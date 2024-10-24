@@ -1,0 +1,42 @@
+<%= component_page do %>
+  <%= title "Dropdown" %>
+
+  <div class="space-y-4">
+    <h3>Dropdown builder</h3>
+
+    <div class="flex justify-center items-center py-20 px-5 w-full rounded border">
+      <%= dropdown do |d| %>
+        <%= d.trigger do %>
+          <%= button "More", icon_right: "ellipsis" %>
+        <% end %>
+        <%= d.content() do %>
+          <%= d.title "My hotdogs" %>
+          <%= d.separator %>
+          <%= d.item "New hotdog", href: request.path %>
+          <%= d.item "Edit hotdog", href: request.path %>
+          <%= d.separator %>
+          <%= d.destructive_item "Delete hotdog", href: request.path, data: { turbo_method: "delete", turbo_confirm: "Sure?" } %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <pre><code>&lt;%= dropdown do |d| %&gt;
+  &lt;%= d.trigger do %&gt;
+    &lt;%= button "More", icon_right: "ellipsis" %&gt;
+  &lt;% end %&gt;
+  &lt;%= d.content do %&gt;
+    &lt;%= d.title("Title") %&gt;
+    &lt;%= d.separator %&gt;
+    &lt;%= d.item("New hotdog", href: new_hotdog_path) %&gt;
+    &lt;%= d.item("Edit hotdog", href: edit_hotdog_path(id)) %&gt;
+    &lt;%= d.separator %&gt;
+    &lt;%= d.destructive_item("Delete hotdog",
+        href: hotdog_path(id),
+        data: {
+          turbo_method: "delete",
+          turbo_confirm: "Not the hotdog!?"
+        }) %&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
+  </div>
+<% end %>

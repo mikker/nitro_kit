@@ -1,0 +1,27 @@
+<%= component_page do %>
+  <%= title "Cards" %>
+
+  <div class="space-y-4">
+    <div class="flex flex-wrap gap-2">
+      <%= card(class: "w-[320px]") do %>
+        <h2 class="text-lg font-bold">Save your changes</h2>
+
+        <div>This will forever set it in stone.</div>
+
+        <div class="flex gap-2 justify-end">
+          <%= button "Cancel" %>
+          <%= primary_button "Save", icon: "check" %>
+        </div>
+      <% end %>
+    </div>
+
+    <pre><code>&lt;%= card do |c| %&gt;
+  &lt;%= c.header "Save your changes" %&gt;
+  &lt;%= c.body "This will forever set it in stone." %&gt;
+  &lt;%= c.footer do %&gt;
+    &lt;%= button "Cancel" %&gt;
+    &lt;%= primary_button "Save", icon: "check" %&gt;
+  &lt;% end %&gt;
+&lt;% end %&gt;</code></pre>
+  </div>
+<% end %>

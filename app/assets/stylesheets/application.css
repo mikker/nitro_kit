@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@source "../../**/*.{rb,erb}";
+
+@theme {
+  --color-background: var(--color-white);
+  --color-foreground: var(--color-zinc-950);
+  --color-border: var(--color-zinc-300);
+  --color-ring: var(--color-blue-400);
+  --color-muted: var(--color-zinc-100);
+  --color-muted-foreground: var(--color-zinc-600);
+
+  --color-primary: var(--color-zinc-900);
+  --color-primary-foreground: var(--color-blue-700);
+  --color-destructive: var(--color-red-500);
+  --color-destructive-foreground: var(--color-red-700);
+}
+
+@layer base {
+  * {
+    @apply font-sans border-border min-w-0;
+  }
+}

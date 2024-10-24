@@ -1,0 +1,26 @@
+<%= component_page do %>
+  <%= title "Forms" %>
+
+  <% @post = Post.new(title: nil).tap { |post| post.valid? } %>
+
+  <div class="w-[480px]">
+    <%= form_with model: @post, url: request.path, builder: IgnitionKit::FormBuilder do |f| %>
+      <%= f.fieldset do %>
+        <%= f.field :title %>
+
+        <%= tag.div(class: "flex gap-4 items-center") do %>
+          <%#<%= f.field :category_id, as: :select, collection: Category.all %>
+          <%#<%= f.field :public, as: :checkbox %>
+          <%= f.select :category_id, [["Ruby"], ["JavaScript"]] %>
+          <%= ik_checkbox label: "Public?" %>
+        <% end %>
+
+        <%#<%= f.field :body %>
+
+        <%= f.textarea :body %>
+
+        <%= f.submit %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,14 @@
+<%= component_page do %>
+  <%= title "Checkboxes" %>
+
+  <div class="space-y-4">
+    <h2>Simple checkbox</h2>
+    <%= ik_checkbox %>
+
+    <h2>Checked checkbox</h2>
+    <%= ik_checkbox checked: true %>
+
+    <h2>Checkbox with label</h2>
+    <%= ik_checkbox :name, label: "Accept your fate" %>
+  </div>
+<% end %>

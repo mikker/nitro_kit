@@ -1,0 +1,21 @@
+<%= component_page do %>
+  <%= title "Icons" %>
+
+  <div class="space-y-4">
+    <p>Uses
+      <a href="https://lucide.dev" class="underline text-primary-foreground">Lucide icons</a></p>
+    <div class="flex flex-col gap-2">
+      <div class="flex gap-2">
+        <%= icon "align-start-vertical" %>
+        <%= icon "image-play", class: "text-green-500" %>
+        <%= icon "popcorn", class: "text-red-400" %>
+        <%= icon "tractor" %>
+      </div>
+      <div class="flex">
+        <% %w[size-2 size-3 size-4 size-5 size-6 size-7 size-8].reverse.each do |size| %>
+          <%= icon "heart", class: size %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

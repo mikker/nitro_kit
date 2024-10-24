@@ -1,0 +1,13 @@
+<%= component_page do %>
+  <%= title "Badges" %>
+
+  <div class="space-y-4">
+    <div class="flex flex-col gap-2 items-start">
+      <% IgnitionKit::Badge::COLORS.keys.each do |color| %>
+        <%= badge(color:) { concat color.capitalize } %>
+      <% end %>
+    </div>
+
+    <pre><code>&lt;%= badge(color: :teal) { "My badge" } %&gt;</code></pre>
+  </div>
+<% end %>

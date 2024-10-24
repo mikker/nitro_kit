@@ -1,0 +1,61 @@
+<%= component_page do %>
+  <%= title "Buttons" %>
+
+  <div class="space-y-4">
+
+    <h2>Buttons</h2>
+
+    <div class="flex gap-2">
+      <%= button "Button" %>
+      <%= primary_button "Primary" %>
+      <%= destructive_button "Destructive" %>
+      <%= ghost_button "Ghost", href: root_path %>
+    </div>
+
+    <div class="flex gap-2">
+      <%= button "Button", size: :sm %>
+      <%= primary_button "Primary", size: :sm %>
+      <%= destructive_button "Destructive", size: :sm %>
+      <%= ghost_button "Ghost", href: root_path, size: :sm %>
+    </div>
+
+    <div class="flex gap-2">
+      <%= button "Button", size: :xs %>
+      <%= primary_button "Primary", size: :xs %>
+      <%= destructive_button "Destructive", size: :xs %>
+      <%= ghost_button "Ghost", href: root_path, size: :xs %>
+    </div>
+
+    <pre><code>&lt;%= button { "Button" } %&gt;
+&lt;%= primary_button { "Primary Button" } %&gt;
+&lt;%= button("Text as arg") %&gt;
+&lt;%= button(variant: :ghost) { "Variant as arg" } %&gt;</code></pre>
+
+    <div class="flex gap-2">
+      <%= button do %>
+        <%= icon "ellipsis" %>
+      <% end %>
+      <%= button "With icon", icon: "mail" %>
+      <%= button do %>
+        <span>Content in block</span>
+        <%= icon "chevron-down" %>
+      <% end %>
+    </div>
+
+    <h2>Button group</h2>
+
+    <div class="flex gap-2">
+      <%= button_group do %>
+        <%= button "Button" %>
+        <%= button "Button" %>
+        <%= destructive_button "Destructive" %>
+      <% end %>
+    </div>
+
+    <pre><code>&lt;%= button_group do %&gt;
+  &lt;%= button("Button") %&gt;
+  &lt;%= button("Button") %&gt;
+  &lt;%= destructive_button("Destructive") %&gt;
+&lt;% end %&gt;</code></pre>
+  </div>
+<% end %>

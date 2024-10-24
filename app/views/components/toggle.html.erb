@@ -1,0 +1,29 @@
+<%= component_page do %>
+  <%= title "Toggles" %>
+
+  <div class="space-y-4">
+    <h2>Default</h2>
+    <div class="flex flex-wrap gap-2">
+      <%= toggle :name %>
+      <%= toggle :name, checked: true %>
+    </div>
+
+    <h2>Sizes</h2>
+    <div class="flex flex-wrap gap-2">
+      <% IgnitionKit::ToggleHelper::SIZE.keys.each do |size| %>
+        <%= toggle(size, size:) %>
+        <%= toggle(size, size:, checked: true) %>
+      <% end %>
+    </div>
+
+    <h2>Colors</h2>
+    <div class="flex flex-wrap gap-2">
+      <% IgnitionKit::ToggleHelper::COLOR.keys.each do |color| %>
+        <%= toggle(color, color:) %>
+        <%= toggle(color, color:, checked: true) %>
+      <% end %>
+    </div>
+
+    <pre><code>&lt;%= toggle("name", color: :teal) %&gt;</code></pre>
+  </div>
+<% end %>
