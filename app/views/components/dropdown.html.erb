@@ -4,7 +4,7 @@
   <div class="space-y-4">
     <h3>Dropdown builder</h3>
 
-    <div class="flex justify-center items-center py-20 px-5 w-full rounded border">
+    <%= example do %>
       <%= dropdown do |d| %>
         <%= d.trigger do %>
           <%= button "More", icon_right: "ellipsis" %>
@@ -18,7 +18,7 @@
           <%= d.destructive_item "Delete hotdog", href: request.path, data: { turbo_method: "delete", turbo_confirm: "Sure?" } %>
         <% end %>
       <% end %>
-    </div>
+    <% end %>
 
     <pre><code>&lt;%= dropdown do |d| %&gt;
   &lt;%= d.trigger do %&gt;
