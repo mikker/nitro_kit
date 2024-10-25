@@ -1,10 +1,10 @@
 {
   "private": "true",
   "scripts": {
-    "build:css": "tailwindcss -i ./app/assets/stylesheets/application.css -o ./app/assets/builds/application.css"
+    "build:css": "tailwindcss -i ./app/assets/stylesheets/application.css -o ./app/assets/builds/application.css --minify"
   },
   "dependencies": {
-    "@tailwindcss/cli": "^4.0.0-alpha.28",
-    "tailwindcss": "^4.0.0-alpha.28"
+    "@tailwindcss/cli": "^4.0.0-alpha.30",
+    "tailwindcss": "^4.0.0-alpha.30"
   }
 }

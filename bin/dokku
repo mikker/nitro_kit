@@ -1,0 +1,2 @@
+#!/bin/bash
+ssh -t dokku@hz1 $@
