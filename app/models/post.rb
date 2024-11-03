@@ -1,6 +1,10 @@
 class Post
   include ActiveModel::Model
+  include ActiveModel::Attributes
 
-  attr_accessor :title
+  attribute :title
+  attribute :publish, :boolean, default: false
+
   validates :title, presence: true
+  validates :publish, inclusion: {in: [true, false]}
 end

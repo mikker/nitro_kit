@@ -3,12 +3,21 @@
 
   <div class="space-y-4">
     <h2>Simple checkbox</h2>
-    <%= ik_checkbox %>
+    <%= example do %>
+      <div class="flex gap-2">
+        <%= checkbox nil %>
+        <%= checkbox nil, checked: true %>
+      </div>
+    <% end %>
 
-    <h2>Checked checkbox</h2>
-    <%= ik_checkbox checked: true %>
+    <%= code_example(%{<%= checkbox "name" %\>}) %>
 
     <h2>Checkbox with label</h2>
-    <%= ik_checkbox :name, label: "Accept your fate" %>
+
+    <%= example do %>
+      <%= checkbox "name", label: "Accept your fate" %>
+    <% end %>
+
+    <%= code_example %{<%= checkbox "name", label: "Accept your fate" %\>} %>
   </div>
 <% end %>

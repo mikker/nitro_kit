@@ -10,17 +10,9 @@
 
     <h2>Sizes</h2>
     <div class="flex flex-wrap gap-2">
-      <% IgnitionKit::ToggleHelper::SIZE.keys.each do |size| %>
+      <% IgnitionKit::Toggle::SIZE.keys.each do |size| %>
         <%= toggle(size, size:) %>
         <%= toggle(size, size:, checked: true) %>
-      <% end %>
-    </div>
-
-    <h2>Colors</h2>
-    <div class="flex flex-wrap gap-2">
-      <% IgnitionKit::ToggleHelper::COLOR.keys.each do |color| %>
-        <%= toggle(color, color:) %>
-        <%= toggle(color, color:, checked: true) %>
       <% end %>
     </div>
 

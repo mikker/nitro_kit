@@ -14,9 +14,9 @@ module IgnitionKit
     }.freeze
 
     SIZES = {
-      base: "px-4 py-1.5 font-medium",
-      sm: "px-2.5 py-1 font-medium text-sm",
-      xs: "px-1.5 py-0.5 font-medium text-xs"
+      base: "px-4 h-9 font-medium",
+      sm: "px-2.5 h-7 font-medium text-sm",
+      xs: "px-1.5 h-6 font-medium text-xs"
     }
 
     def initialize(

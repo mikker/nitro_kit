@@ -11,6 +11,7 @@ gem "importmap-rails"
 gem "turbo-rails"
 gem "stimulus-rails"
 gem "lucide-rails"
+gem "rouge"
 
 gem "solid_cable"
 

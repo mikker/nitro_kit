@@ -266,6 +266,7 @@ GEM
     reline (0.5.10)
       io-console (~> 0.5)
     rexml (3.3.9)
+    rouge (4.4.0)
     ruby-vips (2.2.2)
       ffi (~> 1.12)
       logger
@@ -360,6 +361,7 @@ DEPENDENCIES
   propshaft
   puma (>= 5.0)
   rails (~> 8.0.0.rc1)
+  rouge
   selenium-webdriver
   solid_cable
   sqlite3 (>= 2.1)

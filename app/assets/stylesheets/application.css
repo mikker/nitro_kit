@@ -1,12 +1,10 @@
 @import "tailwindcss";
 
-@source "../../**/*.{rb,erb}";
-
 @theme {
   --color-background: var(--color-white);
   --color-foreground: var(--color-zinc-950);
   --color-border: var(--color-zinc-300);
-  --color-ring: var(--color-blue-400);
+  --color-ring: var(--color-blue-300);
   --color-muted: var(--color-zinc-100);
   --color-muted-foreground: var(--color-zinc-600);
 
@@ -18,6 +16,10 @@
 
 @layer base {
   * {
-    @apply font-sans border-border min-w-0;
+    @apply border-border min-w-0;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
   }
 }

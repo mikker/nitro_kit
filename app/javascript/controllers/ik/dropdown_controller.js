@@ -54,7 +54,7 @@ export default class extends Controller {
       this.clearAutoUpdate = autoUpdate(
         this.triggerTarget,
         this.contentTarget,
-        this.updatePosition
+        this.updatePosition,
       );
     } else {
       this.contentTarget.classList.add("hidden");

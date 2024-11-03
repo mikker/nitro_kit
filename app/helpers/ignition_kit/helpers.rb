@@ -7,6 +7,7 @@ module IgnitionKit
     include CheckboxHelper
     include DropdownHelper
     include FieldHelper
+    include FormHelper
     include IconHelper
     include ToggleHelper
   end
