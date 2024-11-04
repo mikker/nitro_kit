@@ -3,14 +3,14 @@
 
   <div class="space-y-4">
     <%= example(class: "flex-col") do %>
-      <%= badge "Default" %>
-      <%= badge(variant: :outline) { "Outline" } %>
+      <%= ik_badge "Default" %>
+      <%= ik_badge(variant: :outline) { "Outline" } %>
       <% end %>
 
     <%= code_example %{
-    <%= badge(color: :teal) { "My badge" } %\>
+    <%= ik_badge(color: :teal) { "My badge" } %\>
     } %>
 
-    <pre><code>&lt;%= badge(color: :teal) { "My badge" } %&gt;</code></pre>
+    <pre><code>&lt;%= ik_badge(color: :teal) { "My badge" } %&gt;</code></pre>
   </div>
 <% end %>

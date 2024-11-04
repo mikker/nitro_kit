@@ -6,69 +6,69 @@
     <%= example(class: "flex-col") do %>
       <div class="space-y-4">
         <div class="flex gap-2">
-          <%= button "Button" %>
-          <%= primary_button "Primary" %>
-          <%= destructive_button "Destructive" %>
-          <%= ghost_button "Ghost", href: root_path %>
+          <%= ik_button "Button" %>
+          <%= ik_primary_button "Primary" %>
+          <%= ik_destructive_button "Destructive" %>
+          <%= ik_ghost_button "Ghost", href: root_path %>
         </div>
 
         <div class="flex gap-2">
-          <%= button "Button", size: :sm %>
-          <%= primary_button "Primary", size: :sm %>
-          <%= destructive_button "Destructive", size: :sm %>
-          <%= ghost_button "Ghost", href: root_path, size: :sm %>
+          <%= ik_button "Button", size: :sm %>
+          <%= ik_primary_button "Primary", size: :sm %>
+          <%= ik_destructive_button "Destructive", size: :sm %>
+          <%= ik_ghost_button "Ghost", href: root_path, size: :sm %>
         </div>
 
         <div class="flex gap-2">
-          <%= button "Button", size: :xs %>
-          <%= primary_button "Primary", size: :xs %>
-          <%= destructive_button "Destructive", size: :xs %>
-          <%= ghost_button "Ghost", href: root_path, size: :xs %>
+          <%= ik_button "Button", size: :xs %>
+          <%= ik_primary_button "Primary", size: :xs %>
+          <%= ik_destructive_button "Destructive", size: :xs %>
+          <%= ik_ghost_button "Ghost", href: root_path, size: :xs %>
         </div>
       </div>
     <% end %>
 
     <%= code_example %{
-                            <%= button { "Button" } %\>
-                            <%= primary_button { "Primary Button" } %\>
-                            <%= button("Text as arg") %\>
-                            <%= button(variant: :ghost) { "Variant as arg" } %\>
-                            } %>
+              <%= ik_button { "Button" } %\>
+              <%= ik_primary_button { "Primary Button" } %\>
+              <%= ik_button("Text as arg") %\>
+              <%= ik_button(variant: :ghost) { "Variant as arg" } %\>
+              } %>
 
     <%= example do %>
-      <%= button(icon: "ellipsis") %>
-      <%= button "With icon", icon: "mail" %>
-      <%= button do %>
+      <%= ik_button(icon: "ellipsis") %>
+      <%= ik_button "With icon", icon: "mail" %>
+      <%= ik_button do %>
         <span>Content in block</span>
-        <%= icon "chevron-down" %>
+        <%= ik_icon "chevron-down" %>
       <% end %>
     <% end %>
 
     <%= code_example %{
-                            <%= button(icon: "ellipsis") %\>
-                            <%= button(icon: "mail") { "With icon" } %\>
-                            <%= button do %\>
-                              <span>Content in block</span>
-                              <%= icon("chevron-down") %\>
-                            <% end %\>
-                            } %>
+                                                <%= ik_button(icon: "ellipsis") %\>
+                                                <%= ik_button(icon: "mail") { "With icon" } %\>
+                                                <%= ik_button do %\>
+                                                  <span>Content in block</span>
+                                                  <%= ik_icon("chevron-down") %\>
+                                                <% end %\>
+                                                } %>
 
     <h2>Button group</h2>
 
     <%= example do %>
-      <%= button_group do %>
-        <%= button "Button" %>
-        <%= button "Button" %>
-        <%= destructive_button "Destructive" %>
+      <%= ik_button_group do %>
+        <%= ik_button "Button" %>
+        <%= ik_button "Button" %>
+        <%= ik_destructive_button "Destructive" %>
       <% end %>
     <% end %>
 
     <%= code_example %{
-                              <%= button_group do %\>
-                                <%= button("Button") %\>
-                                <%= button("Button") %\>
-                                <%= destructive_button("Destructive") %\>
-                              <% end %\>
-                            } %>
+                      <%= ik_button_group do %\>
+                        <%= ik_button("Button") %\>
+                        <%= ik_button("Button") %\>
+                        <%= ik_destructive_button("Destructive") %\>
+                      <% end %\>
+                    } %>
   </div>
 <% end %>

@@ -3,19 +3,23 @@
 
   <div class="space-y-4">
     <h2>Default</h2>
-    <div class="flex flex-wrap gap-2">
-      <%= toggle :name %>
-      <%= toggle :name, checked: true %>
-    </div>
+    <%= example do %>
+      <%= ik_toggle :name %>
+      <%= ik_toggle :name, checked: true %>
+    <% end %>
+
+    <%= code_example %{
+      <%= ik_toggle :name %\>
+      <%= ik_toggle :name, checked: true %\>
+    } %>
 
     <h2>Sizes</h2>
-    <div class="flex flex-wrap gap-2">
-      <% IgnitionKit::Toggle::SIZE.keys.each do |size| %>
-        <%= toggle(size, size:) %>
-        <%= toggle(size, size:, checked: true) %>
-      <% end %>
-    </div>
+    <%= example do %>
+      <%= ik_toggle(:name, size: :sm) %>
+    <% end %>
 
-    <pre><code>&lt;%= toggle("name", color: :teal) %&gt;</code></pre>
+    <%= code_example %{
+      <%= ik_toggle(:name, size: :sm) %\>
+    } %>
   </div>
 <% end %>

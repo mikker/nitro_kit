@@ -26,7 +26,7 @@ module ApplicationHelper
     tag.div(class: "bg-[#f7f8fa] divide-y  border rounded overflow-hidden") do
       concat(
         tag.div(class: "px-1 py-1 flex") do
-          ghost_button(icon: :copy, size: :xs) { "Copy" }
+          ik_ghost_button(icon: :copy, size: :xs) { "Copy" }
         end
       )
 

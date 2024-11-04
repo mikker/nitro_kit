@@ -6,7 +6,7 @@ module IgnitionKit
       end
     end
 
-    def label(object_name, method, content_or_options = nil, options = nil, &block)
+    def ik_label(object_name, method, content_or_options = nil, options = nil, &block)
       options ||= {}
 
       content_is_options = content_or_options.is_a?(Hash)

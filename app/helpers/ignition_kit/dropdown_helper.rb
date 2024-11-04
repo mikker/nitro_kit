@@ -1,6 +1,6 @@
 module IgnitionKit
   module DropdownHelper
-    def dropdown(**attrs, &block)
+    def ik_dropdown(**attrs, &block)
       render(IgnitionKit::Dropdown.new(**attrs), &block)
     end
   end

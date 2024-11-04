@@ -9,9 +9,7 @@ module IgnitionKit
     ]
 
     def view_template(&block)
-
       div(class: BASE, &block)
     end
-
   end
 end

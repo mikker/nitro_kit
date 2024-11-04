@@ -1,6 +1,6 @@
 module IgnitionKit
   module FieldHelper
-    def field(attribute, **options)
+    def ik_field(attribute, **options)
       render(IgnitionKit::Field.new(attribute, **options))
     end
   end

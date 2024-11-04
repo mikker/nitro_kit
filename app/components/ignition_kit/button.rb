@@ -1,9 +1,15 @@
 module IgnitionKit
   class Button < Component
     BASE = [
-      "inline-flex items-center justify-center rounded-md border gap-2",
+      "inline-flex items-center justify-center rounded-md border gap-2 font-medium",
+      # Focus
       "focus:outline-none focus:ring-[3px] focus:ring-ring",
-      "[&_svg]:size-4"
+
+      # Icon
+      "[&_svg]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
+
+      # If icon alone, make square
+      "[&_svg:first-child:last-child]:-mx-2"
     ].freeze
 
     VARIANTS = {
@@ -14,9 +20,9 @@ module IgnitionKit
     }.freeze
 
     SIZES = {
-      base: "px-4 h-9 font-medium",
-      sm: "px-2.5 h-7 font-medium text-sm",
-      xs: "px-1.5 h-6 font-medium text-xs"
+      base: "px-4 h-9",
+      sm: "px-2.5 h-7 text-sm",
+      xs: "px-1.5 h-6 text-xs",
     }
 
     def initialize(
@@ -36,7 +42,14 @@ module IgnitionKit
       @variant = variant
       @attrs = attrs
 
-      @class_list = merge([BASE, VARIANTS[variant], SIZES[size], attrs[:class]])
+      @class_list = merge(
+        [
+          BASE,
+          VARIANTS[variant],
+          SIZES[size],
+          attrs[:class]
+        ]
+      )
     end
 
     attr_reader(
@@ -65,9 +78,17 @@ module IgnitionKit
     private
 
     def contents
-      render(IgnitionKit::Icon.new(name: icon)) if icon
-      yield
-      render(IgnitionKit::Icon.new(name: icon_right)) if icon_right
+      text = safe(capture { yield })
+
+      case [icon, text.to_s, icon_right].map(&:present?)
+      in [false, true, false] then return text
+      in [true, false, false] then return render(Icon.new(name: icon))
+      else
+      end
+
+      render(Icon.new(name: icon)) if icon
+      span { text }
+      render(Icon.new(name: icon_right)) if icon_right
     end
   end
 end

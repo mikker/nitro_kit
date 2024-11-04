@@ -39,7 +39,7 @@
             [&_a]:underline
           "
         >
-          <% %w[badge button card checkbox dropdown icon input toggle form].each do |component| %>
+          <% %w[badge button card checkbox dropdown icon toggle form].each do |component| %>
             <li><%= link_to component.titlecase, component_path(component) %></li>
           <% end %>
         </ul>

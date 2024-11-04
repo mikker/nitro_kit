@@ -1,6 +1,6 @@
 module IgnitionKit
   module ToggleHelper
-    def toggle(
+    def ik_toggle(
       name,
       checked: false,
       disabled: false,

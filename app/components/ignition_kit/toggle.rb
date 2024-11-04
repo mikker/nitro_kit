@@ -2,9 +2,10 @@ module IgnitionKit
   # These need JS to toggle the stats. Maybe we need to implement these as checkboxes to work with forms, not sure. Maybe include a hidden_field above to make sure we send an "off" value when unchecked similar to the checkbox helpers.
   class Toggle < Component
     BASE = [
-      "relative inline-flex h-[var(--toggle-height)] w-[calc(var(--handle-size)*2)] flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out",
+      "relative inline-flex flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out",
+      "h-[var(--toggle-height)] w-[calc(var(--handle-size)*2)]",
       "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
-      "bg-[var(--bg-color)] [&[aria-checked='true']]:bg-[var(--bg-color-checked)]",
+      "bg-zinc-200 [&[aria-checked='true']]:bg-primary",
       # Color
       "[--bg-color:var(--color-zinc-200)] [--bg-color-checked:var(--color-primary)]"
     ].freeze
@@ -45,15 +46,13 @@ module IgnitionKit
     attr_reader :name, :checked, :disabled, :description
 
     def view_template
-      data = {controller: "toggle", **attrs.fetch(:data, {})}
-
       button(
         **attrs,
         type: "button",
         class: class_list,
-        data: data,
+        data: {controller: "ik--toggle", action: "ik--toggle#toggle"},
         role: "switch",
-        aria: {checked: checked}
+        aria: {checked: checked.to_s}
       ) do
         span(class: "sr-only") { description }
         span(aria: {hidden: true}, class: HANDLE, data: {slot: "handle"})

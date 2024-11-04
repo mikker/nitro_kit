@@ -5,19 +5,19 @@
     <h2>Simple checkbox</h2>
     <%= example do %>
       <div class="flex gap-2">
-        <%= checkbox nil %>
-        <%= checkbox nil, checked: true %>
+        <%= ik_checkbox nil %>
+        <%= ik_checkbox nil, checked: true %>
       </div>
     <% end %>
 
-    <%= code_example(%{<%= checkbox "name" %\>}) %>
+    <%= code_example(%{<%= ik_checkbox "name" %\>}) %>
 
     <h2>Checkbox with label</h2>
 
     <%= example do %>
-      <%= checkbox "name", label: "Accept your fate" %>
+      <%= ik_checkbox "name", label: "Accept your fate" %>
     <% end %>
 
-    <%= code_example %{<%= checkbox "name", label: "Accept your fate" %\>} %>
+    <%= code_example %{<%= ik_checkbox "name", label: "Accept your fate" %\>} %>
   </div>
 <% end %>

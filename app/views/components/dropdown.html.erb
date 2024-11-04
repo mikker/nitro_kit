@@ -5,11 +5,11 @@
     <h3>Dropdown builder</h3>
 
     <%= example do %>
-      <%= dropdown do |d| %>
+      <%= ik_dropdown do |d| %>
         <%= d.trigger do %>
-          <%= button "More", icon_right: "ellipsis" %>
+          <%= ik_button "Open" %>
         <% end %>
-        <%= d.content() do %>
+        <%= d.content do %>
           <%= d.title "My hotdogs" %>
           <%= d.separator %>
           <%= d.item "New hotdog", href: request.path %>
@@ -20,23 +20,22 @@
       <% end %>
     <% end %>
 
-    <pre><code>&lt;%= dropdown do |d| %&gt;
-  &lt;%= d.trigger do %&gt;
-    &lt;%= button "More", icon_right: "ellipsis" %&gt;
-  &lt;% end %&gt;
-  &lt;%= d.content do %&gt;
-    &lt;%= d.title("Title") %&gt;
-    &lt;%= d.separator %&gt;
-    &lt;%= d.item("New hotdog", href: new_hotdog_path) %&gt;
-    &lt;%= d.item("Edit hotdog", href: edit_hotdog_path(id)) %&gt;
-    &lt;%= d.separator %&gt;
-    &lt;%= d.destructive_item("Delete hotdog",
-        href: hotdog_path(id),
-        data: {
-          turbo_method: "delete",
-          turbo_confirm: "Not the hotdog!?"
-        }) %&gt;
-  &lt;% end %&gt;
-&lt;% end %&gt;</code></pre>
+    <%= code_example %{
+      <%= ik_dropdown do |d| %\>
+        <%= d.trigger do %\>
+          <%= ik_button "Open" %\>
+        <% end %\>
+        <%= d.content do %\>
+          <%= d.title "My hotdogs" %\>
+          <%= d.separator %\>
+          <%= d.item "New hotdog", href: new_hotdog_path %\>
+          <%= d.item "Edit hotdog", href: edit_hotdog_path(1) %\>
+          <%= d.separator %\>
+          <%= d.destructive_item "Delete hotdog",
+            href: hotdog_path(1),
+            data: { turbo_method: "delete", turbo_confirm: "Sure?" } %\>
+        <% end %\>
+      <% end %\>
+    } %>
   </div>
 <% end %>

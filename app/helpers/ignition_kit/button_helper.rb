@@ -1,6 +1,6 @@
 module IgnitionKit
   module ButtonHelper
-    def button(
+    def ik_button(
       text = nil,
       href: nil,
       icon: nil,
@@ -28,16 +28,16 @@ module IgnitionKit
       end
     end
 
-    def primary_button(text = nil, **attrs, &block)
-      button(text, **attrs, variant: :primary, &block)
+    def ik_primary_button(text = nil, **attrs, &block)
+      ik_button(text, **attrs, variant: :primary, &block)
     end
 
-    def destructive_button(text = nil, **attrs, &block)
-      button(text, **attrs, variant: :destructive, &block)
+    def ik_destructive_button(text = nil, **attrs, &block)
+      ik_button(text, **attrs, variant: :destructive, &block)
     end
 
-    def ghost_button(text = nil, **attrs, &block)
-      button(text, **attrs, variant: :ghost, &block)
+    def ik_ghost_button(text = nil, **attrs, &block)
+      ik_button(text, **attrs, variant: :ghost, &block)
     end
   end
 end
