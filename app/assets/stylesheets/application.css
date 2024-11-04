@@ -1,25 +1,66 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: var(--color-white);
-  --color-foreground: var(--color-zinc-950);
-  --color-border: var(--color-zinc-300);
-  --color-ring: var(--color-blue-300);
-  --color-muted: var(--color-zinc-100);
-  --color-muted-foreground: var(--color-zinc-600);
-
-  --color-primary: var(--color-zinc-900);
-  --color-primary-foreground: var(--color-blue-700);
-  --color-destructive: var(--color-red-500);
-  --color-destructive-foreground: var(--color-red-700);
+  --color-foreground: #000;
+  --color-background: #000;
+  --color-border: #000;
+  --color-ring: #000;
+  --color-muted: #000;
+  --color-muted-foreground: #000;
+  --color-primary: #000;
+  --color-primary-foreground: #000;
+  --color-destructive: #000;
+  --color-destructive-foreground: #000;
 }
 
 @layer base {
+  :root,
+  .light {
+    --color-foreground: var(--color-zinc-950);
+    --color-background: var(--color-white);
+
+    --color-border: var(--color-zinc-300);
+    --color-ring: var(--color-blue-300);
+    --color-muted: var(--color-zinc-100);
+    --color-muted-foreground: var(--color-zinc-600);
+    --color-primary: var(--color-zinc-900);
+    --color-primary-foreground: var(--color-zinc-950);
+    --color-destructive: var(--color-red-500);
+    --color-destructive-foreground: var(--color-red-700);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-foreground: var(--color-zinc-50);
+      --color-background: var(--color-zinc-950);
+
+      --color-border: var(--color-zinc-700);
+      --color-ring: var(--color-blue-700);
+      --color-muted: var(--color-zinc-800);
+      --color-muted-foreground: var(--color-zinc-400);
+      --color-primary: var(--color-zinc-50);
+      --color-primary-foreground: var(--color-white);
+      --color-destructive: var(--color-red-500);
+      --color-destructive-foreground: var(--color-red-700);
+    }
+  }
+}
+
+@variant dark (&:where(.dark, .dark *));
+
+@layer base {
   * {
-    @apply border-border min-w-0;
+    @apply border-border min-w-0 ring-ring;
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .debug,
+  .debug * {
+    border: 1px solid rgba(255, 0, 0, 0.3);
   }
 }

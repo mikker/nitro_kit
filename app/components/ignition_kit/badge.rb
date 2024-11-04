@@ -6,7 +6,7 @@ module IgnitionKit
     ].join(" ").freeze
 
     VARIANTS = {
-      default: "bg-[var(--color-zinc-200)] text-[var(--color-zinc-700)]",
+      default: "bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
       outline: "border"
     }
 
@@ -29,4 +29,3 @@ module IgnitionKit
     end
   end
 end
-

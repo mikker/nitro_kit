@@ -10,17 +10,15 @@ module IgnitionKit
       value, checked = args.empty? ? ["1", false] : [*args, false]
 
       attrs = {
-        "type" => "checkbox",
-        "name" => name,
-        "id" => sanitize_to_id(name),
-        "value" => value
-      }.update(options.stringify_keys)
+        :type => "checkbox",
+        :name => name,
+        :id => sanitize_to_id(name),
+        :value => value
+      }.update(options.symbolize_keys)
 
-      attrs["checked"] = "checked" if checked
+      attrs[:checked] = "checked" if checked
 
-      label = attrs.delete("label")
-
-      render(IgnitionKit::Checkbox.new(name, value, label: label, **attrs))
+      render(IgnitionKit::Checkbox.new(name, value:, **attrs))
     end
   end
 end

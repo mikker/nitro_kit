@@ -27,7 +27,6 @@ end
 group :development do
   gem "hotwire-livereload"
   gem "listen"
-  gem "erb-formatter"
 end
 
 group :test do

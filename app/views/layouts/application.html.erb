@@ -2,7 +2,7 @@
 <html>
   <head>
     <title><%= content_for(:title) || "Ignition Kit" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
@@ -30,7 +30,7 @@
     <%= hotwire_livereload_tags if Rails.env.development? %>
   </head>
 
-  <body>
+  <body class="dark">
     <main class="flex">
       <section class="p-5 w-1/4 shrink">
         <ul
@@ -39,7 +39,17 @@
             [&_a]:underline
           "
         >
-          <% %w[badge button card checkbox dropdown icon toggle form].each do |component| %>
+          <% %w[
+            badge
+            button
+            card
+            checkbox
+            dropdown
+            form
+            icon
+            radio
+            toggle
+          ].each do |component| %>
             <li><%= link_to component.titlecase, component_path(component) %></li>
           <% end %>
         </ul>

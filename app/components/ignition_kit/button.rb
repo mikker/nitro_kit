@@ -14,7 +14,7 @@ module IgnitionKit
 
     VARIANTS = {
       default: ["bg-background text-foreground border-border"],
-      primary: ["bg-primary text-white border-primary"],
+      primary: ["bg-primary text-white dark:text-zinc-950 border-primary"],
       destructive: ["bg-destructive text-white border-destructive"],
       ghost: ["bg-transparent text-foreground border-transparent"]
     }.freeze

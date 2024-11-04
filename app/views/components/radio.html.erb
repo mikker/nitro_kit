@@ -1,0 +1,32 @@
+<%= component_page do %>
+  <%= title "Radio buttons" %>
+
+  <div class="space-y-4">
+    <%= example do %>
+      <div class="flex gap-2">
+        <%= ik_radio_button :name, 1 %>
+        <%= ik_radio_button :name, 2, checked: true %>
+      </div>
+    <% end %>
+
+    <%= code_example(%{<%= ik_radio_button "name", "value" %\>}) %>
+
+    <h2>Checkbox group</h2>
+
+    <%= example do %>
+      <%= ik_radio_group(:taste, value: :zero) do |g| %>
+        <%= g.title "Choose your fate" %>
+        <%= g.item :coke, label: "Coke" %>
+        <%= g.item :zero, label: "Coke Zero" %>
+      <% end %>
+    <% end %>
+
+    <%= code_example %{
+      <%= ik_radio_group :taste, value: :zero do |g| %\>
+        <%= g.title "Choose your poison" %\>
+        <%= g.item :coke, "Coke" %\>
+        <%= g.item :zero, "Coke Zero" %\>
+      <% end %\>
+    } %>
+  </div>
+<% end %>

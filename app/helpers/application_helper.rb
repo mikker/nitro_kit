@@ -23,7 +23,7 @@ module ApplicationHelper
     formatter = Rouge::Formatters::HTML.new
     lexer = Rouge::Lexers::ERB.new
 
-    tag.div(class: "bg-[#f7f8fa] divide-y  border rounded overflow-hidden") do
+    tag.div(class: "bg-[#f7f8fa] dark:bg-[#161b22] divide-y  border rounded overflow-hidden") do
       concat(
         tag.div(class: "px-1 py-1 flex") do
           ik_ghost_button(icon: :copy, size: :xs) { "Copy" }

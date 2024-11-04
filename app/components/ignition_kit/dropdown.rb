@@ -2,15 +2,11 @@ module IgnitionKit
   class Dropdown < Component
     include Phlex::Rails::Helpers::LinkTo
 
-    TITLE_BASE = [
-      "px-3 pt-2 pb-1.5",
-      "text-muted-foreground text-sm"
-    ].freeze
-
     CONTENT_BASE = [
-      "w-max-content absolute top-0 left-0 hidden",
-      "p-1 bg-background rounded-md border shadow-sm",
-      "w-fit max-w-sm flex flex-col"
+      "w-max-content absolute top-0 left-0",
+      "p-1 bg-background rounded-md border shadow-sm", 
+      "w-fit max-w-sm flex-col",
+      "[&[aria-hidden=true]]:hidden flex"
     ].freeze
 
     ITEM_BASE = [
@@ -41,20 +37,34 @@ module IgnitionKit
         :action => "click->ik--dropdown#toggle",
         **attrs.fetch(:data, {})
       }
-      div(**attrs, class: class_list, data:, &block)
+      div(
+        **attrs,
+        class: class_list,
+        data:,
+        aria: { haspopup: "true", expanded: "false" },
+        &block
+      )
     end
 
     def content(**attrs, &block)
       class_list = merge([CONTENT_BASE, attrs[:class]])
+
       data = {
         :"ik--dropdown-target" => "content",
         **attrs.fetch(:data, {})
       }
-      div(**attrs, class: class_list, data:, &block)
+      div(
+        **attrs,
+        class: class_list,
+        data:,
+        role: "menu",
+        aria: { hidden: "true" },
+        &block
+      )
     end
 
     def title(text = nil, **attrs, &block)
-      class_list = merge([TITLE_BASE, attrs[:class]])
+      class_list = merge(["px-3 pt-2 pb-1.5 text-muted-foreground text-sm", attrs[:class]])
       div(**attrs, class: class_list) { text || block.call }
     end
 
@@ -67,16 +77,22 @@ module IgnitionKit
     )
       class_list = merge([ITEM_BASE, ITEM_VARIANTS[variant], attrs[:class]])
 
+      common_attrs = {
+        **attrs,
+        class: class_list,
+        role: "menuitem",
+        tabindex: "-1"
+      }
+
       if href
         link_to(
           href,
-          **attrs,
-          class: class_list
+          **common_attrs
         ) {
           text || block.call
         }
       else
-        div(**attrs, class: class_list) { text || block.call }
+        div(**common_attrs) { text || block.call }
       end
     end
 

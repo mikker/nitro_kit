@@ -9,7 +9,6 @@ import {
 
 export default class extends Controller {
   static targets = ["trigger", "content"];
-  static values = { open: { type: Boolean, default: false } };
 
   connect() {
     this.updatePosition();
@@ -17,6 +16,10 @@ export default class extends Controller {
 
   disconnect() {
     this.close();
+  }
+
+  get isExpanded() {
+    return this.triggerTarget.getAttribute("aria-expanded") === "true";
   }
 
   updatePosition = () => {
@@ -30,42 +33,35 @@ export default class extends Controller {
   };
 
   open = () => {
-    this.openValue = true;
+    this.triggerTarget.setAttribute("aria-expanded", "true");
+    this.contentTarget.setAttribute("aria-hidden", "false");
+
+    document.addEventListener("click", this.clickOutside);
+    this.clearAutoUpdate = autoUpdate(
+      this.triggerTarget,
+      this.contentTarget,
+      this.updatePosition
+    );
   };
 
   close = () => {
-    this.openValue = false;
+    this.triggerTarget.setAttribute("aria-expanded", "false");
+    this.contentTarget.setAttribute("aria-hidden", "true");
+
+    document.removeEventListener("click", this.clickOutside);
+
+    if (this.clearAutoUpdate) {
+      this.clearAutoUpdate();
+    }
   };
 
   toggle = () => {
-    if (this.openValue) {
+    if (this.isExpanded) {
       this.close();
     } else {
       this.open();
     }
   };
-
-  openValueChanged() {
-    if (this.openValue) {
-      this.contentTarget.classList.remove("hidden");
-
-      document.addEventListener("click", this.clickOutside);
-
-      this.clearAutoUpdate = autoUpdate(
-        this.triggerTarget,
-        this.contentTarget,
-        this.updatePosition,
-      );
-    } else {
-      this.contentTarget.classList.add("hidden");
-
-      document.removeEventListener("click", this.clickOutside);
-
-      if (this.clearAutoUpdate) {
-        this.clearAutoUpdate();
-      }
-    }
-  }
 
   clickOutside = (event) => {
     if (

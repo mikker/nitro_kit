@@ -3,7 +3,8 @@ module IgnitionKit
     attr_reader :attrs, :class_list
 
     def initialize(**attrs)
-      @attrs = attrs
+      @class_list = attrs.delete(:class)
+      @attrs = attrs.symbolize_keys
     end
 
     attr_reader :class_list, :attrs
