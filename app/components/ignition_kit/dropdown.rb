@@ -4,7 +4,7 @@ module IgnitionKit
 
     CONTENT_BASE = [
       "w-max-content absolute top-0 left-0",
-      "p-1 bg-background rounded-md border shadow-sm", 
+      "p-1 bg-background rounded-md border shadow-sm",
       "w-fit max-w-sm flex-col",
       "[&[aria-hidden=true]]:hidden flex"
     ].freeze
@@ -22,12 +22,15 @@ module IgnitionKit
 
     SEPARATOR_BASE = "border-t my-1 -mx-1"
 
-    def initialize(**attrs)
+    def initialize(placement: nil, **attrs)
+      @placement = placement
       @attrs = attrs
     end
 
+    attr_reader :placement
+
     def view_template(&block)
-      div(data: {controller: "ik--dropdown"}, &block)
+      div(data: {:controller => "ik--dropdown", :"ik--dropdown-placement-value" => placement}, &block)
     end
 
     def trigger(**attrs, &block)
@@ -41,7 +44,7 @@ module IgnitionKit
         **attrs,
         class: class_list,
         data:,
-        aria: { haspopup: "true", expanded: "false" },
+        aria: {haspopup: "true", expanded: "false"},
         &block
       )
     end
@@ -58,7 +61,7 @@ module IgnitionKit
         class: class_list,
         data:,
         role: "menu",
-        aria: { hidden: "true" },
+        aria: {hidden: "true"},
         &block
       )
     end

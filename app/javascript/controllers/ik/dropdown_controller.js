@@ -9,6 +9,9 @@ import {
 
 export default class extends Controller {
   static targets = ["trigger", "content"];
+  static values = {
+    placement: { type: String, default: "bottom" },
+  };
 
   connect() {
     this.updatePosition();
@@ -24,7 +27,7 @@ export default class extends Controller {
 
   updatePosition = () => {
     computePosition(this.triggerTarget, this.contentTarget, {
-      placement: "bottom-end",
+      placement: this.placementValue,
       middleware: [offset(5), flip(), shift({ padding: 5 })],
     }).then(({ x, y }) => {
       this.contentTarget.style.left = `${x}px`;
@@ -40,7 +43,7 @@ export default class extends Controller {
     this.clearAutoUpdate = autoUpdate(
       this.triggerTarget,
       this.contentTarget,
-      this.updatePosition
+      this.updatePosition,
     );
   };
 

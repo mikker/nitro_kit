@@ -30,15 +30,10 @@
     <%= hotwire_livereload_tags if Rails.env.development? %>
   </head>
 
-  <body class="dark">
+  <body>
     <main class="flex">
       <section class="p-5 w-1/4 shrink">
-        <ul
-          class="
-            list-inside space-y-2 list list-disc-1 [&_a]:text-primary-foreground
-            [&_a]:underline
-          "
-        >
+        <ul class="list-inside space-y-2 list list-disc-1 [&_a]:text-blue-500 [&_a]:underline">
           <% %w[
             badge
             button

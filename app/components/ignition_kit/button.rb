@@ -22,7 +22,7 @@ module IgnitionKit
     SIZES = {
       base: "px-4 h-9",
       sm: "px-2.5 h-7 text-sm",
-      xs: "px-1.5 h-6 text-xs",
+      xs: "px-1.5 h-6 text-xs"
     }
 
     def initialize(
@@ -79,11 +79,12 @@ module IgnitionKit
 
     def contents
       text = safe(capture { yield })
+      has_text = text.to_s.present?
 
-      case [icon, text.to_s, icon_right].map(&:present?)
-      in [false, true, false] then return text
-      in [true, false, false] then return render(Icon.new(name: icon))
-      else
+      if !icon && has_text && !icon_right
+        return text
+      elsif icon && !has_text && !icon_right
+        return render(Icon.new(name: icon))
       end
 
       render(Icon.new(name: icon)) if icon

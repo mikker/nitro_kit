@@ -29,8 +29,8 @@ module IgnitionKit
             id:,
             class: class_names(
               "peer row-start-1 col-start-1",
-              "appearance-none size-5 shadow rounded-full border-zinc-400 text-foreground",
-              "checked:bg-primary checked:border-primary checked:text-zinc-50 dark:checked:text-zinc-900",
+              "appearance-none size-5 shadow rounded-full border text-foreground bg-background",
+              "[&[aria-checked='true']]:bg-primary",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             )
           )
@@ -48,13 +48,13 @@ module IgnitionKit
     def dot
       svg(
         class: class_names(
-          "size-3 text-zinc-50 dark:text-zinc-900 opacity-0 peer-checked:opacity-100 pointer-events-none",
-          "row-start-1 col-start-1"
+          "row-start-1 col-start-1",
+          "size-2.5 text-primay opacity-0 pointer-events-none",
+          "peer-checked:opacity-100"
         ),
         viewbox: "0 0 20 20",
         fill: "currentColor",
-        stroke: "currentColor",
-        stroke_width: 0
+        stroke: "none"
       ) do |svg|
         svg.circle(cx: 10, cy: 10, r: 10)
       end

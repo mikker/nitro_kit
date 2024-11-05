@@ -1,20 +1,27 @@
 module IgnitionKit
   class Toggle < Component
-    BASE = [
-      "relative inline-flex items-center shrink-0 cursor-pointer rounded-full border transition-colors duration-200 ease-in-out",
-      "bg-background",
+    BUTTON = [
+      "inline-flex items-center shrink-0",
+      "bg-background rounded-full border",
+      "transition-colors duration-200 ease-in-out",
       "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ring-offset-background",
-      "[&[aria-checked='true']]:bg-muted [&[aria-checked='true']_span]:translate-x-[calc(theme(spacing.5)-1px)]"
+
+      # Checked
+      "[&[aria-checked='true']]:bg-foreground [&[aria-checked='true']]:border-foreground",
+
+      # Checked > Handle
+      "[&[aria-checked='false']_[data-slot='handle']]:bg-primary",
+      "[&[aria-checked='true']_[data-slot='handle']]:translate-x-[calc(theme(spacing.5)-1px)] [&[aria-checked='true']_[data-slot='handle']]:bg-background"
     ].freeze
 
     HANDLE = [
-      "pointer-events-none inline-block rounded-full bg-primary shadow ring-0",
+      "pointer-events-none inline-block rounded-full shadow ring-0",
       "transition translate-x-[3px] duration-200 ease-in-out"
     ].freeze
 
     SIZE = {
-      base: "h-6 w-10 [&_[data-slot=handle]]:size-4 [&[aria-checked='true']_span]:translate-x-[calc(theme(spacing.5)-1px)]",
-      sm: "h-5 w-8 [&_[data-slot=handle]]:size-3 [&[aria-checked='true']_span]:translate-x-[calc(theme(spacing.4)-1px)]"
+      base: "h-6 w-10 [&_[data-slot=handle]]:size-4 [&[aria-checked='true']_[data-slot='handle']]:translate-x-[calc(theme(spacing.5)-1px)]",
+      sm: "h-5 w-8 [&_[data-slot=handle]]:size-3 [&[aria-checked='true']_[data-slot='handle']]:translate-x-[calc(theme(spacing.4)-1px)]"
     }
 
     def initialize(
@@ -30,31 +37,30 @@ module IgnitionKit
       @name = name
       @checked = checked
       @disabled = disabled
+      @size = size
       @description = description
-
-      @class_list = merge(
-        [
-          BASE,
-          SIZE[size],
-          attrs.delete(:class)
-        ]
-      )
     end
 
-    attr_reader :name, :checked, :disabled, :description
+    attr_reader :name, :checked, :disabled, :description, :size
 
     def view_template
       button(
         **attrs,
         type: "button",
-        class: class_list,
+        class: merge([BUTTON, SIZE[size], attrs[:class]]),
         data: {controller: "ik--toggle", action: "ik--toggle#toggle"},
         role: "switch",
         aria: {checked: checked.to_s}
       ) do
         span(class: "sr-only") { description }
-        span(aria: {hidden: true}, class: HANDLE, data: {slot: "handle"})
+        handle
       end
+    end
+
+    private
+
+    def handle
+      span(aria: {hidden: true}, class: HANDLE, data: {slot: "handle"})
     end
   end
 end

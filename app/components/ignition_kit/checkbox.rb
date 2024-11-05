@@ -22,8 +22,8 @@ module IgnitionKit
             **attrs,
             type: "checkbox",
             class: class_names(
-              "peer appearance-none shadow size-5 rounded border-zinc-400 text-foreground",
-              "checked:bg-primary checked:border-primary checked:text-white",
+              "peer appearance-none shadow size-4 rounded border text-foreground",
+              "checked:bg-primary checked:border-primary",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             )
           )
@@ -40,11 +40,9 @@ module IgnitionKit
 
     def checkmark
       span(
-        class: merge(
-          [
-            "absolute w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-            "text-zinc-50 dark:text-zinc-950 opacity-0 peer-checked:opacity-100 pointer-events-none"
-          ]
+        class: class_names(
+          "absolute w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
+          "text-zinc-50 dark:text-zinc-950 opacity-0 peer-checked:opacity-100 pointer-events-none"
         )
       ) do
         svg(

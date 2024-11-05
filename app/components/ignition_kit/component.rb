@@ -9,8 +9,8 @@ module IgnitionKit
 
     attr_reader :class_list, :attrs
 
-    def merge(*)
-      self.class.merge(*)
+    def merge(*args)
+      self.class.merge(*args)
     end
 
     def self.merge(*args)
