@@ -16,7 +16,7 @@ module IgnitionKit
     )
 
     def view_template
-      div(class: merge(["inline-flex items-center gap-2", class_list])) do
+      div(class: merge(["isolate inline-flex items-center gap-2", class_list])) do
         label(class: "relative flex shrink-0") do
           input(
             **attrs,

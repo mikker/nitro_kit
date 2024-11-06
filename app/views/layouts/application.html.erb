@@ -32,9 +32,9 @@
 
   <body>
     <main class="flex" data-controller="sidebar" data-turbo-permanent>
-      <div data-sidebar-target="backdrop" class="fixed inset-0 opacity-0 transition-opacity duration-300 pointer-events-none md:hidden bg-black/20 backdrop-blur-sm"></div>
+      <div data-sidebar-target="backdrop" class="fixed inset-0 z-40 opacity-0 transition-opacity duration-300 pointer-events-none md:hidden bg-black/20 backdrop-blur-sm"></div>
       <section 
-        class="overflow-y-auto fixed top-0 bottom-0 left-0 p-5 w-64 border-r shadow-md transition-transform -translate-x-64 md:relative md:w-1/4 md:shadow-none md:translate-x-0 bg-background shrink" 
+        class="overflow-y-auto fixed top-0 bottom-0 left-0 z-50 p-5 w-64 border-r shadow-md transition-transform -translate-x-64 md:relative md:w-1/4 md:shadow-none md:translate-x-0 bg-background shrink" 
         data-sidebar-target="navigation"
         role="navigation"
         aria-label="Main navigation"
