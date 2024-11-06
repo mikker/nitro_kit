@@ -1,9 +1,9 @@
 module IgnitionKit
   class Button < Component
     BASE = [
-      "inline-flex items-center justify-center rounded-md border gap-2 font-medium",
+      "inline-flex items-center shrink-0 justify-center rounded-md border gap-2 font-medium",
       # Focus
-      "focus:outline-none focus:ring-[3px] focus:ring-ring",
+      "focus:outline-none focus:ring-[3px] focus:ring-offset-2 focus:ring-ring",
 
       # Icon
       "[&_svg]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
