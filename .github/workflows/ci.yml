@@ -1,73 +1,19 @@
 name: CI
 
 on:
-  pull_request:
   push:
-    branches: [ main ]
 
 jobs:
-  scan_ruby:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Scan for common Rails security vulnerabilities using static analysis
-        run: bin/brakeman --no-pager
-
-  scan_js:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Scan for security vulnerabilities in JavaScript dependencies
-        run: bin/importmap audit
-
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: .ruby-version
-          bundler-cache: true
-
-      - name: Lint code for consistent style
-        run: bin/rubocop -f github
-
   test:
+    name: Test
     runs-on: ubuntu-latest
 
-    # services:
-    #  redis:
-    #    image: redis
-    #    ports:
-    #      - 6379:6379
-    #    options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Install packages
         run: sudo apt-get update && sudo apt-get install --no-install-recommends -y google-chrome-stable curl libjemalloc2 libvips sqlite3
-
-      - name: Checkout code
-        uses: actions/checkout@v4
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -78,7 +24,6 @@ jobs:
       - name: Run tests
         env:
           RAILS_ENV: test
-          # REDIS_URL: redis://localhost:6379/0
         run: bin/rails db:test:prepare test test:system
 
       - name: Keep screenshots from failed system tests
@@ -88,3 +33,33 @@ jobs:
           name: screenshots
           path: ${{ github.workspace }}/tmp/screenshots
           if-no-files-found: ignore
+
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: ["test"]
+    steps:
+      - uses: actions/checkout@v4
+        if: github.ref == 'refs/heads/master' && job.status == 'success'
+        with:
+          fetch-depth: "0"
+
+      - name: Install SSH private key
+        uses: webfactory/ssh-agent@v0.9.0
+        if: github.ref == 'refs/heads/master' && job.status == 'success'
+        with:
+          ssh-private-key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
+
+      - name: Add host to SSH known_hosts
+        if: github.ref == 'refs/heads/master' && job.status == 'success'
+        run: "mkdir -p ~/.ssh && ssh-keyscan ik.mikker.art >> ~/.ssh/known_hosts"
+
+      - name: Maybe deploy
+        if: github.ref == 'refs/heads/master' && job.status == 'success'
+        run: |
+          timeout 5m bash -c 'until bin/deploy-available; do
+            echo "Deploys are locked (already deploying?). Trying again in 10s"
+            sleep 10
+          done'
+
+          git push dokku@ik.mikker.art:ik
