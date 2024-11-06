@@ -52,9 +52,9 @@ jobs:
 
       - name: Add host to SSH known_hosts
         if: github.ref == 'refs/heads/main' && job.status == 'success'
-        run: "mkdir -p ~/.ssh && ssh-keyscan ${{ secret.DOKKU_SERVER_HOST }} >> ~/.ssh/known_hosts"
+        run: "mkdir -p ~/.ssh && ssh-keyscan ${{ secrets.DOKKU_SERVER_HOST }} >> ~/.ssh/known_hosts"
 
       - name: Maybe deploy
         if: github.ref == 'refs/heads/main' && job.status == 'success'
         run: |
-          git push dokku@${{ secret.DOKKU_SERVER_HOST }}:ik
+          git push dokku@${{ secrets.DOKKU_SERVER_HOST }}:ik
