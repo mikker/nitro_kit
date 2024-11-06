@@ -2,14 +2,14 @@ module IgnitionKit
   class Dropdown < Component
     include Phlex::Rails::Helpers::LinkTo
 
-    CONTENT_BASE = [
+    CONTENT = [
       "w-max-content absolute top-0 left-0",
       "p-1 bg-background rounded-md border shadow-sm",
-      "w-fit max-w-sm flex-col",
+      "w-fit max-w-sm flex-col text-left",
       "[&[aria-hidden=true]]:hidden flex"
     ].freeze
 
-    ITEM_BASE = [
+    ITEM = [
       "px-3 py-1.5 rounded",
       "font-medium truncate",
       "cursor-default"
@@ -20,7 +20,7 @@ module IgnitionKit
       destructive: ["text-destructive-foreground hover:bg-destructive hover:text-white"]
     }.freeze
 
-    SEPARATOR_BASE = "border-t my-1 -mx-1"
+    SEPARATOR = "border-t my-1 -mx-1"
 
     def initialize(placement: nil, **attrs)
       @placement = placement
@@ -50,7 +50,7 @@ module IgnitionKit
     end
 
     def content(**attrs, &block)
-      class_list = merge([CONTENT_BASE, attrs[:class]])
+      class_list = merge([CONTENT, attrs[:class]])
 
       data = {
         :"ik--dropdown-target" => "content",
@@ -73,12 +73,12 @@ module IgnitionKit
 
     def item(
       text = nil,
-      href: nil,
+      href = nil,
       variant: :default,
       **attrs,
       &block
     )
-      class_list = merge([ITEM_BASE, ITEM_VARIANTS[variant], attrs[:class]])
+      class_list = merge([ITEM, ITEM_VARIANTS[variant], attrs[:class]])
 
       common_attrs = {
         **attrs,
@@ -99,12 +99,12 @@ module IgnitionKit
       end
     end
 
-    def destructive_item(text = nil, **attrs, &block)
-      item(text, variant: :destructive, **attrs, &block)
+    def destructive_item(*args, **attrs, &block)
+      item(*args, **attrs, variant: :destructive, &block)
     end
 
     def separator
-      div(class: SEPARATOR_BASE)
+      div(class: SEPARATOR)
     end
   end
 end

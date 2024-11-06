@@ -1,13 +1,24 @@
-# gemspec doesn't bundle require
 require "tailwind_merge"
 require "phlex/rails"
 
 module IgnitionKit
-  def merge(*args)
-    @tailwind_merge ||= TailwindMerge::Merge.new
-    @tailwind_merge.merge(*args)
-  end
+  module Variants
+    module ClassMethods
+      def automatic_variants(variants, method_name)
+        _, prefix, original = method_name.match(/(ik_)(.+)/).to_a
 
-  module Helpers
+        variants.each do |variant, class_name|
+          variant_method_name = "#{prefix}#{variant}_#{original}"
+
+          define_method(variant_method_name) do |*args, **kwargs, &block|
+            send(method_name, *args, variant:, **kwargs, &block)
+          end
+        end
+      end
+    end
+
+    def self.included(base)
+      base.extend(ClassMethods)
+    end
   end
 end

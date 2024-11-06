@@ -12,10 +12,10 @@
         <%= d.content do %>
           <%= d.title "My hotdogs" %>
           <%= d.separator %>
-          <%= d.item "New hotdog", href: request.path %>
-          <%= d.item "Edit hotdog", href: request.path %>
+          <%= d.item "New hotdog", request.path %>
+          <%= d.item "Edit hotdog", request.path %>
           <%= d.separator %>
-          <%= d.destructive_item "Delete hotdog", href: request.path, data: { turbo_method: "delete", turbo_confirm: "Sure?" } %>
+          <%= d.destructive_item "Delete hotdog", request.path, data: { turbo_method: "delete", turbo_confirm: "Sure?" } %>
         <% end %>
       <% end %>
     <% end %>
@@ -28,11 +28,11 @@
         <%= d.content do %\>
           <%= d.title "My hotdogs" %\>
           <%= d.separator %\>
-          <%= d.item "New hotdog", href: new_hotdog_path %\>
-          <%= d.item "Edit hotdog", href: edit_hotdog_path(1) %\>
+          <%= d.item "New hotdog", new_hotdog_path %\>
+          <%= d.item "Edit hotdog", edit_hotdog_path(1) %\>
           <%= d.separator %\>
           <%= d.destructive_item "Delete hotdog",
-            href: hotdog_path(1),
+            hotdog_path(1),
             data: { turbo_method: "delete", turbo_confirm: "Sure?" } %\>
         <% end %\>
       <% end %\>

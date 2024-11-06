@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 @theme {
+  /* We need these for Tailwind to pick up the vars */
   --color-foreground: #000;
   --color-background: #000;
+
   --color-border: #000;
   --color-ring: #000;
   --color-muted: #000;

@@ -16,7 +16,13 @@ Gem::Specification.new do |spec|
   spec.metadata["changelog_uri"] = "https://github.com/IgnitionKit/ignition_kit/releases"
 
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
-    Dir["{app,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
+    Dir[
+      "app/{helpers,components}/**/*",
+      "lib/**/*",
+      "MIT-LICENSE",
+      "Rakefile",
+      "README.md"
+    ]
   end
 
   spec.add_dependency("activesupport", ">= 7.0.0")

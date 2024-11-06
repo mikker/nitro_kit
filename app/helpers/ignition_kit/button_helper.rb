@@ -1,8 +1,12 @@
 module IgnitionKit
   module ButtonHelper
+    include Variants
+
+    automatic_variants(Button::VARIANTS, :ik_button)
+
     def ik_button(
       text = nil,
-      href: nil,
+      href = nil,
       icon: nil,
       icon_right: nil,
       size: :base,
@@ -12,6 +16,10 @@ module IgnitionKit
       &block
     )
       content = block_given? ? capture(&block) : text
+
+      if href && !href.is_a?(String)
+        href = url_for(href)
+      end
 
       render(
         IgnitionKit::Button.new(
@@ -26,18 +34,6 @@ module IgnitionKit
       ) do
         content
       end
-    end
-
-    def ik_primary_button(text = nil, **attrs, &block)
-      ik_button(text, **attrs, variant: :primary, &block)
-    end
-
-    def ik_destructive_button(text = nil, **attrs, &block)
-      ik_button(text, **attrs, variant: :destructive, &block)
-    end
-
-    def ik_ghost_button(text = nil, **attrs, &block)
-      ik_button(text, **attrs, variant: :ghost, &block)
     end
   end
 end
