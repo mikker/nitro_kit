@@ -1,4 +1,3 @@
-require "rails/generators/base"
 require "ignition_kit/schema_builder"
 
 module IgnitionKit
