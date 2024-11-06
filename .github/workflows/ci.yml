@@ -40,22 +40,22 @@ jobs:
     needs: ["test"]
     steps:
       - uses: actions/checkout@v4
-        if: github.ref == 'refs/heads/master' && job.status == 'success'
+        if: github.ref == 'refs/heads/main' && job.status == 'success'
         with:
           fetch-depth: "0"
 
       - name: Install SSH private key
         uses: webfactory/ssh-agent@v0.9.0
-        if: github.ref == 'refs/heads/master' && job.status == 'success'
+        if: github.ref == 'refs/heads/main' && job.status == 'success'
         with:
           ssh-private-key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
 
       - name: Add host to SSH known_hosts
-        if: github.ref == 'refs/heads/master' && job.status == 'success'
+        if: github.ref == 'refs/heads/main' && job.status == 'success'
         run: "mkdir -p ~/.ssh && ssh-keyscan ik.mikker.art >> ~/.ssh/known_hosts"
 
       - name: Maybe deploy
-        if: github.ref == 'refs/heads/master' && job.status == 'success'
+        if: github.ref == 'refs/heads/main' && job.status == 'success'
         run: |
           timeout 5m bash -c 'until bin/deploy-available; do
             echo "Deploys are locked (already deploying?). Trying again in 10s"
