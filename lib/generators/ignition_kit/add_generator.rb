@@ -1,8 +1,10 @@
+require "rails/generators/base"
 require "ignition_kit/schema_builder"
 
 module IgnitionKit
   class AddGenerator < Rails::Generators::Base
     argument :component_names, type: :array
+
     source_root File.expand_path("../../../", __dir__)
 
     extend SchemaBuilder
@@ -42,8 +44,8 @@ module IgnitionKit
 
       return unless gems.any?
 
-      gems.each do |component|
-        component.gems.each { |g| gem(g) }
+      gems.each do |name|
+        gem(name)
       end
 
       run("bundle install")
@@ -55,7 +57,7 @@ module IgnitionKit
       return unless modules.any?
 
       if importmaps?
-        run("bin/importmap pin #{component.modules.join(" ")}")
+        run("bin/importmap pin #{modules.join(" ")}")
       else
         say("oh hai npm/yarn/bun")
       end
@@ -64,7 +66,13 @@ module IgnitionKit
     private
 
     def components
-      component_names.map do |name|
+      list = component_names
+
+      if list == ["all"]
+        list = SCHEMA.all
+      end
+
+      list.map do |name|
         unless component = SCHEMA[name.to_sym]
           raise "Unknown component `#{name}'"
         end

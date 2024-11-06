@@ -34,6 +34,10 @@ module IgnitionKit
       def [](key)
         @schema[key]
       end
+
+      def all
+        @schema.keys.map(&:to_s)
+      end
     end
 
     def build_schema(&block)
