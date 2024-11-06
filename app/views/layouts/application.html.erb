@@ -31,30 +31,65 @@
   </head>
 
   <body>
-    <main class="flex" data-controller="sidebar">
-      <section class="absolute top-0 bottom-0 left-0 p-5 w-64 border-r shadow-md transition-transform -translate-x-64 md:relative md:w-1/4 md:shadow-none md:translate-x-0 bg-background shrink" data-sidebar-target="navigation">
+    <main class="flex" data-controller="sidebar" data-turbo-permanent>
+      <div data-sidebar-target="backdrop" class="fixed inset-0 bg-black/20 backdrop-blur-sm opacity-0 transition-opacity duration-300 md:hidden pointer-events-none"></div>
+      <section 
+        class="fixed overflow-y-auto top-0 bottom-0 left-0 p-5 w-64 border-r shadow-md transition-transform -translate-x-64 md:relative md:w-1/4 md:shadow-none md:translate-x-0 bg-background shrink" 
+        data-sidebar-target="navigation"
+        role="navigation"
+        aria-label="Main navigation"
+        aria-hidden="true"
+        aria-expanded="false"
+      >
         <div class="">
-          <%= ik_ghost_button(icon: "x", data: { action: "sidebar#close" }) %>
+          <%= ik_ghost_button(
+            icon: "x",
+            data: { action: "sidebar#close" },
+            aria: { label: "Close navigation menu" }
+          ) %>
         </div>
-        <ul class="list-inside space-y-2 list list-disc-1 [&_a]:text-blue-500 [&_a]:underline">
-          <% %w[
-            badge
-            button
-            card
-            checkbox
-            dropdown
-            form
-            icon
-            radio
-            toggle
-          ].each do |component| %>
-            <li><%= link_to component.titlecase, component_path(component) %></li>
-          <% end %>
-        </ul>
+        <nav>
+          <ul class="" role="menu">
+            <% %w[
+              badge
+              button
+              card
+              checkbox
+              dropdown
+              form
+              icon
+              radio
+              toggle
+            ].each do |component| %>
+              <% is_current_page = current_page?(component_path(component)) %>
+              <li role="none">
+                <%= link_to component.titlecase, 
+                    component_path(component),
+                    role: "menuitem",
+                    aria: { current: is_current_page ? "page" : nil },
+                    class: class_names(
+                      "block p-2 font-semibold hover:text-primary rounded-md hover:text-foreground",
+                      is_current_page ? "text-foreground" : "text-muted-foreground/80"
+                    ),
+                    data: { action: "sidebar#close" }
+                %>
+              </li>
+            <% end %>
+          </ul>
+        </nav>
       </section>
       <section class="flex-1">
         <div class="p-4 md:hidden">
-          <%= ik_button(icon: "menu", data: { action: "sidebar#open" }) %>
+          <%= ik_button(
+            icon: "menu",
+            data: { action: "sidebar#open" },
+            aria: { 
+              label: "Open navigation menu",
+              expanded: false,
+              controls: "navigation-menu",
+              haspopup: "menu"
+            }
+          ) %>
         </div>
         <%= yield %>
       </section>
