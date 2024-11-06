@@ -2,21 +2,35 @@ module IgnitionKit
   class Button < Component
     BASE = [
       "inline-flex items-center shrink-0 justify-center rounded-md border gap-2 font-medium",
+      # Disabled
+      "disabled:opacity-70 disabled:pointer-events-none",
       # Focus
-      "focus:outline-none focus:ring-[3px] focus:ring-offset-2 focus:ring-ring",
-
+      "focus:outline-none focus:ring-[3px] focus:ring-offset-2 focus:ring-ring ring-offset-background",
       # Icon
       "[&_svg]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-
-      # If icon alone, make square
+      # If icon only, make square
       "[&_svg:first-child:last-child]:-mx-2"
     ].freeze
 
     VARIANTS = {
-      default: ["bg-background text-foreground border-border"],
-      primary: ["bg-primary text-white dark:text-zinc-950 border-primary"],
-      destructive: ["bg-destructive text-white border-destructive"],
-      ghost: ["bg-transparent text-foreground border-transparent"]
+      default: [
+        "bg-background text-foreground",
+        "hover:bg-zinc-50 dark:hover:bg-zinc-900"
+      ],
+      primary: [
+        "bg-primary text-white dark:text-zinc-950 border-primary",
+        "hover:bg-primary/90 dark:hover:bg-primary/90"
+      ],
+      destructive: [
+        "bg-destructive text-white border-destructive",
+        "hover:bg-destructive/90 dark:hover:bg-destructive/90",
+        "disabled:text-white/80"
+      ],
+      ghost: [
+        "bg-transparent text-foreground border-transparent",
+        "hover:bg-zinc-50 dark:hover:bg-zinc-900",
+        "disabled:text-muted-foreground"
+      ]
     }.freeze
 
     SIZES = {

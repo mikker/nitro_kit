@@ -33,7 +33,7 @@
 
   @media (prefers-color-scheme: dark) {
     :root {
-      --color-foreground: var(--color-zinc-50);
+      --color-foreground: var(--color-zinc-100);
       --color-background: var(--color-zinc-950);
 
       --color-border: var(--color-zinc-700);
