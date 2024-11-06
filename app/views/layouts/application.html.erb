@@ -31,8 +31,11 @@
   </head>
 
   <body>
-    <main class="flex">
-      <section class="p-5 w-1/4 shrink">
+    <main class="flex" data-controller="sidebar">
+      <section class="absolute top-0 bottom-0 left-0 p-5 w-64 border-r shadow-md transition-transform -translate-x-64 md:relative md:w-1/4 md:shadow-none md:translate-x-0 bg-background shrink" data-sidebar-target="navigation">
+        <div class="">
+          <%= ik_ghost_button(icon: "x", data: { action: "sidebar#close" }) %>
+        </div>
         <ul class="list-inside space-y-2 list list-disc-1 [&_a]:text-blue-500 [&_a]:underline">
           <% %w[
             badge
@@ -50,6 +53,9 @@
         </ul>
       </section>
       <section class="flex-1">
+        <div class="p-4 md:hidden">
+          <%= ik_button(icon: "menu", data: { action: "sidebar#open" }) %>
+        </div>
         <%= yield %>
       </section>
     </main>
