@@ -52,14 +52,9 @@ jobs:
 
       - name: Add host to SSH known_hosts
         if: github.ref == 'refs/heads/main' && job.status == 'success'
-        run: "mkdir -p ~/.ssh && ssh-keyscan ik.mikker.art >> ~/.ssh/known_hosts"
+        run: "mkdir -p ~/.ssh && ssh-keyscan ${{ secret.DOKKU_SERVER_HOST }} >> ~/.ssh/known_hosts"
 
       - name: Maybe deploy
         if: github.ref == 'refs/heads/main' && job.status == 'success'
         run: |
-          timeout 5m bash -c 'until bin/deploy-available; do
-            echo "Deploys are locked (already deploying?). Trying again in 10s"
-            sleep 10
-          done'
-
-          git push dokku@ik.mikker.art:ik
+          git push dokku@${{ secret.DOKKU_SERVER_HOST }}:ik
