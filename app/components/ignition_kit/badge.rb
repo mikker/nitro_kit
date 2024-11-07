@@ -7,9 +7,9 @@ module IgnitionKit
       outline: "border"
     }
 
-    SIZES = { 
+    SIZES = {
       sm: "text-xs px-1.5 py-0.5",
-      md: "text-sm px-2 py-0.5",
+      md: "text-sm px-2 py-0.5"
     }
 
     def initialize(variant: :default, size: :md, **attrs)

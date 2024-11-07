@@ -12,8 +12,7 @@ gem "turbo-rails"
 gem "stimulus-rails"
 gem "lucide-rails"
 gem "rouge"
-
-gem "solid_cable"
+gem "commonmarker"
 
 gem "bootsnap", require: false
 gem "kamal", require: false
@@ -25,6 +24,7 @@ group :development, :test do
 end
 
 group :development do
+  gem "solid_cable"
   gem "hotwire-livereload"
   gem "listen"
 end

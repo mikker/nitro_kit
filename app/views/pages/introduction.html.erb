@@ -1,5 +1,49 @@
 <%= component_page do %>
-  <header class="text-center">
-    <h1 class="text-5xl font-black">Ignition Kit</h1>
+  <header class="flex flex-col gap-0 justify-center items-center py-8">
+    <div class="leading-loose text-center">
+      <h1 class="text-5xl font-black">Nitro Kit</h1>
+      <h2 class="font-bold">for
+        <span class="text-[#d20001]">Ruby on Rails</span></h2>
+    </div>
+    <%= image_tag "hotwheels-filled.webp", class: "max-w-96 rounded-4xl -mt-8" %>
   </header>
+
+  <%= section(class: "prose") do %>
+    <p><strong>Nitro Kit is a set of generic UI components</strong> to help you build your Ruby
+      on Rails application.</p>
+
+    <p>Rather than being fancy it is <strong>purposefully modest</strong>. Instead of giving you
+      a
+      <em>black box</em>
+      UI kit, it is provided as a bunch of generators that give you a starting
+      point to build your own components.</p>
+
+    <p>Easy to customize, accessible, Rails native.</p>
+
+    <h2>Tech</h2>
+
+    <ol>
+      <li><%= link_to "Ruby on Rails", "https://rubyonrails.org" %>
+      <%= ik_badge ">7.0", size: :sm %></li>
+        <ul>
+          <li>From one person framework to IPO. Unrivaled productivity. You know
+            and love it.</li>
+        </ul></li>
+      <li><%= link_to "Tailwind CSS", "https://tailwindcss.com" %>
+        <%= ik_badge "V4", size: :sm %></li>
+    </ol>
+
+    <h2>Principles</h2>
+
+    <ol>
+      <li>Be Rails native</li>
+      <li>Convention over configuration</li>
+      <li>Don't be fancy for the sake of being fancy</li>
+      <li>Easy to install, easy to use</li>
+      <li>Use as few dependencies as possible</li>
+      <li>Allow modification (micro and macro)</li>
+      <li>...</li>
+    </ol>
+
+  <% end %>
 <% end %>

@@ -13,8 +13,8 @@ module ApplicationHelper
     tag.p(class: "text-lg text-gray-600 dark:text-gray-400 mb-6") { text }
   end
 
-  def section
-    tag.div(class: "mt-8 space-y-4") { yield }
+  def section(**attrs)
+    tag.div(**attrs, class: class_names("mt-8 space-y-4", attrs[:class])) { yield }
   end
 
   def section_title(text)
@@ -74,5 +74,16 @@ module ApplicationHelper
             end
         )
       end
+  end
+
+  def markdown(str)
+    Commonmarker
+      .to_html(
+        str.strip_heredoc,
+        options: {
+          parse: {smart: true}
+        }
+      )
+      .html_safe
   end
 end

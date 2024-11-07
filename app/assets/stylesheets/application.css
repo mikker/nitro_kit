@@ -58,6 +58,62 @@
   }
 }
 
+@layer components {
+  .container {
+    @apply mx-auto max-w-6xl;
+  }
+
+  .prose {
+  }
+
+  .prose a {
+    @apply text-primary underline hover:no-underline;
+  }
+
+  .prose p,
+  .prose ul,
+  .prose ol,
+  .prose blockquote,
+  .prose pre,
+  .prose table {
+    @apply mb-6;
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    @apply font-bold;
+  }
+
+  .prose ul,
+  .prose ol {
+    @apply pl-6;
+  }
+
+  .prose ul li,
+  .prose ol li {
+    @apply mb-2;
+  }
+
+  .prose ul {
+    @apply list-disc;
+  }
+
+  .prose ol {
+    @apply list-decimal;
+  }
+
+  .prose ul ul,
+  .prose ul ol,
+  .prose ol ul,
+  .prose ol ol {
+    @apply mt-2;
+  }
+}
+
 @layer utilities {
   .debug,
   .debug * {
