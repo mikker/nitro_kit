@@ -2,8 +2,8 @@
 # check=error=true
 
 # This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
-# docker build -t ignition_kit .
-# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name ignition_kit ignition_kit
+# docker build -t nitro_kit .
+# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name nitro_kit nitro_kit
 
 # For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
 
@@ -40,8 +40,8 @@ RUN curl -fsSL https://bun.sh/install | bash -s -- "bun-v${BUN_VERSION}"
 
 
 # Install application gems
-COPY Gemfile Gemfile.lock ignition_kit.gemspec ./
-COPY lib/ignition_kit/version.rb lib/ignition_kit/version.rb
+COPY Gemfile Gemfile.lock nitro_kit.gemspec ./
+COPY lib/nitro_kit/version.rb lib/nitro_kit/version.rb
 RUN bundle install && \
   rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
   bundle exec bootsnap precompile --gemfile

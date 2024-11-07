@@ -4,7 +4,7 @@
   <% @post = Post.new(title: nil).tap { |post| post.valid? } %>
 
   <%= example do %>
-    <%= form_with model: @post, url: request.path, builder: IgnitionKit::FormBuilder, html: { class: "w-[320px]" } do |f| %>
+    <%= form_with model: @post, url: request.path, builder: NitroKit::FormBuilder, html: { class: "w-[320px]" } do |f| %>
       <%= f.fieldset do %>
         <%= f.field :title %>
 

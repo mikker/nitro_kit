@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ignition_kit (0.1.0)
+    nitro_kit (0.1.0)
       activesupport (>= 7.0.0)
       phlex-rails (>= 2.0.0.beta2)
       tailwind_merge
@@ -352,12 +352,12 @@ DEPENDENCIES
   commonmarker
   cssbundling-rails
   hotwire-livereload
-  ignition_kit!
   image_processing (~> 1.2)
   importmap-rails
   kamal
   listen
   lucide-rails
+  nitro_kit!
   propshaft
   puma (>= 5.0)
   rails (~> 8.0.0.rc1)
