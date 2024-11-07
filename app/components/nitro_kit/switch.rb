@@ -48,7 +48,7 @@ module NitroKit
         **attrs,
         type: "button",
         class: merge([BUTTON, SIZE[size], attrs[:class]]),
-        data: data_merge(attrs[:data], {controller: "nk--switch", action: "nk--switch#switch"}),
+        data: data_merge(attrs[:data], {controller: "nk--switch", action: "nk--switch#toggle"}),
         role: "switch",
         aria: {checked: checked.to_s}
       ) do

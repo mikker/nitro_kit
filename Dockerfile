@@ -1,13 +1,6 @@
 # syntax=docker/dockerfile:1
 # check=error=true
 
-# This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
-# docker build -t nitro_kit .
-# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name nitro_kit nitro_kit
-
-# For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
-
-# Make sure RUBY_VERSION matches the Ruby version in .ruby-version
 ARG RUBY_VERSION=3.3.5
 FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
@@ -33,11 +26,6 @@ RUN apt-get update -qq && \
   apt-get install --no-install-recommends -y build-essential git pkg-config unzip && \
   rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-# ENV BUN_INSTALL=/usr/local/bun
-# ENV PATH=/usr/local/bun/bin:$PATH
-# ARG BUN_VERSION=1.1.33
-# RUN curl -fsSL https://bun.sh/install | bash -s -- "bun-v${BUN_VERSION}"
-
 
 # Install application gems
 COPY Gemfile Gemfile.lock nitro_kit.gemspec ./
@@ -46,10 +34,6 @@ RUN bundle install && \
   rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
   bundle exec bootsnap precompile --gemfile
 RUN rm -rf lib/
-
-# Install node modules
-# COPY package.json ./
-# RUN bun install --frozen-lockfile
 
 # Copy application code
 COPY . .

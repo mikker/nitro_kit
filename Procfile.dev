@@ -1,2 +1,2 @@
-web: env RUBY_DEBUG_OPEN=true bin/rails server
-css: bun run build:css --watch
+web: env RUBY_DEBUG_OPEN=true bin/rails server -p 3030
+css: bin/rails tailwindcss:watch

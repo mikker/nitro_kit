@@ -21,7 +21,7 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <style>
       <% theme = Rouge::Themes::Github %>
       <%= theme.mode(:light).render(scope: '.highlight') %>
