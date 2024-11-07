@@ -3,25 +3,79 @@
 
   <div class="space-y-4">
     <%= example(class: "flex-col") do %>
-      <%= ik_accordion do |accordion| %>
-        <%= accordion.item "Item 1" do %>
-          <p>Content</p>
+      <%= ik_accordion(class: "w-full max-w-md") do |accordion| %>
+        <%= accordion.item do %>
+          <%= accordion.trigger "Item 1" %>
+          <%= accordion.content do %>
+            <p>Content</p>
+          <% end %>
         <% end %>
-        <%= accordion.item "Item 2" do %>
-          <p>Content</p>
+        <%= accordion.item do %>
+          <%= accordion.trigger "Item 2" %>
+          <%= accordion.content do %>
+            <p>Content</p>
+          <% end %>
         <% end %>
-        <%= accordion.item "Item 3" do %>
-          <p>Content</p>
+        <%= accordion.item do %>
+          <%= accordion.trigger "Item 2" %>
+          <%= accordion.content do %>
+            <p>Content</p>
+          <% end %>
         <% end %>
       <% end %>
     <% end %>
 
     <%= code_example %{
     <%= ik_accordion do |accordion| %\>
-      <%= accordion.item "Item 1" do %\>
-        <p>Content</p>
+      <%= accordion.item do %\>
+        <%= accordion.trigger "Item 1" %\>
+        <%= accordion.content do %\>
+          <p>Content</p>
+        <% end %\>
       <% end %\>
-    <% end e\>
+      <%= accordion.item do %\>
+        <%= accordion.trigger "Item 2" %\>
+        <%= accordion.content do %\>
+          <p>Content</p>
+        <% end %\>
+      <% end %\>
+      <%= accordion.item do %\>
+        <%= accordion.trigger "Item 3" %\>
+        <%= accordion.content do %\>
+          <p>Content</p>
+        <% end %\>
+      <% end %\>
+    <% end %\>
+    } %>
+
+    <%= example(class: "flex-col") do %>
+      <%= ik_accordion(class: "w-full max-w-md") do |accordion| %>
+        <%= accordion.item do %>
+          <%= accordion.trigger(class: "flex items-center gap-2 text-orange-500") do %>
+            <%= ik_icon("star") %>
+            <span>Custom trigger item 3</span>
+            <%= ik_badge("OMG")%>
+          <% end %>
+          <%= accordion.content do %>
+            <p>Content</p>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <%= code_example %{
+    <%= ik_accordion do |accordion| %\>
+      <%= accordion.item do %\>
+        <%= accordion.trigger do %\>
+          <%= ik_icon("star") %\>
+          <span>Custom trigger</span>
+          <%= ik_badge("OMG") %\>
+        <% end %\>
+        <%= accordion.content do %\>
+          <p>Content</p>
+        <% end %\>
+      <% end %\>
+    <% end %\>
     } %>
   </div>
 <% end %>

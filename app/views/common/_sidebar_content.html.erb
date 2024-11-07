@@ -2,48 +2,24 @@
   <nav class="space-y-4">
     <ul role="menu">
       <% %w[install getting_started].each do |page| %>
-        <% is_current_page = current_page?(page_path(page)) %>
-        <li role="none">
-          <%= link_to page.titlecase,
-            page_path(page),
-            role: "menuitem",
-            aria: { current: is_current_page ? "page" : nil },
-            class: class_names(
-              "block p-2 font-semibold hover:text-primary rounded-md hover:text-foreground",
-              is_current_page ? "text-foreground" : "text-muted-foreground/80"
-            ),
-            data: { action: "sidebar#close" }
-          %>
-        </li>
+        <%= render "common/sidebar_link", page: %>
       <% end %>
     </ul>
     <ul class="" role="menu">
       <% %w[
-      accordion
-      badge
-      button
-      card
-      checkbox
-      dropdown
-      form
-      icon
-      radio
-      toggle
+        accordion
+        badge
+        button
+        card
+        checkbox
+        dropdown
+        form
+        icon
+        radio
+        toggle
       ].each do |component| %>
-      <% is_current_page = current_page?(page_path(component)) %>
-      <li role="none">
-        <%= link_to component.titlecase,
-          page_path(component),
-          role: "menuitem",
-          aria: { current: is_current_page ? "page" : nil },
-          class: class_names(
-            "block p-2 font-semibold hover:text-primary rounded-md hover:text-foreground",
-            is_current_page ? "text-foreground" : "text-muted-foreground/80"
-          ),
-          data: { action: "sidebar#close" }
-        %>
-      </li>
-    <% end %>
+        <%= render "common/sidebar_link", page: component %>
+      <% end %>
     </ul>
   </nav>
 </div>

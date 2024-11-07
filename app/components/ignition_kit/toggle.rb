@@ -48,7 +48,7 @@ module IgnitionKit
         **attrs,
         type: "button",
         class: merge([BUTTON, SIZE[size], attrs[:class]]),
-        data: {controller: "ik--toggle", action: "ik--toggle#toggle"},
+        data: data_merge(attrs[:data], {controller: "ik--toggle", action: "ik--toggle#toggle"}),
         role: "switch",
         aria: {checked: checked.to_s}
       ) do

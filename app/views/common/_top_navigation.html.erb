@@ -9,9 +9,16 @@
   <div class="flex gap-1 items-center -mr-3">
     <%= ik_ghost_button("Docs", root_path, class: "font-bold") %>
     <%= ik_ghost_button(root_path, class: "font-bold") do %>
-      <span>Pro components</span>
-      <%= ik_badge("Premium", size: :sm, class: "border-green-500 bg-gradient-to-tr from-green-200 via-yellow-100  to-green-200 text-green-700") %>
+      <span>Premium</span>
+      <%= ik_badge("Early access", size: :sm, class: "border-orange-300 bg-gradient-to-tr from-orange-200 via-yellow-100 to-orange-200 text-orange-800/80!") %>
     <% end %>
+
+    <div class="flex items-center gap-2 mx-4">
+      <%= ik_icon("sun", size: :sm) %>
+      <%= ik_toggle "theme", data: { action: "theme#toggle", "theme-target": "toggle" } %>
+      <%= ik_icon("moon", size: :sm) %>
+    </div>
+
     <%= ik_ghost_button(
       icon: "github",
       url: "https://github.com/mikker/ignition_kit",

@@ -1,7 +1,7 @@
 module IgnitionKit
   class Button < Component
     BASE = [
-      "inline-flex items-center shrink-0 justify-center rounded-md border gap-2 font-medium",
+      "inline-flex items-center cursor-pointer shrink-0 justify-center rounded-md border gap-2 font-medium",
       # Disabled
       "disabled:opacity-70 disabled:pointer-events-none",
       # Focus

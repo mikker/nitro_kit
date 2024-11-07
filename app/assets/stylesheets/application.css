@@ -24,31 +24,29 @@
     --color-border: var(--color-zinc-300);
     --color-ring: var(--color-blue-300);
     --color-muted: var(--color-zinc-100);
-    --color-muted-foreground: var(--color-zinc-600);
+    --color-muted-foreground: var(--color-zinc-500);
     --color-primary: var(--color-zinc-900);
     --color-primary-foreground: var(--color-zinc-950);
     --color-destructive: var(--color-red-500);
     --color-destructive-foreground: var(--color-red-700);
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --color-foreground: var(--color-zinc-100);
-      --color-background: var(--color-zinc-950);
+  [data-theme="dark"] {
+    --color-foreground: var(--color-zinc-100);
+    --color-background: var(--color-zinc-950);
 
-      --color-border: var(--color-zinc-700);
-      --color-ring: var(--color-blue-700);
-      --color-muted: var(--color-zinc-800);
-      --color-muted-foreground: var(--color-zinc-400);
-      --color-primary: var(--color-zinc-50);
-      --color-primary-foreground: var(--color-white);
-      --color-destructive: var(--color-red-500);
-      --color-destructive-foreground: var(--color-red-700);
-    }
+    --color-border: var(--color-zinc-700);
+    --color-ring: var(--color-blue-700);
+    --color-muted: var(--color-zinc-800);
+    --color-muted-foreground: var(--color-zinc-400);
+    --color-primary: var(--color-zinc-50);
+    --color-primary-foreground: var(--color-white);
+    --color-destructive: var(--color-red-500);
+    --color-destructive-foreground: var(--color-red-700);
   }
 }
 
-@variant dark (&:where(.dark, .dark *));
+@variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @layer base {
   * {

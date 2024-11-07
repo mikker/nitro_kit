@@ -39,7 +39,7 @@
     <main class="flex" data-controller="sidebar">
       <div
         data-sidebar-target="backdrop"
-        class="fixed inset-0 z-40 opacity-0 transition-opacity duration-300 pointer-events-none hidden bg-black/20 backdrop-blur-sm"
+        class="hidden fixed inset-0 z-40 opacity-0 transition-opacity duration-300 pointer-events-none bg-black/20 backdrop-blur-sm"
       ></div>
       <section
         class="overflow-y-auto fixed top-0 bottom-0 left-0 z-50 w-64 border-r shadow-md transition-transform -translate-x-64 md:hidden min-h-svh bg-background"
@@ -63,7 +63,7 @@
         <%= render "common/sidebar_content" %>
       </section>
 
-      <section class="hidden md:block w-64">
+      <section class="hidden w-64 md:block">
         <%= render "common/sidebar_content" %>
       </section>
 

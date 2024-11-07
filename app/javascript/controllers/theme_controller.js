@@ -1,38 +1,45 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static mountAs = "theme";
+  static targets = ["toggle"];
 
   connect() {
     window
       .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", this.updateThemeFromSystem.bind(this));
-
-    // Check localStorage first, fallback to system preference
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      this.setTheme(savedTheme);
-    } else {
-      this.setTheme(this.systemIsDark() ? "dark" : "light");
-    }
+      .addEventListener("change", this.systemChanged.bind(this));
+    this.setTheme(this.userPreference || this.system);
   }
 
-  systemIsDark() {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  get system() {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
   }
 
-  toggle() {
-    const isDark = document.documentElement.classList.contains("dark");
-    this.setTheme(isDark ? "light" : "dark");
+  get userPreference() {
+    return localStorage.getItem("theme");
+  }
+
+  toggle(event) {
+    event.stopPropagation();
+    const theme =
+      document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    localStorage.setItem("theme", theme);
+    this.setTheme(theme);
+  }
+
+  systemChanged() {
+    if (this.userPreference) return;
+    this.setTheme(this.system);
   }
 
   setTheme(theme) {
-    localStorage.setItem("theme", theme);
+    console.log("setTheme", theme);
+    document.documentElement.dataset.theme = theme;
 
-    if (theme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
+    console.log(theme, theme === "dark");
+    if (this.hasToggleTarget) {
+      this.toggleTarget.setAttribute("aria-checked", theme === "dark");
     }
   }
 }
