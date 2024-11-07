@@ -20,7 +20,11 @@
 
     <%= ik_ghost_button root_path, class: "font-bold px-2" do %>
       <%= image_tag "ignition_kit.png", class: "h-6 block" %>
-      <span class="">Ignition Kit</span>
+      <div class="flex flex-col items-start leading-tight">
+        <span>Ignition Kit</span>
+        <span class="font-medium text-[8pt]">for
+          <span class="text-[#d20001]">Ruby on Rails</span></span>
+      </div>
     <% end %>
   </div>
 

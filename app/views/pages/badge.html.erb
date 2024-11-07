@@ -1,25 +1,29 @@
 <%= component_page do %>
-  <%= title "Badges" %>
+  <%= title "Badge" %>
+  <%= lead "Badges are used to show how fancy you are. Gold ones are the best." %>
 
-  <div class="space-y-4">
+  <%= section do %>
+    <%= section_title "Default variants" %>
     <%= example(class: "") do %>
       <%= ik_badge "Default" %>
       <%= ik_outline_badge { "Outline" } %>
     <% end %>
 
     <%= code_example %{
-    <%= ik_badge "Default" %\>
-    <%= ik_outline_badge { "Outline" } %\>
-    } %>
-  </div>
+          <%= ik_badge "Default" %\>
+          <%= ik_outline_badge { "Outline" } %\>
+          } %>
+  <% end %>
 
-  <div class="space-y-4">
+  <%= section do %>
+    <%= section_title "Sizes" %>
+
     <%= example(class: "") do %>
       <%= ik_badge "Small", size: :sm %>
     <% end %>
 
     <%= code_example %{
-    <%= ik_badge "Small", size: :sm %\>
-    } %>
-  </div>
+          <%= ik_badge "Small", size: :sm %\>
+          } %>
+  <% end %>
 <% end %>
