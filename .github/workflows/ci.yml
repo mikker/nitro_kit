@@ -57,4 +57,4 @@ jobs:
       - name: Maybe deploy
         if: github.ref == 'refs/heads/main' && job.status == 'success'
         run: |
-          git push dokku@${{ secrets.DOKKU_SERVER_HOST }}:ik
+          git push dokku@${{ secrets.DOKKU_SERVER_HOST }}:nk

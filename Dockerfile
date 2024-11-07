@@ -33,10 +33,10 @@ RUN apt-get update -qq && \
   apt-get install --no-install-recommends -y build-essential git pkg-config unzip && \
   rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-ENV BUN_INSTALL=/usr/local/bun
-ENV PATH=/usr/local/bun/bin:$PATH
-ARG BUN_VERSION=1.1.33
-RUN curl -fsSL https://bun.sh/install | bash -s -- "bun-v${BUN_VERSION}"
+# ENV BUN_INSTALL=/usr/local/bun
+# ENV PATH=/usr/local/bun/bin:$PATH
+# ARG BUN_VERSION=1.1.33
+# RUN curl -fsSL https://bun.sh/install | bash -s -- "bun-v${BUN_VERSION}"
 
 
 # Install application gems
@@ -48,8 +48,8 @@ RUN bundle install && \
 RUN rm -rf lib/
 
 # Install node modules
-COPY package.json ./
-RUN bun install --frozen-lockfile
+# COPY package.json ./
+# RUN bun install --frozen-lockfile
 
 # Copy application code
 COPY . .

@@ -4,7 +4,7 @@ gemspec
 
 gem "rails", "~> 8.0.0.rc1"
 gem "propshaft"
-gem "cssbundling-rails"
+# gem "cssbundling-rails"
 gem "sqlite3", ">= 2.1"
 gem "puma", ">= 5.0"
 gem "importmap-rails"
