@@ -21,10 +21,14 @@ export default class extends Controller {
   }
 
   toggle(event) {
+    // Prevent the toggle from toggling itself as we do it in setTheme
     event.stopPropagation();
+
     const theme =
       document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+
     localStorage.setItem("theme", theme);
+
     this.setTheme(theme);
   }
 
@@ -34,10 +38,8 @@ export default class extends Controller {
   }
 
   setTheme(theme) {
-    console.log("setTheme", theme);
     document.documentElement.dataset.theme = theme;
 
-    console.log(theme, theme === "dark");
     if (this.hasToggleTarget) {
       this.toggleTarget.setAttribute("aria-checked", theme === "dark");
     }

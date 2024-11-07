@@ -33,10 +33,10 @@
     <%= hotwire_livereload_tags if Rails.env.development? %>
   </head>
 
-  <body>
+  <body data-controller="sidebar">
     <%= render "common/top_navigation" %>
 
-    <main class="flex" data-controller="sidebar">
+    <main class="flex">
       <div
         data-sidebar-target="backdrop"
         class="hidden fixed inset-0 z-40 opacity-0 transition-opacity duration-300 pointer-events-none bg-black/20 backdrop-blur-sm"
@@ -68,20 +68,6 @@
       </section>
 
       <section class="flex-1">
-        <div class="p-4 md:hidden">
-          <%= ik_button(
-            icon: "menu",
-            data: {
-              action: "sidebar#open",
-            },
-            aria: {
-              label: "Open navigation menu",
-              expanded: false,
-              controls: "navigation-menu",
-              haspopup: "menu",
-            },
-          ) %>
-        </div>
         <%= yield %>
       </section>
     </main>

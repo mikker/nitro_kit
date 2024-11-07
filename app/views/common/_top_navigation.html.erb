@@ -1,19 +1,54 @@
 <nav
-  class="flex fixed top-0 right-0 left-0 items-center justify-between px-6 h-16 bg-background"
+  class="flex fixed top-0 right-0 left-0 justify-between items-center px-6 h-16 text-sm md:text-base bg-background"
 >
-  <%= ik_ghost_button root_path, class: "-ml-5 font-bold" do %>
-    <%= image_tag "ignition_kit.png", class: "h-6 block" %>
-    <span>Ignition Kit</span>
-  <% end %>
+  <div class="flex items-center -ml-3 grow-0">
+    <div class="md:hidden">
+      <%= ik_ghost_button(
+        icon: "menu",
+        class: "[&_svg]:size-5",
+        data: {
+          action: "sidebar#open",
+        },
+        aria: {
+          label: "Open navigation menu",
+          expanded: false,
+          controls: "navigation-menu",
+          haspopup: "menu",
+        },
+      ) %>
+    </div>
 
-  <div class="flex gap-1 items-center -mr-3">
+    <%= ik_ghost_button root_path, class: "font-bold px-2" do %>
+      <%= image_tag "ignition_kit.png", class: "h-6 block" %>
+      <span class="">Ignition Kit</span>
+    <% end %>
+  </div>
+
+  <div class="-mr-3 md:hidden">
+    <%= ik_ghost_button(root_path, class: "font-bold px-2") do %>
+      <span>Premium</span>
+      <%= ik_badge(
+        "Early access",
+        size: :sm,
+        class:
+          "border-orange-300 bg-gradient-to-tr from-orange-200 via-yellow-100 to-orange-200 text-orange-800/80!",
+      ) %>
+    <% end %>
+  </div>
+
+  <div class="hidden gap-1 items-center -mr-3 md:flex">
     <%= ik_ghost_button("Docs", root_path, class: "font-bold") %>
     <%= ik_ghost_button(root_path, class: "font-bold") do %>
       <span>Premium</span>
-      <%= ik_badge("Early access", size: :sm, class: "border-orange-300 bg-gradient-to-tr from-orange-200 via-yellow-100 to-orange-200 text-orange-800/80!") %>
+      <%= ik_badge(
+        "Early access",
+        size: :sm,
+        class:
+          "border-orange-300 bg-gradient-to-tr from-orange-200 via-yellow-100 to-orange-200 text-orange-800/80!",
+      ) %>
     <% end %>
 
-    <div class="flex items-center gap-2 mx-4">
+    <div class="flex gap-2 items-center mx-4">
       <%= ik_icon("sun", size: :sm) %>
       <%= ik_toggle "theme", data: { action: "theme#toggle", "theme-target": "toggle" } %>
       <%= ik_icon("moon", size: :sm) %>

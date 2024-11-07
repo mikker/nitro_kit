@@ -19,6 +19,9 @@ module IgnitionKit
     end
 
     def data_merge(data = {}, new_data = {})
+      return data if new_data.blank?
+      return new_data if data.blank?
+
       data.deep_merge(new_data) do |_key, old_val, new_val|
         # Put new value first so overrides can stopPropagation to old value
         [new_val, old_val].compact.join(" ")
