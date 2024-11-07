@@ -54,7 +54,7 @@
 
     <div class="flex gap-2 items-center mx-4">
       <%= ik_icon("sun", size: :sm) %>
-      <%= ik_toggle "theme", data: { action: "theme#toggle", "theme-target": "toggle" } %>
+      <%= ik_switch nil, data: { action: "theme#toggle", "theme-target": "toggle" } %>
       <%= ik_icon("moon", size: :sm) %>
     </div>
 

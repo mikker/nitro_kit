@@ -1,5 +1,5 @@
 module IgnitionKit
-  class Toggle < Component
+  class Switch < Component
     BUTTON = [
       "inline-flex items-center shrink-0",
       "bg-background rounded-full border",
@@ -48,7 +48,7 @@ module IgnitionKit
         **attrs,
         type: "button",
         class: merge([BUTTON, SIZE[size], attrs[:class]]),
-        data: data_merge(attrs[:data], {controller: "ik--toggle", action: "ik--toggle#toggle"}),
+        data: data_merge(attrs[:data], {controller: "ik--switch", action: "ik--switch#switch"}),
         role: "switch",
         aria: {checked: checked.to_s}
       ) do
