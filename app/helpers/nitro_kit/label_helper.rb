@@ -1,6 +1,6 @@
 module NitroKit
   module LabelHelper
-    def ik_label(name = nil, content_or_options = nil, options = nil, &block)
+    def nk_label(name = nil, content_or_options = nil, options = nil, &block)
       if block_given? && content_or_options.is_a?(Hash)
         options = content_or_options = content_or_options.symbolize_keys
       else

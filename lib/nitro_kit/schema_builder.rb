@@ -24,7 +24,7 @@ module NitroKit
           [
             components.map { |c| "app/components/nitro_kit/#{c}.rb" },
             helpers.map { |c| "app/helpers/nitro_kit/#{c}_helper.rb" },
-            js.map { |c| "app/javascript/controllers/ik/#{c}_controller.js" }
+            js.map { |c| "app/javascript/controllers/nk/#{c}_controller.js" }
           ].flatten,
           modules,
           gems

@@ -45,14 +45,14 @@ module ApplicationHelper
         concat(
           tag.div(class: "px-1 py-1 flex w-full") do
             concat(
-              ik_ghost_button(
+              nk_ghost_button(
                 icon: :copy,
                 size: :xs,
                 data: {copy_to_clipboard_target: "button", action: "copy-to-clipboard#copy"}
               ) { "Copy" }
             )
             concat(
-              ik_ghost_button(
+              nk_ghost_button(
                 icon: :check,
                 size: :xs,
                 data: {copy_to_clipboard_target: "successMessage"},

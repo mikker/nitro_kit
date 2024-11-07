@@ -1,6 +1,6 @@
 module NitroKit
   module RadioButtonHelper
-    def ik_radio_button(name, value, *args)
+    def nk_radio_button(name, value, *args)
       if args.length >= 3
         raise ArgumentError, "wrong number of arguments (given #{args.length + 2}, expected 2..4)"
       end
@@ -13,7 +13,7 @@ module NitroKit
       render(RadioButton.new(name, value:, name:, value:, **options))
     end
 
-    def ik_radio_group(name, **options, &block)
+    def nk_radio_group(name, **options, &block)
       render(RadioGroup.new(name, **options, &block))
     end
   end

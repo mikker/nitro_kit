@@ -1,6 +1,6 @@
 module NitroKit
   module ButtonGroupHelper
-    def ik_button_group(**attrs, &block)
+    def nk_button_group(**attrs, &block)
       render(ButtonGroup.new(**attrs), &block)
     end
   end

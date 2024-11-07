@@ -2,9 +2,9 @@ module NitroKit
   module ButtonHelper
     include Variants
 
-    automatic_variants(Button::VARIANTS, :ik_button)
+    automatic_variants(Button::VARIANTS, :nk_button)
 
-    def ik_button(
+    def nk_button(
       text_or_href = nil,
       href = nil,
       icon: nil,

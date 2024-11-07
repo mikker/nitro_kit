@@ -20,7 +20,7 @@ module NitroKit
       div(
         **attrs,
         class: merge([ITEM, class_list]),
-        data: { controller: "ik--accordion" }
+        data: { controller: "nk--accordion" }
       ) do
         yield
       end
@@ -37,8 +37,8 @@ module NitroKit
         type: "button",
         class: TRIGGER,
         data: {
-          action: "ik--accordion#toggle",
-          "ik--accordion-target": "trigger"
+          action: "nk--accordion#toggle",
+          "nk--accordion-target": "trigger"
         },
         aria: { expanded: "false", controls: "content" }
       ) do
@@ -50,7 +50,7 @@ module NitroKit
     def content(**attrs)
       div(
         class: merge(CONTENT),
-        data: { "ik--accordion-target": "content" },
+        data: { "nk--accordion-target": "content" },
         aria: { hidden: "true" }
       ) do
         div(class: "pb-4") { yield }

@@ -1,7 +1,7 @@
 module NitroKit
   module CheckboxHelper
     # Match the signature of the Rails `check_box` helper
-    def ik_checkbox(name, *args)
+    def nk_checkbox(name, *args)
       if args.length >= 4
         raise ArgumentError, "wrong number of arguments (given #{args.length + 1}, expected 1..4)"
       end

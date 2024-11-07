@@ -2,7 +2,7 @@ module NitroKit
   module Variants
     module ClassMethods
       def automatic_variants(variants, method_name)
-        _, prefix, original = method_name.match(/(ik_)(.+)/).to_a
+        _, prefix, original = method_name.match(/(nk_)(.+)/).to_a
 
         variants.each do |variant, class_name|
           variant_method_name = "#{prefix}#{variant}_#{original}"

@@ -30,14 +30,14 @@ module NitroKit
     attr_reader :placement
 
     def view_template(&block)
-      div(data: {:controller => "ik--dropdown", :"ik--dropdown-placement-value" => placement}, &block)
+      div(data: {:controller => "nk--dropdown", :"nk--dropdown-placement-value" => placement}, &block)
     end
 
     def trigger(**attrs, &block)
       class_list = "inline-block"
       data = {
-        :"ik--dropdown-target" => "trigger",
-        :action => "click->ik--dropdown#toggle",
+        :"nk--dropdown-target" => "trigger",
+        :action => "click->nk--dropdown#toggle",
         **attrs.fetch(:data, {})
       }
       div(
@@ -53,7 +53,7 @@ module NitroKit
       class_list = merge([CONTENT, attrs[:class]])
 
       data = {
-        :"ik--dropdown-target" => "content",
+        :"nk--dropdown-target" => "content",
         **attrs.fetch(:data, {})
       }
       div(

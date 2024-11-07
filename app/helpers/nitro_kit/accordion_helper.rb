@@ -1,6 +1,6 @@
 module NitroKit
   module AccordionHelper
-    def ik_accordion(**attrs, &block)
+    def nk_accordion(**attrs, &block)
       render(Accordion.new(**attrs), &block)
     end
   end

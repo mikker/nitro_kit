@@ -1,6 +1,6 @@
 module NitroKit
   module SwitchHelper
-    def ik_switch(
+    def nk_switch(
       name,
       checked: false,
       disabled: false,
