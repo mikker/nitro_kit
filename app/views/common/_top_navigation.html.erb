@@ -4,7 +4,7 @@
   >
     <div class="flex items-center -ml-3 grow-0">
       <div class="md:hidden">
-        <%= ik_ghost_button(
+        <%= nk_ghost_button(
           icon: "menu",
           class: "[&_svg]:size-5",
           data: {
@@ -19,7 +19,7 @@
         ) %>
       </div>
 
-      <%= ik_ghost_button root_path, class: "font-bold px-2" do %>
+      <%= nk_ghost_button root_path, class: "font-bold px-2" do %>
         <%= image_tag "nitro_bottle.webp", class: "h-8 block" %>
         <div class="flex flex-col items-start leading-tight">
           <span>Nitro Kit</span>
@@ -30,9 +30,9 @@
     </div>
 
     <div class="-mr-3 md:hidden">
-      <%= ik_ghost_button(root_path, class: "font-bold px-2") do %>
+      <%= nk_ghost_button(root_path, class: "font-bold px-2") do %>
         <span>Premium</span>
-        <%= ik_badge(
+        <%= nk_badge(
           "Early access",
           size: :sm,
           class:
@@ -42,10 +42,10 @@
     </div>
 
     <div class="hidden gap-1 items-center -mr-3 md:flex">
-      <%= ik_ghost_button("Docs", root_path, class: "font-bold") %>
-      <%= ik_ghost_button(root_path, class: "font-bold") do %>
+      <%= nk_ghost_button("Docs", root_path, class: "font-bold") %>
+      <%= nk_ghost_button(root_path, class: "font-bold") do %>
         <span>Premium</span>
-        <%= ik_badge(
+        <%= nk_badge(
           "Early access",
           size: :sm,
           class:
@@ -54,19 +54,19 @@
       <% end %>
 
       <div class="flex gap-2 items-center mx-4">
-        <%= ik_icon("sun", size: :sm) %>
-        <%= ik_switch nil, data: { action: "theme#toggle", "theme-target": "toggle" } %>
-        <%= ik_icon("moon", size: :sm) %>
+        <%= nk_icon("sun", size: :sm) %>
+        <%= nk_switch nil, data: { action: "theme#toggle", "theme-target": "toggle" } %>
+        <%= nk_icon("moon", size: :sm) %>
       </div>
 
-      <%= ik_ghost_button(
+      <%= nk_ghost_button(
         icon: "github",
         url: "https://github.com/mikker/nitro_kit",
         aria: {
           label: "View on GitHub",
         },
       ) %>
-      <%= ik_ghost_button(url: "https://twitter.com/mikker", aria: { label: "Follow on Twitter" }) do %>
+      <%= nk_ghost_button(url: "https://twitter.com/mikker", aria: { label: "Follow on Twitter" }) do %>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           shape-rendering="geometricPrecision"
@@ -81,7 +81,7 @@
             d="M403.229 0h78.506L310.219 196.04 512 462.799H354.002L230.261 301.007 88.669 462.799h-78.56l183.455-209.683L0 0h161.999l111.856 147.88L403.229 0zm-27.556 415.805h43.505L138.363 44.527h-46.68l283.99 371.278z"
           /></svg>
       <% end %>
-      <%= ik_ghost_button(url: "https://bsky.app/profile/mikker.dev", aria: { label: "Follow on Bluesky" }) do %>
+      <%= nk_ghost_button(url: "https://bsky.app/profile/mikker.dev", aria: { label: "Follow on Bluesky" }) do %>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           shape-rendering="geometricPrecision"

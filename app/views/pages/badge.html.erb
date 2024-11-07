@@ -5,13 +5,13 @@
   <%= section do %>
     <%= section_title "Default variants" %>
     <%= example(class: "") do %>
-      <%= ik_badge "Default" %>
-      <%= ik_outline_badge { "Outline" } %>
+      <%= nk_badge "Default" %>
+      <%= nk_outline_badge { "Outline" } %>
     <% end %>
 
     <%= code_example %{
-          <%= ik_badge "Default" %\>
-          <%= ik_outline_badge { "Outline" } %\>
+          <%= nk_badge "Default" %\>
+          <%= nk_outline_badge { "Outline" } %\>
           } %>
   <% end %>
 
@@ -19,11 +19,11 @@
     <%= section_title "Sizes" %>
 
     <%= example(class: "") do %>
-      <%= ik_badge "Small", size: :sm %>
+      <%= nk_badge "Small", size: :sm %>
     <% end %>
 
     <%= code_example %{
-          <%= ik_badge "Small", size: :sm %\>
+          <%= nk_badge "Small", size: :sm %\>
           } %>
   <% end %>
 <% end %>

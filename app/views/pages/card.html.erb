@@ -4,14 +4,14 @@
   <div class="space-y-4">
     <%= example do %>
       <div class="flex flex-wrap gap-2">
-        <%= ik_card(class: "w-[320px]") do |c| %>
+        <%= nk_card(class: "w-[320px]") do |c| %>
           <%= c.title { "Save your changes" } %>
           <%= c.body do %>
             <div>This will forever set it in stone.</div>
           <% end %>
           <%= c.footer(class: "justify-end") do %>
-            <%= ik_button "Cancel" %>
-            <%= ik_primary_button "Save", icon: "check" %>
+            <%= nk_button "Cancel" %>
+            <%= nk_primary_button "Save", icon: "check" %>
           <% end %>
         <% end %>
       </div>

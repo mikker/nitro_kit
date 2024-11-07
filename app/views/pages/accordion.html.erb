@@ -3,7 +3,7 @@
 
   <div class="space-y-4">
     <%= example(class: "flex-col") do %>
-      <%= ik_accordion(class: "w-full max-w-md") do |accordion| %>
+      <%= nk_accordion(class: "w-full max-w-md") do |accordion| %>
         <%= accordion.item do %>
           <%= accordion.trigger "Item 1" %>
           <%= accordion.content do %>
@@ -26,7 +26,7 @@
     <% end %>
 
     <%= code_example %{
-    <%= ik_accordion do |accordion| %\>
+    <%= nk_accordion do |accordion| %\>
       <%= accordion.item do %\>
         <%= accordion.trigger "Item 1" %\>
         <%= accordion.content do %\>
@@ -49,12 +49,12 @@
     } %>
 
     <%= example(class: "flex-col") do %>
-      <%= ik_accordion(class: "w-full max-w-md") do |accordion| %>
+      <%= nk_accordion(class: "w-full max-w-md") do |accordion| %>
         <%= accordion.item do %>
           <%= accordion.trigger(class: "flex items-center gap-2 text-orange-500") do %>
-            <%= ik_icon("star") %>
+            <%= nk_icon("star") %>
             <span>Custom trigger item 3</span>
-            <%= ik_badge("OMG")%>
+            <%= nk_badge("OMG")%>
           <% end %>
           <%= accordion.content do %>
             <p>Content</p>
@@ -64,12 +64,12 @@
     <% end %>
 
     <%= code_example %{
-    <%= ik_accordion do |accordion| %\>
+    <%= nk_accordion do |accordion| %\>
       <%= accordion.item do %\>
         <%= accordion.trigger do %\>
-          <%= ik_icon("star") %\>
+          <%= nk_icon("star") %\>
           <span>Custom trigger</span>
-          <%= ik_badge("OMG") %\>
+          <%= nk_badge("OMG") %\>
         <% end %\>
         <%= accordion.content do %\>
           <p>Content</p>

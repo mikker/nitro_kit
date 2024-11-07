@@ -5,9 +5,9 @@
     <h3>Dropdown builder</h3>
 
     <%= example do %>
-      <%= ik_dropdown do |d| %>
+      <%= nk_dropdown do |d| %>
         <%= d.trigger do %>
-          <%= ik_button "Open" %>
+          <%= nk_button "Open" %>
         <% end %>
         <%= d.content do %>
           <%= d.title "My hotdogs" %>
@@ -21,9 +21,9 @@
     <% end %>
 
     <%= code_example %{
-      <%= ik_dropdown do |d| %\>
+      <%= nk_dropdown do |d| %\>
         <%= d.trigger do %\>
-          <%= ik_button "Open" %\>
+          <%= nk_button "Open" %\>
         <% end %\>
         <%= d.content do %\>
           <%= d.title "My hotdogs" %\>

@@ -4,23 +4,23 @@
   <div class="space-y-4">
     <h2>Default</h2>
     <%= example do %>
-      <%= ik_switch :name %>
-      <%= ik_switch :name, checked: true %>
+      <%= nk_switch :name %>
+      <%= nk_switch :name, checked: true %>
     <% end %>
 
     <%= code_example %{
-                  <%= ik_switch :name %\>
-                  <%= ik_switch :name, checked: true %\>
+                  <%= nk_switch :name %\>
+                  <%= nk_switch :name, checked: true %\>
                 } %>
 
     <h2>Sizes</h2>
     <%= example do %>
-      <%= ik_switch(:name, size: :sm) %>
-      <%= ik_switch(:name, size: :sm, checked: true) %>
+      <%= nk_switch(:name, size: :sm) %>
+      <%= nk_switch(:name, size: :sm, checked: true) %>
     <% end %>
 
     <%= code_example %{
-                  <%= ik_switch(:name, size: :sm) %\>
+                  <%= nk_switch(:name, size: :sm) %\>
                 } %>
   </div>
 <% end %>
