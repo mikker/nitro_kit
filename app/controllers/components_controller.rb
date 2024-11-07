@@ -1,5 +1,2 @@
-class ComponentsController < ApplicationController
-  def show
-    render(params[:id])
-  end
+class PagesController < ApplicationController
 end

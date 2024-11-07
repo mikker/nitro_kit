@@ -1,6 +1,6 @@
 module ApplicationHelper
   def component_page(&block)
-    tag.div(class: "py-12 px-5") do
+    tag.div(class: "p-5") do
       capture(&block)
     end
   end

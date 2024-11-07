@@ -2,7 +2,10 @@
 <html data-controller="theme">
   <head>
     <title><%= content_for(:title) || "Ignition Kit" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1"
+    >
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
@@ -31,64 +34,52 @@
   </head>
 
   <body>
-    <main class="flex" data-controller="sidebar" data-turbo-permanent>
-      <div data-sidebar-target="backdrop" class="fixed inset-0 z-40 opacity-0 transition-opacity duration-300 pointer-events-none md:hidden bg-black/20 backdrop-blur-sm"></div>
-      <section 
-        class="overflow-y-auto fixed top-0 bottom-0 left-0 z-50 p-5 w-64 border-r shadow-md transition-transform -translate-x-64 md:relative md:w-1/4 md:shadow-none md:translate-x-0 bg-background shrink" 
+    <%= render "common/top_navigation" %>
+
+    <main class="flex" data-controller="sidebar">
+      <div
+        data-sidebar-target="backdrop"
+        class="fixed inset-0 z-40 opacity-0 transition-opacity duration-300 pointer-events-none hidden bg-black/20 backdrop-blur-sm"
+      ></div>
+      <section
+        class="overflow-y-auto fixed top-0 bottom-0 left-0 z-50 w-64 border-r shadow-md transition-transform -translate-x-64 md:hidden min-h-svh bg-background"
         data-sidebar-target="navigation"
         role="navigation"
         aria-label="Main navigation"
         aria-hidden="true"
         aria-expanded="false"
       >
-        <div class="">
+        <div class="md:hidden">
           <%= ik_ghost_button(
             icon: "x",
-            data: { action: "sidebar#close" },
-            aria: { label: "Close navigation menu" }
+            data: {
+              action: "sidebar#close",
+            },
+            aria: {
+              label: "Close navigation menu",
+            },
           ) %>
         </div>
-        <nav>
-          <ul class="" role="menu">
-            <% %w[
-              badge
-              button
-              card
-              checkbox
-              dropdown
-              form
-              icon
-              radio
-              toggle
-            ].each do |component| %>
-              <% is_current_page = current_page?(component_path(component)) %>
-              <li role="none">
-                <%= link_to component.titlecase, 
-                    component_path(component),
-                    role: "menuitem",
-                    aria: { current: is_current_page ? "page" : nil },
-                    class: class_names(
-                      "block p-2 font-semibold hover:text-primary rounded-md hover:text-foreground",
-                      is_current_page ? "text-foreground" : "text-muted-foreground/80"
-                    ),
-                    data: { action: "sidebar#close" }
-                %>
-              </li>
-            <% end %>
-          </ul>
-        </nav>
+        <%= render "common/sidebar_content" %>
       </section>
+
+      <section class="hidden md:block w-64">
+        <%= render "common/sidebar_content" %>
+      </section>
+
       <section class="flex-1">
         <div class="p-4 md:hidden">
           <%= ik_button(
             icon: "menu",
-            data: { action: "sidebar#open" },
-            aria: { 
+            data: {
+              action: "sidebar#open",
+            },
+            aria: {
               label: "Open navigation menu",
               expanded: false,
               controls: "navigation-menu",
-              haspopup: "menu"
-            }
+              haspopup: "menu",
+            },
           ) %>
         </div>
         <%= yield %>

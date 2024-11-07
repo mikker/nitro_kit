@@ -1,0 +1,27 @@
+<%= component_page do %>
+  <%= title "Accordions" %>
+
+  <div class="space-y-4">
+    <%= example(class: "flex-col") do %>
+      <%= ik_accordion do |accordion| %>
+        <%= accordion.item "Item 1" do %>
+          <p>Content</p>
+        <% end %>
+        <%= accordion.item "Item 2" do %>
+          <p>Content</p>
+        <% end %>
+        <%= accordion.item "Item 3" do %>
+          <p>Content</p>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <%= code_example %{
+    <%= ik_accordion do |accordion| %\>
+      <%= accordion.item "Item 1" do %\>
+        <p>Content</p>
+      <% end %\>
+    <% end e\>
+    } %>
+  </div>
+<% end %>
