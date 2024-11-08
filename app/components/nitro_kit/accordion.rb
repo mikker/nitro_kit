@@ -14,13 +14,13 @@ module NitroKit
       "[&[aria-hidden='true']]:h-0 [&[aria-hidden='false']]:h-auto"
     ].freeze
 
-    ARROW =  "transition-transform duration-200 text-muted-foreground group-hover/accordion-trigger:text-primary"
+    ARROW = "transition-transform duration-200 text-muted-foreground group-hover/accordion-trigger:text-primary"
 
     def view_template
       div(
         **attrs,
-        class: merge([ITEM, class_list]),
-        data: { controller: "nk--accordion" }
+        class: merge(ITEM, attrs[:class]),
+        data: {controller: "nk--accordion"}
       ) do
         yield
       end
@@ -37,24 +37,24 @@ module NitroKit
         type: "button",
         class: TRIGGER,
         data: {
-          action: "nk--accordion#toggle",
-          "nk--accordion-target": "trigger"
+          :action => "nk--accordion#toggle",
+          :"nk--accordion-target" => "trigger"
         },
-        aria: { expanded: "false", controls: "content" }
+        aria: {expanded: "false", controls: "content"}
       ) do
         div(**attrs) { text || yield }
-        render NitroKit::Icon.new(name: "chevron-down", class: ARROW)
+        render(NitroKit::Icon.new(name: "chevron-down", class: ARROW))
       end
     end
 
     def content(**attrs)
       div(
         class: merge(CONTENT),
-        data: { "nk--accordion-target": "content" },
-        aria: { hidden: "true" }
+        data: {:"nk--accordion-target" => "content"},
+        aria: {hidden: "true"}
       ) do
         div(class: "pb-4") { yield }
       end
     end
   end
-end 
+end

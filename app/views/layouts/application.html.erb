@@ -13,8 +13,17 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+    <link rel="preconnect" href="https://rsms.me/">
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <style>
+      :root {
+        font-family: Inter, sans-serif;
+        font-feature-settings: 'liga' 1, 'calt' 1; /* fix for Chrome */
+      }
+      @supports (font-variation-settings: normal) {
+        :root { font-family: InterVariable, sans-serif; }
+      }
+    </style>
 
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
@@ -25,7 +34,7 @@
     <style>
       <% theme = Rouge::Themes::Github %>
       <%= theme.mode(:light).render(scope: '.highlight') %>
-      <%= theme.mode(:dark).render(scope: '.dark .highlight') %>
+      <%= theme.mode(:dark).render(scope: '[data-theme=dark] .highlight') %>
     </style>
 
     <%= javascript_importmap_tags %>
@@ -36,7 +45,7 @@
   <body data-controller="sidebar">
     <%= render "common/top_navigation" %>
 
-    <main class="container flex">
+    <main class="container flex relative">
       <div
         data-sidebar-target="backdrop"
         class="hidden fixed inset-0 z-40 opacity-0 transition-opacity duration-300 pointer-events-none bg-black/20 backdrop-blur-sm"
@@ -63,12 +72,22 @@
         <%= render "common/sidebar_content" %>
       </section>
 
-      <section class="hidden w-64 md:block">
+      <section
+        class="hidden overflow-y-auto sticky top-16 w-64 md:block max-h-[calc(100dvh-theme(spacing.16))]"
+      >
         <%= render "common/sidebar_content" %>
       </section>
 
       <section class="flex-1">
         <%= yield %>
+
+        <div class="16"></div>
+
+        <footer class="py-12 text-xs font-medium text-center text-muted-foreground">
+          <p>
+            Nitro Kit by mikker
+          </p>
+        </footer>
       </section>
     </main>
   </body>

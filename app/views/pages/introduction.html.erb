@@ -1,49 +1,66 @@
 <%= component_page do %>
   <header class="flex flex-col gap-0 justify-center items-center py-8">
-    <div class="leading-loose text-center">
-      <h1 class="text-5xl font-black">Nitro Kit</h1>
-      <h2 class="font-bold">for
+    <div class="leading-tight text-center">
+      <h1 class="text-8xl font-black tracking-tight">Nitro Kit</h1>
+      <h2 class="text-xl font-bold">for
         <span class="text-[#d20001]">Ruby on Rails</span></h2>
     </div>
-    <%= image_tag "hotwheels-filled.webp", class: "max-w-96 rounded-4xl -mt-8" %>
+    <%= image_tag "hotwheels-filled.webp", class: "max-w-96 rounded-4xl -mt-6" %>
   </header>
 
   <%= section(class: "prose") do %>
-    <p><strong>Nitro Kit is a set of generic UI components</strong> to help you build your Ruby
-      on Rails application.</p>
+    <p>
+      <strong>Nitro Kit is a set of generic UI components</strong>
+      to help you build your
+      <strong>Ruby on Rails</strong>
+      application.
+    </p>
 
-    <p>Rather than being fancy it is <strong>purposefully modest</strong>. Instead of giving you
-      a
-      <em>black box</em>
-      UI kit, it is provided as a bunch of generators that give you a starting
-      point to build your own components.</p>
+    <p>
+      Rather than being fancy it is
+      <strong>purposefully modest</strong>. Instead of giving you a
+      <em>black box</em>, it is provided as a bunch of generators that give you a starting point
+      to build upon.
+    </p>
 
     <p>Easy to customize, accessible, Rails native.</p>
 
     <h2>Tech</h2>
 
     <ol>
-      <li><%= link_to "Ruby on Rails", "https://rubyonrails.org" %>
-      <%= nk_badge ">7.0", size: :sm %></li>
+      <li>
+        <%= link_to "Ruby on Rails", "https://rubyonrails.org" %>
+        <%= nk_outline_badge "7.0+", size: :sm %>
         <ul>
-          <li>From one person framework to IPO. Unrivaled productivity. You know
-            and love it.</li>
-        </ul></li>
-      <li><%= link_to "Tailwind CSS", "https://tailwindcss.com" %>
-        <%= nk_badge "V4", size: :sm %></li>
+          <li>
+            From one dev to IPO. Unrivaled productivity. You know and love it.
+          </li>
+        </ul>
+      </li>
+      <li>
+        <%= link_to "Tailwind CSS", "https://tailwindcss.com" %>
+        <%= nk_outline_badge "V4", size: :sm %>
+        <ul>
+          <li>The modern king of utility style CSS makes everything easy to
+            customize.</li>
+        </ul>
+      </li>
     </ol>
 
     <h2>Principles</h2>
 
     <ol>
-      <li>Be Rails native</li>
+      <li>Feel Rails native</li>
       <li>Convention over configuration</li>
-      <li>Don't be fancy for the sake of being fancy</li>
-      <li>Easy to install, easy to use</li>
+      <li>Don't be fancy just to be fancy</li>
+      <li>Easy to install, easy to use, easy to extend</li>
       <li>Use as few dependencies as possible</li>
       <li>Allow modification (micro and macro)</li>
       <li>...</li>
     </ol>
-
   <% end %>
+
+  <div class="text-right">
+    <%= nk_button "Get started", page_path(:getting_started) %>
+  </div>
 <% end %>

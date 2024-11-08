@@ -1,7 +1,7 @@
 module NitroKit
   module FieldHelper
-    def nk_field(attribute, **options)
-      render(NitroKit::Field.new(attribute, **options))
+    def nk_field(*args, **options, &block)
+      render(NitroKit::Field.new(*args, **options, &block))
     end
   end
 end

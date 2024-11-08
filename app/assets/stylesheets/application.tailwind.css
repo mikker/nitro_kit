@@ -76,7 +76,7 @@
   .prose blockquote,
   .prose pre,
   .prose table {
-    @apply mb-6;
+    @apply mb-8;
   }
 
   .prose h1,
@@ -90,12 +90,7 @@
 
   .prose ul,
   .prose ol {
-    @apply pl-6;
-  }
-
-  .prose ul li,
-  .prose ol li {
-    @apply mb-2;
+    @apply pl-6 space-y-2;
   }
 
   .prose ul {
@@ -110,7 +105,7 @@
   .prose ul ol,
   .prose ol ul,
   .prose ol ol {
-    @apply mt-2;
+    @apply my-2;
   }
 }
 

@@ -9,9 +9,9 @@
         <%= f.field :title %>
 
         <%= tag.div(class: "flex gap-4 items-center") do %>
-          <%#<%= f.field :category_id, as: :select, collection: Category.all %>
+          <%= f.field :category_id, as: :select, collection: Category.all %>
           <%#<%= f.field :public, as: :checkbox %>
-          <%= f.select :category_id, [["Ruby"], ["JavaScript"]] %>
+          <%#<%= f.select :category_id, [["Ruby"], ["JavaScript"]] %>
         <% end %>
 
         <%#<%= f.field :body %>

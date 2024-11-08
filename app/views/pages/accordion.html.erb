@@ -3,22 +3,22 @@
 
   <div class="space-y-4">
     <%= example(class: "flex-col") do %>
-      <%= nk_accordion(class: "w-full max-w-md") do |accordion| %>
-        <%= accordion.item do %>
-          <%= accordion.trigger "Item 1" %>
-          <%= accordion.content do %>
+      <%= nk_accordion(class: "w-full max-w-md") do |a| %>
+        <%= a.item do %>
+          <%= a.trigger "Item 1" %>
+          <%= a.content do %>
             <p>Content</p>
           <% end %>
         <% end %>
-        <%= accordion.item do %>
-          <%= accordion.trigger "Item 2" %>
-          <%= accordion.content do %>
+        <%= a.item do %>
+          <%= a.trigger "Item 2" %>
+          <%= a.content do %>
             <p>Content</p>
           <% end %>
         <% end %>
-        <%= accordion.item do %>
-          <%= accordion.trigger "Item 2" %>
-          <%= accordion.content do %>
+        <%= a.item do %>
+          <%= a.trigger "Item 2" %>
+          <%= a.content do %>
             <p>Content</p>
           <% end %>
         <% end %>
@@ -26,37 +26,37 @@
     <% end %>
 
     <%= code_example %{
-    <%= nk_accordion do |accordion| %\>
-      <%= accordion.item do %\>
-        <%= accordion.trigger "Item 1" %\>
-        <%= accordion.content do %\>
-          <p>Content</p>
-        <% end %\>
-      <% end %\>
-      <%= accordion.item do %\>
-        <%= accordion.trigger "Item 2" %\>
-        <%= accordion.content do %\>
-          <p>Content</p>
-        <% end %\>
-      <% end %\>
-      <%= accordion.item do %\>
-        <%= accordion.trigger "Item 3" %\>
-        <%= accordion.content do %\>
-          <p>Content</p>
-        <% end %\>
-      <% end %\>
-    <% end %\>
-    } %>
+              <%= nk_accordion do |a| %\>
+                <%= a.item do %\>
+                  <%= a.trigger "Item 1" %\>
+                  <%= a.content do %\>
+                    <p>Content</p>
+                  <% end %\>
+                <% end %\>
+                <%= a.item do %\>
+                  <%= a.trigger "Item 2" %\>
+                  <%= a.content do %\>
+                    <p>Content</p>
+                  <% end %\>
+                <% end %\>
+                <%= a.item do %\>
+                  <%= a.trigger "Item 3" %\>
+                  <%= a.content do %\>
+                    <p>Content</p>
+                  <% end %\>
+                <% end %\>
+              <% end %\>
+              } %>
 
     <%= example(class: "flex-col") do %>
-      <%= nk_accordion(class: "w-full max-w-md") do |accordion| %>
-        <%= accordion.item do %>
-          <%= accordion.trigger(class: "flex items-center gap-2 text-orange-500") do %>
+      <%= nk_accordion(class: "w-full max-w-md") do |a| %>
+        <%= a.item do %>
+          <%= a.trigger(class: "flex items-center gap-2") do %>
             <%= nk_icon("star") %>
-            <span>Custom trigger item 3</span>
-            <%= nk_badge("OMG")%>
+            Custom trigger item 3
+            <%= nk_badge("OMG") %>
           <% end %>
-          <%= accordion.content do %>
+          <%= a.content do %>
             <p>Content</p>
           <% end %>
         <% end %>
@@ -64,18 +64,11 @@
     <% end %>
 
     <%= code_example %{
-    <%= nk_accordion do |accordion| %\>
-      <%= accordion.item do %\>
-        <%= accordion.trigger do %\>
-          <%= nk_icon("star") %\>
-          <span>Custom trigger</span>
-          <%= nk_badge("OMG") %\>
-        <% end %\>
-        <%= accordion.content do %\>
-          <p>Content</p>
-        <% end %\>
-      <% end %\>
-    <% end %\>
-    } %>
+              <%= accordion.trigger do %\>
+                <%= nk_icon("star") %\>
+                Custom trigger
+                <%= nk_badge("OMG") %\>
+              <% end %\>
+            } %>
   </div>
 <% end %>

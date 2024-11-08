@@ -1,6 +1,6 @@
 module NitroKit
   class Badge < Component
-    BASE = "inline-flex items-center gap-x-1.5 rounded-md font-medium"
+    BADGE = "inline-flex items-center gap-x-1.5 rounded-md font-medium"
 
     VARIANTS = {
       default: "border border-transparent bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300",
@@ -13,22 +13,19 @@ module NitroKit
     }
 
     def initialize(variant: :default, size: :md, **attrs)
-      @attrs = attrs
+      super(**attrs)
 
-      @class_list = merge(
-        [
-          BASE,
-          VARIANTS[variant],
-          SIZES[size],
-          attrs[:class]
-        ]
-      )
+      @variant = variant
+      @size = size
     end
 
-    attr_reader :color, :attrs, :class_list
+    attr_reader :variant, :size
 
-    def view_template(&block)
-      span(**attrs, class: class_list, &block)
+    def view_template
+      span(
+        **attrs,
+        class: merge(BADGE, VARIANTS[variant], SIZES[size], attrs[:class])
+      ) { yield }
     end
   end
 end

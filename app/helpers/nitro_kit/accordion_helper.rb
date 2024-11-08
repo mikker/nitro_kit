@@ -4,4 +4,4 @@ module NitroKit
       render(Accordion.new(**attrs), &block)
     end
   end
-end 
+end

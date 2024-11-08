@@ -1,37 +1,123 @@
 module NitroKit
   class Field < Component
-    FIELD_BASE = [
+    FIELD = [
       "flex flex-col gap-2 align-start",
+      "[&:has([data-slot='error'])_[data-slot='label']]:text-destructive",
       "[&:has([data-slot='error'])_[data-slot='control']]:border-destructive"
     ].freeze
-    LABEL_BASE = "text-sm font-medium"
-    DESCRIPTION_BASE = "text-sm text-muted-foreground"
-    ERROR_BASE = "text-sm text-destructive"
-    INPUT_BASE = [
-      "rounded-md border bg-background border-border text-base px-3 py-2",
-      "focus:outline-none focus:ring-2 focus:ring-primary",
-      ""
-    ].freeze
 
-    def initialize(attribute, as: :string, label: nil, description: nil, errors: nil, **attrs)
-      @attribute = attribute
-      @as = as
-      @label_text = label
-      @description_text = description
-      @errors = errors || []
-      @attrs = attrs
+    DESCRIPTION = "text-sm text-muted-foreground"
+    ERROR = "text-sm text-destructive"
+
+    def initialize(
+      name,
+      as: :string,
+      label: nil,
+      description: nil,
+      errors: nil,
+      **attrs
+    )
+      super(**attrs)
+
+      @name = name
+      @as = as.to_sym
+
+      @field_attrs = attrs
+      @field_label = label || name.to_s.humanize
+      @field_description = description
+      @field_error_messages = errors
     end
 
-    attr_reader :attribute, :as, :label_text, :description_text, :errors, :attrs
+    attr_reader(
+      :name,
+      :as,
+      :field_attrs,
+      :field_label,
+      :field_description,
+      :field_error_messages
+    )
 
-    def view_template(&block)
-      div(**attrs, class: FIELD_BASE) do
-        label(**attrs, data: {slot: "label"}, class: LABEL_BASE) { label_text }
-        input(**attrs, data: {slot: "control"}, class: INPUT_BASE)
-        errors.each do |msg|
-          div(**attrs, data: {slot: "error"}, class: ERROR_BASE) { msg }
+    def view_template
+      div(**attrs, class: merge(FIELD, attrs[:class])) do
+        if !block_given?
+          default_field
+        else
+          yield
         end
       end
+    end
+
+    alias :original_label :label
+
+    def label(text = nil, **attrs)
+      text ||= field_label
+
+      return unless text
+
+      render(
+        Label.new(
+          **attrs,
+          data: data_merge({slot: "label"}, attrs[:data])
+        )
+      ) do
+        text
+      end
+    end
+
+    def description(text = nil, **attrs)
+      text ||= field_description
+
+      return unless text
+
+      div(
+        data: {slot: "description"},
+        class: merge(DESCRIPTION, attrs[:class])
+      ) { text }
+    end
+
+    alias :original_input :input
+
+    def input(**attrs)
+      render(
+        Input.new(
+          name:,
+          **field_attrs,
+          **attrs,
+          data: {slot: "control", **data_merge(field_attrs[:data], attrs[:data])}
+        )
+      )
+    end
+
+    def errors(error_messages = nil, **attrs)
+      error_messages ||= field_error_messages
+
+      return unless error_messages&.any?
+
+      ul(
+        **attrs,
+        data: {slot: "error"},
+        class: merge([ERROR, attrs[:class]])
+      ) do |msg|
+        error_messages.each do |msg|
+          li { msg }
+        end
+      end
+    end
+
+    def control(**override_attrs)
+      case as
+      when :string
+        input(**override_attrs)
+      end
+    end
+
+    private
+
+    def default_field
+      label
+      description
+      control
+      errors
     end
   end
 end

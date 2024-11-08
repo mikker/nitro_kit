@@ -1,5 +1,5 @@
 <%= component_page do %>
-  <%= title "Buttons" %>
+  <%= title "Button" %>
 
   <div class="space-y-4">
 
@@ -11,36 +11,15 @@
           <%= nk_destructive_button "Destructive" %>
           <%= nk_ghost_button "Ghost", root_path %>
         </div>
-
-        <div class="flex gap-2">
-          <%= nk_button "Button", disabled: true %>
-          <%= nk_primary_button "Primary", disabled: true %>
-          <%= nk_destructive_button "Destructive", disabled: true %>
-          <%= nk_ghost_button "Ghost", disabled: true %>
-        </div>
-
-        <div class="flex gap-2">
-          <%= nk_button "Button", size: :sm %>
-          <%= nk_primary_button "Primary", size: :sm %>
-          <%= nk_destructive_button "Destructive", size: :sm %>
-          <%= nk_ghost_button "Ghost", root_path, size: :sm %>
-        </div>
-
-        <div class="flex gap-2">
-          <%= nk_button "Button", size: :xs %>
-          <%= nk_primary_button "Primary", size: :xs %>
-          <%= nk_destructive_button "Destructive", size: :xs %>
-          <%= nk_ghost_button "Ghost", root_path, size: :xs %>
-        </div>
       </div>
     <% end %>
 
     <%= code_example %{
-      <%= nk_button { "Button" } %\>
-      <%= nk_primary_button { "Primary Button" } %\>
-      <%= nk_button("Text as arg") %\>
-      <%= nk_button(variant: :ghost) { "Variant as arg" } %\>
-    } %>
+        <%= nk_button { "Button" } %\>
+        <%= nk_primary_button { "Primary Button" } %\>
+        <%= nk_button("Text as arg") %\>
+        <%= nk_button(variant: :ghost) { "Variant as arg" } %\>
+        } %>
 
     <%= example do %>
       <%= nk_button(icon: "ellipsis") %>
@@ -55,8 +34,8 @@
       <%= nk_button(icon: "ellipsis") %\>
       <%= nk_button(icon: "mail") { "With icon" } %\>
       <%= nk_button do %\>
-        <span>Content in block</span>
-        <%= nk_icon("chevron-down") %\>
+      <span>Content in block</span>
+      <%= nk_icon("chevron-down") %\>
       <% end %\>
       } %>
 
@@ -71,11 +50,11 @@
     <% end %>
 
     <%= code_example %{
-      <%= nk_button_group do %\>
-        <%= nk_button("Button") %\>
-        <%= nk_button("Button") %\>
-        <%= nk_destructive_button("Destructive") %\>
-      <% end %\>
+    <%= nk_button_group do %\>
+    <%= nk_button("Button") %\>
+    <%= nk_button("Button") %\>
+    <%= nk_destructive_button("Destructive") %\>
+    <% end %\>
     } %>
   </div>
 <% end %>

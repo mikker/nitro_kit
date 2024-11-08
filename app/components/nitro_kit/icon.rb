@@ -5,7 +5,7 @@ module NitroKit
 
     SIZE = {
       sm: "size-4",
-      base: "size-5",
+      base: "size-5"
     }
 
     def initialize(name:, size: :base, **attrs)

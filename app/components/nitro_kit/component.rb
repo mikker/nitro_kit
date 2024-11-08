@@ -1,30 +1,28 @@
 module NitroKit
+  Merger = TailwindMerge::Merger.new
+
   class Component < Phlex::HTML
-    attr_reader :attrs, :class_list
+    attr_reader :attrs
 
     def initialize(**attrs)
-      @class_list = attrs.delete(:class)
       @attrs = attrs.symbolize_keys
     end
 
-    attr_reader :class_list, :attrs
+    attr_reader :attrs
 
     def merge(*args)
       self.class.merge(*args)
     end
 
     def self.merge(*args)
-      @merger ||= TailwindMerge::Merger.new
-      @merger.merge(*args)
+      Merger.merge(args)
     end
 
-    def data_merge(data = {}, new_data = {})
-      return data if new_data.blank?
-      return new_data if data.blank?
-
-      data.deep_merge(new_data) do |_key, old_val, new_val|
-        # Put new value first so overrides can stopPropagation to old value
-        [new_val, old_val].compact.join(" ")
+    def data_merge(*hashes)
+      hashes.compact.reverse.reduce({}) do |acc, hash|
+        acc.deep_merge(hash) do |_key, old_val, new_val|
+          [old_val, new_val].compact.join(" ")
+        end
       end
     end
   end

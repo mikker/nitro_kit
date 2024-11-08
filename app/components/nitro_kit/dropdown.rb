@@ -9,6 +9,10 @@ module NitroKit
       "[&[aria-hidden=true]]:hidden flex"
     ].freeze
 
+    TRIGGER = "inline-block"
+
+    TITLE = "px-3 pt-2 pb-1.5 text-muted-foreground text-sm"
+
     ITEM = [
       "px-3 py-1.5 rounded",
       "font-medium truncate",
@@ -30,44 +34,45 @@ module NitroKit
     attr_reader :placement
 
     def view_template(&block)
-      div(data: {:controller => "nk--dropdown", :"nk--dropdown-placement-value" => placement}, &block)
+      div(
+        data: data_merge(
+          {:controller => "nk--dropdown", :"nk--dropdown-placement-value" => placement},
+          attrs[:data]
+        ),
+        &block
+      )
     end
 
     def trigger(**attrs, &block)
-      class_list = "inline-block"
-      data = {
-        :"nk--dropdown-target" => "trigger",
-        :action => "click->nk--dropdown#toggle",
-        **attrs.fetch(:data, {})
-      }
       div(
-        **attrs,
-        class: class_list,
-        data:,
         aria: {haspopup: "true", expanded: "false"},
+        **attrs,
+        class: merge([TRIGGER, attrs[:class]]),
+        data: data_merge(
+          {:"nk--dropdown-target" => "trigger", :action => "click->nk--dropdown#toggle"},
+          attrs[:data]
+        ),
         &block
       )
     end
 
     def content(**attrs, &block)
-      class_list = merge([CONTENT, attrs[:class]])
 
-      data = {
-        :"nk--dropdown-target" => "content",
-        **attrs.fetch(:data, {})
-      }
-      div(
-        **attrs,
-        class: class_list,
-        data:,
+      class_list = div(
         role: "menu",
         aria: {hidden: "true"},
+        **attrs,
+        class: merge([CONTENT, attrs[:class]]),
+        data: data_merge(
+          {:"nk--dropdown-target" => "content"},
+          attrs[:data]
+        ),
         &block
       )
     end
 
     def title(text = nil, **attrs, &block)
-      class_list = merge(["px-3 pt-2 pb-1.5 text-muted-foreground text-sm", attrs[:class]])
+      class_list = merge([TITLE, attrs[:class]])
       div(**attrs, class: class_list) { text || block.call }
     end
 
@@ -75,27 +80,23 @@ module NitroKit
       text = nil,
       href = nil,
       variant: :default,
-      **attrs,
-      &block
+      **attrs
     )
-      class_list = merge([ITEM, ITEM_VARIANTS[variant], attrs[:class]])
-
       common_attrs = {
-        **attrs,
-        class: class_list,
         role: "menuitem",
-        tabindex: "-1"
+        tabindex: "-1",
+        **attrs,
+        class: merge([ITEM, ITEM_VARIANTS[variant], attrs[:class]])
       }
 
       if href
-        link_to(
-          href,
-          **common_attrs
-        ) {
-          text || block.call
-        }
+        link_to(href, **common_attrs) do
+          text || yield
+        end
       else
-        div(**common_attrs) { text || block.call }
+        div(**common_attrs) do
+          text || yield
+        end
       end
     end
 

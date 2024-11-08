@@ -16,7 +16,7 @@ module NitroKit
     )
 
     def view_template
-      div(class: merge(["isolate inline-flex items-center gap-2", class_list])) do
+      div(class: merge(["isolate inline-flex items-center gap-2", attrs[:class]])) do
         label(class: "relative flex shrink-0") do
           input(
             **attrs,

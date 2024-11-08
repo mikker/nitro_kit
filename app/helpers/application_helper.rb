@@ -9,12 +9,20 @@ module ApplicationHelper
     tag.h1(class: "text-3xl font-semibold mb-6") { text }
   end
 
-  def lead(text)
-    tag.p(class: "text-lg text-gray-600 dark:text-gray-400 mb-6") { text }
+  def lead(text = nil, &block)
+    text = capture(&block) if block_given?
+    tag.div(class: "text-lg text-gray-600 dark:text-gray-400 mb-6") do
+      text
+    end
   end
 
   def section(**attrs)
-    tag.div(**attrs, class: class_names("mt-8 space-y-4", attrs[:class])) { yield }
+    tag.div(
+      **attrs,
+      class: class_names("mt-8 space-y-4", attrs[:class])
+    ) do
+      yield
+    end
   end
 
   def section_title(text)
@@ -33,7 +41,13 @@ module ApplicationHelper
       end
   end
 
-  def code_example(str)
+  def code_example(str = nil, &block)
+    if block_given?
+      str = capture(&block)
+        .gsub(/<#/, "<%")
+        .gsub(/#>/, "%>")
+    end
+
     formatter = Rouge::Formatters::HTML.new
     lexer = Rouge::Lexers::ERB.new
 

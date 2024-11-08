@@ -37,7 +37,7 @@ module NitroKit
       base: "px-4 h-9",
       sm: "px-2.5 h-7 text-sm",
       xs: "px-1.5 h-6 text-xs"
-    }
+    }.freeze
 
     def initialize(
       href: nil,
@@ -48,15 +48,27 @@ module NitroKit
       variant: :default,
       **attrs
     )
+      super(**attrs)
+
       @href = href
       @icon = icon
       @icon_right = icon_right
       @size = size
       @type = type
       @variant = variant
-      @attrs = attrs
+    end
 
-      @class_list = merge(
+    attr_reader(
+      :href,
+      :icon,
+      :icon_right,
+      :size,
+      :type,
+      :variant
+    )
+
+    def view_template(&block)
+      class_list = merge(
         [
           BASE,
           VARIANTS[variant],
@@ -64,20 +76,7 @@ module NitroKit
           attrs[:class]
         ]
       )
-    end
 
-    attr_reader(
-      :class_list,
-      :href,
-      :icon,
-      :icon_right,
-      :size,
-      :type,
-      :variant,
-      :attrs
-    )
-
-    def view_template(&block)
       if href
         a(href:, **attrs, class: class_list) do
           contents(&block)

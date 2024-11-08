@@ -1,4 +1,4 @@
-<nav class="fixed top-0 right-0 left-0 bg-background">
+<nav class="fixed top-0 right-0 left-0 z-10 bg-background">
   <div
     class="container flex justify-between items-center px-6 h-16 text-sm md:text-base"
   >
@@ -42,7 +42,7 @@
     </div>
 
     <div class="hidden gap-1 items-center -mr-3 md:flex">
-      <%= nk_ghost_button("Docs", root_path, class: "font-bold") %>
+      <%#<%= nk_input type: "search" %>
       <%= nk_ghost_button(root_path, class: "font-bold") do %>
         <span>Premium</span>
         <%= nk_badge(
