@@ -267,7 +267,7 @@ GEM
     reline (0.5.11)
       io-console (~> 0.5)
     rexml (3.3.9)
-    rouge (4.4.0)
+    rouge (4.5.0)
     ruby-vips (2.2.2)
       ffi (~> 1.12)
       logger
