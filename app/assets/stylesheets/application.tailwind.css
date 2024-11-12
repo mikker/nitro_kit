@@ -63,11 +63,15 @@
     @apply mx-auto max-w-6xl;
   }
 
+  .link {
+    @apply text-primary-foreground underline hover:no-underline;
+  }
+
   .prose {
   }
 
   .prose a {
-    @apply text-primary underline hover:no-underline;
+    @apply text-primary-foreground underline hover:no-underline;
   }
 
   .prose p,

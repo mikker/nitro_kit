@@ -5,8 +5,9 @@ module ApplicationHelper
     end
   end
 
-  def title(text)
-    tag.h1(class: "text-3xl font-semibold mb-6") { text }
+  def title(text = nil, **attrs, &block)
+    text = capture(&block) if block_given?
+    tag.h1(**attrs, class: class_names("text-3xl font-semibold mb-6", attrs[:class])) { text }
   end
 
   def lead(text = nil, &block)
