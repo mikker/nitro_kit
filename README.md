@@ -10,3 +10,15 @@ Easy to customize, accessible, Rails native.
 
 See [nitrokit.dev](https://nitrokit.dev).
 
+---
+
+### Development
+
+```sh
+bin/setup
+bin/dev
+```
+
+### License
+
+MIT
