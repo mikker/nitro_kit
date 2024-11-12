@@ -22,7 +22,7 @@ module NitroKit
             **attrs,
             type: "checkbox",
             class: class_names(
-              "peer appearance-none shadow size-4 rounded border text-foreground",
+              "peer appearance-none shadow-sm size-4 rounded-sm border text-foreground",
               "checked:bg-primary checked:border-primary",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             )

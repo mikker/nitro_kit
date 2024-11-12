@@ -15,7 +15,7 @@ module NitroKit
     ].freeze
 
     HANDLE = [
-      "pointer-events-none inline-block rounded-full shadow ring-0",
+      "pointer-events-none inline-block rounded-full shadow-sm ring-0",
       "transition translate-x-[3px] duration-200 ease-in-out"
     ].freeze
 

@@ -29,7 +29,7 @@ module NitroKit
             id:,
             class: class_names(
               "peer row-start-1 col-start-1",
-              "appearance-none size-5 shadow rounded-full border text-foreground bg-background",
+              "appearance-none size-5 shadow-sm rounded-full border text-foreground bg-background",
               "[&[aria-checked='true']]:bg-primary",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             )

@@ -56,7 +56,7 @@ module ApplicationHelper
 
     tag
       .div(
-        class: "bg-[#f7f8fa] dark:bg-[#161b22] divide-y border rounded overflow-hidden",
+        class: "bg-[#f7f8fa] dark:bg-[#161b22] divide-y border rounded-sm overflow-hidden",
         data: {controller: "copy-to-clipboard"}
       ) do
         if toolbar
