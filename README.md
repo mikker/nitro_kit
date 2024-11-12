@@ -1,6 +1,6 @@
 <center><a href="https://nitrokit.dev"><img src="https://s3.brnbw.com/Artboard-q85JFfA8Auat32ByIAXtDAsbYGgs5MeTM4GDaonKhlxVniioPDLQTZUeynCfdBSHAfiRYhMWkGaYZC9ClkZS9aFgkBjx9mrAmnFs.png" alt="Nitro Kit" width="335" /></a></center>
 
-<br/>
+<p></p>
 
 **Nitro Kit** is a set of **generic UI components** to help you build your **Ruby on Rails** application.
 
