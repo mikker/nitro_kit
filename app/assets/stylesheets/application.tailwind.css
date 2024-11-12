@@ -89,7 +89,7 @@
   .prose h4,
   .prose h5,
   .prose h6 {
-    @apply font-bold;
+    @apply font-bold mb-2;
   }
 
   .prose ul,

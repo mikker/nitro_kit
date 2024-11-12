@@ -25,6 +25,12 @@
 
     <p>Easy to customize, accessible, Rails native.</p>
 
+    <p class="p-3 rounded-md border">
+      <strong>Note:</strong>
+      Nitro Kit is currently under heavy development and will most likely
+      change a lot until it stabilizes.
+    </p>
+
     <h2>Requirements</h2>
 
     <ol>
@@ -37,7 +43,8 @@
         <%= nk_outline_badge "V4", size: :sm %>
       </li>
       <li>
-        <%= link_to "Stimulus", "https://stimulus.hotwired.dev" %> <span class="text-muted-foreground">(optional &ndash; only for components with JavaScript)</span>
+        <%= link_to "Stimulus", "https://stimulus.hotwired.dev" %>
+        <span class="text-muted-foreground">(optional &ndash; only for components with JavaScript)</span>
       </li>
     </ol>
 
@@ -50,6 +57,14 @@
       <li>Be easy to install, easy to use, easy to modify</li>
       <li>Use as few dependencies as possible</li>
     </ol>
+  <% end %>
+
+  <%= section do %>
+    <div class="space-y-4 prose">
+      <h2>Follow development</h2>
+      <p>Want to know more or just follow along?</p>
+    </div>
+    <%= render "common/newsletter_form" %>
   <% end %>
 
   <div class="text-right">
