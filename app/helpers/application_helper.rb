@@ -7,6 +7,7 @@ module ApplicationHelper
 
   def title(text = nil, **attrs, &block)
     text = capture(&block) if block_given?
+    content_for(:title, text)
     tag.h1(**attrs, class: class_names("text-3xl font-semibold mb-6", attrs[:class])) { text }
   end
 
