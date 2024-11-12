@@ -1,30 +1,8 @@
-require "nitro_kit/schema_builder"
-
 module NitroKit
   class AddGenerator < Rails::Generators::Base
     argument :component_names, type: :array
 
     source_root File.expand_path("../../../", __dir__)
-
-    extend SchemaBuilder
-
-    SCHEMA = build_schema do |s|
-      s.add(:badge)
-      s.add(
-        :button,
-        components: [:button, :button_group],
-        helpers: [:button, :button_group]
-      )
-      s.add(
-        :dropdown,
-        js: [:dropdown],
-        modules: ["@floating-ui/core", "@floating-ui/dom"]
-      )
-      s.add(
-        :icon,
-        gems: ["lucide-rails"]
-      )
-    end
 
     def copy_base_component
       copy_file("app/components/nitro_kit/component.rb", "app/components/nitro_kit/component.rb")

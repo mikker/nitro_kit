@@ -1,25 +1,41 @@
 <div class="p-5 space-y-8">
   <nav class="space-y-4">
     <ul role="menu">
-      <% %w[introduction getting_started].each do |page| %>
+      <% %w[
+        introduction
+        getting_started
+        variants
+      ].each do |page| %>
         <%= render "common/sidebar_link", page: %>
       <% end %>
     </ul>
     <ul class="" role="menu">
-      <% %w[
-        accordion
-        badge
-        button
-        card
-        checkbox
-        dropdown
-        field
-        form
-        icon
-        radio
-        switch
-      ].each do |component| %>
-        <%= render "common/sidebar_link", page: component %>
+      <% {
+        accordion: true,
+        avatar: false,
+        alert: false,
+        badge: true,
+        button: true,
+        card: true,
+        checkbox: true,
+        combobox: false,
+        datepicker: false,
+        dropdown: true,
+        field: true,
+        form: true,
+        icon: true,
+        modal: false,
+        radio_button: true,
+        select: false,
+        switch: true,
+        table: false,
+        tabs: false,
+        textarea: false,
+        toast: false,
+        tooltip: false,
+        pagination: false
+      }.each do |component, enabled| %>
+        <%= render "common/sidebar_link", page: component.to_s, enabled: %>
       <% end %>
     </ul>
   </nav>
