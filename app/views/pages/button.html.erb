@@ -4,22 +4,18 @@
   <div class="space-y-4">
 
     <%= example(class: "flex-col") do %>
-      <div class="space-y-4">
-        <div class="flex gap-2">
-          <%= nk_button "Button" %>
-          <%= nk_primary_button "Primary" %>
-          <%= nk_destructive_button "Destructive" %>
-          <%= nk_ghost_button "Ghost", root_path %>
-        </div>
-      </div>
+      <%= nk_button "Button" %>
+      <%= nk_primary_button "Primary" %>
+      <%= nk_destructive_button "Destructive" %>
+      <%= nk_ghost_button "Ghost", root_path %>
     <% end %>
 
-    <%= code_example %{
-        <%= nk_button { "Button" } %\>
-        <%= nk_primary_button { "Primary Button" } %\>
-        <%= nk_button("Text as arg") %\>
-        <%= nk_button(variant: :ghost) { "Variant as arg" } %\>
-        } %>
+    <%= code_example do %>
+      {#= nk_button { "Button" } #}
+      {#= nk_primary_button { "Primary Button" } #}
+      {#= nk_button("Text as arg") #}
+      {#= nk_button(variant: :ghost) { "Variant as arg" } #}
+    <% end %>
 
     <%= example do %>
       <%= nk_button(icon: "ellipsis") %>
@@ -30,14 +26,14 @@
       <% end %>
     <% end %>
 
-    <%= code_example %{
-      <%= nk_button(icon: "ellipsis") %\>
-      <%= nk_button(icon: "mail") { "With icon" } %\>
-      <%= nk_button do %\>
-      <span>Content in block</span>
-      <%= nk_icon("chevron-down") %\>
-      <% end %\>
-      } %>
+    <%= code_example do %>
+      {#= nk_button(icon: "ellipsis") #}
+      {#= nk_button(icon: "mail") { "With icon" } #}
+      {#= nk_button do #}
+        <span>Content in block</span>
+        {#= nk_icon("chevron-down") #}
+      {# end #}
+    <% end %>
 
     <h2>Button group</h2>
 
@@ -49,12 +45,11 @@
       <% end %>
     <% end %>
 
-    <%= code_example %{
-    <%= nk_button_group do %\>
-    <%= nk_button("Button") %\>
-    <%= nk_button("Button") %\>
-    <%= nk_destructive_button("Destructive") %\>
-    <% end %\>
-    } %>
-  </div>
+    <%= code_example do %>
+      {#= nk_button_group do #}
+        {#= nk_button("Button") #}
+        {#= nk_button("Button") #}
+        {#= nk_destructive_button("Destructive") #}
+      {# end #}
+    <% end %>
 <% end %>

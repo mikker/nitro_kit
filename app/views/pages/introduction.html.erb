@@ -1,11 +1,11 @@
 <%= component_page do %>
   <header class="flex flex-col gap-0 justify-center items-center py-8">
     <div class="leading-tight text-center">
-      <h1 class="text-8xl font-black tracking-tight">Nitro Kit</h1>
+      <h1 class="text-6xl font-black tracking-tight md:text-8xl">Nitro Kit</h1>
       <h2 class="text-xl font-bold">for
         <span class="text-[#d20001]">Ruby on Rails</span></h2>
     </div>
-    <%= image_tag "hotwheels-filled.webp", class: "max-w-96 rounded-4xl -mt-6" %>
+    <%= image_tag "hotwheels-filled.webp", class: "w-full max-w-96 rounded-4xl -mt-6" %>
   </header>
 
   <%= section(class: "prose") do %>
@@ -33,17 +33,15 @@
         <%= nk_outline_badge "7.0+", size: :sm %>
         <ul>
           <li>
-            From one dev to IPO. Unrivaled productivity. You know and love it.
+            From
+            <em>single dev</em>
+            to IPO. Unrivaled productivity. You know and love it.
           </li>
         </ul>
       </li>
       <li>
         <%= link_to "Tailwind CSS", "https://tailwindcss.com" %>
         <%= nk_outline_badge "V4", size: :sm %>
-        <ul>
-          <li>The modern king of utility style CSS makes everything easy to
-            customize.</li>
-        </ul>
       </li>
     </ol>
 
@@ -61,6 +59,6 @@
   <% end %>
 
   <div class="text-right">
-    <%= nk_button "Get started", page_path(:getting_started) %>
+    <%= nk_button "Get started", page_path(:getting_started), icon_right: "arrow-right" %>
   </div>
 <% end %>

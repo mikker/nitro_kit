@@ -1,13 +1,11 @@
 <%= component_page do %>
   <%= title "Checkboxes" %>
 
-  <div class="space-y-4">
+  <%= section do %>
     <h2>Simple checkbox</h2>
     <%= example do %>
-      <div class="flex gap-2">
-        <%= nk_checkbox :name_1 %>
-        <%= nk_checkbox :name_2, checked: true %>
-      </div>
+      <%= nk_checkbox :name_1 %>
+      <%= nk_checkbox :name_2, checked: true %>
     <% end %>
 
     <%= code_example(%{<%= nk_checkbox "name" %\>}) %>
@@ -19,5 +17,5 @@
     <% end %>
 
     <%= code_example %{<%= nk_checkbox "name", label: "Accept your fate" %\>} %>
-  </div>
+  <% end %>
 <% end %>

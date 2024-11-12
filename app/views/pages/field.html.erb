@@ -13,7 +13,7 @@
     <% end %>
 
     <%= code_example do %>
-      <#= nk_field :name, placeholder: "B Gates" %>
+      {#= nk_field :name, placeholder: "B Gates" #}
     <% end %>
   <% end %>
 
@@ -28,12 +28,12 @@
     <% end %>
 
     <%= code_example do %>
-      <#= nk_field :name do |f| #>
-        <#= f.label "Or" #>
-        <#= f.description "Build" #>
-        <#= f.control placeholder: "Your" #>
-        <#= f.errors ["Own"] #>
-      <# end #>
+      {#= nk_field :name do |f| #}
+        {#= f.label "Or" #}
+        {#= f.description "Build" #}
+        {#= f.control placeholder: "Your" #}
+        {#= f.errors ["Own"] #}
+      {# end #}
     <% end %>
   <% end %>
 

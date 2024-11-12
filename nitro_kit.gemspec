@@ -26,6 +26,6 @@ Gem::Specification.new do |spec|
   end
 
   spec.add_dependency("activesupport", ">= 7.0.0")
-  spec.add_dependency("tailwind_merge")
+  spec.add_dependency("tailwind_merge", ">= 0.13.0")
   spec.add_dependency("phlex-rails", ">= 2.0.0.beta2")
 end

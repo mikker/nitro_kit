@@ -1,6 +1,105 @@
 <%= component_page do %>
-  <header class="text-center">
-    <h1 class="text-5xl font-black">Getting Started</h1>
+  <%= title "Getting started" %>
+  <%= lead "Installing Nitro Kit into both new and old apps takes just a few steps" %>
 
-  </header>
+  <%= section do %>
+    <%= section_title "Add the gem" %>
+
+    <%= code_example(language: :shell) do %>
+      bundle add nitro_kit
+      bundle install
+    <% end %>
+  <% end %>
+
+  <%= section do %>
+    <%= section_title "Tailwind CSS" %>
+
+    <p>Tailwind CSS is required for Nitro Kit and version 4 is recommended.</p>
+
+    <p>There are multiple, equally good methods to get Tailwind into your project but the simplest one is probably using <code>tailwindcss-rails</code>:</p>
+
+    <%= code_example(language: :shell) do %>
+      bundle add tailwindcss-rails
+      bundle add tailwindcss-ruby --pre # for Tailwind CSS v4 until released
+      bundle install
+    <% end %>
+
+    <p>Open <code>app/assets/stylesheets/application.tailwind.css</code> and add or replace with this:</p>
+
+    <%= code_example(language: :scss) do %>
+      @import "tailwindcss";
+
+      @theme {
+        /* We need these for Tailwind to pick up the variables below and allow
+         * alpha values, like text-foreground/50.
+         * I hope this will get fixed for v4 release */
+        --color-foreground: #000;
+        --color-background: #000;
+
+        --color-border: #000;
+        --color-ring: #000;
+        --color-muted: #000;
+        --color-muted-foreground: #000;
+        --color-primary: #000;
+        --color-primary-foreground: #000;
+        --color-destructive: #000;
+        --color-destructive-foreground: #000;
+      }
+
+      @layer base {
+        :root,
+        .light {
+          --color-foreground: var(--color-zinc-950);
+          --color-background: var(--color-white);
+
+          --color-border: var(--color-zinc-300);
+          --color-ring: var(--color-blue-300);
+          --color-muted: var(--color-zinc-100);
+          --color-muted-foreground: var(--color-zinc-500);
+          --color-primary: var(--color-zinc-900);
+          --color-primary-foreground: var(--color-zinc-950);
+          --color-destructive: var(--color-red-500);
+          --color-destructive-foreground: var(--color-red-700);
+        }
+
+        [data-theme="dark"] {
+          --color-foreground: var(--color-zinc-100);
+          --color-background: var(--color-zinc-950);
+
+          --color-border: var(--color-zinc-700);
+          --color-ring: var(--color-blue-700);
+          --color-muted: var(--color-zinc-800);
+          --color-muted-foreground: var(--color-zinc-400);
+          --color-primary: var(--color-zinc-50);
+          --color-primary-foreground: var(--color-white);
+          --color-destructive: var(--color-red-500);
+          --color-destructive-foreground: var(--color-red-700);
+        }
+      }
+
+      @variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+      @layer base {
+        * {
+          @apply border-border min-w-0 ring-ring;
+        }
+
+        body {
+          /* Nitro Kit looks great in Inter as well */
+          /* https://rsms.me/inter */
+          @apply bg-background text-foreground font-sans;
+        }
+      }
+    <% end %>
+  <% end %>
+
+  <%= section do %>
+    <%= section_title "Add components to your app" %>
+
+    <%= code_example(language: :bash) do %>
+      rails generate ignition_kit all # or a list of individual components
+    <% end %>
+
+    <p>That's it!</p>
+  <% end %>
 <% end %>

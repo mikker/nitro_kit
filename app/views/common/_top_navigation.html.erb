@@ -1,8 +1,8 @@
 <nav class="fixed top-0 right-0 left-0 z-10 bg-background">
   <div
-    class="container flex justify-between items-center px-6 h-16 text-sm md:text-base"
+    class="container flex justify-between items-center px-4 h-16 text-sm md:px-6 md:text-base"
   >
-    <div class="flex items-center -ml-3 grow-0">
+    <div class="flex items-center -ml-1 md:-ml-3 grow-0">
       <div class="md:hidden">
         <%= nk_ghost_button(
           icon: "menu",
@@ -29,29 +29,19 @@
       <% end %>
     </div>
 
-    <div class="-mr-3 md:hidden">
-      <%= nk_ghost_button(root_path, class: "font-bold px-2") do %>
+    <div class="md:hidden md:-mr-3">
+      <%= nk_button "Get Premium",
+      size: :xs,
+      class:
+        "border-orange-300 bg-gradient-to-tr from-orange-200 via-yellow-100 to-orange-200 text-orange-800/80!" %>
+      <%= nk_ghost_button(root_path, class: "hidden font-bold px-2") do %>
         <span>Premium</span>
-        <%= nk_badge(
-          "Early access",
-          size: :sm,
-          class:
-            "border-orange-300 bg-gradient-to-tr from-orange-200 via-yellow-100 to-orange-200 text-orange-800/80!",
-        ) %>
+        <%= nk_badge("Early access", size: :sm, class:) %>
       <% end %>
     </div>
 
     <div class="hidden gap-1 items-center -mr-3 md:flex">
-      <%#<%= nk_input type: "search" %>
-      <%= nk_ghost_button(root_path, class: "font-bold") do %>
-        <span>Premium</span>
-        <%= nk_badge(
-          "Early access",
-          size: :sm,
-          class:
-            "border-orange-300 bg-gradient-to-tr from-orange-200 via-yellow-100 to-orange-200 text-orange-800/80!",
-        ) %>
-      <% end %>
+      <%#= nk_input type: "search" %>
 
       <div class="flex gap-2 items-center mx-4">
         <%= nk_icon("sun", size: :sm) %>

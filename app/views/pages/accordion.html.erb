@@ -25,28 +25,28 @@
       <% end %>
     <% end %>
 
-    <%= code_example %{
-              <%= nk_accordion do |a| %\>
-                <%= a.item do %\>
-                  <%= a.trigger "Item 1" %\>
-                  <%= a.content do %\>
-                    <p>Content</p>
-                  <% end %\>
-                <% end %\>
-                <%= a.item do %\>
-                  <%= a.trigger "Item 2" %\>
-                  <%= a.content do %\>
-                    <p>Content</p>
-                  <% end %\>
-                <% end %\>
-                <%= a.item do %\>
-                  <%= a.trigger "Item 3" %\>
-                  <%= a.content do %\>
-                    <p>Content</p>
-                  <% end %\>
-                <% end %\>
-              <% end %\>
-              } %>
+    <%= code_example do %>
+      {#= nk_accordion do |a| #}
+        {#= a.item do #}
+          {#= a.trigger "Item 1" #}
+          {#= a.content do #}
+            <p>Content</p>
+          {# end #}
+        {# end #}
+        {#= a.item do #}
+          {#= a.trigger "Item 2" #}
+          {#= a.content do #}
+            <p>Content</p>
+          {# end #}
+        {# end #}
+        {#= a.item do #}
+          {#= a.trigger "Item 3" #}
+          {#= a.content do #}
+            <p>Content</p>
+          {# end #}
+        {# end #}
+      {# end #}
+    <% end %>
 
     <%= example(class: "flex-col") do %>
       <%= nk_accordion(class: "w-full max-w-md") do |a| %>
@@ -63,12 +63,11 @@
       <% end %>
     <% end %>
 
-    <%= code_example %{
-              <%= accordion.trigger do %\>
-                <%= nk_icon("star") %\>
-                Custom trigger
-                <%= nk_badge("OMG") %\>
-              <% end %\>
-            } %>
-  </div>
-<% end %>
+    <%= code_example do %>
+      {#= accordion.trigger do #}
+        {#= nk_icon("star") #}
+        Custom trigger
+        {#= nk_badge("OMG") #}
+      {# end #}
+    <% end %>
+  <% end %>

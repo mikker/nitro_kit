@@ -1,7 +1,7 @@
 <%= component_page do %>
   <%= title "Dropdown" %>
 
-  <div class="space-y-4">
+  <%= section do %>
     <h3>Dropdown builder</h3>
 
     <%= example do %>
@@ -20,22 +20,22 @@
       <% end %>
     <% end %>
 
-    <%= code_example %{
-      <%= nk_dropdown do |d| %\>
-        <%= d.trigger do %\>
-          <%= nk_button "Open" %\>
-        <% end %\>
-        <%= d.content do %\>
-          <%= d.title "My hotdogs" %\>
-          <%= d.separator %\>
-          <%= d.item "New hotdog", new_hotdog_path %\>
-          <%= d.item "Edit hotdog", edit_hotdog_path(1) %\>
-          <%= d.separator %\>
-          <%= d.destructive_item "Delete hotdog",
+    <%= code_example do %>
+      {#= nk_dropdown do |d| #}
+        {#= d.trigger do #}
+          {#= nk_button "Open" #}
+        {# end #}
+        {#= d.content do #}
+          {#= d.title "My hotdogs" #}
+          {#= d.separator #}
+          {#= d.item "New hotdog", new_hotdog_path #}
+          {#= d.item "Edit hotdog", edit_hotdog_path(1) #}
+          {#= d.separator #}
+          {#= d.destructive_item "Delete hotdog",
             hotdog_path(1),
-            data: { turbo_method: "delete", turbo_confirm: "Sure?" } %\>
-        <% end %\>
-      <% end %\>
-    } %>
-  </div>
+            data: { turbo_method: "delete", turbo_confirm: "Sure?" } #}
+        {# end #}
+      {# end #}
+    <% end %>
+  <% end %>
 <% end %>

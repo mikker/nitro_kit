@@ -1,7 +1,7 @@
 <%= component_page do %>
   <%= title "Radio buttons" %>
 
-  <div class="space-y-4">
+  <%= section do %>
     <%= example do %>
       <div class="flex gap-2">
         <%= nk_radio_button :name, 1 %>
@@ -21,12 +21,12 @@
       <% end %>
     <% end %>
 
-    <%= code_example %{
-      <%= nk_radio_group :taste, value: :zero do |g| %\>
-        <%= g.title "Choose your poison" %\>
-        <%= g.item :coke, "Coke" %\>
-        <%= g.item :zero, "Coke Zero" %\>
-      <% end %\>
-    } %>
-  </div>
+    <%= code_example do %>
+      {#= nk_radio_group :taste, value: :zero do |g| #}
+        {#= g.title "Choose your poison" #}
+        {#= g.item :coke, "Coke" #}
+        {#= g.item :zero, "Coke Zero" #}
+      {# end #}
+    <% end %>
+  <% end %>
 <% end %>

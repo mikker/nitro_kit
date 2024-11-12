@@ -9,10 +9,10 @@
       <%= nk_outline_badge { "Outline" } %>
     <% end %>
 
-    <%= code_example %{
-          <%= nk_badge "Default" %\>
-          <%= nk_outline_badge { "Outline" } %\>
-          } %>
+    <%= code_example do %>
+      {#= nk_badge "Default" #}
+      {#= nk_outline_badge { "Outline" } #}
+    <% end %>
   <% end %>
 
   <%= section do %>
@@ -22,8 +22,8 @@
       <%= nk_badge "Small", size: :sm %>
     <% end %>
 
-    <%= code_example %{
-          <%= nk_badge "Small", size: :sm %\>
-          } %>
+    <%= code_example do %>
+      {#= nk_badge "Small", size: :sm #}
+    <% end %>
   <% end %>
 <% end %>

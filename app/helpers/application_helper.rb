@@ -34,47 +34,52 @@ module ApplicationHelper
       .div(
         **attrs,
         class: class_names(
-          ["flex gap-2 justify-center items-center min-h-[200px] py-12 p-5 w-full rounded border", attrs[:class]]
+          [
+            "flex flex-wrap gap-2 justify-center items-center min-h-[200px] py-12 p-5 w-full rounded border overflow-scroll",
+            attrs[:class]
+          ]
         )
       ) do
         yield
       end
   end
 
-  def code_example(str = nil, &block)
+  def code_example(str = nil, language: :erb, toolbar: true, &block)
     if block_given?
       str = capture(&block)
-        .gsub(/<#/, "<%")
-        .gsub(/#>/, "%>")
+        .gsub(/{#/, "<%")
+        .gsub(/#}/, "%>")
     end
 
+    lexer = Rouge::Lexer.find(language)
     formatter = Rouge::Formatters::HTML.new
-    lexer = Rouge::Lexers::ERB.new
 
     tag
       .div(
         class: "bg-[#f7f8fa] dark:bg-[#161b22] divide-y border rounded overflow-hidden",
         data: {controller: "copy-to-clipboard"}
       ) do
-        concat(
-          tag.div(class: "px-1 py-1 flex w-full") do
-            concat(
-              nk_ghost_button(
-                icon: :copy,
-                size: :xs,
-                data: {copy_to_clipboard_target: "button", action: "copy-to-clipboard#copy"}
-              ) { "Copy" }
-            )
-            concat(
-              nk_ghost_button(
-                icon: :check,
-                size: :xs,
-                data: {copy_to_clipboard_target: "successMessage"},
-                class: "hidden"
-              ) { "Copied!" }
-            )
-          end
-        )
+        if toolbar
+          concat(
+            tag.div(class: "px-1 py-1 flex w-full") do
+              concat(
+                nk_ghost_button(
+                  icon: :copy,
+                  size: :xs,
+                  data: {copy_to_clipboard_target: "button", action: "copy-to-clipboard#copy"}
+                ) { "Copy" }
+              )
+              concat(
+                nk_ghost_button(
+                  icon: :check,
+                  size: :xs,
+                  data: {copy_to_clipboard_target: "successMessage"},
+                  class: "hidden"
+                ) { "Copied!" }
+              )
+            end
+          )
+        end
 
         concat(
           tag

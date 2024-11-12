@@ -1,7 +1,7 @@
 <%= component_page do %>
   <%= title "Cards" %>
 
-  <div class="space-y-4">
+  <%= section do %>
     <%= example do %>
       <div class="flex flex-wrap gap-2">
         <%= nk_card(class: "w-[320px]") do |c| %>
@@ -17,15 +17,15 @@
       </div>
     <% end %>
 
-    <%= code_example %{
-                  <%= card do |c| %\>
-                    <%= c.header "Save your changes" %\>
-                    <%= c.body "This will forever set it in stone." %\>
-                    <%= c.footer do %\>
-                      <%= button "Cancel" %\>
-                      <%= primary_button "Save", icon: "check" %\>
-                    <% end %\>
-                  <% end %\>
-                } %>
-  </div>
+    <%= code_example do %>
+      {#= nk_card do |c| #}
+        {#= c.header "Save your changes" #}
+        {#= c.body "This will forever set it in stone." #}
+        {#= c.footer do #}
+          {#= button "Cancel" #}
+          {#= primary_button "Save", icon: "check" #}
+        {# end #}
+      {# end #}
+    <% end %>
+  <% end %>
 <% end %>

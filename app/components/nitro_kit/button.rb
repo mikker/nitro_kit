@@ -28,7 +28,7 @@ module NitroKit
       ],
       ghost: [
         "bg-transparent text-foreground border-transparent",
-        "hover:bg-zinc-50 dark:hover:bg-zinc-900",
+        "hover:bg-zinc-100 dark:hover:bg-zinc-900",
         "disabled:text-muted-foreground"
       ]
     }.freeze
