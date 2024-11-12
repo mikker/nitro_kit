@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    nitro_kit (0.1.0)
+    nitro_kit (0.2.0)
       activesupport (>= 7.0.0)
       phlex-rails (>= 2.0.0.beta2)
       tailwind_merge (>= 0.13.0)

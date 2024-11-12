@@ -38,6 +38,8 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     needs: ["test"]
+    env:
+      DOKKU_APP_NAME: nk
     steps:
       - uses: actions/checkout@v4
         if: github.ref == 'refs/heads/main' && job.status == 'success'
@@ -57,4 +59,9 @@ jobs:
       - name: Maybe deploy
         if: github.ref == 'refs/heads/main' && job.status == 'success'
         run: |
-          git push dokku@${{ secrets.DOKKU_SERVER_HOST }}:nk
+          timeout 5m bash -c 'until bin/deploy-available dokku@${{ secrets.DOKKU_SERVER_HOST }} ${{ env.DOKKU_APP_NAME }}; do
+            echo "Deploys are locked (already deploying?). Trying again in 10s"
+            sleep 10
+          done'
+
+          git push dokku@${{ secrets.DOKKU_SERVER_HOST }}:${{ env.DOKKU_APP_NAME }}

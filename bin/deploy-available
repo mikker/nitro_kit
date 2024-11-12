@@ -1,0 +1,4 @@
+#!/bin/bash
+host=$1
+app=$2
+! ssh "$host" apps:locked "$app" >/dev/null
