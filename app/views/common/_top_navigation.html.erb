@@ -31,15 +31,25 @@
 
     <div class="flex-1"></div>
 
-    <% premium = "border-orange-300 bg-gradient-to-tr from-orange-200 via-yellow-100 to-orange-200 text-orange-800/80!" %>
-    <%= nk_button "Get Premium", page_path(:premium), size: :xs, class: class_names(premium) %>
+    <% premium =
+      "border-orange-300 bg-gradient-to-tr from-orange-200 via-yellow-100 to-orange-200 text-orange-800/80!" %>
+    <%= nk_button "Get Premium",
+    page_path(:premium),
+    size: :xs,
+    class: class_names(premium) %>
 
     <div class="hidden gap-1 items-center -mr-3 md:flex">
       <%#= nk_input type: "search" %>
 
       <div class="flex gap-2 items-center mx-4">
         <%= nk_icon("sun", size: :sm) %>
-        <%= nk_switch nil, data: { action: "theme#toggle", "theme-target": "toggle" } %>
+        <%= nk_switch nil,
+        id: "theme-toggle",
+        data: {
+          action: "theme#toggle",
+          "theme-target": "toggle",
+          turbo_permanent: true,
+        } %>
         <%= nk_icon("moon", size: :sm) %>
       </div>
 
