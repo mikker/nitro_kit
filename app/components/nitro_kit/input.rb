@@ -1,7 +1,7 @@
 module NitroKit
   INPUT = [
     "rounded-md border bg-background border-border text-base px-3 py-2",
-    "focus:outline-none focus:ring-2 focus:ring-primary",
+    "focus:outline-none ring-ring ring-offset-2 ring-offset-background focus-visible:ring-2",
     ""
   ].freeze
 

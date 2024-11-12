@@ -16,7 +16,7 @@
 
     <p>Tailwind CSS is required for Nitro Kit and version 4 is recommended.</p>
 
-    <p>There are multiple, equally good methods to get Tailwind into your project but the simplest one is probably using <code>tailwindcss-rails</code>:</p>
+    <p>There are multiple, equally good, methods to get Tailwind into your project but the simplest one is likely using <code>tailwindcss-rails</code>:</p>
 
     <%= code_example(language: :shell) do %>
       bundle add tailwindcss-rails
@@ -94,10 +94,18 @@
   <% end %>
 
   <%= section do %>
+    <%= section_title "Stimulus" %>
+
+    <p>Nitro Kit requires Stimulus if you add components that depend on JavaScript.</p>
+
+    <p>It is expected that your app loads all Stimulus controllers from <code>app/javascript/controllers/</code> as per the default <a href="https://github.com/hotwired/stimulus-rails">stimulus-rails</a> installation.</p>
+  <% end %>
+
+  <%= section do %>
     <%= section_title "Add components to your app" %>
 
     <%= code_example(language: :bash) do %>
-      rails generate ignition_kit all # or a list of individual components
+      bin/rails generate ignition_kit:add all # or a list of individual components
     <% end %>
 
     <p>That's it!</p>
