@@ -15,8 +15,15 @@ module NitroKit
       **attrs,
       &block
     )
-      content = block_given? ? capture(&block) : text_or_href
-      href = text_or_href if href.nil? && block_given?
+      if block_given?
+        content = capture(&block)
+        href = text_or_href
+      elsif href.nil? && icon
+        content = nil
+        href = text_or_href
+      else
+        content = text_or_href
+      end
 
       if href && !href.is_a?(String)
         href = url_for(href)
