@@ -5,24 +5,17 @@ module NitroKit
     automatic_variants(Button::VARIANTS, :nk_button)
 
     def nk_button(
-      text_or_href = nil,
-      href = nil,
+      text = nil,
+      href: nil,
       icon: nil,
       icon_right: nil,
       size: :base,
-      type: :button,
       variant: :default,
       **attrs,
       &block
     )
       if block_given?
-        content = capture(&block)
-        href = text_or_href
-      elsif href.nil? && icon
-        content = nil
-        href = text_or_href
-      else
-        content = text_or_href
+        text = capture(&block)
       end
 
       if href && !href.is_a?(String)
@@ -34,13 +27,12 @@ module NitroKit
           href:,
           icon:,
           icon_right:,
-          size:,
-          type:,
           variant:,
+          size:,
           **attrs
         )
       ) do
-        content
+        text
       end
     end
   end

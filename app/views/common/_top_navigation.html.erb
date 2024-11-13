@@ -19,7 +19,7 @@
         ) %>
       </div>
 
-      <%= nk_ghost_button root_path, class: "font-bold px-2" do %>
+      <%= nk_ghost_button href: root_path, class: "font-bold px-2" do %>
         <%= image_tag "nitro_bottle.webp", class: "h-8 block" %>
         <div class="flex flex-col items-start leading-tight">
           <span>Nitro Kit</span>
@@ -33,10 +33,7 @@
 
     <% premium =
       "border-orange-300 bg-gradient-to-tr from-orange-200 via-yellow-100 to-orange-200 text-orange-800/80!" %>
-    <%= nk_button "Get Premium",
-    page_path(:premium),
-    size: :xs,
-    class: class_names(premium) %>
+    <%= nk_button "Get Premium", href: page_path(:premium), size: :xs, class: class_names(premium) %>
 
     <div class="hidden gap-1 items-center -mr-3 md:flex">
       <%#= nk_input type: "search" %>
@@ -53,7 +50,7 @@
         <%= nk_icon("moon", size: :sm) %>
       </div>
 
-      <%= nk_ghost_button("https://twitter.com/mikker", aria: { label: "Follow on Twitter" }) do %>
+      <%= nk_ghost_button(href: "https://twitter.com/mikker", aria: { label: "Follow on Twitter" }) do %>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           shape-rendering="geometricPrecision"
@@ -68,7 +65,7 @@
             d="M403.229 0h78.506L310.219 196.04 512 462.799H354.002L230.261 301.007 88.669 462.799h-78.56l183.455-209.683L0 0h161.999l111.856 147.88L403.229 0zm-27.556 415.805h43.505L138.363 44.527h-46.68l283.99 371.278z"
           /></svg>
       <% end %>
-      <%= nk_ghost_button("https://bsky.app/profile/mikker.dev", aria: { label: "Follow on Bluesky" }) do %>
+      <%= nk_ghost_button(href: "https://bsky.app/profile/mikker.dev", aria: { label: "Follow on Bluesky" }) do %>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           shape-rendering="geometricPrecision"
@@ -84,7 +81,7 @@
           /></svg>
       <% end %>
       <%= nk_ghost_button(
-        "https://github.com/mikker/nitro_kit",
+        href: "https://github.com/mikker/nitro_kit",
         icon: "github",
         aria: {
           label: "View on GitHub",
