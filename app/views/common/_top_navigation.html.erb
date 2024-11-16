@@ -33,9 +33,12 @@
 
     <% premium =
       "border-orange-300 bg-gradient-to-tr from-orange-200 via-yellow-100 to-orange-200 text-orange-800/80!" %>
-    <%= nk_button "Get Premium", href: page_path(:premium), size: :xs, class: class_names(premium) %>
+    <%= nk_button "Get Premium",
+    href: page_path(:premium),
+    size: :xs,
+    class: class_names(premium) %>
 
-    <div class="hidden gap-1 items-center -mr-3 md:flex">
+    <div class="hidden gap-1 items-center -mr-3 sm:flex">
       <%#= nk_input type: "search" %>
 
       <div class="flex gap-2 items-center mx-4">

@@ -20,8 +20,12 @@ module NitroKit
 
     def data_merge(*hashes)
       hashes.compact.reverse.reduce({}) do |acc, hash|
-        acc.deep_merge(hash) do |_key, old_val, new_val|
-          [old_val, new_val].compact.join(" ")
+        acc.deep_merge(hash) do |key, old_val, new_val|
+          case key
+          # Concat Stimulus actions
+          when :action then [old_val, new_val].compact.join(" ")
+          else new_val
+          end
         end
       end
     end
