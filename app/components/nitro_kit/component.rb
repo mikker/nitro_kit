@@ -1,6 +1,4 @@
 module NitroKit
-  Merger = TailwindMerge::Merger.new
-
   class Component < Phlex::HTML
     attr_reader :attrs
 
@@ -10,12 +8,11 @@ module NitroKit
 
     attr_reader :attrs
 
-    def merge(*args)
-      self.class.merge(*args)
-    end
+    private
 
-    def self.merge(*args)
-      Merger.merge(args)
+    def merge(*args)
+      @@merger ||= TailwindMerge::Merger.new
+      @@merger.merge(args)
     end
 
     def data_merge(*hashes)

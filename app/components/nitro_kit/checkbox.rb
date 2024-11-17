@@ -1,7 +1,5 @@
 module NitroKit
   class Checkbox < Component
-    include ActionView::Helpers::FormTagHelper
-
     def initialize(name, value: "1", label: nil, **attrs)
       super(**attrs)
 
@@ -16,12 +14,12 @@ module NitroKit
     )
 
     def view_template
-      div(class: merge(["isolate inline-flex items-center gap-2", attrs[:class]])) do
+      div(class: merge("isolate inline-flex items-center gap-2", attrs[:class])) do
         label(class: "relative flex shrink-0") do
           input(
             **attrs,
             type: "checkbox",
-            class: class_names(
+            class: merge(
               "peer appearance-none shadow-sm size-4 rounded-sm border text-foreground",
               "checked:bg-primary checked:border-primary",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -40,7 +38,7 @@ module NitroKit
 
     def checkmark
       span(
-        class: class_names(
+        class: merge(
           "absolute w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
           "text-zinc-50 dark:text-zinc-950 opacity-0 peer-checked:opacity-100 pointer-events-none"
         )
