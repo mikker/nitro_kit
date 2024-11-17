@@ -1,11 +1,13 @@
 module NitroKit
   class Select < Component
-    def initialize(value: nil, **attrs)
+    def initialize(options = nil, value: nil, **attrs)
+      @options = options
       @value = value
+
       super(**attrs)
     end
 
-    attr_reader :value
+    attr_reader :value, :options
 
     def view_template
       span(
@@ -13,7 +15,7 @@ module NitroKit
         class: merge(wrapper_class, attrs[:class])
       ) do
         select(**attrs, class: merge(select_class)) do
-          yield
+          options ? options.map { |o| option(*o) } : yield
         end
         chevron_icon
       end
@@ -21,9 +23,10 @@ module NitroKit
 
     alias :html_option :option
 
-    def option(**attrs, &block)
+    def option(key = nil, value = nil, **attrs, &block)
+      value ||= key
       attrs[:selected] = attrs[:value] == value
-      html_option(selected: value == @value, **attrs) { yield }
+      html_option(**attrs) { key || yield }
     end
 
     private

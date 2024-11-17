@@ -2,7 +2,6 @@ module NitroKit
   class Field < Component
     FIELD = [
       "flex flex-col gap-2 align-start",
-      "[&:has([data-slot='error'])_[data-slot='label']]:text-destructive",
       "[&:has([data-slot='error'])_[data-slot='control']]:border-destructive"
     ].freeze
 
@@ -21,6 +20,9 @@ module NitroKit
 
       @name = name
       @as = as.to_sym
+
+      # select
+      @options = attrs[:options]
 
       @field_attrs = attrs
       @field_label = label || name.to_s.humanize
@@ -47,7 +49,7 @@ module NitroKit
       end
     end
 
-    alias :original_label :label
+    alias :html_label :label
 
     def label(text = nil, **attrs)
       text ||= field_label
@@ -75,19 +77,6 @@ module NitroKit
       ) { text }
     end
 
-    alias :original_input :input
-
-    def input(**attrs)
-      render(
-        Input.new(
-          name:,
-          **field_attrs,
-          **attrs,
-          data: {slot: "control", **data_merge(field_attrs[:data], attrs[:data])}
-        )
-      )
-    end
-
     def errors(error_messages = nil, **attrs)
       error_messages ||= field_error_messages
 
@@ -104,10 +93,12 @@ module NitroKit
       end
     end
 
-    def control(**override_attrs)
+    def control(**attrs)
       case as
       when :string
-        input(**override_attrs)
+        input(**attrs)
+      when :select
+        select(**attrs)
       end
     end
 
@@ -118,6 +109,33 @@ module NitroKit
       description
       control
       errors
+    end
+
+    alias :html_input :input
+
+    def input(**attrs)
+      render(
+        Input.new(
+          name:,
+          **field_attrs,
+          **attrs,
+          data: {slot: "control", **data_merge(field_attrs[:data], attrs[:data])}
+        )
+      )
+    end
+
+    alias :html_select :select
+
+    def select(options: [], **attrs)
+      render(
+        Select.new(
+          @options,
+          name:,
+          **field_attrs,
+          **attrs,
+          data: {slot: "control", **data_merge(field_attrs[:data], attrs[:data])}
+        )
+      )
     end
   end
 end

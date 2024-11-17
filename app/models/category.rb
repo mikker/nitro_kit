@@ -12,4 +12,12 @@ class Category
       new(name:, id:)
     end
   end
+
+  def self.pluck(*keys)
+    all.map do |c|
+      keys.map do |key|
+        c.send(key)
+      end
+    end
+  end
 end
