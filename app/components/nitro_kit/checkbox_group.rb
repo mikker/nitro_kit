@@ -1,15 +1,12 @@
 module NitroKit
-  class RadioGroup < Component
-    def initialize(options = nil, name: nil, value: nil, **attrs)
+  class CheckboxGroup < Component
+    def initialize(options = nil, **attrs)
       super(**attrs)
 
       @options = options
-
-      @name = name
-      @group_value = value
     end
 
-    attr_reader :name, :group_value, :options
+    attr_reader :options
 
     def view_template
       div(class: "flex items-start flex-col gap-2") do
@@ -25,11 +22,9 @@ module NitroKit
       value ||= attrs.fetch(:value, text)
 
       render(
-        RadioButton.new(
-          name:,
+        Checkbox.new(
           value:,
           label: text,
-          checked: group_value.presence == value,
           **attrs
         )
       )

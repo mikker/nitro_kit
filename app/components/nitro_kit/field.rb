@@ -3,8 +3,9 @@ module NitroKit
     include ActionView::Helpers::FormHelper
 
     FIELD = [
-      "flex flex-col gap-2 align-start",
-      "[&:has([data-slot='error'])_[data-slot='control']]:border-destructive"
+      "grid gap-2 align-start",
+      "[&[data-as=checkbox]]:grid-cols-[auto_1fr] [&[data-as=checkbox]_[data-slot=description]]:col-start-2",
+      "[&:has([data-slot=error])_[data-slot=control]]:border-destructive"
     ].freeze
 
     DESCRIPTION = "text-sm text-muted-foreground"
@@ -49,7 +50,7 @@ module NitroKit
     )
 
     def view_template
-      div(**attrs, class: merge(FIELD, attrs[:class])) do
+      div(**attrs, data: data_merge(attrs[:data], as:), class: merge(FIELD, attrs[:class])) do
         if !block_given?
           default_field
         else
@@ -126,6 +127,7 @@ module NitroKit
       case as
       when :checkbox
         control
+        label
         description
         errors
       else
@@ -188,7 +190,6 @@ module NitroKit
     def checkbox(**attrs)
       render(
         Checkbox.new(
-          label: field_label,
           **control_attrs(
             **field_attrs,
             **attrs

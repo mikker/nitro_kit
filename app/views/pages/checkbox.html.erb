@@ -17,5 +17,13 @@
     <% end %>
 
     <%= code_example %{<%= nk_checkbox label: "Accept your fate" %\>} %>
+
+    <%= example do %>
+      <%= nk_checkbox_group do |g| %>
+        <%= g.title "Choose your poisons" %>
+        <%= g.item value: :coke, label: "Coke", checked: true %>
+        <%= g.item value: :zero, label: "Coke Zero" %>
+      <% end %>
+    <% end %>
   <% end %>
 <% end %>
