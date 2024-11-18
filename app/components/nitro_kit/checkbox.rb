@@ -1,22 +1,22 @@
 module NitroKit
   class Checkbox < Component
-    def initialize(name, value: "1", label: nil, **attrs)
+    def initialize(label: nil, id: nil, **attrs)
       super(**attrs)
 
-      @name = name
-      @label_text = label
+      @id = id || SecureRandom.hex(4)
+
+      @label = label
     end
 
-    attr_reader(
-      :name,
-      :value,
-      :label_text
-    )
+    alias :html_label :label
+
+    attr_reader :label, :id
 
     def view_template
       div(class: merge("isolate inline-flex items-center gap-2", attrs[:class])) do
-        label(class: "relative flex shrink-0") do
+        html_label(class: "relative flex shrink-0") do
           input(
+            id:,
             **attrs,
             type: "checkbox",
             class: merge(
@@ -28,8 +28,8 @@ module NitroKit
           checkmark
         end
 
-        if label_text.present?
-          render(Label.new(for: attrs[:id])) { label_text }
+        if label.present?
+          render(Label.new(for: id)) { label }
         end
       end
     end

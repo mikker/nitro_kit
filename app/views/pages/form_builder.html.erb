@@ -10,17 +10,15 @@
 
         <%= tag.div(class: "flex gap-4 items-center") do %>
           <%= f.field :category_id, as: :select, options: Category.pluck(:name, :id) %>
-          <%#<%= f.field :public, as: :checkbox %>
-          <%#<%= f.select :category_id, [["Ruby"], ["JavaScript"]] %>
         <% end %>
 
-        <%#<%= f.field :body %>
-
         <div>
-          <%= f.textarea :body %>
+          <%= f.field :body, as: :text, rows: 6 %>
         </div>
 
-        <%= f.check_box :publish, label: "Publish?" %>
+        <%= f.field :publish, as: :checkbox, description: "Should we tell the world?" %>
+
+        <%= f.field :kind, as: :radio_group, options: Post.kinds, value: "article" %>
 
         <div>
           <%= f.submit %>

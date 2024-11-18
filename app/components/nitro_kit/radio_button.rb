@@ -2,13 +2,13 @@ module NitroKit
   class RadioButton < Component
     include ActionView::Helpers::FormTagHelper
 
-    def initialize(name, value:, label: nil, **attrs)
+    def initialize(name: nil, value: nil, label: nil, **attrs)
       super(**attrs)
 
       @name = name
       @value = value
       @label_text = label
-      @id = "#{sanitize_to_id(name)}_#{sanitize_to_id(value)}"
+      @id = id || SecureRandom.hex(4)
     end
 
     attr_reader(

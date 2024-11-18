@@ -1,5 +1,7 @@
 module NitroKit
   class Field < Component
+    include ActionView::Helpers::FormHelper
+
     FIELD = [
       "flex flex-col gap-2 align-start",
       "[&:has([data-slot='error'])_[data-slot='control']]:border-destructive"
@@ -9,7 +11,8 @@ module NitroKit
     ERROR = "text-sm text-destructive"
 
     def initialize(
-      name,
+      form,
+      field_name,
       as: :string,
       label: nil,
       description: nil,
@@ -18,21 +21,27 @@ module NitroKit
     )
       super(**attrs)
 
-      @name = name
+      @form = form
+      @field_name = field_name
       @as = as.to_sym
+
+      @name = attrs[:name] || form.field_name(field_name)
+      @id = attrs[:id] || form.field_id(field_name)
 
       # select
       @options = attrs[:options]
 
       @field_attrs = attrs
-      @field_label = label || name.to_s.humanize
+      @field_label = label || field_name.to_s.humanize
       @field_description = description
       @field_error_messages = errors
     end
 
     attr_reader(
-      :name,
       :as,
+      :form,
+      :name,
+      :id,
       :field_attrs,
       :field_label,
       :field_description,
@@ -59,6 +68,7 @@ module NitroKit
       render(
         Label.new(
           **attrs,
+          for: id,
           data: data_merge({slot: "label"}, attrs[:data])
         )
       ) do
@@ -99,16 +109,40 @@ module NitroKit
         input(**attrs)
       when :select
         select(**attrs)
+      when :text
+        textarea(**attrs)
+      when :checkbox
+        checkbox(**attrs)
+      when :radio, :radio_group
+        radio_group(**attrs)
+      else
+        raise ArgumentError, "Invalid field type"
       end
     end
 
     private
 
     def default_field
-      label
-      description
-      control
-      errors
+      case as
+      when :checkbox
+        control
+        description
+        errors
+      else
+        label
+        description
+        control
+        errors
+      end
+    end
+
+    def control_attrs(**attrs)
+      {
+        name:,
+        id:,
+        **attrs,
+        data: {slot: "control", **data_merge(field_attrs[:data], attrs[:data])}
+      }
     end
 
     alias :html_input :input
@@ -116,24 +150,61 @@ module NitroKit
     def input(**attrs)
       render(
         Input.new(
-          name:,
-          **field_attrs,
-          **attrs,
-          data: {slot: "control", **data_merge(field_attrs[:data], attrs[:data])}
+          **control_attrs(
+            **field_attrs,
+            **attrs
+          )
         )
       )
     end
 
     alias :html_select :select
 
-    def select(options: [], **attrs)
+    def select(options: nil, **attrs)
       render(
         Select.new(
-          @options,
-          name:,
-          **field_attrs,
-          **attrs,
-          data: {slot: "control", **data_merge(field_attrs[:data], attrs[:data])}
+          options || @options || [],
+          **control_attrs(
+            **field_attrs,
+            **attrs
+          )
+        )
+      )
+    end
+
+    alias :html_textarea :textarea
+
+    def textarea(**attrs)
+      render(
+        Textarea.new(
+          **control_attrs(
+            **field_attrs,
+            **attrs
+          )
+        )
+      )
+    end
+
+    def checkbox(**attrs)
+      render(
+        Checkbox.new(
+          label: field_label,
+          **control_attrs(
+            **field_attrs,
+            **attrs
+          )
+        )
+      )
+    end
+
+    def radio_group(options: nil, **attrs)
+      render(
+        RadioGroup.new(
+          options || @options || [],
+          **control_attrs(
+            **field_attrs,
+            **attrs
+          )
         )
       )
     end

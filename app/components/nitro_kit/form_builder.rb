@@ -12,16 +12,16 @@ module NitroKit
       @template.render(NitroKit::FieldGroup.new(**options)) { content }
     end
 
-    def field(object_name, **options)
-      label = options.fetch(:label, object_name.to_s.humanize)
-      errors = object.errors.include?(object_name) ? object.errors.full_messages_for(object_name) : nil
+    def field(field_name, **options)
+      label = options.fetch(:label, field_name.to_s.humanize)
+      errors = object.errors.include?(field_name) ? object.errors.full_messages_for(field_name) : nil
 
-      @template.render(NitroKit::Field.new(object_name, label:, errors:, **options))
+      @template.render(NitroKit::Field.new(self, field_name, label:, errors:, **options))
     end
 
     # Inputs
 
-    def label(object_name, method, content_or_options = nil, options = nil, &block)
+    def label(field_name, method, content_or_options = nil, options = nil, &block)
     end
 
     def checkbox(method, options = {})

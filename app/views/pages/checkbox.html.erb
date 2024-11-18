@@ -4,18 +4,18 @@
   <%= section do %>
     <h2>Simple checkbox</h2>
     <%= example do %>
-      <%= nk_checkbox :name_1 %>
-      <%= nk_checkbox :name_2, checked: true %>
+      <%= nk_checkbox %>
+      <%= nk_checkbox checked: true %>
     <% end %>
 
-    <%= code_example(%{<%= nk_checkbox "name" %\>}) %>
+    <%= code_example(%{<%= nk_checkbox name: "title" %\>}) %>
 
     <h2>Checkbox with label</h2>
 
     <%= example do %>
-      <%= nk_checkbox "name_3", label: "Accept your fate" %>
+      <%= nk_checkbox label: "Accept your fate" %>
     <% end %>
 
-    <%= code_example %{<%= nk_checkbox "name", label: "Accept your fate" %\>} %>
+    <%= code_example %{<%= nk_checkbox label: "Accept your fate" %\>} %>
   <% end %>
 <% end %>

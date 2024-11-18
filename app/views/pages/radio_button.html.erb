@@ -4,8 +4,8 @@
   <%= section do %>
     <%= example do %>
       <div class="flex gap-2">
-        <%= nk_radio_button :name, 1 %>
-        <%= nk_radio_button :name, 2, checked: true %>
+        <%= nk_radio_button name: "example" %>
+        <%= nk_radio_button name: "example", checked: true %>
       </div>
     <% end %>
 
@@ -14,10 +14,10 @@
     <h2>Radio group</h2>
 
     <%= example do %>
-      <%= nk_radio_group(:taste, value: :zero) do |g| %>
-        <%= g.title "Choose your fate" %>
-        <%= g.item :coke, label: "Coke" %>
-        <%= g.item :zero, label: "Coke Zero" %>
+      <%= nk_radio_group(name: "taste", value: "zero") do |g| %>
+        <%= g.title "Choose your poison" %>
+        <%= g.item value: "coke", label: "Coke" %>
+        <%= g.item value: "zero", label: "Coke Zero" %>
       <% end %>
     <% end %>
 

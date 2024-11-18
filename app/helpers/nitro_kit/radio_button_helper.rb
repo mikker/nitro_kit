@@ -1,20 +1,11 @@
 module NitroKit
   module RadioButtonHelper
-    def nk_radio_button(name, value, *args)
-      if args.length >= 3
-        raise ArgumentError, "wrong number of arguments (given #{args.length + 2}, expected 2..4)"
-      end
-
-      options = args.extract_options!
-      checked = args.empty? ? false : args.first
-
-      options[:checked] = "checked" if checked
-
-      render(RadioButton.new(name, value:, name:, value:, **options))
+    def nk_radio_button(label: nil, **attrs)
+      render(RadioButton.new(label:, **attrs))
     end
 
-    def nk_radio_group(name, **options, &block)
-      render(RadioGroup.new(name, **options, &block))
+    def nk_radio_group(**attrs, &block)
+      render(RadioGroup.new(**attrs, &block))
     end
   end
 end
