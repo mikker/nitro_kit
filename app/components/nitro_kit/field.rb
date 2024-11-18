@@ -12,8 +12,8 @@ module NitroKit
     ERROR = "text-sm text-destructive"
 
     def initialize(
-      form,
-      field_name,
+      form = nil,
+      field_name = nil,
       as: :string,
       label: nil,
       description: nil,
@@ -26,8 +26,8 @@ module NitroKit
       @field_name = field_name
       @as = as.to_sym
 
-      @name = attrs[:name] || form.field_name(field_name)
-      @id = attrs[:id] || form.field_id(field_name)
+      @name = attrs[:name] || form&.field_name(field_name)
+      @id = attrs[:id] || form&.field_id(field_name)
 
       # select
       @options = attrs[:options]
