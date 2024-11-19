@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html data-controller="theme">
   <head>
-    <title><%= content_for(:title) || "Nitro Kit" %></title>
+    <title><%= yield(:title) || "Nitro Kit" %></title>
     <meta
       name="viewport"
       content="width=device-width,initial-scale=1,maximum-scale=1"
