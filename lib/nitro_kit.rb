@@ -23,12 +23,9 @@ module NitroKit
     s.add(:table)
     s.add(:textarea)
 
-    s.add(:input)
-    s.add(:label)
-
     # bit more advanced. Bundle into just "form" ?
     s.add(
-      :field,
+      :form,
       components: [
         :field,
         :field_group,
