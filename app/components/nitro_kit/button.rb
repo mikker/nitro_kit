@@ -1,11 +1,11 @@
 module NitroKit
   class Button < Component
     BASE = [
-      "inline-flex items-center cursor-pointer shrink-0 justify-center rounded-md border gap-2 font-medium",
+      "inline-flex items-center cursor-pointer shrink-0 justify-center rounded-md border gap-2 font-medium select-none",
       # Disabled
       "disabled:opacity-70 disabled:pointer-events-none",
       # Focus
-      "focus:outline-none focus:ring-[3px] focus:ring-offset-2 focus:ring-ring ring-offset-background",
+      "focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-offset-2 focus-visible:ring-ring ring-offset-background",
       # Icon
       "[&_svg]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
       # If icon only, make square
