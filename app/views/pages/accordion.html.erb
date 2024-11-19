@@ -4,22 +4,22 @@
   <div class="space-y-4">
     <%= example(class: "flex-col") do %>
       <%= nk_accordion(class: "w-full max-w-md") do |a| %>
-        <%= a.item do %>
-          <%= a.trigger "Item 1" %>
-          <%= a.content do %>
-            <p>Content</p>
+        <%= a.item(data: { testid: "item-1" }) do %>
+          <%= a.trigger("Item 1", data: { testid: "trigger-1" }) %>
+          <%= a.content(data: { testid: "content-1" }) do %>
+            <p>Content 1</p>
           <% end %>
         <% end %>
         <%= a.item do %>
           <%= a.trigger "Item 2" %>
           <%= a.content do %>
-            <p>Content</p>
+            <p>Content 2</p>
           <% end %>
         <% end %>
         <%= a.item do %>
           <%= a.trigger "Item 2" %>
           <%= a.content do %>
-            <p>Content</p>
+            <p>Content 3</p>
           <% end %>
         <% end %>
       <% end %>

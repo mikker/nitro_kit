@@ -31,6 +31,7 @@ end
 group :test do
   gem "capybara"
   gem "selenium-webdriver"
+  gem "cuprite", require: "capybara/cuprite"
 end
 
 gem "tailwindcss-rails", "~> 3.0"

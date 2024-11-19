@@ -1,0 +1,32 @@
+<%= component_page do %>
+  <%= title "Avatar" %>
+  <%= lead "It's a face in a circle" %>
+
+  <%= section do %>
+    <%= section_title "Default" %>
+
+    <%= example do %>
+      <%= nk_avatar "https://s3.brnbw.com/race-shot-4-JjBbwOH29ZrN54HklF6u47axapBjPDGilcpTmVfkphRnzaI32YsaxxKm7Z6pPDyvhLNkG8NXbtyBonuj0a4lK0JEtTZr91uIajpi.jpg" %>
+    <% end %>
+
+    <%= code_example do %>
+      {#= nk_avatar "dhh-racer.jpg" #}
+    <% end %>
+  <% end %>
+
+  <%= section do %>
+    <%= section_title "Sizes" %>
+
+    <%= example do %>
+      <%= nk_avatar "https://s3.brnbw.com/race-shot-4-JjBbwOH29ZrN54HklF6u47axapBjPDGilcpTmVfkphRnzaI32YsaxxKm7Z6pPDyvhLNkG8NXbtyBonuj0a4lK0JEtTZr91uIajpi.jpg", size: :sm %>
+      <%= nk_avatar "https://s3.brnbw.com/race-shot-4-JjBbwOH29ZrN54HklF6u47axapBjPDGilcpTmVfkphRnzaI32YsaxxKm7Z6pPDyvhLNkG8NXbtyBonuj0a4lK0JEtTZr91uIajpi.jpg", size: :md %>
+      <%= nk_avatar "https://s3.brnbw.com/race-shot-4-JjBbwOH29ZrN54HklF6u47axapBjPDGilcpTmVfkphRnzaI32YsaxxKm7Z6pPDyvhLNkG8NXbtyBonuj0a4lK0JEtTZr91uIajpi.jpg", size: :lg %>
+    <% end %>
+
+    <%= code_example do %>
+      {#= nk_avatar "dhh-racer.jpg", size: :sm #}
+      {#= nk_avatar "dhh-racer.jpg", size: :md #} <!-- default -->
+      {#= nk_avatar "dhh-racer.jpg", size: :lg #}
+    <% end %>
+  <% end %>
+<% end %>
