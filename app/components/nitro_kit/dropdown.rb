@@ -1,7 +1,5 @@
 module NitroKit
   class Dropdown < Component
-    include Phlex::Rails::Helpers::LinkTo
-
     CONTENT = [
       "w-max-content absolute top-0 left-0",
       "p-1 bg-background rounded-md border shadow-sm",

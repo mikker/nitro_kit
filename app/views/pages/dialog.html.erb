@@ -1,0 +1,27 @@
+<%= component_page do %>
+  <%= title "Dialog" %>
+
+  <%= section do %>
+    <%= example do %>
+      <%= nk_dialog do |d| %>
+        <%= d.trigger do %>
+          <%= nk_button "Open dialog" %>
+        <% end %>
+        <%= d.content do %>
+          <p>Dialog content</p>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <%= code_example do %>
+      {#= nk_dialog do |d| #}
+        {#= d.trigger do #}
+          {#= nk_button "Open dialog" #}
+        {# end #}
+        {#= d.content do #}
+          ...
+        {# end #}
+      {# end #}
+    <% end %>
+  <% end %>
+<% end %>
