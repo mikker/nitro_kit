@@ -3,12 +3,16 @@ import { Controller } from "@hotwired/stimulus";
 export default class extends Controller {
   static targets = ["trigger", "content"];
 
-  toggle() {
-    const isExpanded =
-      this.triggerTarget.getAttribute("aria-expanded") === "true";
+  toggle(event) {
+    const trigger = event.target;
+    const content = trigger.parentElement.querySelector(
+      "[data-nk--accordion-target=content]",
+    );
+
+    const isExpanded = trigger.getAttribute("aria-expanded") === "true";
 
     // Toggle current item
-    this.triggerTarget.setAttribute("aria-expanded", (!isExpanded).toString());
-    this.contentTarget.setAttribute("aria-hidden", isExpanded.toString());
+    trigger.setAttribute("aria-expanded", (!isExpanded).toString());
+    content.setAttribute("aria-hidden", isExpanded.toString());
   }
 }

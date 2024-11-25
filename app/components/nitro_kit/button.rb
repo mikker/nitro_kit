@@ -14,7 +14,7 @@ module NitroKit
 
     VARIANTS = {
       default: [
-        "bg-background text-foreground",
+        "bg-background text-foreground border-border",
         "hover:bg-zinc-50 dark:hover:bg-zinc-900"
       ],
       primary: [

@@ -30,38 +30,20 @@
       @import "tailwindcss";
 
       @theme {
-        /* We need these for Tailwind to pick up the variables below and allow
-         * alpha values, like text-foreground/50.
-         * I hope this will get fixed for v4 release */
-        --color-foreground: #000;
-        --color-background: #000;
+        --color-foreground: var(--color-zinc-950);
+        --color-background: var(--color-white);
 
-        --color-border: #000;
-        --color-ring: #000;
-        --color-muted: #000;
-        --color-muted-foreground: #000;
-        --color-primary: #000;
-        --color-primary-foreground: #000;
-        --color-destructive: #000;
-        --color-destructive-foreground: #000;
+        --color-border: var(--color-zinc-300);
+        --color-ring: var(--color-blue-300);
+        --color-muted: var(--color-zinc-100);
+        --color-muted-foreground: var(--color-zinc-500);
+        --color-primary: var(--color-zinc-900);
+        --color-primary-foreground: var(--color-zinc-950);
+        --color-destructive: var(--color-red-500);
+        --color-destructive-foreground: var(--color-red-700);
       }
 
       @layer base {
-        :root,
-        .light {
-          --color-foreground: var(--color-zinc-950);
-          --color-background: var(--color-white);
-
-          --color-border: var(--color-zinc-300);
-          --color-ring: var(--color-blue-300);
-          --color-muted: var(--color-zinc-100);
-          --color-muted-foreground: var(--color-zinc-500);
-          --color-primary: var(--color-zinc-900);
-          --color-primary-foreground: var(--color-zinc-950);
-          --color-destructive: var(--color-red-500);
-          --color-destructive-foreground: var(--color-red-700);
-        }
-
         [data-theme="dark"] {
           --color-foreground: var(--color-zinc-100);
           --color-background: var(--color-zinc-950);

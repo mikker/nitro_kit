@@ -23,7 +23,11 @@ module NitroKit
         type: "button",
         **attrs,
         class: merge(trigger_class, attrs[:class]),
-        data: data_merge(attrs[:data], action: "nk--accordion#toggle", nk__accordion_target: "trigger"),
+        data: data_merge(
+          attrs[:data],
+          action: "nk--accordion#toggle",
+          nk__accordion_target: "trigger"
+        ),
         aria: {expanded: "false"}
       ) do
         block_given? ? yield : plain(text)
@@ -35,7 +39,10 @@ module NitroKit
       div(
         **attrs,
         class: merge(content_class, attrs[:class]),
-        data: data_merge(attrs[:data], nk__accordion_target: "content"),
+        data: data_merge(
+          attrs[:data],
+          nk__accordion_target: "content"
+        ),
         aria: {hidden: "true"}
       ) do
         div(class: "pb-4") { yield }

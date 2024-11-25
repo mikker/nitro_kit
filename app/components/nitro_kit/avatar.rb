@@ -28,7 +28,7 @@ module NitroKit
     end
 
     def image
-      img(src:, class: "block size-full")
+      img(src:, class: "block size-full bg-muted")
     end
 
     private
