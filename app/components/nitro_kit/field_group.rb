@@ -1,9 +1,13 @@
 module NitroKit
   class FieldGroup < Component
-    FIELD_GROUP = "flex flex-col items-start gap-4"
-
     def view_template(&block)
-      div(**attrs, class: merge(FIELD_GROUP, attrs[:class]), &block)
+      div(**attrs, class: merge(base_class, attrs[:class]), &block)
+    end
+
+    private
+
+    def base_class
+      "flex flex-col items-stretch gap-4"
     end
   end
 end

@@ -4,8 +4,8 @@ module NitroKit
       form_with(**attrs, builder: NitroKit::FormBuilder, &block)
     end
 
-    def nk_form_for(**attrs, &block)
-      form_for(**attrs, builder: NitroKit::FormBuilder, &block)
+    def nk_form_for(*args, **attrs, &block)
+      form_for(*args, **attrs, builder: NitroKit::FormBuilder, &block)
     end
   end
 end

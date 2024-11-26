@@ -7,9 +7,7 @@ module NitroKit
       # Focus
       "focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-offset-2 focus-visible:ring-ring ring-offset-background",
       # Icon
-      "[&_svg]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
-      # If icon only, make square
-      "[&_svg:first-child:last-child]:-mx-2"
+      "[&_svg]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0"
     ].freeze
 
     VARIANTS = {
@@ -34,9 +32,19 @@ module NitroKit
     }.freeze
 
     SIZES = {
-      base: "px-4 h-9",
-      sm: "px-2.5 h-7 text-sm",
-      xs: "px-1.5 h-6 text-xs"
+      base: [
+        "px-4 h-9",
+        # If icon only, make square
+        "[&_svg:first-child:last-child]:-mx-2"
+      ],
+      sm: [
+        "px-2.5 h-7 text-sm",
+        "[&_svg:first-child:last-child]:-mx-1"
+      ],
+      xs: [
+        "px-1.5 h-6 text-xs",
+        "[&_svg:first-child:last-child]:-mx-1"
+      ]
     }.freeze
 
     def initialize(

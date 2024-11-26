@@ -1,15 +1,19 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["trigger", "content"];
-
-  connect() {
-    console.log("dialog");
-    this.open();
-  }
+  static targets = ["trigger", "dialog"];
 
   open() {
-    this.contentTarget.showModal();
-    console.log("open");
+    this.dialogTarget.showModal();
+  }
+
+  close() {
+    this.dialogTarget.close();
+  }
+
+  clickOutside(event) {
+    if (event.target === this.dialogTarget) {
+      this.close();
+    }
   }
 }

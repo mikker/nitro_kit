@@ -24,7 +24,7 @@ jobs:
       - name: Run tests
         env:
           RAILS_ENV: test
-        run: bin/rails db:test:prepare test test:system
+        run: bin/rails db:test:prepare test test:all
 
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v4
