@@ -20,8 +20,10 @@ module NitroKit
         acc.deep_merge(hash) do |key, old_val, new_val|
           case key
           # Concat Stimulus actions
-          when :action then [old_val, new_val].compact.join(" ")
-          else new_val
+          when :action
+            [old_val, new_val].compact.join(" ")
+          else
+            new_val
           end
         end
       end

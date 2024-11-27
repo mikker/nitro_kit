@@ -1,6 +1,6 @@
 module NitroKit
   module SelectHelper
-    def nk_select(options = [], value: nil, **attrs, &block)
+    def nk_select(options = nil, value: nil, **attrs, &block)
       render(Select.new(options, value:, **attrs), &block)
     end
   end

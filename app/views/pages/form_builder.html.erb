@@ -6,7 +6,7 @@
   <%= example do %>
     <%= nk_form_with model: @post,
       url: request.path,
-      html: { class: "w-[320px]" } do |f| %>
+      html: { class: "min-w-[320px]" } do |f| %>
       <%= f.fieldset do %>
         <%= f.field :title %>
 

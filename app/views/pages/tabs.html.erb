@@ -1,0 +1,43 @@
+<%= component_page do %>
+  <%= title "Tabs" %>
+
+  <%= section do %>
+    <%= example(data: {testid: "example-1"}) do %>
+      <%= nk_tabs(default: :general, class: "max-w-[480px]") do |t| %>
+        <%= t.tabs do %>
+          <%= t.tab(:general) { "General" } %>
+          <%= t.tab(:billing) { "Billing" } %>
+          <%= t.tab(:contact) { "Contact" } %>
+        <% end %>
+        <%= t.panel(:general) do %>
+          <p>Hi I'm a general, at ease soldier</p>
+        <% end %>
+        <%= t.panel(:billing) do %>
+          <p>Find that one receipts that your accountant asks for</p>
+        <% end %>
+        <%= t.panel(:contact) do %>
+          <p>How we can contact you when we screw up</p>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <%= code_example do %>
+      {#= nk_tabs(default: :general, class: "max-w-[480px]") do |t| #}
+        {#= t.tabs do #}
+          {#= t.tab(:general) { "Profile" } #}
+          {#= t.tab(:billing) { "Billing" } #}
+          {#= t.tab(:contact) { "Contact" } #}
+        {# end #}
+        {#= t.panel(:general) do #}
+          <p>Hi I'm a general, at ease soldier</p>
+        {# end #}
+        {#= t.panel(:billing) do #}
+          <p>Find that one receipt that your accountant asks for</p>
+        {# end #}
+        {#= t.panel(:contact) do #}
+          <p>How we can contact you when we screw up</p>
+        {# end #}
+      {# end #}
+    <% end %>
+  <% end %>
+<% end %>

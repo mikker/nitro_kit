@@ -11,22 +11,23 @@ module NitroKit
 
     def view_template
       span(
-        data: { slot: "control" },
+        data: {slot: "control"},
         class: merge(wrapper_class, attrs[:class])
       ) do
         select(**attrs, class: merge(select_class)) do
           options ? options.map { |o| option(*o) } : yield
         end
+
         chevron_icon
       end
     end
 
     alias :html_option :option
 
-    def option(key = nil, value = nil, **attrs, &block)
-      value ||= key
+    def option(key_or_value = nil, value = nil, **attrs, &block)
+      value ||= key_or_value
       attrs[:selected] = attrs[:value] == value
-      html_option(**attrs) { key || yield }
+      html_option(**attrs) { block_given? ? yield : key_or_value }
     end
 
     private

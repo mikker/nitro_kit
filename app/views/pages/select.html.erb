@@ -15,7 +15,7 @@
     <%= example do %>
       <%= nk_select(value: "3") do |s| %>
         <% 1.upto(5) do |i| %>
-          <%= s.option(value: i.to_s) { "Option #{i}" } %>
+          <%= s.option(i.to_s) { "Option #{i}" } %>
         <% end %>
       <% end %>
     <% end %>
