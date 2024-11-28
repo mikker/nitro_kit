@@ -1,13 +1,17 @@
 <%= component_page do %>
   <%= title "Button" %>
+  <%= lead "What happens if I press this huge red one labeled \"Don't touch!\"" %>
 
-  <div class="space-y-4">
+  <%= section do %>
+    <%= section_title "Variants" %>
+
+    <p>Nitro Kit gives you 4 variants by default. Most buttons should just be buttons. Every page should preferably not have more than one <em>primary</em> button.</p>
 
     <%= example(class: "flex-col") do %>
       <%= nk_button "Button" %>
       <%= nk_primary_button "Primary" %>
       <%= nk_destructive_button "Destructive" %>
-      <%= nk_ghost_button "Ghost", href: root_path %>
+      <%= nk_ghost_button "Ghost" %>
     <% end %>
 
     <%= code_example do %>
@@ -52,4 +56,34 @@
         {#= nk_destructive_button("Destructive") #}
       {# end #}
     <% end %>
+  <% end %>
+
+  <%= section do %>
+    <%= section_title "API compatibility" %>
+
+    <%= example(class: "gap-8") do %>
+      <div class="grid gap-2 place-items-start">
+        <code>nk_button_link_to</code>
+        <p class="text-sm">Matches <a href="https://api.rubyonrails.org/classes/ActionView/Helpers/UrlHelper.html#method-i-link_to" target="_blank" class="link"><code>link_to</code></a></p>
+        <%= nk_button_link_to "Go home", root_path %>
+      </div>
+      <div class="grid gap-2 place-items-start">
+        <code>nk_button_to</code>
+        <p class="text-sm">Matches <a href="https://api.rubyonrails.org/classes/ActionView/Helpers/UrlHelper.html#method-i-button_to" target="_blank" class="link"><code>button_to</code></a></p>
+        <div class="flex gap-2 items-center">
+          <%= nk_destructive_button_to "Delete post", posts_path, method: :delete, data: { turbo_frame: "test-result" }  %>
+          <%= turbo_frame_tag("test-result", class: "text-destructive-foreground") %>
+        </div>
+      </div>
+    <% end %>
+
+    <%= code_example do %>
+      {#= nk_button_link_to "Go home", root_path #}
+
+      {#= nk_destructive_button_to "Delete post", posts_path,
+          method: :delete, data: { turbo_frame: "test-result" }  #}
+      {#= turbo_frame_tag("test-result", class: "text-destructive-foreground") #}
+    <% end %>
+
+  <% end %>
 <% end %>
