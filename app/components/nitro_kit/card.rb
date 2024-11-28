@@ -5,7 +5,7 @@ module NitroKit
     end
 
     def view_template(&block)
-      div(class: "rounded-lg border p-6 space-y-6 shadow-sm", &block)
+      div(class: "rounded-lg border p-6 space-y-6", &block)
     end
 
     def title(**attrs)

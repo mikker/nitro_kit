@@ -41,7 +41,7 @@ module NitroKit
         data: data_merge(
           {
             nk__tabs_target: "tab",
-            action: "nk--tabs#setActiveTab",
+            action: "nk--tabs#setActiveTab keydown.left->nk--tabs#prevTab keydown.right->nk--tabs#nextTab",
             nk__tabs_key_param: key,
             key:
           },

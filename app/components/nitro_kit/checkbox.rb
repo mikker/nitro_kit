@@ -3,7 +3,7 @@ module NitroKit
     def initialize(label: nil, id: nil, **attrs)
       super(**attrs)
 
-      @id = id || SecureRandom.hex(4)
+      @id = id || "nk--" + SecureRandom.hex(4)
 
       @label = label
     end
