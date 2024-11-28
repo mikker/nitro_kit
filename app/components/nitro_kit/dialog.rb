@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   class Dialog < Component
     def initialize(identifier: nil, **attrs)

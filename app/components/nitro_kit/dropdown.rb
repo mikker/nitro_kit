@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   class Dropdown < Component
     include Phlex::Rails::Helpers::LinkTo

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   module FormHelper
     def nk_form_with(**attrs, &block)

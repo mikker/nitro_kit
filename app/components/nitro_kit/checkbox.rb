@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   class Checkbox < Component
     def initialize(label: nil, id: nil, **attrs)
@@ -14,7 +16,7 @@ module NitroKit
 
     def view_template
       div(class: merge("isolate inline-flex items-center gap-2", attrs[:class])) do
-        html_label(class: "relative flex shrink-0") do
+        html_label(class: "inline-grid *:[grid-area:1/1] place-items-center") do
           input(
             id:,
             **attrs,
@@ -22,7 +24,7 @@ module NitroKit
             class: merge(
               "peer appearance-none shadow-sm size-4 rounded-sm border text-foreground",
               "checked:bg-primary checked:border-primary",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ring-offset-2 ring-offset-background"
             )
           )
           checkmark
@@ -38,10 +40,7 @@ module NitroKit
 
     def checkmark
       span(
-        class: merge(
-          "absolute w-full h-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
-          "text-zinc-50 dark:text-zinc-950 opacity-0 peer-checked:opacity-100 pointer-events-none"
-        )
+        class: "size-4 text-zinc-50 dark:text-zinc-950 opacity-0 peer-checked:opacity-100 pointer-events-none"
       ) do
         svg(
           class: "size-full",

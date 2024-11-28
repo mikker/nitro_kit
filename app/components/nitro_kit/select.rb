@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   class Select < Component
     def initialize(options = nil, value: nil, **attrs)

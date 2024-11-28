@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ApplicationHelper
   def component_page(&block)
     tag.div(class: "p-5") do

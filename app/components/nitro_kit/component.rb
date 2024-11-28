@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   class Component < Phlex::HTML
     attr_reader :attrs

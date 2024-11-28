@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   class Label < Component
     def view_template

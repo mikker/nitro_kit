@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   class CheckboxGroup < Component
     def initialize(options = nil, **attrs)

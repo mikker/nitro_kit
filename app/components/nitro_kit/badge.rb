@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   class Badge < Component
     BADGE = "inline-flex items-center gap-x-1.5 rounded-md font-medium"

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   module SwitchHelper
     def nk_switch(

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   class Field < Component
     include ActionView::Helpers::FormHelper

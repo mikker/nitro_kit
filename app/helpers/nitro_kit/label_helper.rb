@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   module LabelHelper
     def nk_label(name = nil, content_or_options = nil, **attrs, &block)

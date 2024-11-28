@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   class Fieldset < Component
     FIELDSET_BASE = "space-y-6"

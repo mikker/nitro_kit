@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   class Tabs < Component
     def initialize(default: nil, **attrs)

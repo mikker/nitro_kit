@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   class RadioButton < Component
     include ActionView::Helpers::FormTagHelper
@@ -20,16 +22,15 @@ module NitroKit
 
     def view_template
       div(class: merge("inline-flex items-center gap-2", attrs[:class])) do
-        label(class: "grid grid-cols-1 place-items-center shrink-0") do
+        label(class: "inline-grid *:[grid-area:1/1] place-items-center") do
           input(
             **attrs,
             type: "radio",
             name:,
             value:,
             id:,
-            class: class_names(
-              "peer row-start-1 col-start-1",
-              "appearance-none size-5 shadow-sm rounded-full border text-foreground bg-background",
+            class: merge(
+              "peer appearance-none size-5 shadow-sm rounded-full border text-foreground bg-background",
               "[&[aria-checked='true']]:bg-primary",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             )

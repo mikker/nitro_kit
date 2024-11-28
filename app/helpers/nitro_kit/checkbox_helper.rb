@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   module CheckboxHelper
     def nk_checkbox(label: nil, **attrs)

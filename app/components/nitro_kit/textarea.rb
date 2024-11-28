@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   class Textarea < Component
     def view_template

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   class Input < Component
     def view_template

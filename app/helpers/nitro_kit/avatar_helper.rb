@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   module AvatarHelper
     def nk_avatar(src = nil, **attrs, &block)
