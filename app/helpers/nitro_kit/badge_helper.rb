@@ -7,7 +7,7 @@ module NitroKit
     automatic_variants(Badge::VARIANTS, :nk_badge)
 
     def nk_badge(text = nil, **attrs, &block)
-      content = text || capture(&block)
+      content = text || (block_given? ? capture(&block) : "")
 
       render(NitroKit::Badge.new(**attrs)) do
         content

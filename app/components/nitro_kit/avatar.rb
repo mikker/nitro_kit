@@ -16,11 +16,9 @@ module NitroKit
       div(
         **attrs,
         class: merge(
-          [
-            "inline-flex size-12 overflow-hidden rounded-full",
-            size_classes,
-            attrs[:class]
-          ]
+          container_class,
+          size_classes,
+          attrs[:class]
         )
       ) do
         image
@@ -28,7 +26,7 @@ module NitroKit
     end
 
     def image
-      img(src:, class: "block size-full bg-muted")
+      img(src:, class: image_class)
     end
 
     private
@@ -46,11 +44,12 @@ module NitroKit
       end
     end
 
-    # def initials(**attrs)
-    #   div(
-    #     **attrs,
-    #     class: merge(["h-12 w-12 flex items-center justify-center text-white bg-gray-500 rounded-full", attrs[:class]])
-    #   ) { yield }
-    # end
+    def container_class
+      "inline-flex size-12 overflow-hidden rounded-full"
+    end
+
+    def image_class
+      "block size-full bg-muted"
+    end
   end
 end

@@ -2,7 +2,7 @@
 
 module ApplicationHelper
   def component_page(&block)
-    tag.div(class: "p-5") do
+    tag.div(class: "p-3 sm:p-5") do
       capture(&block)
     end
   end
@@ -10,7 +10,7 @@ module ApplicationHelper
   def title(text = nil, **attrs, &block)
     text = capture(&block) if block_given?
     content_for(:title, text)
-    tag.h1(**attrs, class: class_names("text-3xl font-semibold mb-6", attrs[:class])) { text }
+    tag.h1(**attrs, class: class_names("text-xl sm:text-3xl font-semibold mb-6", attrs[:class])) { text }
   end
 
   def lead(text = nil, &block)
@@ -39,7 +39,8 @@ module ApplicationHelper
         **attrs,
         class: class_names(
           [
-            "flex flex-wrap gap-2 justify-center items-center min-h-[200px] py-12 p-5 w-full rounded border overflow-scroll",
+            "flex flex-wrap gap-2 justify-center items-center min-h-[200px] py-6 sm:py-12 p-3 sm:p-5 w-full rounded border overflow-scroll",
+
             attrs[:class]
           ]
         )

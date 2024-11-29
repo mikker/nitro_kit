@@ -2,30 +2,58 @@
   <%= title "Card" %>
 
   <%= section do %>
-    <%= example do %>
-      <div class="flex flex-wrap gap-2">
-        <%= nk_card(class: "w-[320px]") do |c| %>
-          <%= c.title { "Save your changes" } %>
+    <%= example(class: "bg-muted") do %>
+        <%= nk_card(class: "flex-none w-full max-w-[320px]") do |c| %>
+          <%= nk_icon "handshake", class: "size-12" %>
+          <%= c.title "Seal the deal" %>
           <%= c.body do %>
-            <div>This will forever set it in stone.</div>
+            You've worked for this moment. It's time to make it official.
           <% end %>
           <%= c.footer(class: "justify-end") do %>
             <%= nk_button "Cancel" %>
             <%= nk_primary_button "Save", icon: "check" %>
           <% end %>
         <% end %>
-      </div>
     <% end %>
 
     <%= code_example do %>
       {#= nk_card do |c| #}
-        {#= c.header "Save your changes" #}
-        {#= c.body "This will forever set it in stone." #}
+        {#= nk_icon "handshake", class: "size-12" #}
+        {#= c.title "Seal the deal" #}
+        {#= c.body do #}
+          You've worked for this moment. It's time to make it official.
+        {# end #}
         {#= c.footer do #}
           {#= button "Cancel" #}
           {#= primary_button "Save", icon: "check" #}
         {# end #}
       {# end #}
     <% end %>
+
+    <%= example(class: "bg-muted") do %>
+      <div class="flex flex-wrap gap-2">
+        <%= nk_card(class: "flex-none w-full max-w-[480px]") do |c| %>
+          <%= c.full_width { image_tag "/og.png" } %>
+          <%= c.title do %>
+            <%= link_to "Top-Mounted Jet Engines", "", class: "hover:underline" %>
+          <% end %>
+          <%= c.body do %>
+            Tired of being stuck in traffic? See what we have in stock. Best prices in the market.
+          <% end %>
+          <%= c.divider %>
+          <%= c.footer(class: "") do %>
+            <%= nk_badge "New!", class: "bg-yellow-100 border border-yellow-300 text-yellow-600" %>
+            <div class="flex items-center">
+              <%= nk_ghost_button_to nil, class: "text-muted-foreground hover:text-foreground", icon: "sparkles", size: :sm %>
+              <%= nk_ghost_button_to nil, class: "text-muted-foreground hover:text-foreground", icon: "citrus", size: :sm %>
+            </div>
+            <div class="flex-1"></div>
+            <%= nk_button "Let's go", size: :sm, icon_right: "arrow-right", class: "sm:hidden" %>
+            <%= nk_button "Let's go", icon_right: "arrow-right", class: "hidden sm:inline-flex" %>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
   <% end %>
 <% end %>

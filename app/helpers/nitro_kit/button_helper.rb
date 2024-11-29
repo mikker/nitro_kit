@@ -35,5 +35,9 @@ module NitroKit
     end
 
     automatic_variants(Button::VARIANTS, :nk_button_link_to)
+
+    def nk_button_group(**attrs, &block)
+      render(ButtonGroup.new(**attrs), &block)
+    end
   end
 end

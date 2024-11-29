@@ -12,7 +12,7 @@ module NitroKit
     s.add(:accordion, js: [:accordion])
     s.add(:avatar)
     s.add(:badge)
-    s.add(:button, components: [:button, :button_group], helpers: [:button, :button_group])
+    s.add(:button, components: [:button, :button_group], helpers: [:button])
     s.add(:card)
     s.add(:checkbox, components: [:checkbox, :checkbox_group])
     s.add(:dropdown, js: [:dropdown], modules: ["@floating-ui/core", "@floating-ui/dom"])
