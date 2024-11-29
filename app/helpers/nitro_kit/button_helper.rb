@@ -5,8 +5,9 @@ module NitroKit
     include Variants
 
     def nk_button(text = nil, **attrs)
-      content = text || (block_given? ? capture { yield } : nil)
-      render(NitroKit::Button.new(**attrs)) { content }
+      render(NitroKit::Button.new(**attrs)) do
+        text || (block_given? ? capture { yield } : nil)
+      end
     end
 
     automatic_variants(Button::VARIANTS, :nk_button)
@@ -31,7 +32,9 @@ module NitroKit
 
       href = attrs[:href] || url_target(text, options)
 
-      render(NitroKit::Button.new(**attrs, href:)) { text || (block_given? ? yield : "") }
+      render(NitroKit::Button.new(**attrs, href:)) do
+        text || (block_given? ? yield : "")
+      end
     end
 
     automatic_variants(Button::VARIANTS, :nk_button_link_to)

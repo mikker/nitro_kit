@@ -1,0 +1,10 @@
+<%= nk_card(class: "flex-none w-full max-w-[320px]") do |c| %>
+  <%= nk_icon "landmark", class: "size-12" %>
+  <%= c.title "Seal the deal" %>
+  <%= c.body do %>
+    You've worked for this moment. It's time to make it official.
+  <% end %>
+  <%= c.footer(class: "justify-end") do %>
+    <%= nk_primary_button "Shake on it", icon: "handshake" %>
+  <% end %>
+<% end %>

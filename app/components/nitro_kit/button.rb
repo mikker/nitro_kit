@@ -101,7 +101,7 @@ module NitroKit
     private
 
     def contents
-      text = safe(capture { yield })
+      text = block_given? ? safe(capture { yield }) : nil
       has_text = text.to_s.present?
 
       if !icon && has_text && !icon_right

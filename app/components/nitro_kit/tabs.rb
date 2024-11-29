@@ -29,7 +29,7 @@ module NitroKit
       ) { yield }
     end
 
-    def tab(key, **attrs)
+    def tab(key, text = nil, **attrs)
       @default ||= key
 
       button(
@@ -51,7 +51,9 @@ module NitroKit
         ),
         tabindex: default == key ? 0 : -1,
         class: merge(tab_class, attrs[:class])
-      ) { block_given? ? yield : key }
+      ) do
+        text || (block_given? ? yield : key)
+      end
     end
 
     def panel(key, **attrs)

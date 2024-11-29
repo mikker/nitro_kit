@@ -52,6 +52,7 @@
   }
 
   .prose {
+    @apply max-w-prose;
   }
 
   .prose a {
@@ -64,7 +65,7 @@
   .prose blockquote,
   .prose pre,
   .prose table {
-    @apply mb-8;
+    @apply mb-4;
   }
 
   .prose h1,

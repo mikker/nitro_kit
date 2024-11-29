@@ -35,7 +35,7 @@ module NitroKit
     end
 
     def full_width(&block)
-      div(data: {slot: "full"}, class: "-mx-(--space)", &block)
+      div(data: {slot: "full"}, class: "-mx-(--gap)", &block)
     end
 
     private
@@ -43,11 +43,11 @@ module NitroKit
     def base_class
       [
         # Configure spacing with breakpoints
-        "[--space:calc(var(--spacing)*4)] sm:[--space:calc(var(--spacing)*6)]",
+        "[--gap:calc(var(--spacing)*4)] sm:[--gap:calc(var(--spacing)*6)]",
         # Base styles
-        "flex flex-col items-stretch rounded-lg bg-background border p-(--space) gap-(--space) overflow-hidden",
+        "flex flex-col items-stretch rounded-lg bg-background border p-(--gap) gap-(--gap) overflow-hidden",
         # If a `data-slot=full` is the first thing, move it to the top
-        "[&>[data-slot=full]:first-child]:-mt-(--space)",
+        "[&>[data-slot=full]:first-child]:-mt-(--gap)",
         # Group for hover, focus
         "group/card"
       ]
