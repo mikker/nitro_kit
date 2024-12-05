@@ -35,7 +35,7 @@ module NitroKit
     private
 
     def wrapper_class
-      "isolate relative group/select"
+      "grid *:[grid-area:1/1] group/select"
     end
 
     def select_class
@@ -47,23 +47,15 @@ module NitroKit
     end
 
     def chevron_icon
-      span(
-        class: merge(
-          "absolute top-1/2 -translate-y-1/2 right-1.5 w-[1.25em]",
-          "text-muted-foreground pointer-events-none",
-          "group-hover/select:text-foreground"
-        )
-      ) do
-        svg(
-          class: "size-full",
-          viewbox: "0 0 24 24",
-          fill: "none",
-          stroke: "currentColor",
-          stroke_width: 1
-        ) do |svg|
-          svg.path(d: "m7 15 5 5 5-5")
-          svg.path(d: "m7 9 5-5 5 5")
-        end
+      svg(
+        class: "size-4 self-center place-self-end mr-1.5 text-muted-foreground pointer-events-none group-hover/select:text-foreground",
+        viewbox: "0 0 24 24",
+        fill: "none",
+        stroke: "currentColor",
+        stroke_width: 1
+      ) do |svg|
+        svg.path(d: "m7 15 5 5 5-5")
+        svg.path(d: "m7 9 5-5 5 5")
       end
     end
   end

@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module NitroKit
   class Checkbox < Component
     def initialize(label: nil, id: nil, **attrs)
@@ -16,7 +14,7 @@ module NitroKit
 
     def view_template
       div(class: merge("isolate inline-flex items-center gap-2", attrs[:class])) do
-        html_label(class: "inline-grid *:[grid-area:1/1] place-items-center") do
+        html_label(class: "inline-grid *:[grid-area:1/1] shrink-0 place-items-center") do
           input(
             id:,
             **attrs,

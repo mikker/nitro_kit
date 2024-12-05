@@ -15,3 +15,4 @@ pin("@floating-ui/utils", to: "@floating-ui--utils.js")
 pin("@floating-ui/utils/dom", to: "@floating-ui--utils--dom.js")
 # @0.453.0
 pin("lucide")
+pin "@github/combobox-nav", to: "@github--combobox-nav.js" # @3.0.1

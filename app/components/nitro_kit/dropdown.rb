@@ -37,6 +37,7 @@ module NitroKit
 
     def view_template(&block)
       div(
+        **attrs,
         data: data_merge(
           {:controller => "nk--dropdown", :"nk--dropdown-placement-value" => placement},
           attrs[:data]

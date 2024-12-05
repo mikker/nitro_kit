@@ -10,6 +10,7 @@ module NitroKit
 
   SCHEMA = build_schema do |s|
     s.add(:accordion, js: [:accordion])
+    s.add(:alert)
     s.add(:avatar)
     s.add(:badge)
     s.add(:button, components: [:button, :button_group], helpers: [:button])

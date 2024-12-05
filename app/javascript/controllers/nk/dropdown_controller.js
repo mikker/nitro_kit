@@ -40,6 +40,7 @@ export default class extends Controller {
     this.contentTarget.setAttribute("aria-hidden", "false");
 
     document.addEventListener("click", this.clickOutside);
+
     this.clearAutoUpdate = autoUpdate(
       this.triggerTarget,
       this.contentTarget,
