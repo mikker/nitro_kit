@@ -31,7 +31,7 @@
         tabs: true,
         textarea: true,
         toast: false,
-        tooltip: false,
+        tooltip: true,
       }.each do |component, enabled| %>
         <%= render "common/sidebar_link", page: component.to_s, enabled: %>
       <% end %>

@@ -1,0 +1,24 @@
+<%= component_page do %>
+  <%= title "Tooltip" %>
+  <%= lead "Sometimes there's just no better way." %>
+
+  <%= section do %>
+    <%= section_title "Basic" %>
+    <%= example_file "tooltip_basic" %>
+
+    <%= code_example do %>
+      {# # Text content #}
+      {#= nk_tooltip(content: "Fill the tank") do |t| #}
+        {#= nk_button icon: "fuel" #}
+      {# end #}
+
+      {# # Block content #}
+      {#= nk_tooltip do |t| #}
+        {#= t.content do #}
+          Anything goes here
+        {# end #}
+        {#= nk_button icon: "fuel" #}
+      {# end #}
+    <% end %>
+  <% end %>
+<% end %>
