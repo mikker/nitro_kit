@@ -1,8 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["toggle"];
-
   connect() {
     window
       .matchMedia("(prefers-color-scheme: dark)")
@@ -20,16 +18,16 @@ export default class extends Controller {
     return localStorage.getItem("theme");
   }
 
-  toggle(event) {
-    // Prevent the toggle from toggling itself as we do it in setTheme
-    event.stopPropagation();
+  set({ params }) {
+    console.log(params);
 
-    const theme =
-      document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    if (params.value === "system") {
+      localStorage.removeItem("theme");
+    } else {
+      localStorage.setItem("theme", params.value);
+    }
 
-    localStorage.setItem("theme", theme);
-
-    this.setTheme(theme);
+    this.setTheme(params.value);
   }
 
   systemChanged() {
@@ -38,10 +36,10 @@ export default class extends Controller {
   }
 
   setTheme(theme) {
-    document.documentElement.dataset.theme = theme;
-
-    if (this.hasToggleTarget) {
-      this.toggleTarget.setAttribute("aria-checked", theme === "dark");
+    if (theme === "system") {
+      document.documentElement.dataset.theme = this.system;
+    } else {
+      document.documentElement.dataset.theme = theme;
     }
   }
 }

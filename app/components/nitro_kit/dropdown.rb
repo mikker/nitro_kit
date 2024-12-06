@@ -60,8 +60,7 @@ module NitroKit
     end
 
     def content(**attrs, &block)
-
-      class_list = div(
+      div(
         role: "menu",
         aria: {hidden: "true"},
         **attrs,

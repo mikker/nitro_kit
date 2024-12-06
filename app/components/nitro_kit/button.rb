@@ -9,7 +9,7 @@ module NitroKit
       # Focus
       "focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-offset-2 focus-visible:ring-ring ring-offset-background",
       # Icon
-      "[&_svg]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0"
+      "[&_svg]:pointer-events-none [&_svg]:shrink-0"
     ].freeze
 
     VARIANTS = {
@@ -35,16 +35,16 @@ module NitroKit
 
     SIZES = {
       base: [
-        "px-4 h-9 text-base",
+        "px-4 h-9 text-base [&_svg]:size-4",
         # If icon only, make square
         "[&_svg:first-child:last-child]:-mx-2"
       ],
       sm: [
-        "px-2.5 h-7 text-sm",
+        "px-2.5 h-7 text-sm [&_svg]:size-3",
         "[&_svg:first-child:last-child]:-mx-1"
       ],
       xs: [
-        "px-1.5 h-6 text-xs",
+        "px-1.5 h-6 text-xs [&_svg]:size-3",
         "[&_svg:first-child:last-child]:-mx-1"
       ]
     }.freeze
