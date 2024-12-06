@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-controller="theme">
+<html data-controller="theme nk--toast">
   <head>
     <title><%= yield(:title) || "Nitro Kit" %></title>
     <meta
@@ -53,7 +53,7 @@
         class="hidden fixed inset-0 z-40 opacity-0 transition-opacity duration-300 pointer-events-none bg-black/20 backdrop-blur-sm"
       ></div>
       <section
-        class="overflow-y-auto fixed top-0 bottom-0 left-0 z-50 w-64 border-r shadow-md transition-transform -translate-x-64 md:hidden min-h-svh bg-background"
+        class="overflow-y-auto fixed top-0 bottom-0 left-0 z-50 w-64 border-r shadow-lg transition-transform -translate-x-64 md:hidden min-h-svh bg-background"
         data-sidebar-target="navigation"
         role="navigation"
         aria-label="Main navigation"
@@ -91,6 +91,8 @@
           </p>
         </footer>
       </section>
+
+      <%= nk_toast %>
     </main>
   </body>
 </html>

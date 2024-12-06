@@ -1,0 +1,16 @@
+<%= component_page do %>
+  <%= title "Toast" %>
+  <%= lead "Does it smell burnt in here?" %>
+
+  <div class="prose">
+    <p>Minimum Viable Toaster</p>
+  </div>
+
+  <%= section do %>
+    <%= example_file "toast_basic" %>
+
+    <%= code_example do %>
+      {#= nk_toast #}
+    <% end %>
+  <% end %>
+<% end %>
