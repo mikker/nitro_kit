@@ -2,7 +2,7 @@
 
 module NitroKit
   module PaginationHelper
-    include Pagy::UrlHelpers
+    include Pagy::UrlHelpers if defined?(Pagy)
 
     def nk_pagination(**attrs, &block)
       render(Pagination.new(**attrs), &block)
@@ -12,8 +12,8 @@ module NitroKit
       attrs[:aria] ||= {label: aria_label}
 
       nk_pagination(id:, **attrs) do |p|
-        if href = pagy.prev
-          p.prev(href:)
+        if prev_page = pagy.prev
+          p.prev(href: pagy_url_for(pagy, prev_page))
         else
           p.prev(disabled: true)
         end
@@ -31,8 +31,8 @@ module NitroKit
           end
         end
 
-        if href = pagy.next
-          p.next(href:)
+        if next_page = pagy.next
+          p.next(href: pagy_url_for(pagy, next_page))
         else
           p.next(disabled: true)
         end
