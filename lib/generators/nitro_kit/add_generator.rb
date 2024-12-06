@@ -22,7 +22,7 @@ module NitroKit
       return unless gems.any?
 
       gems.each do |name|
-        gem(name)
+        gem(name) unless has_gem?(name)
       end
 
       run("bundle install")
@@ -33,10 +33,17 @@ module NitroKit
 
       return unless modules.any?
 
-      if importmaps?
+      case js_strategy
+      when :importmaps
         run("bin/importmap pin #{modules.join(" ")}")
+      when :yarn
+        run("yarn add #{modules.join(" ")}")
+      when :npm
+        run("npm install --save #{modules.join(" ")}")
+      when :bun
+        run("bun add #{modules.join(" ")}")
       else
-        say("oh hai npm/yarn/bun")
+        say("Could not determine JS strategy. Please install one of: npm, yarn, bun, or importmaps")
       end
     end
 
@@ -58,8 +65,23 @@ module NitroKit
       end
     end
 
-    def importmaps?
-      File.exist?(File.expand_path("bin/importmap", Rails.root))
+    def js_strategy
+      if File.exist?(File.expand_path("bin/importmap", Rails.root))
+        :importmaps
+      elsif File.exist?(File.expand_path("yarn.lock", Rails.root))
+        :yarn
+      elsif File.exist?(File.expand_path("package-lock.json", Rails.root))
+        :npm
+      elsif File.exist?(File.expand_path("bun.lockb", Rails.root))
+        :bun
+      else
+        nil
+      end
+    end
+
+    def has_gem?(name)
+      gemfile = File.read(File.expand_path("Gemfile", Rails.root))
+      gemfile.include?("gem '#{name}'") || gemfile.include?("gem \"#{name}\"")
     end
   end
 end
