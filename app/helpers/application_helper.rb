@@ -29,8 +29,10 @@ module ApplicationHelper
     end
   end
 
-  def section_title(text)
-    tag.h2(class: "text-2xl font-semibold mb-4") { text }
+  def section_title(text = nil, **attrs, &block)
+    tag.h2(**attrs, class: class_names("text-2xl font-semibold mb-4", attrs[:class])) do
+      text || yield
+    end
   end
 
   def example(**attrs)

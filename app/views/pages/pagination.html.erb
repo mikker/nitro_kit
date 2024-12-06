@@ -1,0 +1,37 @@
+<%= component_page do %>
+  <%= title "Pagination" %>
+  <%= lead "Numbers, as far as the eye can see" %>
+
+  <%= section do %>
+    <%= section_title "Basic" %>
+    <%= example_file "pagination_basic" %>
+
+    <%= code_example do %>
+      {#= nk_pagination do |p| #}
+        {#= p.prev #}
+        {#= p.page(1) #}
+        {#= p.ellipsis #}
+        {#= p.page(42) #}
+        {#= p.next #}
+      {# end #}
+    <% end %>
+  <% end %>
+
+  <%= section do %>
+    <%= section_title(class: "flex gap-4 justify-between items-center") do %>
+      Pagy
+      <%= nk_button_link_to "Docs", "https://ddnexus.github.io/pagy/", size: :sm, icon_right: "arrow-up-right", target: "_blank" %>
+    <% end %>
+
+    <div class="prose">
+      <p>Nitro Kit comes with built-in support for the gem <a href="https://ddnexus.github.io/pagy/" target="_blank">Pagy</a>.</p>
+      <p><code>nk_pagy_nav</code> has the same API as <code>pagy_nav</code>.</p>
+    </div>
+
+    <%= example_file "pagination_pagy" %>
+
+    <%= code_example do %>
+      {#= nk_pagy_nav(pagy) #}
+    <% end %>
+  <% end %>
+<% end %>

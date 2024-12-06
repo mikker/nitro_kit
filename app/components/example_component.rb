@@ -15,7 +15,7 @@ class ExampleComponent < Phlex::HTML
     end
 
     def panel_class
-      "aria-[hidden=true]:hidden bg-muted"
+      "aria-[hidden=true]:hidden bg-background"
     end
   end
 

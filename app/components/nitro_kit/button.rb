@@ -28,14 +28,14 @@ module NitroKit
       ],
       ghost: [
         "bg-transparent text-foreground border-transparent",
-        "hover:bg-zinc-100 dark:hover:bg-zinc-900",
+        "hover:bg-zinc-200/50 dark:hover:bg-zinc-900",
         "disabled:text-muted-foreground"
       ]
     }.freeze
 
     SIZES = {
       base: [
-        "px-4 h-9",
+        "px-4 h-9 text-base",
         # If icon only, make square
         "[&_svg:first-child:last-child]:-mx-2"
       ],

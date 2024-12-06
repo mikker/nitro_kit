@@ -12,8 +12,8 @@
     <ul class="" role="menu">
       <% {
         accordion: true,
-        avatar: true,
         alert: true,
+        avatar: true,
         badge: true,
         button: true,
         card: true,
@@ -23,6 +23,7 @@
         dialog: true,
         dropdown: true,
         icon: true,
+        pagination: true,
         radio_button: true,
         select: true,
         switch: true,
@@ -31,7 +32,6 @@
         textarea: true,
         toast: false,
         tooltip: false,
-        pagination: false
       }.each do |component, enabled| %>
         <%= render "common/sidebar_link", page: component.to_s, enabled: %>
       <% end %>

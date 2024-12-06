@@ -12,6 +12,7 @@ gem "stimulus-rails"
 gem "lucide-rails"
 gem "rouge"
 gem "commonmarker"
+gem "pagy"
 
 gem "bootsnap", require: false
 gem "kamal", require: false

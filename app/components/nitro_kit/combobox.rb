@@ -122,7 +122,7 @@ module NitroKit
     end
 
     def option_class
-      "hidden flex-none px-2 py-1 rounded font-normal truncate cursor-pointer hover:bg-muted [&[role=option]]:block"
+      "hidden flex-none px-2 py-1 rounded font-medium truncate cursor-pointer hover:bg-muted [&[role=option]]:block"
     end
 
     def chevron_icon

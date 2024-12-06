@@ -11,8 +11,9 @@ import {
 export default class extends Controller {
   static targets = ["input", "list", "hiddenField", "clearButton"];
   static values = {
-    placement: { type: String, default: "bottom" },
     open: { type: Boolean, default: false },
+    // Options for floating-ui
+    placement: { type: String, default: "bottom" },
     // Options for combobox-nav
     tabInsertsSuggestions: { type: Boolean, default: true },
     firstOptionSelectionMode: { type: String, default: "none" },
@@ -35,7 +36,6 @@ export default class extends Controller {
       this.select(event);
       this.close();
     });
-    // this.listTarget.addEventListener("combobox-select", (event) => {});
   }
 
   disconnect() {
