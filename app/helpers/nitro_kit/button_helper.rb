@@ -28,7 +28,10 @@ module NitroKit
 
     # Matches the API of UrlHelper#link_to
     def nk_button_link_to(text = nil, options = nil, **attrs, &block)
-      options = text if block_given?
+      if block_given?
+        options = text if block_given?
+        text = nil
+      end
 
       href = attrs[:href] || url_target(text, options)
 

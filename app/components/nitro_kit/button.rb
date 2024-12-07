@@ -44,8 +44,7 @@ module NitroKit
         "[&_svg:first-child:last-child]:-mx-1"
       ],
       xs: [
-        "px-1.5 h-6 text-xs [&_svg]:size-3",
-        "[&_svg:first-child:last-child]:-mx-1"
+        "px-1.5 h-6 text-xs [&_svg]:size-3"
       ]
     }.freeze
 

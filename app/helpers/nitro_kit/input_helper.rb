@@ -2,8 +2,8 @@
 
 module NitroKit
   module InputHelper
-    def nk_input(name = nil, value = nil, **attrs)
-      render(Input.new({name:, value:, **attrs}))
+    def nk_input(**attrs)
+      render(Input.new(**attrs))
     end
   end
 end
