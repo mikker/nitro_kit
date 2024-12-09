@@ -213,7 +213,7 @@ GEM
     nokogiri (1.16.8-x86_64-linux)
       racc (~> 1.4)
     ostruct (0.6.1)
-    pagy (9.3.2)
+    pagy (9.3.3)
     phlex (2.0.0.rc1)
     phlex-rails (2.0.0.rc1)
       phlex (= 2.0.0.rc1)
