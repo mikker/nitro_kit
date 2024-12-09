@@ -1,15 +1,16 @@
 module NitroKit
   module SchemaBuilder
-    Component = Struct.new(:files, :modules, :gems)
+    Component = Struct.new(:name, :files, :dependencies, :modules, :gems)
 
     class Builder
       def initialize
-        @schema = {}
+        @schema = []
         yield self
       end
 
       def add(
         name,
+        dependencies = [],
         components: nil,
         helpers: nil,
         js: [],
@@ -20,23 +21,27 @@ module NitroKit
         components ||= [name]
         helpers ||= [name]
 
-        @schema[name] = Component.new(
+        component = Component.new(
+          name,
           [
             components.map { |c| "app/components/nitro_kit/#{c}.rb" },
             helpers.map { |c| "app/helpers/nitro_kit/#{c}_helper.rb" },
             js.map { |c| "app/javascript/controllers/nk/#{c}_controller.js" }
           ].flatten,
+          dependencies,
           modules,
           gems
         )
+
+        @schema.push(component)
       end
 
-      def [](key)
-        @schema[key]
+      def find(name)
+        @schema.find { |c| c.name == name.to_sym }
       end
 
       def all
-        @schema.keys.map(&:to_s)
+        @schema
       end
     end
 

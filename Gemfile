@@ -13,6 +13,7 @@ gem "lucide-rails"
 gem "rouge"
 gem "commonmarker"
 gem "pagy"
+gem "tailwindcss-rails"
 
 gem "bootsnap", require: false
 gem "kamal", require: false
@@ -33,6 +34,5 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   gem "cuprite", require: "capybara/cuprite"
+  gem "rr", require: false
 end
-
-gem "tailwindcss-rails", "~> 3.0"

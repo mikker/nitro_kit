@@ -29,7 +29,7 @@ module NitroKit
     end
 
     def install_modules
-      modules = components.flat_map(&:modules)
+      modules = components.flat_map(&:modules).uniq
 
       return unless modules.any?
 
@@ -50,19 +50,18 @@ module NitroKit
     private
 
     def components
-      list = component_names
+      return @components if @components
 
-      if list == ["all"]
-        list = SCHEMA.all
+      if component_names == ["all"]
+        return @components = SCHEMA.all
       end
 
-      list.map do |name|
-        unless component = SCHEMA[name.to_sym]
-          raise "Unknown component `#{name}'"
+      # Component names + their dependencies
+      @components = component_names
+        .flat_map do |name|
+          component = SCHEMA.find(name)
+          [component] + component.dependencies.map(&SCHEMA.method(:find))
         end
-
-        component
-      end
     end
 
     def js_strategy

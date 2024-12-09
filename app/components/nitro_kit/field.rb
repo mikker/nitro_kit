@@ -112,14 +112,16 @@ module NitroKit
         input(**attrs)
       when :select
         select(**attrs)
-      when :text
+      when :text, :textarea
         textarea(**attrs)
       when :checkbox
         checkbox(**attrs)
+      when :combobox
+        combobox(**attrs)
       when :radio, :radio_group
         radio_group(**attrs)
       else
-        raise ArgumentError, "Invalid field type"
+        raise ArgumentError, "Invalid field type `#{as}'"
       end
     end
 
@@ -192,6 +194,17 @@ module NitroKit
     def checkbox(**attrs)
       render(
         Checkbox.new(
+          **control_attrs(
+            **field_attrs,
+            **attrs
+          )
+        )
+      )
+    end
+
+    def combobox(**attrs)
+      render(
+        Combobox.new(
           **control_attrs(
             **field_attrs,
             **attrs
