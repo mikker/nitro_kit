@@ -46,7 +46,7 @@ module NitroKit
             current: current ? "page" : nil
           },
           disabled: current,
-          class: [page_class, current && "bg-zinc-200/50"]
+          class: [page_class, current && "bg-zinc-200/50 dark:bg-zinc-800/50"]
         )
       ) do
         text_or_block(text, &block)

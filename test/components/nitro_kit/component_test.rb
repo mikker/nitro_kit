@@ -1,7 +1,7 @@
 require "test_helper"
 
 module NitroKit
-  class AttributesTest < ActiveSupport::TestCase
+  class ComponentTest < ActiveSupport::TestCase
     class Tester < Component
       def run(...)
         mattr(...)

@@ -2,8 +2,8 @@
 
 module NitroKit
   class Component < Phlex::HTML
-    def initialize(*hashes)
-      @attrs = merge_attrs(*hashes)
+    def initialize(*hashes, **defaults)
+      @attrs = merge_attrs(*hashes, **defaults)
     end
 
     attr_reader :attrs
@@ -11,24 +11,18 @@ module NitroKit
     private
 
     # Merge attributes with some special cases for matching keys
-    def merge_attrs(*hashes, **default)
-      default.merge(*hashes) do |key, old_value, new_value|
+    def merge_attrs(*hashes, **defaults)
+      defaults.merge(*hashes) do |key, old_value, new_value|
         case key
         when :class
           # Use TailwindMerge to merge class names
-          next merge_class(old_value, new_value)
+          merge_class(old_value, new_value)
         when :data
           # Merge data hashes with some special cases for Stimulus
-          next merge_data(old_value, new_value)
+          merge_data(old_value, new_value)
+        else
+          new_value
         end
-
-        # If both values are hashes, merge them
-        if old_value.is_a?(Hash) && new_value.is_a?(Hash)
-          next old_value.merge(new_value)
-        end
-
-        # If nothing of the above, override with new value
-        new_value
       end
     end
 
