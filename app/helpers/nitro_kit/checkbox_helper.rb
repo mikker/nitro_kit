@@ -7,7 +7,7 @@ module NitroKit
     end
 
     def nk_checkbox_group(**attrs, &block)
-      render(CheckboxGroup.new(**attrs, &block))
+      render(CheckboxGroup.new(**attrs), &block)
     end
   end
 end

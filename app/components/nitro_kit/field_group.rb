@@ -3,7 +3,7 @@
 module NitroKit
   class FieldGroup < Component
     def view_template(&block)
-      div(**attrs, class: merge(base_class, attrs[:class]), &block)
+      div(**attrs, class: merge_class(base_class, attrs[:class]), &block)
     end
 
     private

@@ -3,33 +3,36 @@
 module NitroKit
   class CheckboxGroup < Component
     def initialize(options = nil, **attrs)
-      super(**attrs)
-
       @options = options
+
+      super(
+        attrs,
+        class: "flex items-start flex-col gap-2"
+      )
     end
 
     attr_reader :options
 
     def view_template
-      div(class: "flex items-start flex-col gap-2") do
-        block_given? ? yield : options.map { |o| item(*o) }
+      div(**attrs) do
+        if block_given?
+          yield
+        else
+          options.map { |option| item(*option) }
+        end
       end
     end
 
-    def title(text = nil, **attrs)
-      render(Label.new(**attrs)) { text || yield }
+    def title(text = nil, **attrs, &block)
+      render(Label.new(**attrs)) do
+        text_or_block(text, &block)
+      end
     end
 
-    def item(text = nil, value = nil, **attrs)
-      value ||= attrs.fetch(:value, text)
-
-      render(
-        Checkbox.new(
-          value:,
-          label: text,
-          **attrs
-        )
-      )
+    def item(text = nil, **attrs, &block)
+      render(Checkbox.new(**attrs)) do
+        text_or_block(text, &block)
+      end
     end
   end
 end

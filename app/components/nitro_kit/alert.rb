@@ -5,34 +5,32 @@ module NitroKit
     VARIANTS = %i[default warning error success]
 
     def initialize(variant: :default, **attrs)
-      super(**attrs)
       @variant = variant
+
+      super(
+        attrs,
+        role: "alert",
+        class: [base_class, variant_class]
+      )
     end
 
     attr_reader :variant
 
-    def view_template(&block)
-      div(
-        **attrs,
-        role: "alert",
-        class: merge(
-          base_class,
-          variant_class,
-          attrs[:class]
-        ),
-        &block
-      )
-    end
-
-    def title(text = nil, **attrs)
-      h5(**attrs, class: merge(title_class, attrs[:class])) do
-        text || (block_given? ? yield : "")
+    def view_template
+      div(**attrs) do
+        yield
       end
     end
 
-    def description(text = nil, **attrs)
-      div(**attrs, class: merge(description_class, attrs[:class])) do
-        text || (block_given? ? yield : "")
+    def title(text = nil, **attrs, &block)
+      h5(**mattr(attrs, class: title_class)) do
+        text_or_block(text, &block)
+      end
+    end
+
+    def description(text = nil, **attrs, &block)
+      div(**mattr(attrs, class: description_class)) do
+        text_or_block(text, &block)
       end
     end
 

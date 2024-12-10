@@ -2,12 +2,16 @@
 
 module NitroKit
   class Accordion < Component
-    def view_template
-      div(
-        **attrs,
-        class: merge(item_class, attrs[:class]),
+    def initialize(**attrs)
+      super(
+        attrs,
+        class: item_class,
         data: {controller: "nk--accordion"}
-      ) do
+      )
+    end
+
+    def view_template
+      div(**attrs) do
         yield
       end
     end
@@ -20,15 +24,16 @@ module NitroKit
 
     def trigger(text = nil, **attrs)
       button(
-        type: "button",
-        **attrs,
-        class: merge(trigger_class, attrs[:class]),
-        data: data_merge(
-          attrs[:data],
-          action: "nk--accordion#toggle",
-          nk__accordion_target: "trigger"
-        ),
-        aria: {expanded: "false"}
+        **mattr(
+          attrs,
+          type: "button",
+          class: trigger_class,
+          data: {
+            action: "nk--accordion#toggle",
+            nk__accordion_target: "trigger"
+          },
+          aria: {expanded: "false"}
+        )
       ) do
         block_given? ? yield : plain(text)
         render(NitroKit::Icon.new(name: "chevron-down", class: arrow_class))
@@ -37,13 +42,14 @@ module NitroKit
 
     def content(**attrs)
       div(
-        **attrs,
-        class: merge(content_class, attrs[:class]),
-        data: data_merge(
-          attrs[:data],
-          nk__accordion_target: "content"
-        ),
-        aria: {hidden: "true"}
+        **mattr(
+          attrs,
+          class: content_class,
+          data: {
+            nk__accordion_target: "content"
+          },
+          aria: {hidden: "true"}
+        )
       ) do
         div(class: "pb-4") { yield }
       end

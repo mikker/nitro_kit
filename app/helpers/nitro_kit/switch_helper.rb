@@ -2,16 +2,8 @@
 
 module NitroKit
   module SwitchHelper
-    def nk_switch(
-      name,
-      checked: false,
-      disabled: false,
-      size: :base,
-      description: nil,
-      **attrs,
-      &block
-    )
-      render(NitroKit::Switch.new(name, checked:, disabled:, size:, description:, **attrs), &block)
+    def nk_switch(**attrs, &block)
+      render(Switch.new(**attrs), &block)
     end
   end
 end

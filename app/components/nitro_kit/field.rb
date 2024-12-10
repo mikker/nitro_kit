@@ -4,15 +4,6 @@ module NitroKit
   class Field < Component
     include ActionView::Helpers::FormHelper
 
-    FIELD = [
-      "grid gap-2 align-start",
-      "[&[data-as=checkbox]]:grid-cols-[auto_1fr] [&[data-as=checkbox]_[data-slot=description]]:col-start-2",
-      "[&:has([data-slot=error])_[data-slot=control]]:border-destructive"
-    ].freeze
-
-    DESCRIPTION = "text-sm text-muted-foreground"
-    ERROR = "text-sm text-destructive"
-
     def initialize(
       form = nil,
       field_name = nil,
@@ -22,8 +13,6 @@ module NitroKit
       errors: nil,
       **attrs
     )
-      super(**attrs)
-
       @form = form
       @field_name = field_name
       @as = as.to_sym
@@ -38,6 +27,12 @@ module NitroKit
       @field_label = label || field_name.to_s.humanize
       @field_description = description
       @field_error_messages = errors
+
+      super(
+        attrs,
+        data: {as: @as},
+        class: base_class
+      )
     end
 
     attr_reader(
@@ -52,11 +47,11 @@ module NitroKit
     )
 
     def view_template
-      div(**attrs, data: data_merge(attrs[:data], as:), class: merge(FIELD, attrs[:class])) do
-        if !block_given?
-          default_field
-        else
+      div(**attrs) do
+        if block_given?
           yield
+        else
+          default_field
         end
       end
     end
@@ -68,26 +63,17 @@ module NitroKit
 
       return unless text
 
-      render(
-        Label.new(
-          **attrs,
-          for: id,
-          data: data_merge({slot: "label"}, attrs[:data])
-        )
-      ) do
+      render(Label.new(**mattr(attrs, for: id, data: {slot: "label"}))) do
         text
       end
     end
 
-    def description(text = nil, **attrs)
+    def description(text = nil, **attrs, &block)
       text ||= field_description
 
-      return unless text
-
-      div(
-        data: {slot: "description"},
-        class: merge(DESCRIPTION, attrs[:class])
-      ) { text }
+      div(**mattr(attrs, data: {slot: "description"}, class: description_class)) do
+        text_or_block(text, &block)
+      end
     end
 
     def errors(error_messages = nil, **attrs)
@@ -95,11 +81,7 @@ module NitroKit
 
       return unless error_messages&.any?
 
-      ul(
-        **attrs,
-        data: {slot: "error"},
-        class: merge([ERROR, attrs[:class]])
-      ) do |msg|
+      ul(**mattr(attrs, data: {slot: "error"}, class: error_class)) do |msg|
         error_messages.each do |msg|
           li { msg }
         end
@@ -143,12 +125,12 @@ module NitroKit
     end
 
     def control_attrs(**attrs)
-      {
+      mattr(
+        attrs,
         name:,
         id:,
-        **attrs,
-        data: {slot: "control", **data_merge(field_attrs[:data], attrs[:data])}
-      }
+        data: {slot: "control", **field_attrs.fetch(:data, {})}
+      )
     end
 
     alias :html_input :input
@@ -223,6 +205,24 @@ module NitroKit
           )
         )
       )
+    end
+
+    private
+
+    def base_class
+      [
+        "grid gap-2 align-start",
+        "[&[data-as=checkbox]]:grid-cols-[auto_1fr] [&[data-as=checkbox]_[data-slot=description]]:col-start-2",
+        "[&:has([data-slot=error])_[data-slot=control]]:border-destructive"
+      ]
+    end
+
+    def description_class
+      "text-sm text-muted-foreground"
+    end
+
+    def error_class
+      "text-sm text-destructive"
     end
   end
 end

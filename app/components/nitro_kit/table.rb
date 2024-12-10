@@ -2,42 +2,45 @@
 
 module NitroKit
   class Table < Component
+    def initialize(**attrs)
+      super(
+        attrs,
+        class: "w-full caption-bottom text-sm divide-y"
+      )
+    end
+
     def view_template
       div(class: "relative w-full overflow-auto") do
-        table(class: merge("w-full caption-bottom text-sm divide-y", attrs[:class])) do
+        table(**attrs) do
           yield
         end
       end
     end
 
-    alias :original_thead :thead
+    alias :html_thead :thead
+    alias :html_tbody :tbody
+    alias :html_tr :tr
+    alias :html_th :th
+    alias :html_td :td
 
     def thead(**attrs)
-      original_thead(**attrs) { yield }
+      html_thead(**attrs) { yield }
     end
-
-    alias :original_tbody :tbody
 
     def tbody(**attrs)
-      original_tbody(**attrs, class: merge("[&_tr:last-child]:border-0", attrs[:class])) { yield }
+      html_tbody(**mattr(attrs, class: "[&_tr:last-child]:border-0")) { yield }
     end
-
-    alias :original_tr :tr
 
     def tr(**attrs)
-      original_tr(**attrs, class: merge("border-b", attrs[:class])) { yield }
+      html_tr(**mattr(attrs, class: "border-b")) { yield }
     end
-
-    alias :original_th :th
 
     def th(**attrs)
-      original_th(**attrs, class: merge(cell_classes, "font-medium text-left", attrs[:class])) { yield }
+      html_th(**mattr(attrs, class: [cell_classes, "font-medium text-left"])) { yield }
     end
 
-    alias :original_td :td
-
     def td(**attrs)
-      original_td(**attrs, class: merge(cell_classes, attrs[:class])) { yield }
+      html_td(**mattr(attrs, class: cell_classes)) { yield }
     end
 
     private

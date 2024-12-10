@@ -3,28 +3,33 @@
 module NitroKit
   class Card < Component
     def initialize(**attrs)
-      @attrs = attrs
+      super(
+        attrs,
+        class: base_class
+      )
     end
 
-    def view_template(&block)
-      div(**attrs, class: merge(base_class, attrs[:class]), &block)
-    end
-
-    def title(text = nil, **attrs)
-      h2(**attrs, class: merge("text-lg font-bold -mb-2", attrs[:class])) do
-        text || (block_given? ? yield : nil)
+    def view_template
+      div(**attrs) do
+        yield
       end
     end
 
-    def body(text = nil, **attrs)
-      div(**attrs, class: merge("text-muted-foreground text-sm leading-relaxed", attrs[:class])) do
-        text || (block_given? ? yield : nil)
+    def title(text = nil, **attrs, &block)
+      h2(**mattr(attrs, class: "text-lg font-bold -mb-2")) do
+        text_or_block(text, &block)
       end
     end
 
-    def footer(text = nil, **attrs)
-      div(**attrs, class: merge("flex gap-2 items-center", attrs[:class])) do
-        text || (block_given? ? yield : nil)
+    def body(text = nil, **attrs, &block)
+      div(**mattr(attrs, class: "text-muted-foreground text-sm leading-relaxed")) do
+        text_or_block(text, &block)
+      end
+    end
+
+    def footer(text = nil, **attrs, &block)
+      div(**mattr(attrs, class: "flex gap-2 items-center")) do
+        text_or_block(text, &block)
       end
     end
 
@@ -34,8 +39,10 @@ module NitroKit
       end
     end
 
-    def full_width(&block)
-      div(data: {slot: "full"}, class: "-mx-(--gap)", &block)
+    def full_width
+      div(data: {slot: "full"}, class: "-mx-(--gap)") do
+        yield
+      end
     end
 
     private

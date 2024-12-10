@@ -1,11 +1,19 @@
 module NitroKit
   class Checkbox < Component
     def initialize(label: nil, id: nil, **attrs)
-      super(**attrs)
-
       @id = id || "nk--" + SecureRandom.hex(4)
-
       @label = label
+
+      super(
+        attrs,
+        id: @id,
+        type: "checkbox",
+        class: [
+          "peer appearance-none shadow-sm size-4 rounded-sm border text-foreground",
+          "checked:bg-primary checked:border-primary",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ring-offset-2 ring-offset-background"
+        ]
+      )
     end
 
     alias :html_label :label
@@ -13,23 +21,14 @@ module NitroKit
     attr_reader :label, :id
 
     def view_template
-      div(class: merge("isolate inline-flex items-center gap-2", attrs[:class])) do
+      div(class: "isolate inline-flex items-center gap-2") do
         html_label(class: "inline-grid *:[grid-area:1/1] shrink-0 place-items-center") do
-          input(
-            id:,
-            **attrs,
-            type: "checkbox",
-            class: merge(
-              "peer appearance-none shadow-sm size-4 rounded-sm border text-foreground",
-              "checked:bg-primary checked:border-primary",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ring-offset-2 ring-offset-background"
-            )
-          )
+          input(**attrs)
           checkmark
         end
 
-        if label.present?
-          render(Label.new(for: id)) { label }
+        if label.present? || block_given?
+          render(Label.new(for: id)) { label || yield }
         end
       end
     end

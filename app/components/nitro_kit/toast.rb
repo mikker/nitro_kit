@@ -2,13 +2,18 @@
 
 module NitroKit
   class Toast < Component
-    def view_template
-      div(
+    def initialize(**attrs)
+      super(
+        attrs,
         role: "region",
         tabindex: "-1",
         aria: {label: "Notifications"},
         class: "pointer-events-none"
-      ) do
+      )
+    end
+
+    def view_template
+      div(**attrs) do
         ol(class: list_class, data: {nk__toast_target: "list"})
       end
 
@@ -17,13 +22,16 @@ module NitroKit
       end
     end
 
-    def item(title: nil, description: nil)
+    def item(title: nil, description: nil, **attrs)
       li(
-        role: "status",
-        aria: {live: "off", atomic: "true"},
-        tabindex: "0",
-        data: {state: "closed"},
-        class: item_class
+        **mattr(
+          attrs,
+          role: "status",
+          aria: {live: "off", atomic: "true"},
+          tabindex: "0",
+          data: {state: "closed"},
+          class: item_class
+        )
       ) do
         div(class: "grid gap-1") do
           div(class: "text-sm font-semibold", data: {slot: "title"}) do

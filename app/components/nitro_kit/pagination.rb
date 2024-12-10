@@ -2,23 +2,24 @@
 
 module NitroKit
   class Pagination < Component
+    def initialize(**attrs)
+      super(
+        attrs,
+        class: merge_class(nav_class, attrs[:class]),
+        aria: {label: "Pagination"}
+      )
+    end
+
     def view_template
-      nav(
-        **attrs,
-        class: merge(nav_class, attrs[:class]),
-        aria: {
-          label: "Pagination",
-          **attrs.fetch(:aria, {})
-        }
-      ) do
+      nav(**attrs) do
         yield
       end
     end
 
-    def prev(text = nil, **attrs)
-      page_link(**attrs, aria: {label: "Previous page"}) do
+    def prev(text = nil, **attrs, &block)
+      page_link(**mattr(attrs, aria: {label: "Previous page"})) do
         if text || block_given?
-          text ? plain(text) : yield
+          text_or_block(text, &block)
         else
           render(Icon.new(name: "arrow-left"))
           plain("Previous")
@@ -26,10 +27,10 @@ module NitroKit
       end
     end
 
-    def next(text = nil, **attrs)
-      page_link(**attrs, aria: {label: "Next page"}) do
+    def next(text = nil, **attrs, &block)
+      page_link(**mattr(attrs, aria: {label: "Next page"})) do
         if text || block_given?
-          text ? plain(text) : yield
+          text_or_block(text, &block)
         else
           plain("Next")
           render(Icon.new(name: "arrow-right"))
@@ -37,30 +38,30 @@ module NitroKit
       end
     end
 
-    def page(text = nil, current: false, **attrs)
+    def page(text = nil, current: false, **attrs, &block)
       page_link(
-        **attrs,
-        aria: {
-          current: current ? "page" : nil
-        },
-        disabled: current,
-        class: merge(
-          page_class,
-          current && "bg-zinc-200/50",
-          attrs[:class]
+        **mattr(
+          attrs,
+          aria: {
+            current: current ? "page" : nil
+          },
+          disabled: current,
+          class: [page_class, current && "bg-zinc-200/50"]
         )
       ) do
-        text || (block_given? ? yield : "")
+        text_or_block(text, &block)
       end
     end
 
     def ellipsis(**attrs)
       render(
         Button.new(
-          variant: :ghost,
-          **attrs,
-          disabled: true,
-          class: merge(page_class, attrs[:class])
+          **mattr(
+            attrs,
+            variant: :ghost,
+            disabled: true,
+            class: page_class
+          )
         )
       ) do
         "…"
@@ -69,20 +70,17 @@ module NitroKit
 
     private
 
-    def page_link(text = nil, disabled: nil, **attrs, &block)
+    def page_link(text = nil, disabled: nil, **attrs)
       a(
-        **attrs,
-        role: "link",
-        aria: {
-          disabled: disabled.to_s,
-          **attrs.fetch(:aria, {})
-        },
-        class: merge(
-          link_class,
-          attrs[:class]
-        ),
-        &block
-      )
+        **mattr(
+          attrs,
+          role: "link",
+          aria: {disabled: disabled.to_s},
+          class: link_class
+        )
+      ) do
+        yield
+      end
     end
 
     def nav_class

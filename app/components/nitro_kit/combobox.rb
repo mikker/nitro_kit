@@ -13,9 +13,10 @@ module NitroKit
 
       **attrs
     )
-      super(**attrs)
-
+      # floating-ui options
       @placement = placement
+
+      # combobox-nav options
       @tab_inserts_suggestions = tab_inserts_suggestions
       @first_option_selection_mode = first_option_selection_mode
       @scroll_into_view_options = scroll_into_view_options
@@ -23,6 +24,26 @@ module NitroKit
       @id = id || "nk--combobox-" + SecureRandom.hex(4)
 
       @options = options
+
+      super(
+        attrs,
+        type: "text",
+        class: input_class,
+        data: {
+          nk__combobox_target: "input",
+          action: %w[
+            focusin->nk--combobox#open
+            focusin@window->nk--combobox#focusShift
+            click@window->nk--combobox#windowClick
+            input->nk--combobox#input
+            keydown.esc->nk--combobox#clear
+            keydown.down->nk--combobox#open
+          ]
+        },
+        aria: {
+          controls: id(:listbox)
+        }
+      )
     end
 
     attr_reader(
@@ -35,46 +56,22 @@ module NitroKit
 
     def view_template
       div(
-        data: data_merge(
-          attrs[:data],
+        data: {
           slot: "control",
           controller: "nk--combobox",
           nk__combobox_placement_value: placement,
           nk__combobox_tab_inserts_suggestions_value: tab_inserts_suggestions.to_s,
           nk__combobox_first_option_selection_mode_value: first_option_selection_mode.to_s,
           nk__combobox_scroll_into_view_options_value: scroll_into_view_options&.to_json
-        )
+        }
       ) do
-        span(
-          class: merge(wrapper_class, attrs[:class])
-        ) do
-          render(
-            Input.new(
-              type: "text",
-              **attrs,
-              # don't include class from attrs
-              class: input_class,
-              data: data_merge(
-                attrs[:data],
-                nk__combobox_target: "input",
-                action: %w[
-                  focusin->nk--combobox#open
-                  focusin@window->nk--combobox#focusShift
-                  click@window->nk--combobox#windowClick
-                  input->nk--combobox#input
-                  keydown.esc->nk--combobox#clear
-                  keydown.down->nk--combobox#open
-                ]
-              ),
-              aria: {
-                controls: id(:listbox)
-              }
-            )
-          )
-
+        span(class: wrapper_class) do
+          render(Input.new(**attrs))
           chevron_icon
         end
 
+        # Since a combobox can function like a <select> element where the displayed
+        # value and the form value differ, include the value in a hidden field
         input(
           type: "hidden",
           value: attrs[:value],
@@ -84,14 +81,14 @@ module NitroKit
         ul(
           role: "listbox",
           id: id(:listbox),
-          class: merge(list_class),
+          class: list_class,
           data: {nk__combobox_target: "list", state: "closed"}
         ) do
           options.each do |(key, value)|
             li(
               role: "option",
               data: {value:},
-              class: merge(option_class)
+              class: merge_class(option_class)
             ) { key }
           end
         end

@@ -4,25 +4,27 @@ module NitroKit
   class Badge < Component
     VARIANTS = %i[default outline]
 
-    def initialize(variant: :default, size: :md, **attrs)
-      super(**attrs)
-
+    def initialize(text = nil, variant: :default, size: :md, **attrs)
+      @text = text
       @variant = variant
       @size = size
-    end
 
-    attr_reader :variant, :size
-
-    def view_template
-      span(
-        **attrs,
-        class: merge(
+      super(
+        attrs,
+        class: [
           base_class,
           variant_class,
-          size_class,
-          attrs[:class]
-        )
-      ) { yield }
+          size_class
+        ]
+      )
+    end
+
+    attr_reader :text, :variant, :size
+
+    def view_template(&block)
+      span(**attrs) do
+        text_or_block(text, &block)
+      end
     end
 
     private

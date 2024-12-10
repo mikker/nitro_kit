@@ -5,22 +5,19 @@ module NitroKit
     include ActionView::Helpers::AssetUrlHelper
 
     def initialize(src = nil, size: :md, **attrs)
-      super(**attrs)
       @src = image_path(src || attrs[:src])
       @size = size
+
+      super(
+        attrs,
+        class: [container_class, size_classes]
+      )
     end
 
     attr_reader :src, :size
 
     def view_template(&block)
-      div(
-        **attrs,
-        class: merge(
-          container_class,
-          size_classes,
-          attrs[:class]
-        )
-      ) do
+      div(**attrs) do
         image
       end
     end
@@ -45,7 +42,7 @@ module NitroKit
     end
 
     def container_class
-      "inline-flex size-12 overflow-hidden rounded-full"
+      "inline-flex overflow-hidden rounded-full"
     end
 
     def image_class

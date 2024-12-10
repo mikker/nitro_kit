@@ -4,42 +4,42 @@ module NitroKit
   class RadioButton < Component
     include ActionView::Helpers::FormTagHelper
 
-    def initialize(name: nil, value: nil, label: nil, **attrs)
-      super(**attrs)
-
-      @name = name
-      @value = value
-      @label_text = label
+    def initialize(label: nil, **attrs)
+      @label = label
       @id = id || SecureRandom.hex(4)
+
+      @class = attrs.delete(:class)
+
+      super(
+        attrs,
+        type: "radio",
+        id: @id,
+        class: [
+          "peer appearance-none size-5 shadow-sm rounded-full border text-foreground bg-background",
+          "[&[aria-checked='true']]:bg-primary",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        ]
+      )
     end
 
+    alias :html_label :label
+
     attr_reader(
-      :name,
-      :value,
       :id,
-      :label_text
+      :label
     )
 
     def view_template
-      div(class: merge("inline-flex items-center gap-2", attrs[:class])) do
-        label(class: "inline-grid *:[grid-area:1/1] place-items-center") do
-          input(
-            **attrs,
-            type: "radio",
-            name:,
-            value:,
-            id:,
-            class: merge(
-              "peer appearance-none size-5 shadow-sm rounded-full border text-foreground bg-background",
-              "[&[aria-checked='true']]:bg-primary",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            )
-          )
+      div(class: merge_class("inline-flex items-center gap-2", @class)) do
+        html_label(class: "inline-grid *:[grid-area:1/1] place-items-center") do
+          input(**attrs)
           dot
         end
 
-        if label_text.present?
-          render(Label.new(for: id)) { label_text }
+        if label.present? || block_given?
+          render(Label.new(for: id)) do
+            label || (block_given? ? yield : nil)
+          end
         end
       end
     end
@@ -48,7 +48,7 @@ module NitroKit
 
     def dot
       svg(
-        class: class_names(
+        class: merge_class(
           "row-start-1 col-start-1",
           "size-2.5 text-primay opacity-0 pointer-events-none",
           "peer-checked:opacity-100"

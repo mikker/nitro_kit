@@ -7,7 +7,7 @@ module NitroKit
     end
 
     def nk_radio_group(**attrs, &block)
-      render(RadioGroup.new(**attrs, &block))
+      render(RadioGroup.new(**attrs), &block)
     end
   end
 end

@@ -4,100 +4,80 @@ module NitroKit
   class Dropdown < Component
     include Phlex::Rails::Helpers::LinkTo
 
-    CONTENT = [
-      "w-max-content absolute top-0 left-0",
-      "p-1 bg-background rounded-md border shadow-sm",
-      "w-fit max-w-sm flex-col text-left",
-      "[&[aria-hidden=true]]:hidden flex"
-    ].freeze
-
-    TRIGGER = "inline-block"
-
-    TITLE = "px-3 pt-2 pb-1.5 text-muted-foreground text-sm"
-
-    ITEM = [
-      "px-3 py-1.5 rounded",
-      "font-medium truncate",
-      "cursor-default"
-    ].freeze
-
-    ITEM_VARIANTS = {
-      default: ["hover:bg-muted"],
-      destructive: ["text-destructive-foreground hover:bg-destructive hover:text-white"]
-    }.freeze
-
-    SEPARATOR = "border-t my-1 -mx-1"
-
     def initialize(placement: nil, **attrs)
       @placement = placement
-      @attrs = attrs
+
+      super(
+        attrs,
+        data: {
+          controller: "nk--dropdown",
+          nk__dropdown_placement_value: placement
+        }
+      )
     end
 
     attr_reader :placement
 
-    def view_template(&block)
-      div(
-        **attrs,
-        data: data_merge(
-          {:controller => "nk--dropdown", :"nk--dropdown-placement-value" => placement},
-          attrs[:data]
-        ),
-        &block
-      )
+    def view_template
+      div(**attrs) do
+        yield
+      end
     end
 
-    def trigger(**attrs, &block)
+    def trigger(**attrs)
       div(
-        aria: {haspopup: "true", expanded: "false"},
-        **attrs,
-        class: merge([TRIGGER, attrs[:class]]),
-        data: data_merge(
-          {:"nk--dropdown-target" => "trigger", :action => "click->nk--dropdown#toggle"},
-          attrs[:data]
-        ),
-        &block
-      )
+        **mattr(
+          attrs,
+          aria: {haspopup: "true", expanded: "false"},
+          class: trigger_class,
+          data: {nk__dropdown_target: "trigger", action: "click->nk--dropdown#toggle"}
+        )
+      ) do
+        yield
+      end
     end
 
-    def content(**attrs, &block)
+    def content(**attrs)
       div(
-        role: "menu",
-        aria: {hidden: "true"},
-        **attrs,
-        class: merge([CONTENT, attrs[:class]]),
-        data: data_merge(
-          {:"nk--dropdown-target" => "content"},
-          attrs[:data]
-        ),
-        &block
-      )
+        **mattr(
+          attrs,
+          role: "menu",
+          aria: {hidden: "true"},
+          class: content_class,
+          data: {nk__dropdown_target: "content"}
+        )
+      ) do
+        yield
+      end
     end
 
     def title(text = nil, **attrs, &block)
-      class_list = merge([TITLE, attrs[:class]])
-      div(**attrs, class: class_list) { text || block.call }
+      div(**mattr(attrs, class: title_class)) do
+        text_or_block(text, &block)
+      end
     end
 
     def item(
       text = nil,
       href = nil,
       variant: :default,
-      **attrs
+      **attrs,
+      &block
     )
-      common_attrs = {
+      common_attrs = mattr(
+        attrs,
         role: "menuitem",
         tabindex: "-1",
-        **attrs,
-        class: merge([ITEM, ITEM_VARIANTS[variant], attrs[:class]])
-      }
+        class: [item_class, item_variant_class(variant)]
+      )
 
       if href
         link_to(href, **common_attrs) do
-          text || yield
+          text_or_block(text, &block)
         end
       else
         div(**common_attrs) do
-          text || yield
+          text_or_block(text, &block)
         end
       end
     end
@@ -107,7 +87,49 @@ module NitroKit
     end
 
     def separator
-      div(class: SEPARATOR)
+      div(class: separator_class)
+    end
+
+    private
+
+    def content_class
+      [
+        "w-max-content absolute top-0 left-0",
+        "p-1 bg-background rounded-md border shadow-sm",
+        "w-fit max-w-sm flex-col text-left",
+        "[&[aria-hidden=true]]:hidden flex"
+      ]
+    end
+
+    def trigger_class
+      "inline-block"
+    end
+
+    def title_class
+      "px-3 pt-2 pb-1.5 text-muted-foreground text-sm"
+    end
+
+    def item_class
+      [
+        "px-3 py-1.5 rounded",
+        "font-medium truncate",
+        "cursor-default"
+      ]
+    end
+
+    def item_variant_class(variant)
+      case variant
+      when :default
+        "hover:bg-muted"
+      when :destructive
+        "text-destructive-foreground hover:bg-destructive hover:text-white"
+      else
+        raise ArgumentError, "Unknown variant: #{variant.inspect}"
+      end
+    end
+
+    def separator_class
+      "border-t my-1 -mx-1"
     end
   end
 end

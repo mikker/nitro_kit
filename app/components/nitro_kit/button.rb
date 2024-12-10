@@ -2,53 +2,10 @@
 
 module NitroKit
   class Button < Component
-    BASE = [
-      "inline-flex items-center cursor-pointer shrink-0 justify-center rounded-md border gap-2 font-medium select-none",
-      # Disabled
-      "disabled:opacity-70 disabled:pointer-events-none",
-      # Focus
-      "focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-offset-2 focus-visible:ring-ring ring-offset-background",
-      # Icon
-      "[&_svg]:pointer-events-none [&_svg]:shrink-0"
-    ].freeze
-
-    VARIANTS = {
-      default: [
-        "bg-background text-foreground border-border",
-        "hover:bg-zinc-50 dark:hover:bg-zinc-900"
-      ],
-      primary: [
-        "bg-primary text-white dark:text-zinc-950 border-primary",
-        "hover:bg-primary/90 dark:hover:bg-primary/90"
-      ],
-      destructive: [
-        "bg-destructive text-white border-destructive",
-        "hover:bg-destructive/90 dark:hover:bg-destructive/90",
-        "disabled:text-white/80"
-      ],
-      ghost: [
-        "bg-transparent text-foreground border-transparent",
-        "hover:bg-zinc-200/50 dark:hover:bg-zinc-900",
-        "disabled:text-muted-foreground"
-      ]
-    }.freeze
-
-    SIZES = {
-      base: [
-        "px-4 h-9 text-base [&_svg]:size-4",
-        # If icon only, make square
-        "[&_svg:first-child:last-child]:-mx-2"
-      ],
-      sm: [
-        "px-2.5 h-7 text-sm [&_svg]:size-3",
-        "[&_svg:first-child:last-child]:-mx-1"
-      ],
-      xs: [
-        "px-1.5 h-6 text-xs [&_svg]:size-3"
-      ]
-    }.freeze
+    VARIANTS = %i[default primary destructive ghost]
 
     def initialize(
+      text = nil,
       href: nil,
       icon: nil,
       icon_right: nil,
@@ -57,17 +14,26 @@ module NitroKit
       variant: :default,
       **attrs
     )
-      super(**attrs)
-
+      @text = text
       @href = href
       @icon = icon
       @icon_right = icon_right
       @size = size
       @type = type
       @variant = variant
+
+      super(
+        attrs,
+        class: [
+          base_class,
+          variant_class,
+          size_class
+        ]
+      )
     end
 
     attr_reader(
+      :text,
       :href,
       :icon,
       :icon_right,
@@ -77,21 +43,12 @@ module NitroKit
     )
 
     def view_template(&block)
-      class_list = merge(
-        [
-          BASE,
-          VARIANTS[variant],
-          SIZES[size],
-          attrs[:class]
-        ]
-      )
-
       if href
-        a(href:, **attrs, class: class_list) do
+        a(href:, **attrs) do
           contents(&block)
         end
       else
-        button(type:, **attrs, class: class_list) do
+        button(type:, **attrs) do
           contents(&block)
         end
       end
@@ -99,19 +56,83 @@ module NitroKit
 
     private
 
-    def contents
-      text = block_given? ? safe(capture { yield }) : nil
-      has_text = text.to_s.present?
+    def contents(&block)
+      has_content = text.present? || block_given?
 
-      if !icon && has_text && !icon_right
-        return text
-      elsif icon && !has_text && !icon_right
+      if !has_content
         return render(Icon.new(name: icon))
       end
 
       render(Icon.new(name: icon)) if icon
-      span { text }
+
+      if block_given?
+        yield
+      else
+        span { plain(text) }
+      end
+
       render(Icon.new(name: icon_right)) if icon_right
+    end
+
+    def base_class
+      [
+        "inline-flex items-center cursor-pointer shrink-0 justify-center rounded-md border gap-2 font-medium select-none",
+        # Disabled
+        "disabled:opacity-70 disabled:pointer-events-none",
+        # Focus
+        "focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-offset-2 focus-visible:ring-ring ring-offset-background",
+        # Icon
+        "[&_svg]:pointer-events-none [&_svg]:shrink-0"
+      ]
+    end
+
+    def variant_class
+      case variant
+      when :default
+        [
+          "bg-background text-foreground border-border",
+          "hover:bg-zinc-50 dark:hover:bg-zinc-900"
+        ]
+      when :primary
+        [
+          "bg-primary text-white dark:text-zinc-950 border-primary",
+          "hover:bg-primary/90 dark:hover:bg-primary/90"
+        ]
+      when :destructive
+        [
+          "bg-destructive text-white border-destructive",
+          "hover:bg-destructive/90 dark:hover:bg-destructive/90",
+          "disabled:text-white/80"
+        ]
+      when :ghost
+        [
+          "bg-transparent text-foreground border-transparent",
+          "hover:bg-zinc-200/50 dark:hover:bg-zinc-900",
+          "disabled:text-muted-foreground"
+        ]
+      else
+        raise ArgumentError, "Unknown variant `#{variant}'"
+      end
+    end
+
+    def size_class
+      case size
+      when :base
+        [
+          "px-4 h-9 text-base [&_svg]:size-4",
+          # If icon only, make square
+          "[&_svg:first-child:last-child]:-mx-2"
+        ]
+      when :sm
+        [
+          "px-2.5 h-7 text-sm [&_svg]:size-3",
+          "[&_svg:first-child:last-child]:-mx-1"
+        ]
+      when :xs
+        "px-1.5 h-6 text-xs [&_svg]:size-3"
+      else
+        raise ArgumentError, "Unknown size `#{size}'"
+      end
     end
   end
 end

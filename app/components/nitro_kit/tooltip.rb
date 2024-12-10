@@ -3,40 +3,37 @@
 module NitroKit
   class Tooltip < Component
     def initialize(content: nil, placement: nil, **attrs)
-      super(**attrs)
-
-      @content = content
+      @string_content = content
       @placement = placement
-    end
 
-    attr_reader :placement
-
-    def view_template
-      span(
-        **attrs,
-        data: data_merge(
-          attrs[:data],
+      super(
+        attrs,
+        data: {
           action: "mouseover->nk--tooltip#open mouseout->nk--tooltip#close",
           controller: "nk--tooltip",
           nk__tooltip_placement_value: placement
-        )
-      ) do
-        if @content
-          content(@content)
-        end
+        }
+      )
+    end
 
+    attr_reader :placement, :string_content
+
+    def view_template
+      span(**attrs) do
+        content(string_content) if string_content
         yield
       end
     end
 
     def content(text = nil, **attrs)
       div(
-        **attrs,
-        class: merge(tooltip_class, attrs[:class]),
-        data: data_merge(
-          attrs[:data],
-          state: "closed",
-          nk__tooltip_target: "content"
+        **mattr(
+          attrs,
+          class: tooltip_class,
+          data: {
+            state: "closed",
+            nk__tooltip_target: "content"
+          }
         )
       ) do
         text ? plain(text) : yield

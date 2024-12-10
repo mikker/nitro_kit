@@ -2,11 +2,15 @@
 
 module NitroKit
   class Textarea < Component
-    def view_template
-      textarea(
-        **attrs,
-        class: merge(default_class, attrs[:class])
+    def initialize(**attrs)
+      super(
+        attrs,
+        class: default_class
       )
+    end
+
+    def view_template
+      textarea(**attrs)
     end
 
     private

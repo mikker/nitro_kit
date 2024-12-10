@@ -6,17 +6,18 @@ module NitroKit
       @options = options
       @value = value
 
-      super(**attrs)
+      super(
+        attrs,
+        data: {slot: "control"},
+        class: wrapper_class
+      )
     end
 
     attr_reader :value, :options
 
     def view_template
-      span(
-        data: {slot: "control"},
-        class: merge(wrapper_class, attrs[:class])
-      ) do
-        select(**attrs, class: merge(select_class)) do
+      span(**attrs) do
+        select(**attrs, class: select_class) do
           options ? options.map { |o| option(*o) } : yield
         end
 
@@ -28,8 +29,14 @@ module NitroKit
 
     def option(key_or_value = nil, value = nil, **attrs, &block)
       value ||= key_or_value
-      attrs[:selected] = attrs[:value] == value
-      html_option(**attrs) { block_given? ? yield : key_or_value }
+
+      html_option(**attrs, selected: @value == value) do
+        if block_given?
+          yield
+        else
+          key_or_value
+        end
+      end
     end
 
     private

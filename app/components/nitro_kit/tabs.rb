@@ -6,69 +6,73 @@ module NitroKit
       @default = default
       @id = attrs[:id] || SecureRandom.hex(6)
 
-      super(**attrs)
+      super(
+        attrs,
+        data: {controller: "nk--tabs", nk__tabs_active_value: default},
+        class: base_class
+      )
     end
 
     attr_reader :default, :id
 
     def view_template
-      div(
-        **attrs,
-        data: data_merge(attrs[:data], {controller: "nk--tabs", nk__tabs_active_value: default}),
-        class: merge(base_class, attrs[:class])
-      ) do
+      div(**attrs) do
         yield
       end
     end
 
     def tabs(**attrs)
-      div(
-        **attrs,
-        role: "tabtabs",
-        class: merge(tabs_class, attrs[:class])
-      ) { yield }
+      div(**mattr, role: "tabtabs", class: tabs_class) do
+        yield
+      end
     end
 
-    def tab(key, text = nil, **attrs)
+    def tab(key, text = nil, **attrs, &block)
       @default ||= key
 
       button(
-        id: tab_id(key, :tab),
-        **attrs,
-        role: "tab",
-        aria: {
-          selected: (default == key).to_s,
-          controls: tab_id(key, :panel)
-        },
-        data: data_merge(
-          {
-            nk__tabs_target: "tab",
-            action: "nk--tabs#setActiveTab keydown.left->nk--tabs#prevTab keydown.right->nk--tabs#nextTab",
-            nk__tabs_key_param: key,
-            key:
+        **mattr(
+          attrs,
+          aria: {
+            selected: (default == key).to_s,
+            controls: tab_id(key, :panel)
           },
-          attrs[:data]
-        ),
-        tabindex: default == key ? 0 : -1,
-        class: merge(tab_class, attrs[:class])
+          class: tab_class,
+          data: {
+            action: "nk--tabs#setActiveTab keydown.left->nk--tabs#prevTab keydown.right->nk--tabs#nextTab",
+            key:,
+            nk__tabs_key_param: key,
+            nk__tabs_target: "tab"
+          },
+          id: tab_id(key, :tab),
+          role: "tab",
+          tabindex: default == key ? 0 : -1
+        )
       ) do
-        text || (block_given? ? yield : key)
+        text_or_block(text, &block)
       end
     end
 
     def panel(key, **attrs)
       div(
-        id: tab_id(key, :panel),
-        **attrs,
-        name: key,
-        role: "tabpanel",
-        aria: {
-          hidden: (default != key).to_s,
-          labelledby: tab_id(key, :tab)
-        },
-        data: data_merge({nk__tabs_target: "panel", key:}, attrs[:data]),
-        class: merge(panel_class, attrs[:class])
-      ) { yield }
+        **mattr(
+          attrs,
+          aria: {
+            hidden: (default != key).to_s,
+            labelledby: tab_id(key, :tab)
+          },
+          class: panel_class,
+          data: {
+            key:,
+            nk__tabs_target: "panel"
+          },
+          id: tab_id(key, :panel),
+          name: key,
+          role: "tabpanel"
+        )
+      ) do
+        yield
+      end
     end
 
     private
