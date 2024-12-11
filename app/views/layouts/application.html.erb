@@ -34,9 +34,8 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <style>
-      <% theme = Rouge::Themes::Github %>
-      <%= theme.mode(:light).render(scope: '.highlight') %>
-      <%= theme.mode(:dark).render(scope: '[data-theme=dark] .highlight') %>
+      <%= NitroKit::Theme.mode(:light).render(scope: '.highlight') %>
+      <%= NitroKit::Theme.mode(:dark).render(scope: '[data-theme=dark] .highlight') %>
     </style>
 
     <%= javascript_importmap_tags %>
