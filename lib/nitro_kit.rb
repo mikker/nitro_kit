@@ -9,7 +9,7 @@ module NitroKit
   extend SchemaBuilder
 
   SCHEMA = build_schema do |s|
-    s.add(:accordion, [:icon], js: [:accordion])
+    s.add(:accordion, js: [:accordion])
     s.add(:alert)
     s.add(:avatar)
     s.add(:badge)

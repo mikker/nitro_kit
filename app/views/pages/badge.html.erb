@@ -1,6 +1,8 @@
 <%= component_page do %>
-  <%= title "Badge" %>
-  <%= lead "Badges are used to show how fancy you are. Gold ones are the best." %>
+  <%= component_header do %>
+    <%= title "Badge" %>
+    <%= lead "Badges are used to show how fancy you are. Gold ones are the best." %>
+  <% end %>
 
   <%= section do %>
     <%= section_title "Default variants" %>
@@ -10,8 +12,7 @@
     <% end %>
 
     <%= code_example do %>
-      {#= nk_badge "Default" #}
-      {#= nk_outline_badge { "Outline" } #}
+      {#= nk_badge "Default" #} {#= nk_outline_badge { "Outline" } #}
     <% end %>
   <% end %>
 

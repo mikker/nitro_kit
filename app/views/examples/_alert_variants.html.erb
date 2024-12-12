@@ -1,19 +1,28 @@
 <div class="flex flex-col flex-1 gap-8 py-4">
-  <%= nk_warning_alert do |a| %>
-    <%= nk_icon :"loader-circle", class: "animate-spin" %>
-    <%= a.title "Get ready" %>
-    <%= a.description "Ice cream is in just a few minutes…" %>
-  <% end %>
+  <div class="space-y-2">
+    <p class="text-sm"><code>nk_warning_alert</code></p>
+    <%= nk_warning_alert do |a| %>
+      <%= nk_icon :"loader-circle", class: "animate-spin" %>
+      <%= a.title "Get ready" %>
+      <%= a.description "Ice cream is in just a few minutes…" %>
+    <% end %>
+  </div>
 
-  <%= nk_success_alert do |a| %>
-    <%= nk_icon :"ice-cream-cone" %>
-    <%= a.title "Free ice cream!" %>
-    <%= a.description "Grab them quick everyone." %>
-  <% end %>
+  <div class="space-y-2">
+    <p class="text-sm"><code>nk_success_alert</code></p>
+    <%= nk_success_alert do |a| %>
+      <%= nk_icon :"ice-cream-cone" %>
+      <%= a.title "Free ice cream!" %>
+      <%= a.description "Grab them quick everyone." %>
+    <% end %>
+  </div>
 
-  <%= nk_error_alert do |a| %>
-    <%= nk_icon :"circle-x" %>
-    <%= a.title "No more ice cream" %>
-    <%= a.description "Ugh. I wanted one so bad" %>
-  <% end %>
+  <div class="space-y-2">
+    <p class="text-sm"><code>nk_error_alert</code></p>
+    <%= nk_error_alert do |a| %>
+      <%= nk_icon :"circle-x" %>
+      <%= a.title "No more ice cream" %>
+      <%= a.description "Ugh. I wanted one so bad" %>
+    <% end %>
+  </div>
 </div>

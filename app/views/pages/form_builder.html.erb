@@ -1,5 +1,7 @@
 <%= component_page do %>
-  <%= title "Forms" %>
+  <%= component_header do %>
+    <%= title "Forms" %>
+  <% end %>
 
   <% @post = Post.new(title: nil).tap { |post| post.valid? } %>
 

@@ -1,0 +1,13 @@
+<%= component_page do %>
+  <%= component_header do %>
+    <%= title "Good to know" %>
+    <%= lead "It's Dangerous to Go Alone! Take This" %>
+  <% end %>
+
+  <div class="max-w-prose prose">
+    <%= markdown "
+            Nitro Kit uses the term _variant_ for things that can have different presentations. Like a `Button` can be `primary` or `destructive` for example.
+            ...
+            ".strip_heredoc %>
+  </div>
+<% end %>

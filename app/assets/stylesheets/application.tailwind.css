@@ -48,7 +48,7 @@
   }
 
   .link {
-    @apply text-primary-foreground underline hover:no-underline;
+    @apply text-primary-foreground underline hover:no-underline underline-offset-3;
   }
 
   .prose {

@@ -35,18 +35,22 @@ module NitroKit
       html_tr(**mattr(attrs, class: "border-b")) { yield }
     end
 
-    def th(**attrs)
-      html_th(**mattr(attrs, class: [cell_classes, "font-medium text-left"])) { yield }
+    def th(text = nil, **attrs, &block)
+      html_th(**mattr(attrs, class: [cell_classes, "font-medium text-left"])) do
+        text_or_block(text, &block)
+      end
     end
 
-    def td(**attrs)
-      html_td(**mattr(attrs, class: cell_classes)) { yield }
+    def td(text = nil, **attrs, &block)
+      html_td(**mattr(attrs, class: cell_classes)) do
+        text_or_block(text, &block)
+      end
     end
 
     private
 
     def cell_classes
-      "py-3 px-3 first:pl-0 last:pr-0"
+      "py-3 px-2"
     end
   end
 end

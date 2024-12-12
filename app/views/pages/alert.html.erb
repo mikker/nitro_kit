@@ -1,17 +1,56 @@
 <%= component_page do %>
-  <%= title "Alert" %>
-  <%= lead "Hey you look over here!" %>
-
-  <div class="prose">
-    <p>...</p>
-  </div>
-
-  <%= section do %>
-    <%= example_file "alert_basic" %>
+  <%= component_header do %>
+    <%= title "Alert" %>
+    <%= lead "Hey you look over here!" %>
+    <%= render NuggetsComponent.new(%i[component]) %>
   <% end %>
 
   <%= section do %>
+    <%= section_title "Example" %>
+    <%= example_file "alert_basic" %>
+
+    <%= inline_example do %>
+      {%= nk_alert do |a| %}
+        {%= nk_icon :"ice-cream-cone" %}
+        {%= a.title "Free ice cream!" %}
+        {%= a.description "Better be quick everyone." %}
+      {% end %}
+    <% end %>
+  <% end %>
+
+  <%= render "install_section", component_name: "alert" %>
+
+  <%= section do %>
     <%= section_title "Variants" %>
+
     <%= example_file "alert_variants" %>
+    <p>
+    <a href="/good_to_know#variants" class="link">Read more about variants</a>
+    </p>
+
+  <% end %>
+
+  <%= section do %>
+    <%= section_title "Usage" %>
+
+    <%= render PropTable.new("nk_alert(variant: :default, **attrs) { |alert| ... }") do |t| %>
+      <%= t.variant_prop(NitroKit::Alert::VARIANTS) %>
+      <%= t.attrs_prop(:div) %>
+    <% end %>
+
+    <%= render PropTable.new("alert.title(text = nil, **attrs) { ... }") do |t| %>
+      <%= t.text_prop %>
+      <%= t.attrs_prop(:h5) %>
+    <% end %>
+
+    <%= render PropTable.new("alert.trigger(text = nil, **attrs) { ... }") do |t| %>
+      <%= t.text_prop %>
+      <%= t.attrs_prop(:button) %>
+    <% end %>
+
+    <%= render PropTable.new("alert.content(text = nil, **attrs) { ... }") do |t| %>
+      <%= t.text_prop %>
+      <%= t.attrs_prop(:button) %>
+    <% end %>
   <% end %>
 <% end %>

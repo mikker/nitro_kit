@@ -36,7 +36,7 @@ module NitroKit
         )
       ) do
         block_given? ? yield : plain(text)
-        render(NitroKit::Icon.new(name: "chevron-down", class: arrow_class))
+        chevron_icon
       end
     end
 
@@ -79,6 +79,18 @@ module NitroKit
 
     def arrow_class
       "transition-transform duration-200 text-muted-foreground group-hover/accordion-trigger:text-primary"
+    end
+
+    def chevron_icon
+      svg(
+        class: "transition-transform duration-200 size-4 self-center place-self-end mr-2 pointer-events-none text-muted-foreground group-hover/accordion-trigger:text-primary",
+        viewbox: "0 0 24 24",
+        fill: "none",
+        stroke: "currentColor",
+        stroke_width: 1
+      ) do |svg|
+        svg.path(d: "m6 9 6 6 6-6")
+      end
     end
   end
 end

@@ -5,7 +5,7 @@ module NitroKit
     include ActionView::Helpers::AssetUrlHelper
 
     def initialize(src = nil, size: :md, **attrs)
-      @src = image_path(src || attrs[:src])
+      @src = src || attrs[:src]
       @size = size
 
       super(
@@ -23,7 +23,7 @@ module NitroKit
     end
 
     def image
-      img(src:, class: image_class)
+      helpers.image_tag(src, class: image_class)
     end
 
     private
