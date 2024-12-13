@@ -4,10 +4,20 @@
     <%= lead "It's Dangerous to Go Alone! Take This" %>
   <% end %>
 
-  <div class="max-w-prose prose">
-    <%= markdown "
+  <%= section do %>
+    <div class="prose">
+      <%= markdown "
             Nitro Kit uses the term _variant_ for things that can have different presentations. Like a `Button` can be `primary` or `destructive` for example.
             ...
+      
+            todo:
+      
+            - margins considered harmful
+            - make it your own
+            - variants
+            - text_or_block
+            - attrs
             ".strip_heredoc %>
-  </div>
+    </div>
+  <% end %>
 <% end %>

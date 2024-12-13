@@ -38,7 +38,8 @@ module LayoutHelper
   end
 
   def section_title(text = nil, **attrs, &block)
-    tag.h2(**attrs, class: class_names("text-2xl font-semibold mb-4", attrs[:class])) do
+    id = text&.gsub(/[^a-zA-Z0-9\-]/, "-")&.downcase
+    tag.h2(**attrs, class: class_names("text-2xl font-semibold mb-4", attrs[:class]), id:) do
       text || yield
     end
   end

@@ -114,3 +114,8 @@
     );
   }
 }
+
+:where(code:not(pre code)):before,
+:where(code:not(pre code)):after {
+  content: "`";
+}

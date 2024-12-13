@@ -7,11 +7,10 @@ module NitroKit
     def initialize(
       text = nil,
       href: nil,
+      variant: :default,
+      size: :md,
       icon: nil,
       icon_right: nil,
-      size: :base,
-      type: :button,
-      variant: :default,
       **attrs
     )
       @text = text
@@ -19,7 +18,6 @@ module NitroKit
       @icon = icon
       @icon_right = icon_right
       @size = size
-      @type = type
       @variant = variant
 
       super(
@@ -38,7 +36,6 @@ module NitroKit
       :icon,
       :icon_right,
       :size,
-      :type,
       :variant
     )
 
@@ -48,7 +45,7 @@ module NitroKit
           contents(&block)
         end
       else
-        button(type:, **attrs) do
+        button(type: :button, **attrs) do
           contents(&block)
         end
       end
@@ -117,19 +114,19 @@ module NitroKit
 
     def size_class
       case size
-      when :base
-        [
-          "px-4 h-9 text-base [&_svg]:size-4",
-          # If icon only, make square
-          "[&_svg:first-child:last-child]:-mx-2"
-        ]
+      when :xs
+        "px-1.5 h-6 text-xs [&_svg]:size-3"
       when :sm
         [
           "px-2.5 h-7 text-sm [&_svg]:size-3",
           "[&_svg:first-child:last-child]:-mx-1"
         ]
-      when :xs
-        "px-1.5 h-6 text-xs [&_svg]:size-3"
+      when :md
+        [
+          "px-4 h-9 text-base [&_svg]:size-4",
+          # If icon only, make square
+          "[&_svg:first-child:last-child]:-mx-2"
+        ]
       else
         raise ArgumentError, "Unknown size `#{size}'"
       end

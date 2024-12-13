@@ -23,7 +23,7 @@ class PropTable < Phlex::HTML
       end
 
       t.td do
-        code { plain(default) }
+        code { plain(default) } if default
       end
 
       t.td do
@@ -34,13 +34,13 @@ class PropTable < Phlex::HTML
 
   def size_prop(list = [], default: :md)
     prop("size", default.inspect) do
-      safe("One of <em><code>#{list.map(&:inspect).join(" / ")}</code></em>")
+      safe("One of <em><code>#{list.map(&:inspect).join("</code> / <code>")}</code></em>")
     end
   end
 
   def variant_prop(list = [], default: :default)
     prop("variant", default.inspect) do
-      safe("One of <em><code>#{list.map(&:inspect).join(" / ")}</code></em>")
+      safe("One of <em><code>#{list.map(&:inspect).join("</code> / <code>")}</code></em>")
     end
   end
 
@@ -62,7 +62,9 @@ class PropTable < Phlex::HTML
     t.thead do
       t.tr do
         t.th(colspan: 3) do
-          code(class: "font-bold") { title }
+          pre(class: "whitespace-pre-wrap") do
+            code(class: "font-bold") { title }
+          end
         end
       end
 

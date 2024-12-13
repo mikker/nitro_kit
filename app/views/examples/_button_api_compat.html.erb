@@ -1,0 +1,31 @@
+<div class="grid flex-1 grid-cols-2">
+  <div class="grid gap-2 place-items-center">
+    <code>nk_button_link_to</code>
+    <p class="text-sm">Matches
+      <a
+        href="https://api.rubyonrails.org/classes/ActionView/Helpers/UrlHelper.html#method-i-link_to"
+        target="_blank"
+        class="link"
+      ><code>link_to</code></a></p>
+    <%= nk_button_link_to "Go home", root_path %>
+  </div>
+
+  <div class="grid gap-2 place-items-center">
+    <code>nk_button_to</code>
+    <p class="text-sm">Matches
+      <a
+        href="https://api.rubyonrails.org/classes/ActionView/Helpers/UrlHelper.html#method-i-button_to"
+        target="_blank"
+        class="link"
+      ><code>button_to</code></a></p>
+    <div class="flex gap-2 items-center">
+      <%= nk_destructive_button_to "Delete post",
+      posts_path,
+      method: :delete,
+      data: {
+        turbo_frame: "test-result",
+      } %>
+      <%= turbo_frame_tag("test-result", class: "text-destructive-foreground") %>
+    </div>
+  </div>
+</div>
