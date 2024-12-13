@@ -31,7 +31,7 @@ module LayoutHelper
   def section(**attrs)
     tag.div(
       **attrs,
-      class: class_names("mt-8 space-y-4", attrs[:class])
+      class: class_names("mt-8 sm:mt-16 space-y-4", attrs[:class])
     ) do
       yield
     end
