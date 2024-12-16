@@ -46,7 +46,7 @@ class PropTable < Phlex::HTML
 
   def attrs_prop(tag_name)
     prop("**attrs") do
-      safe("HTML attributes for the wrapping <code>&lt;#{tag_name}&gt;</code> element.")
+      safe("HTML attributes for <code>&lt;#{tag_name}&gt;</code> element.")
     end
   end
 

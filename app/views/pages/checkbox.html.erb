@@ -1,31 +1,103 @@
 <%= component_page do %>
   <%= component_header do %>
     <%= title "Checkbox" %>
+    <%= lead "Check it out! Ha haaa.. ha." %>
+    <%= render NuggetsComponent.new(%i[component]) %>
   <% end %>
 
   <%= section do %>
-    <h2>Simple checkbox</h2>
-    <%= example do %>
-      <%= nk_checkbox %>
-      <%= nk_checkbox checked: true %>
+    <%= section_title "Example" %>
+    <%= example_file "checkbox_basic" %>
+    <%= inline_example do %>
+      {%= nk_checkbox %}
+    <% end %>
+    <div class="prose">
+      <p>API tries to match <a href="https://api.rubyonrails.org/classes/ActionView/Helpers/FormHelper.html#method-i-checkbox">Rails' own <code>checkbox()</code> helper</a>. See <a href="#api-compatibility">Form use</a> and <a href="#api-compatibility">API compatibility</a> for examples.</p>
+    </div>
+  <% end %>
+
+  <%= render "install_section", component_name: "checkbox" %>
+
+  <%= section do %>
+    <%= section_title "Form use" %>
+
+    <div class="prose">
+      <p>To use in forms, it's easiest to use the <%= link_to "Form Builder", page_path(:form_builder) %>.</p>
+      <p><code>f.checkbox</code> tries to match Rails' own API.</p>
+      <p>For extra convenience use the <code>f.field</code> method.</p>
+    </div>
+
+    <%= example_file "checkbox_form" %>
+    <%= inline_example do %>
+      {%= nk_form_with model: @session do |f| %}
+        {%= f.field :remember_me,
+          as: :checkbox,
+          label: "Remember me",
+          description: "At least for a little bit" %}
+      {% end %}
     <% end %>
 
-    <%= code_example(%{<%= nk_checkbox name: "title" %\>}) %>
+  <% end %>
 
-    <h2>Checkbox with label</h2>
+  <%= section do %>
+    <%= section_title "With a label" %>
 
-    <%= example do %>
-      <%= nk_checkbox label: "Accept your fate" %>
+    <div class="prose">
+      <p>To add a label, use the <code>label:</code> argument.</p>
+    </div>
+
+    <%= example_file "checkbox_with_label" %>
+
+    <%= inline_example do %>
+      {%= nk_checkbox label: "Accept your fate" %}
     <% end %>
+  <% end %>
 
-    <%= code_example %{<%= nk_checkbox label: "Accept your fate" %\>} %>
+  <%= section do %>
+    <%= section_title "Checkbox group" %>
 
-    <%= example do %>
-      <%= nk_checkbox_group do |g| %>
-        <%= g.title "Choose your poisons" %>
-        <%= g.item value: :coke, label: "Coke", checked: true %>
-        <%= g.item(value: :zero) { "Coke Zero" } %>
+    <div class="prose">
+      <p>Display multiple related checkboxes in a group under the same title.</p>
+    </div>
+
+    <%= example_file "checkbox_group" %>
+
+    <%= inline_example do %>
+      {%= nk_checkbox_group do |g| %}
+        {%= g.title "Choose your poison" %}
+        {%= g.item value: :coke, label: "Coke", checked: true %}
+        {%= g.item value: :zero, label: "Coke Zero" %}
+      {% end %}
+    <% end %>
+  <% end %>
+
+  <%= section do %>
+    <%= section_title "Usage" %>
+
+    <div class="prose">
+      <p><strong>NB:</strong> While <code>checkbox</code> supports Rails' API, using <code>f.field</code> is recommended.</p>
+    </div>
+
+    <%= render PropTable.new("nk_checkbox(compat_object_name = nil, compat_method = nil, compat_options = {}, compat_checked_value = \"1\", compat_unchecked_value = \"0\", label: nil, **attrs)") do |t| %>
+      <%= t.prop "compat_object_name", "nil" do %>
+        <%= nk_badge "API compatibility", size: :sm %> Relevant object
       <% end %>
+      <%= t.prop "compat_method", "nil" do %>
+        <%= nk_badge "API compatibility", size: :sm %> Object attribute
+      <% end %>
+      <%= t.prop "compat_options", "{}" do %>
+        <%= nk_badge "API compatibility", size: :sm %> Options for checkbox
+      <% end %>
+      <%= t.prop "compat_checked_value", '"1"' do %>
+        <%= nk_badge "API compatibility", size: :sm %> Value when checked
+      <% end %>
+      <%= t.prop "compat_unchecked_value", '"0"' do %>
+        <%= nk_badge "API compatibility", size: :sm %> Value when unchecked
+      <% end %>
+      <%= t.prop(:label, "nil") do %>
+        Text label for checkbox
+      <% end %>
+      <%= t.attrs_prop(:input) %>
     <% end %>
   <% end %>
 <% end %>

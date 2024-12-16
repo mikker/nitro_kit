@@ -28,6 +28,7 @@ group :development do
   gem "solid_cable"
   gem "hotwire-livereload"
   gem "listen"
+  gem "erb-formatter"
 end
 
 group :test do

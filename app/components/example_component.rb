@@ -36,7 +36,7 @@ class ExampleComponent < Phlex::HTML
       end
 
       t.panel(:preview) do
-        div(class: "flex justify-center items-center p-4") do
+        div(class: "flex justify-center items-center px-4 py-12 min-h-[120px]") do
           yield
         end
       end
