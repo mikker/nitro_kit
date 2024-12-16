@@ -1,8 +1,11 @@
 class FileListComponent < Phlex::HTML
   def initialize(component)
-    @files = component.files + component.dependencies.flat_map do |name|
-      NitroKit::SCHEMA.find(name).files
-    end
+    @files = (component.files + component
+      .dependencies
+      .flat_map do |name|
+        NitroKit::SCHEMA.find(name).files
+      end)
+      .sort
   end
 
   attr_reader :files

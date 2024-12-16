@@ -13,14 +13,11 @@ export default class extends Controller {
   static values = {
     open: { type: Boolean, default: false },
     // Options for floating-ui
-    placement: { type: String, default: "bottom" },
+    placement: { type: String },
     // Options for combobox-nav
-    tabInsertsSuggestions: { type: Boolean, default: true },
-    firstOptionSelectionMode: { type: String, default: "none" },
-    scrollIntoViewOptions: {
-      type: Object,
-      default: { block: "nearest", inline: "nearest" },
-    },
+    tabInsertsSuggestions: { type: Boolean },
+    firstOptionSelectionMode: { type: String },
+    scrollIntoViewOptions: { type: Object },
   };
 
   connect() {

@@ -31,10 +31,6 @@
   <%= render "install_section", component_name: "accordion" %>
 
   <%= section do %>
-    <%= render DependenciesComponent.new(NitroKit::SCHEMA.find(:accordion)) %>
-  <% end %>
-
-  <%= section do %>
     <%= section_title "Usage" %>
 
     <%= render PropTable.new("nk_accordion(**attrs) { |accordion| ... }") do |t| %>

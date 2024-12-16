@@ -6,10 +6,10 @@ module NitroKit
       options: [],
       id: nil,
 
-      placement: nil,
-      tab_inserts_suggestions: nil,
-      first_option_selection_mode: nil,
-      scroll_into_view_options: nil,
+      placement: "bottom",
+      tab_inserts_suggestions: true,
+      first_option_selection_mode: "selected",
+      scroll_into_view_options: {block: "nearest", inline: "nearest"},
 
       **attrs
     )
@@ -57,6 +57,7 @@ module NitroKit
     def view_template
       div(
         data: {
+          class: "isolate",
           slot: "control",
           controller: "nk--combobox",
           nk__combobox_placement_value: placement,
@@ -102,7 +103,7 @@ module NitroKit
     end
 
     def wrapper_class
-      "grid *:[grid-area:1/1] group/combobox"
+      "inline-grid *:[grid-area:1/1] group/combobox"
     end
 
     def input_class
@@ -111,7 +112,7 @@ module NitroKit
 
     def list_class
       [
-        "absolute top-0 left-0 p-1 bg-background rounded-md border shadow-sm w-fit max-w-sm flex-col flex",
+        "absolute top-0 left-0 p-1 bg-background rounded-md border shadow-sm w-fit max-w-sm flex-col flex z-10",
         "max-h-60 overflow-y-auto",
         "data-[state=closed]:hidden [&:not(:has([role=option]))]:hidden",
         "[&_[aria-selected]]:bg-muted"

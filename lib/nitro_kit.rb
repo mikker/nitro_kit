@@ -26,6 +26,7 @@ module NitroKit
     s.add(:dialog, [:button, :icon], js: [:dialog])
     s.add(:dropdown, js: [:dropdown], modules: ["@floating-ui/core", "@floating-ui/dom"])
     s.add(:icon, gems: ["lucide-rails"])
+    s.add(:input)
     s.add(:label)
     s.add(:pagination, [:icon, :button])
     s.add(:radio_button, [:label], components: [:radio_button, :radio_group])
