@@ -60,7 +60,15 @@
       <p><strong>NB:</strong> Using via <code>f.field</code> is recommended.</p>
     </div>
 
-    <%= render PropTable.new("nk_combobox(options: [], placement: nil, tab_inserts_suggestions: nil, first_option_selection_mode: nil, scroll_into_view_options: nil, **args)") do |t| %>
+    <%= render PropTable.new("
+      nk_combobox(
+        options: [],
+        placement: nil,
+        tab_inserts_suggestions: nil,
+        first_option_selection_mode: nil,
+        scroll_into_view_options: nil,
+        **args
+      )") do |t| %>
       <%= t.prop "options", "[]" do %>
         An array of <code>[label, value]</code> tuples, like <code>[["Mario Kart", "mario_kart"], ["Need for Speed", "need_for_speed"]]</code>
       <% end %>

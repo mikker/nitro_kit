@@ -77,7 +77,16 @@
       <p><strong>NB:</strong> While <code>checkbox</code> supports Rails' API, using <code>f.field</code> is recommended.</p>
     </div>
 
-    <%= render PropTable.new("nk_checkbox(compat_object_name = nil, compat_method = nil, compat_options = {}, compat_checked_value = \"1\", compat_unchecked_value = \"0\", label: nil, **attrs)") do |t| %>
+    <%= render PropTable.new("
+          nk_checkbox(
+            compat_object_name = nil,
+            compat_method = nil,
+            compat_options = {},
+            compat_checked_value = \"1\",
+            compat_unchecked_value = \"0\",
+            label: nil,
+            **attrs
+          )") do |t| %>
       <%= t.prop "compat_object_name", "nil" do %>
         <%= nk_badge "API compatibility", size: :sm %> Relevant object
       <% end %>

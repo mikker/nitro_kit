@@ -63,7 +63,7 @@ class PropTable < Phlex::HTML
       t.tr do
         t.th(colspan: 3) do
           pre(class: "whitespace-pre-wrap") do
-            code(class: "font-bold") { title }
+            code(class: "font-bold") { title.strip_heredoc.strip }
           end
         end
       end
