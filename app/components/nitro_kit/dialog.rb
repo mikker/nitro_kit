@@ -19,9 +19,9 @@ module NitroKit
       end
     end
 
-    def trigger(**attrs)
-      div(**mattr(attrs, data: {nk__dialog_target: "trigger", action: "click->nk--dialog#open"})) do
-        yield
+    def trigger(text = nil, **attrs, &block)
+      render NitroKit::Button.new(**mattr(attrs, data: {nk__dialog_target: "trigger", action: "click->nk--dialog#open"})) do
+        text_or_block(text, &block)
       end
     end
 
@@ -66,7 +66,7 @@ module NitroKit
     end
 
     def description(text = nil, **attrs, &block)
-      p(
+      div(
         **mattr(
           attrs,
           id: id(:description),

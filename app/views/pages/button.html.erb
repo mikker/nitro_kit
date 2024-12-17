@@ -74,7 +74,16 @@
   <%= section do %>
     <%= section_title "Usage" %>
 
-    <%= render PropTable.new("nk_button(text = nil, href: nil, variant: :default, size: :md, icon: nil, icon_right: nil, **attrs) { ... }") do |t| %>
+    <%= render PropTable.new("
+          nk_button(
+            text = nil,
+            href: nil,
+            variant: :default,
+            size: :md,
+            icon: nil,
+            icon_right: nil,
+            **attrs
+          ) { ... }") do |t| %>
       <%= t.text_prop %>
       <%= t.prop "href", "nil" do %>
         If truthy, the button will be an <code>a</code> element. Otherwise it's <code>button</code>.

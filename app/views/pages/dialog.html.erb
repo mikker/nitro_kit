@@ -1,52 +1,61 @@
 <%= component_page do %>
   <%= component_header do %>
     <%= title "Dialog" %>
+    <%= lead "Modal schmodal" %>
+    <%= render NuggetsComponent.new(%i[component js]) %>
   <% end %>
 
   <%= section do %>
-    <%= example do %>
-      <%= nk_dialog do |d| %>
-        <%= d.trigger do %>
-          <%= nk_button "Open dialog" %>
-        <% end %>
-        <%= d.dialog do %>
-          <%= d.title "New post" %>
-          <%= d.description "Start off your new post with a tantilizing promises that your article can never live up to." %>
+    <%= section_title "Example" %>
+    <%= example_file "dialog_basic" %>
 
-          <%= nk_form_for Post.new, url: "#" do |f| %>
-            <div class="grid gap-6">
-              <%= f.field_group do %>
-                <%= f.field :title %>
-              <% end %>
+    <%= inline_example do %>
+      {%= nk_dialog do |d| %}
+        {%= d.trigger "New post" %}
+        {%= d.dialog do %}
+          {%= d.title "New post" %}
+          {%= d.description "Start off your new post ..." %}
 
-              <div class="flex justify-end space-x-2">
-                <%= nk_ghost_button "Cancel", data: {action: "nk--dialog#close"} %>
-                <%= f.submit %>
-              </div>
-            </div>
-          <% end %>
+          {%= nk_form_for ... do %}
+            ...
+          {% end %}
 
-          <%= d.close_button %>
-        <% end %>
-      <% end %>
+          {%= d.close_button %}
+        {% end %}
+      {% end %}
+    <% end %>
+  <% end %>
+
+  <%= render "install_section", component_name: "dialog" %>
+
+  <%= section do %>
+    <%= section_title "Usage" %>
+
+    <%= render PropTable.new("nk_dialog(**attrs) { |dialog| ... }") do |t| %>
+      <%= t.attrs_prop(:div) %>
     <% end %>
 
-    <%= code_example do %>
-      {#= nk_dialog do |d| #}
-        {#= d.trigger do #}
-          {#= nk_button "Open dialog" #}
-        {# end #}
-        {#= d.dialog do #}
-          {#= d.title "New post" #}
-          {#= d.description "Start off your new post ..." #}
+    <%= render PropTable.new("dialog.trigger(text = nil, **attrs) { ... }") do |t| %>
+      <%= t.text_prop %>
+      <%= t.attrs_prop(NitroKit::Button) %>
+    <% end %>
 
-          {#= nk_form_for ... do #}
-            ...
-          {# end #}
+    <%= render PropTable.new("dialog.dialog(**attrs) { ... }") do |t| %>
+      <%= t.attrs_prop(:dialog) %>
+    <% end %>
 
-          {#= d.close_button #}
-        {# end #}
-      {# end #}
+    <%= render PropTable.new("dialog.close_button(**attrs) { ... }") do |t| %>
+      <%= t.attrs_prop(NitroKit::Button) %>
+    <% end %>
+
+    <%= render PropTable.new("dialog.title(text = nil, **attrs) { ... }") do |t| %>
+      <%= t.text_prop %>
+      <%= t.attrs_prop(:h2) %>
+    <% end %>
+
+    <%= render PropTable.new("dialog.description(text = nil, **attrs) { ... }") do |t| %>
+      <%= t.text_prop %>
+      <%= t.attrs_prop(:div) %>
     <% end %>
   <% end %>
 <% end %>

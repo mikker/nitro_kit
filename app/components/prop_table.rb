@@ -4,6 +4,9 @@ class PropTable < Phlex::HTML
   def initialize(title)
     @title = title
     @t = NitroKit::Table.new
+
+    @lexer = Rouge::Lexer.find(:ruby)
+    @formatter = Rouge::Formatters::HTML.new
   end
 
   attr_reader :t, :title
@@ -46,7 +49,12 @@ class PropTable < Phlex::HTML
 
   def attrs_prop(tag_name)
     prop("**attrs") do
-      safe("HTML attributes for <code>&lt;#{tag_name}&gt;</code> element.")
+      case tag_name
+      when String, Symbol
+        safe("HTML attributes for <code>&lt;#{tag_name}&gt;</code> element.")
+      when Class
+        safe("Arguments for <code>#{tag_name.name}.new()</code>.")
+      end
     end
   end
 
@@ -62,8 +70,12 @@ class PropTable < Phlex::HTML
     t.thead do
       t.tr do
         t.th(colspan: 3) do
-          pre(class: "whitespace-pre-wrap") do
-            code(class: "font-bold") { title.strip_heredoc.strip }
+          pre(
+            class: "highlight"
+          ) do
+            code do
+              @formatter.format(@lexer.lex(title.strip_heredoc.strip)).html_safe
+            end
           end
         end
       end
