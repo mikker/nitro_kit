@@ -102,6 +102,8 @@ module NitroKit
         combobox(**attrs)
       when :radio, :radio_button, :radio_group
         radio_group(**attrs)
+      when :switch
+        switch(**attrs)
       else
         raise ArgumentError, "Invalid field type `#{as}'"
       end
@@ -199,6 +201,18 @@ module NitroKit
       render(
         RadioGroup.new(
           options || @options || [],
+          **control_attrs(
+            **field_attrs,
+            **attrs
+          )
+        )
+      )
+    end
+
+    def switch(**attrs)
+      # TODO: support use in forms
+      render(
+        Switch.new(
           **control_attrs(
             **field_attrs,
             **attrs

@@ -2,22 +2,25 @@
 
 module NitroKit
   class Select < Component
-    def initialize(options = nil, value: nil, **attrs)
+    def initialize(options = nil, value: nil, include_empty: false, prompt: nil, index: nil, **attrs)
       @options = options
       @value = value
+      @include_empty = include_empty
+      @prompt = prompt
+      @index = index
 
       super(
         attrs,
-        data: {slot: "control"},
         class: wrapper_class
       )
     end
 
-    attr_reader :value, :options
+    attr_reader :value, :options, :include_empty, :prompts, :index
 
     def view_template
-      span(**attrs) do
+      span(class: wrapper_class, data: {slot: "control"}) do
         select(**attrs, class: select_class) do
+          option if include_empty
           options ? options.map { |o| option(*o) } : yield
         end
 
@@ -42,7 +45,7 @@ module NitroKit
     private
 
     def wrapper_class
-      "grid *:[grid-area:1/1] group/select"
+      "w-fit inline-grid *:[grid-area:1/1] group/select"
     end
 
     def select_class

@@ -1,28 +1,66 @@
 <%= component_page do %>
   <%= component_header do %>
     <%= title "Switch" %>
+    <%= lead "The switch' fancy cousin" %>
+    <%= render NuggetsComponent.new(%i[component js]) %>
   <% end %>
 
-  <div class="space-y-4">
-    <h2>Default</h2>
-    <%= example do %>
-      <%= nk_switch %>
-      <%= nk_switch checked: true %>
+  <%= section do %>
+    <%= section_title "Example" %>
+    <%= example_file "switch_basic" %>
+    <%= inline_example do %>
+      {%= nk_switch %}
     <% end %>
+  <% end %>
 
-    <%= code_example %{
-                      <%= nk_switch :name %\>
-                      <%= nk_switch :name, checked: true %\>
-                    } %>
+  <%= render "install_section", component_name: "switch" %>
+  <%= render "dependencies_section", component_name: "switch" %>
 
-    <h2>Sizes</h2>
-    <%= example do %>
-      <%= nk_switch(size: :sm) %>
-      <%= nk_switch(size: :sm, checked: true) %>
+  <%= section do %>
+    <%= section_title "Form use" %>
+
+    <div class="prose">
+      <p>To use in forms, it's easiest to use the <%= link_to "Form Builder", page_path(:form_builder) %>.</p>
+      <p><code>f.switch</code> tries to match Rails' own API.</p>
+      <p>For extra convenience use the <code>f.field</code> method.</p>
+    </div>
+
+    <%= example_file "switch_form" %>
+    <%= inline_example do %>
+      {%= nk_form_with model: @session do |f| %}
+        {%= f.field :remember_me,
+          as: :switch,
+          label: "Remember me",
+          description: "At least for a little bit" %}
+      {% end %}
     <% end %>
+  <% end %>
 
-    <%= code_example %{
-                      <%= nk_switch(:name, size: :sm) %\>
-                    } %>
-  </div>
+  <%= section do %>
+    <%= section_title "With a label" %>
+
+    <div class="prose">
+      <p>To add a label, use the <code>label:</code> argument.</p>
+    </div>
+
+    <%= example_file "switch_with_label" %>
+
+    <%= inline_example do %>
+      {%= nk_switch label: "Accept your fate" %}
+    <% end %>
+  <% end %>
+
+  <%= section do %>
+    <%= section_title "Sizes" %>
+    <%= example_file("switch_sizes") %>
+  <% end %>
+
+  <%= section do %>
+    <%= section_title "Usage" %>
+
+    <%= render PropTable.new("nk_switch(size: :md, **attrs)") do |t| %>
+      <%= t.size_prop(%i[sm md], default: :md) %>
+      <%= t.attrs_prop(:button) %>
+    <% end %>
+  <% end %>
 <% end %>
