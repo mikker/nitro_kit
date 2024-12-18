@@ -58,8 +58,8 @@ class PropTable < Phlex::HTML
     end
   end
 
-  def text_prop
-    prop("text", "nil") do
+  def text_prop(default: nil)
+    prop("text", default || "nil") do
       plain("Plain text content.")
     end
   end
