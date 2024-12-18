@@ -100,7 +100,7 @@ module NitroKit
         checkbox(**attrs)
       when :combobox
         combobox(**attrs)
-      when :radio, :radio_group
+      when :radio, :radio_button, :radio_group
         radio_group(**attrs)
       else
         raise ArgumentError, "Invalid field type `#{as}'"

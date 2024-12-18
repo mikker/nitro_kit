@@ -65,7 +65,7 @@
   .prose blockquote,
   .prose pre,
   .prose table {
-    @apply mb-4;
+    @apply mb-4 text-muted-foreground;
   }
 
   .prose h1,
@@ -95,6 +95,10 @@
   .prose ol ul,
   .prose ol ol {
     @apply my-2;
+  }
+
+  .prose code {
+    @apply text-sm text-foreground;
   }
 }
 
