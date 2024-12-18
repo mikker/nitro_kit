@@ -38,3 +38,4 @@ bun.lockb
 !/app/assets/builds/.keep
 /node_modules
 .github/*.pem
+test/generators/nitro_kit/tmp/

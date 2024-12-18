@@ -9,15 +9,13 @@ module NitroKit
     end
 
     def copy_component_files
-      components.each do |component|
-        component.files.each do |path|
-          copy_file(path, path)
-        end
+      components.map(&:all_files).flatten.uniq.each do |path|
+        copy_file(path, path)
       end
     end
 
     def add_gems
-      gems = components.flat_map(&:gems)
+      gems = components.flat_map(&:all_gems)
 
       return unless gems.any?
 
@@ -29,7 +27,7 @@ module NitroKit
     end
 
     def install_modules
-      modules = components.flat_map(&:modules).uniq
+      modules = components.flat_map(&:all_modules).uniq
 
       return unless modules.any?
 
@@ -60,7 +58,7 @@ module NitroKit
       @components = component_names
         .flat_map do |name|
           component = SCHEMA.find(name)
-          [component] + component.dependencies.map(&SCHEMA.method(:find))
+          [component] + component.dependencies
         end
     end
 

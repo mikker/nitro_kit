@@ -4,16 +4,35 @@ module NitroKit
       def initialize(schema, name, dependencies:, files:, modules:, gems:)
         @schema = schema
         @name = name
-        @dependencies = dependencies
+        @unresolved_dependencies = dependencies
         @files = files
         @modules = modules
         @gems = gems
+        @resolved = false
       end
 
-      attr_reader :name, :files, :modules, :gems
+      attr_reader :name, :files, :modules, :gems, :unresolved_dependencies
 
       def dependencies
-        @dependencies.map { |d| @schema.find(d) }
+        raise "Component not resolved" unless resolved?
+        @dependencies
+      end
+
+      def resolve!
+        raise "Component already resolved" if resolved?
+
+        @dependencies = @unresolved_dependencies
+          .each_with_object(Set.new) do |name, list|
+            list.add(name)
+            list.merge(@schema.find(name).unresolved_dependencies)
+          end
+          .map { |name| @schema.find(name) }
+
+        @resolved = true
+      end
+
+      def resolved?
+        @resolved
       end
 
       def all_files
@@ -39,6 +58,7 @@ module NitroKit
       def initialize
         @schema = []
         yield self
+        resolve!
       end
 
       def add(
@@ -72,12 +92,23 @@ module NitroKit
         @schema.push(component)
       end
 
+      def all
+        @schema
+      end
+
       def find(name)
         @schema.find { |c| c.name == name.to_sym }
       end
 
-      def all
-        @schema
+      def resolved?
+        @resolved
+      end
+
+      private
+
+      def resolve!
+        all.each(&:resolve!)
+        @resolved = true
       end
     end
 
