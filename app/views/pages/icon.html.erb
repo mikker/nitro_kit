@@ -24,6 +24,20 @@
   <% end %>
 
   <%= section do %>
+    <%= section_title "SVG attributes" %>
+    <div class="prose">
+      <p>Icons are output as inline <code>&lt;svg&gt;</code> elements. This makes it easy to change its properties, like <code>stroke-width</code>.</p>
+    </div>
+    <%= example_file "icon_svg_attributes" %>
+    <%= inline_example do %>
+      {%= nk_icon "car",
+        class: "size-64",
+        stroke_width: 0.2,
+        fill: "rgba(0, 255, 255, 0.2)" %}
+    <% end %>
+  <% end %>
+
+  <%= section do %>
     <%= section_title "Usage" %>
 
     <%= render PropTable.new("nk_icon(**attrs) { |dropdown| ... }") do |t| %>
