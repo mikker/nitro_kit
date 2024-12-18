@@ -1,23 +1,34 @@
 <%= component_page do %>
   <%= component_header do %>
     <%= title "Icon" %>
+    <%= lead "Says more than a thousand words" %>
+    <%= render NuggetsComponent.new(%i[component]) %>
+    <p>Uses <a href="https://lucide.dev" class="underline text-primary-foreground">Lucide icons</a>.</p>
   <% end %>
 
-  <div class="space-y-4">
-    <p>Uses
-      <a href="https://lucide.dev" class="underline text-primary-foreground">Lucide icons</a></p>
-    <div class="flex flex-col gap-2">
-      <div class="flex gap-2">
-        <%= nk_icon "align-start-vertical" %>
-        <%= nk_icon "image-play", class: "text-green-500" %>
-        <%= nk_icon "popcorn", class: "text-red-400" %>
-        <%= nk_icon "tractor" %>
-      </div>
-      <div class="flex">
-        <% %w[size-2 size-3 size-4 size-5 size-6 size-7 size-8].reverse.each do |size| %>
-          <%= nk_icon "heart", class: size %>
-        <% end %>
-      </div>
-    </div>
-  </div>
+  <%= section do %>
+    <%= section_title "Example" %>
+    <%= example_file "icon_basic" %>
+
+    <%= inline_example do %>
+      {%= nk_icon "car" %}
+    <% end %>
+  <% end %>
+
+  <%= render "install_section", component_name: "icon" %>
+  <%= render "dependencies_section", component_name: "icon" %>
+
+  <%= section do %>
+    <%= section_title "Sizes" %>
+    <%= example_file("icon_sizes") %>
+  <% end %>
+
+  <%= section do %>
+    <%= section_title "Usage" %>
+
+    <%= render PropTable.new("nk_icon(**attrs) { |dropdown| ... }") do |t| %>
+      <%= t.size_prop(%i[sm md lg]) %>
+      <%= t.attrs_prop(:svg) %>
+    <% end %>
+  <% end %>
 <% end %>

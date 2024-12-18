@@ -1,0 +1,11 @@
+<%= nk_dropdown do |d| %>
+  <%= d.trigger "Open" %>
+  <%= d.content do %>
+    <%= d.title "My hotdogs" %>
+    <%= d.separator %>
+    <%= d.item "New hotdog", request.path %>
+    <%= d.item "Edit hotdog", request.path %>
+    <%= d.separator %>
+    <%= d.destructive_item "Delete hotdog", request.path, data: { turbo_method: "delete", turbo_confirm: "Sure?" } %>
+  <% end %>
+<% end %>

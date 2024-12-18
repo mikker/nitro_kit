@@ -1,7 +1,7 @@
 class DependenciesComponent < Phlex::HTML
   def initialize(component)
-    @modules = component.modules
-    @gems = component.gems
+    @modules = component.all_modules
+    @gems = component.all_gems
   end
 
   attr_reader :modules, :gems
@@ -37,6 +37,9 @@ class DependenciesComponent < Phlex::HTML
       ["https://floating-ui.com/", "https://github.com/floating-ui/floating-ui"]
     when "@github/combobox-nav"
       ["https://floating-ui.com/", "https://github.com/floating-ui/floating-ui"]
+    when "lucide-rails"
+      ["https://lucide.dev/", "https://github.com/heyvito/lucide-rails"]
+    else raise ArgumentError, "Unknown dependency `#{name}'"
     end
   end
 end

@@ -80,7 +80,7 @@ class PropTable < Phlex::HTML
         end
       end
 
-      t.tr(class: "bg-muted") do
+      t.tr(class: "text-muted-foreground/80 bg-muted/50") do
         t.th("Property", class: "w-1/6")
         t.th("Default", class: "w-1/6")
         t.th("Description")

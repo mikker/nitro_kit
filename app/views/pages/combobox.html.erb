@@ -14,14 +14,7 @@
   <% end %>
 
   <%= render "install_section", component_name: "combobox" %>
-
-  <%= section do %>
-    <%= section_title "Dependencies" %>
-    <div class="prose">
-      <p>This component adds third-party dependencies:</p>
-    </div>
-    <%= render DependenciesComponent.new(NitroKit::SCHEMA.find(:combobox)) %>
-  <% end %>
+  <%= render "dependencies_section", component_name: "dropdown" %>
 
   <%= section do %>
     <%= section_title "Form use" %>

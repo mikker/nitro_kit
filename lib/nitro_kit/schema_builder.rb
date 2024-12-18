@@ -1,8 +1,41 @@
 module NitroKit
   module SchemaBuilder
-    Component = Struct.new(:name, :files, :dependencies, :modules, :gems)
+    class Component
+      def initialize(schema, name, dependencies:, files:, modules:, gems:)
+        @schema = schema
+        @name = name
+        @dependencies = dependencies
+        @files = files
+        @modules = modules
+        @gems = gems
+      end
 
-    class Builder
+      attr_reader :name, :files, :modules, :gems
+
+      def dependencies
+        @dependencies.map { |d| @schema.find(d) }
+      end
+
+      def all_files
+        (files + dependencies.flat_map(&:files)).sort
+      end
+
+      def all_modules
+        (modules + dependencies.flat_map(&:modules)).sort
+      end
+
+      def all_gems
+        (gems + dependencies.flat_map(&:gems)).sort
+      end
+
+      def has_dependencies?
+        return true if gems.any?
+        return true if modules.any?
+        false
+      end
+    end
+
+    class Schema
       def initialize
         @schema = []
         yield self
@@ -21,16 +54,19 @@ module NitroKit
         components ||= [name]
         helpers ||= [name]
 
+        files = [
+          components.map { |c| "app/components/nitro_kit/#{c}.rb" },
+          helpers.map { |c| "app/helpers/nitro_kit/#{c}_helper.rb" },
+          js.map { |c| "app/javascript/controllers/nk/#{c}_controller.js" }
+        ].flatten
+
         component = Component.new(
+          self,
           name,
-          [
-            components.map { |c| "app/components/nitro_kit/#{c}.rb" },
-            helpers.map { |c| "app/helpers/nitro_kit/#{c}_helper.rb" },
-            js.map { |c| "app/javascript/controllers/nk/#{c}_controller.js" }
-          ].flatten,
-          dependencies,
-          modules,
-          gems
+          dependencies:,
+          files:,
+          modules:,
+          gems:
         )
 
         @schema.push(component)
@@ -46,7 +82,7 @@ module NitroKit
     end
 
     def build_schema(&block)
-      Builder.new(&block)
+      Schema.new(&block)
     end
   end
 end

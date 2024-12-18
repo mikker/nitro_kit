@@ -2,6 +2,8 @@
 
 module NitroKit
   class Dropdown < Component
+    ITEM_VARIANTS = %i[default destructive]
+
     include Phlex::Rails::Helpers::LinkTo
 
     def initialize(placement: nil, **attrs)
@@ -19,13 +21,13 @@ module NitroKit
     attr_reader :placement
 
     def view_template
-      div(**attrs) do
+      div(**mattr(attrs)) do
         yield
       end
     end
 
-    def trigger(**attrs)
-      div(
+    def trigger(text = nil, **attrs, &block)
+      render NitroKit::Button.new(
         **mattr(
           attrs,
           aria: {haspopup: "true", expanded: "false"},
@@ -33,7 +35,7 @@ module NitroKit
           data: {nk__dropdown_target: "trigger", action: "click->nk--dropdown#toggle"}
         )
       ) do
-        yield
+        text_or_block(text, &block)
       end
     end
 
@@ -44,7 +46,8 @@ module NitroKit
           role: "menu",
           aria: {hidden: "true"},
           class: content_class,
-          data: {nk__dropdown_target: "content"}
+          data: {nk__dropdown_target: "content"},
+          popover: true,
         )
       ) do
         yield
@@ -87,22 +90,22 @@ module NitroKit
     end
 
     def separator
-      div(class: separator_class)
+      hr(class: separator_class)
     end
 
     private
 
     def content_class
       [
-        "w-max-content absolute top-0 left-0",
-        "p-1 bg-background rounded-md border shadow-sm",
+        "z-10 w-max-content absolute top-0 left-0",
+        "p-1 bg-background text-foreground rounded-md border shadow-sm",
         "w-fit max-w-sm flex-col text-left",
         "[&[aria-hidden=true]]:hidden flex"
       ]
     end
 
     def trigger_class
-      "inline-block"
+      ""
     end
 
     def title_class

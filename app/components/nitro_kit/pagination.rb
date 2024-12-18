@@ -21,7 +21,7 @@ module NitroKit
         if text || block_given?
           text_or_block(text, &block)
         else
-          render(Icon.new(name: "arrow-left"))
+          render(Icon.new("arrow-left"))
           plain("Previous")
         end
       end
@@ -33,7 +33,7 @@ module NitroKit
           text_or_block(text, &block)
         else
           plain("Next")
-          render(Icon.new(name: "arrow-right"))
+          render(Icon.new("arrow-right"))
         end
       end
     end

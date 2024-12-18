@@ -40,9 +40,8 @@
     <%#<%= nk_input type: "search" %>
 
     <%= nk_dropdown(placement: "bottom-end") do |d| %>
-      <%= d.trigger do %>
-        <%= nk_button "Theme", icon: "brush", size: :xs, class: "hidden sm:inline-flex" %>
-        <%= nk_button icon: "brush", size: :xs, class: "sm:hidden" %>
+      <%= d.trigger icon: "brush", size: :xs do %>
+        <span class="hidden sm:inline">Theme</span>
       <% end %>
       <%= d.content do %>
         <%= d.title "Theme" %>

@@ -1,41 +1,74 @@
 <%= component_page do %>
-  <%= title "Dropdown" %>
+  <%= component_header do %>
+    <%= title "Dropdown" %>
+    <%= lead "Everybody get down this is a contextual menu." %>
+    <%= render NuggetsComponent.new(%i[component js]) %>
+  <% end %>
 
   <%= section do %>
-    <h3>Dropdown builder</h3>
+    <%= section_title "Example" %>
+    <%= example_file "dropdown_basic" %>
 
-    <%= example do %>
-      <%= nk_dropdown do |d| %>
-        <%= d.trigger do %>
-          <%= nk_button "Open" %>
-        <% end %>
-        <%= d.content do %>
-          <%= d.title "My hotdogs" %>
-          <%= d.separator %>
-          <%= d.item "New hotdog", request.path %>
-          <%= d.item "Edit hotdog", request.path %>
-          <%= d.separator %>
-          <%= d.destructive_item "Delete hotdog", request.path, data: { turbo_method: "delete", turbo_confirm: "Sure?" } %>
-        <% end %>
-      <% end %>
+    <%= inline_example do %>
+      {%= nk_dropdown do |d| %}
+        {%= d.trigger "Open" %}
+        {%= d.content do %}
+          {%= d.title "My hotdogs" %}
+          {%= d.separator %}
+          {%= d.item "New hotdog", new_hotdog_path %}
+          {%= d.item "Edit hotdog", edit_hotdog_path(1) %}
+          {%= d.separator %}
+          {%= d.destructive_item "Delete hotdog",
+            hotdog_path(1),
+            data: { turbo_method: "delete", turbo_confirm: "Sure?" } %}
+        {% end %}
+      {% end %}
+    <% end %>
+  <% end %>
+
+  <%= render "install_section", component_name: "dropdown" %>
+  <%= render "dependencies_section", component_name: "dropdown" %>
+
+  <%= section do %>
+    <%= section_title "Usage" %>
+
+    <%= render PropTable.new("nk_dropdown(**attrs) { |dropdown| ... }") do |t| %>
+      <%= t.attrs_prop(:div) %>
     <% end %>
 
-    <%= code_example do %>
-      {#= nk_dropdown do |d| #}
-        {#= d.trigger do #}
-          {#= nk_button "Open" #}
-        {# end #}
-        {#= d.content do #}
-          {#= d.title "My hotdogs" #}
-          {#= d.separator #}
-          {#= d.item "New hotdog", new_hotdog_path #}
-          {#= d.item "Edit hotdog", edit_hotdog_path(1) #}
-          {#= d.separator #}
-          {#= d.destructive_item "Delete hotdog",
-            hotdog_path(1),
-            data: { turbo_method: "delete", turbo_confirm: "Sure?" } #}
-        {# end #}
-      {# end #}
+    <%= render PropTable.new("dropdown.trigger(text = nil, **attrs) { ... }") do |t| %>
+      <%= t.text_prop %>
+      <%= t.attrs_prop(NitroKit::Button) %>
+    <% end %>
+
+    <%= render PropTable.new("dropdown.content(**attrs) { ... }") do |t| %>
+      <%= t.attrs_prop(:div) %>
+    <% end %>
+
+    <%= render PropTable.new("dropdown.title(text = nil, **attrs) { ... }") do |t| %>
+      <%= t.text_prop %>
+      <%= t.attrs_prop(:div) %>
+    <% end %>
+
+    <%= render PropTable.new("dropdown.item(text = nil, href = nil, **attrs) { ... }") do |t| %>
+      <%= t.text_prop %>
+      <%= t.prop "href", "nil" do %>
+        If passed, the item will be an <code>&lt;a&gt;</code> link.
+      <% end %>
+      <%= t.variant_prop(NitroKit::Dropdown::ITEM_VARIANTS) %>
+      <%= t.attrs_prop(:div) %>
+    <% end %>
+
+    <%= render PropTable.new("dropdown.destructive_item(text = nil, href = nil, **attrs) { ... }") do |t| %>
+      <%= t.text_prop %>
+      <%= t.prop "href", "nil" do %>
+        If passed, the item will be an <code>&lt;a&gt;</code> link.
+      <% end %>
+      <%= t.attrs_prop(:div) %>
+    <% end %>
+
+    <%= render PropTable.new("dropdown.separator(**attrs)") do |t| %>
+      <%= t.attrs_prop(:hr) %>
     <% end %>
   <% end %>
 <% end %>

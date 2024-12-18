@@ -57,10 +57,10 @@ module NitroKit
       has_content = text.present? || block_given?
 
       if !has_content
-        return render(Icon.new(name: icon))
+        return render(Icon.new(icon))
       end
 
-      render(Icon.new(name: icon)) if icon
+      render(Icon.new(icon)) if icon
 
       if block_given?
         yield
@@ -68,7 +68,7 @@ module NitroKit
         span { plain(text) }
       end
 
-      render(Icon.new(name: icon_right)) if icon_right
+      render(Icon.new(icon_right)) if icon_right
     end
 
     def base_class

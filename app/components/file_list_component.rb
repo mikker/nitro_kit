@@ -1,11 +1,6 @@
 class FileListComponent < Phlex::HTML
   def initialize(component)
-    @files = (component.files + component
-      .dependencies
-      .flat_map do |name|
-        NitroKit::SCHEMA.find(name).files
-      end)
-      .sort
+    @files = component.all_files
   end
 
   attr_reader :files
@@ -20,7 +15,7 @@ class FileListComponent < Phlex::HTML
             class: "inline-flex items-center gap-2 hover:underline"
           ) do
             plain(path)
-            render(NitroKit::Icon.new(name: :"arrow-up-right", size: :sm))
+            render(NitroKit::Icon.new(:"arrow-up-right", size: :sm))
           end
         end
       end

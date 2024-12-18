@@ -55,7 +55,7 @@ module NitroKit
           )
         )
       ) do
-        render(Icon.new(name: "x"))
+        render(Icon.new(:x))
       end
     end
 
