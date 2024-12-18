@@ -2,6 +2,9 @@ import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
   static targets = ["list", "template"];
+  static values = {
+    duration: { type: Number, default: 5000 },
+  };
 
   show({ params }) {
     const { title, description } = params;
@@ -21,7 +24,7 @@ export default class extends Controller {
 
     this.timer = setTimeout(() => {
       this.hide();
-    }, 1000);
+    }, this.durationValue);
   }
 
   hide() {

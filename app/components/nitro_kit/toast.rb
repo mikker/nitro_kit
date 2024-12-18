@@ -22,7 +22,7 @@ module NitroKit
       end
     end
 
-    def item(title: nil, description: nil, **attrs)
+    def item(title: nil, description: nil, **attrs, &block)
       li(
         **mattr(
           attrs,
@@ -39,7 +39,7 @@ module NitroKit
           end
 
           div(class: "text-sm opacity-90", data: {slot: "description"}) do
-            description && plain(description)
+            text_or_block(description, &block)
           end
         end
       end

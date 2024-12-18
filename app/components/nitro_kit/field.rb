@@ -199,7 +199,7 @@ module NitroKit
 
     def radio_group(options: nil, **attrs)
       render(
-        RadioGroup.new(
+        RadioButtonGroup.new(
           options || @options || [],
           **control_attrs(
             **field_attrs,

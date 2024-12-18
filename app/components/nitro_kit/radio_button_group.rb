@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module NitroKit
-  class RadioGroup < Component
+  class RadioButtonGroup < Component
     def initialize(options = nil, name: nil, value: nil, **attrs)
       @options = options
 

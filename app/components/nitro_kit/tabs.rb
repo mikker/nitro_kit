@@ -28,8 +28,6 @@ module NitroKit
     end
 
     def tab(key, text = nil, **attrs, &block)
-      @default ||= key
-
       button(
         **mattr(
           attrs,

@@ -138,10 +138,10 @@ GEM
     ffi (1.17.0-x86_64-linux-musl)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    hotwire-livereload (1.4.1)
-      actioncable (>= 6.0.0)
-      listen (>= 3.0.0)
-      railties (>= 6.0.0)
+    hotwire-spark (0.1.2)
+      listen
+      rails (>= 8.0.0)
+      zeitwerk
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     image_processing (1.13.0)
@@ -375,7 +375,7 @@ DEPENDENCIES
   commonmarker
   cuprite
   erb-formatter
-  hotwire-livereload
+  hotwire-spark
   image_processing (~> 1.2)
   importmap-rails
   kamal

@@ -2,17 +2,56 @@
   <%= component_header do %>
     <%= title "Toast" %>
     <%= lead "Does it smell burnt in here?" %>
+    <%= render NuggetsComponent.new(%i[component js]) %>
   <% end %>
 
-  <div class="prose">
-    <p>Minimum Viable Toaster</p>
-  </div>
-
   <%= section do %>
+    <%= section_title "Example" %>
     <%= example_file "toast_basic" %>
 
-    <%= code_example do %>
-      {#= nk_toast #}
+    <%= inline_example do %>
+      <html data-controller="nk--toast">
+        <body>
+          <!-- ... -->
+          {%= nk_button "Do the thing",
+            data: {
+              action: "nk--toast#show",
+              nk__toast_title_param: "Hi",
+              nk__toast_description_param: "There",
+            } %}
+          <!-- ... -->
+          {%= nk_toast %}
+        </body>
+      </html>
+    <% end %>
+  <% end %>
+
+  <%= render "install_section", component_name: "toast" %>
+  <%= render "dependencies_section", component_name: "toast" %>
+
+  <%= section do %>
+    <%= section_title "Usage" %>
+
+    <div class="prose">
+      <ol>
+        <li>Add <code>data-controller="nk--toast"</code> to the <code>&lt;html&gt;</code> tag.</li>
+        <li>Add <code>&lt;%= nk_toast %&gt;</code> to bottom of your <code>&lt;body&gt;</code> tag.</li>
+        <li>Use <code>data-action="nk--toast#show"</code> to pop some toast.</li>
+      </ol>
+    </div>
+
+    <%= render PropTable.new("nk_toast(**attrs) { |toast| ... }") do |t| %>
+      <%= t.attrs_prop(:div) %>
+    <% end %>
+
+    <%= render PropTable.new("toast.item(title: nil, description: nil, **attrs)") do |t| %>
+      <%= t.prop(:title, "nil") do %>
+        Title of the item
+      <% end %>
+      <%= t.prop(:description, "nil") do %>
+        Body text of the item
+      <% end %>
+      <%= t.attrs_prop(:li) %>
     <% end %>
   <% end %>
 <% end %>

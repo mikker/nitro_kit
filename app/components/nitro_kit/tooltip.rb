@@ -25,7 +25,7 @@ module NitroKit
       end
     end
 
-    def content(text = nil, **attrs)
+    def content(text = nil, **attrs, &block)
       div(
         **mattr(
           attrs,
@@ -36,7 +36,7 @@ module NitroKit
           }
         )
       ) do
-        text ? plain(text) : yield
+        text_or_block(text, &block)
       end
     end
 
