@@ -92,6 +92,26 @@ module NitroKit
       case as
       when :string
         input(**attrs)
+      when
+          :button,
+          :color,
+          :date,
+          :datetime,
+          :datetime_local,
+          :email,
+          :file,
+          :hidden,
+          :month,
+          :number,
+          :password,
+          :range,
+          :search,
+          :tel,
+          :text,
+          :time,
+          :url,
+          :week
+        input(type: as, **attrs)
       when :select
         select(**attrs)
       when :text, :textarea

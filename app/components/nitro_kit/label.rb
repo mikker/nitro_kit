@@ -2,15 +2,21 @@
 
 module NitroKit
   class Label < Component
-    def initialize(**attrs)
+    def initialize(text = nil, **attrs)
+      @text = text
+
       super(
         attrs,
         class: "text-sm font-medium select-none"
       )
     end
 
-    def view_template
-      label(**attrs) { yield }
+    attr_reader :text
+
+    def view_template(&block)
+      label(**attrs) do
+        text_or_block(text, &block)
+      end
     end
   end
 end

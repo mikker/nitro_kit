@@ -25,7 +25,7 @@ module NitroKit
     s.add(:datepicker)
     s.add(:dialog, [:button, :icon], js: [:dialog])
     s.add(:dropdown, [:button], js: [:dropdown], modules: ["@floating-ui/core", "@floating-ui/dom"])
-    s.add(:field, [:label], components: [:field, :field_group])
+    s.add(:field, [:label, :checkbox, :combobox, :label, :radio_button, :select, :switch, :textarea])
     s.add(:icon, gems: ["lucide-rails"])
     s.add(:input)
     s.add(:label)

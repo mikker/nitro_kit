@@ -2,22 +2,18 @@
 
 module NitroKit
   module LabelHelper
-    def nk_label(**attrs, &block)
-      render(Label.new(**attrs), &block)
-    end
+    def nk_label(compat_object_name = nil, compat_method = nil, content_or_options = nil, **attrs, &block)
+      name = field_name(compat_object_name, compat_method)
 
-    # Matches the API of ActionView::Helpers::FormTagHelper
-    def nk_label_tag(name = nil, content_or_options = nil, **attrs, &block)
-      if block_given? && content_or_options.is_a?(Hash)
-        attrs = content_or_options = content_or_options.symbolize_keys
-      else
-        attrs ||= {}
-        attrs = attrs.symbolize_keys
+      case content_or_options
+      when String
+        text = content_or_options
+      when Hash
+        text = nil
+        attrs.merge!(content_or_options)
       end
 
-      attrs[:for] = sanitize_to_id(name) unless name.blank? || attrs.has_key?("for")
-
-      nk_label(**attrs) { content_or_options || name.to_s.humanize || yield }
+      render(Label.new(text, for: name, **attrs), &block)
     end
   end
 end

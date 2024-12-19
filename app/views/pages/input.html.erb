@@ -1,0 +1,72 @@
+<%= component_page do %>
+  <%= component_header do %>
+    <%= title "Input" %>
+    <%= lead "I guess we *have* to accept input somehow" %>
+    <%= render NuggetsComponent.new(%i[component]) %>
+  <% end %>
+
+  <%= section do %>
+    <%= section_title "Example" %>
+    <%= example_file "input_basic" %>
+
+    <%= inline_example do %>
+      {%= nk_input %}
+    <% end %>
+  <% end %>
+
+  <%= render "install_section", component_name: "input" %>
+  <%= render "dependencies_section", component_name: "input" %>
+
+  <%= section do %>
+    <%= section_title "Form use" %>
+
+    <div class="prose">
+      <p>To use in forms, it's easiest to use the <%= link_to "Form Builder", page_path(:form_builder) %>.</p>
+    </div>
+
+    <%= example_file "input_form" %>
+    <%= inline_example do %>
+      {%= nk_form_with model: @user do |f| %}
+        {%= f.field :name %}
+        {%= f.field :email, as: :email %}
+      {% end %}
+    <% end %>
+  <% end %>
+
+  <%= section do %>
+    <%= section_title "Usage" %>
+
+    <div class="prose">
+      <p><strong>NB:</strong> Using through <code>FormBuilder#field</code> is recommended. See <%= link_to "Field docs", page_path(:field) %>.</p>
+    </div>
+
+    <%= render PropTable.new("nk_input(**attrs)") do |t| %>
+      <%= t.attrs_prop(:input) %>
+    <% end %>
+
+    <% %w[
+      color
+      date
+      datetime
+      datetime_local
+      email
+      file
+      hidden
+      month
+      number
+      password
+      phone
+      range
+      search
+      telephone
+      text
+      time
+      url
+      week
+    ].each do |type| %>
+      <%= render PropTable.new("nk_#{type}_field(**attrs)") do |t| %>
+        <%= t.attrs_prop(:input) %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
