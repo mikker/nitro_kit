@@ -97,7 +97,9 @@ module NitroKit
       end
 
       def find(name)
-        @schema.find { |c| c.name == name.to_sym }
+        component = @schema.find { |c| c.name == name.to_sym }
+        raise "Component not found: #{name}" unless component
+        component
       end
 
       def resolved?

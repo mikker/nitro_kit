@@ -70,4 +70,5 @@ Rails.application.configure do
   # config.generators.apply_rubocop_autocorrect_after_generate!
 
   config.hotwire.spark.css_paths = ["app/assets/builds"]
+  config.hotwire.spark.html_paths += ["app/components"]
 end

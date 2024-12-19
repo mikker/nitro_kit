@@ -2,17 +2,54 @@
 
 module NitroKit
   class Fieldset < Component
-    FIELDSET_BASE = "space-y-6"
-
-    def initialize(legend, **attrs)
+    def initialize(legend: nil, description: nil, **attrs)
       @legend = legend
-      @attrs = attrs
+      @description = description
+      super(
+        attrs,
+        class: base_class
+      )
     end
 
-    attr_reader :legend, :attrs
+    def view_template
+      fieldset(**attrs) do
+        legend(@legend) if @legend
+        description(@description) if @description
 
-    def view_template(&block)
-      fieldset(**attrs, class: FIELDSET_BASE, &block)
+        yield
+      end
+    end
+
+    alias :html_legend :legend
+
+    def legend(text = nil, **attrs, &block)
+      html_legend(**mattr(attrs, class: legend_class)) do
+        text_or_block(text, &block)
+      end
+    end
+
+    def description(text = nil, **attrs, &block)
+      div(**mattr(attrs, class: description_class, data: {slot: "text"})) do
+        text_or_block(text, &block)
+      end
+    end
+
+    def group(**attrs, &block)
+      render(FieldGroup.new(**attrs), &block)
+    end
+
+    private
+
+    def base_class
+      "[&>*+[data-slot=control]]:mt-6 [&>*+[data-slot=text]]:mt-1"
+    end
+
+    def legend_class
+      "text-lg font-semibold"
+    end
+
+    def description_class
+      "text-sm text-muted-foreground"
     end
   end
 end

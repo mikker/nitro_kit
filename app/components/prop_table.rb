@@ -51,16 +51,16 @@ class PropTable < Phlex::HTML
     prop("**attrs") do
       case tag_name
       when String, Symbol
-        safe("HTML attributes for <code>&lt;#{tag_name}&gt;</code> element.")
+        safe("HTML attributes for <code>&lt;#{tag_name}&gt;</code> element")
       when Class
-        safe("Arguments for <code>#{tag_name.name}.new()</code>.")
+        safe("Arguments for <code>#{tag_name.name}.new()</code>")
       end
     end
   end
 
-  def text_prop(default: nil)
-    prop("text", default || "nil") do
-      plain("Plain text content.")
+  def text_prop(name = "text", default: nil)
+    prop(name, default || "nil") do
+      plain("Plain text content")
     end
   end
 

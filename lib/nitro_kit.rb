@@ -38,18 +38,5 @@ module NitroKit
     s.add(:textarea)
     s.add(:toast, js: [:toast])
     s.add(:tooltip, js: [:tooltip], modules: ["@floating-ui/core", "@floating-ui/dom"])
-
-    # bit more advanced. Bundle into just "form" ?
-    s.add(
-      :form,
-      components: [
-        :field,
-        :field_group,
-        :fieldset,
-        :input,
-        :label,
-        :form_builder
-      ]
-    )
   end
 end

@@ -7,7 +7,8 @@ module NitroKit
 
       super(
         attrs,
-        class: "text-sm font-medium select-none"
+        class: "text-sm font-medium select-none",
+        data: {slot: "label"}
       )
     end
 

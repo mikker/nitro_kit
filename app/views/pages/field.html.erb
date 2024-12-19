@@ -1,50 +1,64 @@
 <%= component_page do %>
   <%= component_header do %>
     <%= title "Field" %>
-    <%= lead do %>
-      Use <code>Field</code> to render form fields with labels, descriptions, and errors.
-    <% end %>
-  <% end %>
-
-
-  <%= section do %>
-    <%= section_title "Short-hand" %>
-
-    <%= example do %>
-      <%= nk_field :name, placeholder: "B Gates" %>
-    <% end %>
-
-    <%= code_example do %>
-      {#= nk_field :name, placeholder: "B Gates" #}
-    <% end %>
+    <%= lead "Hi" %>
+    <%= render NuggetsComponent.new(%i[component]) %>
   <% end %>
 
   <%= section do %>
-    <%= example do %>
-      <%= nk_field :name do |f| %>
-        <%= f.label "Or" %>
-        <%= f.description "Build" %>
-        <%= f.control placeholder: "Your" %>
-        <%= f.errors ["Own"] %>
-      <% end %>
-    <% end %>
+    <%= section_title "Example" %>
+    <%= example_file "field_basic" %>
 
-    <%= code_example do %>
-      {#= nk_field :name do |f| #}
-        {#= f.label "Or" #}
-        {#= f.description "Build" #}
-        {#= f.control placeholder: "Your" #}
-        {#= f.errors ["Own"] #}
-      {# end #}
+    <%= inline_example do %>
+      {%= nk_form_for :session do |f| %}
+        {%= f.fieldset do |fs| %}
+          {%= fs.legend "Sign in" %}
+          {%= fs.description "Let's see those credentials, buddy" %}
+
+          {%= fs.group do %}
+            {%= f.field :email, as: :email, label: "E-mail address" %}
+            {%= f.field :password, as: :password %}
+            {%= f.field :remember_me, as: :checkbox,
+              description: "At least for a little bit" %}
+            {%= f.submit "Sign in" %}
+          {% end %}
+        {% end %}
+      {% end %}
     <% end %>
   <% end %>
 
+  <%= render "install_section", component_name: "field" %>
+  <%= render "dependencies_section", component_name: "field" %>
+
   <%= section do %>
-    <%= example do %>
-      <div>
-        <h2>With description and custom label</h2>
-        <%= nk_field :name, label: "Custom label", description: "Some more details, y'know?" %>
-      </div>
+    <%= section_title "Usage" %>
+
+    <%= render PropTable.new("nk_field(**attrs)") do |t| %>
+      <%= t.attrs_prop(:input) %>
+    <% end %>
+
+    <%= render PropTable.new("nk_fieldset(legend: nil, description: nil, **attrs) { |fieldset| ... }") do |t| %>
+      <%= t.text_prop(:legend) %>
+      <%= t.text_prop(:description) %>
+      <%= t.attrs_prop(:fieldset) %>
+    <% end %>
+
+    <%= render PropTable.new("fieldset.legend(text = nil, **attrs) { ... }") do |t| %>
+      <%= t.text_prop %>
+      <%= t.attrs_prop(:legend) %>
+    <% end %>
+
+    <%= render PropTable.new("fieldset.description(text = nil, **attrs) { ... }") do |t| %>
+      <%= t.text_prop %>
+      <%= t.attrs_prop(:div) %>
+    <% end %>
+
+    <%= render PropTable.new("fieldset.group(**attrs) { |group| ... }") do |t| %>
+      <%= t.attrs_prop(NitroKit::FieldGroup) %>
+    <% end %>
+
+    <%= render PropTable.new("nk_field_group(**attrs)") do |t| %>
+      <%= t.attrs_prop(:div) %>
     <% end %>
   <% end %>
 <% end %>

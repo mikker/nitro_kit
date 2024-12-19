@@ -1,34 +1,71 @@
 <%= component_page do %>
   <%= component_header do %>
     <%= title "Forms" %>
+    <%= lead "In the end, everything is basically just spreadsheets" %>
+    <%= render NuggetsComponent.new(%i[component]) %>
   <% end %>
 
-  <% @post = Post.new(title: nil).tap { |post| post.valid? } %>
+  <%= section do %>
+    <div class="prose">
+      <p>Nitro Kit comes with a custom <code>FormBuilder</code> that works just like the one you already know except it has a few extras.</p>
+    </div>
+  <% end %>
 
-  <%= example do %>
-    <%= nk_form_with model: @post,
-      url: request.path,
-      html: { class: "min-w-[320px]" } do |f| %>
-      <%= f.fieldset do %>
-        <%= f.field :title %>
+  <%= section do %>
+    <%= section_title "Example" %>
+    <%= example_file "form_basic" %>
 
-        <%= f.field :category_id,
-          as: :select,
-          options: Category.pluck(:name, :id) %>
+    <%= inline_example do %>
+      {%= form_with model: @post, url: request.path do |f| %}
+        {%= f.fieldset(legend: "New Post", description: "Tell the world") do |fs| %}
+          {%= fs.group do %}
+            {%= f.field :title %}
 
-        <%= f.field :body, as: :text, rows: 6 %>
+            {%= f.field :category_id, as: :select, options: Category.pluck(:name, :id) %}
 
-        <%= f.field :publish, as: :checkbox, description: "Should we tell the world?" %>
+            {%= f.field :body, as: :textarea, rows: 6 %}
 
-        <%= f.field :kind,
-          as: :radio_group,
-          options: Post.kinds.map { |k| [k.capitalize, k] },
-          value: "article" %>
+            {%= f.field :publish, as: :checkbox, description: "Should we tell the world?" %}
 
-        <div>
-          <%= f.submit %>
-        </div>
-      <% end %>
+            {%= f.field :kind,
+              as: :radio_group,
+              options: Post.kinds.map { |k| [k.capitalize, k] },
+              value: "article" %}
+
+            {%= f.submit %}
+          {% end %}
+        {% end %}
+      {% end %}
     <% end %>
+  <% end %>
+
+  <%= section do %>
+    <%= section_title "Usage" %>
+
+    <%= render PropTable.new("nk_form_with(**attrs, &block) { |form| ... }") do |t| %>
+      <%= t.attrs_prop(NitroKit::FormBuilder) %>
+    <% end %>
+
+    <p>Works just like <a href="https://api.rubyonrails.org/classes/ActionView/Helpers/FormHelper.html#method-i-form_with" class="link"><code>form_with</code></a>.</p>
+
+    <%= render PropTable.new("nk_form_for(record, **attrs, &block) { |form| ... }") do |t| %>
+      <%= t.prop("record") do %>
+      <% end %>
+      <%= t.attrs_prop(NitroKit::FormBuilder) %>
+    <% end %>
+
+    <p>Works just like <a href="https://api.rubyonrails.org/classes/ActionView/Helpers/FormHelper.html#method-i-form_for" class="link"><code>form_for</code></a>.</p>
+
+    <%= render PropTable.new("form.fieldset(**attrs, &block) { |fieldset| ... }") do |t| %>
+      <%= t.attrs_prop(NitroKit::Fieldset) %>
+    <% end %>
+
+    <%= render PropTable.new("form.field(field_name, **attrs)") do |t| %>
+      <%= t.prop("field_name") do %>
+        Field name
+      <% end %>
+      <%= t.attrs_prop(NitroKit::Field) %>
+    <% end %>
+
   <% end %>
 <% end %>

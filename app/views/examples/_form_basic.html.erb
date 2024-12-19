@@ -1,0 +1,22 @@
+<% @post = Post.new(title: nil).tap { |post| post.valid? } %>
+
+<%= nk_form_with model: @post, url: request.path, html: { class: "w-full max-w-[420px]" } do |f| %>
+  <%= f.fieldset(legend: "New Post", description: "Tell the world") do |fs| %>
+    <%= fs.group do %>
+      <%= f.field :title %>
+
+      <%= f.field :category_id, as: :select, options: Category.pluck(:name, :id) %>
+
+      <%= f.field :body, as: :textarea, rows: 6 %>
+
+      <%= f.field :publish, as: :checkbox, description: "Should we tell the world?" %>
+
+      <%= f.field :kind,
+        as: :radio_group,
+        options: Post.kinds.map { |k| [k.capitalize, k] },
+        value: "article" %>
+
+      <%= f.submit %>
+    <% end %>
+  <% end %>
+<% end %>

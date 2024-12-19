@@ -71,6 +71,8 @@ module NitroKit
     def description(text = nil, **attrs, &block)
       text ||= field_description
 
+      return unless text || block_given?
+
       div(**mattr(attrs, data: {slot: "description"}, class: description_class)) do
         text_or_block(text, &block)
       end
@@ -114,7 +116,7 @@ module NitroKit
         input(type: as, **attrs)
       when :select
         select(**attrs)
-      when :text, :textarea
+      when :textarea
         textarea(**attrs)
       when :checkbox
         checkbox(**attrs)
@@ -151,7 +153,7 @@ module NitroKit
         attrs,
         name:,
         id:,
-        data: {slot: "control", **field_attrs.fetch(:data, {})}
+        data: {slot: "control"}
       )
     end
 
@@ -245,8 +247,11 @@ module NitroKit
 
     def base_class
       [
-        "grid gap-2 align-start",
-        "[&[data-as=checkbox]]:grid-cols-[auto_1fr] [&[data-as=checkbox]_[data-slot=description]]:col-start-2",
+        "grid align-start",
+        # Margins
+        "[&>[data-slot=label]+[data-slot=control]]:mt-2 [&>[data-slot=label]+[data-slot=description]]:mt-1 [&>[data-slot=description]+[data-slot=control]]:mt-3 [&>[data-slot=control]+[data-slot=description]]:mt-3 [&>[data-slot=control]+[data-slot=error]]:mt-2",
+        # When checkbox
+        "[&[data-as=checkbox]]:grid-cols-[auto_1fr] data-[as=checkbox]:gap-x-2 [&[data-as=checkbox]_[data-slot=description]]:col-start-2",
         "[&:has([data-slot=error])_[data-slot=control]]:border-destructive"
       ]
     end

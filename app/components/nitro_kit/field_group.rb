@@ -2,14 +2,18 @@
 
 module NitroKit
   class FieldGroup < Component
+    def initialize(**attrs)
+      super(attrs, class: base_class, data: {slot: "control"})
+    end
+
     def view_template(&block)
-      div(**attrs, class: merge_class(base_class, attrs[:class]), &block)
+      div(**attrs, &block)
     end
 
     private
 
     def base_class
-      "flex flex-col items-stretch gap-4"
+      "space-y-6"
     end
   end
 end
