@@ -1,0 +1,8 @@
+<div class="flex flex-col flex-1 gap-8 py-4">
+  <div class="space-y-4">
+    <% %i[default success warning error].each do |variant| %>
+      <p class="text-sm"><code><%= variant.inspect %></code></p>
+      <%= render NitroKit::Toast::Item.new(title: variant.to_s.titleize, description: "Your message", variant: variant, data: {state: "preview"}, class: "opacity-100") %>
+    <% end %>
+  </div>
+</div>

@@ -64,6 +64,14 @@ class PropTable < Phlex::HTML
     end
   end
 
+  def tr(...)
+    t.tr(...)
+  end
+
+  def td(...)
+    t.td(...)
+  end
+
   private
 
   def header_rows

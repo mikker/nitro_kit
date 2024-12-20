@@ -1,18 +1,38 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["list", "template"];
+  static targets = ["list", "template", "sink"];
   static values = {
     duration: { type: Number, default: 5000 },
   };
 
-  show({ params }) {
+  connect() {
+    this.#flushSink();
+
+    if (this.hasSinkTarget) {
+      this.mutationObserver = new MutationObserver(([event]) => {
+        if (event.addedNodes.length === 0) return;
+        this.#flushSink();
+      });
+      this.mutationObserver.observe(this.sinkTarget, { childList: true });
+    }
+  }
+
+  disconnect() {
+    if (this.mutationObserver) this.mutationObserver.disconnect();
+  }
+
+  toast({ params }) {
     const { title, description } = params;
     const item = this.templateTarget.content.cloneNode(true);
 
     item.querySelector("[data-slot=title]").textContent = title;
     item.querySelector("[data-slot=description]").textContent = description;
 
+    this.show(item);
+  }
+
+  show(item) {
     this.clear();
     this.listTarget.appendChild(item);
 
@@ -37,5 +57,12 @@ export default class extends Controller {
 
   clear() {
     this.listTarget.innerHTML = "";
+  }
+
+  #flushSink() {
+    for (const li of this.sinkTarget.children) {
+      this.show(li.cloneNode(true));
+      li.remove();
+    }
   }
 }
