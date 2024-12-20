@@ -30,19 +30,14 @@
 
     <div class="prose">
       <p>The Toast component comes with a built-in mechanism to show your application's <code>flash</code> messages.</p>
+      <p>Consider these Turbo enabled actions:</p>
     </div>
 
-    <%= example do %>
-      <%= nk_button_to "Eat hotdog", flash_path %>
-      <%= nk_destructive_button_to "Throw away hotdog", flash_path, method: :delete %>
-    <% end %>
-
-    <div class="prose">
-      <p>Take an action like:</p>
-    </div>
+    <%= example_file "toast_flash" %>
 
     <%= inline_example do %>
       {%= nk_button_to "Eat hotdog", hotdog_path %}
+      {%= nk_destructive_button_to "Throw away hotdog", flash_path, method: :delete %}
     <% end %>
 
     <div class="prose">
