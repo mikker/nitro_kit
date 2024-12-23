@@ -319,7 +319,7 @@ GEM
     stringio (3.1.2)
     syntax_tree (6.2.0)
       prettier_print (>= 1.2.0)
-    tailwind_merge (0.13.3)
+    tailwind_merge (0.14.0)
       lru_redux (~> 1.1)
     tailwindcss-rails (3.0.0)
       railties (>= 7.0.0)
