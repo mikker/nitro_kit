@@ -27,12 +27,14 @@ module NitroKit
     end
 
     def trigger(text = nil, **attrs, &block)
-      render NitroKit::Button.new(
-        **mattr(
-          attrs,
-          aria: {haspopup: "true", expanded: "false"},
-          class: trigger_class,
-          data: {nk__dropdown_target: "trigger", action: "click->nk--dropdown#toggle"}
+      render(
+        NitroKit::Button.new(
+          **mattr(
+            attrs,
+            aria: {haspopup: "true", expanded: "false"},
+            class: trigger_class,
+            data: {nk__dropdown_target: "trigger", action: "click->nk--dropdown#toggle"}
+          )
         )
       ) do
         text_or_block(text, &block)
@@ -47,7 +49,7 @@ module NitroKit
           aria: {hidden: "true"},
           class: content_class,
           data: {nk__dropdown_target: "content"},
-          popover: true,
+          popover: true
         )
       ) do
         yield

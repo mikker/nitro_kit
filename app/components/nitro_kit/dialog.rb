@@ -20,7 +20,9 @@ module NitroKit
     end
 
     def trigger(text = nil, **attrs, &block)
-      render NitroKit::Button.new(**mattr(attrs, data: {nk__dialog_target: "trigger", action: "click->nk--dialog#open"})) do
+      render(
+        NitroKit::Button.new(**mattr(attrs, data: {nk__dialog_target: "trigger", action: "click->nk--dialog#open"}))
+      ) do
         text_or_block(text, &block)
       end
     end
