@@ -1,8 +1,0 @@
-<%= nk_form_for :high_score do |f| %>
-  <%= f.field :game,
-          as: :combobox,
-          label: "Game",
-          placeholder: "Best game ever",
-          description: "In which game did you beat the world record again?",
-          options: Game.all %>
-<% end %>

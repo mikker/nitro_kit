@@ -34,10 +34,6 @@ module NitroKit
       end
     end
 
-    def group(**attrs, &block)
-      render(FieldGroup.new(**attrs), &block)
-    end
-
     private
 
     def base_class

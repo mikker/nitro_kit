@@ -36,12 +36,10 @@ module NitroKit
     def merge_data(*hashes)
       hashes.compact.reduce({}) do |acc, hash|
         acc.deep_merge(hash) do |key, old_val, new_val|
-          case key
           # Concat Stimulus actions
-          when :action
+          case key
+          when :action, :controller
             [new_val, old_val].compact.join(" ")
-          when :controller
-            [old_val, new_val].compact.join(" ")
           else
             new_val
           end

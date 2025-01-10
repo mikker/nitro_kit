@@ -1,9 +1,0 @@
-<% component = NitroKit::SCHEMA.find(component_name) %>
-
-<%= section do %>
-  <%= section_title "Dependencies" %>
-  <div class="prose">
-    <p>This component adds third-party dependencies:</p>
-  </div>
-  <%= render DependenciesComponent.new(component) %>
-  <% end if component.has_dependencies? %>

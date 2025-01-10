@@ -2,7 +2,7 @@ module NitroKit
   class AddGenerator < Rails::Generators::Base
     argument :component_names, type: :array
 
-    source_root File.expand_path("../../../", __dir__)
+    source_root File.expand_path("../../../", __dir__).tap { |path| puts path }
 
     def copy_base_component
       copy_file("app/components/nitro_kit/component.rb", "app/components/nitro_kit/component.rb")

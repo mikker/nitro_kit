@@ -16,6 +16,10 @@ module NitroKit
       @template.render(NitroKit::Field.new(self, field_name, label:, errors:, **attrs))
     end
 
+    def group(**attrs, &block)
+      @template.render(FieldGroup.new(**attrs), &block)
+    end
+
     # Inputs
 
     %i[

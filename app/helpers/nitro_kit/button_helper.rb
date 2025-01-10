@@ -15,7 +15,7 @@ module NitroKit
       url_for_options = name if block_given?
 
       form_options = attrs.delete(:form) || {}
-      form_options.merge!(attrs.slice(:multipart, :method, :authenticity_token, :remote, :enforce_utf8))
+      form_options.merge!(attrs.slice(:multipart, :data, :method, :authenticity_token, :remote, :enforce_utf8))
 
       form_tag(url_for_options, form_options) do
         nk_button(name, type: "submit", **attrs, &block)

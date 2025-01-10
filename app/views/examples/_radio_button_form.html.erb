@@ -1,8 +1,0 @@
-<%= nk_form_for :golem do |f| %>
-  <%= f.field :element,
-      options: [%w[Earth earth], %w[Fire fire], %w[Water water], %w[Air air]],
-      value: "fire",
-      as: :radio_group,
-      label: "Golem type",
-      description: "He'll be invincible" %>
-<% end %>

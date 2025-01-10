@@ -1,8 +1,9 @@
 require "tailwind_merge"
 require "phlex/rails"
 
+require "nitro_kit/version"
+require "nitro_kit/engine"
 require "nitro_kit/variants"
-require "nitro_kit/railtie"
 require "nitro_kit/schema_builder"
 
 module NitroKit
@@ -13,7 +14,7 @@ module NitroKit
     s.add(:alert)
     s.add(:avatar)
     s.add(:badge)
-    s.add(:button, [:icon], components: [:button, :button_group], helpers: [:button])
+    s.add(:button, [:icon], components: [:button, :button_group], helpers: [:button, :button_group])
     s.add(:card)
     s.add(:checkbox, [:label], components: [:checkbox, :checkbox_group])
     s.add(
@@ -28,7 +29,7 @@ module NitroKit
     s.add(:field, [:label, :checkbox, :combobox, :label, :radio_button, :select, :switch, :textarea])
     s.add(:field_group)
     s.add(:fieldset, [:field_group])
-    s.add(:form_builder, [:field], helpers: [])
+    s.add(:form_builder, [:field], helpers: [:form])
     s.add(:icon, gems: ["lucide-rails"])
     s.add(:input)
     s.add(:label)
