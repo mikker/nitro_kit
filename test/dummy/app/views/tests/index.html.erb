@@ -1,0 +1,5 @@
+<ul>
+  <% @tests.each do |example| %>
+    <li><%= link_to example, test_path(example), class: "text-primary underline" %></li>
+  <% end %>
+</ul>
