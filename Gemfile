@@ -11,3 +11,5 @@ gem "tailwindcss-ruby", "~> 4.0.0.beta9"
 gem "stimulus-rails"
 gem "turbo-rails"
 gem "importmap-rails"
+gem "hotwire-spark"
+

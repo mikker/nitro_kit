@@ -26,22 +26,26 @@ module NitroKit
       end
     end
 
-    def trigger(text = nil, **attrs, &block)
-      render(
-        NitroKit::Button.new(
-          **mattr(
-            attrs,
-            aria: {haspopup: "true", expanded: "false"},
-            class: trigger_class,
-            data: {nk__dropdown_target: "trigger", action: "click->nk--dropdown#toggle"}
-          )
-        )
-      ) do
-        text_or_block(text, &block)
+    def trigger(text = nil, as: NitroKit::Button, **attrs, &block)
+      trigger_attrs = mattr(
+        attrs,
+        aria: {haspopup: "true", expanded: "false"},
+        data: {nk__dropdown_target: "trigger", action: "click->nk--dropdown#toggle"}
+      )
+
+      case as
+      when Symbol
+        send(as, **trigger_attrs) do
+          text_or_block(text, &block)
+        end
+      else
+        render(as.new(**trigger_attrs)) do
+          text_or_block(text, &block)
+        end
       end
     end
 
-    def content(**attrs)
+    def content(as: :div, **attrs)
       div(
         **mattr(
           attrs,

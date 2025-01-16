@@ -4,8 +4,8 @@ module NitroKit
   class Avatar < Component
     include ActionView::Helpers::AssetUrlHelper
 
-    def initialize(src = nil, size: :md, **attrs)
-      @src = src || attrs[:src]
+    def initialize(src_arg = nil, src: nil, size: :md, **attrs)
+      @src = src_arg || src
       @size = size
 
       super(

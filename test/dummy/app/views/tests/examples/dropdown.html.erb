@@ -1,5 +1,15 @@
 <%= back_link %>
+
+<p>Simplest</p>
 <%= nk_dropdown do |d| %>
-  <%= d.trigger(plain: true) { "plain" } %>
+  <%= d.trigger { "simple" } %>
+  <%= d.content { "hi" } %>
+<% end %>
+
+<p>With `as:`</p>
+<%= nk_dropdown do |d| %>
+  <%= d.trigger(as: :button, class: "border border-green-500 p-1 inline-flex shrink-0 rounded-full cursor-pointer") do %>
+    <%= nk_avatar("https://placecage.lucidinternets.com/249/249", size: :sm) %>
+  <% end %>
   <%= d.content { "hi" } %>
 <% end %>
