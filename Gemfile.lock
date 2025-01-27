@@ -84,27 +84,29 @@ GEM
     benchmark (0.4.0)
     bigdecimal (3.1.9)
     builder (3.3.0)
-    concurrent-ruby (1.3.4)
+    concurrent-ruby (1.3.5)
     connection_pool (2.5.0)
     crass (1.0.6)
     date (3.4.1)
     drb (2.2.1)
     erubi (1.13.1)
     ffi (1.17.1-arm64-darwin)
+    ffi (1.17.1-x86_64-linux-gnu)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    hotwire-spark (0.1.12)
+    hotwire-spark (0.1.13)
       listen
       rails (>= 7.0.0)
       zeitwerk
-    i18n (1.14.6)
+    i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     importmap-rails (2.1.0)
       actionpack (>= 6.0.0)
       activesupport (>= 6.0.0)
       railties (>= 6.0.0)
     io-console (0.8.0)
-    irb (1.14.3)
+    irb (1.15.1)
+      pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     listen (3.9.0)
@@ -133,32 +135,23 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     nio4r (2.7.4)
-    nokogiri (1.18.1-aarch64-linux-gnu)
+    nokogiri (1.18.2-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.18.1-aarch64-linux-musl)
-      racc (~> 1.4)
-    nokogiri (1.18.1-arm-linux-gnu)
-      racc (~> 1.4)
-    nokogiri (1.18.1-arm-linux-musl)
-      racc (~> 1.4)
-    nokogiri (1.18.1-arm64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.18.1-x86_64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.18.1-x86_64-linux-gnu)
-      racc (~> 1.4)
-    nokogiri (1.18.1-x86_64-linux-musl)
+    nokogiri (1.18.2-x86_64-linux-gnu)
       racc (~> 1.4)
     phlex (2.0.0.rc1)
     phlex-rails (2.0.0.rc1)
       phlex (= 2.0.0.rc1)
       railties (>= 6.1, < 9)
+    pp (0.6.2)
+      prettyprint
+    prettyprint (0.2.0)
     propshaft (1.1.0)
       actionpack (>= 7.0.0)
       activesupport (>= 7.0.0)
       rack
       railties (>= 7.0.0)
-    psych (5.2.2)
+    psych (5.2.3)
       date
       stringio
     puma (6.5.0)
@@ -205,19 +198,13 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.11.1)
       ffi (~> 1.0)
-    rdoc (6.10.0)
+    rdoc (6.11.0)
       psych (>= 4.0.0)
     reline (0.6.0)
       io-console (~> 0.5)
     securerandom (0.4.1)
-    sqlite3 (2.5.0-aarch64-linux-gnu)
-    sqlite3 (2.5.0-aarch64-linux-musl)
-    sqlite3 (2.5.0-arm-linux-gnu)
-    sqlite3 (2.5.0-arm-linux-musl)
     sqlite3 (2.5.0-arm64-darwin)
-    sqlite3 (2.5.0-x86_64-darwin)
     sqlite3 (2.5.0-x86_64-linux-gnu)
-    sqlite3 (2.5.0-x86_64-linux-musl)
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
     stringio (3.1.2)
@@ -227,12 +214,8 @@ GEM
       railties (>= 7.0.0)
       tailwindcss-ruby
     tailwindcss-ruby (4.0.0.beta.9)
-    tailwindcss-ruby (4.0.0.beta.9-aarch64-linux-gnu)
-    tailwindcss-ruby (4.0.0.beta.9-aarch64-linux-musl)
     tailwindcss-ruby (4.0.0.beta.9-arm64-darwin)
-    tailwindcss-ruby (4.0.0.beta.9-x86_64-darwin)
     tailwindcss-ruby (4.0.0.beta.9-x86_64-linux-gnu)
-    tailwindcss-ruby (4.0.0.beta.9-x86_64-linux-musl)
     thor (1.3.2)
     timeout (0.4.3)
     turbo-rails (2.0.11)
@@ -249,14 +232,8 @@ GEM
     zeitwerk (2.7.1)
 
 PLATFORMS
-  aarch64-linux-gnu
-  aarch64-linux-musl
-  arm-linux-gnu
-  arm-linux-musl
   arm64-darwin
-  x86_64-darwin
-  x86_64-linux-gnu
-  x86_64-linux-musl
+  x86_64-linux
 
 DEPENDENCIES
   hotwire-spark
