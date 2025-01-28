@@ -210,7 +210,7 @@ GEM
     stringio (3.1.2)
     tailwind_merge (0.16.0)
       sin_lru_redux (~> 2.5)
-    tailwindcss-rails (3.2.0)
+    tailwindcss-rails (3.3.0)
       railties (>= 7.0.0)
       tailwindcss-ruby
     tailwindcss-ruby (4.0.0-arm64-darwin)
@@ -242,7 +242,7 @@ DEPENDENCIES
   puma
   sqlite3
   stimulus-rails
-  tailwindcss-rails (~> 3.2)
+  tailwindcss-rails (~> 3.3)
   tailwindcss-ruby (~> 4.0.0)
   turbo-rails
 
