@@ -243,7 +243,7 @@ DEPENDENCIES
   sqlite3
   stimulus-rails
   tailwindcss-rails (~> 3.2)
-  tailwindcss-ruby (~> 4.0.0.beta9)
+  tailwindcss-ruby (~> 4.0.0)
   turbo-rails
 
 BUNDLED WITH
