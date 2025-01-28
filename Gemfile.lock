@@ -213,9 +213,8 @@ GEM
     tailwindcss-rails (3.2.0)
       railties (>= 7.0.0)
       tailwindcss-ruby
-    tailwindcss-ruby (4.0.0.beta.9)
-    tailwindcss-ruby (4.0.0.beta.9-arm64-darwin)
-    tailwindcss-ruby (4.0.0.beta.9-x86_64-linux-gnu)
+    tailwindcss-ruby (4.0.0-arm64-darwin)
+    tailwindcss-ruby (4.0.0-x86_64-linux-gnu)
     thor (1.3.2)
     timeout (0.4.3)
     turbo-rails (2.0.11)
@@ -244,7 +243,7 @@ DEPENDENCIES
   sqlite3
   stimulus-rails
   tailwindcss-rails (~> 3.2)
-  tailwindcss-ruby (~> 4.0.0.beta9)
+  tailwindcss-ruby (~> 4.0.0)
   turbo-rails
 
 BUNDLED WITH
