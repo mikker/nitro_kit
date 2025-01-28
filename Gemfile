@@ -6,7 +6,7 @@ gem "puma"
 gem "sqlite3"
 gem "propshaft"
 
-gem "tailwindcss-rails", "~> 3.2"
+gem "tailwindcss-rails", "~> 3.3"
 gem "tailwindcss-ruby", "~> 4.0.0"
 gem "stimulus-rails"
 gem "turbo-rails"
