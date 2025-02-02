@@ -8,12 +8,12 @@ module NitroKit
       @template.render(NitroKit::Fieldset.new(**attrs), &block)
     end
 
-    def field(field_name, **attrs)
+    def field(field_name, **attrs, &block)
       label = attrs.fetch(:label, field_name.to_s.humanize)
 
       errors = object && object.errors.include?(field_name) ? object.errors.full_messages_for(field_name) : nil
 
-      @template.render(NitroKit::Field.new(self, field_name, label:, errors:, **attrs))
+      @template.render(NitroKit::Field.new(self, field_name, label:, errors:, **attrs), &block)
     end
 
     def group(**attrs, &block)

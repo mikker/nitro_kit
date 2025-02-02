@@ -66,13 +66,7 @@ module NitroKit
       end
     end
 
-    def item(
-      text = nil,
-      href = nil,
-      variant: :default,
-      **attrs,
-      &block
-    )
+    def item(text = nil, href: nil, variant: :default, **attrs, &block)
       common_attrs = mattr(
         attrs,
         role: "menuitem",
@@ -89,6 +83,16 @@ module NitroKit
           text_or_block(text, &block)
         end
       end
+    end
+
+    def item_to(
+      text_or_href,
+      href = nil,
+      **attrs,
+      &block
+    )
+      href = text_or_href if block_given?
+      item(text_or_href, href: href, **attrs, &block)
     end
 
     def destructive_item(*args, **attrs, &block)
@@ -129,9 +133,9 @@ module NitroKit
     def item_variant_class(variant)
       case variant
       when :default
-        "hover:bg-muted"
+        "[&[href]]:hover:bg-muted"
       when :destructive
-        "text-destructive-foreground hover:bg-destructive hover:text-white"
+        "text-destructive-foreground [&[href]]:hover:bg-destructive [&[href]]:hover:text-white"
       else
         raise ArgumentError, "Unknown variant: #{variant.inspect}"
       end
