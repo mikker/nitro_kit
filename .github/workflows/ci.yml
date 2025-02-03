@@ -15,7 +15,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ruby-3.3.6
+          ruby-version: ruby-3.4.1
           bundler-cache: true
 
   test:
@@ -31,7 +31,7 @@ jobs:
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ruby-3.3.6
+          ruby-version: ruby-3.4.1
           bundler-cache: true
 
       - name: Run tests
