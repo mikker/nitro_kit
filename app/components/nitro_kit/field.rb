@@ -2,8 +2,6 @@
 
 module NitroKit
   class Field < Component
-    include ActionView::Helpers::FormHelper
-
     def initialize(
       form = nil,
       field_name = nil,
