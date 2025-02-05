@@ -123,7 +123,13 @@ module NitroKit
         ]
       when :md
         [
-          "px-4 h-9 text-base [&_svg]:size-4",
+          "px-4 h-10 text-base [&_svg]:size-4",
+          # If icon only, make square
+          "[&_svg:first-child:last-child]:-mx-2"
+        ]
+      when :lg
+        [
+          "px-5 h-11 text-lg [&_svg]:size-5",
           # If icon only, make square
           "[&_svg:first-child:last-child]:-mx-2"
         ]
