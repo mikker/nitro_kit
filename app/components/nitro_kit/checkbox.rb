@@ -37,27 +37,27 @@ module NitroKit
     def checkmark
       svg(
         class: merge_class(svg_class, "group-has-[:checked]/checkbox:visible"),
-        viewbox: "0 0 20 20",
-        fill: "currentColor",
+        viewbox: "0 0 16 16",
+        fill: "none",
         stroke: "currentColor",
-        stroke_width: 1
+        stroke_linecap: "round",
+        stroke_linejoin: "round",
+        stroke_width: 3
       ) do |svg|
-        svg.path(
-          "d" => "M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-        )
+        svg.path(d: "M 3 8 L 6 12 L 12 5")
       end
     end
 
     def dash
       svg(
         class: merge_class(svg_class, "group-has-[:indeterminate]/checkbox:visible"),
-        viewbox: "0 0 20 20",
+        viewbox: "0 0 16 16",
         fill: "none",
         stroke: "currentColor",
         stroke_linecap: "round",
         stroke_width: 3
       ) do |svg|
-        svg.line(x1: "5", y1: "10", x2: "15", y2: "10")
+        svg.line(x1: "3", y1: "8", x2: "12", y2: "8")
       end
     end
 
@@ -70,7 +70,7 @@ module NitroKit
     end
 
     def svg_class
-      "size-4 text-zinc-50 [&>svg]:size-full dark:text-zinc-950 pointer-events-none invisible"
+      "size-3 text-zinc-50 [&>svg]:size-full dark:text-zinc-950 pointer-events-none invisible"
     end
 
     def wrapper_class
