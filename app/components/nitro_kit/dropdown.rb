@@ -99,6 +99,11 @@ module NitroKit
       item(*args, **attrs, variant: :destructive, &block)
     end
 
+    def destructive_item_to(text_or_block, href = nil, **attrs, &block)
+      href = args.shift if block_given?
+      destructive_item(text_or_block, href: href, **attrs, &block)
+    end
+
     def separator
       hr(class: separator_class)
     end
