@@ -12,7 +12,7 @@ module NitroKit
       **attrs
     )
       @form = form
-      @field_name = field_name
+      @field_name = field_name.to_s
       @as = as.to_sym
 
       @name = attrs[:name] || form&.field_name(field_name)
@@ -151,6 +151,7 @@ module NitroKit
         attrs,
         name:,
         id:,
+        value: value_before_typecast,
         data: {slot: "control"}
       )
     end
@@ -260,6 +261,28 @@ module NitroKit
 
     def error_class
       "text-sm text-destructive"
+    end
+
+    def value
+      return attrs[:value] if attrs[:value]
+      return unless object = form&.object
+
+      if object.respond_to?(@field_name)
+        object.public_send(@field_name)
+      end
+    end
+
+    def value_before_typecast
+      return attrs[:value] if attrs[:value]
+      return unless object = form&.object
+
+      method_before_type_cast = @field_name + "_before_type_cast"
+
+      if object.respond_to?(method_before_type_cast)
+        object.public_send(method_before_type_cast)
+      else
+        value
+      end
     end
   end
 end
