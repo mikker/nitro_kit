@@ -131,7 +131,7 @@ GEM
       net-protocol
     net-protocol (0.2.2)
       timeout
-    net-smtp (0.5.0)
+    net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.4)
     nokogiri (1.18.2-arm64-darwin)
@@ -197,7 +197,7 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.11.1)
       ffi (~> 1.0)
-    rdoc (6.11.0)
+    rdoc (6.12.0)
       psych (>= 4.0.0)
     reline (0.6.0)
       io-console (~> 0.5)
@@ -213,8 +213,8 @@ GEM
     tailwindcss-rails (3.3.0)
       railties (>= 7.0.0)
       tailwindcss-ruby
-    tailwindcss-ruby (4.0.3-arm64-darwin)
-    tailwindcss-ruby (4.0.3-x86_64-linux-gnu)
+    tailwindcss-ruby (4.0.4-arm64-darwin)
+    tailwindcss-ruby (4.0.4-x86_64-linux-gnu)
     thor (1.3.2)
     timeout (0.4.3)
     turbo-rails (2.0.11)
