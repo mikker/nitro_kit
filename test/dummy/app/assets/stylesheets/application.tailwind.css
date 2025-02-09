@@ -3,17 +3,17 @@
 @source "../../../../../app";
 
 @theme {
-  --color-foreground: var(--color-zinc-950);
+  --color-foreground: var(--color-zinc-900);
   --color-background: var(--color-white);
 
-  --color-border: var(--color-zinc-300);
-  --color-ring: var(--color-blue-300);
+  --color-border: var(--color-zinc-200);
+  --color-ring: var(--color-blue-600);
   --color-muted: var(--color-zinc-100);
   --color-muted-foreground: var(--color-zinc-500);
   --color-primary: var(--color-zinc-900);
-  --color-primary-foreground: var(--color-zinc-950);
+  --color-primary-foreground: var(--color-zinc-100);
   --color-destructive: var(--color-red-500);
-  --color-destructive-foreground: var(--color-red-700);
+  --color-destructive-foreground: var(--color-red-100);
 }
 
 @layer base {
@@ -26,7 +26,7 @@
     --color-muted: var(--color-zinc-800);
     --color-muted-foreground: var(--color-zinc-400);
     --color-primary: var(--color-zinc-50);
-    --color-primary-foreground: var(--color-white);
+    --color-primary-foreground: var(--color-zinc-900);
     --color-destructive: var(--color-red-500);
     --color-destructive-foreground: var(--color-red-700);
   }
