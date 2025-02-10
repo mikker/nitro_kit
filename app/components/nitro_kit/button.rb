@@ -92,14 +92,14 @@ module NitroKit
         ]
       when :primary
         [
-          "bg-primary text-white dark:text-zinc-950 border-primary",
+          "bg-primary text-primary-foreground border-primary",
           "hover:bg-primary/90 dark:hover:bg-primary/90"
         ]
       when :destructive
         [
-          "bg-destructive text-white border-destructive",
+          "bg-destructive text-destructive-foreground border-destructive",
           "hover:bg-destructive/90 dark:hover:bg-destructive/90",
-          "disabled:text-white/80"
+          "disabled:text-destructive-foreground/80"
         ]
       when :ghost
         [
@@ -125,7 +125,7 @@ module NitroKit
         [
           "px-4 h-10 text-base [&_svg]:size-4",
           # If icon only, make square
-          "[&_svg:first-child:last-child]:-mx-2"
+          "[&_svg:first-child:last-child]:-mx-1"
         ]
       when :lg
         [

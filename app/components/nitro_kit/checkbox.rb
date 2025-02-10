@@ -44,7 +44,7 @@ module NitroKit
         stroke_linejoin: "round",
         stroke_width: 3
       ) do |svg|
-        svg.path(d: "M 3 8 L 6 12 L 12 5")
+        svg.path(d: "M 3 8 L 6 12 L 13 5")
       end
     end
 
@@ -57,7 +57,7 @@ module NitroKit
         stroke_linecap: "round",
         stroke_width: 3
       ) do |svg|
-        svg.line(x1: "3", y1: "8", x2: "12", y2: "8")
+        svg.line(x1: "3", y1: "8", x2: "13", y2: "8")
       end
     end
 

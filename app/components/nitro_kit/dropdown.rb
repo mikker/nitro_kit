@@ -140,7 +140,7 @@ module NitroKit
       when :default
         "[&[href]]:hover:bg-muted"
       when :destructive
-        "text-destructive-foreground [&[href]]:hover:bg-destructive [&[href]]:hover:text-white"
+        "text-destructive [&[href]]:hover:bg-destructive [&[href]]:hover:text-white"
       else
         raise ArgumentError, "Unknown variant: #{variant.inspect}"
       end
