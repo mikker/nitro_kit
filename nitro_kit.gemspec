@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
 
   spec.files = Dir.chdir(File.expand_path(__dir__)) do
     Dir[
-      "app/{helpers,components}/**/*",
+      "app/{helpers,components,javascript}/**/*",
       "lib/**/*",
       "MIT-LICENSE",
       "Rakefile",
