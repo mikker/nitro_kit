@@ -1,5 +1,5 @@
 module NitroKit
-  class AddGenerator < Rails::Generators::Base
+  class ComponentGenerator < Rails::Generators::Base
     argument :component_names, type: :array
 
     source_root File.expand_path("../../../", __dir__).tap { |path| puts path }
