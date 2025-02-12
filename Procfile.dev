@@ -1,2 +1,0 @@
-web: rails s -p 3031
-css: cd test/dummy && bin/rails tailwindcss:watch
