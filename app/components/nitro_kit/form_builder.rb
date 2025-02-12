@@ -8,10 +8,14 @@ module NitroKit
       @template.render(NitroKit::Fieldset.new(**attrs), &block)
     end
 
-    def field(field_name, **attrs, &block)
-      label = attrs.fetch(:label, field_name.to_s.humanize)
+    def field(field_name, label: nil, errors: nil, **attrs, &block)
+      if label.nil?
+        label = attrs.fetch(:label, field_name.to_s.humanize)
+      end
 
-      errors = object && object.errors.include?(field_name) ? object.errors.full_messages_for(field_name) : nil
+      if errors.nil?
+        errors = (object && object.errors.include?(field_name) ? object.errors.full_messages_for(field_name) : nil)
+      end
 
       @template.render(NitroKit::Field.new(self, field_name, label:, errors:, **attrs), &block)
     end
@@ -20,7 +24,7 @@ module NitroKit
       @template.render(FieldGroup.new(**attrs), &block)
     end
 
-    # Inputs
+    # Input types
 
     %i[
       checkbox
@@ -47,7 +51,7 @@ module NitroKit
     ]
       .each do |method|
         define_method(method) do |*args, **attrs, &block|
-          @template.send("nk_#{method}", *args, **attrs, &block)
+          field(*args, **attrs, label: false, &block)
         end
       end
 

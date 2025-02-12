@@ -22,7 +22,7 @@ module NitroKit
       @options = attrs[:options]
 
       @field_attrs = attrs
-      @field_label = label || field_name.to_s.humanize
+      @field_label = label.nil? ? field_name.to_s.humanize : label
       @field_description = description
       @field_error_messages = errors
 
