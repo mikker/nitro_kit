@@ -2,8 +2,6 @@
 
 module NitroKit
   class RadioButton < Component
-    include ActionView::Helpers::FormTagHelper
-
     def initialize(label: nil, **attrs)
       @label = label
       @id = id || SecureRandom.hex(4)

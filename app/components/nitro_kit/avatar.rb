@@ -2,8 +2,6 @@
 
 module NitroKit
   class Avatar < Component
-    include ActionView::Helpers::AssetUrlHelper
-
     def initialize(src_arg = nil, src: nil, size: :md, **attrs)
       @src = src_arg || src
       @size = size
@@ -23,7 +21,7 @@ module NitroKit
     end
 
     def image
-      helpers.image_tag(src, class: image_class)
+      safe(helpers.image_tag(src, class: image_class))
     end
 
     private
