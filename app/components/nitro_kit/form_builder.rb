@@ -51,7 +51,8 @@ module NitroKit
     ]
       .each do |method|
         define_method(method) do |*args, **attrs, &block|
-          field(*args, **attrs, label: false, &block)
+          type = method.to_s.gsub(/_field$/, "")
+          field(*args, **attrs, type:, label: false, &block)
         end
       end
 
