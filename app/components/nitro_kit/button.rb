@@ -118,7 +118,7 @@ module NitroKit
         "px-1.5 h-6 text-xs [&_svg]:size-3"
       when :sm
         [
-          "px-2.5 h-7 text-sm [&_svg]:size-3",
+          "px-2.5 h-7 text-sm [&_svg]:size-4",
           "[&_svg:first-child:last-child]:-mx-1"
         ]
       when :md
