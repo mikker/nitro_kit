@@ -2,6 +2,8 @@
 
 module NitroKit
   class Avatar < Component
+    include Phlex::Rails::Helpers::ImageTag
+
     def initialize(src_arg = nil, src: nil, size: :md, **attrs)
       @src = src_arg || src
       @size = size
@@ -21,7 +23,7 @@ module NitroKit
     end
 
     def image
-      safe(helpers.image_tag(src, class: image_class))
+      image_tag(src, class: image_class)
     end
 
     private
