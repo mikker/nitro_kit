@@ -2,6 +2,27 @@
 
 module NitroKit
   class Toast < Component
+    register_output_helper :nk_toast_flash_messages
+
+    class FlashMessages < Component
+      def initialize(flash)
+        @flash = flash
+      end
+
+      attr_reader :flash
+
+      def view_template
+        flash.each do |severity, message|
+          render(
+            Toast::Item.new(
+              description: message,
+              variant: severity.to_sym == :alert ? :error : :default
+            )
+          )
+        end
+      end
+    end
+
     class Item < Component
       VARIANTS = %i[default warning error success]
 
@@ -91,7 +112,7 @@ module NitroKit
 
     def flash_sink
       div(id: "nk--toast-sink", data: {nk__toast_target: "sink"}, hidden: true) do
-        helpers.nk_toast_flash_messages
+        render(FlashMessages.new(view_context.flash))
       end
     end
 

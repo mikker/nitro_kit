@@ -15,18 +15,7 @@ module NitroKit
     end
 
     def nk_toast_flash_messages
-      capture do
-        flash.each do |severity, message|
-          concat(
-            render(
-              Toast::Item.new(
-                description: message,
-                variant: severity.to_sym == :alert ? :error : :default
-              )
-            )
-          )
-        end
-      end
+      render(Toast::FlashMessages.new(flash))
     end
 
     def nk_toast_turbo_stream_refresh
