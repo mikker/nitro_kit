@@ -2,8 +2,6 @@
 
 module NitroKit
   class Toast < Component
-    register_output_helper :nk_toast_flash_messages
-
     class FlashMessages < Component
       def initialize(flash)
         @flash = flash
