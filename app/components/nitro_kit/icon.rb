@@ -2,8 +2,7 @@
 
 module NitroKit
   class Icon < Component
-    include Phlex::Rails::Helpers::ContentTag
-    include LucideRails::RailsHelper
+    register_output_helper :lucide_icon
 
     def initialize(name, size: :md, **attrs)
       @name = name
