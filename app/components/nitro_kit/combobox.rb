@@ -67,7 +67,7 @@ module NitroKit
         }
       ) do
         span(class: wrapper_class) do
-          render(Input.new(**attrs))
+          render(Input.new(**attrs, value: display_value))
           chevron_icon
         end
 
@@ -76,6 +76,7 @@ module NitroKit
         input(
           type: "hidden",
           value: attrs[:value],
+          name: attrs[:name],
           data: {nk__combobox_target: "hiddenField"}
         )
 
@@ -100,6 +101,14 @@ module NitroKit
 
     def id(suffix)
       "#{@id}-#{suffix}"
+    end
+
+    def display_value
+      selected = options.find do |(key, value)|
+        value.to_s == attrs[:value].to_s
+      end
+
+      selected&.first || attrs[:value]
     end
 
     def wrapper_class
