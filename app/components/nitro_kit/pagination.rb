@@ -16,7 +16,7 @@ module NitroKit
       end
     end
 
-    def prev(text = nil, **attrs, &block)
+    builder_method def prev(text = nil, **attrs, &block)
       page_link(**mattr(attrs, aria: {label: "Previous page"})) do
         if text || block_given?
           text_or_block(text, &block)
@@ -27,7 +27,7 @@ module NitroKit
       end
     end
 
-    def next(text = nil, **attrs, &block)
+    builder_method def next(text = nil, **attrs, &block)
       page_link(**mattr(attrs, aria: {label: "Next page"})) do
         if text || block_given?
           text_or_block(text, &block)
@@ -38,7 +38,7 @@ module NitroKit
       end
     end
 
-    def page(text = nil, current: false, **attrs, &block)
+    builder_method def page(text = nil, current: false, **attrs, &block)
       page_link(
         **mattr(
           attrs,
@@ -53,7 +53,7 @@ module NitroKit
       end
     end
 
-    def ellipsis(**attrs)
+    builder_method def ellipsis(**attrs)
       render(
         Button.new(
           **mattr(

@@ -21,13 +21,13 @@ module NitroKit
       end
     end
 
-    def tabs(**attrs)
+    builder_method def tabs(**attrs)
       div(**mattr, role: "tabtabs", class: tabs_class) do
         yield
       end
     end
 
-    def tab(key, text = nil, **attrs, &block)
+    builder_method def tab(key, text = nil, **attrs, &block)
       button(
         **mattr(
           attrs,
@@ -51,7 +51,7 @@ module NitroKit
       end
     end
 
-    def panel(key, **attrs)
+    builder_method def panel(key, **attrs)
       div(
         **mattr(
           attrs,

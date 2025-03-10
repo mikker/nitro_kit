@@ -56,7 +56,7 @@ module NitroKit
 
     alias :html_label :label
 
-    def label(text = nil, **attrs)
+    builder_method def label(text = nil, **attrs)
       text ||= field_label
 
       return unless text
@@ -66,7 +66,7 @@ module NitroKit
       end
     end
 
-    def description(text = nil, **attrs, &block)
+    builder_method def description(text = nil, **attrs, &block)
       text ||= field_description
 
       return unless text || block_given?
@@ -76,7 +76,7 @@ module NitroKit
       end
     end
 
-    def errors(error_messages = nil, **attrs)
+    builder_method def errors(error_messages = nil, **attrs)
       error_messages ||= field_error_messages
 
       return unless error_messages&.any?
@@ -88,7 +88,7 @@ module NitroKit
       end
     end
 
-    def control(**attrs)
+    builder_method def control(**attrs)
       case as
       when :string
         input(**attrs)

@@ -10,6 +10,31 @@ module NitroKit
 
     private
 
+    # Class-level helper method for builder style components.
+    # When called from erb or templates, we need to wrap the return value
+    # in capture so we don't write to the output buffer immediately.
+    # However when called from other components, we don't.
+    def self.builder_method(method_name)
+      mod = Module.new
+      mod.module_eval(
+        <<~RUBY,
+          # frozen_string_literal: true
+
+          def #{method_name}(...)
+            if caller_locations(1, 1).first.path.end_with?(".rb")
+              super
+            else
+              capture { super }
+            end
+          end
+        RUBY
+        __FILE__,
+        __LINE__ + 1
+      )
+
+      prepend(mod)
+    end
+
     # Merge attributes with some special cases for matching keys
     def merge_attrs(*hashes, **defaults)
       defaults.merge(*hashes) do |key, old_value, new_value|

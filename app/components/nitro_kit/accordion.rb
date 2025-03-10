@@ -16,13 +16,13 @@ module NitroKit
       end
     end
 
-    def item(**attrs)
+    builder_method def item(**attrs)
       div(**attrs) do
         yield
       end
     end
 
-    def trigger(text = nil, **attrs)
+    builder_method def trigger(text = nil, **attrs)
       button(
         **mattr(
           attrs,
@@ -40,7 +40,7 @@ module NitroKit
       end
     end
 
-    def content(**attrs)
+    builder_method def content(**attrs)
       div(
         **mattr(
           attrs,
