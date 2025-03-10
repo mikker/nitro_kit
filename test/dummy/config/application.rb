@@ -26,8 +26,6 @@ module Dummy
     # config.time_zone = "Central Time (US & Canada)"
 
     config.assets.paths << Rails.root.join("../../app/javascript")
-    config.autoload_paths << Rails.root.join("../..")
-    config.eager_load_paths << Rails.root.join("../..")
 
     config.hotwire.spark.html_paths << Rails.root.join("../../app/components")
     config.hotwire.spark.stimulus_paths << Rails.root.join("../../app/javascript")
