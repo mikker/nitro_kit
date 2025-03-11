@@ -15,31 +15,31 @@ module NitroKit
       end
     end
 
-    def title(text = nil, **attrs, &block)
+    builder_method def title(text = nil, **attrs, &block)
       h2(**mattr(attrs, class: "text-lg font-bold -mb-2")) do
         text_or_block(text, &block)
       end
     end
 
-    def body(text = nil, **attrs, &block)
+    builder_method def body(text = nil, **attrs, &block)
       div(**mattr(attrs, class: "text-muted-foreground text-sm leading-relaxed")) do
         text_or_block(text, &block)
       end
     end
 
-    def footer(text = nil, **attrs, &block)
+    builder_method def footer(text = nil, **attrs, &block)
       div(**mattr(attrs, class: "flex gap-2 items-center")) do
         text_or_block(text, &block)
       end
     end
 
-    def divider(**attrs)
+    builder_method def divider(**attrs)
       full_width do
         hr(**attrs)
       end
     end
 
-    def full_width(**attrs)
+    builder_method def full_width(**attrs)
       div(**mattr(attrs, data: {slot: "full"}, class: "-mx-(--gap)")) do
         yield
       end

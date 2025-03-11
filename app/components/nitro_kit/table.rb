@@ -23,25 +23,25 @@ module NitroKit
     alias :html_th :th
     alias :html_td :td
 
-    def thead(**attrs)
+    builder_method def thead(**attrs)
       html_thead(**attrs) { yield }
     end
 
-    def tbody(**attrs)
+    builder_method def tbody(**attrs)
       html_tbody(**mattr(attrs, class: "[&_tr:last-child]:border-0")) { yield }
     end
 
-    def tr(**attrs)
+    builder_method def tr(**attrs)
       html_tr(**mattr(attrs, class: "border-b")) { yield }
     end
 
-    def th(text = nil, **attrs, &block)
+    builder_method def th(text = nil, **attrs, &block)
       html_th(**mattr(attrs, class: [cell_classes, "font-medium text-left"])) do
         text_or_block(text, &block)
       end
     end
 
-    def td(text = nil, **attrs, &block)
+    builder_method def td(text = nil, **attrs, &block)
       html_td(**mattr(attrs, class: cell_classes)) do
         text_or_block(text, &block)
       end

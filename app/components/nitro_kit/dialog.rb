@@ -19,7 +19,7 @@ module NitroKit
       end
     end
 
-    def trigger(text = nil, **attrs, &block)
+    builder_method def trigger(text = nil, **attrs, &block)
       render(
         NitroKit::Button.new(**mattr(attrs, data: {nk__dialog_target: "trigger", action: "click->nk--dialog#open"}))
       ) do
@@ -29,7 +29,7 @@ module NitroKit
 
     alias :html_dialog :dialog
 
-    def dialog(**attrs)
+    builder_method def dialog(**attrs)
       html_dialog(
         **mattr(
           attrs,
@@ -45,7 +45,7 @@ module NitroKit
       end
     end
 
-    def close_button(**attrs)
+    builder_method def close_button(**attrs)
       render(
         Button.new(
           **mattr(
@@ -61,13 +61,13 @@ module NitroKit
       end
     end
 
-    def title(text = nil, **attrs, &block)
+    builder_method def title(text = nil, **attrs, &block)
       h2(**mattr(attrs, id: id(:title), class: "text-lg font-semibold mb-2")) do
         text_or_block(text, &block)
       end
     end
 
-    def description(text = nil, **attrs, &block)
+    builder_method def description(text = nil, **attrs, &block)
       div(
         **mattr(
           attrs,

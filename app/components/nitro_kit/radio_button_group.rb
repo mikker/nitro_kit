@@ -27,13 +27,13 @@ module NitroKit
       end
     end
 
-    def title(text = nil, **attrs, &block)
+    builder_method def title(text = nil, **attrs, &block)
       render(Label.new(**attrs)) do
         text_or_block(text, &block)
       end
     end
 
-    def item(text = nil, value_as_arg = nil, value: nil, **attrs, &block)
+    builder_method def item(text = nil, value_as_arg = nil, value: nil, **attrs, &block)
       value ||= value_as_arg
 
       render(

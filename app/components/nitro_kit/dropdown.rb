@@ -26,7 +26,7 @@ module NitroKit
       end
     end
 
-    def trigger(text = nil, as: NitroKit::Button, **attrs, &block)
+    builder_method def trigger(text = nil, as: NitroKit::Button, **attrs, &block)
       trigger_attrs = mattr(
         attrs,
         aria: {haspopup: "true", expanded: "false"},
@@ -45,7 +45,7 @@ module NitroKit
       end
     end
 
-    def content(as: :div, **attrs)
+    builder_method def content(as: :div, **attrs)
       div(
         **mattr(
           attrs,
@@ -60,13 +60,13 @@ module NitroKit
       end
     end
 
-    def title(text = nil, **attrs, &block)
+    builder_method def title(text = nil, **attrs, &block)
       div(**mattr(attrs, class: title_class)) do
         text_or_block(text, &block)
       end
     end
 
-    def item(text = nil, href: nil, variant: :default, **attrs, &block)
+    builder_method def item(text = nil, href: nil, variant: :default, **attrs, &block)
       common_attrs = mattr(
         attrs,
         role: "menuitem",
@@ -85,7 +85,7 @@ module NitroKit
       end
     end
 
-    def item_to(
+    builder_method def item_to(
       text_or_href,
       href = nil,
       **attrs,
@@ -95,16 +95,16 @@ module NitroKit
       item(text_or_href, href: href, **attrs, &block)
     end
 
-    def destructive_item(*args, **attrs, &block)
+    builder_method def destructive_item(*args, **attrs, &block)
       item(*args, **attrs, variant: :destructive, &block)
     end
 
-    def destructive_item_to(text_or_block, href = nil, **attrs, &block)
+    builder_method def destructive_item_to(text_or_block, href = nil, **attrs, &block)
       href = args.shift if block_given?
       destructive_item(text_or_block, href: href, **attrs, &block)
     end
 
-    def separator
+    builder_method def separator
       hr(class: separator_class)
     end
 

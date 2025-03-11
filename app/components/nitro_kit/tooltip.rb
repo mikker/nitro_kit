@@ -25,7 +25,7 @@ module NitroKit
       end
     end
 
-    def content(text = nil, **attrs, &block)
+    builder_method def content(text = nil, **attrs, &block)
       div(
         **mattr(
           attrs,

@@ -22,13 +22,13 @@ module NitroKit
       end
     end
 
-    def title(text = nil, **attrs, &block)
+    builder_method def title(text = nil, **attrs, &block)
       h5(**mattr(attrs, class: title_class)) do
         text_or_block(text, &block)
       end
     end
 
-    def description(text = nil, **attrs, &block)
+    builder_method def description(text = nil, **attrs, &block)
       div(**mattr(attrs, class: description_class)) do
         text_or_block(text, &block)
       end
