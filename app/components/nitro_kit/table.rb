@@ -10,7 +10,7 @@ module NitroKit
     end
 
     def view_template
-      div(class: "relative w-full overflow-auto") do
+      div(class: "relative w-full overflow-x-scroll") do
         table(**attrs) do
           yield
         end
@@ -35,22 +35,39 @@ module NitroKit
       html_tr(**mattr(attrs, class: "border-b")) { yield }
     end
 
-    builder_method def th(text = nil, **attrs, &block)
-      html_th(**mattr(attrs, class: [cell_classes, "font-medium text-left"])) do
+    builder_method def th(text = nil, align: :left, **attrs, &block)
+      html_th(**mattr(attrs, class: [header_cell_classes, cell_classes, align_classes(align), "font-medium"])) do
         text_or_block(text, &block)
       end
     end
 
-    builder_method def td(text = nil, **attrs, &block)
-      html_td(**mattr(attrs, class: cell_classes)) do
+    builder_method def td(text = nil, align: nil, **attrs, &block)
+      html_td(**mattr(attrs, class: [cell_classes, align_classes(align)])) do
         text_or_block(text, &block)
       end
     end
 
     private
 
+    def header_cell_classes
+      ""
+    end
+
     def cell_classes
-      "py-3 px-2"
+      "whitespace-nowrap py-2 min-h-10 px-2"
+    end
+
+    def align_classes(align = nil)
+      case align
+      when :left
+        "text-left"
+      when :center
+        "text-center"
+      when :right
+        "text-right"
+      else
+        nil
+      end
     end
   end
 end
