@@ -58,7 +58,7 @@ module NitroKit
 
     def chevron_icon
       svg(
-        class: "size-4 self-center place-self-end mr-1.5 text-muted-foreground pointer-events-none group-hover/select:text-foreground",
+        class: "size-4 self-center place-self-end mr-1.5 text-muted-content pointer-events-none group-hover/select:text-foreground",
         viewbox: "0 0 24 24",
         fill: "none",
         stroke: "currentColor",

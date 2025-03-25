@@ -85,7 +85,7 @@ module NitroKit
         **mattr(
           attrs,
           id: id(:description),
-          class: "text-muted-foreground mb-6 text-sm leading-relaxed"
+          class: "text-muted-content mb-6 text-sm leading-relaxed"
         )
       ) do
         text_or_block(text, &block)

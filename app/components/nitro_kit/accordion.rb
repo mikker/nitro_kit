@@ -78,12 +78,12 @@ module NitroKit
     end
 
     def arrow_class
-      "transition-transform duration-200 text-muted-foreground group-hover/accordion-trigger:text-primary"
+      "transition-transform duration-200 text-muted-content group-hover/accordion-trigger:text-primary"
     end
 
     def chevron_icon
       svg(
-        class: "transition-transform duration-200 size-4 self-center place-self-end mr-2 pointer-events-none text-muted-foreground group-hover/accordion-trigger:text-primary",
+        class: "transition-transform duration-200 size-4 self-center place-self-end mr-2 pointer-events-none text-muted-content group-hover/accordion-trigger:text-primary",
         viewbox: "0 0 24 24",
         fill: "none",
         stroke: "currentColor",

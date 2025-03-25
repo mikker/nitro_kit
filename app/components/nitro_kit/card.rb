@@ -22,7 +22,7 @@ module NitroKit
     end
 
     builder_method def body(text = nil, **attrs, &block)
-      div(**mattr(attrs, class: "text-muted-foreground text-sm leading-relaxed")) do
+      div(**mattr(attrs, class: "text-muted-content text-sm leading-relaxed")) do
         text_or_block(text, &block)
       end
     end

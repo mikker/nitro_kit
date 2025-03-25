@@ -88,7 +88,7 @@ module NitroKit
     end
 
     def link_class
-      "inline-flex items-center justify-center rounded-md border font-medium h-9 px-3 gap-2 border-transparent aria-disabled:text-muted-foreground [&>svg]:size-4"
+      "inline-flex items-center justify-center rounded-md border font-medium h-9 px-3 gap-2 border-transparent aria-disabled:text-muted-content [&>svg]:size-4"
     end
 
     def page_class

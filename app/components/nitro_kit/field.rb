@@ -261,11 +261,11 @@ module NitroKit
     end
 
     def description_class
-      "text-sm text-muted-foreground"
+      "text-sm text-muted-content"
     end
 
     def error_class
-      "text-sm text-destructive"
+      "text-sm text-destructive-content"
     end
 
     def value

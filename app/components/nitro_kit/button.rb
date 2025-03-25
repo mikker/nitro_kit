@@ -105,7 +105,7 @@ module NitroKit
         [
           "bg-transparent text-foreground border-transparent",
           "hover:bg-zinc-200/50 dark:hover:bg-zinc-900",
-          "disabled:text-muted-foreground"
+          "disabled:text-muted-content"
         ]
       else
         raise ArgumentError, "Unknown variant `#{variant}'"

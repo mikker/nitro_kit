@@ -128,7 +128,7 @@ module NitroKit
     end
 
     def title_class
-      "px-3 pt-2 pb-1.5 text-muted-foreground text-sm"
+      "px-3 pt-2 pb-1.5 text-muted-content text-sm"
     end
 
     def item_class

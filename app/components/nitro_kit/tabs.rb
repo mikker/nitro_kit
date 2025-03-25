@@ -88,7 +88,7 @@ module NitroKit
     end
 
     def tab_class
-      "border-b-2 border-transparent hover:border-primary focus-visible:border-primary cursor-pointer text-muted-foreground aria-[selected=true]:text-foreground font-medium aria-[selected=true]:border-primary -mb-px px-2"
+      "border-b-2 border-transparent hover:border-primary focus-visible:border-primary cursor-pointer text-muted-content aria-[selected=true]:text-foreground font-medium aria-[selected=true]:border-primary -mb-px px-2"
     end
 
     def panel_class

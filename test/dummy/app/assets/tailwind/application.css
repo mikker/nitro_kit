@@ -9,11 +9,13 @@
   --color-border: var(--color-zinc-200);
   --color-ring: var(--color-blue-600);
   --color-muted: var(--color-zinc-100);
-  --color-muted-foreground: var(--color-zinc-500);
-  --color-primary: var(--color-zinc-900);
+  --color-muted-content: var(--color-zinc-500);
+  --color-primary: var(--color-zinc-800);
+  --color-primary-content: var(--zinc-800);
   --color-primary-foreground: var(--color-zinc-100);
   --color-destructive: var(--color-red-500);
-  --color-destructive-foreground: var(--color-red-100);
+  --color-destructive-content: var(--color-red-800);
+  --color-destructive-foreground: var(--color-white);
 }
 
 @layer base {
@@ -24,11 +26,13 @@
     --color-border: var(--color-zinc-700);
     --color-ring: var(--color-blue-700);
     --color-muted: var(--color-zinc-800);
-    --color-muted-foreground: var(--color-zinc-400);
+    --color-muted-content: var(--color-zinc-400);
     --color-primary: var(--color-zinc-50);
+    --color-primary-content: var(--color-zinc-50);
     --color-primary-foreground: var(--color-zinc-900);
-    --color-destructive: var(--color-red-500);
-    --color-destructive-foreground: var(--color-red-700);
+    --color-destructive: var(--color-red-900);
+    --color-destructive-content: var(--color-red-600);
+    --color-destructive-foreground: var(--color-white);
   }
 }
 
