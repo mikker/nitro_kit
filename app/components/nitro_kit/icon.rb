@@ -25,6 +25,8 @@ module NitroKit
 
     def size_class
       case size
+      when :xs
+        "size-3"
       when :sm
         "size-4"
       when :md

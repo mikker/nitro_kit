@@ -14,7 +14,9 @@ module NitroKit
       end
 
       if errors.nil?
-        errors = (object && object.errors.include?(field_name) ? object.errors.full_messages_for(field_name) : nil)
+        errors = object && object.respond_to?(:errors) && object.errors.include?(field_name) ? object
+          .errors
+          .full_messages_for(field_name) : nil
       end
 
       @template.render(NitroKit::Field.new(self, field_name, label:, errors:, **attrs), &block)
@@ -27,7 +29,6 @@ module NitroKit
     # Input types
 
     %i[
-      checkbox
       color_field
       date_field
       datetime_field
@@ -56,10 +57,25 @@ module NitroKit
         end
       end
 
+    def checkbox(method, checked_value = "1", unchecked_value = "0", *args, include_hidden: true, **attrs)
+      if include_hidden
+        @template.concat(hidden_field(method, value: unchecked_value))
+      end
+
+      field(method, *args, as: :checkbox, label: false, value: checked_value, **attrs)
+    end
+
     # Buttons
 
-    def submit(value = "Save changes", **attrs)
-      content = value || @template.capture(&block)
+    def submit(value = nil, **attrs, &block)
+      if value
+        content = value
+      elsif block_given?
+        content = @template.capture(&block)
+      else
+        content = I18n.t("save_changes")
+      end
+
       @template.render(NitroKit::Button.new(variant: :primary, type: :submit, **attrs)) { content }
     end
 

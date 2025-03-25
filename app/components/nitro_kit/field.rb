@@ -9,6 +9,8 @@ module NitroKit
       label: nil,
       description: nil,
       errors: nil,
+      wrapper: {},
+      options: nil,
       **attrs
     )
       @form = form
@@ -18,16 +20,18 @@ module NitroKit
       @name = attrs[:name] || form&.field_name(field_name)
       @id = attrs[:id] || form&.field_id(field_name)
 
-      # select
-      @options = attrs[:options]
+      # select, radio group
+      @options = options
 
       @field_attrs = attrs
       @field_label = label.nil? ? field_name.to_s.humanize : label
       @field_description = description
       @field_error_messages = errors
 
+      @wrapper = wrapper
+
       super(
-        attrs,
+        wrapper,
         data: {as: @as},
         class: base_class
       )
@@ -199,6 +203,7 @@ module NitroKit
     def checkbox(**attrs)
       render(
         Checkbox.new(
+          checked: checked?,
           **control_attrs(
             **field_attrs,
             **attrs
@@ -282,6 +287,22 @@ module NitroKit
         object.public_send(method_before_type_cast)
       else
         value
+      end
+    end
+
+    def checked?
+      return unless object = form&.object
+      value = object.public_send(@field_name)
+
+      case value
+      when true, false
+        value
+      when String
+        value == "1"
+      when Numeric
+        value == 1
+      else
+        false
       end
     end
   end

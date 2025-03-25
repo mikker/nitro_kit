@@ -4,7 +4,7 @@ module NitroKit
   class Select < Component
     def initialize(options = nil, value: nil, include_empty: false, prompt: nil, index: nil, **attrs)
       @options = options
-      @value = value
+      @value = value.to_s
       @include_empty = include_empty
       @prompt = prompt
       @index = index
@@ -33,7 +33,7 @@ module NitroKit
     builder_method def option(key_or_value = nil, value = nil, **attrs, &block)
       value ||= key_or_value
 
-      html_option(**attrs, selected: @value == value) do
+      html_option(value:, selected: @value == value.to_s, **attrs) do
         if block_given?
           yield
         else

@@ -20,6 +20,29 @@ module NitroKit
       render(Checkbox.new(name:, label:, value: compat_checked_value, checked:, **attrs))
     end
 
+    def nk_checkbox_tag(name, *args)
+      if args.length >= 4
+        raise ArgumentError, "wrong number of arguments (given #{args.length + 1}, expected 1..4)"
+      end
+
+      options = args.extract_options!
+      value, checked = args.empty? ? ["1", false] : [*args, false]
+      attrs = {
+        type: "checkbox",
+        name: name,
+        id: sanitize_to_id(name),
+        value: value
+      }.update(
+        options.symbolize_keys
+      )
+
+      attrs[:checked] = "checked" if checked
+
+      render(Checkbox.new(name:, **attrs))
+    end
+
+    alias :nk_check_box_tag :nk_checkbox_tag
+
     def nk_checkbox_group(**attrs, &block)
       render(CheckboxGroup.new(**attrs), &block)
     end
