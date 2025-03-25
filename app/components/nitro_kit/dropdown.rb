@@ -91,7 +91,11 @@ module NitroKit
       **attrs,
       &block
     )
-      href = text_or_href if block_given?
+      if block_given?
+        href = text_or_href
+        text_or_href = nil
+      end
+
       item(text_or_href, href: href, **attrs, &block)
     end
 
