@@ -1,6 +1,7 @@
 class TestsController < ApplicationController
+  helper_method :tailwind_color_names
+
   def index
-    pp("#{Rails.root}/test/dummy/views/tests/examples/**/*.html.erb")
     @tests = Dir["#{Rails.root}/app/views/tests/examples/**/*.html.erb"].map do |path|
       File.basename(path).split(".").first
     end
@@ -8,5 +9,30 @@ class TestsController < ApplicationController
 
   def show
     render("tests/examples/#{params[:id]}")
+  end
+
+  private
+
+  def tailwind_color_names
+    %i[
+      gray
+      red
+      orange
+      amber
+      yellow
+      lime
+      green
+      emerald
+      teal
+      cyan
+      sky
+      blue
+      indigo
+      violet
+      purple
+      fuchsia
+      pink
+      rose
+    ]
   end
 end

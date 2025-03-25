@@ -1,0 +1,16 @@
+<%= back_link %>
+<%= box do %>
+  <% %i[default outline].each do |variant| %>
+    <%= nk_badge variant.to_s.humanize, variant: %>
+  <% end %>
+<% end %>
+<%= box do %>
+  <% tailwind_color_names.each do |color| %>
+    <%= nk_badge color.to_s.humanize, color: %>
+  <% end %>
+<% end %>
+<%= box do %>
+  <% %i[sm md].each do |size| %>
+    <%= nk_badge size.to_s.humanize, size: %>
+  <% end %>
+<% end %>
