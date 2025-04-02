@@ -13,3 +13,19 @@
   <% end %>
   <%= d.content { "hi" } %>
 <% end %>
+
+<div class="p-5">
+  <p>Inside overflow table</p>
+  <%= nk_table(class: "border border-red-500") do |t| %>
+    <%= t.body do %>
+      <%= t.tr do %>
+        <%= t.td do %>
+          <%= nk_dropdown do |d| %>
+            <%= d.trigger(size: :xs) { "simple" } %>
+            <%= d.content { "oh no!" } %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

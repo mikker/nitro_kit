@@ -10,7 +10,7 @@ module NitroKit
     end
 
     def view_template
-      div(class: "relative w-full overflow-x-scroll") do
+      div(class: "w-full overflow-x-scroll") do
         table(**attrs) do
           yield
         end
