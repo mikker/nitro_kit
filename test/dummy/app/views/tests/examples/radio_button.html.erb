@@ -1,0 +1,21 @@
+<div class="flex flex-col gap-4 p-12">
+  <%= nk_radio_button name: "basic", label: "Unchecked" %>
+  <%= nk_radio_button name: "basic", label: "Checked", checked: true %>
+</div>
+<div class="flex flex-col gap-4 p-12">
+  <%= nk_radio_button name: "basic", size: :lg, label: "Unchecked" %>
+  <%= nk_radio_button name: "basic", size: :lg, label: "Checked", checked: true %>
+</div>
+<div class="flex flex-col gap-4 p-12">
+  <%= nk_radio_button_group options: [["Hi", 1], ["There", 2]], value: 2 %>
+</div>
+<div class="flex flex-col items-center py-12 px-4">
+  <%= nk_form_for :golem do |f| %>
+    <%= f.field :element,
+            options: [%w[Earth earth], %w[Fire fire], %w[Water water], %w[Air air]],
+            value: "fire",
+            as: :radio_group,
+            label: "Golem type",
+            description: "He'll be invincible" %>
+  <% end %>
+</div>

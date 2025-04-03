@@ -2,8 +2,8 @@
 
 module NitroKit
   class RadioButtonGroup < Component
-    def initialize(options = nil, name: nil, value: nil, **attrs)
-      @options = options
+    def initialize(options_arg = nil, options: [], name: nil, value: nil, **attrs)
+      @options = options_arg || options
 
       @name = name
       @group_value = value

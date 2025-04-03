@@ -68,7 +68,7 @@ module NitroKit
       when :md
         "[&>input]:size-5 [&>svg]:size-2.5"
       when :lg
-        "[&>input]:size-7 [&>svg]:size-[calc(var(--spacing)*3+1px)]"
+        "[&>input]:size-7 [&>svg]:size-3.5"
       else
         raise ArgumentError, "Unknown size `#{size}'"
       end
