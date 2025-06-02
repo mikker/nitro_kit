@@ -15,7 +15,7 @@ module NitroKit
     )
       @form = form
       @field_name = field_name.to_s
-      @as = as.to_sym
+      @as = as.is_a?(String) ? as.to_sym : as
 
       @name = attrs[:name] || form&.field_name(field_name)
       @id = attrs[:id] || form&.field_id(field_name)
@@ -32,7 +32,7 @@ module NitroKit
 
       super(
         wrapper,
-        data: {as: @as},
+        data: {as: @as.to_s},
         class: base_class
       )
     end
@@ -128,6 +128,8 @@ module NitroKit
         radio_group(**attrs)
       when :switch
         switch(**attrs)
+      when Class
+        component(**attrs)
       else
         raise ArgumentError, "Invalid field type `#{as}'"
       end
@@ -239,6 +241,17 @@ module NitroKit
       # TODO: support use in forms
       render(
         Switch.new(
+          **control_attrs(
+            **field_attrs,
+            **attrs
+          )
+        )
+      )
+    end
+
+    def component(**attrs)
+      render(
+        as.new(
           **control_attrs(
             **field_attrs,
             **attrs
