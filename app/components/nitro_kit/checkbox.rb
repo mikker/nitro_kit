@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module NitroKit
   class Checkbox < Component
     def initialize(label: nil, id: nil, wrapper: {}, **attrs)

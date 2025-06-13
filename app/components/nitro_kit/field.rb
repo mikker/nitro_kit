@@ -203,15 +203,10 @@ module NitroKit
     end
 
     def checkbox(**attrs)
-      render(
-        Checkbox.new(
-          checked: checked?,
-          **control_attrs(
-            **field_attrs,
-            **attrs
-          )
-        )
-      )
+      control_attrs(**field_attrs, **attrs).tap do |attrs|
+        input(type: "hidden", **attrs, value: "0")
+        render(Checkbox.new(checked: checked?, **attrs, value: "1"))
+      end
     end
 
     def combobox(**attrs)

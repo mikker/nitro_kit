@@ -2,15 +2,19 @@
 
 module NitroKit
   class Textarea < Component
-    def initialize(**attrs)
+    def initialize(value: nil, **attrs)
+      @value = value
+
       super(
         attrs,
         class: default_class
       )
     end
 
+    attr_reader :value
+
     def view_template
-      textarea(**attrs)
+      textarea(**attrs) { plain(value) }
     end
 
     private
