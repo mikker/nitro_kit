@@ -73,7 +73,7 @@ module NitroKit
       elsif block_given?
         content = @template.capture(&block)
       else
-        content = I18n.t("save_changes")
+        content = "Save changes"
       end
 
       @template.render(NitroKit::Button.new(variant: :primary, type: :submit, **attrs)) { content }
