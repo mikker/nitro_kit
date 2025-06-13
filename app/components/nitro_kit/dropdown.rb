@@ -116,7 +116,7 @@ module NitroKit
 
     def content_class
       [
-        "z-10 w-max-content absolute top-0 left-0",
+        "isolate w-max-content absolute top-0 left-0",
         "p-1 bg-background text-foreground rounded-md border shadow-sm",
         "w-fit max-w-sm flex-col text-left",
         "[&[aria-hidden=true]]:hidden flex"
@@ -135,7 +135,8 @@ module NitroKit
       [
         "px-3 py-1.5 rounded",
         "font-medium truncate",
-        "cursor-default"
+        "cursor-default",
+        "flex gap-2 items-center [&>span]:truncate"
       ]
     end
 
@@ -144,7 +145,7 @@ module NitroKit
       when :default
         "[&[href]]:hover:bg-muted"
       when :destructive
-        "text-destructive [&[href]]:hover:bg-destructive [&[href]]:hover:text-white"
+        "text-destructive-content [&[href]]:hover:bg-destructive [&[href]]:hover:text-white"
       else
         raise ArgumentError, "Unknown variant: #{variant.inspect}"
       end
