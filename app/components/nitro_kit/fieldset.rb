@@ -37,7 +37,10 @@ module NitroKit
     private
 
     def base_class
-      "[&>*+[data-slot=control]]:mt-6 [&>*+[data-slot=text]]:mt-1"
+      [
+        "[&>*+[data-slot=control]]:mt-6 [&>*+[data-slot=text]]:mt-1",
+        "[&+&]:mt-8"
+      ]
     end
 
     def legend_class
