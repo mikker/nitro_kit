@@ -204,7 +204,7 @@ module NitroKit
 
     def checkbox(**attrs)
       control_attrs(**field_attrs, **attrs).tap do |attrs|
-        input(type: "hidden", **attrs, value: "0")
+        input(type: "hidden", **attrs, id: nil, value: "0")
         render(Checkbox.new(checked: checked?, **attrs, value: "1"))
       end
     end
