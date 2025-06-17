@@ -3,7 +3,7 @@
 module NitroKit
   module AccordionHelper
     def nk_accordion(**attrs, &block)
-      render(Accordion.new(**attrs), &block)
+      render(Accordion.from_erb(**attrs), &block)
     end
   end
 end

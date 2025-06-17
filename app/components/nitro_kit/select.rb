@@ -30,14 +30,16 @@ module NitroKit
 
     alias :html_option :option
 
-    builder_method def option(key_or_value = nil, value = nil, **attrs, &block)
-      value ||= key_or_value
+    def option(key_or_value = nil, value = nil, **attrs, &block)
+      builder do
+        value ||= key_or_value
 
-      html_option(value:, selected: @value == value.to_s, **attrs) do
-        if block_given?
-          yield
-        else
-          key_or_value
+        html_option(value:, selected: @value == value.to_s, **attrs) do
+          if block_given?
+            yield
+          else
+            key_or_value
+          end
         end
       end
     end

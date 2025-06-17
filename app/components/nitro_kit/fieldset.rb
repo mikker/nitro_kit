@@ -22,15 +22,19 @@ module NitroKit
 
     alias :html_legend :legend
 
-    builder_method def legend(text = nil, **attrs, &block)
-      html_legend(**mattr(attrs, class: legend_class)) do
-        text_or_block(text, &block)
+    def legend(text = nil, **attrs, &block)
+      builder do
+        html_legend(**mattr(attrs, class: legend_class)) do
+          text_or_block(text, &block)
+        end
       end
     end
 
-    builder_method def description(text = nil, **attrs, &block)
-      div(**mattr(attrs, class: description_class, data: {slot: "text"})) do
-        text_or_block(text, &block)
+    def description(text = nil, **attrs, &block)
+      builder do
+        div(**mattr(attrs, class: description_class, data: {slot: "text"})) do
+          text_or_block(text, &block)
+        end
       end
     end
 

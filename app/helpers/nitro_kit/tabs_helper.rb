@@ -3,7 +3,7 @@
 module NitroKit
   module TabsHelper
     def nk_tabs(**attrs, &block)
-      render(Tabs.new(**attrs), &block)
+      render(Tabs.from_erb(**attrs), &block)
     end
   end
 end

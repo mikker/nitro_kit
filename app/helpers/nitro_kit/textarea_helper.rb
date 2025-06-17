@@ -3,7 +3,7 @@
 module NitroKit
   module TextareaHelper
     def nk_textarea(**attrs)
-      render(Textarea.new(**attrs))
+      render(Textarea.from_erb(**attrs))
     end
   end
 end

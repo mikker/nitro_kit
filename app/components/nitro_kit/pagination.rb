@@ -16,55 +16,63 @@ module NitroKit
       end
     end
 
-    builder_method def prev(text = nil, **attrs, &block)
-      page_link(**mattr(attrs, aria: {label: "Previous page"})) do
-        if text || block_given?
-          text_or_block(text, &block)
-        else
-          render(Icon.new("arrow-left"))
-          plain("Previous")
+    def prev(text = nil, **attrs, &block)
+      builder do
+        page_link(**mattr(attrs, aria: {label: "Previous page"})) do
+          if text || block_given?
+            text_or_block(text, &block)
+          else
+            render(Icon.new("arrow-left"))
+            plain("Previous")
+          end
         end
       end
     end
 
-    builder_method def next(text = nil, **attrs, &block)
-      page_link(**mattr(attrs, aria: {label: "Next page"})) do
-        if text || block_given?
-          text_or_block(text, &block)
-        else
-          plain("Next")
-          render(Icon.new("arrow-right"))
+    def next(text = nil, **attrs, &block)
+      builder do
+        page_link(**mattr(attrs, aria: {label: "Next page"})) do
+          if text || block_given?
+            text_or_block(text, &block)
+          else
+            plain("Next")
+            render(Icon.new("arrow-right"))
+          end
         end
       end
     end
 
-    builder_method def page(text = nil, current: false, **attrs, &block)
-      page_link(
-        **mattr(
-          attrs,
-          aria: {
-            current: current ? "page" : nil
-          },
-          disabled: current,
-          class: [page_class, current && "bg-zinc-200/50 dark:bg-zinc-800/50"]
-        )
-      ) do
-        text_or_block(text, &block)
-      end
-    end
-
-    builder_method def ellipsis(**attrs)
-      render(
-        Button.new(
+    def page(text = nil, current: false, **attrs, &block)
+      builder do
+        page_link(
           **mattr(
             attrs,
-            variant: :ghost,
-            disabled: true,
-            class: page_class
+            aria: {
+              current: current ? "page" : nil
+            },
+            disabled: current,
+            class: [page_class, current && "bg-zinc-200/50 dark:bg-zinc-800/50"]
           )
-        )
-      ) do
-        "…"
+        ) do
+          text_or_block(text, &block)
+        end
+      end
+    end
+
+    def ellipsis(**attrs)
+      builder do
+        render(
+          Button.new(
+            **mattr(
+              attrs,
+              variant: :ghost,
+              disabled: true,
+              class: page_class
+            )
+          )
+        ) do
+          "…"
+        end
       end
     end
 

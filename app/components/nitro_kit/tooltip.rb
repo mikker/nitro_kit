@@ -25,18 +25,20 @@ module NitroKit
       end
     end
 
-    builder_method def content(text = nil, **attrs, &block)
-      div(
-        **mattr(
-          attrs,
-          class: tooltip_class,
-          data: {
-            state: "closed",
-            nk__tooltip_target: "content"
-          }
-        )
-      ) do
-        text_or_block(text, &block)
+    def content(text = nil, **attrs, &block)
+      builder do
+        div(
+          **mattr(
+            attrs,
+            class: tooltip_class,
+            data: {
+              state: "closed",
+              nk__tooltip_target: "content"
+            }
+          )
+        ) do
+          text_or_block(text, &block)
+        end
       end
     end
 

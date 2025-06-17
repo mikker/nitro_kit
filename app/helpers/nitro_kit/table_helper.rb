@@ -3,7 +3,7 @@
 module NitroKit
   module TableHelper
     def nk_table(**attrs, &block)
-      render(Table.new(**attrs), &block)
+      render(Table.from_erb(**attrs), &block)
     end
   end
 end

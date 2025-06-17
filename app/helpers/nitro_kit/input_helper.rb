@@ -3,7 +3,7 @@
 module NitroKit
   module InputHelper
     def nk_input(**attrs)
-      render(Input.new(**attrs))
+      render(Input.from_erb(**attrs))
     end
 
     %w[

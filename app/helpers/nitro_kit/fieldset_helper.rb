@@ -3,7 +3,7 @@
 module NitroKit
   module FieldsetHelper
     def nk_fieldset(**attrs, &block)
-      render(NitroKit::Fieldset.new(**attrs), &block)
+      render(NitroKit::Fieldset.from_erb(**attrs), &block)
     end
   end
 end

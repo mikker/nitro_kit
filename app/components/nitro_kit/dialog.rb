@@ -19,76 +19,86 @@ module NitroKit
       end
     end
 
-    builder_method def trigger(text = nil, as: Button, **attrs, &block)
-      trigger_attrs = mattr(
-        attrs,
-        data: {
-          nk__dialog_target: "trigger",
-          action: "click->nk--dialog#open"
-        }
-      )
+    def trigger(text = nil, as: Button, **attrs, &block)
+      builder do
+        trigger_attrs = mattr(
+          attrs,
+          data: {
+            nk__dialog_target: "trigger",
+            action: "click->nk--dialog#open"
+          }
+        )
 
-      case as
-      when Symbol
-        send(as, **trigger_attrs) do
-          text_or_block(text, &block)
-        end
-      else
-        render(as.new(**trigger_attrs)) do
-          text_or_block(text, &block)
+        case as
+        when Symbol
+          send(as, **trigger_attrs) do
+            text_or_block(text, &block)
+          end
+        else
+          render(as.new(**trigger_attrs)) do
+            text_or_block(text, &block)
+          end
         end
       end
     end
 
     alias :html_dialog :dialog
 
-    builder_method def dialog(**attrs)
-      html_dialog(
-        **mattr(
-          attrs,
-          class: dialog_class,
-          data: {nk__dialog_target: "dialog"},
-          aria: {
-            labelledby: id(:title),
-            describedby: id(:description)
-          }
-        )
-      ) do
-        yield
-      end
-    end
-
-    builder_method def close_button(**attrs)
-      render(
-        Button.new(
+    def dialog(**attrs)
+      builder do
+        html_dialog(
           **mattr(
             attrs,
-            variant: :ghost,
-            size: :sm,
-            class: "absolute top-2 right-2",
-            data: {action: "nk--dialog#close"}
+            class: dialog_class,
+            data: {nk__dialog_target: "dialog"},
+            aria: {
+              labelledby: id(:title),
+              describedby: id(:description)
+            }
           )
-        )
-      ) do
-        render(Icon.new(:x))
+        ) do
+          yield
+        end
       end
     end
 
-    builder_method def title(text = nil, **attrs, &block)
-      h2(**mattr(attrs, id: id(:title), class: "text-lg font-semibold mb-2")) do
-        text_or_block(text, &block)
+    def close_button(**attrs)
+      builder do
+        render(
+          Button.new(
+            **mattr(
+              attrs,
+              variant: :ghost,
+              size: :sm,
+              class: "absolute top-2 right-2",
+              data: {action: "nk--dialog#close"}
+            )
+          )
+        ) do
+          render(Icon.new(:x))
+        end
       end
     end
 
-    builder_method def description(text = nil, **attrs, &block)
-      div(
-        **mattr(
-          attrs,
-          id: id(:description),
-          class: "text-muted-content mb-6 text-sm leading-relaxed"
-        )
-      ) do
-        text_or_block(text, &block)
+    def title(text = nil, **attrs, &block)
+      builder do
+        h2(**mattr(attrs, id: id(:title), class: "text-lg font-semibold mb-2")) do
+          text_or_block(text, &block)
+        end
+      end
+    end
+
+    def description(text = nil, **attrs, &block)
+      builder do
+        div(
+          **mattr(
+            attrs,
+            id: id(:description),
+            class: "text-muted-content mb-6 text-sm leading-relaxed"
+          )
+        ) do
+          text_or_block(text, &block)
+        end
       end
     end
 

@@ -3,7 +3,7 @@
 module NitroKit
   module ToastHelper
     def nk_toast(**attrs, &block)
-      render(Toast.new(**attrs), &block)
+      render(Toast.from_erb(**attrs), &block)
     end
 
     def nk_toast_action(title: nil, description: nil, event: nil)
@@ -15,7 +15,7 @@ module NitroKit
     end
 
     def nk_toast_flash_messages
-      render(Toast::FlashMessages.new(flash))
+      render(Toast::FlashMessages.from_erb(flash))
     end
 
     def nk_toast_turbo_stream_refresh

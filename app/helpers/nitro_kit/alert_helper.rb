@@ -3,7 +3,7 @@ module NitroKit
     include Variants
 
     def nk_alert(**attrs, &block)
-      render(Alert.new(**attrs), &block)
+      render(Alert.from_erb(**attrs), &block)
     end
 
     automatic_variants(Alert::VARIANTS, :nk_alert)

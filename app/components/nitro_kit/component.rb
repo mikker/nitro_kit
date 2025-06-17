@@ -2,11 +2,19 @@
 
 module NitroKit
   class Component < Phlex::HTML
-    def initialize(*hashes, **defaults)
-      @attrs = merge_attrs(*hashes, **defaults)
+    def initialize(attrs = {}, **defaults)
+      @attrs = merge_attrs(attrs, **defaults)
     end
 
     attr_reader :attrs
+
+    def self.from_erb(*args, **attrs, &block)
+      new(*args, **attrs, &block).tap { |instance| instance.instance_variable_set(:@from_erb, true) }
+    end
+
+    def builder(&block)
+      @from_erb ? capture(&block) : yield
+    end
 
     private
 
@@ -15,24 +23,11 @@ module NitroKit
     # in capture so we don't write to the output buffer immediately.
     # However when called from other components, we don't.
     def self.builder_method(method_name)
-      mod = Module.new
-      mod.module_eval(
-        <<~RUBY,
-          # frozen_string_literal: true
-
-          def #{method_name}(...)
-            if caller_locations(1, 1).first.path.end_with?(".rb")
-              super
-            else
-              capture { super }
-            end
-          end
-        RUBY
-        __FILE__,
-        __LINE__ + 1
+      warn(
+        "[DEPRECATION] builder_method is deprecated. Please migrate to using the builder(&) pattern. See https://github.com/mikker/nitro_kit/issues/35 for details."
       )
 
-      prepend(mod)
+      nil
     end
 
     # Merge attributes with some special cases for matching keys
