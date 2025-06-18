@@ -5,7 +5,7 @@ module NitroKit
     include Pagy::UrlHelpers if defined?(Pagy)
 
     def nk_pagination(**attrs, &block)
-      render(Pagination.from_erb(**attrs), &block)
+      render(Pagination.from_template(**attrs), &block)
     end
 
     def nk_pagy_nav(pagy, id: nil, aria_label: nil, **attrs)

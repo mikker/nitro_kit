@@ -13,7 +13,7 @@ module NitroKit
         attrs.merge!(content_or_options)
       end
 
-      render(Label.from_erb(text, for: name, **attrs), &block)
+      render(Label.from_template(text, for: name, **attrs), &block)
     end
   end
 end

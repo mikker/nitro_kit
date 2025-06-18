@@ -8,12 +8,12 @@ module NitroKit
 
     attr_reader :attrs
 
-    def self.from_erb(*args, **attrs, &block)
-      new(*args, **attrs, &block).tap { |instance| instance.instance_variable_set(:@from_erb, true) }
+    def self.from_template(*args, **attrs, &block)
+      new(*args, **attrs, &block).tap { |instance| instance.instance_variable_set(:@_nk_from_template, true) }
     end
 
     def builder(&block)
-      @from_erb ? capture(&block) : yield
+      @_nk_from_template ? capture(&block) : yield
     end
 
     private
