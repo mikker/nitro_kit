@@ -23,15 +23,19 @@ module NitroKit
       end
     end
 
-    builder_method def title(text = nil, **attrs, &block)
-      render(Label.new(**attrs)) do
-        text_or_block(text, &block)
+    def title(text = nil, **attrs, &block)
+      builder do
+        render(Label.new(**attrs)) do
+          text_or_block(text, &block)
+        end
       end
     end
 
-    builder_method def item(text = nil, **attrs, &block)
-      render(Checkbox.new(**attrs)) do
-        text_or_block(text, &block)
+    def item(text = nil, **attrs, &block)
+      builder do
+        render(Checkbox.new(**attrs)) do
+          text_or_block(text, &block)
+        end
       end
     end
   end

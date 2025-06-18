@@ -15,33 +15,43 @@ module NitroKit
       end
     end
 
-    builder_method def title(text = nil, **attrs, &block)
-      h2(**mattr(attrs, class: "text-lg font-bold -mb-2")) do
-        text_or_block(text, &block)
+    def title(text = nil, **attrs, &block)
+      builder do
+        h2(**mattr(attrs, class: "text-lg font-bold -mb-2")) do
+          text_or_block(text, &block)
+        end
       end
     end
 
-    builder_method def body(text = nil, **attrs, &block)
-      div(**mattr(attrs, class: "text-muted-content text-sm leading-relaxed")) do
-        text_or_block(text, &block)
+    def body(text = nil, **attrs, &block)
+      builder do
+        div(**mattr(attrs, class: "text-muted-content text-sm leading-relaxed")) do
+          text_or_block(text, &block)
+        end
       end
     end
 
-    builder_method def footer(text = nil, **attrs, &block)
-      div(**mattr(attrs, class: "flex gap-2 items-center")) do
-        text_or_block(text, &block)
+    def footer(text = nil, **attrs, &block)
+      builder do
+        div(**mattr(attrs, class: "flex gap-2 items-center")) do
+          text_or_block(text, &block)
+        end
       end
     end
 
-    builder_method def divider(**attrs)
-      full_width do
-        hr(**attrs)
+    def divider(**attrs)
+      builder do
+        full_width do
+          hr(**attrs)
+        end
       end
     end
 
-    builder_method def full_width(**attrs)
-      div(**mattr(attrs, data: {slot: "full"}, class: "-mx-(--gap)")) do
-        yield
+    def full_width(**attrs)
+      builder do
+        div(**mattr(attrs, data: {slot: "full"}, class: "-mx-(--gap)")) do
+          yield
+        end
       end
     end
 

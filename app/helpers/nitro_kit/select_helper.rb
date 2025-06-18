@@ -18,7 +18,7 @@ module NitroKit
 
       # TODO: support index
 
-      render(Select.new(options, value:, include_blank:, prompt:, **compat_options, **attrs), &block)
+      render(Select.from_template(options, value:, include_blank:, prompt:, **compat_options, **attrs), &block)
     end
   end
 end

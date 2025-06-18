@@ -21,55 +21,61 @@ module NitroKit
       end
     end
 
-    builder_method def tabs(**attrs)
-      div(**mattr, role: "tabtabs", class: tabs_class) do
-        yield
+    def tabs(**attrs)
+      builder do
+        div(**mattr, role: "tabtabs", class: tabs_class) do
+          yield
+        end
       end
     end
 
-    builder_method def tab(key, text = nil, **attrs, &block)
-      button(
-        **mattr(
-          attrs,
-          aria: {
-            selected: (default == key).to_s,
-            controls: tab_id(key, :panel)
-          },
-          class: tab_class,
-          data: {
-            action: "nk--tabs#setActiveTab keydown.left->nk--tabs#prevTab keydown.right->nk--tabs#nextTab",
-            key:,
-            nk__tabs_key_param: key,
-            nk__tabs_target: "tab"
-          },
-          id: tab_id(key, :tab),
-          role: "tab",
-          tabindex: default == key ? 0 : -1
-        )
-      ) do
-        text_or_block(text, &block)
+    def tab(key, text = nil, **attrs, &block)
+      builder do
+        button(
+          **mattr(
+            attrs,
+            aria: {
+              selected: (default == key).to_s,
+              controls: tab_id(key, :panel)
+            },
+            class: tab_class,
+            data: {
+              action: "nk--tabs#setActiveTab keydown.left->nk--tabs#prevTab keydown.right->nk--tabs#nextTab",
+              key:,
+              nk__tabs_key_param: key,
+              nk__tabs_target: "tab"
+            },
+            id: tab_id(key, :tab),
+            role: "tab",
+            tabindex: default == key ? 0 : -1
+          )
+        ) do
+          text_or_block(text, &block)
+        end
       end
     end
 
-    builder_method def panel(key, **attrs)
-      div(
-        **mattr(
-          attrs,
-          aria: {
-            hidden: (default != key).to_s,
-            labelledby: tab_id(key, :tab)
-          },
-          class: panel_class,
-          data: {
-            key:,
-            nk__tabs_target: "panel"
-          },
-          id: tab_id(key, :panel),
-          name: key,
-          role: "tabpanel"
-        )
-      ) do
-        yield
+    def panel(key, **attrs)
+      builder do
+        div(
+          **mattr(
+            attrs,
+            aria: {
+              hidden: (default != key).to_s,
+              labelledby: tab_id(key, :tab)
+            },
+            class: panel_class,
+            data: {
+              key:,
+              nk__tabs_target: "panel"
+            },
+            id: tab_id(key, :panel),
+            name: key,
+            role: "tabpanel"
+          )
+        ) do
+          yield
+        end
       end
     end
 

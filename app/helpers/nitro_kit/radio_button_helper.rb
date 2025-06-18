@@ -13,11 +13,11 @@ module NitroKit
       name = field_name(compat_object_name, compat_method)
       value = compat_tag_value || attrs[:value]
 
-      render(RadioButton.new(label:, name:, value:, **attrs))
+      render(RadioButton.from_template(label:, name:, value:, **attrs))
     end
 
     def nk_radio_button_group(**attrs, &block)
-      render(RadioButtonGroup.new(**attrs), &block)
+      render(RadioButtonGroup.from_template(**attrs), &block)
     end
   end
 end

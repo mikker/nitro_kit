@@ -17,7 +17,7 @@ module NitroKit
 
       # TODO: multiple, unchecked hidden field
 
-      render(Checkbox.new(name:, label:, value: compat_checked_value, checked:, **attrs))
+      render(Checkbox.from_template(name:, label:, value: compat_checked_value, checked:, **attrs))
     end
 
     def nk_checkbox_tag(name, *args)
@@ -38,13 +38,13 @@ module NitroKit
 
       attrs[:checked] = "checked" if checked
 
-      render(Checkbox.new(name:, **attrs))
+      render(Checkbox.from_template(name:, **attrs))
     end
 
     alias :nk_check_box_tag :nk_checkbox_tag
 
     def nk_checkbox_group(**attrs, &block)
-      render(CheckboxGroup.new(**attrs), &block)
+      render(CheckboxGroup.from_template(**attrs), &block)
     end
   end
 end

@@ -23,27 +23,37 @@ module NitroKit
     alias :html_th :th
     alias :html_td :td
 
-    builder_method def thead(**attrs)
-      html_thead(**attrs) { yield }
-    end
-
-    builder_method def tbody(**attrs)
-      html_tbody(**mattr(attrs, class: "[&_tr:last-child]:border-0")) { yield }
-    end
-
-    builder_method def tr(**attrs)
-      html_tr(**mattr(attrs, class: "border-b")) { yield }
-    end
-
-    builder_method def th(text = nil, align: :left, **attrs, &block)
-      html_th(**mattr(attrs, class: [header_cell_classes, cell_classes, align_classes(align), "font-medium"])) do
-        text_or_block(text, &block)
+    def thead(**attrs)
+      builder do
+        html_thead(**attrs) { yield }
       end
     end
 
-    builder_method def td(text = nil, align: nil, **attrs, &block)
-      html_td(**mattr(attrs, class: [cell_classes, align_classes(align)])) do
-        text_or_block(text, &block)
+    def tbody(**attrs)
+      builder do
+        html_tbody(**mattr(attrs, class: "[&_tr:last-child]:border-0")) { yield }
+      end
+    end
+
+    def tr(**attrs)
+      builder do
+        html_tr(**mattr(attrs, class: "border-b")) { yield }
+      end
+    end
+
+    def th(text = nil, align: :left, **attrs, &block)
+      builder do
+        html_th(**mattr(attrs, class: [header_cell_classes, cell_classes, align_classes(align), "font-medium"])) do
+          text_or_block(text, &block)
+        end
+      end
+    end
+
+    def td(text = nil, align: nil, **attrs, &block)
+      builder do
+        html_td(**mattr(attrs, class: [cell_classes, align_classes(align)])) do
+          text_or_block(text, &block)
+        end
       end
     end
 

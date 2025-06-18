@@ -27,26 +27,30 @@ module NitroKit
       end
     end
 
-    builder_method def title(text = nil, **attrs, &block)
-      render(Label.new(**attrs)) do
-        text_or_block(text, &block)
+    def title(text = nil, **attrs, &block)
+      builder do
+        render(Label.new(**attrs)) do
+          text_or_block(text, &block)
+        end
       end
     end
 
-    builder_method def item(text = nil, value_as_arg = nil, value: nil, **attrs, &block)
-      value ||= value_as_arg
+    def item(text = nil, value_as_arg = nil, value: nil, **attrs, &block)
+      builder do
+        value ||= value_as_arg
 
-      render(
-        RadioButton.new(
-          **mattr(
-            attrs,
-            name: attrs.fetch(:name, name),
-            value:,
-            checked: group_value.presence == value
+        render(
+          RadioButton.new(
+            **mattr(
+              attrs,
+              name: attrs.fetch(:name, name),
+              value:,
+              checked: group_value.presence == value
+            )
           )
-        )
-      ) do
-        text_or_block(text, &block)
+        ) do
+          text_or_block(text, &block)
+        end
       end
     end
   end

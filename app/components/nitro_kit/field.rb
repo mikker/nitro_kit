@@ -60,78 +60,86 @@ module NitroKit
 
     alias :html_label :label
 
-    builder_method def label(text = nil, **attrs)
-      text ||= field_label
+    def label(text = nil, **attrs)
+      builder do
+        text ||= field_label
 
-      return unless text
+        return unless text
 
-      render(Label.new(**mattr(attrs, for: id, data: {slot: "label"}))) do
-        text
-      end
-    end
-
-    builder_method def description(text = nil, **attrs, &block)
-      text ||= field_description
-
-      return unless text || block_given?
-
-      div(**mattr(attrs, data: {slot: "description"}, class: description_class)) do
-        text_or_block(text, &block)
-      end
-    end
-
-    builder_method def errors(error_messages = nil, **attrs)
-      error_messages ||= field_error_messages
-
-      return unless error_messages&.any?
-
-      ul(**mattr(attrs, data: {slot: "error"}, class: error_class)) do |msg|
-        error_messages.each do |msg|
-          li { msg }
+        render(Label.new(**mattr(attrs, for: id, data: {slot: "label"}))) do
+          text
         end
       end
     end
 
-    builder_method def control(**attrs)
-      case as
-      when :string
-        input(**attrs)
-      when
-          :button,
-          :color,
-          :date,
-          :datetime,
-          :datetime_local,
-          :email,
-          :file,
-          :hidden,
-          :month,
-          :number,
-          :password,
-          :range,
-          :search,
-          :tel,
-          :text,
-          :time,
-          :url,
-          :week
-        input(type: as, **attrs)
-      when :select
-        select(**attrs)
-      when :textarea
-        textarea(**attrs)
-      when :checkbox
-        checkbox(**attrs)
-      when :combobox
-        combobox(**attrs)
-      when :radio, :radio_button, :radio_group
-        radio_group(**attrs)
-      when :switch
-        switch(**attrs)
-      when Class
-        component(**attrs)
-      else
-        raise ArgumentError, "Invalid field type `#{as}'"
+    def description(text = nil, **attrs, &block)
+      builder do
+        text ||= field_description
+
+        return unless text || block_given?
+
+        div(**mattr(attrs, data: {slot: "description"}, class: description_class)) do
+          text_or_block(text, &block)
+        end
+      end
+    end
+
+    def errors(error_messages = nil, **attrs)
+      builder do
+        error_messages ||= field_error_messages
+
+        return unless error_messages&.any?
+
+        ul(**mattr(attrs, data: {slot: "error"}, class: error_class)) do |msg|
+          error_messages.each do |msg|
+            li { msg }
+          end
+        end
+      end
+    end
+
+    def control(**attrs)
+      builder do
+        case as
+        when :string
+          input(**attrs)
+        when
+            :button,
+            :color,
+            :date,
+            :datetime,
+            :datetime_local,
+            :email,
+            :file,
+            :hidden,
+            :month,
+            :number,
+            :password,
+            :range,
+            :search,
+            :tel,
+            :text,
+            :time,
+            :url,
+            :week
+          input(type: as, **attrs)
+        when :select
+          select(**attrs)
+        when :textarea
+          textarea(**attrs)
+        when :checkbox
+          checkbox(**attrs)
+        when :combobox
+          combobox(**attrs)
+        when :radio, :radio_button, :radio_group
+          radio_group(**attrs)
+        when :switch
+          switch(**attrs)
+        when Class
+          component(**attrs)
+        else
+          raise ArgumentError, "Invalid field type `#{as}'"
+        end
       end
     end
 

@@ -16,42 +16,48 @@ module NitroKit
       end
     end
 
-    builder_method def item(**attrs)
-      div(**attrs) do
-        yield
+    def item(**attrs)
+      builder do
+        div(**attrs) do
+          yield
+        end
       end
     end
 
-    builder_method def trigger(text = nil, **attrs)
-      button(
-        **mattr(
-          attrs,
-          type: "button",
-          class: trigger_class,
-          data: {
-            action: "nk--accordion#toggle",
-            nk__accordion_target: "trigger"
-          },
-          aria: {expanded: "false"}
-        )
-      ) do
-        block_given? ? yield : plain(text)
-        chevron_icon
+    def trigger(text = nil, **attrs)
+      builder do
+        button(
+          **mattr(
+            attrs,
+            type: "button",
+            class: trigger_class,
+            data: {
+              action: "nk--accordion#toggle",
+              nk__accordion_target: "trigger"
+            },
+            aria: {expanded: "false"}
+          )
+        ) do
+          block_given? ? yield : plain(text)
+          chevron_icon
+        end
       end
     end
 
-    builder_method def content(**attrs)
-      div(
-        **mattr(
-          attrs,
-          class: content_class,
-          data: {
-            nk__accordion_target: "content"
-          },
-          aria: {hidden: "true"}
-        )
-      ) do
-        div(class: "pb-4") { yield }
+    def content(**attrs)
+      builder do
+        div(
+          **mattr(
+            attrs,
+            class: content_class,
+            data: {
+              nk__accordion_target: "content"
+            },
+            aria: {hidden: "true"}
+          )
+        ) do
+          div(class: "pb-4") { yield }
+        end
       end
     end
 
