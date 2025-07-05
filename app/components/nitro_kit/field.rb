@@ -220,6 +220,7 @@ module NitroKit
     def combobox(**attrs)
       render(
         Combobox.new(
+          options: @options,
           **control_attrs(
             **field_attrs,
             **attrs
