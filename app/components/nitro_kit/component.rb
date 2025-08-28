@@ -71,8 +71,10 @@ module NitroKit
     end
 
     def text_or_block(text = nil, &block)
-      if text
+      if text && text.is_a?(ActiveSupport::SafeBuffer)
         plain(text)
+      elsif text
+        text
       elsif block_given?
         yield
       else
