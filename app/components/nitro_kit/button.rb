@@ -133,6 +133,12 @@ module NitroKit
           # If icon only, make square
           "[&_svg:first-child:last-child]:-mx-2"
         ]
+      when :xl
+        [
+          "px-8 h-14 text-2xl [&_svg]:size-5 gap-x-4",
+          # If icon only, make square
+          "[&_svg:first-child:last-child]:-mx-8"
+        ]
       else
         raise ArgumentError, "Unknown size `#{size}'"
       end
