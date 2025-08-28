@@ -19,7 +19,7 @@ module NitroKit
       [
         "block rounded-md border bg-background border-border text-base px-3 py-2 h-10",
         # Focus
-        "focus:outline-none ring-ring ring-offset-2 ring-offset-background focus-visible:ring-2"
+        "focus-visible:outline-none ring-ring ring-offset-2 ring-offset-background focus-visible:ring-2"
       ]
     end
   end
