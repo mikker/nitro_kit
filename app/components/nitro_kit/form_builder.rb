@@ -57,6 +57,10 @@ module NitroKit
         end
       end
 
+    def radio_button(method, value = "1", **attrs)
+      field(method, as: :radio_button, label: false, value:, **attrs)
+    end
+
     def checkbox(method, checked_value = "1", unchecked_value = "0", *args, include_hidden: true, **attrs)
       if include_hidden
         @template.concat(hidden_field(method, value: unchecked_value))
