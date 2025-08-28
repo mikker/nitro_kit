@@ -68,20 +68,19 @@ module NitroKit
     # Buttons
 
     def submit(value = nil, **attrs, &block)
-      if value
-        content = value
-      elsif block_given?
-        content = @template.capture(&block)
-      else
-        content = "Save changes"
+      if value.nil? && !block_given?
+        value = "Save changes"
       end
 
-      @template.render(NitroKit::Button.new(variant: :primary, type: :submit, **attrs)) { content }
+      @template.render(NitroKit::Button.new(value, variant: :primary, type: :submit, **attrs), &block)
     end
 
-    def button(value = "Save changes", **attrs)
-      content = value || @template.capture(&block)
-      @template.render(NitroKit::Button.new(**attrs)) { content }
+    def button(value = nil, **attrs, &block)
+      if value.nil? && !block_given?
+        value = "Save changes"
+      end
+
+      @template.render(NitroKit::Button.new(value, **attrs), &block)
     end
   end
 end
