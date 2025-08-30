@@ -22,7 +22,7 @@ module NitroKit
       end
     end
 
-    builder_method def image
+    def image
       image_tag(src, class: image_class)
     end
 
