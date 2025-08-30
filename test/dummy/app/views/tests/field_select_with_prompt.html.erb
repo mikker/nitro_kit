@@ -1,0 +1,3 @@
+<%= nk_form_for @user, url: "#" do |f| %>
+  <%= f.field :status, as: :select, options: [["Active", "active"], ["Inactive", "inactive"]], include_blank: "Pick one..." %>
+<% end %>

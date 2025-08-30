@@ -8,10 +8,36 @@ class TestsController < ApplicationController
   end
 
   def show
-    render("tests/examples/#{params[:id]}")
+    template_name = params[:id]
+    
+    # Check if it's an example template first
+    example_path = "tests/examples/#{template_name}"
+    if template_exists?(example_path)
+      render(example_path)
+      return
+    end
+    
+    # Handle test templates with setup
+    test_path = "tests/#{template_name}"
+    if template_exists?(test_path)
+      setup_test_data(template_name)
+      render(template: test_path)
+      return
+    end
+    
+    # Fallback to 404 if template doesn't exist
+    raise ActionController::RoutingError, "Template not found: #{template_name}"
   end
 
   private
+
+  def setup_test_data(template_name)
+    # Setup data based on template name patterns
+    case template_name
+    when /select/, /form_builder/
+      @user = User.new(status: "active")
+    end
+  end
 
   def tailwind_color_names
     %i[

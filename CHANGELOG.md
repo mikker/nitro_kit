@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Fix Select component empty rendering issue with from_template pattern
+- Add missing `select` method to FormBuilder for Rails API compatibility
+
 ## 0.7.0
 
 ### Changed
