@@ -193,7 +193,7 @@ module NitroKit
       collection = options || @options || []
       blank_option = include_blank || @include_blank
       prompt_text = prompt || @prompt
-      
+
       render(
         Select.new(
           collection,

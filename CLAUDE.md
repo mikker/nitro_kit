@@ -98,4 +98,3 @@ Use the generator: `rails generate nitro_kit:component ComponentName`
 - Minimal Stimulus controllers for UI interactions only
 - Data attributes follow pattern: `data-nk--{component}-target` and `data-action`
 - External libraries (floating-ui, etc.) integrated via importmaps or package manager
-
