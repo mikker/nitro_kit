@@ -4,7 +4,7 @@ module NitroKit
   class Select < Component
     def initialize(options = nil, value: nil, include_empty: false, prompt: nil, index: nil, **attrs)
       @options = options
-      @value = value.to_s
+      @value = value&.to_s
       @include_empty = include_empty
       @prompt = prompt
       @index = index
@@ -20,8 +20,30 @@ module NitroKit
     def view_template
       span(class: wrapper_class, data: {slot: "control"}) do
         select(**attrs, class: select_class) do
-          option if include_empty
-          options ? options.map { |o| option(*o) } : yield
+          if include_empty
+            blank_text = if include_empty.is_a?(String)
+              include_empty
+            elsif @prompt
+              @prompt
+            else
+              ""
+            end
+
+            html_option(value: "", selected: @value == "") { blank_text }
+          end
+
+          if options
+            options.each do |opt|
+              if opt.is_a?(Array) && opt.length >= 2
+                html_option(value: opt[1], selected: @value == opt[1].to_s) { opt[0] }
+              else
+                # Handle simple strings - use as both label and value
+                html_option(value: opt.to_s, selected: @value == opt.to_s) { opt.to_s }
+              end
+            end
+          else
+            yield if block_given?
+          end
         end
 
         chevron_icon
@@ -30,15 +52,15 @@ module NitroKit
 
     alias :html_option :option
 
-    def option(key_or_value = nil, value = nil, **attrs, &block)
+    def option(text = nil, value = nil, **attrs, &block)
       builder do
-        value ||= key_or_value
+        value ||= text
 
         html_option(value:, selected: @value == value.to_s, **attrs) do
           if block_given?
             yield
           else
-            key_or_value
+            text
           end
         end
       end

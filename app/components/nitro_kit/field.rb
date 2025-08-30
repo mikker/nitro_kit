@@ -11,6 +11,8 @@ module NitroKit
       errors: nil,
       wrapper: {},
       options: nil,
+      include_blank: nil,
+      prompt: nil,
       **attrs
     )
       @form = form
@@ -22,6 +24,8 @@ module NitroKit
 
       # select, radio group
       @options = options
+      @include_blank = include_blank
+      @prompt = prompt
 
       @field_attrs = attrs
       @field_label = label.nil? ? field_name.to_s.humanize : label
@@ -185,10 +189,17 @@ module NitroKit
 
     alias :html_select :select
 
-    def select(options: nil, **attrs)
+    def select(options: nil, include_blank: nil, prompt: nil, **attrs)
+      collection = options || @options || []
+      blank_option = include_blank || @include_blank
+      prompt_text = prompt || @prompt
+      
       render(
         Select.new(
-          options || @options || [],
+          collection,
+          value: value,
+          include_empty: blank_option,
+          prompt: prompt_text,
           **control_attrs(
             **field_attrs,
             **attrs

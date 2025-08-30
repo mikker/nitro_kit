@@ -86,5 +86,18 @@ module NitroKit
 
       @template.render(NitroKit::Button.new(value, **attrs), &block)
     end
+
+    def select(method, choices = nil, options = {}, html_options = {}, &block)
+      field_options = {
+        as: :select,
+        options: choices,
+        include_blank: options[:include_blank],
+        prompt: options[:prompt]
+      }.compact
+
+      field_attributes = options.except(:include_blank, :prompt, :selected)
+
+      field(method, **field_options, **field_attributes, **html_options, &block)
+    end
   end
 end
