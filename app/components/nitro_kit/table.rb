@@ -2,16 +2,21 @@
 
 module NitroKit
   class Table < Component
-    def initialize(**attrs)
-      super(
-        attrs,
-        class: "w-full caption-bottom text-sm divide-y"
-      )
+    def initialize(wrapper: {}, **attrs)
+      super(attrs)
+      @wrapper = wrapper
     end
 
+    attr_reader :wrapper
+
     def view_template
-      div(class: "w-full overflow-x-scroll") do
-        table(**attrs) do
+      div(**mattr(wrapper, class: "w-full overflow-x-scroll")) do
+        table(
+          **mattr(
+            attrs,
+            class: "w-full caption-bottom text-sm divide-y"
+          )
+        ) do
           yield
         end
       end
@@ -64,7 +69,7 @@ module NitroKit
     end
 
     def cell_classes
-      "whitespace-nowrap py-2 min-h-10 px-2"
+      "py-2 min-h-10 px-2"
     end
 
     def align_classes(align = nil)
