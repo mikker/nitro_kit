@@ -7,8 +7,6 @@ export default class extends Controller {
   };
 
   connect() {
-    this.#flushSink();
-
     if (this.hasSinkTarget) {
       this.mutationObserver = new MutationObserver(([event]) => {
         if (event.addedNodes.length === 0) return;
@@ -16,6 +14,8 @@ export default class extends Controller {
       });
       this.mutationObserver.observe(this.sinkTarget, { childList: true });
     }
+
+    this.#flushSink();
   }
 
   disconnect() {
@@ -60,6 +60,8 @@ export default class extends Controller {
   }
 
   #flushSink() {
+    if (!this.hasSinkTarget) return;
+
     for (const li of this.sinkTarget.children) {
       this.show(li.cloneNode(true));
       li.remove();

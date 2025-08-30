@@ -105,16 +105,12 @@ module NitroKit
     end
 
     def item(title: nil, description: nil, **attrs, &block)
-      builder do
-        render(Item.new(title:, description:, **attrs), &block)
-      end
+      render(Item.new(title:, description:, **attrs), &block)
     end
 
     def flash_sink
-      builder do
-        div(id: "nk--toast-sink", data: {nk__toast_target: "sink"}, hidden: true) do
-          render(FlashMessages.new(view_context.flash))
-        end
+      div(id: "nk--toast-sink", data: {nk__toast_target: "sink"}, hidden: true) do
+        render(FlashMessages.new(view_context.flash))
       end
     end
 
