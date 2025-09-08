@@ -13,3 +13,4 @@
 !/test/dummy//app/assets/builds/.keep
 Gemfile.lock
 .claude/settings.local.json
+.nvim.lua
