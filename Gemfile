@@ -11,3 +11,4 @@ gem "stimulus-rails"
 gem "turbo-rails"
 gem "importmap-rails"
 gem "hotwire-spark"
+gem "rubocop-rails-omakase", require: false

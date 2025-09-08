@@ -36,7 +36,7 @@ module NitroKit
 
       super(
         wrapper,
-        data: {as: @as.to_s},
+        data: { as: @as.to_s },
         class: base_class
       )
     end
@@ -70,7 +70,7 @@ module NitroKit
 
         return unless text
 
-        render(Label.new(**mattr(attrs, for: id, data: {slot: "label"}))) do
+        render(Label.new(**mattr(attrs, for: id, data: { slot: "label" }))) do
           text
         end
       end
@@ -82,7 +82,7 @@ module NitroKit
 
         return unless text || block_given?
 
-        div(**mattr(attrs, data: {slot: "description"}, class: description_class)) do
+        div(**mattr(attrs, data: { slot: "description" }, class: description_class)) do
           text_or_block(text, &block)
         end
       end
@@ -94,7 +94,7 @@ module NitroKit
 
         return unless error_messages&.any?
 
-        ul(**mattr(attrs, data: {slot: "error"}, class: error_class)) do |msg|
+        ul(**mattr(attrs, data: { slot: "error" }, class: error_class)) do |msg|
           error_messages.each do |msg|
             li { msg }
           end
@@ -170,7 +170,7 @@ module NitroKit
         name:,
         id:,
         value: value_before_typecast,
-        data: {slot: "control"}
+        data: { slot: "control" }
       )
     end
 

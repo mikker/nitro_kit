@@ -48,7 +48,7 @@ module NitroKit
 
     def th(text = nil, align: :left, **attrs, &block)
       builder do
-        html_th(**mattr(attrs, class: [header_cell_classes, cell_classes, align_classes(align), "font-medium"])) do
+        html_th(**mattr(attrs, class: [ header_cell_classes, cell_classes, align_classes(align), "font-medium" ])) do
           text_or_block(text, &block)
         end
       end
@@ -56,7 +56,7 @@ module NitroKit
 
     def td(text = nil, align: nil, **attrs, &block)
       builder do
-        html_td(**mattr(attrs, class: [cell_classes, align_classes(align)])) do
+        html_td(**mattr(attrs, class: [ cell_classes, align_classes(align) ])) do
           text_or_block(text, &block)
         end
       end

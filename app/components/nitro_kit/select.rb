@@ -18,7 +18,7 @@ module NitroKit
     attr_reader :value, :options, :include_empty, :prompts, :index
 
     def view_template
-      span(class: wrapper_class, data: {slot: "control"}) do
+      span(class: wrapper_class, data: { slot: "control" }) do
         select(**attrs, class: select_class) do
           if include_empty
             blank_text = if include_empty.is_a?(String)

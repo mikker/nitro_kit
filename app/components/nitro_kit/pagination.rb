@@ -6,7 +6,7 @@ module NitroKit
       super(
         attrs,
         class: merge_class(nav_class, attrs[:class]),
-        aria: {label: "Pagination"}
+        aria: { label: "Pagination" }
       )
     end
 
@@ -18,7 +18,7 @@ module NitroKit
 
     def prev(text = nil, **attrs, &block)
       builder do
-        page_link(**mattr(attrs, aria: {label: "Previous page"})) do
+        page_link(**mattr(attrs, aria: { label: "Previous page" })) do
           if text || block_given?
             text_or_block(text, &block)
           else
@@ -31,7 +31,7 @@ module NitroKit
 
     def next(text = nil, **attrs, &block)
       builder do
-        page_link(**mattr(attrs, aria: {label: "Next page"})) do
+        page_link(**mattr(attrs, aria: { label: "Next page" })) do
           if text || block_given?
             text_or_block(text, &block)
           else
@@ -51,7 +51,7 @@ module NitroKit
               current: current ? "page" : nil
             },
             disabled: current,
-            class: [page_class, current && "bg-zinc-200/50 dark:bg-zinc-800/50"]
+            class: [ page_class, current && "bg-zinc-200/50 dark:bg-zinc-800/50" ]
           )
         ) do
           text_or_block(text, &block)
@@ -83,7 +83,7 @@ module NitroKit
         **mattr(
           attrs,
           role: "link",
-          aria: {disabled: disabled.to_s},
+          aria: { disabled: disabled.to_s },
           class: link_class
         )
       ) do

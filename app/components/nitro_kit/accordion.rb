@@ -6,7 +6,7 @@ module NitroKit
       super(
         attrs,
         class: item_class,
-        data: {controller: "nk--accordion"}
+        data: { controller: "nk--accordion" }
       )
     end
 
@@ -35,7 +35,7 @@ module NitroKit
               action: "nk--accordion#toggle",
               nk__accordion_target: "trigger"
             },
-            aria: {expanded: "false"}
+            aria: { expanded: "false" }
           )
         ) do
           block_given? ? yield : plain(text)
@@ -53,7 +53,7 @@ module NitroKit
             data: {
               nk__accordion_target: "content"
             },
-            aria: {hidden: "true"}
+            aria: { hidden: "true" }
           )
         ) do
           div(class: "pb-4") { yield }

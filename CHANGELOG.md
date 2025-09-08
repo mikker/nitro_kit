@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased
+## 0.8.0
+
+### Changed
+
+- Reformat as Rails Omakase rubocop style
+- Update Avatar component rendering for improved consistency
+- Add formatting tools and minor cleanup improvements
 
 ### Fixed
 
@@ -9,11 +15,6 @@
 - Fix toast controller initialization timing issues
 - Add Table wrapper parameter
 - Remove default whitespace-nowrap from table cells
-
-### Changed
-
-- Update Avatar component rendering for improved consistency
-- Add formatting tools and minor cleanup improvements
 
 ## 0.7.0
 

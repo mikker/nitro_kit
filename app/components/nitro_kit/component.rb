@@ -62,7 +62,7 @@ module NitroKit
             # Concat Stimulus actions
             case key
             when :action, :controller
-              [new_val, old_val].compact.join(" ")
+              [ new_val, old_val ].compact.join(" ")
             else
               new_val
             end

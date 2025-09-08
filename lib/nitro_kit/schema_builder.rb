@@ -71,8 +71,8 @@ module NitroKit
         gems: []
       )
         # Default is one component, one helper with same name
-        components ||= [name]
-        helpers ||= [name]
+        components ||= [ name ]
+        helpers ||= [ name ]
 
         files = [
           components.map { |c| "app/components/nitro_kit/#{c}.rb" },

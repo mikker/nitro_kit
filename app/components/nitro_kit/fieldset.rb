@@ -32,7 +32,7 @@ module NitroKit
 
     def description(text = nil, **attrs, &block)
       builder do
-        div(**mattr(attrs, class: description_class, data: {slot: "text"})) do
+        div(**mattr(attrs, class: description_class, data: { slot: "text" })) do
           text_or_block(text, &block)
         end
       end

@@ -49,7 +49,7 @@ module NitroKit
 
     def full_width(**attrs)
       builder do
-        div(**mattr(attrs, data: {slot: "full"}, class: "-mx-(--gap)")) do
+        div(**mattr(attrs, data: { slot: "full" }, class: "-mx-(--gap)")) do
           yield
         end
       end

@@ -22,10 +22,10 @@ module NitroKit
         **mattr(
           **attrs,
           type: "button",
-          class: [base_class, size_class],
-          data: {controller: "nk--switch", action: "nk--switch#toggle"},
+          class: [ base_class, size_class ],
+          data: { controller: "nk--switch", action: "nk--switch#toggle" },
           role: "switch",
-          aria: {checked: checked.to_s}
+          aria: { checked: checked.to_s }
         )
       ) do
         span(class: "sr-only") { description }
@@ -36,7 +36,7 @@ module NitroKit
     private
 
     def handle
-      span(aria: {hidden: true}, class: handle_class, data: {slot: "handle"})
+      span(aria: { hidden: true }, class: handle_class, data: { slot: "handle" })
     end
 
     def base_class

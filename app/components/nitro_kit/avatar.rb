@@ -10,7 +10,7 @@ module NitroKit
 
       super(
         attrs,
-        class: [container_class, size_classes]
+        class: [ container_class, size_classes ]
       )
     end
 

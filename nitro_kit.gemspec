@@ -4,8 +4,8 @@ Gem::Specification.new do |spec|
   spec.name = "nitro_kit"
 
   spec.version = NitroKit::VERSION
-  spec.authors = ["Mikkel Malmberg"]
-  spec.email = ["mikkel@brnbw.com"]
+  spec.authors = [ "Mikkel Malmberg" ]
+  spec.email = [ "mikkel@brnbw.com" ]
   spec.homepage = "https://github.com/mikker/nitro_kit"
   spec.summary = "WIP, not usable yet"
   spec.description = "WIP, not usable yet"

@@ -26,7 +26,7 @@ module NitroKit
       end
 
       options = args.extract_options!
-      value, checked = args.empty? ? ["1", false] : [*args, false]
+      value, checked = args.empty? ? [ "1", false ] : [ *args, false ]
       attrs = {
         type: "checkbox",
         name: name,

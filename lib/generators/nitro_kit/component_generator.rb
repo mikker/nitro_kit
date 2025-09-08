@@ -50,7 +50,7 @@ module NitroKit
     def components
       return @components if @components
 
-      if component_names == ["all"]
+      if component_names == [ "all" ]
         return @components = SCHEMA.all
       end
 
@@ -58,7 +58,7 @@ module NitroKit
       @components = component_names
         .flat_map do |name|
           component = SCHEMA.find(name)
-          [component] + component.dependencies
+          [ component ] + component.dependencies
         end
     end
 

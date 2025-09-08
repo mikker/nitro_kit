@@ -9,7 +9,7 @@ module NitroKit
       placement: "bottom",
       tab_inserts_suggestions: true,
       first_option_selection_mode: "selected",
-      scroll_into_view_options: {block: "nearest", inline: "nearest"},
+      scroll_into_view_options: { block: "nearest", inline: "nearest" },
 
       **attrs
     )
@@ -77,19 +77,19 @@ module NitroKit
           type: "hidden",
           value: attrs[:value],
           name: attrs[:name],
-          data: {nk__combobox_target: "hiddenField"}
+          data: { nk__combobox_target: "hiddenField" }
         )
 
         ul(
           role: "listbox",
           id: id(:listbox),
           class: list_class,
-          data: {nk__combobox_target: "list", state: "closed"}
+          data: { nk__combobox_target: "list", state: "closed" }
         ) do
           options.each do |(key, value)|
             li(
               role: "option",
-              data: {value:},
+              data: { value: },
               class: merge_class(option_class)
             ) { key }
           end

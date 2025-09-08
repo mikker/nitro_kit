@@ -10,7 +10,7 @@ module NitroKit
       super(
         attrs,
         role: "alert",
-        class: [base_class, variant_class]
+        class: [ base_class, variant_class ]
       )
     end
 

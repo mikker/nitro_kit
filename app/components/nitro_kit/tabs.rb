@@ -8,7 +8,7 @@ module NitroKit
 
       super(
         attrs,
-        data: {controller: "nk--tabs", nk__tabs_active_value: default},
+        data: { controller: "nk--tabs", nk__tabs_active_value: default },
         class: base_class
       )
     end

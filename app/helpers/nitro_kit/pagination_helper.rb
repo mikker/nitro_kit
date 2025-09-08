@@ -9,7 +9,7 @@ module NitroKit
     end
 
     def nk_pagy_nav(pagy, id: nil, aria_label: nil, **attrs)
-      attrs[:aria] ||= {label: aria_label}
+      attrs[:aria] ||= { label: aria_label }
 
       nk_pagination(id:, **attrs) do |p|
         if prev_page = pagy.prev

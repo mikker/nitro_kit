@@ -3,7 +3,7 @@
 module NitroKit
   class FieldGroup < Component
     def initialize(**attrs)
-      super(attrs, class: base_class, data: {slot: "control"})
+      super(attrs, class: base_class, data: { slot: "control" })
     end
 
     def view_template(&block)

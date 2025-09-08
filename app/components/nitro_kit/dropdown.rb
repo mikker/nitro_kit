@@ -30,8 +30,8 @@ module NitroKit
       builder do
         trigger_attrs = mattr(
           attrs,
-          aria: {haspopup: "true", expanded: "false"},
-          data: {nk__dropdown_target: "trigger", action: "click->nk--dropdown#toggle"}
+          aria: { haspopup: "true", expanded: "false" },
+          data: { nk__dropdown_target: "trigger", action: "click->nk--dropdown#toggle" }
         )
 
         case as
@@ -53,9 +53,9 @@ module NitroKit
           **mattr(
             attrs,
             role: "menu",
-            aria: {hidden: "true"},
+            aria: { hidden: "true" },
             class: content_class,
-            data: {nk__dropdown_target: "content"},
+            data: { nk__dropdown_target: "content" },
             popover: true
           )
         ) do
@@ -78,7 +78,7 @@ module NitroKit
           attrs,
           role: "menuitem",
           tabindex: "-1",
-          class: [item_class, item_variant_class(variant)]
+          class: [ item_class, item_variant_class(variant) ]
         )
 
         if href

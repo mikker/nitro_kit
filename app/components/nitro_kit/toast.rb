@@ -37,9 +37,9 @@ module NitroKit
               variant_class
             ],
             role: "status",
-            aria: {live: "off", atomic: "true"},
+            aria: { live: "off", atomic: "true" },
             tabindex: "0",
-            data: {state: "closed"}
+            data: { state: "closed" }
           )
         )
       end
@@ -49,11 +49,11 @@ module NitroKit
       def view_template(&block)
         li(**attrs) do
           div(class: "grid gap-1") do
-            div(class: "text-sm font-semibold", data: {slot: "title"}) do
+            div(class: "text-sm font-semibold", data: { slot: "title" }) do
               title && plain(title)
             end
 
-            div(class: "text-sm opacity-90", data: {slot: "description"}) do
+            div(class: "text-sm opacity-90", data: { slot: "description" }) do
               text_or_block(description, &block)
             end
           end
@@ -87,19 +87,19 @@ module NitroKit
         attrs,
         role: "region",
         tabindex: "-1",
-        aria: {label: "Notifications"},
+        aria: { label: "Notifications" },
         class: "pointer-events-none"
       )
     end
 
     def view_template
       div(**attrs) do
-        ol(class: list_class, data: {nk__toast_target: "list"})
+        ol(class: list_class, data: { nk__toast_target: "list" })
       end
 
       flash_sink
 
-      template(data: {nk__toast_target: "template"}) do
+      template(data: { nk__toast_target: "template" }) do
         item
       end
     end
@@ -109,7 +109,7 @@ module NitroKit
     end
 
     def flash_sink
-      div(id: "nk--toast-sink", data: {nk__toast_target: "sink"}, hidden: true) do
+      div(id: "nk--toast-sink", data: { nk__toast_target: "sink" }, hidden: true) do
         render(FlashMessages.new(view_context.flash))
       end
     end

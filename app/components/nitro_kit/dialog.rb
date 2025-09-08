@@ -7,7 +7,7 @@ module NitroKit
 
       super(
         attrs,
-        data: {controller: "nk--dialog", action: "click->nk--dialog#clickOutside"}
+        data: { controller: "nk--dialog", action: "click->nk--dialog#clickOutside" }
       )
     end
 
@@ -50,7 +50,7 @@ module NitroKit
           **mattr(
             attrs,
             class: dialog_class,
-            data: {nk__dialog_target: "dialog"},
+            data: { nk__dialog_target: "dialog" },
             aria: {
               labelledby: id(:title),
               describedby: id(:description)
@@ -71,7 +71,7 @@ module NitroKit
               variant: :ghost,
               size: :sm,
               class: "absolute top-2 right-2",
-              data: {action: "nk--dialog#close"}
+              data: { action: "nk--dialog#close" }
             )
           )
         ) do
