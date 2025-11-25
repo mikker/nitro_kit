@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
+require "pagy/toolbox/helpers/support/series"
+
 module NitroKit
   module PaginationHelper
-    include Pagy::UrlHelpers if defined?(Pagy)
 
     def nk_pagination(**attrs, &block)
       render(Pagination.from_template(**attrs), &block)
@@ -12,16 +13,16 @@ module NitroKit
       attrs[:aria] ||= { label: aria_label }
 
       nk_pagination(id:, **attrs) do |p|
-        if prev_page = pagy.prev
-          p.prev(href: pagy_url_for(pagy, prev_page))
+        if prev_page = pagy.previous
+          p.prev(href: pagy.page_url(prev_page))
         else
           p.prev(disabled: true)
         end
 
-        pagy.series.each do |item|
+        pagy.send(:series).each do |item|
           case item
           when Integer
-            p.page(item.to_s, href: pagy_url_for(pagy, item))
+            p.page(item.to_s, href: pagy.page_url(item))
           when String
             p.page(item, current: true)
           when :gap
@@ -32,7 +33,7 @@ module NitroKit
         end
 
         if next_page = pagy.next
-          p.next(href: pagy_url_for(pagy, next_page))
+          p.next(href: pagy.page_url(next_page))
         else
           p.next(disabled: true)
         end
