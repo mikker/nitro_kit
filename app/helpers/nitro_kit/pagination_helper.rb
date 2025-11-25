@@ -4,7 +4,6 @@ require "pagy/toolbox/helpers/support/series"
 
 module NitroKit
   module PaginationHelper
-
     def nk_pagination(**attrs, &block)
       render(Pagination.from_template(**attrs), &block)
     end

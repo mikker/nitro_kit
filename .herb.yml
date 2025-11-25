@@ -1,4 +1,7 @@
 formatter:
   enabled: true # Must be enabled for formatting to work
+  rewriter:
+    pre:
+      - tailwind-class-sorter
   exclude:
     - "test/dummy/**/*"
