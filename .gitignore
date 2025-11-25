@@ -14,3 +14,4 @@
 Gemfile.lock
 .claude/settings.local.json
 .nvim.lua
+package-lock.json

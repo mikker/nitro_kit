@@ -38,7 +38,7 @@
 
 @layer base {
   * {
-    @apply border-border min-w-0 ring-ring;
+    @apply border-border ring-ring min-w-0;
   }
 
   body {

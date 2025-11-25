@@ -1,17 +1,10 @@
 #!/bin/bash
 
 # ruby
-rubyfmt -i .
+rubocop -a
 
 # js,css,yaml
 prettier . --write
 
-# erb – parallelize to number of cores
-format_erb() {
-  bundle exec erb-format "$1" --write && echo "$1" ✅
-}
-
-export -f format_erb
-
-# skip erb
-# find app/views/ -name "*.html.erb" -print0 | xargs -0 -P "$(nproc 2>/dev/null || sysctl -n hw.ncpu 2>/dev/null || getconf _NPROCESSORS_ONLN)" -I {} bash -c 'format_erb "{}"'
+# erb
+npm run herb:format

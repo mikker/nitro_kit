@@ -1,0 +1,4 @@
+formatter:
+  enabled: true # Must be enabled for formatting to work
+  exclude:
+    - "test/dummy/**/*"
