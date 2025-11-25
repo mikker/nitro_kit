@@ -13,7 +13,7 @@ module NitroKit
     end
 
     def builder(&block)
-      @_nk_from_template ? capture(&block) : yield
+      @_nk_from_template && !self.is_a?(NitroKit::Component) ? capture(&block) : yield
     end
 
     private
