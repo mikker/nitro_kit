@@ -5,6 +5,7 @@ gemspec
 gem "puma"
 gem "sqlite3"
 gem "propshaft"
+gem "minitest", "< 6"
 
 gem "tailwindcss-rails"
 gem "stimulus-rails"

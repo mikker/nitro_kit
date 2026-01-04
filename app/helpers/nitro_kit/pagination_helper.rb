@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
-require "pagy/toolbox/helpers/support/series"
+begin
+  require "pagy/toolbox/helpers/support/series"
+rescue LoadError
+  # Pagy isn't around
+end
 
 module NitroKit
   module PaginationHelper
