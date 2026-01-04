@@ -117,7 +117,11 @@ module NitroKit
 
     def destructive_item_to(text_or_block, href = nil, **attrs, &block)
       builder do
-        href = args.shift if block_given?
+        if block_given?
+          href = text_or_block
+          text_or_block = nil
+        end
+
         destructive_item(text_or_block, href: href, **attrs, &block)
       end
     end
