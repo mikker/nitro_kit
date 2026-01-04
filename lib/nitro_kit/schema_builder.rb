@@ -23,12 +23,18 @@ module NitroKit
       def resolve!
         raise "Component already resolved" if resolved?
 
-        @dependencies = @unresolved_dependencies
-          .each_with_object(Set.new) do |name, list|
-            list.add(name)
-            list.merge(@schema.find(name).unresolved_dependencies)
-          end
-          .map { |name| @schema.find(name) }
+        dependencies = Set.new
+        stack = @unresolved_dependencies.dup
+
+        until stack.empty?
+          name = stack.pop
+          next if dependencies.include?(name)
+
+          dependencies.add(name)
+          stack.concat(@schema.find(name).unresolved_dependencies)
+        end
+
+        @dependencies = dependencies.map { |name| @schema.find(name) }
 
         @resolved = true
       end
