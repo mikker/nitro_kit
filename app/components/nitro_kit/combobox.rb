@@ -56,8 +56,8 @@ module NitroKit
 
     def view_template
       div(
+        class: "isolate",
         data: {
-          class: "isolate",
           slot: "control",
           controller: "nk--combobox",
           nk__combobox_placement_value: placement,
