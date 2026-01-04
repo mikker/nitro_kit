@@ -15,7 +15,7 @@ module NitroKit
       )
     end
 
-    attr_reader :value, :options, :include_empty, :prompts, :index
+    attr_reader :value, :options, :include_empty, :prompt, :index
 
     def view_template
       span(class: wrapper_class, data: { slot: "control" }) do
