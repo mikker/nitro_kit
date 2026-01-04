@@ -1,0 +1,14 @@
+<%= nk_tabs default: :general, id: "settings-tabs" do |t| %>
+  <%= t.tabs do %>
+    <%= t.tab :general, "General" %>
+    <%= t.tab :billing, "Billing" %>
+  <% end %>
+
+  <%= t.panel :general do %>
+    <div>General content</div>
+  <% end %>
+
+  <%= t.panel :billing do %>
+    <div>Billing content</div>
+  <% end %>
+<% end %>

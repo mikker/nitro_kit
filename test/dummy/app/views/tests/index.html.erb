@@ -1,5 +1,23 @@
-<ul>
+<h2 class="text-lg font-medium mb-2">Examples</h2>
+<ul class="mb-6">
   <% @tests.each do |example| %>
     <li><%= link_to example, test_path(example), class: "text-primary underline" %></li>
+  <% end %>
+</ul>
+
+<h2 class="text-lg font-medium mb-2">Test Pages</h2>
+<ul>
+  <% %w[
+    alert_card_badge
+    button
+    checkbox_radio
+    dropdown_helper
+    form_field
+    pagination
+    table
+    tabs
+    tooltip
+  ].each do |page| %>
+    <li><%= link_to page, test_path(page), class: "text-primary underline" %></li>
   <% end %>
 </ul>

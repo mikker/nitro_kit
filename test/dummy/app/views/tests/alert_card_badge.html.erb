@@ -1,0 +1,19 @@
+<%= nk_alert id: "alert-default" do |a| %>
+  <%= a.title "Heads up" %>
+  <%= a.description "Something happened" %>
+<% end %>
+
+<%= nk_success_alert id: "alert-success" do |a| %>
+  <%= a.title "Saved" %>
+<% end %>
+
+<%= nk_card id: "card" do |c| %>
+  <%= c.title "Card title" %>
+  <%= c.body "Card body" %>
+  <%= c.divider %>
+  <%= c.footer do %>
+    <%= nk_badge "New", id: "badge-new" %>
+  <% end %>
+<% end %>
+
+<%= nk_outline_badge "Outline", id: "badge-outline" %>

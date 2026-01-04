@@ -1,0 +1,15 @@
+<%= nk_table id: "stats-table" do |t| %>
+  <%= t.thead do %>
+    <%= t.tr do %>
+      <%= t.th "Name" %>
+      <%= t.th "Score", align: :right %>
+    <% end %>
+  <% end %>
+
+  <%= t.tbody do %>
+    <%= t.tr do %>
+      <%= t.td "Alice" %>
+      <%= t.td "10", align: :right %>
+    <% end %>
+  <% end %>
+<% end %>

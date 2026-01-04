@@ -1,0 +1,16 @@
+<%= nk_field name: :email,
+  as: :email,
+  id: "email",
+  label: "Email",
+  description: "We will never spam",
+  errors: ["Invalid email"],
+  wrapper: { id: "email-field" } do |f| %>
+  <%= f.label %>
+  <%= f.control %>
+  <%= f.description %>
+  <%= f.errors %>
+<% end %>
+
+<%= nk_datepicker id: "birthday", name: "birthday" %>
+
+<%= nk_combobox :game_id, [["Zelda", "1"], ["Mario", "2"]], id: "game-combobox", value: "2" %>

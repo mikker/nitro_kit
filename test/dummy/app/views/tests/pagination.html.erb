@@ -1,0 +1,7 @@
+<%= nk_pagination id: "pager" do |p| %>
+  <%= p.prev "Previous", href: "/prev" %>
+  <%= p.page "1", current: true %>
+  <%= p.page "2", href: "/page/2" %>
+  <%= p.ellipsis %>
+  <%= p.next "Next", href: "/next" %>
+<% end %>

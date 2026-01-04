@@ -1,0 +1,9 @@
+<%= nk_dropdown id: "menu" do |d| %>
+  <%= d.trigger "Open", id: "menu-trigger" %>
+
+  <%= d.content id: "menu-content" do %>
+    <%= d.title "Actions" %>
+    <%= d.item "Edit", href: "/edit" %>
+    <%= d.destructive_item "Delete", href: "/delete" %>
+  <% end %>
+<% end %>
