@@ -1,3 +1,5 @@
+require "set"
+
 module NitroKit
   module SchemaBuilder
     class Component
