@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.9.0
+
+### Added
+
+- Include assets in the gem package
+- Add integration test coverage for core components
+
+### Changed
+
+- Update pagination helper for the latest Pagy API
+- Resolve schema builder dependencies transitively
+
+### Fixed
+
+- Apply combobox root class correctly
+- Fix rendering NitroKit components inside NitroKit components
+- Fix Select prompt handling
+- Fix dropdown destructive item helper argument handling
+- Handle missing Pagy dependency gracefully
+
 ## 0.8.0
 
 ### Changed
