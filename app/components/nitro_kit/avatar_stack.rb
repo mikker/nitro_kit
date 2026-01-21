@@ -17,7 +17,9 @@ module NitroKit
     end
 
     def avatar(*args, **attrs, &block)
-      render(Avatar.new(*args, size:, **attrs, &block))
+      builder do
+        render(Avatar.new(*args, size:, **attrs, &block))
+      end
     end
   end
 end

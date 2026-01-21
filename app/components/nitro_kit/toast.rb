@@ -105,7 +105,9 @@ module NitroKit
     end
 
     def item(title: nil, description: nil, **attrs, &block)
-      render(Item.new(title:, description:, **attrs), &block)
+      builder do
+        render(Item.new(title:, description:, **attrs), &block)
+      end
     end
 
     def flash_sink

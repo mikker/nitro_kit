@@ -29,13 +29,20 @@ export default class extends Controller {
 
     this.updatePosition();
 
-    this.listTarget.addEventListener("combobox-commit", (event) => {
+    this.onCommit = (event) => {
       this.select(event);
       this.close();
-    });
+    };
+    this.listTarget.addEventListener("combobox-commit", this.onCommit);
   }
 
   disconnect() {
+    if (this.onCommit) {
+      this.listTarget.removeEventListener("combobox-commit", this.onCommit);
+    }
+    if (this.clearAutoUpdate) {
+      this.clearAutoUpdate();
+    }
     this.combobox.destroy();
   }
 
