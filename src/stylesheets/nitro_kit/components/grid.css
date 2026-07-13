@@ -1,0 +1,21 @@
+@layer nitro-kit.base {
+  :where([data-nk="grid"]) {
+    display: grid;
+    min-width: 0;
+    gap: calc(var(--nk-space) * 4);
+  }
+}
+
+@layer nitro-kit.variant {
+  :where([data-nk="grid"][data-cols="3"]) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@layer nitro-kit.state {
+  @media (max-width: 48rem) {
+    :where([data-nk="grid"][data-cols="3"]) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}

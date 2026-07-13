@@ -2,117 +2,167 @@
 
 module NitroKit
   class Dialog < Component
-    def initialize(identifier: nil, **attrs)
-      @identifier = identifier || SecureRandom.hex(6)
+    def initialize(
+      id:,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil
+    )
+      unless id.is_a?(String) && id.present? && !id.match?(/\s/)
+        raise ArgumentError, "Dialog id: must be a non-blank String without whitespace"
+      end
+
+      @id = id
 
       super(
-        attrs,
-        data: { controller: "nk--dialog", action: "click->nk--dialog#clickOutside" }
+        component: :dialog,
+        attributes: { id:, data: { controller: "nk--dialog" } },
+        html:,
+        aria:,
+        data:,
+        desperately_need_a_class:
       )
     end
 
-    attr_reader :identifier
+    attr_reader :id
 
     def view_template
-      div(**attrs) do
-        yield
-      end
+      div(**root_attributes) { yield }
     end
 
-    def trigger(text = nil, as: Button, **attrs, &block)
-      builder do
-        trigger_attrs = mattr(
-          attrs,
-          data: {
-            nk__dialog_target: "trigger",
-            action: "click->nk--dialog#open"
-          }
-        )
-
-        case as
-        when Symbol
-          send(as, **trigger_attrs) do
-            text_or_block(text, &block)
-          end
-        else
-          render(as.new(**trigger_attrs)) do
-            text_or_block(text, &block)
-          end
-        end
-      end
+    def trigger(
+      text = nil,
+      variant: :default,
+      size: :md,
+      disabled: false,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil,
+      &block
+    )
+      render_in_slot(
+        Button.new(
+          text,
+          variant:,
+          size:,
+          disabled:,
+          html:,
+          aria:,
+          data: with_action(data, "click->nk--dialog#open"),
+          desperately_need_a_class:
+        ),
+        :trigger,
+        &block
+      )
     end
 
     alias :html_dialog :dialog
 
-    def dialog(**attrs)
-      builder do
-        html_dialog(
-          **mattr(
-            attrs,
-            class: dialog_class,
-            data: { nk__dialog_target: "dialog" },
-            aria: {
-              labelledby: id(:title),
-              describedby: id(:description)
+    def dialog(
+      title:,
+      description: nil,
+      open: false,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil,
+      &block
+    )
+      unless title.is_a?(String) && title.present?
+        raise ArgumentError, "Dialog title: must be a non-blank String"
+      end
+      unless description.nil? || (description.is_a?(String) && description.present?)
+        raise ArgumentError, "Dialog description: must be nil or a non-blank String"
+      end
+      open = validate_boolean!(:open, open)
+
+      owned_aria = {
+        labelledby: element_id(:title),
+        describedby: description.nil? ? nil : element_id(:description)
+      }.compact
+
+      html_dialog(
+        **slot_attributes(
+          :panel,
+          attributes: {
+            open:,
+            data: {
+              nk__dialog_target: "dialog",
+              action: "click->nk--dialog#clickOutside close->nk--dialog#syncClosed",
+              state: open ? "open" : "closed"
             }
-          )
-        ) do
-          yield
-        end
+          },
+          html:,
+          aria: aria.merge(owned_aria),
+          data:,
+          desperately_need_a_class:
+        )
+      ) do
+        title(title)
+        description(description) unless description.nil?
+        yield if block
       end
     end
 
-    def close_button(**attrs)
-      builder do
-        render(
-          Button.new(
-            **mattr(
-              attrs,
-              variant: :ghost,
-              size: :sm,
-              class: "absolute top-2 right-2",
-              data: { action: "nk--dialog#close" }
-            )
-          )
-        ) do
-          render(Icon.new(:x))
-        end
-      end
+    def close_button(
+      label: "Close dialog",
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil
+    )
+      render_in_slot(
+        Button.new(
+          icon: :x,
+          variant: :ghost,
+          size: :sm,
+          html:,
+          aria: aria.merge(label:),
+          data: with_action(data, "click->nk--dialog#close"),
+          desperately_need_a_class:
+        ),
+        :close
+      )
     end
 
-    def title(text = nil, **attrs, &block)
-      builder do
-        h2(**mattr(attrs, id: id(:title), class: "text-lg font-semibold mb-2")) do
-          text_or_block(text, &block)
-        end
-      end
+    def title(text = nil, html: {}, aria: {}, data: {}, desperately_need_a_class: nil, &block)
+      h2(
+        **slot_attributes(
+          :title,
+          attributes: { id: element_id(:title) },
+          html:,
+          aria:,
+          data:,
+          desperately_need_a_class:
+        )
+      ) { text_or_block(text, &block) }
     end
 
-    def description(text = nil, **attrs, &block)
-      builder do
-        div(
-          **mattr(
-            attrs,
-            id: id(:description),
-            class: "text-muted-content mb-6 text-sm leading-relaxed"
-          )
-        ) do
-          text_or_block(text, &block)
-        end
-      end
+    def description(text = nil, html: {}, aria: {}, data: {}, desperately_need_a_class: nil, &block)
+      div(
+        **slot_attributes(
+          :description,
+          attributes: { id: element_id(:description) },
+          html:,
+          aria:,
+          data:,
+          desperately_need_a_class:
+        )
+      ) { text_or_block(text, &block) }
     end
 
     private
 
-    def id(suffix = nil)
-      "nk-#{identifier}#{suffix ? "-#{suffix}" : ""}"
+    def element_id(suffix)
+      "#{id}-#{suffix}"
     end
 
-    def dialog_class
-      [
-        "border rounded-xl max-w-lg w-full bg-background text-foreground shadow-lg m-auto p-6",
-        "dark:backdrop:bg-black/50"
-      ]
+    def with_action(data, owned_action)
+      action_key = data.keys.find { |key| key.to_s.tr("_", "-") == "action" }
+      app_action = action_key && data[action_key]
+      data.except(action_key).merge(action: [ owned_action, app_action ].compact.join(" "))
     end
   end
 end

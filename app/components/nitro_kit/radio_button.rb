@@ -2,34 +2,65 @@
 
 module NitroKit
   class RadioButton < Component
-    def initialize(label: nil, id: nil, wrapper: {}, size: :md, **attrs)
-      @label = label
-      @id = id || "nk--" + SecureRandom.hex(4)
-      @size = size
-      @wrapper = wrapper
+    SIZES = %i[md lg].freeze
+
+    def initialize(
+      label: nil,
+      id: nil,
+      name: nil,
+      value: "1",
+      checked: false,
+      disabled: false,
+      required: false,
+      size: :md,
+      html: {},
+      aria: {},
+      data: {},
+      control_html: {},
+      control_aria: {},
+      control_data: {},
+      desperately_need_a_class: nil
+    )
+      @label = validate_optional_text!(:label, label)
+      @id = id
+      @name = name
+      @value = value
+      @checked = validate_boolean!(:checked, checked)
+      @disabled = validate_boolean!(:disabled, disabled)
+      @required = validate_boolean!(:required, required)
+      @size = validate_choice!(:size, size.to_s.to_sym, SIZES)
+      @control_html = control_html
+      @control_aria = control_aria
+      @control_data = control_data
 
       super(
-        attrs,
-        id: @id,
-        type: "radio",
-        class: input_class
+        component: :radio_button,
+        size: @size,
+        attributes: {
+          data: {
+            state: @checked ? "checked" : "unchecked",
+            disabled: @disabled ? "true" : nil
+          }.compact
+        },
+        html:,
+        aria:,
+        data:,
+        desperately_need_a_class:
       )
     end
 
-    alias :html_label :label
+    attr_reader :label, :id, :name, :value, :size
 
-    attr_reader :id, :label, :size, :wrapper
-
-    def view_template
-      div(**mattr(wrapper, class: wrapper_class)) do
-        html_label(class: merge_class("inline-grid *:[grid-area:1/1] shrink-0 place-items-center", size_class)) do
-          input(**attrs)
-          dot
-        end
-
-        if label.present? || block_given?
-          render(Label.new(for: id)) do
-            label || (block_given? ? yield : nil)
+    def view_template(&block)
+      div(**root_attributes) do
+        if label.nil? && !block
+          render_control
+          span(**slot_attributes(:indicator), aria: { hidden: true })
+        else
+          render_in_slot(Label.new(for: id), :label) do
+            render_control
+            span(**slot_attributes(:indicator), aria: { hidden: true })
+            span(**slot_attributes(:label_text)) { text_or_block(label, &block) }
           end
         end
       end
@@ -37,41 +68,29 @@ module NitroKit
 
     private
 
-    def dot
-      svg(
-        class: merge_class(
-          "text-primary opacity-0 pointer-events-none",
-          "peer-checked:opacity-100"
+    def render_control
+      render_in_slot(
+        Input.new(
+          type: :radio,
+          id:,
+          name:,
+          value:,
+          checked: @checked,
+          disabled: @disabled,
+          required: @required,
+          html: @control_html,
+          aria: @control_aria,
+          data: @control_data
         ),
-        viewbox: "0 0 20 20",
-        fill: "currentColor",
-        stroke: "none"
-      ) do |svg|
-        svg.circle(cx: 10, cy: 10, r: 10)
-      end
+        :control
+      )
     end
 
-    def wrapper_class
-      "inline-flex items-center gap-2"
-    end
+    def validate_optional_text!(name, text)
+      return if text.nil?
+      return text if text.is_a?(String) && !text.strip.empty?
 
-    def input_class
-      [
-        "peer appearance-none shadow-sm rounded-full border text-foreground bg-background",
-        "[&[aria-checked='true']]:bg-primary",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-      ]
-    end
-
-    def size_class
-      case size
-      when :md
-        "[&>input]:size-5 [&>svg]:size-2.5"
-      when :lg
-        "[&>input]:size-7 [&>svg]:size-3.5"
-      else
-        raise ArgumentError, "Unknown size `#{size}'"
-      end
+      raise ArgumentError, "#{name} must be a non-blank String or nil"
     end
   end
 end

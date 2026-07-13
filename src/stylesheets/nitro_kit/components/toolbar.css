@@ -1,0 +1,43 @@
+@layer nitro-kit.base {
+  :where([data-nk="toolbar"]) {
+    display: flex;
+    min-width: 0;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: calc(var(--nk-space) * 4);
+  }
+
+  :where(
+    [data-nk="toolbar"] > [data-slot="toolbar-leading"],
+    [data-nk="toolbar"] > [data-slot="toolbar-trailing"]
+  ) {
+    display: flex;
+    min-width: 0;
+    /* Regions never exceed the toolbar, so nested content such as a
+       scrolling ButtonGroup receives real width pressure when stacked. */
+    max-inline-size: 100%;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: calc(var(--nk-space) * 2);
+  }
+
+  :where([data-nk="toolbar"] > [data-slot="toolbar-trailing"]) {
+    justify-content: flex-end;
+    margin-inline-start: auto;
+  }
+}
+
+@layer nitro-kit.state {
+  @media (max-width: 48rem) {
+    :where([data-nk="toolbar"]) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    :where([data-nk="toolbar"] > [data-slot="toolbar-trailing"]) {
+      justify-content: flex-start;
+      margin-inline-start: 0;
+    }
+  }
+}

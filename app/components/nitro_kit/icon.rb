@@ -1,45 +1,61 @@
 # frozen_string_literal: true
 
+require "lucide-rails"
+
 module NitroKit
   class Icon < Component
-    register_output_helper :lucide_icon
+    SIZES = %i[xs sm md lg].freeze
 
-    def initialize(name, size: :md, **attrs)
-      @name = name
-      @size = size
+    def initialize(
+      name,
+      size: :md,
+      label: nil,
+      stroke_width: 1.5,
+      id: nil,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil
+    )
+      @name = name.to_s.tr("_", "-")
+      @size = validate_choice!(:size, size, SIZES)
+      @label = label
+      if !label.nil? && (!label.is_a?(String) || label.strip.empty?)
+        raise ArgumentError, "Icon label: must be a non-blank String"
+      end
+      @icon = LucideRails::IconProvider.icon(@name)
+
+      raise ArgumentError, "Unknown icon #{@name.inspect}" unless @icon
+
+      icon_aria = label ? { label:, hidden: false } : { hidden: true }
 
       super(
-        attrs,
-        class: size_class,
-        stroke_width: 1.5
+        component: :icon,
+        attributes: {
+          id:,
+          width: 24,
+          height: 24,
+          viewBox: "0 0 24 24",
+          fill: "none",
+          stroke: "currentColor",
+          stroke_width:,
+          stroke_linecap: "round",
+          stroke_linejoin: "round",
+          focusable: false,
+          role: label && "img"
+        }.compact,
+        html:,
+        aria: aria.merge(icon_aria),
+        data:,
+        size:,
+        desperately_need_a_class:
       )
     end
 
-    attr_reader :name, :size
+    attr_reader :name, :size, :label
 
     def view_template
-      lucide_icon(name, **dasherized_attrs)
-    end
-
-    private
-
-    def size_class
-      case size
-      when :xs
-        "size-3"
-      when :sm
-        "size-4"
-      when :md
-        "size-5"
-      when :lg
-        "size-7"
-      else
-        raise ArgumentError, "Unknown size `#{size}'"
-      end
-    end
-
-    def dasherized_attrs
-      attrs.transform_keys { |k| k.to_s.dasherize }
+      svg(**root_attributes) { raw safe(@icon) }
     end
   end
 end

@@ -2,7 +2,9 @@
 
 module NitroKit
   class Button < Component
-    VARIANTS = %i[default primary destructive ghost]
+    VARIANTS = %i[default primary destructive ghost].freeze
+    SIZES = %i[xs sm md lg xl].freeze
+    TYPES = %i[button submit reset].freeze
 
     def initialize(
       text = nil,
@@ -11,137 +13,100 @@ module NitroKit
       size: :md,
       icon: nil,
       icon_right: nil,
-      **attrs
+      id: nil,
+      type: :button,
+      name: nil,
+      value: nil,
+      form: nil,
+      target: nil,
+      rel: nil,
+      download: nil,
+      disabled: false,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil
     )
       @text = text
       @href = href
       @icon = icon
       @icon_right = icon_right
-      @size = size
-      @variant = variant
+      @variant = validate_choice!(:variant, variant, VARIANTS)
+      @size = validate_choice!(:size, size, SIZES)
+      @type = validate_choice!(:type, type.to_s.to_sym, TYPES)
+      @disabled = validate_boolean!(:disabled, disabled)
+      @aria = aria
+
+      native_attributes = if href
+        {
+          id:,
+          href: @disabled ? nil : href,
+          target:,
+          rel:,
+          download:,
+          tabindex: @disabled ? -1 : nil
+        }.compact.tap do |attributes|
+          if @disabled
+            attributes[:href] = nil
+            attributes[:aria] = { disabled: true }
+          end
+        end
+      else
+        { id:, type: @type, name:, value:, form:, disabled: @disabled }.compact
+      end
 
       super(
-        attrs,
-        class: [
-          base_class,
-          variant_class,
-          size_class
-        ]
+        component: :button,
+        attributes: native_attributes,
+        html:,
+        aria:,
+        data:,
+        variant:,
+        size:,
+        desperately_need_a_class:
       )
     end
 
-    attr_reader(
-      :text,
-      :href,
-      :icon,
-      :icon_right,
-      :size,
-      :variant
-    )
+    attr_reader :text, :href, :icon, :icon_right, :size, :variant
 
     def view_template(&block)
-      if href
-        a(href:, **attrs) do
-          contents(&block)
-        end
-      else
-        button(type: :button, **attrs) do
-          contents(&block)
-        end
+      raise ArgumentError, "Button requires text, a block, or an icon" unless !text.nil? || block || icon || icon_right
+      if text.nil? && !block && !accessible_label?
+        raise ArgumentError, "Icon-only Button requires a non-blank aria: { label: }"
       end
+
+      tag = href ? :a : :button
+      public_send(tag, **root_attributes) { contents(&block) }
     end
 
     private
 
     def contents(&block)
-      has_content = text.present? || block_given?
+      icon_slot(icon, :icon_start) if icon
 
-      if !has_content
-        return render(Icon.new(icon))
+      if block || !text.nil?
+        span(**slot_attributes(:label)) do
+          block ? yield : plain(text.to_s)
+        end
       end
 
-      render(Icon.new(icon)) if icon
-
-      if block_given?
-        yield
-      else
-        span { plain(text) }
-      end
-
-      render(Icon.new(icon_right)) if icon_right
+      icon_slot(icon_right, :icon_end) if icon_right
     end
 
-    def base_class
-      [
-        "inline-flex items-center cursor-pointer shrink-0 justify-center rounded-md border gap-2 font-medium select-none",
-        # Disabled
-        "disabled:opacity-70 disabled:pointer-events-none",
-        # Focus
-        "focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-offset-2 focus-visible:ring-ring ring-offset-background",
-        # Icon
-        "[&_svg]:pointer-events-none [&_svg]:shrink-0"
-      ]
-    end
-
-    def variant_class
-      case variant
-      when :default
-        [
-          "bg-background text-foreground border-border",
-          "hover:bg-zinc-50 dark:hover:bg-zinc-900"
-        ]
-      when :primary
-        [
-          "bg-primary text-primary-foreground border-primary",
-          "hover:bg-primary/90 dark:hover:bg-primary/90"
-        ]
-      when :destructive
-        [
-          "bg-destructive text-destructive-foreground border-destructive",
-          "hover:bg-destructive/90 dark:hover:bg-destructive/90",
-          "disabled:text-destructive-foreground/80"
-        ]
-      when :ghost
-        [
-          "bg-transparent text-foreground border-transparent",
-          "hover:bg-zinc-200/50 dark:hover:bg-zinc-900",
-          "disabled:text-muted-content"
-        ]
-      else
-        raise ArgumentError, "Unknown variant `#{variant}'"
+    def icon_slot(name, slot)
+      span(**slot_attributes(slot)) do
+        render(Icon.new(name, size: icon_size))
       end
     end
 
-    def size_class
-      case size
-      when :xs
-        "px-1.5 h-6 text-xs [&_svg]:size-3"
-      when :sm
-        [
-          "px-2.5 h-7 text-sm [&_svg]:size-4",
-          "[&_svg:first-child:last-child]:-mx-1"
-        ]
-      when :md
-        [
-          "px-4 h-10 text-base [&_svg]:size-4",
-          # If icon only, make square
-          "[&_svg:first-child:last-child]:-mx-1"
-        ]
-      when :lg
-        [
-          "px-5 h-11 text-lg [&_svg]:size-5",
-          # If icon only, make square
-          "[&_svg:first-child:last-child]:-mx-2"
-        ]
-      when :xl
-        [
-          "px-8 h-14 text-2xl [&_svg]:size-5 gap-x-4",
-          # If icon only, make square
-          "[&_svg:first-child:last-child]:-mx-8"
-        ]
-      else
-        raise ArgumentError, "Unknown size `#{size}'"
-      end
+    def icon_size
+      { xs: :xs, sm: :sm, md: :sm, lg: :md, xl: :md }.fetch(size)
+    end
+
+    def accessible_label?
+      label_key = @aria.keys.find { |key| key.to_s.tr("_", "-") == "label" }
+      label = @aria[label_key]
+      label.is_a?(String) && !label.strip.empty?
     end
   end
 end

@@ -2,51 +2,101 @@
 
 module NitroKit
   class Avatar < Component
-    include Phlex::Rails::Helpers::ImageTag
+    SIZES = %i[sm md lg].freeze
 
-    def initialize(src_arg = nil, src: nil, size: :md, **attrs)
-      @src = src_arg || src
-      @size = size
+    def initialize(
+      positional_src = nil,
+      src: nil,
+      alt: "",
+      fallback: nil,
+      size: :md,
+      loading: "lazy",
+      decoding: "async",
+      id: nil,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil
+    )
+      raise ArgumentError, "Pass src either positionally or by keyword, not both" if positional_src && src
+      raise ArgumentError, "alt must be a String" unless alt.is_a?(String)
+      unless fallback.nil? || fallback.is_a?(String)
+        raise ArgumentError, "fallback must be a String or nil"
+      end
+
+      @src = positional_src || src
+      @alt = alt
+      @fallback = fallback || initials_for(alt)
+      @size = validate_choice!(:size, size, SIZES)
+      root_aria = fallback_aria(aria)
 
       super(
-        attrs,
-        class: [ container_class, size_classes ]
+        component: :avatar,
+        attributes: {
+          id:,
+          role: !src? && !alt.empty? ? "img" : nil
+        },
+        html:,
+        aria: root_aria,
+        data:,
+        size:,
+        desperately_need_a_class:
       )
+
+      @image_attributes = {
+        alt:,
+        loading:,
+        decoding:
+      }
     end
 
-    attr_reader :src, :size
+    attr_reader :src, :alt, :fallback, :size
 
-    def view_template(&block)
-      div(**attrs) do
-        image
+    def view_template
+      span(**root_attributes) do
+        span(
+          **slot_attributes(
+            :fallback,
+            aria: { hidden: (src? || !alt.empty?) ? true : nil }
+          )
+        ) { fallback }
+
+        if src?
+          img(
+            **slot_attributes(
+              :image,
+              attributes: @image_attributes.merge(src:)
+            )
+          )
+        end
       end
-    end
-
-    def image
-      image_tag(src, class: image_class)
     end
 
     private
 
-    def size_classes
-      case size
-      when :sm
-        "size-8"
-      when :md
-        "size-12"
-      when :lg
-        "size-16"
+    def src?
+      !src.nil? && (!src.respond_to?(:empty?) || !src.empty?)
+    end
+
+    def fallback_aria(aria)
+      return aria if src? || alt.empty?
+      raise ArgumentError, "aria must be a Hash" unless aria.is_a?(Hash)
+
+      label_key = aria.keys.find { |key| key.to_s.downcase.tr("_", "-") == "label" }
+      label_key ? aria : { label: alt }.merge(aria)
+    end
+
+    def initials_for(name)
+      words = name.strip.split
+      return "?" if words.empty?
+
+      initials = if words.one?
+        words.first[0, 2]
       else
-        raise ArgumentError, "Invalid size: #{size}"
+        [ words.first[0], words.last[0] ].join
       end
-    end
 
-    def container_class
-      "inline-flex overflow-hidden rounded-full"
-    end
-
-    def image_class
-      "block size-full bg-muted"
+      initials.upcase
     end
   end
 end

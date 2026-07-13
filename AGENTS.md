@@ -1,100 +1,106 @@
-# CLAUDE.md
+# Nitro Kit 2.0 agent guidance
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Nitro Kit is a gem-owned, Phlex-only UI system for Rails. Read `docs/agent_native_spec.md`, `docs/component_contracts.md`, and `STYLE_GUIDE.md` before editing components. `docs/implementation_plan.md` is the delivery record; `tk` is the source of truth for live status.
 
-## Overview
+The `2.0-agent-native` branch intentionally breaks the 1.x API. Do not preserve obsolete helpers, generated-copy installation, Tailwind class strings, or permissive component attributes for compatibility.
 
-Nitro Kit is a Ruby gem providing generic UI components for Ruby on Rails applications. It uses Phlex for component rendering, Tailwind CSS for styling, and Stimulus.js for JavaScript behaviors.
+## Commands
 
-## Common Development Commands
+Use the repository's `mise` environment:
 
-### Development Server
-
-- `bin/dev` - Start development server on port 3031
-- Visit http://localhost:3031/tests to see all component examples
-
-### Testing
-
-- `bin/rails test` - Run the test suite
-- `rake app:test:db` - Run tests with database reset
-- `rake app:test` - Run all tests
-
-### Building & Releasing
-
-- `rake build` - Build the gem
-- `rake install:local` - Install gem locally
-- `rake release` - Release to RubyGems
-
-### Tailwind CSS
-
-- `rake app:tailwindcss:build` - Build CSS
-- `rake app:tailwindcss:watch` - Watch for CSS changes
-
-### View All Tasks
-
-- `rake -T` - List all available rake tasks
-
-## Architecture
-
-### Component Pattern
-
-All components inherit from `NitroKit::Component` (which extends `Phlex::HTML`) and follow this structure:
-
-```ruby
-class ComponentName < Component
-  def initialize(params, **attrs)
-    # Store parameters, merge attributes
-    super(**attrs_with_defaults(attrs))
-  end
-
-  def view_template
-    # Main rendering logic
-  end
-
-  builder_method def part_name
-    # Nested component parts
-  end
-end
+```sh
+mise exec -- bundle install
+mise exec -- bin/rails test
+mise exec -- bin/format
+mise exec -- rake nitro_kit:css:build
+mise exec -- rake nitro_kit:css:check
 ```
 
-### Key Architectural Principles
+The dummy app runs on port 3031 with `mise exec -- bin/dev`.
 
-1. **Phlex-Based Rendering**: Components use Phlex::HTML for Ruby-based templating
-2. **TailwindMerge Integration**: CSS classes are intelligently merged to prevent conflicts
-3. **Stimulus Controllers**: Interactive behavior uses minimal JavaScript with naming convention `nk--{component-name}`
-4. **Builder Methods**: Components use builder pattern for composable nested parts
-5. **Rails Integration**: Each component has a corresponding helper module (e.g., `nk_button` for `Button` component)
+## Ownership
 
-### Form Builder
+Nitro Kit owns and versions component Ruby, rendered `data-nk` contracts, CSS, Stimulus behavior, layout primitives, blocks, and examples. Applications customize documented `--nk-*` properties and compose Nitro components into their own namespaces.
 
-Custom `NitroKit::FormBuilder` extends Rails' form builder to automatically use NitroKit components for form fields. Access via `form.nk` namespace in forms.
+Composition is the stable extension path. Subclassing is possible, but private methods are not an API.
 
-### File Organization
+Core components are loaded from the gem. Do not add or restore generators that copy component source into applications.
 
-- `app/components/nitro_kit/` - Component classes
-- `app/helpers/nitro_kit/` - Rails helper modules
-- `app/javascript/controllers/nk/` - Stimulus controllers
-- `test/dummy/` - Dummy Rails app for testing/development
+## Public API
 
-### Adding New Components
+Direct Phlex composition is the only Nitro component API:
 
-Use the generator: `rails generate nitro_kit:component ComponentName`
+```ruby
+render NitroKit::Button.new("Save", variant: :primary)
+```
 
-### Testing Components
+Do not create `nk_*` ERB helpers, automatic variant helper names, `from_template`, or template-buffer-aware builder wrappers.
 
-1. Add example view in `test/dummy/app/views/tests/examples/`
-2. Component will appear in development server at http://localhost:3031/tests
-3. Write integration tests in `test/integration/`
+Rails helpers remain welcome where Rails supplies real semantics: forms, routes, DOM IDs, translations, assets, and Turbo/Hotwire. Include only the `Phlex::Rails::Helpers::*` adapters a component or page actually uses.
 
-### CSS Architecture
+## Component rules
 
-- Uses Tailwind utility classes with CSS custom properties for theming
-- Dark mode support via Tailwind's dark variant
-- Theme colors defined as CSS variables (--foreground, --background, --border, etc.)
-- Component styles encapsulated in private methods (base_class, variant_class, size_class)
+- Public component options are explicit keywords. Do not add a catch-all `**options` that can swallow misspellings.
+- Validate every enumerated option and raise `ArgumentError` for invalid values.
+- Use a deliberate `html:`, `aria:`, and `data:` boundary for native attributes.
+- `class:` and `style:` are forbidden.
+- The only class escape is `desperately_need_a_class:`. It must also emit `data-nk-escape="class"`.
+- Reserve `data-nk`, `data-slot`, `data-variant`, `data-size`, `data-state`, and `data-nk-escape` for Nitro.
+- Every root emits `data-nk`. Owned parts use component-qualified `data-slot` values such as `field-control` or `card-title`.
+- Keep application content slots flexible where the public compound API declares them. Do not invent an untyped structural bypass.
+- Parents own external placement and available width. Atoms own intrinsic geometry.
+- Preserve native elements and accessibility semantics.
 
-### JavaScript Pattern
+## CSS rules
 
-- Minimal Stimulus controllers for UI interactions only
-- Data attributes follow pattern: `data-nk--{component}-target` and `data-action`
-- External libraries (floating-ui, etc.) integrated via importmaps or package manager
+- Nitro components never emit or depend on classes.
+- Author split plain CSS under `src/stylesheets/nitro_kit/`.
+- Commit the generated browser-ready `app/assets/stylesheets/nitro_kit.css`.
+- Target `data-nk`, qualified `data-slot`, variant, size, ARIA, and state attributes inside `:where()`.
+- Scope slot selectors to their owner, using direct relationships where possible.
+- Use documented `--nk-*` variables for themeable decisions and private `--_nk-*` variables for component mechanics.
+- Do not rely on Tailwind Preflight or consumer Tailwind configuration.
+- Keep the optional Tailwind v4 adapter separate from the main asset.
+- Never use `transition: all`. Respect reduced motion and keep interactive transitions interruptible.
+
+## Rails and Hotwire
+
+- Retain and simplify `NitroKit::FormBuilder`; use it through `form_with` from Phlex.
+- Exercise real ActiveModel validation, Rails naming, IDs, error rendering, multipart forms, and submit behavior.
+- Keep Stimulus controllers small and state visible through ARIA and `data-state`.
+- Remove listeners, observers, timers, and other external resources in `disconnect`.
+- Test behavior through Turbo Drive, Frames, Streams, and morphing.
+
+Importmap applications receive Nitro's controller pins from the engine, but the host application still owns Stimulus and its controller loader. Do not add vendored third-party JavaScript or assume a JavaScript-package entrypoint exists.
+
+## Tests and examples
+
+Every component needs:
+
+- Direct-Phlex render tests.
+- Invalid-option tests.
+- Reserved attribute and escape-hatch coverage.
+- Structural/accessibility assertions.
+- A navigable gallery combination page.
+- Meaningful variants, sizes, states, long content, disabled/error cases, dark mode, and narrow-width coverage.
+
+The gallery is a real Phlex application driven by an explicit catalog. Do not add ERB test templates or filename-based template dispatch. Keep preview composition inside the block passed to `example`/`render_example`; `Gallery::SourceCode` extracts its executable Ruby body for the paired Code tab. Inherited flow wrappers may pass `SourceCode.from_method` for the concrete composition method. Do not duplicate snippets in heredocs.
+
+Preserve these pre-existing behaviors when migrating their files:
+
+- Button labels call `to_s` so non-string labels render correctly.
+- `datetime-local` Field values normalize time-like values, while file fields never emit a value.
+
+## Tickets
+
+The 2.0 pivot is tracked with `tk` from the workspace root:
+
+```sh
+tk ready
+tk show ID
+tk start ID
+tk add-note ID "..."
+tk close ID
+```
+
+Work only on tickets whose dependencies are satisfied unless the orchestrating agent explicitly assigns preparatory work. Add notes for design decisions, risks, and verification results before closing a ticket.

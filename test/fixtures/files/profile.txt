@@ -1,0 +1,1 @@
+Nitro Kit Rails integration fixture.

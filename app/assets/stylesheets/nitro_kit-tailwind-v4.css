@@ -1,0 +1,38 @@
+/*
+ * Nitro Kit Tailwind CSS v4 adapter.
+ * Load this before both Nitro Kit and compiled Tailwind stylesheets.
+ */
+
+@layer properties, theme, base, nitro-kit, components, utilities;
+
+@layer nitro-kit.tokens {
+  :where(:root, [data-theme]) {
+    --font-sans: var(--nk-font-sans);
+    --font-mono: var(--nk-font-mono);
+    --spacing: var(--nk-space);
+
+    --color-background: var(--nk-color-canvas);
+    --color-foreground: var(--nk-color-foreground);
+    --color-muted: var(--nk-color-muted);
+    --color-muted-content: var(--nk-color-muted-foreground);
+    --color-border: var(--nk-color-border);
+    --color-ring: var(--nk-color-focus);
+    --color-primary: var(--nk-color-primary);
+    --color-primary-foreground: var(--nk-color-primary-foreground);
+    --color-destructive: var(--nk-color-danger);
+    --color-destructive-content: var(--nk-color-danger-content);
+    --color-destructive-foreground: var(--nk-color-danger-foreground);
+
+    --radius-sm: var(--nk-radius-sm);
+    --radius-md: var(--nk-radius-md);
+    --radius-lg: var(--nk-radius-lg);
+    --radius-xl: var(--nk-radius-xl);
+
+    --shadow-sm: var(--nk-shadow-sm);
+    --shadow-md: var(--nk-shadow-md);
+    --shadow-lg: var(--nk-shadow-lg);
+
+    --default-transition-duration: var(--nk-duration-normal);
+    --default-transition-timing-function: var(--nk-ease);
+  }
+}

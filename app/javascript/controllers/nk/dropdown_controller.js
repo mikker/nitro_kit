@@ -1,78 +1,104 @@
 import { Controller } from "@hotwired/stimulus";
-import {
-  computePosition,
-  offset,
-  flip,
-  shift,
-  autoUpdate,
-} from "@floating-ui/dom";
 
 export default class extends Controller {
-  static targets = ["trigger", "content"];
-  static values = {
-    placement: { type: String, default: "bottom" },
-  };
-
-  connect() {
-    this.updatePosition();
-  }
+  static targets = ["trigger", "content", "item"];
 
   disconnect() {
     this.close();
   }
 
-  get isExpanded() {
-    return this.triggerTarget.getAttribute("aria-expanded") === "true";
+  sync(event) {
+    this.setState(event.newState === "open");
   }
 
-  updatePosition = () => {
-    computePosition(this.triggerTarget, this.contentTarget, {
-      placement: this.placementValue,
-      middleware: [offset(5), flip(), shift({ padding: 5 })],
-    }).then(({ x, y }) => {
-      this.contentTarget.style.left = `${x}px`;
-      this.contentTarget.style.top = `${y}px`;
-    });
-  };
+  openFromKeyboard(event) {
+    if (!["ArrowDown", "ArrowUp"].includes(event.key)) return;
 
-  open = () => {
-    this.triggerTarget.setAttribute("aria-expanded", "true");
-    this.contentTarget.setAttribute("aria-hidden", "false");
+    event.preventDefault();
+    this.open();
 
-    document.addEventListener("click", this.clickOutside);
+    const items = this.enabledItems;
+    const item = event.key === "ArrowUp" ? items.at(-1) : items[0];
+    item?.focus();
+  }
 
-    this.clearAutoUpdate = autoUpdate(
-      this.triggerTarget,
-      this.contentTarget,
-      this.updatePosition,
-    );
-  };
+  navigate(event) {
+    const items = this.enabledItems;
+    if (items.length === 0) return;
 
-  close = () => {
-    this.triggerTarget.setAttribute("aria-expanded", "false");
-    this.contentTarget.setAttribute("aria-hidden", "true");
+    const currentIndex = items.indexOf(document.activeElement);
+    let nextIndex;
 
-    document.removeEventListener("click", this.clickOutside);
-
-    if (this.clearAutoUpdate) {
-      this.clearAutoUpdate();
+    switch (event.key) {
+      case "ArrowDown":
+        nextIndex = (currentIndex + 1) % items.length;
+        break;
+      case "ArrowUp":
+        nextIndex = (currentIndex - 1 + items.length) % items.length;
+        break;
+      case "Home":
+        nextIndex = 0;
+        break;
+      case "End":
+        nextIndex = items.length - 1;
+        break;
+      case "Escape":
+        event.preventDefault();
+        this.close();
+        this.triggerTarget.focus();
+        return;
+      case "Tab":
+        this.close();
+        return;
+      default:
+        return;
     }
-  };
 
-  toggle = () => {
-    if (this.isExpanded) {
-      this.close();
-    } else {
-      this.open();
+    event.preventDefault();
+    items[nextIndex].focus();
+  }
+
+  select() {
+    this.close();
+  }
+
+  open() {
+    if (this.triggerTarget.disabled) return;
+
+    if (typeof this.contentTarget.showPopover === "function") {
+      if (!this.contentTarget.matches(":popover-open")) {
+        this.contentTarget.showPopover();
+      }
     }
-  };
 
-  clickOutside = (event) => {
+    this.setState(true);
+  }
+
+  close() {
+    if (!this.hasContentTarget) return;
+
     if (
-      !this.contentTarget.contains(event.target) &&
-      !this.triggerTarget.contains(event.target)
+      typeof this.contentTarget.hidePopover === "function" &&
+      this.contentTarget.matches(":popover-open")
     ) {
-      this.close();
+      this.contentTarget.hidePopover();
     }
-  };
+
+    this.setState(false);
+  }
+
+  setState(open) {
+    const state = open ? "open" : "closed";
+    this.element.dataset.state = state;
+    if (this.hasContentTarget) this.contentTarget.dataset.state = state;
+    if (this.hasTriggerTarget) {
+      this.triggerTarget.setAttribute("aria-expanded", String(open));
+    }
+  }
+
+  get enabledItems() {
+    return this.itemTargets.filter(
+      (item) => !item.disabled && item.getAttribute("aria-disabled") !== "true",
+    );
+  }
 }

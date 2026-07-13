@@ -2,56 +2,118 @@
 
 module NitroKit
   class RadioButtonGroup < Component
-    def initialize(options_arg = nil, options: [], name: nil, value: nil, **attrs)
-      @options = options_arg || options
+    alias :html_legend :legend
 
-      @name = name
-      @group_value = value
+    def initialize(
+      legend:,
+      options:,
+      name:,
+      value: nil,
+      id: nil,
+      description: nil,
+      disabled: false,
+      required: false,
+      size: :md,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil
+    )
+      @legend = validate_text!(:legend, legend)
+      @options = Array(options).map { |choice| Choice.coerce(choice) }.freeze
+      @name = validate_text!(:name, name)
+      @value = value
+      @id = id || deterministic_id(name)
+      @description = validate_optional_text!(:description, description)
+      @disabled = validate_boolean!(:disabled, disabled)
+      @required = validate_boolean!(:required, required)
+      @size = validate_choice!(:size, size.to_s.to_sym, RadioButton::SIZES)
+
+      raise ArgumentError, "options cannot be empty" if @options.empty?
+      validate_unique_choices!
 
       super(
-        attrs,
-        name: @name,
-        class: "flex items-start flex-col gap-2"
+        component: :radio_button_group,
+        size: @size,
+        attributes: {
+          id: @id,
+          disabled: @disabled,
+          data: { required: @required ? "true" : nil }.compact
+        }.compact,
+        html:,
+        aria:,
+        data:,
+        desperately_need_a_class:
       )
     end
 
-    attr_reader :name, :group_value, :options
+    attr_reader :legend, :options, :name, :value, :description, :id, :size
 
     def view_template
-      div(**attrs) do
-        if block_given?
-          yield
-        else
-          options.map { |o| item(*o) }
+      fieldset(**root_attributes) do
+        html_legend(**slot_attributes(:legend)) { plain(legend) }
+        if description
+          p(**slot_attributes(:description, attributes: { id: description_id }.compact)) do
+            plain(description.to_s)
+          end
+        end
+
+        div(**slot_attributes(:choices)) do
+          options.each_with_index { |choice, index| render_choice(choice, index) }
         end
       end
     end
 
-    def title(text = nil, **attrs, &block)
-      builder do
-        render(Label.new(**attrs)) do
-          text_or_block(text, &block)
-        end
-      end
+    private
+
+    def render_choice(choice, index)
+      render_in_slot(
+        RadioButton.new(
+          label: choice.label,
+          id: choice.id || choice_id(index),
+          name:,
+          value: choice.value,
+          checked: value.to_s == choice.value.to_s,
+          disabled: @disabled || choice.disabled,
+          required: @required,
+          size:,
+          control_aria: { describedby: description_id }.compact
+        ),
+        :choice
+      )
     end
 
-    def item(text = nil, value_as_arg = nil, value: nil, **attrs, &block)
-      builder do
-        value ||= value_as_arg
+    def deterministic_id(name)
+      name.to_s.gsub(/[^a-zA-Z0-9_-]+/, "_").gsub(/\A_+|_+\z/, "").presence
+    end
 
-        render(
-          RadioButton.new(
-            **mattr(
-              attrs,
-              name: attrs.fetch(:name, name),
-              value:,
-              checked: group_value.presence == value
-            )
-          )
-        ) do
-          text_or_block(text, &block)
-        end
-      end
+    def choice_id(index)
+      "#{id}-#{index}" if id
+    end
+
+    def description_id
+      "#{id}-description" if id && description
+    end
+
+    def validate_text!(name, text)
+      return text if text.is_a?(String) && !text.strip.empty?
+
+      raise ArgumentError, "#{name} must be a non-blank String"
+    end
+
+    def validate_optional_text!(name, text)
+      return if text.nil?
+      return text if text.is_a?(String) && !text.strip.empty?
+
+      raise ArgumentError, "#{name} must be a non-blank String or nil"
+    end
+
+    def validate_unique_choices!
+      duplicate_value = options.group_by { |choice| choice.value.to_s }.find { |_value, matches| matches.many? }
+      raise ArgumentError, "choice values must be unique" if duplicate_value
+
+      ids = options.each_with_index.filter_map { |choice, index| choice.id || choice_id(index) }
+      raise ArgumentError, "choice ids must be unique" unless ids.uniq.length == ids.length
     end
   end
 end

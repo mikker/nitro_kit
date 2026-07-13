@@ -2,101 +2,190 @@
 
 module NitroKit
   class Accordion < Component
-    def initialize(**attrs)
+    MODES = %i[multiple single].freeze
+    Item = ::Data.define(:key, :title, :expanded, :disabled, :content)
+
+    def initialize(
+      id:,
+      mode: :multiple,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil
+    )
+      @identifier = component_id(id)
+      @mode = validate_choice!(:mode, mode, MODES)
+      @items = []
+
       super(
-        attrs,
-        class: item_class,
-        data: { controller: "nk--accordion" }
+        component: :accordion,
+        attributes: {
+          id: @identifier,
+          data: {
+            controller: "nk--accordion",
+            mode: @mode,
+            nk__accordion_mode_value: @mode
+          }
+        },
+        html:,
+        aria:,
+        data:,
+        desperately_need_a_class:
       )
     end
 
-    def view_template
-      div(**attrs) do
-        yield
+    attr_reader :identifier, :mode
+
+    def view_template(&block)
+      collect_items(&block)
+
+      div(**root_attributes) do
+        @items.each { |item| render_item(item) }
       end
     end
 
-    def item(**attrs)
-      builder do
-        div(**attrs) do
-          yield
-        end
-      end
-    end
+    def item(key, title:, expanded: false, disabled: false, &content)
+      ensure_collecting!
 
-    def trigger(text = nil, **attrs)
-      builder do
-        button(
-          **mattr(
-            attrs,
-            type: "button",
-            class: trigger_class,
-            data: {
-              action: "nk--accordion#toggle",
-              nk__accordion_target: "trigger"
-            },
-            aria: { expanded: "false" }
-          )
-        ) do
-          block_given? ? yield : plain(text)
-          chevron_icon
-        end
-      end
-    end
+      key = normalize_identity(key, name: "accordion item key")
+      title = validate_title!(title)
+      expanded = validate_boolean!(:expanded, expanded)
+      disabled = validate_boolean!(:disabled, disabled)
+      raise ArgumentError, "Accordion item #{key.inspect} requires content" unless content
+      raise ArgumentError, "Duplicate accordion item key #{key.inspect}" if @items.any? { |item| item.key == key }
 
-    def content(**attrs)
-      builder do
-        div(
-          **mattr(
-            attrs,
-            class: content_class,
-            data: {
-              nk__accordion_target: "content"
-            },
-            aria: { hidden: "true" }
-          )
-        ) do
-          div(class: "pb-4") { yield }
-        end
+      if mode == :single && expanded && @items.any?(&:expanded)
+        raise ArgumentError, "Single accordion mode accepts only one expanded item"
       end
+
+      @items << Item.new(key:, title:, expanded:, disabled:, content:)
+      nil
     end
 
     private
 
-    def item_class
-      "divide-y"
+    def collect_items
+      raise ArgumentError, "Accordion requires an item declaration block" unless block_given?
+
+      @collecting = true
+      yield(self)
+      raise ArgumentError, "Accordion requires at least one item" if @items.empty?
+    ensure
+      @collecting = false
     end
 
-    def trigger_class
-      [
-        "flex w-full items-center justify-between py-4 font-medium cursor-pointer",
-        "group/accordion-trigger hover:underline transition-colors",
-        "[&[aria-expanded='true']>svg]:rotate-180",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-      ]
-    end
+    def render_item(item)
+      state = item.expanded ? "open" : "closed"
 
-    def content_class
-      [
-        "overflow-hidden transition-all duration-200",
-        "[&[aria-hidden='true']]:h-0 [&[aria-hidden='false']]:h-auto"
-      ]
-    end
+      div(
+        **slot_attributes(
+          :item,
+          attributes: {
+            data: {
+              key: item.key,
+              state:,
+              nk__accordion_target: "item"
+            }
+          }
+        )
+      ) do
+        button(
+          **slot_attributes(
+            :trigger,
+            attributes: {
+              id: trigger_id(item),
+              type: "button",
+              disabled: item.disabled,
+              aria: {
+                controls: content_id(item),
+                expanded: item.expanded
+              },
+              data: {
+                action: "click->nk--accordion#toggle",
+                nk__accordion_target: "trigger"
+              }
+            }
+          )
+        ) do
+          span(**slot_attributes(:label)) { item.title }
+          chevron
+        end
 
-    def arrow_class
-      "transition-transform duration-200 text-muted-content group-hover/accordion-trigger:text-primary"
-    end
-
-    def chevron_icon
-      svg(
-        class: "transition-transform duration-200 size-4 self-center place-self-end mr-2 pointer-events-none text-muted-content group-hover/accordion-trigger:text-primary",
-        viewbox: "0 0 24 24",
-        fill: "none",
-        stroke: "currentColor",
-        stroke_width: 1
-      ) do |svg|
-        svg.path(d: "m6 9 6 6 6-6")
+        div(
+          **slot_attributes(
+            :content,
+            attributes: {
+              id: content_id(item),
+              role: "region",
+              hidden: item.expanded ? nil : true,
+              aria: {
+                hidden: !item.expanded,
+                labelledby: trigger_id(item)
+              },
+              data: {
+                state:,
+                nk__accordion_target: "content"
+              }
+            }
+          )
+        ) do
+          render(item.content)
+        end
       end
+    end
+
+    def chevron
+      svg(
+        **slot_attributes(
+          :icon,
+          attributes: {
+            viewbox: "0 0 16 16",
+            width: 16,
+            height: 16,
+            fill: "none",
+            stroke: "currentColor",
+            stroke_width: 1.5,
+            stroke_linecap: "round",
+            stroke_linejoin: "round",
+            focusable: "false",
+            aria: { hidden: true }
+          }
+        )
+      ) do |svg|
+        svg.path(d: "m4 6 4 4 4-4")
+      end
+    end
+
+    def trigger_id(item)
+      "#{identifier}-#{item.key}-trigger"
+    end
+
+    def content_id(item)
+      "#{identifier}-#{item.key}-content"
+    end
+
+    def ensure_collecting!
+      return if @collecting
+
+      raise ArgumentError, "Accordion items must be declared inside the render block"
+    end
+
+    def validate_title!(title)
+      return title if title.is_a?(String) && title.present?
+
+      raise ArgumentError, "Accordion item title must be a non-blank String"
+    end
+
+    def validate_boolean!(name, value)
+      return value if value == true || value == false
+
+      raise ArgumentError, "Accordion #{name} must be true or false"
+    end
+
+    def component_id(value)
+      return value if value.is_a?(String) && value.present? && !value.match?(/\s/)
+
+      raise ArgumentError, "Accordion id must be a non-blank String without whitespace"
     end
   end
 end

@@ -1,0 +1,53 @@
+@layer nitro-kit.base {
+  :where([data-nk="card"]) {
+    --_nk-card-padding: calc(var(--nk-space) * 6);
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: calc(var(--nk-space) * 4);
+    overflow: hidden;
+    padding: var(--_nk-card-padding);
+    color: var(--nk-color-foreground);
+    background: var(--nk-color-surface);
+    border: var(--nk-border-width) solid var(--nk-color-border);
+    border-radius: var(--nk-radius-lg);
+    box-shadow: var(--nk-shadow-sm);
+  }
+
+  :where([data-nk="card"] > [data-slot="card-title"]) {
+    font-size: var(--nk-text-lg);
+    font-weight: var(--nk-font-weight-semibold);
+    line-height: var(--nk-leading-tight);
+    text-wrap: balance;
+  }
+
+  :where([data-nk="card"] > [data-slot="card-body"]) {
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-sm);
+    line-height: var(--nk-leading-relaxed);
+    text-wrap: pretty;
+  }
+
+  :where([data-nk="card"] > [data-slot="card-footer"]) {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: calc(var(--nk-space) * 2);
+  }
+}
+
+@layer nitro-kit.compound {
+  :where([data-nk="card"] > [data-slot="card-full"]) {
+    margin-inline: calc(var(--_nk-card-padding) * -1);
+  }
+
+  :where([data-nk="card"] > [data-slot="card-full"]:first-child) {
+    margin-block-start: calc(var(--_nk-card-padding) * -1);
+  }
+
+  :where([data-nk="card"] > [data-slot="card-divider"]) {
+    margin-inline: calc(var(--_nk-card-padding) * -1);
+    border-block-start: var(--nk-border-width) solid var(--nk-color-border);
+  }
+}

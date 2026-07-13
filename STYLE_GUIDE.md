@@ -1,285 +1,279 @@
-# Nitro Kit Component Style Guide
+# Nitro Kit 2.0 component style guide
 
-Use this guide when building or customizing UI components in your app. It summarizes Nitro Kit conventions for Phlex components, Tailwind styling, helpers, Stimulus, and form layout defaults.
+Nitro Kit is a gem-owned, Phlex-only UI system for Rails. Its public surface is typed Ruby composition, self-describing markup, and static CSS driven by custom properties.
 
 ## Principles
 
-- Keep components modest, generic, and composable.
-- Prefer Phlex rendering, Tailwind utilities, and Rails-native APIs.
-- Use minimal JavaScript, only when interaction needs it.
-- Make state visible in markup (`data-*`, `aria-*`) so CSS can respond.
-- Validate input early and fail loudly for unknown variants or sizes.
+- Prefer the smallest obvious Ruby API.
+- Compose components directly with Phlex.
+- Make invalid component vocabulary impossible to render silently.
+- Keep state and component identity visible in markup.
+- Preserve native HTML and Rails semantics.
+- Let applications customize themes and compose product-specific UI without editing Nitro internals.
+- Keep behavior minimal, progressive, and Turbo-safe.
 
-## Internal file layout and naming
+## File layout
 
-- Component class: `app/components/nitro_kit/<component>.rb`
-- Helper: `app/helpers/nitro_kit/<component>_helper.rb`
-- Stimulus controller: `app/javascript/controllers/nk/<component>_controller.js`
-- Component schema: `lib/nitro_kit.rb` (update `NitroKit::SCHEMA`)
-- Examples: `test/dummy/app/views/tests/examples/<component>.html.erb`
-- Tests: `test/integration/<component>_test.rb`
-
-For custom components and easier upgrades, avoid adding your own components under `app/components/nitro_kit`. Treat this as vendor-style code and keep your work elsewhere while following the same patterns.
-
-## Custom components (recommended)
-
-Put app-specific components in a separate namespace, e.g. `app/components/ui`.
-
-If you want `UI::` instead of `U_I::`, add an inflection so Rails autoloading maps it correctly.
-
-```ruby
-# config/initializers/inflections.rb
-ActiveSupport::Inflector.inflections(:en) do |inflect|
-  inflect.acronym "UI"
-end
+```text
+app/components/nitro_kit/          # gem-owned atoms, layouts, blocks
+app/javascript/controllers/nk/     # gem-owned Stimulus behavior
+src/stylesheets/nitro_kit/         # plain CSS authoring sources
+app/assets/stylesheets/            # generated browser-ready distribution CSS
+test/components/                   # focused render/contract tests
+test/dummy/app/components/gallery/ # Phlex gallery pages
+test/integration/                  # catalog-driven route coverage
 ```
 
-You can still subclass `NitroKit::Component` and reuse helpers, but keep your components outside `nitro_kit` for upgrade safety.
+Do not add component helper modules or copied-component generators.
 
 ## Component anatomy
 
-Use the same shape across components: initializer, `view_template`, private class helpers, and `attr_reader` for public API.
+Use explicit public keywords and pass an internal attribute bundle to the base component:
 
 ```ruby
-# frozen_string_literal: true
-
 module NitroKit
-  class Button < Component
-    VARIANTS = %i[default primary destructive ghost]
+  class Container < Component
+    SIZES = %i[sm md lg xl].freeze
 
-    def initialize(text = nil, variant: :default, size: :md, **attrs)
-      @text = text
-      @variant = variant
-      @size = size
+    def initialize(
+      size:,
+      id: nil,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil
+    )
+      size = validate_choice!(:size, size, SIZES)
 
-      super(attrs, class: [base_class, variant_class, size_class])
+      super(
+        component: :container,
+        attributes: { id: }.compact,
+        html:,
+        aria:,
+        data:,
+        size:,
+        desperately_need_a_class:
+      )
     end
 
-    attr_reader :text, :variant, :size
-
-    def view_template(&block)
-      button(type: :button, **attrs) do
-        text_or_block(text, &block)
-      end
-    end
-
-    private
-
-    def base_class
-      "inline-flex items-center rounded-md"
-    end
-
-    def variant_class
-      case variant
-      when :default then "bg-background text-foreground"
-      when :primary then "bg-primary text-primary-foreground"
-      else raise ArgumentError, "Unknown variant `#{variant}'"
-      end
-    end
-
-    def size_class
-      case size
-      when :sm then "h-7 px-2.5 text-sm"
-      when :md then "h-10 px-4 text-base"
-      else raise ArgumentError, "Unknown size `#{size}'"
-      end
+    def view_template
+      div(**root_attributes) { yield if block_given? }
     end
   end
 end
 ```
 
-## Attribute merging and class composition
+These base boundaries are settled for 2.0: explicit component options, deliberate native-attribute bags, reserved Nitro identity, validated closed vocabularies, and one centralized class escape hatch.
 
-`NitroKit::Component` merges attributes for you. Use it instead of manual string concatenation.
+## Options and native attributes
+
+Component semantics are explicit keywords. Do not use a broad `**attrs` or `**options` public argument.
+
+Common element semantics can be first-class keywords when central to the component: `id:`, `href:`, `type:`, `name:`, `value:`, `disabled:`, `required:`, and similar.
+
+Less common native attributes use:
+
+- `html:` for ordinary attributes.
+- `aria:` for ARIA attributes.
+- `data:` for non-reserved application data and additive Stimulus controllers/actions.
+
+Reject `class` and `style`, including nested in `html:`. Reject every spelling of Nitro-reserved data keys, including symbol/string and dashed/underscored forms.
+
+Nitro-owned data cannot be replaced through the public boundary. Collisions raise, except user Stimulus `controller` and `action` values, which compose deterministically with Nitro-owned values.
+
+## Validation
+
+Validate every closed vocabulary at construction time:
 
 ```ruby
-super(attrs, class: [base_class, variant_class])
-
-# Inside builder methods
-mattr(attrs, class: "text-muted-content", data: { slot: "description" })
+@variant = validate_choice!(:variant, variant, VARIANTS)
 ```
 
-What happens under the hood:
+Errors identify the invalid option or slot, the received value where useful, and the accepted vocabulary. Do not silently fall back.
 
-- `class` values are merged using Tailwind Merge.
-- `data` hashes are deep-merged.
-- `data: { controller: ... }` and `data: { action: ... }` are concatenated.
+Required slots and invalid slot combinations should raise as soon as the component can know them. Do not attempt to validate whole-page information architecture in the component kernel.
 
-## Builder methods and slots
+## Identity and slots
 
-Block-style components i.e. `table { |t| t.tr { ... } }`
+Every component root emits `data-nk`:
 
-Builder methods must wrap output in `builder do` so they work in helpers and components.
-
-```ruby
-def title(text = nil, **attrs, &block)
-  builder do
-    h2(**mattr(attrs, class: "text-lg font-semibold")) do
-      text_or_block(text, &block)
-    end
-  end
-end
+```html
+<article data-nk="card"></article>
 ```
 
-Do not use `builder_method`. It is deprecated. Use the `builder do` pattern instead.
+Every owned part has a component-qualified slot:
 
-Use `data-slot` for internal parts that need styling or selection.
-
-```ruby
-div(**mattr(attrs, data: { slot: "description" }, class: description_class))
+```html
+<article data-nk="card">
+  <h2 data-slot="card-title">...</h2>
+  <div data-slot="card-body">...</div>
+</article>
 ```
 
-## Text or block APIs
+A nested component can have both identities:
 
-Most components accept either text or a block. Use `text_or_block` to support both.
-
-```ruby
-text_or_block(text, &block)
+```html
+<input data-nk="input" data-slot="field-control" />
 ```
 
-If you need safe HTML, pass `ActiveSupport::SafeBuffer` and `text_or_block` will call `plain` for you.
+The parent supplies contextual slot identity. An atom such as `Label` must not globally identify itself as every parent's `label` slot.
 
-## Accessibility and state
+Prefer direct-child contracts for component-owned structure. Do not style arbitrary application descendants merely because they appear inside a content slot.
 
-Make state explicit in the DOM and reflect it in CSS.
+## Compound components and content
 
-- Use `role`, `aria-expanded`, `aria-hidden`, `aria-selected`, `aria-current`, and `aria-checked`.
-- Toggle state with `data-state` or `aria-*` and style with Tailwind selectors.
+Direct Phlex composition replaces the old template-aware `builder do` wrapper. Compound APIs should be ordinary Ruby methods that render into the current Phlex context.
 
-Examples from existing components:
+Named leaf slots may accept arbitrary application content. That is normal composition, not an escape.
 
-- Dropdown: `aria-expanded`, `aria-hidden`
-- Tabs: `aria-selected`, `aria-hidden`
-- Switch: `role="switch"`, `aria-checked`
-- Toast: `data-state="open" | "closed"`
+Do not add an untyped structural bypass. If a legitimate application-content boundary is missing, add the smallest named compound method supported by real composition evidence.
 
-## Stimulus controller naming
+## Class escape
 
-Controllers in NitroKit core are `nk--<component>` and map cleanly to data keys.
+Nitro components never emit or depend on classes. The only exception is:
 
 ```ruby
-data: {
-  controller: "nk--dropdown",
-  nk__dropdown_target: "trigger",
-  nk__dropdown_placement_value: placement
+desperately_need_a_class: "external-widget-hook"
+```
+
+It must produce both the class and `data-nk-escape="class"`. Blank or non-string values raise. Implement this once in the base component.
+
+## CSS architecture
+
+Author plain CSS in split source files and generate one committed `nitro_kit.css` distribution asset.
+
+Declare deterministic layers:
+
+```css
+@layer nitro-kit.tokens,
+  nitro-kit.reset,
+  nitro-kit.base,
+  nitro-kit.variant,
+  nitro-kit.size,
+  nitro-kit.state,
+  nitro-kit.compound;
+```
+
+Every Nitro selector uses `:where()`:
+
+```css
+@layer nitro-kit.base {
+  :where([data-nk="button"]) {
+    background: var(--_nk-button-background);
+  }
 }
 ```
 
-Controller conventions:
+Variants assign private values and generic state consumes them:
 
-- `static targets` and `static values` are the default pattern.
-- Clean up listeners in `disconnect`.
-- If using floating-ui, update positions on open and dispose on close.
+```css
+@layer nitro-kit.variant {
+  :where([data-nk="button"][data-variant="primary"]) {
+    --_nk-button-background: var(--nk-color-primary);
+    --_nk-button-hover-background: var(--nk-color-primary-hover);
+  }
+}
 
-## Tailwind + theme tokens
+@layer nitro-kit.state {
+  @media (hover: hover) {
+    :where([data-nk="button"]:hover) {
+      background: var(--_nk-button-hover-background);
+    }
+  }
+}
+```
 
-Use the theme tokens from `app/assets/tailwind/application.css`.
+Never target an unqualified `[data-slot]`. Never use `transition: all`.
 
-- `bg-background`, `text-foreground`, `border-border`, `ring-ring`, `text-muted-content`.
-- Prefer arrays of classes for readability.
-- Style state using `data-*` and `aria-*` selectors instead of custom CSS.
+## Tokens and themes
 
-Premium components show two extra patterns worth copying when needed:
+Public `--nk-*` variables cover themeable decisions: semantic colors, paired foregrounds, typography, spacing, radii, control dimensions, shadows, borders, motion, and content widths.
 
-- Container queries with `@container` / `@min` / `@max` (e.g., Dropzone, Sidebar)
-- CSS custom props for layout spacing (e.g., Sidebar, Card)
+Private `--_nk-*` variables coordinate component mechanics and are not a theme API.
 
-## Helpers and variants
+Do not tokenize structural keywords, percentages, zero values, grid mechanics, or every media-query breakpoint.
 
-Every internal component should have a helper and optionally variant helpers. Custom components can copy this pattern but it's not a requirement.
+The built-in light contract applies at `:root` and `[data-theme="light"]`. Dark themes use `[data-theme="dark"]`, override the same public tokens, and set `color-scheme: dark`. Derived hover/active values may use `color-mix()` while remaining explicitly overridable.
+
+The optional `nitro_kit-tailwind-v4.css` adapter is a separate asset. Load it before Nitro Kit and compiled Tailwind CSS. Do not add Tailwind as a Nitro runtime dependency.
+
+## Scoped baseline
+
+Nitro CSS cannot rely on Tailwind Preflight. Add a small reset scoped to Nitro roots and owned parts for box sizing, form typography, borders, owned text/list margins, tables, SVGs, placeholders, hidden state, and native-control quirks actually used by Nitro.
+
+Do not reset arbitrary content supplied by the application.
+
+## Layout sizing
+
+Parents own external placement and available width. Components own intrinsic geometry.
+
+- Naturally stretchable: inputs, textareas, selects, tables, broad surfaces.
+- Naturally intrinsic: buttons, badges, avatars, icons, switches.
+- Layout primitives decide alignment, wrapping, the proven three-column grid, and available width through closed enumerations.
+
+## Rails forms
+
+Use Rails `form_with` from Phlex with `NitroKit::FormBuilder`:
 
 ```ruby
-module NitroKit
-  module ButtonHelper
-    include Variants
-
-    def nk_button(text = nil, **attrs, &block)
-      render(NitroKit::Button.from_template(text, **attrs), &block)
-    end
-
-    automatic_variants(Button::VARIANTS, :nk_button)
-  end
+form_with(model:, builder: NitroKit::FormBuilder) do |form|
+  form.field(:email)
+  form.submit
 end
 ```
 
-## Forms
+Keep Rails naming, IDs, values, CSRF, validations, multipart behavior, and error semantics. Refactor the builder for direct Phlex; do not restore `nk_form_with` or `nk_form_for`.
 
-Use `NitroKit::FormBuilder` and the `nk_form_for` / `nk_form_with` helpers.
+Default form composition uses `Fieldset` and `FieldGroup` where semantics call for them.
 
-- `Field` is the form wrapper that handles label, description, errors, and control.
-- `data-slot` is used for internal styling (`label`, `description`, `control`, `error`).
-- Strong default: wrap related fields in `fieldset` and `group` for consistent spacing and layout. Only omit if you intentionally want a custom layout.
+## Stimulus and Hotwire
 
-```erb
-<%= nk_form_for @user do |f| %>
-  <%= f.fieldset legend: "Profile", description: "Public info" do %>
-    <%= f.group do %>
-      <%= f.field :name %>
-      <%= f.field :email, as: :email, description: "We only email receipts." %>
-    <% end %>
-  <% end %>
-<% end %>
-```
+Stimulus remains Nitro Kit 2.0's behavior layer.
 
-## Premium components
+- Use targets and values for declarative state.
+- Reflect visible state through ARIA and `data-state`.
+- Clean up every external listener, timer, observer, and other resource in `disconnect`.
+- Avoid duplicate initialization through Turbo morphs.
+- Prefer native controls and browser behavior.
+- Test keyboard behavior and Turbo Drive/Frame/Stream/morph lifecycles.
 
-Premium components are available separately. The current catalog and install instructions live on nitrokit.dev, which is the source of truth.
+## Interface quality
 
-Once installed, premium components behave like standard Nitro Kit components. Prefer wrapping or composing them in your own `UI::` components if you need custom behavior, to keep upgrades easy.
+- Headings use balanced wrapping; short descriptions use pretty wrapping.
+- Dynamic numeric columns use tabular numerals.
+- Interactive hit areas are at least 40×40px without overlapping.
+- Use concentric radii for closely nested surfaces.
+- Prefer subtle layered shadows for elevated surfaces and borders for true separators/form outlines.
+- Interactive transitions are interruptible and declare exact transitioned properties.
+- Respect `prefers-reduced-motion`.
+- Use `will-change` only after observing a compositing problem.
 
-Patterns worth noting:
+## Testing checklist
 
-- Premium components still inherit from `NitroKit::Component` and use `mattr`.
-- Use `register_output_helper` when calling view helpers (`nk_button`, `file_field_tag`, `content_for`).
-- `DetailsTable` still uses the deprecated `builder_method` pattern. Avoid that in new components.
+Every component includes:
 
-## Do and do not examples
+- Direct-Phlex rendering coverage.
+- Every option and invalid value.
+- Reserved attribute rejection.
+- Class escape output.
+- Structural and component-specific accessibility assertions.
+- A gallery combination page with meaningful permutations.
+- Long, missing optional, disabled, validation/error, dark, and narrow-width examples where relevant.
+- Behavior tests for interactive components.
 
-```ruby
-# Do: builder wrapper and text_or_block
+The gallery uses explicit Phlex page classes and `Gallery::Catalog`. Do not add ERB component examples or infer routes from filenames. Every `Gallery::Example` pairs Preview and Code tabs. Keep the preview in the block passed to the gallery helper so `Gallery::SourceCode` can extract, highlight, and copy its executable Ruby body; use a concrete method source for inherited flow wrappers instead of duplicating snippets.
 
-def description(text = nil, **attrs, &block)
-  builder do
-    div(**mattr(attrs, class: "text-sm text-muted-content")) do
-      text_or_block(text, &block)
-    end
-  end
-end
+Browser verification may live outside Minitest, but it must enumerate the explicit gallery catalog, prove code-source parity and escaping, and exercise interactive behavior through Turbo lifecycles.
 
-# Do: use Tailwind Merge via super / mattr
-super(attrs, class: [base_class, size_class])
+## Component completion checklist
 
-# Do: validate variant and size
-raise ArgumentError, "Unknown variant `#{variant}'"
-```
-
-```ruby
-# Do not: skip builder for builder methods
-# def title(text = nil, **attrs)
-#   h2(**attrs) { text }
-# end
-
-# Do not: manually concatenate classes
-# super(attrs.merge(class: "#{base_class} #{attrs[:class]}"))
-
-# Do not: silently ignore unknown variants
-# when :default then ...
-# else nil
-```
-
-## Component checklist
-
-Core Nitro Kit (internal):
-
-- Add component class under `app/components/nitro_kit/`.
-- Add helper under `app/helpers/nitro_kit/`.
-- Add JS controller under `app/javascript/controllers/nk/` if needed.
-- Update `NitroKit::SCHEMA` in `lib/nitro_kit.rb`.
-- Add example view under `test/dummy/app/views/tests/examples/`.
-- Add integration test under `test/integration/`.
-
-Custom app components (recommended):
-
-- Create under `app/components/ui/` (or your own namespace).
-- Subclass `NitroKit::Component` if you want `mattr`, class merging, and `text_or_block`.
-- Add a helper only if you want a `ui_*` (or similar) template API.
+- Explicit public options.
+- Enumerated options validated.
+- Stable `data-nk` root.
+- Component-qualified slots.
+- Static CSS source and generated bundle updated.
+- No internal class/style output.
+- No Tailwind runtime assumption.
+- Direct-Phlex tests and gallery examples.
+- Rails/Hotwire behavior preserved where applicable.
+- Relevant `tk` ticket updated with verification notes.

@@ -1,0 +1,43 @@
+@layer nitro-kit.variant {
+  :where(
+      [data-nk="v-stack"][data-gap="none"],
+      [data-nk="h-stack"][data-gap="none"]
+    ) {
+    --_nk-stack-gap: 0;
+  }
+
+  :where(
+      [data-nk="v-stack"][data-gap="xs"],
+      [data-nk="h-stack"][data-gap="xs"]
+    ) {
+    --_nk-stack-gap: var(--nk-space);
+  }
+
+  :where(
+      [data-nk="v-stack"][data-gap="sm"],
+      [data-nk="h-stack"][data-gap="sm"]
+    ) {
+    --_nk-stack-gap: calc(var(--nk-space) * 2);
+  }
+
+  :where(
+      [data-nk="v-stack"][data-gap="md"],
+      [data-nk="h-stack"][data-gap="md"]
+    ) {
+    --_nk-stack-gap: calc(var(--nk-space) * 4);
+  }
+
+  :where(
+      [data-nk="v-stack"][data-gap="lg"],
+      [data-nk="h-stack"][data-gap="lg"]
+    ) {
+    --_nk-stack-gap: calc(var(--nk-space) * 6);
+  }
+
+  :where(
+      [data-nk="v-stack"][data-gap="xl"],
+      [data-nk="h-stack"][data-gap="xl"]
+    ) {
+    --_nk-stack-gap: calc(var(--nk-space) * 8);
+  }
+}

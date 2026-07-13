@@ -2,95 +2,147 @@
 
 module NitroKit
   class Select < Component
-    def initialize(options = nil, value: nil, include_empty: false, prompt: nil, index: nil, **attrs)
-      @options = options
-      @value = value&.to_s
-      @include_empty = include_empty
-      @prompt = prompt
-      @index = index
+    def initialize(
+      options: [],
+      option_tags: nil,
+      id: nil,
+      name: nil,
+      value: nil,
+      include_blank: nil,
+      prompt: nil,
+      disabled: false,
+      required: false,
+      multiple: false,
+      autocomplete: nil,
+      html: {},
+      aria: {},
+      data: {},
+      control_html: {},
+      control_aria: {},
+      control_data: {},
+      desperately_need_a_class: nil
+    )
+      @options = Array(options).map { |choice| Choice.coerce(choice) }.freeze
+      @option_tags = option_tags
+      @value = value
+      @include_blank = validate_blank_option!(include_blank)
+      @prompt = validate_optional_text!(:prompt, prompt)
+      @disabled = validate_boolean!(:disabled, disabled)
+      @required = validate_boolean!(:required, required)
+      @multiple = validate_boolean!(:multiple, multiple)
+      @name = multiple_name(name)
+      @id = id
+      @autocomplete = autocomplete
+      @control_html = control_html
+      @control_aria = control_aria
+      @control_data = control_data
+
+      if option_tags && !option_tags.is_a?(ActiveSupport::SafeBuffer)
+        raise ArgumentError, "option_tags must be an ActiveSupport::SafeBuffer"
+      end
+      if option_tags && @options.any?
+        raise ArgumentError, "options and option_tags are mutually exclusive"
+      end
 
       super(
-        attrs,
-        class: wrapper_class
+        component: :select,
+        html:,
+        aria:,
+        data:,
+        desperately_need_a_class:
       )
     end
 
-    attr_reader :value, :options, :include_empty, :prompt, :index
+    attr_reader :options, :value, :include_blank, :prompt, :name, :id
 
     def view_template
-      span(class: wrapper_class, data: { slot: "control" }) do
-        select(**attrs, class: select_class) do
-          if include_empty
-            blank_text = if include_empty.is_a?(String)
-              include_empty
-            elsif @prompt
-              @prompt
-            else
-              ""
-            end
+      span(**root_attributes) do
+        select(**control_attributes) do
+          render_blank_option if include_blank
+          render_prompt_option if prompt && selected_values.empty?
 
-            html_option(value: "", selected: @value == "") { blank_text }
-          end
-
-          if options
-            options.each do |opt|
-              if opt.is_a?(Array) && opt.length >= 2
-                html_option(value: opt[1], selected: @value == opt[1].to_s) { opt[0] }
-              else
-                # Handle simple strings - use as both label and value
-                html_option(value: opt.to_s, selected: @value == opt.to_s) { opt.to_s }
-              end
-            end
+          if @option_tags
+            raw safe(@option_tags)
           else
-            yield if block_given?
+            options.each { |choice| render_option(choice) }
           end
         end
 
-        chevron_icon
-      end
-    end
-
-    alias :html_option :option
-
-    def option(text = nil, value = nil, **attrs, &block)
-      builder do
-        value ||= text
-
-        html_option(value:, selected: @value == value.to_s, **attrs) do
-          if block_given?
-            yield
-          else
-            text
-          end
+        svg(
+          **slot_attributes(
+            :icon,
+            attributes: {
+              viewbox: "0 0 20 20",
+              fill: "none",
+              stroke: "currentColor",
+              stroke_width: 1.5,
+              aria: { hidden: true }
+            }
+          )
+        ) do |icon|
+          icon.path(d: "m6.5 8 3.5 3.5L13.5 8", stroke_linecap: "round", stroke_linejoin: "round")
         end
       end
     end
 
     private
 
-    def wrapper_class
-      "w-fit inline-grid *:[grid-area:1/1] group/select"
+    def control_attributes
+      slot_attributes(
+        :control,
+        attributes: {
+          id:,
+          name:,
+          disabled: @disabled,
+          required: @required,
+          multiple: @multiple,
+          autocomplete: @autocomplete
+        }.compact,
+        html: @control_html,
+        aria: @control_aria,
+        data: @control_data
+      )
     end
 
-    def select_class
-      [
-        "appearance-none bg-background text-foreground rounded-md border px-3 py-2 pr-10 w-full",
-        # Focus
-        "focus:outline-none ring-ring ring-offset-2 ring-offset-background focus-visible:ring-2"
-      ]
+    def render_blank_option
+      text = include_blank == true ? "" : include_blank
+      option(value: "", selected: selected_values.empty?) { plain(text.to_s) }
     end
 
-    def chevron_icon
-      svg(
-        class: "size-4 self-center place-self-end mr-1.5 text-muted-content pointer-events-none group-hover/select:text-foreground",
-        viewbox: "0 0 24 24",
-        fill: "none",
-        stroke: "currentColor",
-        stroke_width: 1
-      ) do |svg|
-        svg.path(d: "m7 15 5 5 5-5")
-        svg.path(d: "m7 9 5-5 5 5")
-      end
+    def render_prompt_option
+      option(value: "", selected: true) { plain(prompt) }
+    end
+
+    def render_option(choice)
+      option(
+        id: choice.id,
+        value: choice.value,
+        selected: selected_values.include?(choice.value.to_s),
+        disabled: choice.disabled
+      ) { plain(choice.label.to_s) }
+    end
+
+    def selected_values
+      @selected_values ||= Array(value).compact.map(&:to_s)
+    end
+
+    def multiple_name(name)
+      return name unless @multiple && name && !name.end_with?("[]")
+
+      "#{name}[]"
+    end
+
+    def validate_blank_option!(value)
+      return value if value.nil? || value == true || value == false || value.is_a?(String)
+
+      raise ArgumentError, "include_blank must be true, false, nil, or a String"
+    end
+
+    def validate_optional_text!(name, value)
+      return if value.nil? || value == false
+      return value if value.is_a?(String) && !value.strip.empty?
+
+      raise ArgumentError, "#{name} must be a non-blank String, false, or nil"
     end
   end
 end

@@ -2,102 +2,170 @@
 
 module NitroKit
   class FormBuilder < ActionView::Helpers::FormBuilder
-    # Fields
+    FIELD_TYPES = {
+      color_field: :color,
+      date_field: :date,
+      datetime_field: :datetime_local,
+      datetime_local_field: :datetime_local,
+      email_field: :email,
+      file_field: :file,
+      hidden_field: :hidden,
+      month_field: :month,
+      number_field: :number,
+      password_field: :password,
+      phone_field: :tel,
+      range_field: :range,
+      search_field: :search,
+      telephone_field: :tel,
+      text_area: :textarea,
+      text_field: :text,
+      time_field: :time,
+      url_field: :url,
+      week_field: :week
+    }.freeze
+    CONTROL_OPTIONS = %i[
+      id name value placeholder disabled readonly required autocomplete checked
+      multiple accept min max step pattern inputmode
+    ].freeze
 
-    def fieldset(**attrs, &block)
-      @template.render(NitroKit::Fieldset.new(**attrs), &block)
+    def fieldset(**attributes, &block)
+      @template.render(NitroKit::Fieldset.new(**attributes), &block)
     end
 
-    def field(field_name, label: nil, errors: nil, **attrs, &block)
-      if label.nil?
-        label = attrs.fetch(:label, field_name.to_s.humanize)
+    def field(field_name, label: nil, errors: nil, **attributes, &block)
+      label = field_name.to_s.humanize if label.nil?
+      errors ||= errors_for(field_name)
+      self.multipart = true if attributes[:as].to_s.tr("-", "_") == "file"
+
+      @template.render(
+        NitroKit::Field.new(self, field_name, label:, errors:, **attributes),
+        &block
+      )
+    end
+
+    def group(**attributes, &block)
+      @template.render(NitroKit::FieldGroup.new(**attributes), &block)
+    end
+
+    FIELD_TYPES.each do |method_name, field_type|
+      define_method(method_name) do |field_name, options = {}, **attributes|
+        self.multipart = true if field_type == :file
+        field(
+          field_name,
+          as: field_type,
+          label: false,
+          **normalize_control_options(options.merge(attributes))
+        )
       end
-
-      if errors.nil?
-        errors = object && object.respond_to?(:errors) && object.errors.include?(field_name) ? object
-          .errors
-          .full_messages_for(field_name) : nil
-      end
-
-      @template.render(NitroKit::Field.new(self, field_name, label:, errors:, **attrs), &block)
     end
 
-    def group(**attrs, &block)
-      @template.render(FieldGroup.new(**attrs), &block)
+    def hidden_field(field_name, options = {}, **attributes)
+      options = options.merge(attributes).symbolize_keys
+      value = options.key?(:value) ? options.delete(:value) : value_for(field_name)
+      @emitted_hidden_id = true if field_name.to_sym == :id
+
+      @template.render(
+        Input.new(
+          type: :hidden,
+          id: options.delete(:id) || field_id(field_name),
+          name: options.delete(:name) || self.field_name(field_name),
+          value:,
+          disabled: options.delete(:disabled) { false },
+          autocomplete: options.delete(:autocomplete),
+          data: options.delete(:data) || {},
+          aria: options.delete(:aria) || {},
+          html: options
+        )
+      )
     end
 
-    # Input types
+    def radio_button(field_name, tag_value = "1", options = {}, **attributes)
+      control_options = normalize_control_options(options.merge(attributes))
 
-    %i[
-      color_field
-      date_field
-      datetime_field
-      datetime_local_field
-      email_field
-      file_field
-      hidden_field
-      month_field
-      number_field
-      password_field
-      phone_field
-      radio_button
-      range_field
-      search_field
-      telephone_field
-      text_area
-      text_field
-      time_field
-      url_field
-      week_field
-    ]
-      .each do |method|
-        define_method(method) do |*args, **attrs, &block|
-          type = method.to_s.gsub(/_field$/, "")
-          field(*args, **attrs, type:, label: false, &block)
-        end
-      end
-
-    def radio_button(method, value = "1", **attrs)
-      field(method, as: :radio_button, label: false, value:, **attrs)
+      field(
+        field_name,
+        as: :radio_button,
+        label: false,
+        options: [ [ tag_value, tag_value ] ],
+        **control_options
+      )
     end
 
-    def checkbox(method, checked_value = "1", unchecked_value = "0", *args, include_hidden: true, **attrs)
-      if include_hidden
-        @template.concat(hidden_field(method, value: unchecked_value))
-      end
+    def check_box(
+      field_name,
+      options = {},
+      checked_value = "1",
+      unchecked_value = "0",
+      **attributes
+    )
+      options = options.merge(attributes).symbolize_keys
+      include_hidden = options.delete(:include_hidden) { true }
 
-      field(method, *args, as: :checkbox, label: false, value: checked_value, **attrs)
+      field(
+        field_name,
+        as: :checkbox,
+        label: false,
+        checked_value:,
+        unchecked_value:,
+        include_hidden:,
+        **normalize_control_options(options)
+      )
     end
 
-    # Buttons
+    alias :checkbox :check_box
 
-    def submit(value = nil, **attrs, &block)
-      if value.nil? && !block_given?
-        value = "Save changes"
-      end
-
-      @template.render(NitroKit::Button.new(value, variant: :primary, type: :submit, **attrs), &block)
+    def submit(value = nil, options = {}, **attributes, &block)
+      value = "Save changes" if value.nil? && !block
+      @template.render(Button.new(value, variant: :primary, type: :submit, **options, **attributes), &block)
     end
 
-    def button(value = nil, **attrs, &block)
-      if value.nil? && !block_given?
-        value = "Save changes"
-      end
-
-      @template.render(NitroKit::Button.new(value, **attrs), &block)
+    def button(value = nil, options = {}, **attributes, &block)
+      value = "Save changes" if value.nil? && !block
+      @template.render(Button.new(value, **options, **attributes), &block)
     end
 
-    def select(method, choices = nil, options = {}, html_options = {}, &block)
-      field_options = {
+    def select(field_name, choices = nil, options = {}, html_options = {}, &block)
+      option_tags = @template.capture(&block) if block
+      option_tags ||= choices if choices.is_a?(ActiveSupport::SafeBuffer)
+      prompt = options[:prompt] == true ? I18n.t("helpers.select.prompt", default: "Please select") : options[:prompt]
+
+      field(
+        field_name,
         as: :select,
-        options: choices,
+        options: option_tags ? nil : choices,
+        option_tags:,
         include_blank: options[:include_blank],
-        prompt: options[:prompt]
-      }.compact
+        prompt:,
+        value: options.fetch(:selected, NitroKit::Field::UNSET),
+        label: false,
+        **normalize_control_options(html_options)
+      )
+    end
 
-      field_attributes = options.except(:include_blank, :prompt, :selected)
+    private
 
-      field(method, **field_options, **field_attributes, **html_options, &block)
+    def errors_for(field_name)
+      return unless object&.respond_to?(:errors) && object.errors.include?(field_name)
+
+      object.errors.full_messages_for(field_name)
+    end
+
+    def normalize_control_options(options)
+      options = options.symbolize_keys
+      normalized = options.extract!(*CONTROL_OPTIONS)
+      control_html = options.delete(:control_html) || {}
+      control_data = options.delete(:control_data) || options.delete(:data) || {}
+      control_aria = options.delete(:control_aria) || options.delete(:aria) || {}
+
+      normalized.merge(
+        control_html: options.merge(control_html),
+        control_data:,
+        control_aria:
+      )
+    end
+
+    def value_for(field_name)
+      object.public_send(field_name) if object&.respond_to?(field_name)
     end
   end
 end

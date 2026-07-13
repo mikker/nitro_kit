@@ -1,0 +1,28 @@
+@layer nitro-kit.base {
+  :where([data-nk="fieldset"]) {
+    min-inline-size: 0;
+    padding: 0;
+    color: var(--nk-color-foreground);
+    border: 0;
+  }
+
+  :where([data-nk="fieldset"] > [data-slot="fieldset-legend"]) {
+    padding: 0;
+    font-size: var(--nk-text-lg);
+    font-weight: var(--nk-font-weight-semibold);
+    line-height: var(--nk-leading-tight);
+  }
+
+  :where([data-nk="fieldset"] > [data-slot="fieldset-description"]) {
+    margin-block-start: var(--nk-space);
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-sm);
+    text-wrap: pretty;
+  }
+
+  :where([data-nk="fieldset"] > [data-slot="fieldset-fields"]) {
+    display: grid;
+    gap: calc(var(--nk-space) * 6);
+    margin-block-start: calc(var(--nk-space) * 6);
+  }
+}

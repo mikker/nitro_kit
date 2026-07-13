@@ -1,0 +1,131 @@
+@layer nitro-kit.tokens {
+  :where(:root) {
+    --nk-font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+      "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    --nk-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+      "Liberation Mono", "Courier New", monospace;
+
+    --nk-text-xs: 0.75rem;
+    --nk-text-sm: 0.875rem;
+    --nk-text-base: 1rem;
+    --nk-text-lg: 1.125rem;
+    --nk-text-xl: 1.25rem;
+    --nk-text-2xl: 1.5rem;
+
+    --nk-leading-tight: 1.25;
+    --nk-leading-normal: 1.5;
+    --nk-leading-relaxed: 1.625;
+
+    --nk-font-weight-normal: 400;
+    --nk-font-weight-medium: 500;
+    --nk-font-weight-semibold: 600;
+    --nk-font-weight-bold: 700;
+
+    --nk-space: 0.25rem;
+
+    --nk-radius-xs: 0.125rem;
+    --nk-radius-sm: 0.25rem;
+    --nk-radius-md: 0.375rem;
+    --nk-radius-lg: 0.5rem;
+    --nk-radius-xl: 0.75rem;
+    --nk-radius-full: 9999px;
+
+    --nk-border-width: 1px;
+    --nk-focus-width: 2px;
+    --nk-focus-offset: 2px;
+
+    --nk-shadow-sm: 0 1px 2px oklch(0 0 0 / 0.08);
+    --nk-shadow-md: 0 4px 6px -1px oklch(0 0 0 / 0.1),
+      0 2px 4px -2px oklch(0 0 0 / 0.1);
+    --nk-shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 0.12),
+      0 4px 6px -4px oklch(0 0 0 / 0.12);
+
+    --nk-duration-fast: 100ms;
+    --nk-duration-normal: 150ms;
+    --nk-duration-slow: 250ms;
+    --nk-ease: cubic-bezier(0.4, 0, 0.2, 1);
+
+    --nk-control-height-xs: 1.5rem;
+    --nk-control-height-sm: 1.75rem;
+    --nk-control-height-md: 2.5rem;
+    --nk-control-height-lg: 2.75rem;
+    --nk-control-height-xl: 3.5rem;
+
+    --nk-content-sm: 24rem;
+    --nk-content-md: 32rem;
+    --nk-content-lg: 48rem;
+    --nk-content-xl: 64rem;
+  }
+
+  :where(:root, [data-theme="light"]) {
+    color-scheme: light;
+
+    --nk-color-canvas: oklch(1 0 0);
+    --nk-color-surface: oklch(1 0 0);
+    --nk-color-elevated: oklch(0.985 0 0);
+    --nk-color-foreground: oklch(0.21 0.006 285.885);
+    --nk-color-muted: oklch(0.967 0.001 286.375);
+    --nk-color-muted-foreground: oklch(0.552 0.016 285.938);
+    --nk-color-border: oklch(0.92 0.004 286.32);
+    --nk-color-focus: oklch(0.546 0.245 262.881);
+    --nk-color-primary: oklch(0.274 0.006 286.033);
+    --nk-color-primary-foreground: oklch(0.967 0.001 286.375);
+    --nk-color-neutral: oklch(0.552 0.016 285.938);
+    --nk-color-neutral-content: oklch(0.37 0.013 285.805);
+    --nk-color-info: oklch(0.546 0.245 262.881);
+    --nk-color-info-content: oklch(0.424 0.199 265.638);
+    --nk-color-success: oklch(0.627 0.194 149.214);
+    --nk-color-success-content: oklch(0.393 0.095 152.535);
+    --nk-color-warning: oklch(0.681 0.162 75.834);
+    --nk-color-warning-content: oklch(0.421 0.095 57.708);
+    --nk-color-danger: oklch(0.637 0.237 25.331);
+    --nk-color-danger-foreground: oklch(1 0 0);
+    --nk-color-danger-content: oklch(0.444 0.177 26.899);
+    --nk-color-overlay: oklch(0 0 0 / 0.5);
+  }
+
+  :where([data-theme="dark"]) {
+    color-scheme: dark;
+
+    --nk-color-canvas: oklch(0.141 0.005 285.823);
+    --nk-color-surface: oklch(0.178 0.006 285.885);
+    --nk-color-elevated: oklch(0.21 0.006 285.885);
+    --nk-color-foreground: oklch(0.967 0.001 286.375);
+    --nk-color-muted: oklch(0.274 0.006 286.033);
+    --nk-color-muted-foreground: oklch(0.705 0.015 286.067);
+    --nk-color-border: oklch(0.37 0.013 285.805);
+    --nk-color-focus: oklch(0.488 0.243 264.376);
+    --nk-color-primary: oklch(0.985 0 0);
+    --nk-color-primary-foreground: oklch(0.21 0.006 285.885);
+    --nk-color-neutral: oklch(0.705 0.015 286.067);
+    --nk-color-neutral-content: oklch(0.92 0.004 286.32);
+    --nk-color-info: oklch(0.623 0.214 259.815);
+    --nk-color-info-content: oklch(0.882 0.059 254.128);
+    --nk-color-success: oklch(0.723 0.219 149.579);
+    --nk-color-success-content: oklch(0.925 0.084 155.995);
+    --nk-color-warning: oklch(0.828 0.189 84.429);
+    --nk-color-warning-content: oklch(0.945 0.129 101.54);
+    --nk-color-danger: oklch(0.396 0.141 25.723);
+    --nk-color-danger-foreground: oklch(0.985 0 0);
+    --nk-color-danger-content: oklch(0.704 0.191 22.216);
+    --nk-color-overlay: oklch(0 0 0 / 0.65);
+  }
+
+  :where(:root, [data-theme]) {
+    --nk-color-surface-hover: color-mix(
+      in oklab,
+      var(--nk-color-surface) 96%,
+      var(--nk-color-foreground)
+    );
+    --nk-color-primary-hover: color-mix(
+      in oklab,
+      var(--nk-color-primary) 90%,
+      var(--nk-color-canvas)
+    );
+    --nk-color-danger-hover: color-mix(
+      in oklab,
+      var(--nk-color-danger) 90%,
+      var(--nk-color-canvas)
+    );
+  }
+}

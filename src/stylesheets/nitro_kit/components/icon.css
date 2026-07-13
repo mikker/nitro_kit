@@ -1,0 +1,23 @@
+@layer nitro-kit.base {
+  :where([data-nk="icon"]) {
+    display: block;
+    flex: none;
+    inline-size: var(--_nk-icon-size);
+    block-size: var(--_nk-icon-size);
+  }
+}
+
+@layer nitro-kit.size {
+  :where([data-nk="icon"][data-size="xs"]) {
+    --_nk-icon-size: 0.75rem;
+  }
+  :where([data-nk="icon"][data-size="sm"]) {
+    --_nk-icon-size: 1rem;
+  }
+  :where([data-nk="icon"][data-size="md"]) {
+    --_nk-icon-size: 1.25rem;
+  }
+  :where([data-nk="icon"][data-size="lg"]) {
+    --_nk-icon-size: 1.75rem;
+  }
+}

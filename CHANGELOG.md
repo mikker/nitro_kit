@@ -1,5 +1,34 @@
 # Changelog
 
+## 2.0.0.pre.1
+
+Nitro Kit 2.0 is a complete, intentionally incompatible rewrite around gem-owned Phlex composition.
+
+### Breaking changes
+
+- Replace generated editable component copies with versioned `NitroKit::*` classes loaded from the gem.
+- Remove all `nk_*` ERB helpers, generated variant helpers, `from_template`, and template-buffer bridges.
+- Remove copied-component generators, schema/variant metadata, and legacy installation paths.
+- Remove Tailwind Merge, consumer Tailwind requirements, old Tailwind assets, and internal component class strings.
+- Replace permissive component attributes with explicit options and `html:`, `aria:`, and `data:` boundaries.
+- Reject `class` and `style`; add the observable `desperately_need_a_class:` integration escape.
+- Use Rails `form_with(..., builder: NitroKit::FormBuilder)` instead of `nk_form_with` or `nk_form_for`.
+- Remove vendored Floating UI and combobox navigation runtimes and the obsolete Datepicker and Switch controllers.
+
+### Added
+
+- Self-describing, classless `data-nk` roots and component-qualified `data-slot` contracts.
+- Static zero-specificity CSS, light and dark theme tokens, and a separate Tailwind CSS v4 adapter.
+- Four evidence-backed layouts: VStack, HStack, three-column Grid, and Container.
+- AuthShell plus SettingsLayout, Toolbar, PaginationBar, PageHeader, StatGrid, DataSection, FormSection, DangerZone, and EmptyState blocks.
+- Typed Choice values and direct-Phlex Rails FormBuilder integration with Active Model errors, multipart uploads, and Turbo Frame/Stream examples.
+- Gem-owned importmap pins and Stimulus behavior for Accordion, Combobox, Dialog, Dropdown, Tabs, Toast, and Tooltip.
+- A catalog-driven Phlex gallery covering components, blocks, broad application flows, responsive states, and themes.
+
+### License metadata
+
+- Mark the gem's existing custom NitroKit License as nonstandard and include `LICENSE` in the package. The license terms are unchanged.
+
 ## 0.9.0
 
 ### Added

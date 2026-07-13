@@ -2,36 +2,72 @@
 
 module NitroKit
   class Checkbox < Component
-    def initialize(label: nil, id: nil, wrapper: {}, **attrs)
-      @id = id || "nk--" + SecureRandom.hex(4)
-      @label = label
-      @wrapper = wrapper
+    def initialize(
+      label: nil,
+      id: nil,
+      name: nil,
+      value: "1",
+      unchecked_value: "0",
+      include_hidden: true,
+      checked: false,
+      indeterminate: false,
+      disabled: false,
+      required: false,
+      html: {},
+      aria: {},
+      data: {},
+      control_html: {},
+      control_aria: {},
+      control_data: {},
+      desperately_need_a_class: nil
+    )
+      @label = validate_optional_text!(:label, label)
+      @id = id
+      @name = name
+      @value = value
+      @unchecked_value = unchecked_value
+      @include_hidden = validate_boolean!(:include_hidden, include_hidden)
+      @checked = validate_boolean!(:checked, checked)
+      @indeterminate = validate_boolean!(:indeterminate, indeterminate)
+      @disabled = validate_boolean!(:disabled, disabled)
+      @required = validate_boolean!(:required, required)
+      @control_html = control_html
+      @control_aria = control_aria
+      @control_data = control_data
+
+      if include_hidden && unchecked_value.nil?
+        raise ArgumentError, "unchecked_value cannot be nil when include_hidden is true"
+      end
 
       super(
-        attrs,
-        id: @id,
-        type: "checkbox",
-        class: input_class
+        component: :checkbox,
+        attributes: {
+          data: {
+            state: @indeterminate ? "indeterminate" : (@checked ? "checked" : "unchecked"),
+            disabled: @disabled ? "true" : nil
+          }.compact
+        },
+        html:,
+        aria:,
+        data:,
+        desperately_need_a_class:
       )
     end
 
-    alias :html_label :label
+    attr_reader :label, :id, :name, :value, :unchecked_value
 
-    attr_reader :label, :id, :wrapper
+    def view_template(&block)
+      div(**root_attributes) do
+        render_hidden_control
 
-    def view_template
-      div(**mattr(wrapper, class: wrapper_class)) do
-        html_label(
-          class: "inline-grid *:[grid-area:1/1] shrink-0 place-items-center group/checkbox has-checked:not-has-indeterminate:[&>[data-check]]:visible has-indeterminate:[&>[data-indeterminate]]:visible"
-        ) do
-          input(**attrs)
-          checkmark
-          dash
-        end
-
-        if label.present? || block_given?
-          render(Label.new(for: id)) do
-            label || (block_given? ? yield : nil)
+        if label.nil? && !block
+          render_control
+          span(**slot_attributes(:indicator), aria: { hidden: true })
+        else
+          render_in_slot(Label.new(for: id), :label) do
+            render_control
+            span(**slot_attributes(:indicator), aria: { hidden: true })
+            span(**slot_attributes(:label_text)) { text_or_block(label, &block) }
           end
         end
       end
@@ -39,53 +75,50 @@ module NitroKit
 
     private
 
-    def checkmark
-      svg(
-        class: merge_class(svg_class, "invisible"),
-        viewbox: "0 0 16 16",
-        fill: "none",
-        stroke: "currentColor",
-        stroke_linecap: "round",
-        stroke_linejoin: "round",
-        stroke_width: 3,
-        data: { check: "" }
-      ) do |svg|
-        svg.path(d: "M 3 8 L 6 12 L 13 5")
-      end
+    def render_hidden_control
+      return unless @include_hidden && name
+
+      render_in_slot(
+        Input.new(
+          type: :hidden,
+          name:,
+          value: unchecked_value,
+          disabled: @disabled,
+          autocomplete: "off"
+        ),
+        :unchecked
+      )
     end
 
-    def dash
-      svg(
-        class: merge_class(svg_class, "invisible"),
-        viewbox: "0 0 16 16",
-        fill: "none",
-        stroke: "currentColor",
-        stroke_linecap: "round",
-        stroke_width: 3,
-        data: { indeterminate: "" }
-      ) do |svg|
-        svg.line(x1: "3", y1: "8", x2: "13", y2: "8")
-      end
+    def render_control
+      render_in_slot(
+        Input.new(
+          type: :checkbox,
+          id:,
+          name:,
+          value:,
+          checked: @checked,
+          disabled: @disabled,
+          required: @required,
+          html: @control_html,
+          aria: checkbox_aria,
+          data: @control_data
+        ),
+        :control
+      )
     end
 
-    def input_class
-      [
-        "appearance-none shadow-sm size-4 rounded-sm border text-foreground",
-        "checked:bg-primary checked:border-primary indeterminate:bg-primary indeterminate:border-primary",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ring-offset-2 ring-offset-background",
-        "disabled:pointer-events-none"
-      ]
+    def checkbox_aria
+      return @control_aria unless @indeterminate
+
+      @control_aria.merge(checked: "mixed")
     end
 
-    def svg_class
-      "size-3 text-zinc-50 dark:text-zinc-950 pointer-events-none invisible"
-    end
+    def validate_optional_text!(name, text)
+      return if text.nil?
+      return text if text.is_a?(String) && !text.strip.empty?
 
-    def wrapper_class
-      [
-        "isolate inline-flex items-center gap-2",
-        "has-disabled:opacity-70"
-      ]
+      raise ArgumentError, "#{name} must be a non-blank String or nil"
     end
   end
 end

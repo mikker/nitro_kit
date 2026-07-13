@@ -1,0 +1,41 @@
+@layer nitro-kit.base {
+  :where([data-nk="h-stack"]) {
+    display: flex;
+    min-width: 0;
+    gap: var(--_nk-stack-gap);
+  }
+}
+
+@layer nitro-kit.variant {
+  :where([data-nk="h-stack"][data-align="start"]) {
+    align-items: flex-start;
+  }
+
+  :where([data-nk="h-stack"][data-align="center"]) {
+    align-items: center;
+  }
+
+  :where([data-nk="h-stack"][data-align="stretch"]) {
+    align-items: stretch;
+  }
+
+  :where([data-nk="h-stack"][data-justify="start"]) {
+    justify-content: flex-start;
+  }
+
+  :where([data-nk="h-stack"][data-justify="end"]) {
+    justify-content: flex-end;
+  }
+
+  :where([data-nk="h-stack"][data-justify="between"]) {
+    justify-content: space-between;
+  }
+
+  :where([data-nk="h-stack"][data-wrap="false"]) {
+    flex-wrap: nowrap;
+  }
+
+  :where([data-nk="h-stack"][data-wrap="true"]) {
+    flex-wrap: wrap;
+  }
+}

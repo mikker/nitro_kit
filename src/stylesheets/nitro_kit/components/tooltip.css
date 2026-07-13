@@ -1,0 +1,79 @@
+@layer nitro-kit.base {
+  :where([data-nk="tooltip"]) {
+    position: relative;
+    display: inline-flex;
+  }
+
+  :where([data-nk="tooltip"] > [data-slot="tooltip-content"]) {
+    position: absolute;
+    z-index: 50;
+    inline-size: max-content;
+    max-inline-size: min(20rem, calc(100vw - (var(--nk-space) * 8)));
+    padding: calc(var(--nk-space) * 1.5) calc(var(--nk-space) * 2.5);
+    color: var(--nk-color-primary-foreground);
+    font-size: var(--nk-text-xs);
+    line-height: var(--nk-leading-normal);
+    text-wrap: pretty;
+    pointer-events: none;
+    background: var(--nk-color-primary);
+    border-radius: var(--nk-radius-md);
+    box-shadow: var(--nk-shadow-sm);
+  }
+
+  :where(
+      [data-nk="tooltip"][data-placement="top"] > [data-slot="tooltip-content"]
+    ) {
+    inset-block-end: calc(100% + (var(--nk-space) * 2));
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+  }
+
+  :where(
+      [data-nk="tooltip"][data-placement="right"]
+        > [data-slot="tooltip-content"]
+    ) {
+    inset-block-start: 50%;
+    inset-inline-start: calc(100% + (var(--nk-space) * 2));
+    transform: translateY(-50%);
+  }
+
+  :where(
+      [data-nk="tooltip"][data-placement="bottom"]
+        > [data-slot="tooltip-content"]
+    ) {
+    inset-block-start: calc(100% + (var(--nk-space) * 2));
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+  }
+
+  :where(
+      [data-nk="tooltip"][data-placement="left"] > [data-slot="tooltip-content"]
+    ) {
+    inset-block-start: 50%;
+    inset-inline-end: calc(100% + (var(--nk-space) * 2));
+    transform: translateY(-50%);
+  }
+}
+
+@layer nitro-kit.state {
+  :where(
+      [data-nk="tooltip"] > [data-slot="tooltip-content"][data-state="open"]
+    ) {
+    animation: nk-tooltip-enter var(--nk-duration-fast) var(--nk-ease);
+  }
+
+  @keyframes nk-tooltip-enter {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where([data-nk="tooltip"] > [data-slot="tooltip-content"]) {
+      animation-duration: 0.01ms;
+    }
+  }
+}

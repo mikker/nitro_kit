@@ -1,0 +1,127 @@
+@layer nitro-kit.reset {
+  :where([data-nk], [data-nk] [data-slot]) {
+    box-sizing: border-box;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border-width: 0;
+    border-style: solid;
+    border-color: var(--nk-color-border);
+  }
+
+  :where([data-nk], [data-nk] [data-slot])::before,
+  :where([data-nk], [data-nk] [data-slot])::after {
+    box-sizing: inherit;
+  }
+
+  :where(
+      button[data-nk],
+      input[data-nk],
+      select[data-nk],
+      textarea[data-nk],
+      [data-nk] :is(button, input, select, textarea)[data-slot]
+    ) {
+    font: inherit;
+    font-feature-settings: inherit;
+    font-variation-settings: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    opacity: 1;
+    background-color: transparent;
+    border-radius: 0;
+  }
+
+  :where([data-nk]) {
+    font-family: var(--nk-font-sans);
+    line-height: var(--nk-leading-normal);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :where(
+      input[data-nk],
+      textarea[data-nk],
+      [data-nk] :is(input, textarea)[data-slot]
+    )::placeholder {
+    color: var(--nk-color-muted-foreground);
+    opacity: 1;
+  }
+
+  :where(
+      button[data-nk],
+      input[data-nk],
+      [data-nk] :is(button, input)[data-slot]
+    )::file-selector-button {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    background-color: transparent;
+    border: 0 solid transparent;
+  }
+
+  :where(
+      ol[data-nk],
+      ul[data-nk],
+      menu[data-nk],
+      [data-nk] :is(ol, ul, menu)[data-slot]
+    ) {
+    list-style: none;
+  }
+
+  :where(table[data-nk], [data-nk] table[data-slot]) {
+    text-indent: 0;
+    border-color: inherit;
+    border-collapse: collapse;
+  }
+
+  :where(
+      img[data-nk],
+      svg[data-nk],
+      video[data-nk],
+      [data-nk] :is(img, svg, video)[data-slot]
+    ) {
+    display: block;
+    vertical-align: middle;
+  }
+
+  :where(img[data-nk], video[data-nk], [data-nk] :is(img, video)[data-slot]) {
+    max-width: 100%;
+    height: auto;
+  }
+
+  :where(hr[data-nk], [data-nk] hr[data-slot]) {
+    height: 0;
+    color: inherit;
+    border-top-width: var(--nk-border-width);
+  }
+
+  :where(textarea[data-nk], [data-nk] textarea[data-slot]) {
+    resize: vertical;
+  }
+
+  :where(
+      input[data-nk],
+      [data-nk] input[data-slot]
+    )::-webkit-search-decoration {
+    appearance: none;
+  }
+
+  :where(
+      input[data-nk],
+      [data-nk] input[data-slot]
+    )::-webkit-date-and-time-value {
+    min-height: 1lh;
+    text-align: inherit;
+  }
+
+  :where(input[data-nk], [data-nk] input[data-slot]):-moz-ui-invalid {
+    box-shadow: none;
+  }
+
+  :where([data-nk][hidden], [data-nk] [data-slot][hidden]):not(
+      [hidden="until-found"]
+    ) {
+    display: none !important;
+  }
+}

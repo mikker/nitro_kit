@@ -8,6 +8,15 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  resources(:tests)
-  root(to: "tests#index")
+  resource(:registration, only: %i[ new create show ])
+
+  namespace :gallery do
+    root(to: "home#show")
+
+    resources(:components, only: :show, param: :slug)
+    resources(:blocks, only: :show, param: :slug)
+    get("flows/:slug(/:state)" => "flows#show", :as => :flow)
+  end
+
+  root(to: "gallery/home#show")
 end

@@ -1,70 +1,105 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["list", "template", "sink"];
-  static values = {
-    duration: { type: Number, default: 5000 },
-  };
+  static targets = ["item"];
+  static values = { duration: Number };
 
   connect() {
-    if (this.hasSinkTarget) {
-      this.mutationObserver = new MutationObserver(([event]) => {
-        if (event.addedNodes.length === 0) return;
-        this.#flushSink();
-      });
-      this.mutationObserver.observe(this.sinkTarget, { childList: true });
-    }
-
-    this.#flushSink();
+    this.timers ||= new Map();
   }
 
   disconnect() {
-    if (this.mutationObserver) this.mutationObserver.disconnect();
-  }
-
-  toast({ params }) {
-    const { title, description } = params;
-    const item = this.templateTarget.content.cloneNode(true);
-
-    item.querySelector("[data-slot=title]").textContent = title;
-    item.querySelector("[data-slot=description]").textContent = description;
-
-    this.show(item);
-  }
-
-  show(item) {
-    this.clear();
-    this.listTarget.appendChild(item);
-
-    requestAnimationFrame(() => {
-      this.listTarget.children[0].dataset.state = "open";
+    this.timers?.forEach((timers) => {
+      window.clearTimeout(timers.dismiss);
+      window.clearTimeout(timers.remove);
     });
-
-    if (this.timer) clearTimeout(this.timer);
-
-    this.timer = setTimeout(() => {
-      this.hide();
-    }, this.durationValue);
+    this.timers?.clear();
   }
 
-  hide() {
-    this.listTarget.children[0].dataset.state = "closed";
-
-    setTimeout(() => {
-      this.clear();
-    }, 250);
+  itemTargetConnected(item) {
+    this.schedule(item);
   }
 
-  clear() {
-    this.listTarget.innerHTML = "";
+  itemTargetDisconnected(item) {
+    this.clear(item);
   }
 
-  #flushSink() {
-    if (!this.hasSinkTarget) return;
+  dismiss(event) {
+    const item = event.currentTarget.closest('[data-nk="toast-item"]');
+    if (item) this.close(item);
+  }
 
-    for (const li of this.sinkTarget.children) {
-      this.show(li.cloneNode(true));
-      li.remove();
-    }
+  pause(event) {
+    const item = event.currentTarget;
+    const timers = this.timerMap.get(item);
+    if (!timers?.dismiss) return;
+
+    window.clearTimeout(timers.dismiss);
+    timers.dismiss = null;
+    timers.remaining = Math.max(0, timers.deadline - Date.now());
+  }
+
+  resume(event) {
+    const item = event.currentTarget;
+    if (item.contains(event.relatedTarget)) return;
+    if (item.dataset.state !== "open") return;
+
+    const remaining = this.timerMap.get(item)?.remaining ?? this.durationValue;
+    this.schedule(item, remaining);
+  }
+
+  remove(event) {
+    if (event.target !== event.currentTarget) return;
+    if (event.currentTarget.dataset.state !== "closed") return;
+
+    this.removeItem(event.currentTarget);
+  }
+
+  schedule(item, delay = this.durationValue) {
+    this.clear(item);
+    if (item.dataset.state !== "open") return;
+    if (item.hasAttribute("data-nk--toast-permanent")) return;
+
+    const dismiss = window.setTimeout(() => this.close(item), delay);
+    this.timerMap.set(item, {
+      dismiss,
+      remove: null,
+      deadline: Date.now() + delay,
+      remaining: delay,
+    });
+  }
+
+  close(item) {
+    if (!item.isConnected || item.dataset.state === "closed") return;
+
+    this.clear(item);
+    item.dataset.state = "closed";
+
+    const remove = window.setTimeout(() => this.removeItem(item), 200);
+    this.timerMap.set(item, {
+      dismiss: null,
+      remove,
+      deadline: null,
+      remaining: null,
+    });
+  }
+
+  removeItem(item) {
+    this.clear(item);
+    item.remove();
+  }
+
+  clear(item) {
+    const timers = this.timerMap.get(item);
+    if (!timers) return;
+
+    window.clearTimeout(timers.dismiss);
+    window.clearTimeout(timers.remove);
+    this.timerMap.delete(item);
+  }
+
+  get timerMap() {
+    this.timers ||= new Map();
+    return this.timers;
   }
 }

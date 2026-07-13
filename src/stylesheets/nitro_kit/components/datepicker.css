@@ -1,0 +1,32 @@
+@layer nitro-kit.base {
+  :where([data-nk="datepicker"]) {
+    display: block;
+    inline-size: 100%;
+    min-block-size: var(--nk-control-height-md);
+    padding-inline: calc(var(--nk-space) * 3);
+    color: var(--nk-color-foreground);
+    font-size: var(--nk-text-base);
+    background: var(--nk-color-surface);
+    border: var(--nk-border-width) solid var(--nk-color-border);
+    border-radius: var(--nk-radius-md);
+    transition:
+      border-color var(--nk-duration-normal) var(--nk-ease),
+      box-shadow var(--nk-duration-normal) var(--nk-ease);
+  }
+}
+
+@layer nitro-kit.state {
+  :where([data-nk="datepicker"]:focus-visible) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: var(--nk-focus-offset);
+  }
+
+  :where([data-nk="datepicker"]:disabled) {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  :where([data-nk="datepicker"][aria-invalid="true"]) {
+    border-color: var(--nk-color-danger);
+  }
+}

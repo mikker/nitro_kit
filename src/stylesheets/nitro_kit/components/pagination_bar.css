@@ -1,0 +1,41 @@
+@layer nitro-kit.base {
+  :where([data-nk="pagination-bar"]) {
+    display: flex;
+    min-width: 0;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: calc(var(--nk-space) * 4);
+  }
+
+  :where([data-nk="pagination-bar"] > [data-slot="pagination-bar-summary"]) {
+    min-width: 0;
+    margin: 0;
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-sm);
+    text-wrap: pretty;
+  }
+
+  :where(
+      [data-nk="pagination-bar"]
+        > [data-nk="pagination"][data-slot="pagination-bar-pagination"]
+    ) {
+    margin-inline-start: auto;
+  }
+}
+
+@layer nitro-kit.state {
+  @media (max-width: 48rem) {
+    :where([data-nk="pagination-bar"]) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    :where(
+        [data-nk="pagination-bar"]
+          > [data-nk="pagination"][data-slot="pagination-bar-pagination"]
+      ) {
+      margin-inline-start: 0;
+    }
+  }
+}

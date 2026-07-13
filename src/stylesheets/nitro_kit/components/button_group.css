@@ -1,0 +1,53 @@
+@layer nitro-kit.compound {
+  :where([data-nk="button-group"]) {
+    display: inline-flex;
+    isolation: isolate;
+    align-items: stretch;
+    max-inline-size: 100%;
+    overflow-x: auto;
+    vertical-align: middle;
+  }
+
+  :where([data-nk="button-group"] > [data-slot="button-group-button"]) {
+    position: relative;
+    /* The group handles pressure by scrolling, so members keep their
+       intrinsic width instead of truncating their labels. */
+    max-inline-size: none;
+  }
+
+  :where(
+    [data-nk="button-group"]
+      > [data-slot="button-group-button"]:not(:first-child)
+  ) {
+    margin-inline-start: calc(var(--nk-border-width) * -1);
+  }
+
+  :where(
+    [data-nk="button-group"]
+      > [data-slot="button-group-button"]:not(:only-child)
+  ) {
+    border-radius: 0;
+  }
+
+  :where(
+    [data-nk="button-group"]
+      > [data-slot="button-group-button"]:first-child:not(:only-child)
+  ) {
+    border-start-start-radius: var(--nk-radius-md);
+    border-end-start-radius: var(--nk-radius-md);
+  }
+
+  :where(
+    [data-nk="button-group"]
+      > [data-slot="button-group-button"]:last-child:not(:only-child)
+  ) {
+    border-start-end-radius: var(--nk-radius-md);
+    border-end-end-radius: var(--nk-radius-md);
+  }
+
+  :where(
+    [data-nk="button-group"] > [data-slot="button-group-button"]:focus-visible
+  ) {
+    z-index: 1;
+  }
+}

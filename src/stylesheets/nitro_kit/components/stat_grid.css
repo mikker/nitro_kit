@@ -1,0 +1,42 @@
+@layer nitro-kit.base {
+  :where([data-nk="stat-grid"]) {
+    color: var(--nk-color-foreground);
+  }
+
+  :where(
+      [data-nk="stat-grid"]
+        > [data-slot="stat-grid-grid"]
+        > [data-slot="stat-grid-stat"]
+    ) {
+    display: grid;
+    align-content: start;
+    gap: calc(var(--nk-space) * 2);
+    min-height: 100%;
+    padding: calc(var(--nk-space) * 5);
+    background: var(--nk-color-surface);
+    border: var(--nk-border-width) solid var(--nk-color-border);
+    border-radius: var(--nk-radius-lg);
+    box-shadow: var(--nk-shadow-sm);
+  }
+
+  :where([data-nk="stat-grid"] [data-slot="stat-grid-label"]) {
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-sm);
+    font-weight: var(--nk-font-weight-medium);
+  }
+
+  :where([data-nk="stat-grid"] [data-slot="stat-grid-value"]) {
+    font-size: var(--nk-text-2xl);
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--nk-font-weight-bold);
+    line-height: var(--nk-leading-tight);
+    overflow-wrap: anywhere;
+  }
+
+  :where([data-nk="stat-grid"] [data-slot="stat-grid-detail"]) {
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-xs);
+    line-height: var(--nk-leading-normal);
+    text-wrap: pretty;
+  }
+}

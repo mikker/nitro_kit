@@ -1,0 +1,9 @@
+@layer nitro-kit.base {
+  :where([data-nk="label"]) {
+    color: var(--nk-color-foreground);
+    font-size: var(--nk-text-sm);
+    font-weight: var(--nk-font-weight-medium);
+    line-height: var(--nk-leading-normal);
+    text-wrap: pretty;
+  }
+}

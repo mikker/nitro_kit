@@ -1,0 +1,55 @@
+@layer nitro-kit.base {
+  :where(
+      [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
+    ) {
+    display: block;
+    inline-size: 100%;
+    min-block-size: var(--nk-control-height-md);
+    padding-inline: calc(var(--nk-space) * 3);
+    color: var(--nk-color-foreground);
+    font-size: var(--nk-text-base);
+    background: var(--nk-color-surface);
+    border: var(--nk-border-width) solid var(--nk-color-border);
+    border-radius: var(--nk-radius-md);
+    transition:
+      border-color var(--nk-duration-normal) var(--nk-ease),
+      box-shadow var(--nk-duration-normal) var(--nk-ease);
+  }
+
+  :where([data-nk="input"][type="checkbox"], [data-nk="input"][type="radio"]) {
+    inline-size: 1.125rem;
+    block-size: 1.125rem;
+    accent-color: var(--nk-color-primary);
+  }
+
+  :where([data-nk="input"][type="file"]) {
+    padding-inline-start: 0;
+  }
+
+  :where([data-nk="input"][type="file"])::file-selector-button {
+    min-block-size: calc(
+      var(--nk-control-height-md) - (var(--nk-border-width) * 2)
+    );
+    margin-inline-end: calc(var(--nk-space) * 3);
+    padding-inline: calc(var(--nk-space) * 3);
+    font-weight: var(--nk-font-weight-medium);
+    background: var(--nk-color-muted);
+    border-inline-end: var(--nk-border-width) solid var(--nk-color-border);
+  }
+}
+
+@layer nitro-kit.state {
+  :where([data-nk="input"]:focus-visible) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: var(--nk-focus-offset);
+  }
+
+  :where([data-nk="input"]:disabled) {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  :where([data-nk="input"][aria-invalid="true"]) {
+    border-color: var(--nk-color-danger);
+  }
+}

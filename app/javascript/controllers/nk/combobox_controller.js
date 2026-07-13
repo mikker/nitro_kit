@@ -1,137 +1,195 @@
 import { Controller } from "@hotwired/stimulus";
-import Combobox from "@github/combobox-nav";
-import {
-  computePosition,
-  offset,
-  flip,
-  shift,
-  autoUpdate,
-} from "@floating-ui/dom";
 
 export default class extends Controller {
-  static targets = ["input", "list", "hiddenField", "clearButton"];
-  static values = {
-    open: { type: Boolean, default: false },
-    // Options for floating-ui
-    placement: { type: String },
-    // Options for combobox-nav
-    tabInsertsSuggestions: { type: Boolean },
-    firstOptionSelectionMode: { type: String },
-    scrollIntoViewOptions: { type: Object },
-  };
+  static targets = ["input", "value", "listbox", "option"];
+  static values = { open: Boolean, required: Boolean };
 
   connect() {
-    this.combobox = new Combobox(this.inputTarget, this.listTarget, {
-      tabInsertsSuggestions: this.tabInsertsSuggestionsValue,
-      firstOptionSelectionMode: this.firstOptionSelectionModeValue,
-      scrollIntoViewOptions: this.scrollIntoViewOptionsValue,
-    });
-
-    this.updatePosition();
-
-    this.onCommit = (event) => {
-      this.select(event);
-      this.close();
-    };
-    this.listTarget.addEventListener("combobox-commit", this.onCommit);
+    this.activeOption = null;
+    this.syncSelection();
+    this.syncValidity();
   }
 
   disconnect() {
-    if (this.onCommit) {
-      this.listTarget.removeEventListener("combobox-commit", this.onCommit);
+    this.openValue = false;
+    this.element.dataset.state = "closed";
+    if (this.hasListboxTarget) {
+      this.listboxTarget.dataset.state = "closed";
+      this.listboxTarget.hidden = true;
     }
-    if (this.clearAutoUpdate) {
-      this.clearAutoUpdate();
+    if (this.hasInputTarget) {
+      this.inputTarget.setAttribute("aria-expanded", "false");
+      this.inputTarget.setCustomValidity("");
+      this.inputTarget.removeAttribute("aria-activedescendant");
     }
-    this.combobox.destroy();
-  }
-
-  select(event) {
-    this.inputTarget.value = event.target.textContent;
-    this.hiddenFieldTarget.value =
-      event.target.dataset.value || event.target.textContent;
   }
 
   open() {
+    if (this.inputTarget.disabled) return;
+
     this.openValue = true;
   }
 
   close() {
     this.openValue = false;
+    this.setActive(null);
   }
 
-  focusShift({ target }) {
-    if (!this.openValue) return;
-    if (this.element.contains(target)) return;
-
-    this.close();
+  closeFromOutside(event) {
+    if (!this.element.contains(event.target)) this.close();
   }
 
-  windowClick({ target }) {
-    if (!this.openValue) return;
-    if (this.element.contains(target)) return;
+  filter() {
+    const query = this.inputTarget.value.trim().toLocaleLowerCase();
+    let exactMatch = null;
 
-    this.close();
-  }
+    this.optionTargets.forEach((option) => {
+      const label = this.optionLabel(option);
+      option.hidden = !label.toLocaleLowerCase().includes(query);
 
-  clear() {
-    this.combobox.resetSelection();
-    this.inputTarget.value = "";
-    this.input();
-    this.hiddenFieldTarget.value = "";
-  }
-
-  input(_event) {
-    if (!this.isOpen) this.open();
-
-    const filter = this.inputTarget.value.toLowerCase();
-
-    Array.from(this.listTarget.children).forEach((item) => {
-      const value = item.dataset.value?.toLowerCase();
-      const text = item.textContent.toLowerCase();
-
-      if (value?.includes(filter) || text.includes(filter)) {
-        item.setAttribute("role", "option");
-      } else {
-        item.removeAttribute("role");
+      if (
+        label.toLocaleLowerCase() === query &&
+        option.getAttribute("aria-disabled") !== "true"
+      ) {
+        exactMatch = option;
       }
     });
 
-    this.hiddenFieldTarget.value = this.inputTarget.value;
+    this.valueTarget.value = exactMatch?.dataset.value ?? "";
+    this.syncSelection();
+    this.setActive(null);
+    this.syncValidity();
+    this.open();
   }
 
-  openValueChanged(state, _previous) {
-    if (!this.combobox) return;
+  select(event) {
+    this.commit(event.currentTarget);
+  }
 
-    if (state) {
-      this.combobox.start();
+  activate(event) {
+    this.setActive(event.currentTarget);
+  }
 
-      this.listTarget.dataset.state = "open";
+  navigate(event) {
+    const options = this.visibleOptions;
+    const currentIndex = options.indexOf(this.activeOption);
+    let nextIndex;
 
-      this.clearAutoUpdate = autoUpdate(
-        this.inputTarget,
-        this.listTarget,
-        this.updatePosition,
+    switch (event.key) {
+      case "ArrowDown":
+        event.preventDefault();
+        this.open();
+        nextIndex = (currentIndex + 1) % options.length;
+        break;
+      case "ArrowUp":
+        event.preventDefault();
+        this.open();
+        nextIndex = (currentIndex - 1 + options.length) % options.length;
+        break;
+      case "Home":
+        if (!this.openValue) return;
+        event.preventDefault();
+        nextIndex = 0;
+        break;
+      case "End":
+        if (!this.openValue) return;
+        event.preventDefault();
+        nextIndex = options.length - 1;
+        break;
+      case "Enter":
+        if (!this.openValue || !this.activeOption) return;
+        event.preventDefault();
+        this.commit(this.activeOption);
+        return;
+      case "Escape":
+        if (!this.openValue) return;
+        event.preventDefault();
+        this.close();
+        return;
+      case "Tab":
+        this.close();
+        this.syncValidity();
+        return;
+      default:
+        return;
+    }
+
+    if (options.length > 0) this.setActive(options[nextIndex]);
+  }
+
+  validate() {
+    this.syncValidity();
+  }
+
+  openValueChanged(open) {
+    const state = open ? "open" : "closed";
+    this.element.dataset.state = state;
+    this.listboxTarget.dataset.state = state;
+    this.listboxTarget.hidden = !open;
+    this.inputTarget.setAttribute("aria-expanded", String(open));
+
+    if (open && !this.activeOption) {
+      const selected = this.optionTargets.find(
+        (option) =>
+          option.getAttribute("aria-selected") === "true" && !option.hidden,
       );
-    } else {
-      this.combobox.stop();
-
-      this.listTarget.dataset.state = "closed";
-
-      if (this.clearAutoUpdate) {
-        this.clearAutoUpdate();
-      }
+      this.setActive(selected ?? this.visibleOptions[0] ?? null);
     }
   }
 
-  updatePosition = () => {
-    computePosition(this.inputTarget, this.listTarget, {
-      placement: this.placementValue,
-      middleware: [offset(5), flip(), shift({ padding: 5 })],
-    }).then(({ x, y }) => {
-      this.listTarget.style.left = `${x}px`;
-      this.listTarget.style.top = `${y}px`;
-      this.listTarget.style.width = `${this.inputTarget.clientWidth}px`;
+  commit(option) {
+    if (!option || option.getAttribute("aria-disabled") === "true") return;
+
+    this.inputTarget.value = this.optionLabel(option);
+    this.valueTarget.value = option.dataset.value;
+    this.syncSelection();
+    this.syncValidity();
+    this.close();
+    this.inputTarget.focus();
+    this.valueTarget.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+
+  syncSelection() {
+    this.optionTargets.forEach((option) => {
+      const selected = option.dataset.value === this.valueTarget.value;
+      option.setAttribute("aria-selected", String(selected));
+      option.dataset.state = selected ? "selected" : "unselected";
     });
-  };
+  }
+
+  syncValidity() {
+    const hasVisibleValue = this.inputTarget.value.trim() !== "";
+    const hasSubmittedValue = this.valueTarget.value !== "";
+    const invalid =
+      (this.requiredValue && !hasSubmittedValue) ||
+      (hasVisibleValue && !hasSubmittedValue);
+    this.inputTarget.setCustomValidity(invalid ? "Choose an option." : "");
+    this.inputTarget.setAttribute("aria-invalid", String(invalid));
+  }
+
+  setActive(option) {
+    this.optionTargets.forEach((candidate) => {
+      candidate.dataset.active = String(candidate === option);
+    });
+
+    this.activeOption = option;
+
+    if (option) {
+      this.inputTarget.setAttribute("aria-activedescendant", option.id);
+      option.scrollIntoView({ block: "nearest" });
+    } else {
+      this.inputTarget.removeAttribute("aria-activedescendant");
+    }
+  }
+
+  optionLabel(option) {
+    return option.textContent.trim();
+  }
+
+  get visibleOptions() {
+    return this.optionTargets.filter(
+      (option) =>
+        !option.hidden && option.getAttribute("aria-disabled") !== "true",
+    );
+  }
 }

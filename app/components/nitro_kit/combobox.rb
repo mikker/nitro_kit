@@ -2,146 +2,251 @@
 
 module NitroKit
   class Combobox < Component
+    PLACEMENTS = %i[bottom_start bottom_end top_start top_end].freeze
+
+    Option = NitroKit::Choice
+
     def initialize(
-      options: [],
-      id: nil,
-
-      placement: "bottom",
-      tab_inserts_suggestions: true,
-      first_option_selection_mode: "selected",
-      scroll_into_view_options: { block: "nearest", inline: "nearest" },
-
-      **attrs
+      id:,
+      name:,
+      label:,
+      options:,
+      value: nil,
+      placeholder: nil,
+      placement: :bottom_start,
+      required: false,
+      disabled: false,
+      autocomplete: "off",
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil
     )
-      # floating-ui options
-      @placement = placement
+      @identifier = component_id(id)
+      @name = form_name(name)
+      @label = accessible_label(label)
+      @options = typed_options(options)
+      @value = value
+      @selected_option = selected_option(value)
+      @placeholder = placeholder
+      @placement = validate_choice!(:placement, placement, PLACEMENTS)
+      @required = validate_boolean!(:required, required)
+      @disabled = validate_boolean!(:disabled, disabled)
+      @autocomplete = autocomplete
 
-      # combobox-nav options
-      @tab_inserts_suggestions = tab_inserts_suggestions
-      @first_option_selection_mode = first_option_selection_mode
-      @scroll_into_view_options = scroll_into_view_options
-
-      @id = id || "nk--combobox-" + SecureRandom.hex(4)
-
-      @options = options
+      if !value.nil? && !@selected_option
+        raise ArgumentError, "Combobox value #{value.inspect} does not match a declared option"
+      end
 
       super(
-        attrs,
-        type: "text",
-        class: input_class,
-        data: {
-          nk__combobox_target: "input",
-          action: %w[
-            focusin->nk--combobox#open
-            focusin@window->nk--combobox#focusShift
-            click@window->nk--combobox#windowClick
-            input->nk--combobox#input
-            keydown.esc->nk--combobox#clear
-            keydown.down->nk--combobox#open
-          ]
+        component: :combobox,
+        attributes: {
+          id: @identifier,
+          role: "group",
+          aria: { label: @label },
+          data: {
+            controller: "nk--combobox",
+            placement: placement_value,
+            state: "closed",
+            action: "click@window->nk--combobox#closeFromOutside",
+            nk__combobox_open_value: "false",
+            nk__combobox_required_value: @required
+          }
         },
-        aria: {
-          controls: id(:listbox)
-        }
+        html:,
+        aria:,
+        data:,
+        desperately_need_a_class:
       )
     end
 
-    attr_reader(
-      :options,
-      :placement,
-      :tab_inserts_suggestions,
-      :first_option_selection_mode,
-      :scroll_into_view_options
-    )
+    attr_reader :identifier, :name, :label, :options, :value, :placement
 
     def view_template
-      div(
-        class: "isolate",
-        data: {
-          slot: "control",
-          controller: "nk--combobox",
-          nk__combobox_placement_value: placement,
-          nk__combobox_tab_inserts_suggestions_value: tab_inserts_suggestions.to_s,
-          nk__combobox_first_option_selection_mode_value: first_option_selection_mode.to_s,
-          nk__combobox_scroll_into_view_options_value: scroll_into_view_options&.to_json
-        }
-      ) do
-        span(class: wrapper_class) do
-          render(Input.new(**attrs, value: display_value))
-          chevron_icon
-        end
-
-        # Since a combobox can function like a <select> element where the displayed
-        # value and the form value differ, include the value in a hidden field
-        input(
-          type: "hidden",
-          value: attrs[:value],
-          name: attrs[:name],
-          data: { nk__combobox_target: "hiddenField" }
-        )
-
-        ul(
-          role: "listbox",
-          id: id(:listbox),
-          class: list_class,
-          data: { nk__combobox_target: "list", state: "closed" }
-        ) do
-          options.each do |(key, value)|
-            li(
-              role: "option",
-              data: { value: },
-              class: merge_class(option_class)
-            ) { key }
-          end
-        end
+      div(**root_attributes) do
+        render_control
+        render_hidden_field
+        render_listbox
       end
     end
 
     private
 
-    def id(suffix)
-      "#{@id}-#{suffix}"
+    def render_control
+      span(**slot_attributes(:control)) do
+        render_in_slot(
+          Input.new(
+            type: :text,
+            id: input_id,
+            value: @selected_option&.label,
+            placeholder: @placeholder,
+            disabled: @disabled,
+            required: @required,
+            autocomplete: @autocomplete,
+            html: { role: "combobox" },
+            aria: {
+              label:,
+              autocomplete: "list",
+              controls: listbox_id,
+              expanded: false
+            },
+            data: {
+              nk__combobox_target: "input",
+              action: [
+                "focus->nk--combobox#open",
+                "input->nk--combobox#filter",
+                "keydown->nk--combobox#navigate",
+                "blur->nk--combobox#validate"
+              ].join(" ")
+            }
+          ),
+          :input
+        )
+
+        svg(
+          **slot_attributes(
+            :icon,
+            attributes: {
+              viewbox: "0 0 16 16",
+              width: 16,
+              height: 16,
+              fill: "none",
+              stroke: "currentColor",
+              stroke_width: 1.5,
+              stroke_linecap: "round",
+              stroke_linejoin: "round",
+              focusable: "false",
+              aria: { hidden: true }
+            }
+          )
+        ) { |svg| svg.path(d: "m4 6 4 4 4-4") }
+      end
     end
 
-    def display_value
-      selected = options.find do |(key, value)|
-        value.to_s == attrs[:value].to_s
+    def render_hidden_field
+      input(
+        **slot_attributes(
+          :value,
+          attributes: {
+            id: value_id,
+            type: "hidden",
+            name:,
+            value: @selected_option&.value,
+            disabled: @disabled,
+            data: { nk__combobox_target: "value" }
+          }
+        )
+      )
+    end
+
+    def render_listbox
+      ul(
+        **slot_attributes(
+          :listbox,
+          attributes: {
+            id: listbox_id,
+            role: "listbox",
+            hidden: true,
+            aria: { label: },
+            data: {
+              placement: placement_value,
+              state: "closed",
+              nk__combobox_target: "listbox"
+            }
+          }
+        )
+      ) do
+        options.each_with_index { |option, index| render_option(option, index) }
+      end
+    end
+
+    def render_option(option, index)
+      selected = option.equal?(@selected_option)
+
+      li(
+        **slot_attributes(
+          :option,
+          attributes: {
+            id: option_id(index),
+            role: "option",
+            aria: {
+              disabled: option.disabled ? true : nil,
+              selected:
+            },
+            data: {
+              value: option.value.to_s,
+              state: selected ? "selected" : "unselected",
+              nk__combobox_target: "option",
+              action: option.disabled ? nil : "click->nk--combobox#select pointermove->nk--combobox#activate"
+            }
+          }
+        )
+      ) { plain(option.label) }
+    end
+
+    def typed_options(value)
+      unless value.is_a?(Array) && value.any?
+        raise ArgumentError, "Combobox options must be a non-empty Array"
       end
 
-      selected&.first || attrs[:value]
-    end
+      coerced = value.map do |option|
+        unless option.is_a?(Option) || option.is_a?(Hash) || option.is_a?(Array)
+          raise ArgumentError, "Combobox options must be Choice instances, Hashes, or label/value Arrays"
+        end
 
-    def wrapper_class
-      "inline-grid *:[grid-area:1/1] group/combobox"
-    end
-
-    def input_class
-      "pr-8"
-    end
-
-    def list_class
-      [
-        "absolute top-0 left-0 p-1 bg-background rounded-md border shadow-sm w-fit max-w-sm flex-col flex z-10",
-        "max-h-60 overflow-y-auto",
-        "data-[state=closed]:hidden [&:not(:has([role=option]))]:hidden",
-        "[&_[aria-selected]]:bg-muted"
-      ]
-    end
-
-    def option_class
-      "hidden flex-none px-2 py-1 rounded font-medium truncate cursor-pointer hover:bg-muted [&[role=option]]:block"
-    end
-
-    def chevron_icon
-      svg(
-        class: "size-4 self-center place-self-end mr-2 pointer-events-none text-muted-content group-hover/combobox:text-foreground",
-        viewbox: "0 0 24 24",
-        fill: "none",
-        stroke: "currentColor",
-        stroke_width: 1
-      ) do |svg|
-        svg.path(d: "m6 9 6 6 6-6")
+        Option.coerce(option)
       end
+
+      duplicates = coerced.group_by { |option| option.value.to_s }.select { |_key, options| options.many? }
+      if duplicates.any?
+        raise ArgumentError, "Combobox option values must be unique: #{duplicates.keys.join(", ")}"
+      end
+
+      coerced.freeze
+    end
+
+    def selected_option(value)
+      return if value.nil?
+
+      options.find { |option| option.value.to_s == value.to_s }
+    end
+
+    def placement_value
+      placement.to_s.tr("_", "-")
+    end
+
+    def input_id
+      "#{identifier}-input"
+    end
+
+    def value_id
+      "#{identifier}-value"
+    end
+
+    def listbox_id
+      "#{identifier}-listbox"
+    end
+
+    def option_id(index)
+      "#{identifier}-option-#{index + 1}"
+    end
+
+    def component_id(value)
+      return value if value.is_a?(String) && value.present? && !value.match?(/\s/)
+
+      raise ArgumentError, "Combobox id must be a non-blank String without whitespace"
+    end
+
+    def form_name(value)
+      return value if value.is_a?(String) && value.present?
+
+      raise ArgumentError, "Combobox name must be a non-blank String"
+    end
+
+    def accessible_label(value)
+      return value if value.is_a?(String) && value.present?
+
+      raise ArgumentError, "Combobox label must be a non-blank String"
     end
   end
 end

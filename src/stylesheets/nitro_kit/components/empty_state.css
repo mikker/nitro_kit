@@ -1,0 +1,44 @@
+@layer nitro-kit.base {
+  :where([data-nk="empty-state"]) {
+    display: grid;
+    justify-items: center;
+    gap: calc(var(--nk-space) * 3);
+    width: 100%;
+    padding: calc(var(--nk-space) * 10) calc(var(--nk-space) * 5);
+    color: var(--nk-color-foreground);
+    text-align: center;
+    background: var(--nk-color-surface);
+    border: var(--nk-border-width) dashed var(--nk-color-border);
+    border-radius: var(--nk-radius-lg);
+  }
+
+  :where([data-nk="empty-state"] > [data-slot="empty-state-icon"]) {
+    width: 2rem;
+    height: 2rem;
+    color: var(--nk-color-muted-foreground);
+  }
+
+  :where([data-nk="empty-state"] > [data-slot="empty-state-title"]) {
+    max-width: var(--nk-content-md);
+    font-size: var(--nk-text-lg);
+    font-weight: var(--nk-font-weight-semibold);
+    line-height: var(--nk-leading-tight);
+    text-wrap: balance;
+  }
+
+  :where([data-nk="empty-state"] > [data-slot="empty-state-description"]) {
+    max-width: var(--nk-content-md);
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-sm);
+    line-height: var(--nk-leading-relaxed);
+    text-wrap: pretty;
+  }
+
+  :where([data-nk="empty-state"] > [data-slot="empty-state-actions"]) {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: calc(var(--nk-space) * 2);
+    margin-block-start: calc(var(--nk-space) * 2);
+  }
+}

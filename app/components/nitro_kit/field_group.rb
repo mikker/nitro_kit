@@ -2,18 +2,25 @@
 
 module NitroKit
   class FieldGroup < Component
-    def initialize(**attrs)
-      super(attrs, class: base_class, data: { slot: "control" })
+    def initialize(
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil
+    )
+      super(
+        component: :field_group,
+        html:,
+        aria:,
+        data:,
+        desperately_need_a_class:
+      )
     end
 
     def view_template(&block)
-      div(**attrs, &block)
-    end
+      raise ArgumentError, "field group requires a block" unless block
 
-    private
-
-    def base_class
-      "space-y-6"
+      div(**root_attributes, &block)
     end
   end
 end

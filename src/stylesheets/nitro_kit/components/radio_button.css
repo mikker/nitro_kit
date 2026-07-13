@@ -1,0 +1,113 @@
+@layer nitro-kit.base {
+  :where([data-nk="radio-button"]) {
+    display: inline-grid;
+    min-inline-size: var(--nk-control-height-md);
+    min-block-size: var(--nk-control-height-md);
+    color: var(--nk-color-foreground);
+  }
+
+  :where([data-nk="radio-button"] > [data-slot="radio-button-label"]) {
+    display: grid;
+    grid-template-columns: 1.125rem minmax(0, 1fr);
+    gap: calc(var(--nk-space) * 2);
+    align-items: center;
+    min-block-size: var(--nk-control-height-md);
+    cursor: pointer;
+  }
+
+  :where(
+      [data-nk="radio-button"][data-size="lg"]
+        > [data-slot="radio-button-label"]
+    ) {
+    grid-template-columns: 1.5rem minmax(0, 1fr);
+  }
+
+  :where(
+      [data-nk="radio-button"] [data-slot="radio-button-control"],
+      [data-nk="radio-button"] [data-slot="radio-button-indicator"]
+    ) {
+    grid-area: 1 / 1;
+    inline-size: 1.125rem;
+    block-size: 1.125rem;
+  }
+
+  :where(
+      [data-nk="radio-button"][data-size="lg"]
+        [data-slot="radio-button-control"],
+      [data-nk="radio-button"][data-size="lg"]
+        [data-slot="radio-button-indicator"]
+    ) {
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
+  }
+
+  :where([data-nk="radio-button"] [data-slot="radio-button-control"]) {
+    z-index: 1;
+    margin: 0;
+    cursor: pointer;
+    appearance: none;
+    opacity: 0;
+  }
+
+  :where([data-nk="radio-button"] [data-slot="radio-button-indicator"]) {
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+    background: var(--nk-color-surface);
+    border: var(--nk-border-width) solid var(--nk-color-border);
+    border-radius: var(--nk-radius-full);
+  }
+
+  :where([data-nk="radio-button"] [data-slot="radio-button-indicator"])::after {
+    inline-size: 0.5rem;
+    block-size: 0.5rem;
+    content: "";
+    background: var(--nk-color-primary);
+    border-radius: inherit;
+    opacity: 0;
+  }
+
+  :where([data-nk="radio-button"] [data-slot="radio-button-label-text"]) {
+    grid-column: 2;
+  }
+}
+
+@layer nitro-kit.state {
+  :where(
+      [data-nk="radio-button"]
+        [data-slot="radio-button-control"]:checked
+        + [data-slot="radio-button-indicator"]
+    ) {
+    border-color: var(--nk-color-primary);
+  }
+
+  :where(
+      [data-nk="radio-button"]
+        [data-slot="radio-button-control"]:checked
+        + [data-slot="radio-button-indicator"]
+    )::after {
+    opacity: 1;
+  }
+
+  :where(
+      [data-nk="radio-button"]
+        [data-slot="radio-button-control"]:focus-visible
+        + [data-slot="radio-button-indicator"]
+    ) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: var(--nk-focus-offset);
+  }
+
+  :where([data-nk="radio-button"][data-disabled="true"]) {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  :where(
+      [data-nk="radio-button"]
+        [data-slot="radio-button-control"][aria-invalid="true"]
+        + [data-slot="radio-button-indicator"]
+    ) {
+    border-color: var(--nk-color-danger);
+  }
+}

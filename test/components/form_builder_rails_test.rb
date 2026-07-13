@@ -1,0 +1,152 @@
+require "test_helper"
+
+class FormBuilderRailsTest < ActiveSupport::TestCase
+  class SelectBlockProbe < Phlex::HTML
+    include Phlex::Rails::Helpers::FormWith
+
+    def initialize(registration)
+      @registration = registration
+    end
+
+    def view_template
+      form_with(model: @registration, url: "/registration", builder: NitroKit::FormBuilder) do |form|
+        form.select(:role, nil, {}, data: { tracking_id: "role" }) do
+          option(value: "developer") { "Developer" }
+          option(value: "designer", selected: @registration.role == "designer") { "Designer" }
+        end
+      end
+    end
+  end
+
+  class MultipleSelectProbe < Phlex::HTML
+    include Phlex::Rails::Helpers::FormWith
+
+    def view_template
+      form_with(model: Registration.new, url: "/registration", builder: NitroKit::FormBuilder) do |form|
+        form.select(
+          :role,
+          [ [ "Developer", "developer" ], [ "Designer", "designer" ] ],
+          { selected: %w[developer designer] },
+          { multiple: true }
+        )
+      end
+    end
+  end
+
+  class SafeOptionsProbe < Phlex::HTML
+    include Phlex::Rails::Helpers::FormWith
+
+    def view_template
+      option_tags = <<~HTML.html_safe
+        <option value="developer">Developer</option>
+        <option value="designer" selected>Designer</option>
+      HTML
+
+      form_with(model: Registration.new(role: "designer"), url: "/registration", builder: NitroKit::FormBuilder) do |form|
+        form.select(:role, option_tags)
+      end
+    end
+  end
+
+  class NativeHelpersProbe < Phlex::HTML
+    include Phlex::Rails::Helpers::FormWith
+
+    def view_template
+      registration = Registration.new(source: "probe", terms: true)
+
+      form_with(model: registration, url: "/registration", builder: NitroKit::FormBuilder) do |form|
+        form.hidden_field(:source)
+        form.check_box(:terms, { include_hidden: true }, "yes", "no")
+        form.file_field(:attachment, accept: "text/plain")
+        form.text_field(
+          :email,
+          maxlength: 40,
+          data: { tracking_id: "email" },
+          aria: { describedby: "email-help" }
+        )
+      end
+    end
+  end
+
+  class StructuralProbe < Phlex::HTML
+    include Phlex::Rails::Helpers::FormWith
+
+    def view_template
+      form_with(model: Registration.new, url: "/registration", builder: NitroKit::FormBuilder) do |form|
+        form.fieldset(legend: "Profile", description: "Public details") do
+          form.group do
+            form.field(:email, as: :email)
+            form.field(:role, as: :radio_group, options: [ [ "Developer", "developer" ], [ "Designer", "designer" ] ])
+          end
+        end
+      end
+    end
+  end
+
+  test "captures select blocks inside the native select control" do
+    form = render_form(SelectBlockProbe.new(Registration.new(role: "designer")))
+    select = form.at_css("[data-nk='select'][data-slot='field-control'] select")
+
+    assert_equal 2, select.css("option").count
+    assert_equal "designer", select.at_css("option[selected]")["value"]
+    assert_equal "role", select["data-tracking-id"]
+    assert_empty form.css("[data-nk='field'] > option")
+  end
+
+  test "preserves explicit selected arrays and multiple select semantics" do
+    select = render_form(MultipleSelectProbe.new).at_css("select")
+
+    assert select.key?("multiple")
+    assert_equal "registration[role][]", select["name"]
+    assert_equal %w[developer designer], select.css("option[selected]").map { |option| option["value"] }
+  end
+
+  test "preserves trusted Rails-generated option markup" do
+    select = render_form(SafeOptionsProbe.new).at_css("select")
+
+    assert_equal 2, select.css("option").count
+    assert_equal "designer", select.at_css("option[selected]")["value"]
+  end
+
+  test "keeps native helper behavior at the control boundary" do
+    form = render_form(NativeHelpersProbe.new)
+    hidden = form.at_css("input[type='hidden'][name='registration[source]']")
+    checkbox = form.at_css("input[type='checkbox']")
+    file = form.at_css("input[type='file']")
+    text = form.at_css("input[type='text']")
+
+    assert_equal "multipart/form-data", form["enctype"]
+    assert_equal "probe", hidden["value"]
+    assert_nil hidden.ancestors.find { |node| node["data-nk"] == "field" }
+    assert_equal "yes", checkbox["value"]
+    assert checkbox.key?("checked")
+    assert_equal "no", form.at_css("input[type='hidden'][name='registration[terms]']")["value"]
+    assert_equal "text/plain", file["accept"]
+    assert_nil file["value"]
+    assert_equal "40", text["maxlength"]
+    assert_equal "email", text["data-tracking-id"]
+    assert_equal "email-help", text["aria-describedby"]
+    assert_empty form.css("[class], [style]")
+  end
+
+  test "composes builder fieldsets groups and native radio fieldsets" do
+    form = render_form(StructuralProbe.new)
+    fieldset = form.at_css("fieldset[data-nk='fieldset']")
+    group = fieldset.at_css("[data-nk='field-group']")
+    radio_group = group.at_css("fieldset[data-nk='radio-button-group']")
+
+    assert_equal "Profile", fieldset.at_css("legend[data-slot='fieldset-legend']").text
+    assert_equal "Public details", fieldset.at_css("[data-slot='fieldset-description']").text
+    assert_equal 2, group.xpath("./*[@data-nk='field']").count
+    assert_equal "Role", radio_group.at_css("legend").text
+    assert_equal %w[registration[role] registration[role]], radio_group.css("input[type='radio']").map { |input| input["name"] }
+    assert_empty form.css("[class], [style]")
+  end
+
+  private
+
+  def render_form(component)
+    html = ApplicationController.render(component, layout: false)
+    Nokogiri::HTML.fragment(html).at_css("form")
+  end
+end

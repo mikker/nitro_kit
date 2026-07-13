@@ -2,87 +2,111 @@
 
 module NitroKit
   class Table < Component
-    def initialize(wrapper: {}, **attrs)
-      super(attrs)
-      @wrapper = wrapper
+    ALIGNMENTS = %i[left center right].freeze
+    SCOPES = %i[col row].freeze
+
+    def initialize(
+      id: nil,
+      html: {},
+      aria: {},
+      data: {},
+      table_html: {},
+      table_aria: {},
+      table_data: {},
+      desperately_need_a_class: nil
+    )
+      super(
+        component: :table,
+        attributes: { id: }.compact,
+        html:,
+        aria:,
+        data:,
+        desperately_need_a_class:
+      )
+
+      @table_attributes = slot_attributes(
+        :element,
+        html: table_html,
+        aria: table_aria,
+        data: table_data
+      )
     end
 
-    attr_reader :wrapper
-
     def view_template
-      div(**mattr(wrapper, class: "w-full overflow-x-scroll")) do
-        table(
-          **mattr(
-            attrs,
-            class: "w-full caption-bottom text-sm divide-y"
-          )
-        ) do
-          yield
-        end
+      div(**root_attributes) do
+        table(**@table_attributes) { yield }
       end
     end
 
+    alias :html_caption :caption
     alias :html_thead :thead
     alias :html_tbody :tbody
     alias :html_tr :tr
     alias :html_th :th
     alias :html_td :td
 
-    def thead(**attrs)
-      builder do
-        html_thead(**attrs) { yield }
+    def caption(text = nil, html: {}, aria: {}, data: {}, desperately_need_a_class: nil, &block)
+      html_caption(**slot_attributes(:caption, html:, aria:, data:, desperately_need_a_class:)) do
+        text_or_block(text, &block)
       end
     end
 
-    def tbody(**attrs)
-      builder do
-        html_tbody(**mattr(attrs, class: "[&_tr:last-child]:border-0")) { yield }
-      end
+    def thead(html: {}, aria: {}, data: {}, desperately_need_a_class: nil)
+      html_thead(**slot_attributes(:head, html:, aria:, data:, desperately_need_a_class:)) { yield }
     end
 
-    def tr(**attrs)
-      builder do
-        html_tr(**mattr(attrs, class: "border-b")) { yield }
-      end
+    def tbody(html: {}, aria: {}, data: {}, desperately_need_a_class: nil)
+      html_tbody(**slot_attributes(:body, html:, aria:, data:, desperately_need_a_class:)) { yield }
     end
 
-    def th(text = nil, align: :left, **attrs, &block)
-      builder do
-        html_th(**mattr(attrs, class: [ header_cell_classes, cell_classes, align_classes(align), "font-medium" ])) do
-          text_or_block(text, &block)
-        end
-      end
+    def tr(html: {}, aria: {}, data: {}, desperately_need_a_class: nil)
+      html_tr(**slot_attributes(:row, html:, aria:, data:, desperately_need_a_class:)) { yield }
     end
 
-    def td(text = nil, align: nil, **attrs, &block)
-      builder do
-        html_td(**mattr(attrs, class: [ cell_classes, align_classes(align) ])) do
-          text_or_block(text, &block)
-        end
-      end
+    def th(
+      text = nil,
+      align: :left,
+      scope: :col,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil,
+      &block
+    )
+      alignment = validate_choice!(:align, align, ALIGNMENTS)
+      scope = validate_choice!(:scope, scope, SCOPES)
+      html_th(
+        **slot_attributes(
+          :header,
+          attributes: { scope:, data: { align: alignment } },
+          html:,
+          aria:,
+          data:,
+          desperately_need_a_class:
+        )
+      ) { text_or_block(text, &block) }
     end
 
-    private
-
-    def header_cell_classes
-      ""
-    end
-
-    def cell_classes
-      "py-2 min-h-10 px-2"
-    end
-
-    def align_classes(align = nil)
-      case align
-      when :left
-        "text-left"
-      when :center
-        "text-center"
-      when :right
-        "text-right"
-      else
-        nil
-      end
+    def td(
+      text = nil,
+      align: :left,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil,
+      &block
+    )
+      alignment = validate_choice!(:align, align, ALIGNMENTS)
+      html_td(
+        **slot_attributes(
+          :cell,
+          attributes: { data: { align: alignment } },
+          html:,
+          aria:,
+          data:,
+          desperately_need_a_class:
+        )
+      ) { text_or_block(text, &block) }
     end
   end
 end

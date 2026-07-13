@@ -1,0 +1,131 @@
+@layer nitro-kit.base {
+  :where([data-nk="toast"]) {
+    pointer-events: none;
+  }
+
+  :where([data-nk="toast"] > [data-slot="toast-list"]) {
+    position: fixed;
+    z-index: 100;
+    inset-inline-end: calc(var(--nk-space) * 5);
+    inset-block-end: calc(var(--nk-space) * 5);
+    display: flex;
+    flex-direction: column;
+    inline-size: min(26rem, calc(100vw - (var(--nk-space) * 10)));
+    gap: calc(var(--nk-space) * 3);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  :where([data-nk="toast-item"]) {
+    --_nk-toast-background: var(--nk-color-surface);
+    --_nk-toast-foreground: var(--nk-color-foreground);
+    --_nk-toast-border: var(--nk-color-border);
+
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    inline-size: 100%;
+    gap: calc(var(--nk-space) * 3);
+    padding: calc(var(--nk-space) * 4);
+    color: var(--_nk-toast-foreground);
+    pointer-events: auto;
+    background: var(--_nk-toast-background);
+    border: var(--nk-border-width) solid var(--_nk-toast-border);
+    border-radius: var(--nk-radius-lg);
+    box-shadow: var(--nk-shadow-lg);
+    transition:
+      opacity var(--nk-duration-normal) var(--nk-ease),
+      transform var(--nk-duration-normal) var(--nk-ease);
+  }
+
+  :where([data-nk="toast-item"] > [data-slot="toast-item-content"]) {
+    display: grid;
+    flex: 1;
+    gap: var(--nk-space);
+    min-inline-size: 0;
+  }
+
+  :where([data-nk="toast-item"] [data-slot="toast-item-title"]) {
+    font-size: var(--nk-text-sm);
+    font-weight: var(--nk-font-weight-semibold);
+    line-height: var(--nk-leading-tight);
+    text-wrap: balance;
+  }
+
+  :where([data-nk="toast-item"] [data-slot="toast-item-description"]) {
+    font-size: var(--nk-text-sm);
+    line-height: var(--nk-leading-normal);
+    text-wrap: pretty;
+  }
+
+  :where([data-nk="toast-item"] > [data-slot="toast-item-dismiss"]) {
+    flex: none;
+    margin: calc(var(--nk-space) * -2) calc(var(--nk-space) * -2) 0 0;
+  }
+}
+
+@layer nitro-kit.variant {
+  :where([data-nk="toast-item"][data-variant="info"]) {
+    --_nk-toast-background: color-mix(
+      in oklab,
+      var(--nk-color-info) 10%,
+      var(--nk-color-surface)
+    );
+    --_nk-toast-foreground: var(--nk-color-info-content);
+    --_nk-toast-border: var(--nk-color-info);
+  }
+
+  :where([data-nk="toast-item"][data-variant="success"]) {
+    --_nk-toast-background: color-mix(
+      in oklab,
+      var(--nk-color-success) 10%,
+      var(--nk-color-surface)
+    );
+    --_nk-toast-foreground: var(--nk-color-success-content);
+    --_nk-toast-border: var(--nk-color-success);
+  }
+
+  :where([data-nk="toast-item"][data-variant="warning"]) {
+    --_nk-toast-background: color-mix(
+      in oklab,
+      var(--nk-color-warning) 10%,
+      var(--nk-color-surface)
+    );
+    --_nk-toast-foreground: var(--nk-color-warning-content);
+    --_nk-toast-border: var(--nk-color-warning);
+  }
+
+  :where([data-nk="toast-item"][data-variant="error"]) {
+    --_nk-toast-background: color-mix(
+      in oklab,
+      var(--nk-color-danger) 10%,
+      var(--nk-color-surface)
+    );
+    --_nk-toast-foreground: var(--nk-color-danger-content);
+    --_nk-toast-border: var(--nk-color-danger);
+  }
+}
+
+@layer nitro-kit.state {
+  :where([data-nk="toast-item"][data-state="open"]) {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  :where([data-nk="toast-item"][data-state="closed"]) {
+    opacity: 0;
+    transform: translateY(calc(var(--nk-space) * 3));
+  }
+
+  :where([data-nk="toast-item"]:focus-visible) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: var(--nk-focus-offset);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where([data-nk="toast-item"]) {
+      transition-duration: 0.01ms;
+    }
+  }
+}
