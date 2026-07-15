@@ -109,7 +109,7 @@ module NitroKit
             type: "button",
             role: "tab",
             disabled: tab.disabled,
-            tabindex: active ? 0 : -1,
+            tabindex: tab.disabled ? -1 : 0,
             aria: {
               controls: panel_id(tab),
               selected: active
@@ -134,10 +134,7 @@ module NitroKit
           attributes: {
             id: panel_id(tab),
             role: "tabpanel",
-            tabindex: 0,
-            hidden: active ? nil : true,
             aria: {
-              hidden: !active,
               labelledby: tab_id(tab)
             },
             data: {

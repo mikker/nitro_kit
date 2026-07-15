@@ -3,96 +3,77 @@ import { Controller } from "@hotwired/stimulus";
 export default class extends Controller {
   static targets = ["trigger", "content", "item"];
 
-  disconnect() {
-    this.close();
-  }
-
-  sync(event) {
-    this.setState(event.newState === "open");
-  }
-
   openFromKeyboard(event) {
     if (!["ArrowDown", "ArrowUp"].includes(event.key)) return;
+    if (this.triggerTarget.disabled) return;
 
     event.preventDefault();
-    this.open();
+    this.focusLast = event.key === "ArrowUp";
 
-    const items = this.enabledItems;
-    const item = event.key === "ArrowUp" ? items.at(-1) : items[0];
-    item?.focus();
+    if (this.contentTarget.matches(":popover-open")) {
+      this.focusInitialItem();
+    } else {
+      this.contentTarget.showPopover();
+    }
+  }
+
+  focusOpened(event) {
+    if (event.newState === "open") {
+      this.focusInitialItem();
+    } else {
+      this.focusLast = false;
+    }
   }
 
   navigate(event) {
+    switch (event.key) {
+      case "Escape":
+        event.preventDefault();
+        this.hide();
+        this.triggerTarget.focus();
+        return;
+      case "Tab":
+        this.hide();
+        return;
+    }
+
     const items = this.enabledItems;
     if (items.length === 0) return;
 
     const currentIndex = items.indexOf(document.activeElement);
-    let nextIndex;
+    const nextIndex = {
+      ArrowDown: (currentIndex + 1) % items.length,
+      ArrowUp: (currentIndex - 1 + items.length) % items.length,
+      Home: 0,
+      End: items.length - 1,
+    }[event.key];
 
-    switch (event.key) {
-      case "ArrowDown":
-        nextIndex = (currentIndex + 1) % items.length;
-        break;
-      case "ArrowUp":
-        nextIndex = (currentIndex - 1 + items.length) % items.length;
-        break;
-      case "Home":
-        nextIndex = 0;
-        break;
-      case "End":
-        nextIndex = items.length - 1;
-        break;
-      case "Escape":
-        event.preventDefault();
-        this.close();
-        this.triggerTarget.focus();
-        return;
-      case "Tab":
-        this.close();
-        return;
-      default:
-        return;
-    }
+    if (nextIndex === undefined) return;
 
     event.preventDefault();
     items[nextIndex].focus();
   }
 
   select() {
-    this.close();
+    this.hide();
   }
 
-  open() {
-    if (this.triggerTarget.disabled) return;
+  focusInitialItem() {
+    const item = this.focusLast
+      ? this.enabledItems.at(-1)
+      : this.enabledItems[0];
 
-    if (typeof this.contentTarget.showPopover === "function") {
-      if (!this.contentTarget.matches(":popover-open")) {
-        this.contentTarget.showPopover();
-      }
+    this.focusLast = false;
+    if (item) {
+      item.focus();
+    } else {
+      this.contentTarget.focus();
     }
-
-    this.setState(true);
   }
 
-  close() {
-    if (!this.hasContentTarget) return;
-
-    if (
-      typeof this.contentTarget.hidePopover === "function" &&
-      this.contentTarget.matches(":popover-open")
-    ) {
+  hide() {
+    if (this.contentTarget.matches(":popover-open")) {
       this.contentTarget.hidePopover();
-    }
-
-    this.setState(false);
-  }
-
-  setState(open) {
-    const state = open ? "open" : "closed";
-    this.element.dataset.state = state;
-    if (this.hasContentTarget) this.contentTarget.dataset.state = state;
-    if (this.hasTriggerTarget) {
-      this.triggerTarget.setAttribute("aria-expanded", String(open));
     }
   }
 

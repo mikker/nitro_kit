@@ -44,7 +44,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-onboarding-card") do |card|
           card.title(screen_title, level: 4)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render_progress
 
               case state
@@ -260,8 +260,7 @@ module Gallery
           render NitroKit::Button.new(
             "Save and finish later",
             id: "gallery-onboarding-save-later",
-            href: entry_path(entry, state: "resume"),
-            variant: :ghost
+            href: entry_path(entry, state: "resume")
           )
         end
       end

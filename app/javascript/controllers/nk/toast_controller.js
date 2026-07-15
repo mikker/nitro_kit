@@ -9,11 +9,19 @@ export default class extends Controller {
   }
 
   disconnect() {
+    this.teardown();
+  }
+
+  teardown() {
     this.timers?.forEach((timers) => {
       window.clearTimeout(timers.dismiss);
       window.clearTimeout(timers.remove);
     });
     this.timers?.clear();
+
+    this.itemTargets
+      .filter((item) => item.dataset.state === "closed")
+      .forEach((item) => item.remove());
   }
 
   itemTargetConnected(item) {
@@ -42,6 +50,7 @@ export default class extends Controller {
   resume(event) {
     const item = event.currentTarget;
     if (item.contains(event.relatedTarget)) return;
+    if (item.matches(":hover, :focus-within")) return;
     if (item.dataset.state !== "open") return;
 
     const remaining = this.timerMap.get(item)?.remaining ?? this.durationValue;
@@ -75,7 +84,10 @@ export default class extends Controller {
     this.clear(item);
     item.dataset.state = "closed";
 
-    const remove = window.setTimeout(() => this.removeItem(item), 200);
+    const remove = window.setTimeout(
+      () => this.removeItem(item),
+      this.removalDelay(item),
+    );
     this.timerMap.set(item, {
       dismiss: null,
       remove,
@@ -96,6 +108,30 @@ export default class extends Controller {
     window.clearTimeout(timers.dismiss);
     window.clearTimeout(timers.remove);
     this.timerMap.delete(item);
+  }
+
+  removalDelay(item) {
+    const style = getComputedStyle(item);
+    const durations = style.transitionDuration
+      .split(",")
+      .map((value) => this.timeInMilliseconds(value));
+    const delays = style.transitionDelay
+      .split(",")
+      .map((value) => this.timeInMilliseconds(value));
+
+    return (
+      Math.max(
+        ...durations.map(
+          (duration, index) => duration + delays[index % delays.length],
+        ),
+        0,
+      ) + 50
+    );
+  }
+
+  timeInMilliseconds(value) {
+    const time = Number.parseFloat(value) || 0;
+    return value.trim().endsWith("ms") ? time : time * 1000;
   }
 
   get timerMap() {

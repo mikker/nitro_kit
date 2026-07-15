@@ -1,41 +1,38 @@
 require "test_helper"
 
 class AccordionTest < ActiveSupport::TestCase
-  test "renders keyed items with deterministic ARIA relationships and visible state" do
+  test "renders keyed native disclosures without a controller" do
     node = render_accordion do |accordion|
       accordion.item(:general, title: "General", expanded: true) { "General content" }
-      accordion.item(:billing_details, title: "Billing", disabled: true) { "Billing content" }
+      accordion.item(:billing_details, title: "Billing") { "Billing content" }
     end
 
     items = node.css("[data-slot='accordion-item']")
     general_trigger = items.first.at_css("[data-slot='accordion-trigger']")
     general_content = items.first.at_css("[data-slot='accordion-content']")
-    billing_trigger = items.last.at_css("[data-slot='accordion-trigger']")
     billing_content = items.last.at_css("[data-slot='accordion-content']")
 
     assert_equal "faq", node["id"]
     assert_equal "accordion", node["data-nk"]
-    assert_equal "nk--accordion", node["data-controller"]
+    assert_nil node["data-controller"]
     assert_equal "multiple", node["data-mode"]
-    assert_equal "multiple", node["data-nk--accordion-mode-value"]
 
+    assert_equal "details", items.first.name
     assert_equal "general", items.first["data-key"]
-    assert_equal "open", items.first["data-state"]
+    assert items.first.key?("open")
+    assert_nil items.first["name"]
     assert_equal "faq-general-trigger", general_trigger["id"]
-    assert_equal "faq-general-content", general_trigger["aria-controls"]
-    assert_equal "true", general_trigger["aria-expanded"]
+    assert_equal "summary", general_trigger.name
+    assert_nil general_trigger["aria-controls"]
+    assert_nil general_trigger["aria-expanded"]
     assert_equal "faq-general-content", general_content["id"]
-    assert_equal "faq-general-trigger", general_content["aria-labelledby"]
-    assert_equal "false", general_content["aria-hidden"]
-    refute general_content.key?("hidden")
+    assert_nil general_content["role"]
+    assert_nil general_content["aria-hidden"]
     assert_equal "General content", general_content.text
 
     assert_equal "billing-details", items.last["data-key"]
-    assert billing_trigger.key?("disabled")
-    assert_equal "false", billing_trigger["aria-expanded"]
-    assert_equal "true", billing_content["aria-hidden"]
-    assert billing_content.key?("hidden")
-    assert_equal "closed", billing_content["data-state"]
+    refute items.last.key?("open")
+    assert_nil billing_content["hidden"]
     assert_empty node.css("[class], [style]")
   end
 
@@ -52,10 +49,10 @@ class AccordionTest < ActiveSupport::TestCase
     end
 
     assert_equal "single", node["data-mode"]
-    assert_equal "single", node["data-nk--accordion-mode-value"]
+    assert_equal "preferences", node.at_css("details")["name"]
     assert_equal "Preferences", node["title"]
     assert_equal "Preference sections", node["aria-label"]
-    assert_equal "nk--accordion application", node["data-controller"]
+    assert_equal "application", node["data-controller"]
     assert_equal "prefs", node["data-tracking-id"]
   end
 
@@ -112,13 +109,17 @@ class AccordionTest < ActiveSupport::TestCase
       end
     end
 
-    %i[expanded disabled].each do |option|
-      error = assert_raises(ArgumentError) do
-        render_accordion do |accordion|
-          accordion.item(:one, title: "One", **{ option => :yes }) { "Content" }
-        end
+    error = assert_raises(ArgumentError) do
+      render_accordion do |accordion|
+        accordion.item(:one, title: "One", expanded: :yes) { "Content" }
       end
-      assert_match(/#{option} must be true or false/, error.message)
+    end
+    assert_match(/expanded must be true or false/, error.message)
+
+    assert_raises(ArgumentError) do
+      render_accordion do |accordion|
+        accordion.item(:one, title: "One", disabled: true) { "Content" }
+      end
     end
 
     error = assert_raises(ArgumentError) do

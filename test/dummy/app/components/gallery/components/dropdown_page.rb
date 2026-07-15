@@ -15,7 +15,7 @@ module Gallery
         example_section(
           "Placements",
           slug: "dropdown-placements",
-          description: "Every placement is a closed vocabulary reflected in inspectable data."
+          description: "Anchor positioning follows the trigger when supported and safely centers otherwise."
         ) do
           example("Placement matrix", slug: "dropdown-placement-matrix", layout: :matrix) do
             NitroKit::Dropdown::PLACEMENTS.each do |placement|

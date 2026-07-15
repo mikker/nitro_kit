@@ -47,6 +47,46 @@ module NitroKit
       @template.render(NitroKit::FieldGroup.new(**attributes), &block)
     end
 
+    def dropzone(
+      field_name,
+      id: nil,
+      title: "Upload files",
+      description: nil,
+      direct_upload: true,
+      multiple: false,
+      accept: nil,
+      max_files: 1,
+      max_bytes: nil,
+      disabled: false,
+      required: false,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil
+    )
+      self.multipart = true
+
+      @template.render(
+        Dropzone.new(
+          id: id || field_id(field_name),
+          name: self.field_name(field_name, multiple:),
+          title:,
+          description:,
+          direct_upload:,
+          multiple:,
+          accept:,
+          max_files:,
+          max_bytes:,
+          disabled:,
+          required:,
+          html:,
+          aria:,
+          data:,
+          desperately_need_a_class:
+        )
+      )
+    end
+
     FIELD_TYPES.each do |method_name, field_type|
       define_method(method_name) do |field_name, options = {}, **attributes|
         self.multipart = true if field_type == :file
@@ -81,6 +121,7 @@ module NitroKit
 
     def radio_button(field_name, tag_value = "1", options = {}, **attributes)
       control_options = normalize_control_options(options.merge(attributes))
+      control_options[:control_aria] = accessible_control_aria(field_name, control_options[:control_aria])
 
       field(
         field_name,
@@ -100,6 +141,8 @@ module NitroKit
     )
       options = options.merge(attributes).symbolize_keys
       include_hidden = options.delete(:include_hidden) { true }
+      control_options = normalize_control_options(options)
+      control_options[:control_aria] = accessible_control_aria(field_name, control_options[:control_aria])
 
       field(
         field_name,
@@ -108,7 +151,7 @@ module NitroKit
         checked_value:,
         unchecked_value:,
         include_hidden:,
-        **normalize_control_options(options)
+        **control_options
       )
     end
 
@@ -143,6 +186,13 @@ module NitroKit
     end
 
     private
+
+    def accessible_control_aria(field_name, aria)
+      has_name = aria.any? do |key, value|
+        %w[label labelledby].include?(key.to_s.tr("_", "-")) && value.to_s.present?
+      end
+      has_name ? aria : aria.merge(label: field_name.to_s.humanize)
+    end
 
     def errors_for(field_name)
       return unless object&.respond_to?(:errors) && object.errors.include?(field_name)

@@ -14,5 +14,10 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     options.logging_prefs = { browser: "ALL" }
   end
 
+  setup do
+    browser.execute_cdp("Emulation.clearDeviceMetricsOverride")
+    resize_viewport(width: 1440, height: 1200)
+  end
+
   Capybara.default_max_wait_time = 5
 end

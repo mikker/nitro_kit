@@ -2,8 +2,13 @@ module Gallery
   module Catalog
     KINDS = %i[home component block flow].freeze
 
-    Entry = ::Data.define(:kind, :slug, :title, :group, :description, :page, :states, :expected_roots)
-    NavigationGroup = ::Data.define(:kind, :title, :description, :entries)
+    Entry = ::Data.define(:kind, :slug, :title, :description, :page, :states, :expected_roots)
+    Category = ::Data.define(:slug, :title, :description, :entries)
+    Collection = ::Data.define(:kind, :title, :description, :categories) do
+      def entries
+        categories.flat_map(&:entries)
+      end
+    end
 
     class EntryNotFound < KeyError
     end
@@ -11,12 +16,17 @@ module Gallery
     class StateNotFound < KeyError
     end
 
+    class CollectionNotFound < KeyError
+    end
+
+    class CategoryNotFound < KeyError
+    end
+
     ENTRIES = [
       Entry.new(
         kind: :home,
         slug: "home",
         title: "Overview",
-        group: "Gallery",
         description: "The Nitro Kit 2.0 component and application gallery.",
         page: Gallery::Home,
         states: [],
@@ -26,7 +36,6 @@ module Gallery
         kind: :component,
         slug: "button",
         title: "Button",
-        group: "Actions",
         description: "Native buttons and links with typed variants, sizes, and icons.",
         page: Gallery::Components::ButtonPage,
         states: [],
@@ -36,7 +45,6 @@ module Gallery
         kind: :component,
         slug: "icon",
         title: "Icon",
-        group: "Display",
         description: "Lucide icons with decorative and labelled semantics.",
         page: Gallery::Components::IconPage,
         states: [],
@@ -46,7 +54,6 @@ module Gallery
         kind: :component,
         slug: "button-group",
         title: "Button group",
-        group: "Actions",
         description: "One labelled action group containing typed Button children.",
         page: Gallery::Components::ButtonGroupPage,
         states: [],
@@ -56,7 +63,6 @@ module Gallery
         kind: :component,
         slug: "pagination",
         title: "Pagination",
-        group: "Navigation",
         description: "Accessible page navigation with explicit boundaries, current state, and ellipses.",
         page: Gallery::Components::PaginationPage,
         states: [],
@@ -64,9 +70,17 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
+        slug: "app-navigation",
+        title: "Application navigation",
+        description: "A labelled application destination tree with explicit body anatomy, current state, icons, badges, sections, and flexible spacing.",
+        page: Gallery::Components::AppNavigationPage,
+        states: [],
+        expected_roots: %w[app-navigation icon badge button button-group]
+      ),
+      Entry.new(
+        kind: :component,
         slug: "card",
         title: "Card",
-        group: "Structure",
         description: "A compound surface with typed title, body, divider, and footer slots.",
         page: Gallery::Components::CardPage,
         states: [],
@@ -76,7 +90,6 @@ module Gallery
         kind: :component,
         slug: "input",
         title: "Input",
-        group: "Forms",
         description: "Native input controls with explicit HTML semantics.",
         page: Gallery::Components::InputPage,
         states: [],
@@ -86,7 +99,6 @@ module Gallery
         kind: :component,
         slug: "field",
         title: "Field",
-        group: "Forms",
         description: "Labels, descriptions, controls, and validation errors as one accessible unit.",
         page: Gallery::Components::FieldPage,
         states: [],
@@ -96,7 +108,6 @@ module Gallery
         kind: :component,
         slug: "label",
         title: "Label",
-        group: "Forms",
         description: "Native labels with explicit control relationships and direct Phlex content.",
         page: Gallery::Components::LabelPage,
         states: [],
@@ -106,7 +117,6 @@ module Gallery
         kind: :component,
         slug: "textarea",
         title: "Textarea",
-        group: "Forms",
         description: "Multiline text controls with native values, constraints, and availability state.",
         page: Gallery::Components::TextareaPage,
         states: [],
@@ -116,7 +126,6 @@ module Gallery
         kind: :component,
         slug: "select",
         title: "Select",
-        group: "Forms",
         description: "Native selection controls with typed choices, prompts, blanks, and multiple values.",
         page: Gallery::Components::SelectPage,
         states: [],
@@ -126,7 +135,6 @@ module Gallery
         kind: :component,
         slug: "checkbox",
         title: "Checkbox",
-        group: "Forms",
         description: "Submittable boolean controls with explicit checked, unchecked, and mixed state.",
         page: Gallery::Components::CheckboxPage,
         states: [],
@@ -136,7 +144,6 @@ module Gallery
         kind: :component,
         slug: "checkbox-group",
         title: "Checkbox group",
-        group: "Forms",
         description: "A native fieldset of typed multi-select choices with Rails array naming.",
         page: Gallery::Components::CheckboxGroupPage,
         states: [],
@@ -146,7 +153,6 @@ module Gallery
         kind: :component,
         slug: "radio-button",
         title: "Radio button",
-        group: "Forms",
         description: "Same-name native radio choices with explicit labels, values, sizes, and state.",
         page: Gallery::Components::RadioButtonPage,
         states: [],
@@ -156,7 +162,6 @@ module Gallery
         kind: :component,
         slug: "radio-button-group",
         title: "Radio button group",
-        group: "Forms",
         description: "A native single-select fieldset with typed choices and required selection semantics.",
         page: Gallery::Components::RadioButtonGroupPage,
         states: [],
@@ -166,7 +171,6 @@ module Gallery
         kind: :component,
         slug: "switch",
         title: "Switch",
-        group: "Forms",
         description: "Checkbox-backed settings switches with labels, descriptions, sizes, and submitted values.",
         page: Gallery::Components::SwitchPage,
         states: [],
@@ -176,7 +180,6 @@ module Gallery
         kind: :component,
         slug: "field-group",
         title: "Field group",
-        group: "Forms",
         description: "A layout boundary for related direct or FormBuilder-backed fields.",
         page: Gallery::Components::FieldGroupPage,
         states: [],
@@ -186,7 +189,6 @@ module Gallery
         kind: :component,
         slug: "fieldset",
         title: "Fieldset",
-        group: "Forms",
         description: "A semantic form section with legend, guidance, grouped fields, and disabled state.",
         page: Gallery::Components::FieldsetPage,
         states: [],
@@ -194,9 +196,17 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
+        slug: "appearance-picker",
+        title: "Appearance picker",
+        description: "Native light, dark, and system preferences synchronized through one document runtime.",
+        page: Gallery::Components::AppearancePickerPage,
+        states: [],
+        expected_roots: %w[appearance-picker card badge]
+      ),
+      Entry.new(
+        kind: :component,
         slug: "table",
         title: "Table",
-        group: "Structure",
         description: "Semantic tabular data with typed alignment and scope.",
         page: Gallery::Components::TablePage,
         states: [],
@@ -204,9 +214,26 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
+        slug: "sortable-table",
+        title: "Sortable table",
+        description: "Dependency-free sortable headers with caller-owned URLs and an optional Ransack recipe.",
+        page: Gallery::Components::SortableTablePage,
+        states: [],
+        expected_roots: %w[sortable-table table field-group field input select toolbar checkbox button badge flex pagination-bar pagination]
+      ),
+      Entry.new(
+        kind: :component,
+        slug: "details-table",
+        title: "Details table",
+        description: "Record attributes with deterministic Rails values and explicit custom rendering.",
+        page: Gallery::Components::DetailsTablePage,
+        states: [],
+        expected_roots: %w[details-table table badge card progressive-image]
+      ),
+      Entry.new(
+        kind: :component,
         slug: "dialog",
         title: "Dialog",
-        group: "Overlays",
         description: "A native dialog with Nitro-owned trigger, state, and accessible relationships.",
         page: Gallery::Components::DialogPage,
         states: [],
@@ -216,7 +243,6 @@ module Gallery
         kind: :component,
         slug: "dropdown",
         title: "Dropdown",
-        group: "Overlays",
         description: "Native popover menus with typed triggers, entries, placement, and keyboard state.",
         page: Gallery::Components::DropdownPage,
         states: [],
@@ -226,7 +252,6 @@ module Gallery
         kind: :component,
         slug: "tooltip",
         title: "Tooltip",
-        group: "Overlays",
         description: "Contextual descriptions attached to an owned, focusable Button trigger.",
         page: Gallery::Components::TooltipPage,
         states: [],
@@ -236,7 +261,6 @@ module Gallery
         kind: :component,
         slug: "combobox",
         title: "Combobox",
-        group: "Forms",
         description: "Searchable typed choices with distinct display labels and submitted values.",
         page: Gallery::Components::ComboboxPage,
         states: [],
@@ -246,7 +270,6 @@ module Gallery
         kind: :component,
         slug: "datepicker",
         title: "Datepicker",
-        group: "Forms",
         description: "A native date control with explicit constraints and server-owned semantics.",
         page: Gallery::Components::DatepickerPage,
         states: [],
@@ -254,9 +277,17 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
+        slug: "dropzone",
+        title: "Dropzone",
+        description: "Native file selection and drag-and-drop with optional Active Storage direct uploads.",
+        page: Gallery::Components::DropzonePage,
+        states: [],
+        expected_roots: %w[dropzone button]
+      ),
+      Entry.new(
+        kind: :component,
         slug: "toast",
         title: "Toast",
-        group: "Overlays",
         description: "Explicit notification markup, Rails flash mapping, and pauseable dismissal behavior.",
         page: Gallery::Components::ToastPage,
         states: [],
@@ -266,7 +297,6 @@ module Gallery
         kind: :component,
         slug: "alert",
         title: "Alert",
-        group: "Display",
         description: "Status messages with typed intent, title, description, and icon slots.",
         page: Gallery::Components::AlertPage,
         states: [],
@@ -276,7 +306,6 @@ module Gallery
         kind: :component,
         slug: "avatar",
         title: "Avatar",
-        group: "Display",
         description: "Images and accessible initial fallbacks at predictable sizes.",
         page: Gallery::Components::AvatarPage,
         states: [],
@@ -284,9 +313,17 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
+        slug: "progressive-image",
+        title: "Progressive image",
+        description: "Active Storage images with low-resolution previews and explicit lifecycle states.",
+        page: Gallery::Components::ProgressiveImagePage,
+        states: [],
+        expected_roots: %w[progressive-image card details-table table badge]
+      ),
+      Entry.new(
+        kind: :component,
         slug: "avatar-stack",
         title: "Avatar stack",
-        group: "Display",
         description: "A labelled group of consistently sized avatars with overflow state.",
         page: Gallery::Components::AvatarStackPage,
         states: [],
@@ -296,7 +333,6 @@ module Gallery
         kind: :component,
         slug: "badge",
         title: "Badge",
-        group: "Display",
         description: "Compact status labels with typed color, variant, and size.",
         page: Gallery::Components::BadgePage,
         states: [],
@@ -306,7 +342,6 @@ module Gallery
         kind: :component,
         slug: "accordion",
         title: "Accordion",
-        group: "Structure",
         description: "Keyed disclosure sections with native buttons and visible state.",
         page: Gallery::Components::AccordionPage,
         states: [],
@@ -316,7 +351,6 @@ module Gallery
         kind: :component,
         slug: "tabs",
         title: "Tabs",
-        group: "Structure",
         description: "Keyed tab and panel pairs with automatic or manual keyboard activation.",
         page: Gallery::Components::TabsPage,
         states: [],
@@ -324,69 +358,62 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        slug: "v-stack",
-        title: "Vertical stack",
-        group: "Layout",
-        description: "Token-spaced vertical rhythm with explicit intrinsic, centered, or stretched child alignment.",
-        page: Gallery::Components::VStackPage,
+        slug: "flex",
+        title: "Flex",
+        description: "Responsive rows and columns with Tailwind-style breakpoint shorthand and closed layout values.",
+        page: Gallery::Components::FlexPage,
         states: [],
-        expected_roots: %w[v-stack h-stack grid container card alert badge button]
-      ),
-      Entry.new(
-        kind: :component,
-        slug: "h-stack",
-        title: "Horizontal stack",
-        group: "Layout",
-        description: "Token-spaced rows with closed alignment, distribution, and wrapping decisions.",
-        page: Gallery::Components::HStackPage,
-        states: [],
-        expected_roots: %w[h-stack v-stack container card badge button]
+        expected_roots: %w[flex container card badge button]
       ),
       Entry.new(
         kind: :component,
         slug: "grid",
         title: "Grid",
-        group: "Layout",
-        description: "The proven three-column collection layout with one Nitro-owned narrow collapse.",
+        description: "Responsive one-to-twelve-column collections with Tailwind-style breakpoint shorthand.",
         page: Gallery::Components::GridPage,
         states: [],
-        expected_roots: %w[grid v-stack h-stack container card badge button]
+        expected_roots: %w[grid flex container card badge button]
       ),
       Entry.new(
         kind: :component,
         slug: "container",
         title: "Container",
-        group: "Layout",
         description: "Centered content maximums backed by the existing public width tokens.",
         page: Gallery::Components::ContainerPage,
         states: [],
-        expected_roots: %w[container v-stack h-stack grid card alert badge button]
+        expected_roots: %w[container flex grid card alert badge button]
       ),
       Entry.new(
         kind: :block,
         slug: "auth-shell",
         title: "Authentication shell",
-        group: "Authentication",
         description: "A semantic narrow page landmark that owns gutters and layout while applications own every visible authentication region.",
         page: Gallery::Blocks::AuthShellPage,
         states: [],
-        expected_roots: %w[auth-shell container v-stack card alert field input button]
+        expected_roots: %w[auth-shell container flex card alert field input button]
+      ),
+      Entry.new(
+        kind: :block,
+        slug: "app-shell",
+        title: "Application shell",
+        description: "Sidebar, topbar, and hybrid application frames that reflow one AppNavigation tree through an accessible narrow drawer.",
+        page: Gallery::Blocks::AppShellPage,
+        states: [],
+        expected_roots: %w[app-shell app-navigation icon badge button-group button container card]
       ),
       Entry.new(
         kind: :block,
         slug: "settings-layout",
         title: "Settings layout",
-        group: "Navigation and progress",
         description: "A labelled settings navigation beside one neutral content region with a Nitro-owned narrow stack.",
         page: Gallery::Blocks::SettingsLayoutPage,
         states: [],
-        expected_roots: %w[settings-layout button-group button card field input toolbar pagination-bar pagination v-stack]
+        expected_roots: %w[settings-layout button-group button card field input toolbar pagination-bar pagination flex]
       ),
       Entry.new(
         kind: :block,
         slug: "toolbar",
         title: "Toolbar",
-        group: "Navigation and progress",
         description: "Neutral leading and trailing regions with owned distribution, wrapping, and narrow stacking.",
         page: Gallery::Blocks::ToolbarPage,
         states: [],
@@ -396,7 +423,6 @@ module Gallery
         kind: :block,
         slug: "pagination-bar",
         title: "Pagination bar",
-        group: "Navigation and progress",
         description: "Caller-owned result context placed beside exactly one typed Pagination.",
         page: Gallery::Blocks::PaginationBarPage,
         states: [],
@@ -406,7 +432,6 @@ module Gallery
         kind: :block,
         slug: "page-header",
         title: "Page header",
-        group: "Content and forms",
         description: "A fixed page-level heading sequence with optional context and one typed action group.",
         page: Gallery::Blocks::PageHeaderPage,
         states: [],
@@ -416,8 +441,7 @@ module Gallery
         kind: :block,
         slug: "stat-grid",
         title: "Stat grid",
-        group: "Content and forms",
-        description: "Keyed label, value, and detail records in the proven three-column responsive grid.",
+        description: "Keyed label, value, and detail records in a responsive one-to-three-column grid.",
         page: Gallery::Blocks::StatGridPage,
         states: [],
         expected_roots: %w[stat-grid grid container]
@@ -426,7 +450,6 @@ module Gallery
         kind: :block,
         slug: "data-section",
         title: "Data section",
-        group: "Content and forms",
         description: "An owned section heading around exactly one caller-populated Table or typed EmptyState.",
         page: Gallery::Blocks::DataSectionPage,
         states: [],
@@ -436,7 +459,6 @@ module Gallery
         kind: :block,
         slug: "form-section",
         title: "Form section",
-        group: "Content and forms",
         description: "A section frame for one complete caller-owned Rails form and an optional typed status.",
         page: Gallery::Blocks::FormSectionPage,
         states: [],
@@ -446,7 +468,6 @@ module Gallery
         kind: :block,
         slug: "danger-zone",
         title: "Danger zone",
-        group: "Content and forms",
         description: "Impact anatomy around a caller-owned confirmation composition and explicit safe escape.",
         page: Gallery::Blocks::DangerZonePage,
         states: [],
@@ -456,7 +477,6 @@ module Gallery
         kind: :block,
         slug: "empty-state",
         title: "Empty state",
-        group: "Content and forms",
         description: "An explicit empty result with controlled heading hierarchy, icon, and up to two actions.",
         page: Gallery::Blocks::EmptyStatePage,
         states: [],
@@ -466,404 +486,546 @@ module Gallery
         kind: :flow,
         slug: "sign-in",
         title: "Sign in",
-        group: "Authentication",
         description: "AuthShell-composed credential entry, validation, submission, success, and mobile pressure.",
         page: Gallery::Flows::SignInPage,
         states: %w[default invalid loading success mobile],
-        expected_roots: %w[auth-shell container v-stack card button]
+        expected_roots: %w[auth-shell container flex card button]
       ),
       Entry.new(
         kind: :flow,
         slug: "password-reset",
         title: "Password reset",
-        group: "Authentication",
         description: "AuthShell-composed recovery request, delivery, replacement, expiration, and loading states.",
         page: Gallery::Flows::PasswordResetPage,
         states: %w[request validation sent update expired loading],
-        expected_roots: %w[auth-shell container v-stack card button]
+        expected_roots: %w[auth-shell container flex card button]
       ),
       Entry.new(
         kind: :flow,
         slug: "email-verification",
         title: "Email verification",
-        group: "Authentication",
         description: "AuthShell-composed pending, verified, expired, invalid-token, and long-copy identity states.",
         page: Gallery::Flows::EmailVerificationPage,
         states: %w[pending verified expired invalid-token long-copy],
-        expected_roots: %w[auth-shell container v-stack card button]
+        expected_roots: %w[auth-shell container flex card button]
       ),
       Entry.new(
         kind: :flow,
         slug: "invitation-acceptance",
         title: "Invitation acceptance",
-        group: "Authentication",
         description: "AuthShell-composed workspace invitation setup, validation, token recovery, completion, and mobile pressure.",
         page: Gallery::Flows::InvitationAcceptancePage,
         states: %w[valid validation loading accepted expired invalid-token mobile],
-        expected_roots: %w[auth-shell container v-stack card button]
+        expected_roots: %w[auth-shell container flex card button]
       ),
       Entry.new(
         kind: :flow,
         slug: "account-creation",
         title: "Account creation",
-        group: "Authentication",
         description: "AuthShell-composed registration, consent, validation, submission, verification handoff, and content pressure.",
         page: Gallery::Flows::AccountCreationPage,
         states: %w[default validation loading success long-copy mobile],
-        expected_roots: %w[auth-shell container v-stack card button]
+        expected_roots: %w[auth-shell container flex card button]
       ),
       Entry.new(
         kind: :flow,
         slug: "onboarding",
         title: "Workspace onboarding",
-        group: "Onboarding",
         description: "AuthShell-composed workspace, team, integration, review, resume, validation, loading, and completion steps.",
         page: Gallery::Flows::OnboardingPage,
         states: %w[workspace workspace-validation team integrations review loading complete resume mobile],
-        expected_roots: %w[auth-shell container v-stack card button]
+        expected_roots: %w[auth-shell container flex card button]
       ),
       Entry.new(
         kind: :flow,
         slug: "dashboard",
         title: "Workspace dashboard",
-        group: "Workspace",
         description: "A block-composed dashboard with semantic chart pressure across new, active, degraded, loading, dense, and mobile states.",
         page: Gallery::Flows::DashboardPage,
         states: %w[new active degraded loading dense mobile],
-        expected_roots: %w[container v-stack page-header button]
+        expected_roots: %w[container flex page-header button]
       ),
       Entry.new(
         kind: :flow,
         slug: "settings",
         title: "Workspace settings",
-        group: "Workspace",
         description: "Block-composed profile, security, notification, integration, and appearance settings.",
         page: Gallery::Flows::SettingsPage,
         states: %w[
           profile profile-validation profile-success security security-disabled notifications notifications-success
           integrations integrations-empty integrations-error appearance appearance-loading long-content mobile
         ],
-        expected_roots: %w[container v-stack settings-layout button]
+        expected_roots: %w[container flex settings-layout button]
       ),
       Entry.new(
         kind: :flow,
         slug: "billing",
         title: "Subscription billing",
-        group: "Workspace",
         description: "Block-composed plan, payment, paginated invoice, cancellation, outcome, and mobile billing states.",
         page: Gallery::Flows::BillingPage,
         states: %w[
           plans payment-method payment-validation payment-loading payment-updated invoices invoice-detail invoice-empty
           cancellation cancellation-validation cancellation-loading cancelled mobile
         ],
-        expected_roots: %w[container v-stack button]
+        expected_roots: %w[container flex button]
       ),
       Entry.new(
         kind: :flow,
         slug: "users",
         title: "Workspace users",
-        group: "Workspace",
         description: "Block-composed paginated user index and search plus detail, empty, loading, error, bulk, outcome, and mobile states.",
         page: Gallery::Flows::UsersPage,
         states: %w[index detail search empty loading error bulk bulk-confirmation bulk-complete mobile],
-        expected_roots: %w[container v-stack button]
+        expected_roots: %w[container flex button]
       ),
       Entry.new(
         kind: :flow,
         slug: "team-management",
         title: "Team management",
-        group: "Workspace",
         description: "Block-composed member inventory, invitation, role, removal, outcome, density, and mobile states.",
         page: Gallery::Flows::TeamManagementPage,
         states: %w[
           members search empty invite invite-validation loading role-change remove-confirmation removed error dense mobile
         ],
-        expected_roots: %w[container v-stack button]
+        expected_roots: %w[container flex button]
       ),
       Entry.new(
         kind: :flow,
         slug: "api-credentials",
         title: "API credentials",
-        group: "Workspace",
         description: "Block-composed credential inventory, creation, reveal-once, revocation, recovery, density, and mobile states.",
         page: Gallery::Flows::ApiCredentialsPage,
         states: %w[
           list empty create validation loading reveal-once revoke-confirmation revoked expired error long dense mobile
         ],
-        expected_roots: %w[container v-stack button]
+        expected_roots: %w[container flex button]
       ),
       Entry.new(
         kind: :flow,
         slug: "organization-overview",
         title: "Organization overview",
-        group: "Organization",
         description: "Block-composed organization identity, capacity, resource inventory, availability, density, and mobile states.",
         page: Gallery::Flows::OrganizationOverviewPage,
         states: %w[active empty error dense long mobile],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "organization-settings",
         title: "Organization settings",
-        group: "Organization",
         description: "Block-composed identity, access, integration, validation, authorization, long-content, and mobile settings.",
         page: Gallery::Flows::OrganizationSettingsPage,
         states: %w[general access integrations validation success error long mobile],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "team-activity",
         title: "Team activity",
-        group: "Organization",
         description: "Searchable and filterable organization access activity with empty, failure, density, long-content, and mobile states.",
         page: Gallery::Flows::TeamActivityPage,
         states: %w[recent search filtered empty error dense long mobile],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "team-member",
         title: "Team member",
-        group: "Organization",
         description: "Member identity, lifecycle, caller-owned authorization, activity, missing, failure, long-content, and mobile states.",
         page: Gallery::Flows::TeamMemberPage,
         states: %w[active invited suspended activity empty error long mobile],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "data-resource-overview",
         title: "Data resource overview",
-        group: "Data resources",
         description: "Searchable and filterable resource inventory with bulk selection, empty, failure, density, long-content, and mobile states.",
         page: Gallery::Flows::DataResourceOverviewPage,
         states: %w[index search filtered bulk empty error dense long mobile],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "data-resource-activity",
         title: "Data resource activity",
-        group: "Data resources",
         description: "Resource-scoped operational activity with composed filters, empty, failure, density, long-content, and mobile states.",
         page: Gallery::Flows::DataResourceActivityPage,
         states: %w[recent filtered empty error dense long mobile],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "data-resource-settings",
         title: "Data resource settings",
-        group: "Data resources",
         description: "Resource configuration, access, validation, authorization, archival, long-content, and mobile settings states.",
         page: Gallery::Flows::DataResourceSettingsPage,
         states: %w[general validation success access danger error long mobile],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "checkout",
         title: "Checkout and payment",
-        group: "Billing",
         description: "Block-composed order review, payment entry, provider outcomes, cancellation, refunds, and pressure states.",
         page: Gallery::Flows::CheckoutPage,
         states: %w[
           review payment validation processing succeeded failed requires-action cancelled refunded empty-cart long mobile
         ],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "account-security",
         title: "Account security",
-        group: "Authentication",
         description: "AuthShell-composed recovery, token expiry, locks, two-factor challenges, recovery codes, trust, and pressure states.",
         page: Gallery::Flows::AccountSecurityPage,
         states: %w[
           recovery-request recovery-validation recovery-sent reset reset-expired account-locked unlock-sent
           two-factor-challenge two-factor-invalid recovery-code recovery-code-invalid trusted-device loading success long mobile
         ],
-        expected_roots: %w[auth-shell page-header container v-stack button-group button]
+        expected_roots: %w[auth-shell page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "onboarding-branches",
         title: "Branched onboarding",
-        group: "Onboarding",
         description: "Block-composed company, personal, and import branches with explicit skips, reviews, resume, and outcomes.",
         page: Gallery::Flows::OnboardingBranchesPage,
         states: %w[
           choose-path company solo import invite-team skip-team integration skip-integration review-company review-solo
           validation saving complete resume long mobile
         ],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "api-webhooks",
         title: "API webhooks",
-        group: "API",
         description: "Block-composed endpoint inventory, configuration, signing secrets, deliveries, failures, retries, and pressure states.",
         page: Gallery::Flows::ApiWebhooksPage,
         states: %w[
           list empty detail create validation loading delivery-succeeded delivery-failed retrying disabled signing-secret
           dense long mobile
         ],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "integration-management",
         title: "Integration management",
-        group: "Workspace operations",
         description: "Block-composed provider catalog, detail, connected inventory, configuration recovery, and mobile states.",
         page: Gallery::Flows::IntegrationManagementPage,
         states: %w[catalog detail connected config-error mobile],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "uploads",
         title: "File uploads",
-        group: "Workspace operations",
         description: "Rails-native multipart upload forms across empty, uploading, complete, rejected, multiple, long, and mobile states.",
         page: Gallery::Flows::UploadsPage,
         states: %w[empty uploading complete error multiple long mobile],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "activity-audit",
         title: "Activity and audit log",
-        group: "Workspace operations",
         description: "Searchable workspace audit history across normal, filtered, empty, dense, failure, and mobile states.",
         page: Gallery::Flows::ActivityAuditPage,
         states: %w[normal filter empty dense error mobile],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "changelog",
         title: "Changelog",
-        group: "Product",
         description: "Block-composed latest release, archive, empty, long-content, and mobile documentation states.",
         page: Gallery::Flows::ChangelogPage,
         states: %w[latest archive empty long mobile],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "help-center",
         title: "Help center",
-        group: "Support",
         description: "FAQ, search, zero-result, support contact, validation, outcome, long-content, and mobile states.",
         page: Gallery::Flows::HelpCenterPage,
         states: %w[faq search empty contact contact-validation contact-sent long mobile],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "system-status",
         title: "System status and errors",
-        group: "System",
         description: "Caller-owned HTTP failures, maintenance, connectivity, rate limits, degradation, and pressure states.",
         page: Gallery::Flows::SystemStatusPage,
         states: %w[403 404 422 500 maintenance offline rate-limited degraded long mobile],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "landing",
         title: "Product landing",
-        group: "Marketing",
         description: "A direct block-composed public landing page with announcement, proof, long-content, and mobile states.",
         page: Gallery::Flows::LandingPage,
         states: %w[default announcement customer-proof long mobile],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "pricing",
         title: "Public pricing",
-        group: "Marketing",
         description: "Monthly, annual, comparison, enterprise, long-content, and mobile pricing compositions.",
         page: Gallery::Flows::PricingPage,
         states: %w[monthly annual comparison enterprise long mobile],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "features",
         title: "Product features",
-        group: "Marketing",
         description: "Overview, security, automation, collaboration, long-content, and mobile feature compositions.",
         page: Gallery::Flows::FeaturesPage,
         states: %w[overview security automation collaboration long mobile],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "contact",
         title: "Public contact",
-        group: "Marketing",
         description: "A Rails-native public inquiry across validation, submission, result, availability, and pressure states.",
         page: Gallery::Flows::ContactPage,
         states: %w[form validation sending sent unavailable long mobile],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
       ),
       Entry.new(
         kind: :flow,
         slug: "checkout-result",
         title: "Checkout results",
-        group: "Billing",
         description: "Invoice, bank transfer, trial, account credit, manual review, long-content, and mobile outcomes.",
         page: Gallery::Flows::CheckoutResultPage,
         states: %w[invoice-issued bank-transfer-pending trial-started credit-applied manual-review long mobile],
-        expected_roots: %w[page-header container v-stack button-group button]
+        expected_roots: %w[page-header container flex button-group button]
+      ),
+      Entry.new(
+        kind: :flow,
+        slug: "application-sidebar",
+        title: "Sidebar operations application",
+        description: "A realistic sidebar application combining appearance, data, upload, notification, recovery, and empty-state workflows.",
+        page: Gallery::Flows::SidebarApplicationPage,
+        states: [],
+        expected_roots: %w[
+          app-shell app-navigation page-header appearance-picker stat-grid sortable-table toast data-section empty-state
+          dropzone form-section alert details-table dialog container flex button
+        ]
+      ),
+      Entry.new(
+        kind: :flow,
+        slug: "application-topbar",
+        title: "Topbar media application",
+        description: "A realistic topbar application combining progressive media, record menus, loading feedback, long data, dialogs, and notifications.",
+        page: Gallery::Flows::TopbarApplicationPage,
+        states: [],
+        expected_roots: %w[
+          app-shell app-navigation page-header grid card progressive-image dropdown toast alert sortable-table dialog
+          container flex button
+        ]
+      ),
+      Entry.new(
+        kind: :flow,
+        slug: "application-hybrid",
+        title: "Hybrid account application",
+        description: "A realistic hybrid application combining synchronized appearance, profile media, record details, forms, missing data, policy errors, and overlays.",
+        page: Gallery::Flows::HybridApplicationPage,
+        states: [],
+        expected_roots: %w[
+          app-shell app-navigation page-header appearance-picker settings-layout progressive-image details-table form-section
+          fieldset field-group field input empty-state alert dialog toast dropdown container flex button
+        ]
       )
     ].freeze
 
-    GROUPS = [
-      NavigationGroup.new(
+    entry_index = ENTRIES.to_h { |entry| [ [ entry.kind, entry.slug ], entry ] }
+    pick_entries = lambda do |kind, *slugs|
+      slugs.map { |slug| entry_index.fetch([ kind, slug ]) }.freeze
+    end
+
+    COLLECTIONS = [
+      Collection.new(
         kind: :component,
         title: "Components",
         description: "Atoms and their meaningful combinations.",
-        entries: ENTRIES.select { |entry| entry.kind == :component }
+        categories: [
+          Category.new(
+            slug: "all",
+            title: nil,
+            description: nil,
+            entries: ENTRIES.select { |entry| entry.kind == :component }
+              .sort_by { |entry| entry.title.downcase }
+              .freeze
+          )
+        ].freeze
       ),
-      NavigationGroup.new(
+      Collection.new(
         kind: :block,
         title: "Blocks",
         description: "Typed compositions extracted from application flows.",
-        entries: ENTRIES.select { |entry| entry.kind == :block }
+        categories: [
+          Category.new(
+            slug: "shells",
+            title: "Shells",
+            description: "Page and application frames with responsive chrome.",
+            entries: pick_entries.call(:block, "auth-shell", "app-shell")
+          ),
+          Category.new(
+            slug: "navigation",
+            title: "Navigation",
+            description: "Reusable navigation, action, and pagination structures.",
+            entries: pick_entries.call(:block, "settings-layout", "toolbar", "pagination-bar")
+          ),
+          Category.new(
+            slug: "sections",
+            title: "Sections",
+            description: "Reusable page, data, form, and outcome sections.",
+            entries: pick_entries.call(
+              :block,
+              "page-header",
+              "stat-grid",
+              "data-section",
+              "form-section",
+              "danger-zone",
+              "empty-state"
+            )
+          )
+        ].freeze
       ),
-      NavigationGroup.new(
+      Collection.new(
         kind: :flow,
         title: "Flows",
         description: "Realistic Rails screens and product states.",
-        entries: ENTRIES.select { |entry| entry.kind == :flow }
+        categories: [
+          Category.new(
+            slug: "access-and-onboarding",
+            title: "Access & onboarding",
+            description: "Account entry, recovery, verification, invitations, security, and setup.",
+            entries: pick_entries.call(
+              :flow,
+              "sign-in",
+              "password-reset",
+              "email-verification",
+              "invitation-acceptance",
+              "account-creation",
+              "account-security",
+              "onboarding",
+              "onboarding-branches"
+            )
+          ),
+          Category.new(
+            slug: "workspace-and-organization",
+            title: "Workspace & organization",
+            description: "Daily administration, people, settings, and credentials.",
+            entries: pick_entries.call(
+              :flow,
+              "dashboard",
+              "settings",
+              "users",
+              "team-management",
+              "api-credentials",
+              "organization-overview",
+              "organization-settings",
+              "team-activity",
+              "team-member"
+            )
+          ),
+          Category.new(
+            slug: "billing-and-commerce",
+            title: "Billing & commerce",
+            description: "Subscription management, checkout, and payment outcomes.",
+            entries: pick_entries.call(:flow, "billing", "checkout", "checkout-result")
+          ),
+          Category.new(
+            slug: "data-and-operations",
+            title: "Data & operations",
+            description: "Resources, integrations, uploads, webhooks, and audit activity.",
+            entries: pick_entries.call(
+              :flow,
+              "data-resource-overview",
+              "data-resource-activity",
+              "data-resource-settings",
+              "api-webhooks",
+              "integration-management",
+              "uploads",
+              "activity-audit"
+            )
+          ),
+          Category.new(
+            slug: "product-and-support",
+            title: "Product & support",
+            description: "Product communication, help, and system states.",
+            entries: pick_entries.call(:flow, "changelog", "help-center", "system-status")
+          ),
+          Category.new(
+            slug: "marketing",
+            title: "Marketing",
+            description: "Public acquisition, pricing, feature, and contact pages.",
+            entries: pick_entries.call(:flow, "landing", "pricing", "features", "contact")
+          ),
+          Category.new(
+            slug: "complete-applications",
+            title: "Complete applications",
+            description: "End-to-end sidebar, topbar, and hybrid application compositions.",
+            entries: pick_entries.call(
+              :flow,
+              "application-sidebar",
+              "application-topbar",
+              "application-hybrid"
+            )
+          )
+        ].freeze
       )
     ].freeze
+
+    ORDERED_ENTRIES = [ ENTRIES.first, *COLLECTIONS.flat_map(&:entries) ].freeze
+    ENTRY_INDEX = entry_index.freeze
 
     module_function
 
     def home
-      ENTRIES.first
+      ORDERED_ENTRIES.first
     end
 
     def entries(kind: nil)
-      return ENTRIES unless kind
+      return ORDERED_ENTRIES unless kind
 
-      ENTRIES.select { |entry| entry.kind == kind.to_sym }
+      normalized_kind = kind.to_sym
+      return [ home ] if normalized_kind == :home
+
+      COLLECTIONS.find { |collection| collection.kind == normalized_kind }&.entries || []
     end
 
-    def navigation_groups
-      GROUPS
+    def collections
+      COLLECTIONS
+    end
+
+    def collection!(kind)
+      COLLECTIONS.find { |collection| collection.kind == kind.to_sym } ||
+        raise(CollectionNotFound, "Unknown gallery collection #{kind.inspect}")
+    end
+
+    def category!(kind:, slug:)
+      collection!(kind).categories.find { |category| category.slug == slug.to_s } ||
+        raise(CategoryNotFound, "Unknown #{kind} gallery category #{slug.inspect}")
+    end
+
+    def category_for(entry)
+      collection = COLLECTIONS.find { |candidate| candidate.kind == entry.kind }
+      collection&.categories&.find { |category| category.entries.include?(entry) }
     end
 
     def fetch!(kind:, slug:)
-      entries(kind:).find { |entry| entry.slug == slug } ||
+      ENTRY_INDEX[[ kind.to_sym, slug.to_s ]] ||
         raise(EntryNotFound, "Unknown #{kind} gallery entry #{slug.inspect}")
     end
 

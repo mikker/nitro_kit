@@ -156,20 +156,37 @@ class FormAtomsTest < ActiveSupport::TestCase
     assert control.key?("checked")
     assert control.key?("required")
     assert_equal "terms", node.at_css("label")["for"]
-    assert_equal "checkbox-indicator", node.at_css("[data-slot='checkbox-indicator']")["data-slot"]
+    assert_equal "true", node.at_css("[data-slot='checkbox-indicator']")["aria-hidden"]
     assert_empty node.css("[class], [style]")
   end
 
   test "checkbox supports honest standalone and indeterminate states" do
-    standalone = render_node(NitroKit::Checkbox.new(id: "feature", include_hidden: false))
-    mixed = render_node(NitroKit::Checkbox.new(label: "Some", indeterminate: true, include_hidden: false))
+    standalone = render_node(
+      NitroKit::Checkbox.new(
+        id: "feature",
+        include_hidden: false,
+        control_aria: { label: "Enable feature" }
+      )
+    )
+    mixed = render_node(
+      NitroKit::Checkbox.new(
+        label: "Some",
+        id: "some",
+        indeterminate: true,
+        include_hidden: false
+      )
+    )
 
     assert standalone.at_css("input[type='checkbox']")
-    assert standalone.at_css("[data-slot='checkbox-indicator']")
+    assert_equal "true", standalone.at_css("[data-slot='checkbox-indicator']")["aria-hidden"]
     assert_nil standalone.at_css("label")
     assert_nil standalone.at_css("input")["name"]
     assert_equal "indeterminate", mixed["data-state"]
+    assert_equal "nk--checkable", mixed["data-controller"]
+    assert_equal "true", mixed["data-nk--checkable-indeterminate-value"]
     assert_equal "mixed", mixed.at_css("input")["aria-checked"]
+    assert_equal "control", mixed.at_css("input")["data-nk--checkable-target"]
+    assert_raises(ArgumentError) { NitroKit::Checkbox.new(include_hidden: false).call }
     assert_raises(ArgumentError) { NitroKit::Checkbox.new(checked: 1) }
     assert_raises(ArgumentError) { NitroKit::Checkbox.new(include_hidden: true, unchecked_value: nil) }
   end
@@ -235,11 +252,23 @@ class FormAtomsTest < ActiveSupport::TestCase
 
     assert_equal "radio", standalone.at_css("input")["type"]
     assert_equal "lg", standalone["data-size"]
+    assert_equal "true", standalone.at_css("[data-slot='radio-button-indicator']")["aria-hidden"]
     assert_equal "fieldset", group.name
     assert_equal %w[account[size] account[size]], group.css("input").map { |input| input["name"] }
     assert_equal "lg", group.at_css("input[checked]")["value"]
     assert group.css("input").all? { |input| input.key?("required") }
     assert_empty group.css("[class], [style]")
+
+    standalone_radio = render_node(
+      NitroKit::RadioButton.new(
+        id: "standalone-radio",
+        control_aria: { label: "Select row" }
+      )
+    )
+    assert_equal "true", standalone_radio.at_css("[data-slot='radio-button-indicator']")["aria-hidden"]
+    assert_equal "nk--checkable", standalone_radio["data-controller"]
+    assert_equal "control", standalone_radio.at_css("input")["data-nk--checkable-target"]
+    assert_raises(ArgumentError) { NitroKit::RadioButton.new.call }
 
     assert_raises(ArgumentError) { NitroKit::RadioButton.new(size: :xl) }
     assert_raises(ArgumentError) { NitroKit::RadioButton.new(size: nil) }
@@ -259,7 +288,8 @@ class FormAtomsTest < ActiveSupport::TestCase
         id: "digest",
         name: "account[digest]",
         checked: true,
-        control_html: { role: "checkbox", title: "Digest" }
+        control_html: { role: "checkbox", title: "Digest" },
+        control_aria: { describedby: "account-help" }
       )
     )
     hidden = node.at_css("input[type='hidden']")
@@ -271,14 +301,21 @@ class FormAtomsTest < ActiveSupport::TestCase
     assert_nil control["aria-checked"]
     assert control.key?("checked")
     assert_nil node.at_css("button")
-    assert_nil node.at_css("[data-controller]")
-    assert node.at_css("[data-slot='switch-track']")
+    assert_equal "nk--checkable", node["data-controller"]
+    assert_equal "change->nk--checkable#change", node["data-action"]
+    assert_equal "account-help digest-description", control["aria-describedby"]
+    assert_equal "digest-description", node.at_css("[data-slot='switch-description']")["id"]
+    assert_nil node.at_css("label [data-slot='switch-description']")
+    assert_equal "true", node.at_css("[data-slot='switch-track']")["aria-hidden"]
     assert node.at_css("[data-slot='switch-handle']")
     assert_empty node.css("[class], [style]")
 
     assert_raises(ArgumentError) { NitroKit::Switch.new(size: :lg, label: "Digest") }
     assert_raises(ArgumentError) { NitroKit::Switch.new(size: nil, label: "Digest") }
     assert_raises(ArgumentError) { NitroKit::Switch.new.call }
+    assert_raises(ArgumentError) { NitroKit::Switch.new(id: "digest", description: "One summary").call }
+    assert_raises(ArgumentError) { NitroKit::Switch.new(label: "Digest", description: "One summary") }
+    assert_raises(ArgumentError) { NitroKit::Switch.new(label: "Digest", id: " ", description: "One summary") }
     assert render_node(NitroKit::Switch.new(control_aria: { label: "Digest" })).at_css("input[aria-label='Digest']")
   end
 

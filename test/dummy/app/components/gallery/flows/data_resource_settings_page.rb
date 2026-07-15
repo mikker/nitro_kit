@@ -28,7 +28,7 @@ module Gallery
             group.button(
               section.humanize,
               href: flow_path(state: section),
-              variant: settings_section == section ? :primary : :ghost,
+              variant: settings_section == section ? :primary : :default,
               aria: { current: settings_section == section ? "page" : nil }
             )
           end
@@ -207,8 +207,7 @@ module Gallery
           zone.escape(
             NitroKit::Button.new(
               "Return to general settings",
-              href: flow_path(state: "general"),
-              variant: :ghost
+              href: flow_path(state: "general")
             )
           )
         end

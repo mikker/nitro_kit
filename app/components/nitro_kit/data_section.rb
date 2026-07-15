@@ -5,7 +5,7 @@ module NitroKit
     Child = Data.define(:component, :content)
 
     def initialize(
-      title:,
+      title: nil,
       description: nil,
       id: nil,
       html: {},
@@ -13,8 +13,8 @@ module NitroKit
       data: {},
       desperately_need_a_class: nil
     )
-      @title = validate_text!(:title, title)
-      @description = validate_optional_text!(:description, description)
+      @title_content = content_from_keyword(:title, title)
+      @description_content = content_from_keyword(:description, description)
       @actions = nil
       @content = nil
 
@@ -28,22 +28,33 @@ module NitroKit
       )
     end
 
-    attr_reader :title, :description
-
     def view_template
       yield self if block_given?
+      require_content!("DataSection", :title, @title_content)
       raise ArgumentError, "DataSection requires exactly one Table or EmptyState" unless @content
 
       section(**root_attributes) do
         header(**slot_attributes(:header)) do
           div(**slot_attributes(:heading)) do
-            h2(**slot_attributes(:title)) { plain(title) }
-            p(**slot_attributes(:description)) { plain(description) } if description
+            h2(**slot_attributes(:title)) { render_deferred_content(@title_content) }
+            if @description_content
+              p(**slot_attributes(:description)) { render_deferred_content(@description_content) }
+            end
           end
           render_in_slot(@actions.component, :actions, &@actions.content) if @actions
         end
         render_in_slot(@content.component, content_slot, &@content.content)
       end
+    end
+
+    def title(text = nil, &block)
+      @title_content = declare_content(:title, @title_content, text, &block)
+      nil
+    end
+
+    def description(text = nil, &block)
+      @description_content = declare_content(:description, @description_content, text, &block)
+      nil
     end
 
     def actions(component, &content)
@@ -82,18 +93,6 @@ module NitroKit
 
     def content_slot
       @content.component.is_a?(NitroKit::Table) ? :table : :empty_state
-    end
-
-    def validate_text!(name, value)
-      return value if value.is_a?(String) && !value.strip.empty?
-
-      raise ArgumentError, "#{name} must be a non-blank String"
-    end
-
-    def validate_optional_text!(name, value)
-      return if value.nil?
-
-      validate_text!(name, value)
     end
   end
 end

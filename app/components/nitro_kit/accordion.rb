@@ -3,7 +3,7 @@
 module NitroKit
   class Accordion < Component
     MODES = %i[multiple single].freeze
-    Item = ::Data.define(:key, :title, :expanded, :disabled, :content)
+    Item = ::Data.define(:key, :title, :expanded, :content)
 
     def initialize(
       id:,
@@ -21,11 +21,7 @@ module NitroKit
         component: :accordion,
         attributes: {
           id: @identifier,
-          data: {
-            controller: "nk--accordion",
-            mode: @mode,
-            nk__accordion_mode_value: @mode
-          }
+          data: { mode: @mode }
         },
         html:,
         aria:,
@@ -44,13 +40,12 @@ module NitroKit
       end
     end
 
-    def item(key, title:, expanded: false, disabled: false, &content)
+    def item(key, title:, expanded: false, &content)
       ensure_collecting!
 
       key = normalize_identity(key, name: "accordion item key")
       title = validate_title!(title)
       expanded = validate_boolean!(:expanded, expanded)
-      disabled = validate_boolean!(:disabled, disabled)
       raise ArgumentError, "Accordion item #{key.inspect} requires content" unless content
       raise ArgumentError, "Duplicate accordion item key #{key.inspect}" if @items.any? { |item| item.key == key }
 
@@ -58,7 +53,7 @@ module NitroKit
         raise ArgumentError, "Single accordion mode accepts only one expanded item"
       end
 
-      @items << Item.new(key:, title:, expanded:, disabled:, content:)
+      @items << Item.new(key:, title:, expanded:, content:)
       nil
     end
 
@@ -75,35 +70,21 @@ module NitroKit
     end
 
     def render_item(item)
-      state = item.expanded ? "open" : "closed"
-
-      div(
+      details(
         **slot_attributes(
           :item,
           attributes: {
-            data: {
-              key: item.key,
-              state:,
-              nk__accordion_target: "item"
-            }
+            name: mode == :single ? identifier : nil,
+            open: item.expanded,
+            data: { key: item.key }
           }
         )
       ) do
-        button(
+        summary(
           **slot_attributes(
             :trigger,
             attributes: {
-              id: trigger_id(item),
-              type: "button",
-              disabled: item.disabled,
-              aria: {
-                controls: content_id(item),
-                expanded: item.expanded
-              },
-              data: {
-                action: "click->nk--accordion#toggle",
-                nk__accordion_target: "trigger"
-              }
+              id: trigger_id(item)
             }
           )
         ) do
@@ -115,17 +96,7 @@ module NitroKit
           **slot_attributes(
             :content,
             attributes: {
-              id: content_id(item),
-              role: "region",
-              hidden: item.expanded ? nil : true,
-              aria: {
-                hidden: !item.expanded,
-                labelledby: trigger_id(item)
-              },
-              data: {
-                state:,
-                nk__accordion_target: "content"
-              }
+              id: content_id(item)
             }
           )
         ) do

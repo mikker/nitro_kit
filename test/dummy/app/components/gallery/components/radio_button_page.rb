@@ -15,7 +15,7 @@ module Gallery
         example_section(
           "Native selection",
           slug: "radio-button-selection",
-          description: "Radio buttons share a native name while each option keeps its own deterministic ID and value."
+          description: "Radio buttons share a native name while every root reflects the group’s live checked state."
         ) do
           example("Workspace visibility", slug: "radio-button-visibility") do
             render NitroKit::RadioButton.new(
@@ -50,7 +50,7 @@ module Gallery
         example_section(
           "Size and label pressure",
           slug: "radio-button-states",
-          description: "Both sizes, standalone controls, disabled state, and long labels preserve native radio semantics."
+          description: "Both sizes, explicitly named standalone controls, disabled state, and long labels preserve native radio semantics."
         ) do
           example("State matrix", slug: "radio-button-state-matrix", layout: :matrix) do
             sample("Medium", slug: "medium") do

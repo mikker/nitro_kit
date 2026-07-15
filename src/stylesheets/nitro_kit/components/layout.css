@@ -1,0 +1,440 @@
+@layer nitro-kit.variant {
+  :where([data-nk="flex"][data-gap~="0"], [data-nk="grid"][data-gap~="0"]) {
+    --_nk-layout-gap: 0;
+  }
+
+  :where([data-nk="flex"][data-gap~="1"], [data-nk="grid"][data-gap~="1"]) {
+    --_nk-layout-gap: var(--nk-space);
+  }
+
+  :where([data-nk="flex"][data-gap~="2"], [data-nk="grid"][data-gap~="2"]) {
+    --_nk-layout-gap: calc(var(--nk-space) * 2);
+  }
+
+  :where([data-nk="flex"][data-gap~="3"], [data-nk="grid"][data-gap~="3"]) {
+    --_nk-layout-gap: calc(var(--nk-space) * 3);
+  }
+
+  :where([data-nk="flex"][data-gap~="4"], [data-nk="grid"][data-gap~="4"]) {
+    --_nk-layout-gap: calc(var(--nk-space) * 4);
+  }
+
+  :where([data-nk="flex"][data-gap~="5"], [data-nk="grid"][data-gap~="5"]) {
+    --_nk-layout-gap: calc(var(--nk-space) * 5);
+  }
+
+  :where([data-nk="flex"][data-gap~="6"], [data-nk="grid"][data-gap~="6"]) {
+    --_nk-layout-gap: calc(var(--nk-space) * 6);
+  }
+
+  :where([data-nk="flex"][data-gap~="8"], [data-nk="grid"][data-gap~="8"]) {
+    --_nk-layout-gap: calc(var(--nk-space) * 8);
+  }
+
+  :where([data-nk="flex"][data-gap~="10"], [data-nk="grid"][data-gap~="10"]) {
+    --_nk-layout-gap: calc(var(--nk-space) * 10);
+  }
+
+  :where([data-nk="flex"][data-gap~="12"], [data-nk="grid"][data-gap~="12"]) {
+    --_nk-layout-gap: calc(var(--nk-space) * 12);
+  }
+
+  :where([data-nk="flex"][data-gap~="16"], [data-nk="grid"][data-gap~="16"]) {
+    --_nk-layout-gap: calc(var(--nk-space) * 16);
+  }
+
+  @media (min-width: 40rem) {
+    :where(
+      [data-nk="flex"][data-gap~="sm:0"],
+      [data-nk="grid"][data-gap~="sm:0"]
+    ) {
+      --_nk-layout-gap: 0;
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="sm:1"],
+      [data-nk="grid"][data-gap~="sm:1"]
+    ) {
+      --_nk-layout-gap: var(--nk-space);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="sm:2"],
+      [data-nk="grid"][data-gap~="sm:2"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 2);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="sm:3"],
+      [data-nk="grid"][data-gap~="sm:3"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 3);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="sm:4"],
+      [data-nk="grid"][data-gap~="sm:4"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 4);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="sm:5"],
+      [data-nk="grid"][data-gap~="sm:5"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 5);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="sm:6"],
+      [data-nk="grid"][data-gap~="sm:6"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 6);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="sm:8"],
+      [data-nk="grid"][data-gap~="sm:8"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 8);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="sm:10"],
+      [data-nk="grid"][data-gap~="sm:10"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 10);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="sm:12"],
+      [data-nk="grid"][data-gap~="sm:12"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 12);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="sm:16"],
+      [data-nk="grid"][data-gap~="sm:16"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 16);
+    }
+  }
+
+  @media (min-width: 48rem) {
+    :where(
+      [data-nk="flex"][data-gap~="md:0"],
+      [data-nk="grid"][data-gap~="md:0"]
+    ) {
+      --_nk-layout-gap: 0;
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="md:1"],
+      [data-nk="grid"][data-gap~="md:1"]
+    ) {
+      --_nk-layout-gap: var(--nk-space);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="md:2"],
+      [data-nk="grid"][data-gap~="md:2"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 2);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="md:3"],
+      [data-nk="grid"][data-gap~="md:3"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 3);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="md:4"],
+      [data-nk="grid"][data-gap~="md:4"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 4);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="md:5"],
+      [data-nk="grid"][data-gap~="md:5"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 5);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="md:6"],
+      [data-nk="grid"][data-gap~="md:6"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 6);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="md:8"],
+      [data-nk="grid"][data-gap~="md:8"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 8);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="md:10"],
+      [data-nk="grid"][data-gap~="md:10"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 10);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="md:12"],
+      [data-nk="grid"][data-gap~="md:12"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 12);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="md:16"],
+      [data-nk="grid"][data-gap~="md:16"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 16);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    :where(
+      [data-nk="flex"][data-gap~="lg:0"],
+      [data-nk="grid"][data-gap~="lg:0"]
+    ) {
+      --_nk-layout-gap: 0;
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="lg:1"],
+      [data-nk="grid"][data-gap~="lg:1"]
+    ) {
+      --_nk-layout-gap: var(--nk-space);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="lg:2"],
+      [data-nk="grid"][data-gap~="lg:2"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 2);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="lg:3"],
+      [data-nk="grid"][data-gap~="lg:3"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 3);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="lg:4"],
+      [data-nk="grid"][data-gap~="lg:4"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 4);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="lg:5"],
+      [data-nk="grid"][data-gap~="lg:5"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 5);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="lg:6"],
+      [data-nk="grid"][data-gap~="lg:6"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 6);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="lg:8"],
+      [data-nk="grid"][data-gap~="lg:8"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 8);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="lg:10"],
+      [data-nk="grid"][data-gap~="lg:10"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 10);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="lg:12"],
+      [data-nk="grid"][data-gap~="lg:12"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 12);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="lg:16"],
+      [data-nk="grid"][data-gap~="lg:16"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 16);
+    }
+  }
+
+  @media (min-width: 80rem) {
+    :where(
+      [data-nk="flex"][data-gap~="xl:0"],
+      [data-nk="grid"][data-gap~="xl:0"]
+    ) {
+      --_nk-layout-gap: 0;
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="xl:1"],
+      [data-nk="grid"][data-gap~="xl:1"]
+    ) {
+      --_nk-layout-gap: var(--nk-space);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="xl:2"],
+      [data-nk="grid"][data-gap~="xl:2"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 2);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="xl:3"],
+      [data-nk="grid"][data-gap~="xl:3"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 3);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="xl:4"],
+      [data-nk="grid"][data-gap~="xl:4"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 4);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="xl:5"],
+      [data-nk="grid"][data-gap~="xl:5"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 5);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="xl:6"],
+      [data-nk="grid"][data-gap~="xl:6"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 6);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="xl:8"],
+      [data-nk="grid"][data-gap~="xl:8"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 8);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="xl:10"],
+      [data-nk="grid"][data-gap~="xl:10"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 10);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="xl:12"],
+      [data-nk="grid"][data-gap~="xl:12"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 12);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="xl:16"],
+      [data-nk="grid"][data-gap~="xl:16"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 16);
+    }
+  }
+
+  @media (min-width: 96rem) {
+    :where(
+      [data-nk="flex"][data-gap~="2xl:0"],
+      [data-nk="grid"][data-gap~="2xl:0"]
+    ) {
+      --_nk-layout-gap: 0;
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="2xl:1"],
+      [data-nk="grid"][data-gap~="2xl:1"]
+    ) {
+      --_nk-layout-gap: var(--nk-space);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="2xl:2"],
+      [data-nk="grid"][data-gap~="2xl:2"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 2);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="2xl:3"],
+      [data-nk="grid"][data-gap~="2xl:3"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 3);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="2xl:4"],
+      [data-nk="grid"][data-gap~="2xl:4"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 4);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="2xl:5"],
+      [data-nk="grid"][data-gap~="2xl:5"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 5);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="2xl:6"],
+      [data-nk="grid"][data-gap~="2xl:6"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 6);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="2xl:8"],
+      [data-nk="grid"][data-gap~="2xl:8"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 8);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="2xl:10"],
+      [data-nk="grid"][data-gap~="2xl:10"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 10);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="2xl:12"],
+      [data-nk="grid"][data-gap~="2xl:12"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 12);
+    }
+
+    :where(
+      [data-nk="flex"][data-gap~="2xl:16"],
+      [data-nk="grid"][data-gap~="2xl:16"]
+    ) {
+      --_nk-layout-gap: calc(var(--nk-space) * 16);
+    }
+  }
+}

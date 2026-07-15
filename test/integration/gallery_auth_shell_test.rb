@@ -9,9 +9,11 @@ class GalleryAuthShellTest < ActionDispatch::IntegrationTest
   test "catalog exposes the evidence-backed auth shell without speculative shells" do
     entry = Gallery::Catalog.fetch!(kind: :block, slug: "auth-shell")
 
-    assert_equal "Authentication", entry.group
+    assert_equal "Shells", Gallery::Catalog.category_for(entry).title
     assert_equal "/gallery/blocks/auth-shell", Gallery::Catalog.path_for(entry, routes: Rails.application.routes.url_helpers)
-    assert_empty Gallery::Catalog.entries(kind: :block).map(&:slug) & %w[app-shell marketing-shell authentication-panel]
+    block_slugs = Gallery::Catalog.entries(kind: :block).map(&:slug)
+    assert_includes block_slugs, "app-shell"
+    assert_empty block_slugs & %w[marketing-shell authentication-panel]
   end
 
   test "renders every auth shell composition in light and dark themes" do
@@ -41,8 +43,9 @@ class GalleryAuthShellTest < ActionDispatch::IntegrationTest
 
         assert_equal "container", container["data-nk"]
         assert_equal "md", container["data-size"]
-        assert_equal "v-stack", stack["data-nk"]
-        assert_equal "lg", stack["data-gap"]
+        assert_equal "flex", stack["data-nk"]
+        assert_equal "col", stack["data-dir"]
+        assert_equal "6", stack["data-gap"]
         assert_equal "stretch", stack["data-align"]
       end
     end
@@ -56,7 +59,7 @@ class GalleryAuthShellTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-auth-shell-credentials-form input[type='email'][required]"
     assert_select "#gallery-auth-shell-credentials-form input[type='password'][value]", count: 0
 
-    assert_select "#gallery-auth-shell-branding > [data-nk='container'] > [data-nk='v-stack']" do
+    assert_select "#gallery-auth-shell-branding > [data-nk='container'] > [data-nk='flex'][data-dir='col']" do
       assert_select "> header[data-gallery='auth-branding']"
       assert_select "> #gallery-auth-shell-branding-card[data-nk='card']"
     end
@@ -76,7 +79,7 @@ class GalleryAuthShellTest < ActionDispatch::IntegrationTest
 
         assert_response :success
         assert_select "main[data-nk='auth-shell'][data-gallery='flow-surface']", count: 1 do
-          assert_select "> [data-nk='container'][data-size='md'] > [data-nk='v-stack'][data-gap='lg'][data-align='stretch'] > turbo-frame", count: 1
+          assert_select "> [data-nk='container'][data-size='md'] > [data-nk='flex'][data-dir='col'][data-gap='6'][data-align='stretch'] > turbo-frame", count: 1
           assert_select "turbo-frame > [data-nk='card'][id]", count: 1
         end
       end

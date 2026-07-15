@@ -49,6 +49,7 @@ Rails helpers remain welcome where Rails supplies real semantics: forms, routes,
 - Every root emits `data-nk`. Owned parts use component-qualified `data-slot` values such as `field-control` or `card-title`.
 - Keep application content slots flexible where the public compound API declares them. Do not invent an untyped structural bypass.
 - Parents own external placement and available width. Atoms own intrinsic geometry.
+- Use `Flex(dir:, gap: 4, align: :start, justify: :start, wrap: :nowrap)` and `Grid(cols:, gap: 4)` for layout; `VStack` and `HStack` are removed. Responsive properties use a required base plus fixed `sm md lg xl 2xl` overrides, never a generic utility or custom-breakpoint DSL.
 - Preserve native elements and accessibility semantics.
 
 ## CSS rules

@@ -1,0 +1,53 @@
+@layer nitro-kit.base {
+  :where([data-nk="details-table"]) {
+    inline-size: 100%;
+    color: var(--nk-color-foreground);
+  }
+
+  :where([data-nk="details-table"] [data-slot="table-header"][scope="row"]) {
+    inline-size: clamp(8rem, 28%, 16rem);
+    vertical-align: top;
+  }
+
+  :where([data-nk="details-table"] [data-slot="details-table-empty"]) {
+    color: var(--nk-color-muted-foreground);
+  }
+
+  :where(
+      [data-nk="details-table"] [data-slot="details-table-number"],
+      [data-nk="details-table"] [data-slot="details-table-time"]
+    ) {
+    font-variant-numeric: tabular-nums;
+  }
+
+  :where(
+      [data-nk="details-table"] [data-slot="details-table-link"],
+      [data-nk="details-table"] [data-slot="details-table-record"]
+    ) {
+    color: var(--nk-color-info-content);
+    text-decoration-line: underline;
+    text-decoration-color: color-mix(in oklab, currentcolor 40%, transparent);
+    text-underline-offset: 0.16em;
+  }
+
+  :where(
+      [data-nk="details-table"] [data-slot="details-table-link"]:hover,
+      [data-nk="details-table"] [data-slot="details-table-record"]:hover
+    ) {
+    text-decoration-color: currentcolor;
+  }
+
+  :where([data-nk="details-table"] [data-slot="details-table-file"]) {
+    font-family: var(--nk-font-mono);
+    font-size: var(--nk-text-sm);
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 36rem) {
+  @layer nitro-kit.compound {
+    :where([data-nk="details-table"] [data-slot="table-header"][scope="row"]) {
+      inline-size: 40%;
+    }
+  }
+}

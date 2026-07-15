@@ -28,7 +28,7 @@ module NitroKit
       raise ArgumentError, "StatGrid requires at least one stat" if @stats.empty?
 
       div(**root_attributes) do
-        render_in_slot(Grid.new(cols: 3), :grid) do
+        render_in_slot(Grid.new(cols: "1 sm:2 lg:3"), :grid) do
           @stats.each { |stat| render_stat(stat) }
         end
       end

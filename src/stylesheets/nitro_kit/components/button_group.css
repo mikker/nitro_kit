@@ -33,16 +33,16 @@
     [data-nk="button-group"]
       > [data-slot="button-group-button"]:first-child:not(:only-child)
   ) {
-    border-start-start-radius: var(--nk-radius-md);
-    border-end-start-radius: var(--nk-radius-md);
+    border-start-start-radius: var(--_nk-button-radius);
+    border-end-start-radius: var(--_nk-button-radius);
   }
 
   :where(
     [data-nk="button-group"]
       > [data-slot="button-group-button"]:last-child:not(:only-child)
   ) {
-    border-start-end-radius: var(--nk-radius-md);
-    border-end-end-radius: var(--nk-radius-md);
+    border-start-end-radius: var(--_nk-button-radius);
+    border-end-end-radius: var(--_nk-button-radius);
   }
 
   :where(

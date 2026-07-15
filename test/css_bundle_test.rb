@@ -22,6 +22,19 @@ class CssBundleTest < ActiveSupport::TestCase
     assert_includes css, ":where([data-nk], [data-nk] [data-slot])"
   end
 
+  test "theme tokens follow the system only when no explicit theme is present" do
+    source = NitroKit::CssBundle::ROOT.join("src/stylesheets/nitro_kit/tokens.css").read
+    system_dark = theme_declarations(source, ":where(:root:not([data-theme]))")
+    explicit_dark = theme_declarations(source, ':where([data-theme="dark"])')
+    explicit_light = theme_declarations(source, ':where(:root, [data-theme="light"])')
+
+    assert_includes source, "@media (prefers-color-scheme: dark)"
+    assert_includes source, ':where(:root, [data-theme="light"])'
+    assert_predicate system_dark, :any?
+    assert_equal explicit_light.keys, explicit_dark.keys
+    assert_equal explicit_dark, system_dark
+  end
+
   test "component slot selectors are scoped through their owner" do
     unqualified_slot = /(?:\:where\(\s*|,\s*)\[data-slot=/m
     offenders = NitroKit::CssBundle.component_sources.select do |path|
@@ -44,11 +57,36 @@ class CssBundleTest < ActiveSupport::TestCase
     refute_includes css, "transition: all"
   end
 
-  test "gem package includes CSS sources and distribution assets" do
+  test "gem package includes responsive layout sources and distribution assets" do
     specification = Gem::Specification.load(NitroKit::CssBundle::ROOT.join("nitro_kit.gemspec").to_s)
 
     assert_includes specification.files, "src/stylesheets/nitro_kit/tokens.css"
+    assert_includes specification.files, "src/stylesheets/nitro_kit/components/layout.css"
+    assert_includes specification.files, "src/stylesheets/nitro_kit/components/flex.css"
+    assert_includes specification.files, "src/stylesheets/nitro_kit/components/grid.css"
     assert_includes specification.files, "app/assets/stylesheets/nitro_kit.css"
     assert_includes specification.files, "app/assets/stylesheets/nitro_kit-tailwind-v4.css"
+    assert_includes specification.files, "app/components/nitro_kit/responsive_value.rb"
+    assert_includes specification.files, "app/components/nitro_kit/flex.rb"
+    assert_includes specification.files, "app/components/nitro_kit/grid.rb"
+
+    %w[h_stack.rb v_stack.rb].each do |name|
+      refute_includes specification.files, "app/components/nitro_kit/#{name}"
+    end
+
+    %w[h_stack.css v_stack.css stack.css].each do |name|
+      refute_includes specification.files, "src/stylesheets/nitro_kit/components/#{name}"
+    end
+  end
+
+  private
+
+  def theme_declarations(source, selector)
+    body = source.match(/#{Regexp.escape(selector)}\s*\{(?<body>[^}]*)\}/m)&.[](:body)
+    return {} unless body
+
+    body.scan(/(?<name>color-scheme|--nk-color-[a-z-]+):\s*(?<value>[^;]+);/)
+      .to_h
+      .transform_values(&:strip)
   end
 end

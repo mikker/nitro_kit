@@ -27,7 +27,6 @@ Gem::Specification.new do |spec|
       "docs/**/*",
       "CHANGELOG.md",
       "LICENSE",
-      "Rakefile",
       "README.md",
       "STYLE_GUIDE.md"
     ].select { |path| File.file?(path) }

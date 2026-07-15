@@ -27,6 +27,16 @@ module NitroKit
       data: {},
       desperately_need_a_class: nil
     )
+      if !href.nil? && (!href.is_a?(String) || href.empty?)
+        raise ArgumentError, "Button href must be nil or a non-blank String"
+      end
+      if href && [ name, value, form ].any? { |option| !option.nil? }
+        raise ArgumentError, "Link Buttons do not accept name, value, or form"
+      end
+      if !href && [ target, rel, download ].any? { |option| !option.nil? }
+        raise ArgumentError, "Button elements do not accept target, rel, or download"
+      end
+
       @text = text
       @href = href
       @icon = icon
@@ -70,6 +80,10 @@ module NitroKit
     attr_reader :text, :href, :icon, :icon_right, :size, :variant
 
     def view_template(&block)
+      raise ArgumentError, "Button accepts text or a block, not both" if !text.nil? && block
+      if text.is_a?(String) && text.strip.empty?
+        raise ArgumentError, "Button text must be non-blank"
+      end
       raise ArgumentError, "Button requires text, a block, or an icon" unless !text.nil? || block || icon || icon_right
       if text.nil? && !block && !accessible_label?
         raise ArgumentError, "Icon-only Button requires a non-blank aria: { label: }"
@@ -82,7 +96,8 @@ module NitroKit
     private
 
     def contents(&block)
-      icon_slot(icon, :icon_start) if icon
+      icon_only = text.nil? && !block
+      icon_slot(icon, :icon_start, icon_only:) if icon
 
       if block || !text.nil?
         span(**slot_attributes(:label)) do
@@ -90,12 +105,12 @@ module NitroKit
         end
       end
 
-      icon_slot(icon_right, :icon_end) if icon_right
+      icon_slot(icon_right, :icon_end, icon_only:) if icon_right
     end
 
-    def icon_slot(name, slot)
+    def icon_slot(name, slot, icon_only:)
       span(**slot_attributes(slot)) do
-        render(Icon.new(name, size: icon_size))
+        render(Icon.new(name, size: icon_only ? :md : icon_size))
       end
     end
 

@@ -15,7 +15,7 @@ module Gallery
         example_section(
           "Workspace settings",
           slug: "tabs-settings",
-          description: "Each tab declaration owns its matching panel, eliminating split-key mismatch states."
+          description: "Each declaration owns its panel; all panels remain readable until Stimulus enhances the APG tab behavior."
         ) do
           example("Settings sections", slug: "tabs-settings-sections") do
             render NitroKit::Tabs.new(
@@ -33,7 +33,7 @@ module Gallery
         example_section(
           "Orientation and activation",
           slug: "tabs-behavior",
-          description: "Horizontal and vertical tablists expose automatic or manual keyboard activation explicitly."
+          description: "Horizontal and vertical tablists expose automatic or manual keyboard activation after enhancement."
         ) do
           example("Vertical manual tabs", slug: "tabs-vertical-manual") do
             render NitroKit::Tabs.new(
@@ -152,7 +152,6 @@ module Gallery
                 id: "gallery-tabs-profile-reset",
                 type: :reset,
                 form: "gallery-tabs-profile-form",
-                variant: :ghost,
                 size: :sm
               )
             end
@@ -234,7 +233,6 @@ module Gallery
                 "View invoices",
                 id: "gallery-tabs-billing-invoices",
                 href: "#invoices",
-                variant: :ghost,
                 size: :sm
               )
             end

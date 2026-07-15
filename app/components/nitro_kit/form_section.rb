@@ -5,7 +5,7 @@ module NitroKit
     Child = Data.define(:component, :content)
 
     def initialize(
-      title:,
+      title: nil,
       description: nil,
       id: nil,
       html: {},
@@ -13,8 +13,8 @@ module NitroKit
       data: {},
       desperately_need_a_class: nil
     )
-      @title = validate_text!(:title, title)
-      @description = validate_optional_text!(:description, description)
+      @title_content = content_from_keyword(:title, title)
+      @description_content = content_from_keyword(:description, description)
       @status = nil
       @form = nil
 
@@ -28,20 +28,31 @@ module NitroKit
       )
     end
 
-    attr_reader :title, :description
-
     def view_template
       yield self if block_given?
+      require_content!("FormSection", :title, @title_content)
       raise ArgumentError, "FormSection requires exactly one form" unless @form
 
       section(**root_attributes) do
         header(**slot_attributes(:header)) do
-          h2(**slot_attributes(:title)) { plain(title) }
-          p(**slot_attributes(:description)) { plain(description) } if description
+          h2(**slot_attributes(:title)) { render_deferred_content(@title_content) }
+          if @description_content
+            p(**slot_attributes(:description)) { render_deferred_content(@description_content) }
+          end
         end
         render_in_slot(@status.component, :status, &@status.content) if @status
         div(**slot_attributes(:form), &@form)
       end
+    end
+
+    def title(text = nil, &block)
+      @title_content = declare_content(:title, @title_content, text, &block)
+      nil
+    end
+
+    def description(text = nil, &block)
+      @description_content = declare_content(:description, @description_content, text, &block)
+      nil
     end
 
     def status(component, &content)
@@ -60,20 +71,6 @@ module NitroKit
 
       @form = content
       nil
-    end
-
-    private
-
-    def validate_text!(name, value)
-      return value if value.is_a?(String) && !value.strip.empty?
-
-      raise ArgumentError, "#{name} must be a non-blank String"
-    end
-
-    def validate_optional_text!(name, value)
-      return if value.nil?
-
-      validate_text!(name, value)
     end
   end
 end

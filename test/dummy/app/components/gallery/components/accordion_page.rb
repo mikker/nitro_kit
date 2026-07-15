@@ -15,7 +15,7 @@ module Gallery
         example_section(
           "Account questions",
           slug: "accordion-account",
-          description: "Stable keys produce deterministic trigger and region relationships."
+          description: "Native details and summary elements work before JavaScript and keep stable keyed IDs."
         ) do
           example("Billing questions", slug: "accordion-billing-questions") do
             render NitroKit::Accordion.new(id: "gallery-accordion-billing", mode: :single) do |accordion|
@@ -25,8 +25,8 @@ module Gallery
               accordion.item(:currency, title: "Can I change billing currency?") do
                 "Contact support before the next renewal date."
               end
-              accordion.item(:legacy, title: "Legacy plan details", disabled: true) do
-                "Legacy plan changes are currently unavailable."
+              accordion.item(:legacy, title: "What happens to a legacy plan?") do
+                "Legacy plans retain their current limits until an owner chooses a new plan."
               end
             end
           end
@@ -66,7 +66,7 @@ module Gallery
               accordion.item(:billing, title: "Billing") do
                 "Plan, payment method, and invoice history."
               end
-              accordion.item(:advanced, title: "Advanced controls", disabled: true) do
+              accordion.item(:advanced, title: "Advanced controls") do
                 "Advanced controls are managed by the organization owner."
               end
             end
@@ -99,8 +99,8 @@ module Gallery
               accordion.item(:regions, title: "Data regions") { "The workspace currently uses the EU region." }
               accordion.item(:sessions, title: "Active sessions") { "Owners can revoke individual sessions." }
               accordion.item(:webhooks, title: "Webhook delivery") { "Failed deliveries retry with backoff." }
-              accordion.item(:legacy, title: "Legacy retention controls", disabled: true) do
-                "Legacy controls cannot be changed for this workspace."
+              accordion.item(:legacy, title: "Legacy retention controls") do
+                "Legacy controls remain visible while owners plan their replacement."
               end
             end
           end
@@ -134,7 +134,6 @@ module Gallery
                         "View logs",
                         id: "gallery-accordion-deployment-logs",
                         href: "#deployment-logs",
-                        variant: :ghost,
                         size: :sm
                       )
                       group.button(

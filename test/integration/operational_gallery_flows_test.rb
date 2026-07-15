@@ -17,7 +17,7 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
       entry = Gallery::Catalog.fetch!(kind: :flow, slug:)
 
       assert_equal states, entry.states
-      assert_equal %w[page-header container v-stack button-group button], entry.expected_roots
+      assert_equal %w[page-header container flex button-group button], entry.expected_roots
       states.each do |state|
         assert_equal "/gallery/flows/#{slug}/#{state}", Gallery::Catalog.path_for(
           entry,
@@ -42,7 +42,7 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
           assert_select "[data-gallery='flow-states'] > a[aria-current='page']", count: 1
         end
         assert_select "[data-gallery='example'][data-gallery-mode='full-width']", count: 1
-        assert_select "[data-gallery='flow-surface'] [data-nk='container'] > [data-nk='v-stack']", count: 1
+        assert_select "[data-gallery='flow-surface'] [data-nk='container'] > [data-nk='flex'][data-dir='col']", count: 1
         assert_select "[data-gallery='flow-surface'] [data-nk='page-header']", count: 1
         assert_select "[data-gallery='flow-surface'] [data-nk='button-group']", minimum: 1
         assert_select "[data-gallery='flow-surface'] [data-nk='button']", minimum: 1
@@ -77,7 +77,7 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-integration-provider_sentry-action[href$='/integration-management/detail']", text: "View"
 
     get_flow("integration-management", "detail")
-    assert_select "#gallery-integration-detail-grid[data-nk='grid'][data-cols='3']" do
+    assert_select "#gallery-integration-detail-grid[data-nk='grid'][data-cols='1 sm:2 lg:3']" do
       assert_select "> #gallery-integration-detail-card[data-nk='card']", count: 1
       assert_select "> #gallery-integration-configuration-section[data-nk='form-section']", count: 1
     end
@@ -208,8 +208,9 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
     get_flow("help-center", "faq")
     assert_select "#gallery-help-center-faq[data-nk='accordion'][data-mode='single']" do
       assert_select "> [data-slot='accordion-item']", count: Gallery::OperationalData.help_questions.size
-      assert_select "[data-slot='accordion-trigger'][aria-expanded='true']", count: 1
-      assert_select "[data-slot='accordion-content']:not([hidden])", count: 1
+      assert_select "> details[data-slot='accordion-item'][name='gallery-help-center-faq'][open]", count: 1
+      assert_select "> details[data-slot='accordion-item']:not([open])",
+        count: Gallery::OperationalData.help_questions.size - 1
     end
 
     get_flow("help-center", "search")

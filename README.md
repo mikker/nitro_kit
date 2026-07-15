@@ -41,15 +41,15 @@ Load the shipped stylesheet through the Rails asset pipeline:
 <%= stylesheet_link_tag "nitro_kit", "data-turbo-track": "reload" %>
 ```
 
-The stylesheet is plain CSS. It does not require Tailwind or Preflight. Applications that use Tailwind CSS v4 may load the optional adapter before both Nitro Kit and their compiled Tailwind stylesheet:
+The stylesheet is plain CSS. It does not require Tailwind or Preflight. Load application styles containing token overrides after Nitro Kit. Applications that use Tailwind CSS v4 load the optional adapter first, then Nitro Kit, compiled Tailwind, and application styles:
 
 ```erb
-<%= stylesheet_link_tag "nitro_kit-tailwind-v4", "nitro_kit", "tailwind", "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "nitro_kit-tailwind-v4", "nitro_kit", "tailwind", "application", "data-turbo-track": "reload" %>
 ```
 
 ### Stimulus and importmap
 
-Nitro Kit packages controllers for Accordion, Combobox, Dialog, Dropdown, Tabs, Toast, and Tooltip. With `importmap-rails` installed, the engine adds their pins automatically. A normal Stimulus loader registers them:
+Nitro Kit packages its interactive component controllers. With `importmap-rails` installed, the engine adds their pins automatically. A normal Stimulus loader registers them:
 
 ```js
 // app/javascript/controllers/index.js
@@ -59,7 +59,7 @@ import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading";
 eagerLoadControllersFrom("controllers", application);
 ```
 
-The host application must provide `@hotwired/stimulus` and `@hotwired/stimulus-loading`; Nitro Kit does not install those packages. It ships no third-party JavaScript runtime. Rails applications without importmap can render and style every component, but must expose and register the seven Stimulus controllers themselves. A JavaScript-package entrypoint is not part of this prerelease.
+The host application must provide `@hotwired/stimulus` and `@hotwired/stimulus-loading`; Nitro Kit does not install those packages. It ships no third-party JavaScript runtime. Rails applications without importmap can render and style every component, but must expose and register Nitro's Stimulus controllers themselves. A JavaScript-package entrypoint is not part of this prerelease.
 
 Datepicker and Switch use native inputs and do not have controllers.
 
@@ -90,6 +90,28 @@ end
 ```
 
 Closed options such as variants, sizes, placements, and layout values are validated. Unknown values and invalid slot combinations raise `ArgumentError` instead of silently changing the output. See [the component contracts](docs/component_contracts.md) for the shipped catalog and compound rules.
+
+### Responsive layouts
+
+Use `Flex` for row and column composition and `Grid` for equal-track collections:
+
+```ruby
+render NitroKit::Flex.new(
+  dir: "col md:row",
+  gap: "3 md:6",
+  align: "stretch md:center",
+  justify: "start md:between"
+) do
+  render WorkspaceSummary.new
+  render WorkspaceActions.new
+end
+
+render NitroKit::Grid.new(cols: "1 sm:2 lg:3", gap: "3 lg:6") do
+  records.each { |record| render RecordCard.new(record) }
+end
+```
+
+Each responsive property receives its own string. The required unprefixed value applies mobile-first; optional `sm`, `md`, `lg`, `xl`, and `2xl` overrides begin at 40rem, 48rem, 64rem, 80rem, and 96rem. Scalar values such as `dir: :col`, `cols: 3`, or `gap: 4` remain valid; reverse scalar symbols use underscores, such as `:row_reverse`, and render hyphenated data tokens. Nitro validates a closed vocabulary, normalizes breakpoint order into the rendered `data-*` attributes, and ships all required CSS. This syntax is not a Tailwind class list and does not require Tailwind at runtime. See [the layout contracts](docs/component_contracts.md#layout-primitives) for every accepted value.
 
 ## Rails forms and Hotwire
 
@@ -147,14 +169,16 @@ Nitro Kit owns the component CSS and default light and dark themes. Applications
 
 ```css
 :root {
-  --nk-color-primary: oklch(0.55 0.18 260);
-  --nk-color-primary-hover: oklch(0.49 0.18 260);
-  --nk-radius-md: 0.5rem;
   --nk-font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+  --nk-content-lg: 52rem;
 }
 ```
 
-Use `data-theme="light"` or `data-theme="dark"` on a document or containing element. Public tokens cover semantic colors, typography, spacing, radii, borders, focus geometry, shadows, motion, control heights, and content widths. Variables beginning with `--_nk-` are private component mechanics.
+Override semantic colors as coordinated foreground pairs for light, dark, and no-JavaScript system fallback rather than setting one root color in isolation.
+
+Nitro's appearance runtime owns a persistent light, dark, or live system preference. Render `NitroKit::AppearanceBootstrap` in `head` before stylesheet links, and place `NitroKit::AppearancePicker` wherever people choose it. Without JavaScript, the token layer still follows `prefers-color-scheme`. Explicit `data-theme="light"` and `data-theme="dark"` contracts override that fallback.
+
+Public tokens cover semantic colors, typography, spacing, radii, borders, focus geometry, shadows, motion, control heights, content widths, and application-shell chrome. Variables beginning with `--_nk-` are private component mechanics. The [customization guide](docs/customization.md) is the complete supported-token reference and includes load order, global and scoped light/dark/system recipes, the gallery wizard, shell composition, and the optional Tailwind adapter. [Rails and Hotwire integration](docs/rails_integration.md#appearance-and-content-security-policy) documents bootstrap placement, persistence, and nonce- and hash-based CSP setup.
 
 ## Composition and extension
 
@@ -173,18 +197,18 @@ module UI
 end
 ```
 
-Subclassing a Nitro component is allowed when composition cannot express the requirement, but only public constructors and compound methods are stable. Private rendering helpers and internal `Data` records may change between releases.
+Subclassing a Nitro component is allowed when composition cannot express the requirement, but only public constructors and compound methods are stable. Private rendering helpers and internal `Data` records may change between releases. The [customization guide](docs/customization.md#application-composition) shows both boundaries with copyable Phlex examples.
 
 ## Catalog
 
 The prerelease ships:
 
-- 30 atoms and components covering actions, display, forms, structure, navigation, and overlays.
-- Four evidence-backed layouts: `VStack`, `HStack`, `Grid`, and `Container`.
-- Ten blocks and shells: `AuthShell`, `SettingsLayout`, `Toolbar`, `PaginationBar`, `PageHeader`, `StatGrid`, `DataSection`, `FormSection`, `DangerZone`, and `EmptyState`.
-- `NitroKit::FormBuilder` and typed `NitroKit::Choice` values for Rails form composition.
+- 36 atoms and components covering actions, display, forms, structure, navigation, appearance, uploads, images, and overlays.
+- Three evidence-backed layouts: responsive `Flex`, responsive `Grid`, and `Container`.
+- Eleven blocks and shells: `AuthShell`, `AppShell`, `SettingsLayout`, `Toolbar`, `PaginationBar`, `PageHeader`, `StatGrid`, `DataSection`, `FormSection`, `DangerZone`, and `EmptyState`.
+- The non-visual `AppearanceBootstrap`, `NitroKit::FormBuilder`, and typed `NitroKit::Choice` values.
 
-The repository's dummy application is the canonical gallery. It exercises the component and block catalog across realistic Rails SaaS flows, narrow and wide layouts, light and dark themes, and success, empty, error, loading, and destructive states. Every example pairs Preview and Code tabs; the highlighted, copyable Ruby is extracted from the executable body of its Phlex block or concrete flow method so examples cannot silently drift from their source.
+The repository's dummy application is the canonical gallery. It exercises the component and block catalog across realistic Rails SaaS flows, narrow and wide layouts, light, dark, and system themes, and success, empty, error, loading, and destructive states. The gallery also includes a [customization wizard](/gallery/customize) and complete [sidebar](/gallery/flows/application-sidebar), [topbar](/gallery/flows/application-topbar), and [hybrid](/gallery/flows/application-hybrid) applications. Every example pairs Preview and Code tabs; the highlighted, copyable Ruby is extracted from the executable body of its Phlex block or concrete flow method so examples cannot silently drift from their source.
 
 ## Migrating from 1.x
 
@@ -195,6 +219,7 @@ Nitro Kit 2.0 does not include a compatibility layer. Replace:
 - `from_template`, conditional builder capture, and template-buffer bridges with normal Phlex blocks and compound methods.
 - Arbitrary component keyword attributes with explicit options or `html:`, `aria:`, and `data:`.
 - Tailwind class customization with documented `--nk-*` theme variables or application composition.
+- `VStack` and `HStack` with `Flex.new(dir: :col, ...)` and `Flex.new(dir: :row, ...)`; use responsive property strings when the direction or spacing changes by viewport.
 - `nk_form_with` and `nk_form_for` with Rails `form_with(..., builder: NitroKit::FormBuilder)`.
 
 The old generators, helper modules, schema/variant layer, Tailwind Merge dependency, vendored Floating UI and combobox navigation code, and ERB test pages have been removed.

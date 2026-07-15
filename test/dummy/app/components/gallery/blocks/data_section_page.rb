@@ -24,7 +24,7 @@ module Gallery
               id: "gallery-data-section-complete"
             ) do |section|
               section.actions NitroKit::ButtonGroup.new(label: "Member data actions") do |actions|
-                actions.button("Export CSV", href: "#export", variant: :ghost)
+                actions.button("Export CSV", href: "#export")
                 actions.button("Invite teammate", href: "#invite", variant: :primary)
               end
               section.table(member_table(id: "gallery-data-section-complete-table", count: 4)) do |table|
@@ -59,7 +59,7 @@ module Gallery
                 id: "gallery-data-section-dense"
               ) do |section|
                 section.actions NitroKit::ButtonGroup.new(label: "Inventory actions") do |actions|
-                  actions.button("Download complete access inventory", href: "#download", variant: :ghost)
+                  actions.button("Download complete access inventory", href: "#download")
                 end
                 section.table(member_table(id: "gallery-data-section-dense-table", count: 12)) do |table|
                   render_member_rows(table, 12, long: true)
@@ -103,7 +103,7 @@ module Gallery
       end
 
       def api_note
-        "Provide exactly one table(Table) or empty_state(EmptyState level: 3). actions accepts at most one ButtonGroup."
+        "Supply the required title and optional description through constructor text or matching compound methods. Provide exactly one table(Table) or empty_state(EmptyState level: 3). actions accepts at most one ButtonGroup."
       end
     end
   end

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get("favicon.ico" => redirect("/favicon.svg"))
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -13,8 +15,11 @@ Rails.application.routes.draw do
   namespace :gallery do
     root(to: "home#show")
 
+    get("customize" => "customizations#show", as: :customize)
+    get("previews/:kind/:slug/:example" => "previews#show", as: :preview)
     resources(:components, only: :show, param: :slug)
     resources(:blocks, only: :show, param: :slug)
+    resources(:upload_submissions, only: :create)
     get("flows/:slug(/:state)" => "flows#show", :as => :flow)
   end
 

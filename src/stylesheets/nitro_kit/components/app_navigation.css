@@ -1,0 +1,136 @@
+@layer nitro-kit.base {
+  :where([data-nk="app-navigation"]) {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-inline-size: 0;
+    min-block-size: 0;
+    color: var(--nk-app-shell-sidebar-foreground);
+    font-size: var(--nk-text-sm);
+  }
+
+  :where(
+      [data-nk="app-navigation"] > [data-slot="app-navigation-header"],
+      [data-nk="app-navigation"] > [data-slot="app-navigation-footer"]
+    ) {
+    flex: 0 0 auto;
+    padding: calc(var(--nk-space) * 3);
+  }
+
+  :where([data-nk="app-navigation"] > [data-slot="app-navigation-header"]) {
+    border-block-end: var(--nk-border-width) solid var(--nk-app-shell-border);
+  }
+
+  :where([data-nk="app-navigation"] > [data-slot="app-navigation-footer"]) {
+    border-block-start: var(--nk-border-width) solid var(--nk-app-shell-border);
+  }
+
+  :where([data-nk="app-navigation"] > [data-slot="app-navigation-body"]) {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: var(--nk-space);
+    min-block-size: 0;
+    padding: calc(var(--nk-space) * 3);
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable;
+  }
+
+  :where([data-nk="app-navigation"] [data-slot="app-navigation-section"]) {
+    display: flex;
+    flex: 0 0 auto;
+    flex-direction: column;
+    gap: var(--nk-space);
+    min-inline-size: 0;
+  }
+
+  :where(
+      [data-nk="app-navigation"] [data-slot="app-navigation-section-label"]
+    ) {
+    margin: calc(var(--nk-space) * 4) calc(var(--nk-space) * 2) var(--nk-space);
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-xs);
+    font-weight: var(--nk-font-weight-semibold);
+    line-height: var(--nk-leading-tight);
+  }
+
+  :where([data-nk="app-navigation"] [data-slot="app-navigation-item"]) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: calc(var(--nk-space) * 2);
+    align-items: center;
+    min-block-size: var(--nk-control-height-md);
+    padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
+    color: inherit;
+    font-weight: var(--nk-font-weight-medium);
+    line-height: var(--nk-leading-tight);
+    text-decoration: none;
+    border-radius: var(--nk-radius-md);
+    transition:
+      color var(--nk-duration-normal) var(--nk-ease),
+      background-color var(--nk-duration-normal) var(--nk-ease);
+  }
+
+  :where([data-nk="app-navigation"] [data-slot="app-navigation-item-label"]) {
+    min-inline-size: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :where(
+      [data-nk="app-navigation"] [data-slot="app-navigation-item-icon"],
+      [data-nk="app-navigation"] [data-slot="app-navigation-item-badge"]
+    ) {
+    flex: 0 0 auto;
+  }
+
+  :where([data-nk="app-navigation"] [data-slot="app-navigation-item-badge"]) {
+    justify-self: end;
+    font-variant-numeric: tabular-nums;
+  }
+
+  :where([data-nk="app-navigation"] [data-slot="app-navigation-divider"]) {
+    flex: 0 0 auto;
+    block-size: var(--nk-border-width);
+    margin: calc(var(--nk-space) * 2);
+    background: var(--nk-app-shell-border);
+    border: 0;
+  }
+
+  :where([data-nk="app-navigation"] [data-slot="app-navigation-spacer"]) {
+    flex: 1 1 calc(var(--nk-space) * 4);
+    min-block-size: calc(var(--nk-space) * 4);
+  }
+}
+
+@layer nitro-kit.state {
+  :where(
+      [data-nk="app-navigation"]
+        [data-slot="app-navigation-item"][data-state="current"]
+    ) {
+    color: var(--nk-app-shell-sidebar-accent-foreground);
+    background: var(--nk-app-shell-sidebar-accent);
+  }
+
+  @media (hover: hover) {
+    :where([data-nk="app-navigation"] [data-slot="app-navigation-item"]:hover) {
+      color: var(--nk-app-shell-sidebar-accent-foreground);
+      background: var(--nk-app-shell-sidebar-accent);
+    }
+  }
+
+  :where(
+      [data-nk="app-navigation"] [data-slot="app-navigation-item"]:focus-visible
+    ) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: calc(var(--nk-focus-offset) * -1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where([data-nk="app-navigation"] [data-slot="app-navigation-item"]) {
+      transition-duration: 0.01ms;
+    }
+  }
+}

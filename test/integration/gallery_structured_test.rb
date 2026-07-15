@@ -1,30 +1,28 @@
 require "test_helper"
 
 class GalleryStructuredTest < ActionDispatch::IntegrationTest
-  test "accordion page covers modes counts states and deterministic relationships" do
+  test "accordion page covers native modes counts and deterministic identity" do
     get_component("accordion")
 
     assert_select "#gallery-accordion-one[data-mode='multiple']" do
       assert_select "[data-slot='accordion-item']", count: 1
-      assert_select "#gallery-accordion-one-summary-trigger" \
-                    "[aria-controls='gallery-accordion-one-summary-content']" \
-                    "[aria-expanded='false']"
-      assert_select "#gallery-accordion-one-summary-content" \
-                    "[aria-labelledby='gallery-accordion-one-summary-trigger']" \
-                    "[aria-hidden='true'][hidden]"
+      assert_select "details[data-slot='accordion-item']:not([name]):not([open])" do
+        assert_select "summary#gallery-accordion-one-summary-trigger"
+        assert_select "#gallery-accordion-one-summary-content"
+      end
     end
 
     assert_select "#gallery-accordion-one-open[data-mode='single']" do
-      assert_select "[data-slot='accordion-item'][data-state='open']", count: 1
-      assert_select "#gallery-accordion-one-open-summary-trigger[aria-expanded='true']"
-      assert_select "#gallery-accordion-one-open-summary-content[aria-hidden='false']:not([hidden])"
+      assert_select "details[data-slot='accordion-item'][name='gallery-accordion-one-open'][open]", count: 1
+      assert_select "summary#gallery-accordion-one-open-summary-trigger"
+      assert_select "#gallery-accordion-one-open-summary-content"
     end
 
     assert_select "#gallery-accordion-multiple[data-mode='multiple']" do
       assert_select "[data-slot='accordion-item']", count: 4
-      assert_select "[data-slot='accordion-item'][data-state='open']", count: 2
-      assert_select "[data-slot='accordion-item'][data-state='closed']", count: 2
-      assert_select "#gallery-accordion-multiple-advanced-trigger[disabled]"
+      assert_select "details[data-slot='accordion-item'][open]", count: 2
+      assert_select "details[data-slot='accordion-item']:not([open])", count: 2
+      assert_select "summary#gallery-accordion-multiple-advanced-trigger"
     end
   end
 
@@ -35,7 +33,7 @@ class GalleryStructuredTest < ActionDispatch::IntegrationTest
       assert_select "[data-slot='accordion-item']", count: 6
       assert_select "#gallery-accordion-pressure-retention-trigger", text: /long-running organization/
       assert_select "#gallery-accordion-pressure-retention-content li", count: 3
-      assert_select "#gallery-accordion-pressure-legacy-trigger[disabled]"
+      assert_select "summary#gallery-accordion-pressure-legacy-trigger"
     end
 
     assert_select "#gallery-accordion-deployment[data-mode='single']" do
@@ -64,7 +62,8 @@ class GalleryStructuredTest < ActionDispatch::IntegrationTest
                     "[aria-selected='true'][tabindex='0']"
       assert_select "#gallery-tabs-vertical-manual-security-panel" \
                     "[aria-labelledby='gallery-tabs-vertical-manual-security-tab']" \
-                    "[aria-hidden='false']:not([hidden])"
+                    ":not([aria-hidden]):not([hidden])"
+      assert_select "[data-slot='tabs-panel']:not([hidden])", count: 4
       assert_select "#gallery-tabs-vertical-manual-legacy-tab[disabled][aria-selected='false']"
       assert_select "[role='tab']" do |tabs|
         tabs.each { |tab| assert_includes tab["data-action"], "keydown->nk--tabs#navigate" }

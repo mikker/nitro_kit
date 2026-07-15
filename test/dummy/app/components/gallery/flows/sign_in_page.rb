@@ -44,7 +44,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-sign-in-card") do |card|
           card.title(state == "success" ? "Welcome back" : "Sign in to Nitro", level: 4)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               if state == "success"
                 render_success
               else

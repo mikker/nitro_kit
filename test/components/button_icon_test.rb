@@ -20,6 +20,12 @@ class ButtonIconTest < ActiveSupport::TestCase
     end
   end
 
+  test "uses the default treatment when the ordinary action omits variant" do
+    node = render_node(NitroKit::Button.new("Save changes"))
+
+    assert_equal "default", node["data-variant"]
+  end
+
   test "keeps label and icon structure stable for text and block content" do
     text_node = render_node(NitroKit::Button.new(LabelObject.new("Object label"), icon: :save))
     block_node = render_node(NitroKit::Button.new(icon_right: :arrow_right)) { "Block label" }
@@ -62,6 +68,14 @@ class ButtonIconTest < ActiveSupport::TestCase
     assert_nil node.at_css("[data-slot='button-label']")
   end
 
+  test "uses Flux icon geometry for labelled and square buttons" do
+    labelled = render_node(NitroKit::Button.new("Export", icon: :download))
+    square = render_node(NitroKit::Button.new(icon: :ellipsis, aria: { label: "More" }))
+
+    assert_equal "sm", labelled.at_css("[data-nk='icon']")["data-size"]
+    assert_equal "md", square.at_css("[data-nk='icon']")["data-size"]
+  end
+
   test "validates closed vocabularies and native button type" do
     assert_raises(ArgumentError) { NitroKit::Button.new("Save", variant: :loud) }
     assert_raises(ArgumentError) { NitroKit::Button.new("Save", size: :huge) }
@@ -69,6 +83,11 @@ class ButtonIconTest < ActiveSupport::TestCase
     assert_raises(ArgumentError) { NitroKit::Button.new("Save", type: nil) }
     assert_raises(ArgumentError) { NitroKit::Button.new("Save", disabled: "false") }
     assert_raises(ArgumentError) { NitroKit::Button.new("Save", class: "utility") }
+    assert_raises(ArgumentError) { NitroKit::Button.new("").call }
+    assert_raises(ArgumentError) { NitroKit::Button.new("Text").call { "Block" } }
+    assert_raises(ArgumentError) { NitroKit::Button.new("Link", href: "") }
+    assert_raises(ArgumentError) { NitroKit::Button.new("Link", href: "/", name: "action") }
+    assert_raises(ArgumentError) { NitroKit::Button.new("Button", target: "_blank") }
   end
 
   test "renders decorative and meaningful icons with owned ARIA" do

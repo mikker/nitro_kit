@@ -20,7 +20,7 @@ module Gallery
                   render NitroKit::Button.new("Revoke sessions", type: :submit, variant: :destructive)
                 end
               end
-              zone.escape NitroKit::Button.new("Keep sessions", href: "#security", variant: :ghost)
+              zone.escape NitroKit::Button.new("Keep sessions", href: "#security")
             end
           end
 
@@ -35,7 +35,7 @@ module Gallery
                   render NitroKit::Button.new("Delete workspace", type: :submit, variant: :destructive, disabled: true)
                 end
               end
-              zone.escape NitroKit::Button.new("Review ownership", href: "#ownership", variant: :default)
+              zone.escape NitroKit::Button.new("Review ownership", href: "#ownership")
             end
           end
 
@@ -60,7 +60,7 @@ module Gallery
                   end
                 end
               end
-              zone.escape NitroKit::Button.new("Return to credentials", href: "#credentials", variant: :ghost)
+              zone.escape NitroKit::Button.new("Return to credentials", href: "#credentials")
             end
           end
 
@@ -76,7 +76,7 @@ module Gallery
                     render NitroKit::Button.new("Permanently delete workspace", type: :submit, variant: :destructive)
                   end
                 end
-                zone.escape NitroKit::Button.new("Keep workspace and return to settings", href: "#settings", variant: :ghost)
+                zone.escape NitroKit::Button.new("Keep workspace and return to settings", href: "#settings")
               end
             end
           end
@@ -88,7 +88,7 @@ module Gallery
       end
 
       def api_note
-        "confirmation requires exactly one caller block. escape requires exactly one non-destructive NitroKit::Button."
+        "Supply the required title and description through constructor text or matching compound methods. confirmation requires exactly one caller block. escape requires exactly one non-destructive NitroKit::Button."
       end
     end
   end

@@ -1,27 +1,105 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["input", "value", "listbox", "option"];
+  static targets = [
+    "control",
+    "input",
+    "native",
+    "value",
+    "listbox",
+    "option",
+    "status",
+  ];
   static values = { open: Boolean, required: Boolean };
 
   connect() {
     this.activeOption = null;
+    this.enhanced = true;
+    this.nativeRequired = this.requiredValue;
+    this.element.dataset.enhanced = "true";
+    this.controlTarget.hidden = false;
+    this.nativeTarget.hidden = true;
+    this.valueTarget.required = false;
     this.syncSelection();
     this.syncValidity();
+    this.reflectOpenState();
   }
 
   disconnect() {
-    this.openValue = false;
+    this.enhanced = false;
+    const control = this.element.querySelector(
+      ':scope > [data-slot="combobox-control"]',
+    );
+    const input = control?.querySelector('[data-nk--combobox-target~="input"]');
+    const native = this.element.querySelector(
+      ':scope > [data-slot="combobox-native"]',
+    );
+    const value = native?.querySelector('[data-nk--combobox-target~="value"]');
+    const listbox = this.element.querySelector(
+      ':scope > [data-slot="combobox-listbox"]',
+    );
+    const status = this.element.querySelector(
+      ':scope > [data-slot="combobox-status"]',
+    );
+
+    this.element.setAttribute("data-nk--combobox-open-value", "false");
     this.element.dataset.state = "closed";
-    if (this.hasListboxTarget) {
-      this.listboxTarget.dataset.state = "closed";
-      this.listboxTarget.hidden = true;
+    if (listbox) {
+      listbox.dataset.state = "closed";
+      listbox.hidden = true;
     }
+    if (input) {
+      input.setAttribute("aria-expanded", "false");
+      input.setCustomValidity("");
+      input.removeAttribute("aria-activedescendant");
+    }
+    if (control) control.hidden = true;
+    if (native) native.hidden = false;
+    if (value) value.required = this.nativeRequired;
+    if (status) status.textContent = "";
+    delete this.element.dataset.enhanced;
+  }
+
+  controlTargetConnected(control) {
+    if (this.enhanced) control.hidden = false;
+  }
+
+  nativeTargetConnected(native) {
+    if (this.enhanced) native.hidden = true;
+  }
+
+  valueTargetConnected(value) {
+    if (!this.enhanced) return;
+
+    this.nativeRequired = this.requiredValue;
+    value.required = false;
     if (this.hasInputTarget) {
-      this.inputTarget.setAttribute("aria-expanded", "false");
-      this.inputTarget.setCustomValidity("");
-      this.inputTarget.removeAttribute("aria-activedescendant");
+      this.syncSelection();
+      this.syncValidity();
     }
+  }
+
+  inputTargetConnected() {
+    if (!this.enhanced) return;
+
+    if (this.hasValueTarget) this.syncValidity();
+    this.reflectOpenState();
+  }
+
+  inputTargetDisconnected() {
+    this.activeOption = null;
+  }
+
+  listboxTargetConnected() {
+    if (this.enhanced) this.reflectOpenState();
+  }
+
+  optionTargetConnected() {
+    if (this.enhanced && this.hasValueTarget) this.syncSelection();
+  }
+
+  optionTargetDisconnected(option) {
+    if (this.activeOption === option) this.setActive(null);
   }
 
   open() {
@@ -59,6 +137,7 @@ export default class extends Controller {
     this.syncSelection();
     this.setActive(null);
     this.syncValidity();
+    this.announceResults();
     this.open();
   }
 
@@ -122,18 +201,31 @@ export default class extends Controller {
   }
 
   openValueChanged(open) {
+    if (!this.enhanced) return;
+
+    this.reflectOpenState(open);
+  }
+
+  reflectOpenState(open = this.openValue) {
+    if (!this.hasListboxTarget || !this.hasInputTarget) return;
+
     const state = open ? "open" : "closed";
     this.element.dataset.state = state;
     this.listboxTarget.dataset.state = state;
     this.listboxTarget.hidden = !open;
     this.inputTarget.setAttribute("aria-expanded", String(open));
 
-    if (open && !this.activeOption) {
+    if (open && (!this.activeOption || !this.activeOption.isConnected)) {
       const selected = this.optionTargets.find(
         (option) =>
           option.getAttribute("aria-selected") === "true" && !option.hidden,
       );
       this.setActive(selected ?? this.visibleOptions[0] ?? null);
+    } else if (open && this.activeOption) {
+      this.inputTarget.setAttribute(
+        "aria-activedescendant",
+        this.activeOption.id,
+      );
     }
   }
 
@@ -174,16 +266,26 @@ export default class extends Controller {
 
     this.activeOption = option;
 
-    if (option) {
+    if (option && this.hasInputTarget) {
       this.inputTarget.setAttribute("aria-activedescendant", option.id);
       option.scrollIntoView({ block: "nearest" });
-    } else {
+    } else if (this.hasInputTarget) {
       this.inputTarget.removeAttribute("aria-activedescendant");
     }
   }
 
   optionLabel(option) {
     return option.textContent.trim();
+  }
+
+  announceResults() {
+    const count = this.optionTargets.filter((option) => !option.hidden).length;
+
+    if (count === 0) {
+      this.statusTarget.textContent = "No options found.";
+    } else {
+      this.statusTarget.textContent = `${count} ${count === 1 ? "option" : "options"} available.`;
+    }
   }
 
   get visibleOptions() {

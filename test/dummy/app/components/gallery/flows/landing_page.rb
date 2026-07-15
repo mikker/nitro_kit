@@ -42,7 +42,7 @@ module Gallery
       end
 
       def render_feature_summary
-        render NitroKit::Grid.new(cols: 3, id: "gallery-landing-feature-grid") do
+        render NitroKit::Grid.new(cols: "1 sm:2 lg:3", id: "gallery-landing-feature-grid") do
           landing_features.each do |feature|
             render NitroKit::Card.new(id: "gallery-landing-feature-#{feature.id}") do |card|
               card.title(feature.title, level: 2)
@@ -50,8 +50,7 @@ module Gallery
               card.footer do
                 render NitroKit::Button.new(
                   "Explore #{feature.title.downcase}",
-                  href: features_path,
-                  variant: :ghost
+                  href: features_path
                 )
               end
             end

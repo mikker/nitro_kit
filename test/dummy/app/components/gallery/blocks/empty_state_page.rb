@@ -42,21 +42,27 @@ module Gallery
             ) do |empty|
               empty.icon NitroKit::Icon.new(:search_x)
               empty.action NitroKit::Button.new("Clear filters", href: "#clear", variant: :primary)
-              empty.action NitroKit::Button.new("Return to billing", href: "#billing", variant: :ghost)
+              empty.action NitroKit::Button.new("Return to billing", href: "#billing")
             end
           end
 
           example("Long nested empty state", slug: "empty-state-long", mode: :full_width) do
             render NitroKit::Container.new(size: :md, id: "gallery-empty-state-long-container") do
               render NitroKit::EmptyState.new(
-                title: "No records for International Research, Production, and Reliability Engineering",
-                description: "The current search includes archived projects, suspended members, expired credentials, and a date range that predates this workspace. Remove one or more filters before trying again.",
                 level: 4,
                 id: "gallery-empty-state-long"
               ) do |empty|
+                empty.title do
+                  plain "No records for "
+                  strong { "International Research, Production, and Reliability Engineering" }
+                end
+                empty.description do
+                  plain "The current search includes archived projects, suspended members, expired credentials, and a date range that predates this workspace. "
+                  plain "Remove one or more filters before trying again."
+                end
                 empty.icon NitroKit::Icon.new(:database)
                 empty.action NitroKit::Button.new("Reset all filters", href: "#reset", variant: :primary)
-                empty.action NitroKit::Button.new("Review query guide", href: "#guide", variant: :ghost)
+                empty.action NitroKit::Button.new("Review query guide", href: "#guide")
               end
             end
           end
@@ -68,7 +74,7 @@ module Gallery
       end
 
       def api_note
-        "title: is required; level: accepts 2..6. icon accepts one Icon and action accepts at most two distinct Buttons."
+        "Supply the required title through title: or title { ... }; description supports the same two forms. level: accepts 2..6. icon accepts one Icon and action accepts at most two distinct Buttons."
       end
     end
   end

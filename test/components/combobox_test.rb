@@ -1,7 +1,7 @@
 require "test_helper"
 
 class ComboboxTest < ActiveSupport::TestCase
-  test "renders typed choices with a visible search control and named submitted value" do
+  test "renders a native named fallback and a progressively enhanced search control" do
     options = [
       NitroKit::Combobox::Option.new(label: "Denmark", value: "dk"),
       { label: "Sweden", value: "se", disabled: true },
@@ -9,8 +9,11 @@ class ComboboxTest < ActiveSupport::TestCase
     ]
     node = render_combobox(options:, value: "dk")
     input = node.at_css("[data-slot='combobox-input']")
-    hidden = node.at_css("[data-slot='combobox-value']")
+    control = node.at_css("[data-slot='combobox-control']")
+    native = node.at_css("[data-slot='combobox-native']")
+    select = native.at_css("select")
     listbox = node.at_css("[data-slot='combobox-listbox']")
+    status = node.at_css("[data-slot='combobox-status']")
     choices = node.css("[data-slot='combobox-option']")
 
     assert_equal "country", node["id"]
@@ -26,14 +29,19 @@ class ComboboxTest < ActiveSupport::TestCase
     assert_equal "combobox", input["role"]
     assert_equal "Denmark", input["value"]
     assert_nil input["name"]
+    assert control.key?("hidden")
     assert_equal "country-listbox", input["aria-controls"]
     assert_equal "false", input["aria-expanded"]
     assert_equal "list", input["aria-autocomplete"]
 
-    assert_equal "hidden", hidden["type"]
-    assert_equal "registration[country]", hidden["name"]
-    assert_equal "dk", hidden["value"]
-    refute hidden.key?("disabled")
+    assert_equal "select", native["data-nk"]
+    assert_equal "native", native["data-nk--combobox-target"]
+    assert_equal "country-value", select["id"]
+    assert_equal "registration[country]", select["name"]
+    assert_equal "dk", select.at_css("option[selected]")["value"]
+    assert_equal "value", select["data-nk--combobox-target"]
+    refute select.key?("disabled")
+    assert_empty node.css("input[type='hidden'][name]")
 
     assert_equal "country-listbox", listbox["id"]
     assert_equal "listbox", listbox["role"]
@@ -43,6 +51,11 @@ class ComboboxTest < ActiveSupport::TestCase
     assert_equal "true", choices[0]["aria-selected"]
     assert_equal "true", choices[1]["aria-disabled"]
     assert_equal "option", choices[1]["role"]
+    assert_equal "status", status["role"]
+    assert_equal "polite", status["aria-live"]
+    assert_equal "true", status["aria-atomic"]
+    assert_equal "status", status["data-nk--combobox-target"]
+    assert_empty status.text
     assert_empty node.css("[class], [style]")
   end
 
@@ -50,7 +63,15 @@ class ComboboxTest < ActiveSupport::TestCase
     node = render_combobox(disabled: true)
 
     assert node.at_css("[data-slot='combobox-input']").key?("disabled")
-    assert node.at_css("[data-slot='combobox-value']").key?("disabled")
+    assert node.at_css("[data-slot='combobox-native'] select").key?("disabled")
+  end
+
+  test "renders numeric choice labels in both native and enhanced options" do
+    node = render_combobox(options: [ [ 1, "one" ], { label: 2, value: "two" } ], value: "two")
+
+    assert_equal %w[1 2], node.css("[data-slot='combobox-native'] option:not([value=''])").map(&:text)
+    assert_equal %w[1 2], node.css("[data-slot='combobox-option']").map(&:text)
+    assert_equal "2", node.at_css("[data-slot='combobox-input']")["value"]
   end
 
   test "supports every placement and root application attributes" do

@@ -3,6 +3,28 @@
 module NitroKit
   class Pagination < Component
     Item = Data.define(:kind, :button, :content, :current, :label)
+    class CurrentPage < Component
+      def initialize(text, id:, html:, aria:, data:, desperately_need_a_class:)
+        @text = text
+        super(
+          component: :button,
+          attributes: { id: },
+          html:,
+          aria:,
+          data:,
+          variant: :ghost,
+          size: :sm,
+          desperately_need_a_class:
+        )
+      end
+
+      def view_template(&block)
+        span(**root_attributes) do
+          span(**slot_attributes(:label)) { block ? yield : plain(@text.to_s) }
+        end
+      end
+    end
+    private_constant :CurrentPage
     ITEM_KINDS = %i[previous page ellipsis next].freeze
 
     def initialize(
@@ -50,6 +72,7 @@ module NitroKit
       desperately_need_a_class: nil,
       &content
     )
+      text = nil if content && text == "Previous"
       validate_boolean!(:disabled, disabled)
       append_navigation_item(
         :previous,
@@ -79,6 +102,9 @@ module NitroKit
       &content
     )
       validate_boolean!(:current, current)
+      if !text.nil? && content
+        raise ArgumentError, "Pagination page accepts text or a block, not both"
+      end
       validate_content!(text, content, name: "page label")
       if missing_href?(href) && !current
         raise ArgumentError, "Pagination page href is required unless the page is current"
@@ -86,16 +112,27 @@ module NitroKit
       validate_aria!(aria, reserved: %w[current disabled])
 
       item_aria = current ? aria.merge(current: "page") : aria
-      button = pagination_button(
-        text,
-        href:,
-        disabled: current,
-        id:,
-        html:,
-        aria: item_aria,
-        data:,
-        desperately_need_a_class:
-      )
+      button = if current && missing_href?(href)
+        CurrentPage.new(
+          text,
+          id:,
+          html:,
+          aria: item_aria,
+          data:,
+          desperately_need_a_class:
+        )
+      else
+        pagination_button(
+          text,
+          href:,
+          disabled: false,
+          id:,
+          html:,
+          aria: item_aria,
+          data:,
+          desperately_need_a_class:
+        )
+      end
 
       append(Item.new(kind: :page, button:, content:, current:, label: nil))
     end
@@ -118,6 +155,7 @@ module NitroKit
       desperately_need_a_class: nil,
       &content
     )
+      text = nil if content && text == "Next"
       validate_boolean!(:disabled, disabled)
       append_navigation_item(
         :next,
@@ -237,7 +275,7 @@ module NitroKit
     end
 
     def render_ellipsis(item)
-      span(**slot_attributes(:ellipsis), aria: { hidden: true }) { "…" }
+      span(**slot_attributes(:ellipsis), aria: { hidden: "true" }) { "…" }
       span(**slot_attributes(:ellipsis_label)) { plain(item.label) }
     end
 

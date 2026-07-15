@@ -15,7 +15,7 @@ module Gallery
         example_section(
           "Submission states",
           slug: "switch-states",
-          description: "Switches remain native checkboxes with hidden unchecked values and an owned switch role."
+          description: "Switches remain native checkboxes with hidden unchecked values and live checked-state reflection."
         ) do
           example("State and size matrix", slug: "switch-state-matrix", layout: :matrix) do
             sample("Small off", slug: "small-off") do
@@ -66,7 +66,7 @@ module Gallery
         example_section(
           "Accessible labels",
           slug: "switch-labels",
-          description: "Block content, long descriptions, and control-only accessible names cover compact and verbose uses."
+          description: "Descriptions are referenced with aria-describedby instead of becoming part of the accessible name."
         ) do
           example("Label pressure", slug: "switch-label-pressure", layout: :matrix) do
             sample("Block label", slug: "block") do

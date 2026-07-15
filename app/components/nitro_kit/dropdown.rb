@@ -27,8 +27,7 @@ module NitroKit
           id: @identifier,
           data: {
             controller: "nk--dropdown",
-            placement: placement_value,
-            state: "closed"
+            placement: placement_value
           }
         },
         html:,
@@ -160,11 +159,7 @@ module NitroKit
         disabled: @trigger.disabled,
         id: trigger_id,
         html: @trigger.html.merge(popovertarget: @trigger.disabled ? nil : content_id),
-        aria: @trigger.aria.merge(
-          controls: content_id,
-          expanded: false,
-          haspopup: "menu"
-        ),
+        aria: @trigger.aria.merge(haspopup: "menu"),
         data: owned_data(
           @trigger.data,
           nk__dropdown_target: "trigger",
@@ -191,9 +186,8 @@ module NitroKit
             aria: { labelledby: trigger_id },
             data: {
               placement: placement_value,
-              state: "closed",
               nk__dropdown_target: "content",
-              action: "toggle->nk--dropdown#sync keydown->nk--dropdown#navigate"
+              action: "toggle->nk--dropdown#focusOpened keydown->nk--dropdown#navigate"
             }
           }
         )
@@ -214,6 +208,10 @@ module NitroKit
       div(
         **slot_attributes(
           :title,
+          attributes: {
+            role: "presentation",
+            aria: { hidden: true }
+          },
           html: entry.html,
           aria: entry.aria,
           data: entry.data,
@@ -226,13 +224,14 @@ module NitroKit
       native_attributes = if entry.href
         {
           href: entry.disabled ? nil : entry.href,
-          tabindex: entry.disabled ? -1 : 0,
+          tabindex: -1,
           aria: entry.aria.merge(disabled: entry.disabled ? true : nil)
         }
       else
         {
           type: entry.type,
           disabled: entry.disabled,
+          tabindex: -1,
           aria: entry.aria
         }
       end

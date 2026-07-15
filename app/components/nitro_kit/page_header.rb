@@ -5,7 +5,7 @@ module NitroKit
     Child = Data.define(:component, :content)
 
     def initialize(
-      title:,
+      title: nil,
       eyebrow: nil,
       description: nil,
       id: nil,
@@ -14,9 +14,9 @@ module NitroKit
       data: {},
       desperately_need_a_class: nil
     )
-      @title = validate_text!(:title, title)
-      @eyebrow = validate_optional_text!(:eyebrow, eyebrow)
-      @description = validate_optional_text!(:description, description)
+      @title_content = content_from_keyword(:title, title)
+      @eyebrow_content = content_from_keyword(:eyebrow, eyebrow)
+      @description_content = content_from_keyword(:description, description)
       @actions = nil
 
       super(
@@ -29,17 +29,33 @@ module NitroKit
       )
     end
 
-    attr_reader :title, :eyebrow, :description
-
     def view_template
       yield self if block_given?
+      require_content!("PageHeader", :title, @title_content)
 
       header(**root_attributes) do
-        p(**slot_attributes(:eyebrow)) { plain(eyebrow) } if eyebrow
-        h1(**slot_attributes(:title)) { plain(title) }
-        p(**slot_attributes(:description)) { plain(description) } if description
+        p(**slot_attributes(:eyebrow)) { render_deferred_content(@eyebrow_content) } if @eyebrow_content
+        h1(**slot_attributes(:title)) { render_deferred_content(@title_content) }
+        if @description_content
+          p(**slot_attributes(:description)) { render_deferred_content(@description_content) }
+        end
         render_in_slot(@actions.component, :actions, &@actions.content) if @actions
       end
+    end
+
+    def eyebrow(text = nil, &block)
+      @eyebrow_content = declare_content(:eyebrow, @eyebrow_content, text, &block)
+      nil
+    end
+
+    def title(text = nil, &block)
+      @title_content = declare_content(:title, @title_content, text, &block)
+      nil
+    end
+
+    def description(text = nil, &block)
+      @description_content = declare_content(:description, @description_content, text, &block)
+      nil
     end
 
     def actions(component, &content)
@@ -50,20 +66,6 @@ module NitroKit
 
       @actions = Child.new(component:, content:)
       nil
-    end
-
-    private
-
-    def validate_text!(name, value)
-      return value if value.is_a?(String) && !value.strip.empty?
-
-      raise ArgumentError, "#{name} must be a non-blank String"
-    end
-
-    def validate_optional_text!(name, value)
-      return if value.nil?
-
-      validate_text!(name, value)
     end
   end
 end

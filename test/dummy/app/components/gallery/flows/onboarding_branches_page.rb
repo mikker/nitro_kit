@@ -39,7 +39,7 @@ module Gallery
           id: "gallery-onboarding-branches-header"
         ) do |header|
           header.actions NitroKit::ButtonGroup.new(label: "Onboarding session", id: "gallery-onboarding-branches-session") do |actions|
-            actions.button("Save and exit", href: entry_path(entry, state: "resume"), variant: :ghost, disabled: state == "saving")
+            actions.button("Save and exit", href: entry_path(entry, state: "resume"), disabled: state == "saving")
           end
         end
       end
@@ -56,7 +56,7 @@ module Gallery
       end
 
       def render_path_choice
-        render NitroKit::Grid.new(cols: 3, id: "gallery-onboarding-branches-paths") do
+        render NitroKit::Grid.new(cols: "1 sm:2 lg:3", id: "gallery-onboarding-branches-paths") do
           render_path_card("Company workspace", "Invite a team and connect delivery integrations.", "company", :building_2)
           render_path_card("Personal workspace", "Start alone with a minimal profile and no invitations.", "solo", :user)
           render_path_card("Import configuration", "Upload an application-owned export from another workspace.", "import", :upload)
@@ -67,7 +67,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-onboarding-path-#{destination}") do |card|
           card.title(title)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Icon.new(icon)
               p { description }
             end
@@ -205,7 +205,7 @@ module Gallery
           card.footer do
             render NitroKit::ButtonGroup.new(label: "Skipped step actions") do |actions|
               actions.button("Continue", href: entry_path(entry, state: destination), variant: :primary)
-              actions.button("Go back", href: entry_path(entry, state: state == "skip-team" ? "invite-team" : "integration"), variant: :ghost)
+              actions.button("Go back", href: entry_path(entry, state: state == "skip-team" ? "invite-team" : "integration"))
             end
           end
         end
@@ -218,7 +218,7 @@ module Gallery
           id: "gallery-onboarding-integrations-section"
         ) do |section|
           section.actions NitroKit::ButtonGroup.new(label: "Integration actions") do |actions|
-            actions.button("Skip integrations", href: entry_path(entry, state: "skip-integration"), variant: :ghost)
+            actions.button("Skip integrations", href: entry_path(entry, state: "skip-integration"))
           end
           section.table NitroKit::Table.new(id: "gallery-onboarding-integrations-table") do |table|
             table.caption("Available integration setup")
@@ -250,7 +250,7 @@ module Gallery
         ) do |section|
           section.actions NitroKit::ButtonGroup.new(label: "Review actions") do |actions|
             actions.button("Create workspace", href: entry_path(entry, state: "saving"), variant: :primary)
-            actions.button("Edit details", href: entry_path(entry, state: branch == :company ? "company" : "solo"), variant: :ghost)
+            actions.button("Edit details", href: entry_path(entry, state: branch == :company ? "company" : "solo"))
           end
           section.table NitroKit::Table.new(id: "gallery-onboarding-review-table") do |table|
             table.caption("Onboarding choices")
@@ -280,7 +280,7 @@ module Gallery
         ) do |empty|
           empty.icon NitroKit::Icon.new(:circle_check)
           empty.action NitroKit::Button.new("Open workspace", href: "#workspace", variant: :primary, id: "gallery-onboarding-complete-action")
-          empty.action NitroKit::Button.new("Configure integrations", href: "#integrations", variant: :ghost)
+          empty.action NitroKit::Button.new("Configure integrations", href: "#integrations")
         end
       end
 
@@ -293,7 +293,7 @@ module Gallery
           card.footer do
             render NitroKit::ButtonGroup.new(label: "Resume actions") do |actions|
               actions.button("Resume team invitations", href: entry_path(entry, state: "invite-team"), variant: :primary)
-              actions.button("Start over", href: entry_path(entry, state: "choose-path"), variant: :ghost)
+              actions.button("Start over", href: entry_path(entry, state: "choose-path"))
             end
           end
         end

@@ -13,6 +13,7 @@ module NitroKit
       desperately_need_a_class: nil
     )
       @size = validate_choice!(:size, size, SIZES)
+      @overflow_rendered = false
 
       super(
         component: :avatar_stack,
@@ -34,6 +35,7 @@ module NitroKit
     end
 
     def avatar(positional_src = nil, **options)
+      raise ArgumentError, "AvatarStack overflow must be the final item" if @overflow_rendered
       if options.key?(:size)
         raise ArgumentError, "Avatar size is owned by AvatarStack"
       end
@@ -49,14 +51,19 @@ module NitroKit
       data: {},
       desperately_need_a_class: nil
     )
+      raise ArgumentError, "AvatarStack accepts at most one overflow" if @overflow_rendered
       unless count.is_a?(Integer) && count.positive?
         raise ArgumentError, "count must be a positive Integer"
       end
       raise ArgumentError, "label must be a String or nil" unless label.nil? || label.is_a?(String)
       raise ArgumentError, "aria must be a Hash" unless aria.is_a?(Hash)
 
-      aria = aria.reject { |key, _value| key.to_s.tr("_", "-") == "label" }
-        .merge(label: label || "#{count} more avatars")
+      if aria.keys.any? { |key| key.to_s.tr("_", "-") == "label" }
+        raise ArgumentError, "AvatarStack overflow label is owned by label:"
+      end
+
+      @overflow_rendered = true
+      aria = aria.merge(label: label || "#{count} more avatars")
 
       span(
         **slot_attributes(

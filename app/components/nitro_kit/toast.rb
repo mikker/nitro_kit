@@ -25,10 +25,9 @@ module NitroKit
         super(
           component: :toast_item,
           attributes: {
-            role: "status",
-            tabindex: 0,
             data: {
               state: "open",
+              turbo_temporary: dismissible ? true : nil,
               nk__toast_target: "item",
               nk__toast_permanent: dismissible ? nil : "true",
               action: [
@@ -57,7 +56,7 @@ module NitroKit
 
         li(**root_attributes) do
           div(**slot_attributes(:content)) do
-            h2(**slot_attributes(:title)) { plain(title) } if title
+            p(**slot_attributes(:title)) { plain(title) } if title
             div(**slot_attributes(:description)) do
               block ? yield : plain(description.to_s)
             end if description || block
@@ -147,6 +146,7 @@ module NitroKit
           role: "region",
           data: {
             controller: "nk--toast",
+            action: "turbo:before-cache@document->nk--toast#teardown",
             nk__toast_duration_value: duration
           }
         },

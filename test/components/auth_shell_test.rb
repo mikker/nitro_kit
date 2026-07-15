@@ -41,8 +41,9 @@ class AuthShellTest < ActiveSupport::TestCase
 
     assert_equal 1, container.element_children.count
     stack = container.element_children.first
-    assert_equal "v-stack", stack["data-nk"]
-    assert_equal "lg", stack["data-gap"]
+    assert_equal "flex", stack["data-nk"]
+    assert_equal "col", stack["data-dir"]
+    assert_equal "6", stack["data-gap"]
     assert_equal "stretch", stack["data-align"]
 
     assert_equal 1, stack.element_children.count
@@ -59,7 +60,7 @@ class AuthShellTest < ActiveSupport::TestCase
 
     node = render_probe(OwnershipProbe)
 
-    assert_equal %w[header section footer], node.css("[data-nk='v-stack'] > *").map(&:name)
+    assert_equal %w[header section footer], node.css("[data-nk='flex'][data-dir='col'] > *").map(&:name)
     assert_empty node.css("[data-nk='card'], [data-slot], turbo-frame")
   end
 
@@ -84,8 +85,8 @@ class AuthShellTest < ActiveSupport::TestCase
     assert_raises(ArgumentError) { NitroKit::AuthShell.new(data: { nk: "replacement" }) }
   end
 
-  test "keeps unsupported product and public shells explicitly absent" do
-    refute NitroKit.const_defined?(:AppShell, false)
+  test "keeps unsupported public and authentication panel shells explicitly absent" do
+    assert NitroKit.const_defined?(:AppShell, false)
     refute NitroKit.const_defined?(:MarketingShell, false)
     refute NitroKit.const_defined?(:AuthenticationPanel, false)
   end

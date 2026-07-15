@@ -14,16 +14,19 @@ Nitro Kit 2.0 is a complete, intentionally incompatible rewrite around gem-owned
 - Reject `class` and `style`; add the observable `desperately_need_a_class:` integration escape.
 - Use Rails `form_with(..., builder: NitroKit::FormBuilder)` instead of `nk_form_with` or `nk_form_for`.
 - Remove vendored Floating UI and combobox navigation runtimes and the obsolete Datepicker and Switch controllers.
+- Remove `VStack` and `HStack` in favor of one explicit, responsive `Flex` component.
 
 ### Added
 
 - Self-describing, classless `data-nk` roots and component-qualified `data-slot` contracts.
-- Static zero-specificity CSS, light and dark theme tokens, and a separate Tailwind CSS v4 adapter.
-- Four evidence-backed layouts: VStack, HStack, three-column Grid, and Container.
-- AuthShell plus SettingsLayout, Toolbar, PaginationBar, PageHeader, StatGrid, DataSection, FormSection, DangerZone, and EmptyState blocks.
-- Typed Choice values and direct-Phlex Rails FormBuilder integration with Active Model errors, multipart uploads, and Turbo Frame/Stream examples.
-- Gem-owned importmap pins and Stimulus behavior for Accordion, Combobox, Dialog, Dropdown, Tabs, Toast, and Tooltip.
-- A catalog-driven Phlex gallery covering components, blocks, broad application flows, responsive states, and themes.
+- Static zero-specificity CSS, light and dark theme tokens with a no-JavaScript system fallback, and a separate Tailwind CSS v4 adapter.
+- Responsive Flex and Grid layouts with fixed mobile-first breakpoints, closed values, classless data contracts, and no Tailwind runtime; plus the constrained-width Container.
+- Eleven blocks and shells: AuthShell, AppShell, SettingsLayout, Toolbar, PaginationBar, PageHeader, StatGrid, DataSection, FormSection, DangerZone, and EmptyState.
+- AppNavigation, AppearancePicker, DetailsTable, Dropzone, ProgressiveImage, and SortableTable components, plus the non-visual AppearanceBootstrap runtime.
+- Typed Choice values and direct-Phlex Rails FormBuilder integration with Active Model errors, native and direct uploads, and Turbo Frame/Stream examples.
+- Gem-owned importmap pins and Stimulus behavior for Accordion, AppShell, AppearancePicker, Combobox, Dialog, Dropdown, Dropzone, ProgressiveImage, Tabs, Toast, and Tooltip.
+- A catalog-driven Phlex gallery covering components, blocks, broad application flows, complete application shells, responsive states, and light, dark, and system appearance.
+- A public customization guide and gallery wizard for documented tokens, deterministic CSS exports, and copyable AppShell composition.
 
 ### License metadata
 

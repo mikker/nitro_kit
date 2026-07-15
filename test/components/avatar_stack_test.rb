@@ -39,7 +39,7 @@ class AvatarStackTest < ActiveSupport::TestCase
         12,
         label: "12 additional reviewers",
         html: { title: "More reviewers" },
-        aria: { label: "Do not override the explicit label" },
+        aria: { describedby: "reviewer-help" },
         data: { tracking_id: "overflow" }
       )
     end
@@ -48,15 +48,18 @@ class AvatarStackTest < ActiveSupport::TestCase
     assert_equal "Reviewers", node["aria-label"]
     assert_equal "12 additional reviewers", overflow["aria-label"]
     assert_equal "More reviewers", overflow["title"]
+    assert_equal "reviewer-help", overflow["aria-describedby"]
     assert_equal "overflow", overflow["data-tracking-id"]
   end
 
   test "keeps overflow label ownership explicit across normalized ARIA keys" do
-    node = render_node(NitroKit::AvatarStack.new) do |stack|
-      stack.overflow(2, label: "Two more teammates", aria: { "label" => "Override" })
+    error = assert_raises(ArgumentError) do
+      render_node(NitroKit::AvatarStack.new) do |stack|
+        stack.overflow(2, label: "Two more teammates", aria: { "label" => "Override" })
+      end
     end
 
-    assert_equal "Two more teammates", node.at_css("[data-slot='avatar-stack-overflow']")["aria-label"]
+    assert_match(/label is owned/, error.message)
   end
 
   test "validates stack size and overflow count" do
@@ -74,6 +77,18 @@ class AvatarStackTest < ActiveSupport::TestCase
     end
     assert_raises(ArgumentError) do
       NitroKit::AvatarStack.new.call { |stack| stack.avatar(nil, size: :lg) }
+    end
+    assert_raises(ArgumentError) do
+      NitroKit::AvatarStack.new.call do |stack|
+        stack.overflow(2)
+        stack.overflow(3)
+      end
+    end
+    assert_raises(ArgumentError) do
+      NitroKit::AvatarStack.new.call do |stack|
+        stack.overflow(2)
+        stack.avatar(nil, alt: "Late avatar")
+      end
     end
   end
 

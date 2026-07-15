@@ -41,7 +41,7 @@ module Gallery
               }.compact
             ) do
               render NitroKit::Container.new(size: :xl, id: "gallery-billing-container") do
-                render NitroKit::VStack.new(gap: :lg, align: :stretch, id: "gallery-billing-stack") do
+                render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch, id: "gallery-billing-stack") do
                   turbo_frame_tag("gallery-billing-frame") { render_screen }
                 end
               end
@@ -74,11 +74,11 @@ module Gallery
       end
 
       def render_plans
-        render NitroKit::VStack.new(gap: :lg, align: :stretch, id: "gallery-billing-plans-stack") do
+        render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch, id: "gallery-billing-plans-stack") do
           render NitroKit::Card.new(id: "gallery-billing-plan-summary") do |card|
             card.title("Choose a plan", level: 4)
             card.body do
-              render NitroKit::VStack.new(gap: :md, align: :stretch) do
+              render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
                 p { "Prices are billed monthly in US dollars. You can change plans without contacting support." }
                 render NitroKit::Badge.new("Current: Team", id: "gallery-billing-current-plan", color: :success, size: :sm)
               end
@@ -93,17 +93,14 @@ module Gallery
             end
           end
 
-          render NitroKit::Grid.new(
-            cols: 3,
-            id: "gallery-billing-plan-grid",
-            aria: { label: "Available plans" },
-            data: { gallery: "billing-plan-grid" }
-          ) do
+          render NitroKit::Grid.new(cols: "1 sm:2 lg:3", id: "gallery-billing-plan-grid",
+          aria: { label: "Available plans" },
+          data: { gallery: "billing-plan-grid" }) do
             Gallery::Data.plans.each do |plan|
               render NitroKit::Card.new(id: "gallery-billing-#{plan.id}") do |card|
                 card.title(plan.name, level: 5)
                 card.body do
-                  render NitroKit::VStack.new(gap: :md, align: :stretch) do
+                  render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
                     p { plan_price(plan) }
                     ul do
                       plan.features.each { |feature| li { feature } }
@@ -206,8 +203,7 @@ module Gallery
                   render NitroKit::Button.new(
                     "Back to plans",
                     id: "gallery-billing-payment-back",
-                    href: entry_path(entry, state: "plans"),
-                    variant: :ghost
+                    href: entry_path(entry, state: "plans")
                   )
                 end
                 toolbar.trailing do
@@ -228,7 +224,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-billing-payment-updated-card") do |card|
           card.title("Payment method updated", level: 4)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Alert.new(id: "gallery-billing-payment-updated", variant: :success) do |alert|
                 alert.icon(NitroKit::Icon.new(:circle_check, id: "gallery-billing-payment-updated-icon"))
                 alert.title("Visa ending in 4242 is ready")
@@ -257,7 +253,7 @@ module Gallery
       end
 
       def render_invoice_history
-        render NitroKit::VStack.new(gap: :md, align: :stretch, id: "gallery-billing-invoices-stack") do
+        render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch, id: "gallery-billing-invoices-stack") do
           render NitroKit::DataSection.new(
             title: "Invoice history",
             description: "Paid and refunded records remain available to workspace owners for accounting and audit purposes.",
@@ -361,7 +357,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-billing-invoice-detail-card") do |card|
           card.title("Invoice #{invoice.number}", level: 4)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Badge.new("Paid", id: "gallery-billing-invoice-detail-status", color: :success)
               dl(data: { gallery: "billing-invoice-metadata" }) do
                 dt { "Issued" }
@@ -416,8 +412,7 @@ module Gallery
               group.button(
                 "Back to history",
                 id: "gallery-billing-invoice-back",
-                href: entry_path(entry, state: "invoices"),
-                variant: :ghost
+                href: entry_path(entry, state: "invoices")
               )
             end
           end
@@ -457,11 +452,8 @@ module Gallery
           id: "gallery-billing-cancellation-card"
         ) do |zone|
           zone.confirmation do
-            render NitroKit::VStack.new(
-              gap: :md,
-              align: :stretch,
-              id: "gallery-billing-cancellation-confirmation"
-            ) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch,
+            id: "gallery-billing-cancellation-confirmation") do
               if invalid
                 render NitroKit::Alert.new(id: "gallery-billing-cancellation-validation", variant: :error) do |alert|
                   alert.title("Confirm the cancellation details")
@@ -520,8 +512,7 @@ module Gallery
           zone.escape NitroKit::Button.new(
             "Keep Team plan",
             id: "gallery-billing-cancellation-keep",
-            href: entry_path(entry, state: "plans"),
-            variant: :ghost
+            href: entry_path(entry, state: "plans")
           )
         end
       end
@@ -530,7 +521,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-billing-cancelled-card") do |card|
           card.title("Cancellation scheduled", level: 4)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Alert.new(id: "gallery-billing-cancelled", variant: :success) do |alert|
                 alert.icon(NitroKit::Icon.new(:circle_check, id: "gallery-billing-cancelled-icon"))
                 alert.title("Team plan ends August 1, 2026")
@@ -562,7 +553,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-billing-mobile-card") do |card|
           card.title("Team plan for Analytical Engines — Research and Production", level: 4)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Badge.new("Active", id: "gallery-billing-mobile-status", color: :success)
               dl(data: { gallery: "billing-mobile-summary" }) do
                 dt { "Next invoice" }

@@ -3,9 +3,13 @@
 module NitroKit
   class Alert < Component
     VARIANTS = %i[default warning error success].freeze
+    LIVE_MODES = %i[off polite assertive].freeze
+    Region = Data.define(:text, :content, :html, :aria, :data, :css_class)
+    Child = Data.define(:component, :content)
 
     def initialize(
       variant: :default,
+      live: :off,
       id: nil,
       html: {},
       aria: {},
@@ -13,10 +17,14 @@ module NitroKit
       desperately_need_a_class: nil
     )
       @variant = validate_choice!(:variant, variant, VARIANTS)
+      @live = validate_choice!(:live, live, LIVE_MODES)
+      @icon = nil
+      @title = nil
+      @description = nil
 
       super(
         component: :alert,
-        attributes: { id:, role: "alert" },
+        attributes: { id:, role: live_role },
         html:,
         aria:,
         data:,
@@ -28,13 +36,23 @@ module NitroKit
     attr_reader :variant
 
     def view_template
+      yield self if block_given?
+
       div(**root_attributes) do
-        yield self if block_given?
+        render_in_slot(@icon.component, :icon, &@icon.content) if @icon
+        render_region(:title, @title) if @title
+        render_region(:description, @description) if @description
       end
     end
 
     def icon(component, &block)
-      render_in_slot(component, :icon, &block)
+      raise ArgumentError, "Alert accepts at most one icon" if @icon
+      unless component.is_a?(NitroKit::Component)
+        raise ArgumentError, "Alert icon must be a NitroKit::Component"
+      end
+
+      @icon = Child.new(component:, content: block)
+      nil
     end
 
     def title(
@@ -45,17 +63,8 @@ module NitroKit
       desperately_need_a_class: nil,
       &block
     )
-      div(
-        **slot_attributes(
-          :title,
-          html:,
-          aria:,
-          data:,
-          desperately_need_a_class:
-        )
-      ) do
-        text_or_block(text, &block)
-      end
+      @title = declare_region(:title, @title, text, block, html, aria, data, desperately_need_a_class)
+      nil
     end
 
     def description(
@@ -66,17 +75,45 @@ module NitroKit
       desperately_need_a_class: nil,
       &block
     )
+      @description = declare_region(
+        :description,
+        @description,
+        text,
+        block,
+        html,
+        aria,
+        data,
+        desperately_need_a_class
+      )
+      nil
+    end
+
+    private
+
+    def declare_region(name, current, text, content, html, aria, data, css_class)
+      raise ArgumentError, "Alert accepts at most one #{name}" if current
+      raise ArgumentError, "Alert #{name} accepts text or a block, not both" if !text.nil? && content
+      validate_content_text!("Alert #{name}", text) unless content
+
+      Region.new(text:, content:, html:, aria:, data:, css_class:)
+    end
+
+    def render_region(name, region)
       div(
         **slot_attributes(
-          :description,
-          html:,
-          aria:,
-          data:,
-          desperately_need_a_class:
+          name,
+          html: region.html,
+          aria: region.aria,
+          data: region.data,
+          desperately_need_a_class: region.css_class
         )
       ) do
-        text_or_block(text, &block)
+        text_or_block(region.text, &region.content)
       end
+    end
+
+    def live_role
+      { off: nil, polite: "status", assertive: "alert" }.fetch(@live)
     end
   end
 end

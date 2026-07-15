@@ -78,7 +78,7 @@ module Gallery
               end
               render NitroKit::Toolbar.new(id: "gallery-contact-toolbar") do |toolbar|
                 toolbar.leading do
-                  render NitroKit::Button.new("Privacy policy", href: "#privacy", variant: :ghost)
+                  render NitroKit::Button.new("Privacy policy", href: "#privacy")
                 end
                 toolbar.trailing do
                   form.submit(

@@ -14,6 +14,7 @@ class ToastTest < ActiveSupport::TestCase
     assert_equal "Notifications", node["aria-label"]
     assert_equal "polite", node["aria-live"]
     assert_equal "nk--toast", node["data-controller"]
+    assert_includes node["data-action"], "turbo:before-cache@document->nk--toast#teardown"
     assert_equal "5000", node["data-nk--toast-duration-value"]
     assert_equal "ol", node.at_css("[data-slot='toast-list']").name
 
@@ -21,15 +22,22 @@ class ToastTest < ActiveSupport::TestCase
     assert_equal %w[success warning error], items.map { |item| item["data-variant"] }
     assert items.all? { |item| item["data-nk"] == "toast-item" }
     assert items.all? { |item| item["data-state"] == "open" }
-    assert items.all? { |item| item["role"] == "status" }
+    assert items.all? { |item| item["role"].nil? }
+    assert items.all? { |item| item["tabindex"].nil? }
     assert_includes items.first["data-action"], "focusin->nk--toast#pause"
     assert_includes items.first["data-action"], "focusout->nk--toast#resume"
     assert_equal "Saved", items.first.at_css("[data-slot='toast-item-title']").text
+    assert_equal "p", items.first.at_css("[data-slot='toast-item-title']").name
     assert_equal "Your changes are live", items.first.at_css("[data-slot='toast-item-description']").text
-    assert_equal "Dismiss notification", items.first.at_css("[data-slot='toast-item-dismiss']")["aria-label"]
+    dismiss = items.first.at_css("[data-slot='toast-item-dismiss']")
+    assert_equal "Dismiss notification", dismiss["aria-label"]
+    assert_equal "ghost", dismiss["data-variant"]
+    assert_equal "sm", dismiss["data-size"]
     assert_nil items.first["data-nk--toast-permanent"]
+    assert items.first.key?("data-turbo-temporary")
     assert_nil items[1].at_css("[data-slot='toast-item-dismiss']")
     assert_equal "true", items[1]["data-nk--toast-permanent"]
+    assert_nil items[1]["data-turbo-temporary"]
     assert_equal "The request failed", items[2].at_css("[data-slot='toast-item-description']").text
     assert_nil node.at_css("template")
     assert_nil node.at_css("#nk--toast-sink")

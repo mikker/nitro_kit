@@ -23,7 +23,7 @@ module Gallery
           ) do |actions|
             actions.button(status.primary_action, href: status.primary_href, variant: :primary)
             if status.secondary_action
-              actions.button(status.secondary_action, href: status.secondary_href, variant: :ghost)
+              actions.button(status.secondary_action, href: status.secondary_href)
             end
           end
         end

@@ -9,9 +9,9 @@
   }
 
   :where(
-    [data-nk="toolbar"] > [data-slot="toolbar-leading"],
-    [data-nk="toolbar"] > [data-slot="toolbar-trailing"]
-  ) {
+      [data-nk="toolbar"] > [data-slot="toolbar-leading"],
+      [data-nk="toolbar"] > [data-slot="toolbar-trailing"]
+    ) {
     display: flex;
     min-width: 0;
     /* Regions never exceed the toolbar, so nested content such as a

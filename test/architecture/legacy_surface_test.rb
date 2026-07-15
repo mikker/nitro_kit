@@ -24,8 +24,19 @@ class LegacySurfaceTest < ActiveSupport::TestCase
     refute specification.files.any? { |path| path.start_with?("app/helpers/") }
     refute specification.files.any? { |path| path.start_with?("lib/generators/") }
     refute specification.files.any? { |path| path.start_with?("vendor/javascript/") }
+    refute_includes specification.files, "Rakefile"
     refute ROOT.join("Gemfile").read.include?("tailwindcss-rails")
     refute JSON.parse(ROOT.join("package.json").read).fetch("devDependencies").key?("prettier-plugin-tailwindcss")
+  end
+
+  test "tooling keeps lint at the Ruby boundary" do
+    tooling = JSON.parse(ROOT.join("package.json").read)
+    dependencies = tooling.fetch("devDependencies")
+
+    assert_empty dependencies.keys.grep(/\A@herb-tools\//)
+    refute tooling.fetch("scripts", {}).keys.any? { |name| name.include?("lint") }
+    refute ROOT.join(".herb.yml").exist?
+    assert ROOT.join("bin/rubocop").exist?
   end
 
   test "dummy app uses the gallery root without the legacy template catalog" do

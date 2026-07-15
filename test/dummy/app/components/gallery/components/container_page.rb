@@ -18,7 +18,7 @@ module Gallery
           description: "Four existing content tokens provide centered maximum widths without arbitrary CSS values."
         ) do
           example("Every size", slug: "container-every-size", mode: :full_width) do
-            render NitroKit::VStack.new(gap: :lg, align: :stretch, id: "gallery-container-size-stack") do
+            render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch, id: "gallery-container-size-stack") do
               NitroKit::Container::SIZES.each do |size|
                 render NitroKit::Container.new(size:, id: "gallery-container-size-#{size}") do
                   render NitroKit::Card.new(id: "gallery-container-size-#{size}-card") do |card|
@@ -69,7 +69,7 @@ module Gallery
             end
             sample("Many", slug: "many") do
               render NitroKit::Container.new(size: :md, id: "gallery-container-many") do
-                render NitroKit::VStack.new(gap: :sm, align: :stretch) do
+                render NitroKit::Flex.new(dir: :col, gap: 2, align: :stretch) do
                   6.times do |index|
                     render NitroKit::Alert.new(id: "gallery-container-many-#{index + 1}") do |alert|
                       alert.title("Queued operation #{index + 1}")
@@ -106,8 +106,8 @@ module Gallery
         ) do
           example("Wide workspace collection", slug: "container-workspace-collection", mode: :full_width) do
             render NitroKit::Container.new(size: :xl, id: "gallery-container-composition") do
-              render NitroKit::VStack.new(gap: :lg, align: :stretch) do
-                render NitroKit::HStack.new(gap: :sm, justify: :between, wrap: true) do
+              render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch) do
+                render NitroKit::Flex.new(dir: :row, align: :center, gap: 2, justify: :between, wrap: :wrap) do
                   render NitroKit::Badge.new(
                     "12 active members",
                     id: "gallery-container-composition-status",
@@ -119,7 +119,7 @@ module Gallery
                     variant: :primary
                   )
                 end
-                render NitroKit::Grid.new(cols: 3, id: "gallery-container-composition-grid") do
+                render NitroKit::Grid.new(cols: "1 sm:2 lg:3", id: "gallery-container-composition-grid") do
                   Gallery::Data.members.each do |member|
                     render NitroKit::Card.new(id: "gallery-container-composition-#{member.id}") do |card|
                       card.title(member.name, level: 4)
@@ -141,7 +141,7 @@ module Gallery
             "Deferred names",
             slug: "container-deferred-layouts",
             mode: :full_width,
-            api: "No Spacer, Split, Frame, public breakpoint, as:, or arbitrary CSS-value APIs"
+            api: "No Spacer, Split, Frame, custom breakpoints, as:, or arbitrary CSS-value APIs"
           ) do
             render NitroKit::Container.new(size: :lg, id: "gallery-container-deferred") do
               render NitroKit::Alert.new(id: "gallery-container-deferred-alert") do |alert|

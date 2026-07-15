@@ -2,20 +2,307 @@
   :where([data-nk="grid"]) {
     display: grid;
     min-width: 0;
-    gap: calc(var(--nk-space) * 4);
+    grid-template-columns: repeat(var(--_nk-grid-columns), minmax(0, 1fr));
+    gap: var(--_nk-layout-gap);
   }
 }
 
 @layer nitro-kit.variant {
-  :where([data-nk="grid"][data-cols="3"]) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  :where([data-nk="grid"][data-cols~="1"]) {
+    --_nk-grid-columns: 1;
   }
-}
 
-@layer nitro-kit.state {
-  @media (max-width: 48rem) {
-    :where([data-nk="grid"][data-cols="3"]) {
-      grid-template-columns: minmax(0, 1fr);
+  :where([data-nk="grid"][data-cols~="2"]) {
+    --_nk-grid-columns: 2;
+  }
+
+  :where([data-nk="grid"][data-cols~="3"]) {
+    --_nk-grid-columns: 3;
+  }
+
+  :where([data-nk="grid"][data-cols~="4"]) {
+    --_nk-grid-columns: 4;
+  }
+
+  :where([data-nk="grid"][data-cols~="5"]) {
+    --_nk-grid-columns: 5;
+  }
+
+  :where([data-nk="grid"][data-cols~="6"]) {
+    --_nk-grid-columns: 6;
+  }
+
+  :where([data-nk="grid"][data-cols~="7"]) {
+    --_nk-grid-columns: 7;
+  }
+
+  :where([data-nk="grid"][data-cols~="8"]) {
+    --_nk-grid-columns: 8;
+  }
+
+  :where([data-nk="grid"][data-cols~="9"]) {
+    --_nk-grid-columns: 9;
+  }
+
+  :where([data-nk="grid"][data-cols~="10"]) {
+    --_nk-grid-columns: 10;
+  }
+
+  :where([data-nk="grid"][data-cols~="11"]) {
+    --_nk-grid-columns: 11;
+  }
+
+  :where([data-nk="grid"][data-cols~="12"]) {
+    --_nk-grid-columns: 12;
+  }
+
+  @media (min-width: 40rem) {
+    :where([data-nk="grid"][data-cols~="sm:1"]) {
+      --_nk-grid-columns: 1;
+    }
+
+    :where([data-nk="grid"][data-cols~="sm:2"]) {
+      --_nk-grid-columns: 2;
+    }
+
+    :where([data-nk="grid"][data-cols~="sm:3"]) {
+      --_nk-grid-columns: 3;
+    }
+
+    :where([data-nk="grid"][data-cols~="sm:4"]) {
+      --_nk-grid-columns: 4;
+    }
+
+    :where([data-nk="grid"][data-cols~="sm:5"]) {
+      --_nk-grid-columns: 5;
+    }
+
+    :where([data-nk="grid"][data-cols~="sm:6"]) {
+      --_nk-grid-columns: 6;
+    }
+
+    :where([data-nk="grid"][data-cols~="sm:7"]) {
+      --_nk-grid-columns: 7;
+    }
+
+    :where([data-nk="grid"][data-cols~="sm:8"]) {
+      --_nk-grid-columns: 8;
+    }
+
+    :where([data-nk="grid"][data-cols~="sm:9"]) {
+      --_nk-grid-columns: 9;
+    }
+
+    :where([data-nk="grid"][data-cols~="sm:10"]) {
+      --_nk-grid-columns: 10;
+    }
+
+    :where([data-nk="grid"][data-cols~="sm:11"]) {
+      --_nk-grid-columns: 11;
+    }
+
+    :where([data-nk="grid"][data-cols~="sm:12"]) {
+      --_nk-grid-columns: 12;
+    }
+  }
+
+  @media (min-width: 48rem) {
+    :where([data-nk="grid"][data-cols~="md:1"]) {
+      --_nk-grid-columns: 1;
+    }
+
+    :where([data-nk="grid"][data-cols~="md:2"]) {
+      --_nk-grid-columns: 2;
+    }
+
+    :where([data-nk="grid"][data-cols~="md:3"]) {
+      --_nk-grid-columns: 3;
+    }
+
+    :where([data-nk="grid"][data-cols~="md:4"]) {
+      --_nk-grid-columns: 4;
+    }
+
+    :where([data-nk="grid"][data-cols~="md:5"]) {
+      --_nk-grid-columns: 5;
+    }
+
+    :where([data-nk="grid"][data-cols~="md:6"]) {
+      --_nk-grid-columns: 6;
+    }
+
+    :where([data-nk="grid"][data-cols~="md:7"]) {
+      --_nk-grid-columns: 7;
+    }
+
+    :where([data-nk="grid"][data-cols~="md:8"]) {
+      --_nk-grid-columns: 8;
+    }
+
+    :where([data-nk="grid"][data-cols~="md:9"]) {
+      --_nk-grid-columns: 9;
+    }
+
+    :where([data-nk="grid"][data-cols~="md:10"]) {
+      --_nk-grid-columns: 10;
+    }
+
+    :where([data-nk="grid"][data-cols~="md:11"]) {
+      --_nk-grid-columns: 11;
+    }
+
+    :where([data-nk="grid"][data-cols~="md:12"]) {
+      --_nk-grid-columns: 12;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    :where([data-nk="grid"][data-cols~="lg:1"]) {
+      --_nk-grid-columns: 1;
+    }
+
+    :where([data-nk="grid"][data-cols~="lg:2"]) {
+      --_nk-grid-columns: 2;
+    }
+
+    :where([data-nk="grid"][data-cols~="lg:3"]) {
+      --_nk-grid-columns: 3;
+    }
+
+    :where([data-nk="grid"][data-cols~="lg:4"]) {
+      --_nk-grid-columns: 4;
+    }
+
+    :where([data-nk="grid"][data-cols~="lg:5"]) {
+      --_nk-grid-columns: 5;
+    }
+
+    :where([data-nk="grid"][data-cols~="lg:6"]) {
+      --_nk-grid-columns: 6;
+    }
+
+    :where([data-nk="grid"][data-cols~="lg:7"]) {
+      --_nk-grid-columns: 7;
+    }
+
+    :where([data-nk="grid"][data-cols~="lg:8"]) {
+      --_nk-grid-columns: 8;
+    }
+
+    :where([data-nk="grid"][data-cols~="lg:9"]) {
+      --_nk-grid-columns: 9;
+    }
+
+    :where([data-nk="grid"][data-cols~="lg:10"]) {
+      --_nk-grid-columns: 10;
+    }
+
+    :where([data-nk="grid"][data-cols~="lg:11"]) {
+      --_nk-grid-columns: 11;
+    }
+
+    :where([data-nk="grid"][data-cols~="lg:12"]) {
+      --_nk-grid-columns: 12;
+    }
+  }
+
+  @media (min-width: 80rem) {
+    :where([data-nk="grid"][data-cols~="xl:1"]) {
+      --_nk-grid-columns: 1;
+    }
+
+    :where([data-nk="grid"][data-cols~="xl:2"]) {
+      --_nk-grid-columns: 2;
+    }
+
+    :where([data-nk="grid"][data-cols~="xl:3"]) {
+      --_nk-grid-columns: 3;
+    }
+
+    :where([data-nk="grid"][data-cols~="xl:4"]) {
+      --_nk-grid-columns: 4;
+    }
+
+    :where([data-nk="grid"][data-cols~="xl:5"]) {
+      --_nk-grid-columns: 5;
+    }
+
+    :where([data-nk="grid"][data-cols~="xl:6"]) {
+      --_nk-grid-columns: 6;
+    }
+
+    :where([data-nk="grid"][data-cols~="xl:7"]) {
+      --_nk-grid-columns: 7;
+    }
+
+    :where([data-nk="grid"][data-cols~="xl:8"]) {
+      --_nk-grid-columns: 8;
+    }
+
+    :where([data-nk="grid"][data-cols~="xl:9"]) {
+      --_nk-grid-columns: 9;
+    }
+
+    :where([data-nk="grid"][data-cols~="xl:10"]) {
+      --_nk-grid-columns: 10;
+    }
+
+    :where([data-nk="grid"][data-cols~="xl:11"]) {
+      --_nk-grid-columns: 11;
+    }
+
+    :where([data-nk="grid"][data-cols~="xl:12"]) {
+      --_nk-grid-columns: 12;
+    }
+  }
+
+  @media (min-width: 96rem) {
+    :where([data-nk="grid"][data-cols~="2xl:1"]) {
+      --_nk-grid-columns: 1;
+    }
+
+    :where([data-nk="grid"][data-cols~="2xl:2"]) {
+      --_nk-grid-columns: 2;
+    }
+
+    :where([data-nk="grid"][data-cols~="2xl:3"]) {
+      --_nk-grid-columns: 3;
+    }
+
+    :where([data-nk="grid"][data-cols~="2xl:4"]) {
+      --_nk-grid-columns: 4;
+    }
+
+    :where([data-nk="grid"][data-cols~="2xl:5"]) {
+      --_nk-grid-columns: 5;
+    }
+
+    :where([data-nk="grid"][data-cols~="2xl:6"]) {
+      --_nk-grid-columns: 6;
+    }
+
+    :where([data-nk="grid"][data-cols~="2xl:7"]) {
+      --_nk-grid-columns: 7;
+    }
+
+    :where([data-nk="grid"][data-cols~="2xl:8"]) {
+      --_nk-grid-columns: 8;
+    }
+
+    :where([data-nk="grid"][data-cols~="2xl:9"]) {
+      --_nk-grid-columns: 9;
+    }
+
+    :where([data-nk="grid"][data-cols~="2xl:10"]) {
+      --_nk-grid-columns: 10;
+    }
+
+    :where([data-nk="grid"][data-cols~="2xl:11"]) {
+      --_nk-grid-columns: 11;
+    }
+
+    :where([data-nk="grid"][data-cols~="2xl:12"]) {
+      --_nk-grid-columns: 12;
     }
   }
 }

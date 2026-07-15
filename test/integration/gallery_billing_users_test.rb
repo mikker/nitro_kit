@@ -33,7 +33,7 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
         assert_select "[data-gallery='flow-states'] a[aria-current='page']", count: 1
         assert_select "[data-gallery='flow-surface']" do
           assert_select "#gallery-#{slug}-container[data-nk='container'][data-size='xl']" do
-            assert_select "#gallery-#{slug}-stack[data-nk='v-stack'][data-gap='lg'][data-align='stretch']" do
+            assert_select "#gallery-#{slug}-stack[data-nk='flex'][data-dir='col'][data-gap='6'][data-align='stretch']" do
               assert_select "> turbo-frame#gallery-#{slug}-frame", count: 1
             end
           end
@@ -66,8 +66,8 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
   test "billing plans expose pricing current state features and decisions" do
     get_flow("billing", "plans")
 
-    assert_select "#gallery-billing-plans-stack[data-nk='v-stack'][data-gap='lg'][data-align='stretch']"
-    assert_select "#gallery-billing-plan-grid[data-gallery='billing-plan-grid'][data-nk='grid'][data-cols='3']" \
+    assert_select "#gallery-billing-plans-stack[data-nk='flex'][data-dir='col'][data-gap='6'][data-align='stretch']"
+    assert_select "#gallery-billing-plan-grid[data-gallery='billing-plan-grid'][data-nk='grid'][data-cols='1 sm:2 lg:3']" \
                   "[aria-label='Available plans']"
     assert_select "[data-gallery='billing-plan-grid'] [data-nk='card']", count: 3
     assert_select "#gallery-billing-current-plan[data-color='success']", text: "Current: Team"
@@ -129,8 +129,8 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-billing-inv_may_2026-status[data-color='warning']", text: "Refunded"
     assert_select "#gallery-billing-invoice-summary", text: "Showing the three most recent of 36 invoices"
     assert_select "#gallery-billing-invoice-pagination[data-nk='pagination'][aria-label='Invoice history pages']" do
-      assert_select "#gallery-billing-invoice-pagination-page-12[aria-current='page']" \
-                    "[aria-disabled='true'][tabindex='-1']:not([href])", text: "12"
+      assert_select "span#gallery-billing-invoice-pagination-page-12[aria-current='page']" \
+                    ":not([aria-disabled]):not([tabindex]):not([href])", text: "12"
       assert_select "#gallery-billing-invoice-pagination-next[aria-disabled='true'][tabindex='-1']:not([href])"
       assert_select "[data-slot='pagination-ellipsis-label']", text: "Pages 2 through 9 omitted"
     end
@@ -163,7 +163,7 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
     get_flow("billing", "cancellation")
     assert_select "#gallery-billing-cancellation-card[data-nk='danger-zone']" do
       assert_select "> [data-slot='danger-zone-confirmation'] > " \
-                    "#gallery-billing-cancellation-confirmation[data-nk='v-stack']",
+                    "#gallery-billing-cancellation-confirmation[data-nk='flex'][data-dir='col']",
         count: 1
       assert_select "> #gallery-billing-cancellation-keep[data-slot='danger-zone-escape']", count: 1
     end
@@ -217,8 +217,8 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-users-index-summary", text: "Showing 1–8 of 128 workspace users"
     assert_select "#gallery-users-index-pagination[data-nk='pagination'][aria-label='Workspace user pages']" do
       assert_select "#gallery-users-index-pagination-previous[aria-disabled='true'][tabindex='-1']:not([href])"
-      assert_select "#gallery-users-index-pagination-page-1[aria-current='page']" \
-                    "[aria-disabled='true'][tabindex='-1']:not([href])", text: "1"
+      assert_select "span#gallery-users-index-pagination-page-1[aria-current='page']" \
+                    ":not([aria-disabled]):not([tabindex]):not([href])", text: "1"
       assert_select "[data-slot='pagination-ellipsis-label']", text: "Pages 4 through 15 omitted"
     end
     assert_equal(
@@ -251,8 +251,8 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-users-search-summary[aria-live='polite']", text: /11–15 of 37 active users/
     assert_select "#gallery-users-search-results tbody tr", count: 5
     assert_select "#gallery-users-search-pagination[data-nk='pagination'][aria-label='Filtered workspace user pages']" do
-      assert_select "#gallery-users-search-pagination-page-3[aria-current='page']" \
-                    "[aria-disabled='true'][tabindex='-1']:not([href])", text: "3"
+      assert_select "span#gallery-users-search-pagination-page-3[aria-current='page']" \
+                    ":not([aria-disabled]):not([tabindex]):not([href])", text: "3"
       assert_select "[data-slot='pagination-ellipsis-label']", text: "Pages 5 through 7 omitted"
     end
     assert_equal(

@@ -140,7 +140,7 @@ module Gallery
                       render NitroKit::Badge.new("Unsaved changes", id: "gallery-toolbar-form-status", color: :warning)
                     end
                     toolbar.trailing do
-                      render NitroKit::Button.new("Discard", id: "gallery-toolbar-form-discard", variant: :ghost)
+                      render NitroKit::Button.new("Discard", id: "gallery-toolbar-form-discard")
                       render NitroKit::Button.new("Save profile", id: "gallery-toolbar-form-save", variant: :primary)
                     end
                   end

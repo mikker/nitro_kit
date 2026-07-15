@@ -33,12 +33,12 @@ module Gallery
       end
 
       def render_features
-        render NitroKit::Grid.new(cols: 3, id: "gallery-features-grid") do
+        render NitroKit::Grid.new(cols: "1 sm:2 lg:3", id: "gallery-features-grid") do
           selected_features.each_with_index do |feature, index|
             render NitroKit::Card.new(id: "gallery-feature-#{feature.id}") do |card|
               card.title(feature_title(feature, index), level: 2)
               card.body do
-                render NitroKit::VStack.new(gap: :md, align: :stretch) do
+                render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
                   render NitroKit::Badge.new(feature.category.to_s.humanize, color: feature_color(feature.category))
                   p { feature.description }
                 end
@@ -46,8 +46,7 @@ module Gallery
               card.footer do
                 render NitroKit::Button.new(
                   "Learn about #{feature.title.downcase}",
-                  href: "#feature-#{feature.id}",
-                  variant: :ghost
+                  href: "#feature-#{feature.id}"
                 )
               end
             end

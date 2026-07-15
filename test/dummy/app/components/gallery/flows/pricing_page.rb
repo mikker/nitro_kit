@@ -39,13 +39,13 @@ module Gallery
               actions.button(
                 "Monthly",
                 href: entry_path(entry, state: "monthly"),
-                variant: annual? ? :ghost : :primary,
+                variant: annual? ? :default : :primary,
                 aria: { current: annual? ? nil : "page" }
               )
               actions.button(
                 "Annual",
                 href: entry_path(entry, state: "annual"),
-                variant: annual? ? :primary : :ghost,
+                variant: annual? ? :primary : :default,
                 aria: { current: annual? ? "page" : nil }
               )
             end
@@ -54,12 +54,12 @@ module Gallery
       end
 
       def render_plans
-        render NitroKit::Grid.new(cols: 3, id: "gallery-pricing-plan-grid") do
+        render NitroKit::Grid.new(cols: "1 sm:2 lg:3", id: "gallery-pricing-plan-grid") do
           Gallery::PublicData.plans.each do |plan|
             render NitroKit::Card.new(id: "gallery-pricing-plan-#{plan.id}") do |card|
               card.title(plan_name(plan), level: 2)
               card.body do
-                render NitroKit::VStack.new(gap: :md, align: :stretch) do
+                render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
                   render NitroKit::Badge.new("Recommended", color: :success) if plan.highlighted
                   strong { plan_price(plan) }
                   p { plan.description }

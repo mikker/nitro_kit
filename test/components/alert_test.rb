@@ -19,7 +19,7 @@ class AlertTest < ActiveSupport::TestCase
 
       assert_equal "alert", node["data-nk"]
       assert_equal variant.to_s, node["data-variant"]
-      assert_equal "alert", node["role"]
+      assert_nil node["role"]
       refute node.key?("class")
       refute node.key?("style")
     end
@@ -66,7 +66,7 @@ class AlertTest < ActiveSupport::TestCase
     )
 
     assert_equal "notice", node["id"]
-    assert_equal "alert", node["role"]
+    assert_nil node["role"]
     assert_equal "Status notice", node["title"]
     assert_equal "true", node["aria-atomic"]
     assert_equal "notice-1", node["data-tracking-id"]
@@ -94,10 +94,22 @@ class AlertTest < ActiveSupport::TestCase
     assert_raises(ArgumentError) do
       NitroKit::Alert.new.call { |alert| alert.icon(Object.new) }
     end
+    assert_raises(ArgumentError) { NitroKit::Alert.new(live: :loud) }
+    assert_raises(ArgumentError) do
+      NitroKit::Alert.new.call do |alert|
+        alert.title("First")
+        alert.title("Second")
+      end
+    end
 
     node = render_node(NitroKit::Alert.new(desperately_need_a_class: "external-alert"))
     assert_equal "external-alert", node["class"]
     assert_equal "class", node["data-nk-escape"]
+  end
+
+  test "opts into live-region semantics deliberately" do
+    assert_equal "status", render_node(NitroKit::Alert.new(live: :polite))["role"]
+    assert_equal "alert", render_node(NitroKit::Alert.new(live: :assertive))["role"]
   end
 
   private

@@ -3,6 +3,26 @@ require "test_helper"
 load File.expand_path("../../lib/tasks/nitro_kit_tasks.rake", __dir__) unless defined?(NitroKit::CssBundle)
 
 class NavigationBlocksTest < ActiveSupport::TestCase
+  test "compound blocks render their owned regions in semantic order" do
+    settings = render_node(NitroKit::SettingsLayout.new) do |layout|
+      layout.content { "Content" }
+      layout.navigation(label: "Settings") { "Navigation" }
+    end
+    assert_equal %w[settings-layout-navigation settings-layout-content], settings.element_children.map { |node| node["data-slot"] }
+
+    toolbar = render_node(NitroKit::Toolbar.new) do |bar|
+      bar.trailing { "Trailing" }
+      bar.leading { "Leading" }
+    end
+    assert_equal %w[toolbar-leading toolbar-trailing], toolbar.element_children.map { |node| node["data-slot"] }
+
+    pagination_bar = render_node(NitroKit::PaginationBar.new) do |bar|
+      bar.pagination(NitroKit::Pagination.new) { |pagination| pagination.page(1, current: true) }
+      bar.summary("1 result")
+    end
+    assert_equal %w[pagination-bar-summary pagination-bar-pagination], pagination_bar.element_children.map { |node| node["data-slot"] }
+  end
+
   class CompositionProbe < Phlex::HTML
     def view_template
       render NitroKit::SettingsLayout.new(id: "settings") do |layout|

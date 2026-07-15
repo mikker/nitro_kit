@@ -56,7 +56,7 @@ module Gallery
       end
 
       def source_note
-        "StatGrid composes the proven three-column Grid and owns its narrow collapse. It does not own trends, charts, colors, or policy."
+        "StatGrid composes Grid with one column by default, two from sm, and three from lg. It does not own trends, charts, colors, or policy."
       end
 
       def api_note

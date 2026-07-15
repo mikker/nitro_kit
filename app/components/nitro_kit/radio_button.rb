@@ -38,6 +38,8 @@ module NitroKit
         size: @size,
         attributes: {
           data: {
+            controller: "nk--checkable",
+            action: "change->nk--checkable#change",
             state: @checked ? "checked" : "unchecked",
             disabled: @disabled ? "true" : nil
           }.compact
@@ -52,14 +54,16 @@ module NitroKit
     attr_reader :label, :id, :name, :value, :size
 
     def view_template(&block)
+      require_accessible_name!(&block)
+
       div(**root_attributes) do
         if label.nil? && !block
           render_control
-          span(**slot_attributes(:indicator), aria: { hidden: true })
+          span(**slot_attributes(:indicator), aria: { hidden: "true" })
         else
           render_in_slot(Label.new(for: id), :label) do
             render_control
-            span(**slot_attributes(:indicator), aria: { hidden: true })
+            span(**slot_attributes(:indicator), aria: { hidden: "true" })
             span(**slot_attributes(:label_text)) { text_or_block(label, &block) }
           end
         end
@@ -80,10 +84,23 @@ module NitroKit
           required: @required,
           html: @control_html,
           aria: @control_aria,
-          data: @control_data
+          data: @control_data.merge(nk__checkable_target: "control")
         ),
         :control
       )
+    end
+
+    def require_accessible_name!
+      return if label || block_given? || accessible_name?
+
+      raise ArgumentError, "radio button requires a label, block, or accessible control name"
+    end
+
+    def accessible_name?
+      @control_aria.any? do |key, value|
+        name = key.to_s.downcase.tr("_", "-").delete_prefix("aria-")
+        %w[label labelledby].include?(name) && value.to_s.present?
+      end
     end
 
     def validate_optional_text!(name, text)

@@ -37,6 +37,29 @@ class NitroKitTableComponentTest < ActiveSupport::TestCase
     end
   end
 
+  test "collects sections into valid table order and constrains cell context" do
+    node = render_node(NitroKit::Table.new) do |table|
+      table.tbody do
+        table.tr { table.td("Ada") }
+      end
+      table.caption("People")
+      table.thead do
+        table.tr { table.th("Name") }
+      end
+    end
+    element = node.at_css("table")
+
+    assert_equal %w[caption thead tbody], element.element_children.map(&:name)
+    assert_raises(ArgumentError) do
+      NitroKit::Table.new.call do |table|
+        table.caption("First")
+        table.caption("Second")
+      end
+    end
+    assert_raises(ArgumentError) { NitroKit::Table.new.call { |table| table.tr { table.td("Invalid") } } }
+    assert_raises(ArgumentError) { NitroKit::Table.new.call { |table| table.td("Invalid") } }
+  end
+
   private
 
   def render_node(component, &block)

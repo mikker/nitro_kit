@@ -2,21 +2,24 @@
 
 module NitroKit
   class Grid < Component
-    COLUMNS = [ 3 ].freeze
+    COLUMNS = (1..12).to_a.freeze
+    GAPS = LayoutOptions::GAPS
 
     def initialize(
       cols:,
+      gap: 4,
       id: nil,
       html: {},
       aria: {},
       data: {},
       desperately_need_a_class: nil
     )
-      cols = validate_choice!(:cols, cols, COLUMNS)
+      cols = ResponsiveValue.new(property: :cols, value: cols, allowed: COLUMNS).to_s
+      gap = ResponsiveValue.new(property: :gap, value: gap, allowed: GAPS).to_s
 
       super(
         component: :grid,
-        attributes: { id:, data: { cols: } }.compact,
+        attributes: { id:, data: { cols:, gap: } }.compact,
         html:,
         aria:,
         data:,

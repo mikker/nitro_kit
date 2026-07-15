@@ -1,22 +1,24 @@
 require "application_system_test_case"
 
 class InteractiveComponentsTest < ApplicationSystemTestCase
-  test "accordion toggles keyed content from the keyboard and respects disabled items" do
+  test "accordion uses native keyboard disclosure and single-group exclusivity" do
     path = visit_component("accordion")
+
+    assert_selector "#gallery-accordion-billing details[name='gallery-accordion-billing']", count: 3
+    assert_selector "#gallery-accordion-billing [data-key='invoices'][open]"
 
     find("#gallery-accordion-billing-currency-trigger").send_keys(:space)
 
-    assert_selector "#gallery-accordion-billing-currency-trigger[aria-expanded='true']"
-    assert_selector "#gallery-accordion-billing-currency-content[aria-hidden='false']:not([hidden])"
-    assert_selector "#gallery-accordion-billing-invoices-trigger[aria-expanded='false']"
-    assert_selector "#gallery-accordion-billing-invoices-content[aria-hidden='true'][hidden]", visible: :all
+    assert_selector "#gallery-accordion-billing [data-key='currency'][open]"
+    assert_selector "#gallery-accordion-billing-currency-content", visible: true
+    assert_selector "#gallery-accordion-billing [data-key='invoices']:not([open])", visible: :all
+    assert_selector "#gallery-accordion-billing-invoices-content", visible: false
 
     find("#gallery-accordion-billing-currency-trigger").send_keys(:enter)
 
-    assert_selector "#gallery-accordion-billing-currency-trigger[aria-expanded='false']"
-    assert_selector "#gallery-accordion-billing-currency-content[aria-hidden='true'][hidden]", visible: :all
-    assert_selector "#gallery-accordion-billing-legacy-trigger[disabled][aria-expanded='false']", visible: :all
-    assert_selector "#gallery-accordion-billing-legacy-content[hidden]", visible: :all
+    assert_selector "#gallery-accordion-billing [data-key='currency']:not([open])", visible: :all
+    assert_selector "#gallery-accordion-billing-currency-content", visible: false
+    assert_selector "#gallery-accordion-billing-legacy-trigger", visible: true
     assert_no_severe_console_errors(context: path)
   end
 
@@ -58,19 +60,19 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
 
     find(trigger).click
 
-    assert_selector "#{panel}[open][data-state='open']"
+    assert_selector "#{panel}[open]"
     assert_focused close
 
     active_element.send_keys(:escape)
 
-    assert_selector "#{panel}:not([open])[data-state='closed']", visible: :all
+    assert_selector "#{panel}:not([open])", visible: :all
     assert_focused trigger
 
     find(trigger).click
     find(close).click
 
-    assert_selector "#{panel}:not([open])[data-state='closed']", visible: :all
-    assert_selector "#gallery-dialog-disabled [data-slot='dialog-trigger'][disabled]", visible: :all
+    assert_selector "#{panel}:not([open])", visible: :all
+    assert_selector "#gallery-dialog-disabled [data-slot='dialog-trigger'][disabled]:not([command])", visible: :all
     assert_selector "#gallery-dialog-disabled [data-slot='dialog-panel']:not([open])", visible: :all
     assert_no_severe_console_errors(context: path)
   end
@@ -86,8 +88,7 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
 
     find(trigger).send_keys(:arrow_down)
 
-    assert_selector "#{root}[data-state='open']"
-    assert_selector "#{trigger}[aria-expanded='true']"
+    assert_selector "#{content}:popover-open"
     assert_focused settings
 
     find(settings).send_keys(:end)
@@ -101,25 +102,23 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
 
     find(settings).send_keys(:escape)
 
-    assert_selector "#{root}[data-state='closed']"
-    assert_selector "#{trigger}[aria-expanded='false']"
+    assert_selector "#{content}:not(:popover-open)", visible: :all
     assert_focused trigger
 
     find(trigger).send_keys(:arrow_up)
     assert_focused delete
     find(delete).send_keys(:tab)
 
-    assert_selector "#{root}[data-state='closed']"
+    assert_selector "#{content}:not(:popover-open)", visible: :all
 
     find(trigger).send_keys(:arrow_down)
     find(settings).send_keys(:arrow_down)
     assert_focused duplicate, text: "Duplicate workspace"
     active_element.send_keys(:enter)
 
-    assert_selector "#{root}[data-state='closed']"
-    assert_selector "#{trigger}[aria-expanded='false']"
+    assert_selector "#{content}:not(:popover-open)", visible: :all
     assert_selector "#gallery-dropdown-disabled-trigger[disabled]:not([popovertarget])", visible: :all
-    assert_selector "#gallery-dropdown-disabled[data-state='closed']"
+    assert_selector "#gallery-dropdown-disabled:not([data-state])"
     assert_no_severe_console_errors(context: path)
   end
 
@@ -132,20 +131,22 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
     execute_script("arguments[0].focus()", find(trigger))
 
     assert_focused trigger
-    assert_selector "#{root}[data-state='open']"
-    assert_selector "#{content}[data-state='open']:not([hidden])"
+    assert_equal "visible", evaluate_script("getComputedStyle(arguments[0]).visibility", find(content, visible: :all))
 
     find(trigger).send_keys(:escape)
 
     assert_focused trigger
-    assert_selector "#{root}[data-state='closed']"
-    assert_selector "#{content}[data-state='closed'][hidden]", visible: :all
+    assert_selector "#{root}[data-dismissed]"
+    assert_equal "hidden", evaluate_script("getComputedStyle(arguments[0]).visibility", find(content, visible: :all))
 
+    find("[data-gallery='brand']").hover
+    execute_script("arguments[0].blur()", find(trigger))
+    assert_selector "#{root}:not([data-dismissed])"
     find(trigger).hover
-    assert_selector "#{content}[data-state='open']:not([hidden])"
+    assert_equal "visible", evaluate_script("getComputedStyle(arguments[0]).visibility", find(content, visible: :all))
     find("[data-gallery='brand']").hover
 
-    assert_selector "#{content}[data-state='closed'][hidden]", visible: :all
+    assert_equal "hidden", evaluate_script("getComputedStyle(arguments[0]).visibility", find(content, visible: :all))
     assert_no_severe_console_errors(context: path)
   end
 
@@ -153,7 +154,7 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
     path = visit_component("combobox")
     root = "#gallery-combobox-empty"
     input = "#{root}-input"
-    hidden = "#{root}-value"
+    value = "#{root}-value"
 
     find(input).click
     find(input).send_keys(:end)
@@ -165,22 +166,22 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
 
     assert_focused input
     assert_equal "Iceland", find(input).value
-    assert_equal "is", find(hidden, visible: :all).value
+    assert_equal "is", find(value, visible: :all).value
     assert_selector "#{root}[data-state='closed']"
     assert_selector "#{root}-option-5[aria-selected='true']", visible: :all
 
     find(input).set("Finland")
 
-    assert_equal "", find(hidden, visible: :all).value
+    assert_equal "", find(value, visible: :all).value
     assert_selector "#{input}[aria-invalid='true']"
     assert_selector "#{root} [data-value='fi'][aria-disabled='true']:not([hidden])"
     find(input).send_keys(:enter, :escape)
-    assert_equal "", find(hidden, visible: :all).value
+    assert_equal "", find(value, visible: :all).value
     assert_selector "#{root}[data-state='closed']"
 
     required = "#gallery-combobox-required-input"
     required_value = "#gallery-combobox-required-value"
-    assert_selector "#{required}[required][aria-invalid='true']"
+    assert_selector "#{required}[aria-required='true'][aria-invalid='true']:not([required])"
 
     find(required).set("Denmark")
 
@@ -252,9 +253,10 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
     assert_selector "#gallery-toast-permanent [data-nk='toast-item']"
     assert_no_selector "#gallery-toast-permanent [data-slot='toast-item-dismiss']"
 
-    execute_script("arguments[0].focus()", find(timed_item))
+    timed_dismiss = "#{timed_item} [data-slot='toast-item-dismiss']"
+    execute_script("arguments[0].focus()", find(timed_dismiss))
 
-    assert_focused timed_item
+    assert_focused timed_dismiss
     sleep 1.4
     assert_selector "#{timed_item}[data-state='open']"
 

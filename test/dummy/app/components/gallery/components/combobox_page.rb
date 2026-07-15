@@ -29,7 +29,7 @@ module Gallery
         example_section(
           "Selection states",
           slug: "combobox-selection",
-          description: "Typed choices keep display labels separate from submitted values."
+          description: "A named native select submits without JavaScript; enhancement adds filtering without a duplicate form value."
         ) do
           example("Selection matrix", slug: "combobox-selection-matrix", layout: :matrix) do
             sample("Empty optional", slug: "empty") do
@@ -43,6 +43,15 @@ module Gallery
             end
             sample("Disabled", slug: "disabled") do
               render_combobox("gallery-combobox-disabled", value: "se", disabled: true)
+            end
+            sample("Numeric labels", slug: "numeric-labels") do
+              render NitroKit::Combobox.new(
+                id: "gallery-combobox-numeric",
+                name: "deployment[retry_count]",
+                label: "Retry count",
+                options: [ [ 1, "one" ], [ 2, "two" ], [ 3, "three" ] ],
+                value: "two"
+              )
             end
           end
         end
@@ -71,7 +80,7 @@ module Gallery
         example_section(
           "Form composition",
           slug: "combobox-form",
-          description: "The combobox submits one hidden value alongside ordinary Nitro fields."
+          description: "The combobox keeps one native select as its submission source alongside ordinary Nitro fields."
         ) do
           example("Deployment target", slug: "combobox-deployment-target") do
             render NitroKit::Card.new(id: "gallery-combobox-deployment-card") do |card|

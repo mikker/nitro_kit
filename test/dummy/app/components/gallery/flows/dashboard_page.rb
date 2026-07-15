@@ -33,11 +33,8 @@ module Gallery
               }.compact
             ) do
               render NitroKit::Container.new(size: :xl, id: "gallery-dashboard-container") do
-                render NitroKit::VStack.new(
-                  gap: :lg,
-                  align: :stretch,
-                  id: "gallery-dashboard-stack"
-                ) do
+                render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch,
+                id: "gallery-dashboard-stack") do
                   render_workspace_header(disabled: state == "loading")
                   render_state
                 end
@@ -80,13 +77,12 @@ module Gallery
               "Invite members",
               id: "gallery-dashboard-invite-members",
               href: disabled ? nil : "#invite-members",
-              variant: :ghost,
               disabled:
             )
           end
         end
 
-        render NitroKit::HStack.new(gap: :sm, wrap: true, id: "gallery-dashboard-workspace-context") do
+        render NitroKit::Flex.new(dir: :row, align: :center, gap: 2, wrap: :wrap, id: "gallery-dashboard-workspace-context") do
           render NitroKit::Badge.new(
             workspace_status_label,
             id: "gallery-dashboard-workspace-status",
@@ -150,7 +146,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-dashboard-incident-card") do |card|
           card.title("Active incident", level: 4)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Badge.new(
                 "Investigating",
                 id: "gallery-dashboard-incident-status",

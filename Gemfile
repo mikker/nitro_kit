@@ -15,6 +15,7 @@ gem "rubocop-rails-omakase", require: false
 
 group :development, :test do
   gem "prism", "~> 1.0"
+  gem "ransack", "~> 4.4"
 end
 
 group :test do

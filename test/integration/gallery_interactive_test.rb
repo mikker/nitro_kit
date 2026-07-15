@@ -7,8 +7,8 @@ class GalleryInteractiveTest < ActionDispatch::IntegrationTest
     NitroKit::Dropdown::PLACEMENTS.each do |placement|
       id = "gallery-dropdown-#{placement}"
       assert_select "##{id}[data-nk='dropdown'][data-placement='#{placement.to_s.tr("_", "-")}']" do
-        assert_select "##{id}-trigger[popovertarget='#{id}-content'][aria-expanded='false']"
-        assert_select "##{id}-content[popover='auto'][role='menu']"
+        assert_select "##{id}-trigger[popovertarget='#{id}-content'][aria-haspopup='menu']:not([aria-expanded])"
+        assert_select "##{id}-content[popover='auto'][role='menu']:not([data-state])"
       end
     end
 
@@ -40,9 +40,9 @@ class GalleryInteractiveTest < ActionDispatch::IntegrationTest
 
     NitroKit::Tooltip::PLACEMENTS.each do |placement|
       id = "gallery-tooltip-#{placement}"
-      assert_select "##{id}[data-placement='#{placement}'][data-state='closed']" do
+      assert_select "##{id}[data-placement='#{placement}']:not([data-state])" do
         assert_select "##{id}-trigger[data-nk='button'][aria-describedby='#{id}-content']"
-        assert_select "##{id}-content[role='tooltip'][hidden][data-state='closed']"
+        assert_select "##{id}-content[role='tooltip']:not([hidden]):not([data-state])"
       end
     end
 
@@ -68,17 +68,22 @@ class GalleryInteractiveTest < ActionDispatch::IntegrationTest
 
     assert_select "#gallery-combobox-empty[data-state='closed']" do
       assert_select "#gallery-combobox-empty-input[role='combobox'][placeholder='Choose a country']"
-      assert_select "#gallery-combobox-empty-value[type='hidden'][name='profile[country]']"
+      assert_select "#gallery-combobox-empty-value[name='profile[country]']" do
+        assert_select "option[value='']", count: 1
+      end
+      assert_select "[data-slot='combobox-control'][hidden]"
+      assert_select "[data-slot='combobox-native']:not([hidden])"
       assert_select "#gallery-combobox-empty-listbox[role='listbox'][hidden]"
       assert_select "[data-slot='combobox-option']", count: 5
       assert_select "[data-value='fi'][aria-disabled='true']"
     end
     assert_select "#gallery-combobox-selected" do
       assert_select "#gallery-combobox-selected-input[value='Denmark']"
-      assert_select "#gallery-combobox-selected-value[value='dk']"
+      assert_select "#gallery-combobox-selected-value option[value='dk'][selected]"
       assert_select "[data-value='dk'][aria-selected='true']"
     end
-    assert_select "#gallery-combobox-required-input[required]"
+    assert_select "#gallery-combobox-required-input[aria-required='true']:not([required])"
+    assert_select "#gallery-combobox-required-value[required]"
     assert_select "#gallery-combobox-disabled" do
       assert_select "#gallery-combobox-disabled-input[disabled]"
       assert_select "#gallery-combobox-disabled-value[disabled]"
@@ -89,7 +94,7 @@ class GalleryInteractiveTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "combobox page composes one visible search control and one named value" do
+  test "combobox page composes one progressive search control and one native named value" do
     get_component("combobox")
 
     assert_select "#gallery-combobox-deployment-card[data-nk='card']" do
@@ -97,7 +102,10 @@ class GalleryInteractiveTest < ActionDispatch::IntegrationTest
         assert_select "#gallery-combobox-release[data-nk='input'][readonly][name='deployment[release]']"
         assert_select "#gallery-combobox-environment[data-nk='combobox']" do
           assert_select "#gallery-combobox-environment-input[role='combobox']:not([name])"
-          assert_select "#gallery-combobox-environment-value[type='hidden'][name='deployment[environment]'][value='production']"
+          assert_select "#gallery-combobox-environment-value[name='deployment[environment]']" do
+            assert_select "option[value='production'][selected]"
+          end
+          assert_select "[name='deployment[environment]']", count: 1
         end
         assert_select "#gallery-combobox-submit[type='submit'][data-variant='primary']"
       end

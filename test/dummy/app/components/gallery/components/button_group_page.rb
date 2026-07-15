@@ -37,7 +37,7 @@ module Gallery
                 label: "Form actions"
               ) do |group|
                 group.button("Save", id: "gallery-button-group-two-save", variant: :primary)
-                group.button("Cancel", id: "gallery-button-group-two-cancel", variant: :ghost)
+                group.button("Cancel", id: "gallery-button-group-two-cancel")
               end
             end
             sample("Four actions", slug: "four") do

@@ -22,7 +22,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
   test "catalog exposes the exact additive flow matrix and stable routes" do
     entries = Gallery::Catalog.entries(kind: :flow).select { |entry| FLOW_STATES.key?(entry.slug) }
 
-    assert_equal FLOW_STATES.keys, entries.map(&:slug)
+    assert_equal FLOW_STATES.keys.sort, entries.map(&:slug).sort
 
     entries.each do |entry|
       assert_equal FLOW_STATES.fetch(entry.slug), entry.states
@@ -57,7 +57,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
         assert_select "#gallery-#{slug}-header[data-nk='page-header'] > h1[data-slot='page-header-title']"
         assert_select "#gallery-#{slug}-header [data-slot='page-header-actions'][data-nk='button-group'] [data-nk='button']", minimum: 1
         assert_select "[data-gallery='example-canvas'] [data-nk='container']", minimum: 1
-        assert_select "[data-gallery='example-canvas'] [data-nk='v-stack']", minimum: 1
+        assert_select "[data-gallery='example-canvas'] [data-nk='flex'][data-dir='col']", minimum: 1
         assert_select "[data-gallery='example-canvas'] [class]", count: 0
         assert_select "[data-gallery='example-canvas'] [style]", count: 0
         assert_select "[data-gallery='example-canvas'] [data-nk-escape]", count: 0
@@ -93,7 +93,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
 
   test "checkout covers review card entry provider outcomes cancellation refunds and empty state" do
     get_flow("checkout", "review")
-    assert_select "#gallery-checkout-review-grid[data-nk='grid'][data-cols='3'] > [data-nk='card']", count: 3
+    assert_select "#gallery-checkout-review-grid[data-nk='grid'][data-cols='1 sm:2 lg:3'] > [data-nk='card']", count: 3
     assert_select "#gallery-checkout-review-actions[data-nk='toolbar']"
     assert_select "#gallery-checkout-continue[href$='/checkout/payment']"
 

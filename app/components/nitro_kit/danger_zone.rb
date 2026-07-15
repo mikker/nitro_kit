@@ -5,16 +5,16 @@ module NitroKit
     Child = Data.define(:component, :content)
 
     def initialize(
-      title:,
-      description:,
+      title: nil,
+      description: nil,
       id: nil,
       html: {},
       aria: {},
       data: {},
       desperately_need_a_class: nil
     )
-      @title = validate_text!(:title, title)
-      @description = validate_text!(:description, description)
+      @title_content = content_from_keyword(:title, title)
+      @description_content = content_from_keyword(:description, description)
       @confirmation = nil
       @escape = nil
 
@@ -28,21 +28,31 @@ module NitroKit
       )
     end
 
-    attr_reader :title, :description
-
     def view_template
       yield self if block_given?
+      require_content!("DangerZone", :title, @title_content)
+      require_content!("DangerZone", :description, @description_content)
       raise ArgumentError, "DangerZone requires exactly one confirmation" unless @confirmation
       raise ArgumentError, "DangerZone requires exactly one safe escape action" unless @escape
 
       section(**root_attributes) do
         header(**slot_attributes(:header)) do
-          h2(**slot_attributes(:title)) { plain(title) }
-          p(**slot_attributes(:impact)) { plain(description) }
+          h2(**slot_attributes(:title)) { render_deferred_content(@title_content) }
+          p(**slot_attributes(:impact)) { render_deferred_content(@description_content) }
         end
         div(**slot_attributes(:confirmation), &@confirmation)
         render_in_slot(@escape.component, :escape, &@escape.content)
       end
+    end
+
+    def title(text = nil, &block)
+      @title_content = declare_content(:title, @title_content, text, &block)
+      nil
+    end
+
+    def description(text = nil, &block)
+      @description_content = declare_content(:description, @description_content, text, &block)
+      nil
     end
 
     def confirmation(&content)
@@ -64,14 +74,6 @@ module NitroKit
 
       @escape = Child.new(component:, content:)
       nil
-    end
-
-    private
-
-    def validate_text!(name, value)
-      return value if value.is_a?(String) && !value.strip.empty?
-
-      raise ArgumentError, "#{name} must be a non-blank String"
     end
   end
 end

@@ -1,0 +1,1 @@
+This response intentionally is not an image. It exercises ProgressiveImage's error state without a failed network request.

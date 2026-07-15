@@ -6,7 +6,7 @@ module NitroKit
     TITLE_LEVELS = (2..6).freeze
 
     def initialize(
-      title:,
+      title: nil,
       description: nil,
       level: 2,
       id: nil,
@@ -15,8 +15,8 @@ module NitroKit
       data: {},
       desperately_need_a_class: nil
     )
-      @title = validate_text!(:title, title)
-      @description = validate_optional_text!(:description, description)
+      @title_content = content_from_keyword(:title, title)
+      @description_content = content_from_keyword(:description, description)
       @level = validate_choice!(:level, level, TITLE_LEVELS)
       @icon = nil
       @actions = []
@@ -31,17 +31,30 @@ module NitroKit
       )
     end
 
-    attr_reader :title, :description, :level
+    attr_reader :level
 
     def view_template
       yield self if block_given?
+      require_content!("EmptyState", :title, @title_content)
 
       section(**root_attributes) do
         render_in_slot(@icon.component, :icon, &@icon.content) if @icon
-        public_send(:"h#{level}", **slot_attributes(:title)) { plain(title) }
-        p(**slot_attributes(:description)) { plain(description) } if description
+        public_send(:"h#{level}", **slot_attributes(:title)) { render_deferred_content(@title_content) }
+        if @description_content
+          p(**slot_attributes(:description)) { render_deferred_content(@description_content) }
+        end
         render_actions if @actions.any?
       end
+    end
+
+    def title(text = nil, &block)
+      @title_content = declare_content(:title, @title_content, text, &block)
+      nil
+    end
+
+    def description(text = nil, &block)
+      @description_content = declare_content(:description, @description_content, text, &block)
+      nil
     end
 
     def icon(component, &content)
@@ -75,18 +88,6 @@ module NitroKit
           render_in_slot(action.component, :action, &action.content)
         end
       end
-    end
-
-    def validate_text!(name, value)
-      return value if value.is_a?(String) && !value.strip.empty?
-
-      raise ArgumentError, "#{name} must be a non-blank String"
-    end
-
-    def validate_optional_text!(name, value)
-      return if value.nil?
-
-      validate_text!(name, value)
     end
   end
 end

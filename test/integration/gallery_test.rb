@@ -5,7 +5,8 @@ class GalleryTest < ActionDispatch::IntegrationTest
     get gallery_root_path
 
     assert_response :success
-    assert_select "html[data-gallery='document'][data-theme='light']"
+    assert_select "html[data-gallery='document']:not([data-theme])"
+    assert_select "script[data-nk-appearance-default='system']"
     assert_select "body[data-gallery='body']"
     assert_select "[data-gallery='sidebar']"
     assert_select "[data-gallery='main'] div[data-gallery='page'][data-gallery-page='home']"
@@ -14,6 +15,40 @@ class GalleryTest < ActionDispatch::IntegrationTest
     assert_select "[data-gallery='index-group'][data-gallery-kind='component'] h2", text: "Components"
     assert_select "[data-gallery='index-group'][data-gallery-kind='block'] h2", text: "Blocks"
     assert_select "[data-gallery='index-group'][data-gallery-kind='flow'] h2", text: "Flows"
+  end
+
+  test "gallery renders flat alphabetical components and nested block and flow categories" do
+    get gallery_root_path
+
+    assert_response :success
+    assert_select "[data-gallery='navigation-collection'][data-gallery-kind='component']" do |collections|
+      assert_select "[data-gallery='navigation-category']", count: 0
+      assert_equal(
+        Gallery::Catalog.entries(kind: :component).map(&:title),
+        collections.first.css("ul a").map(&:text)
+      )
+    end
+    assert_select "[data-gallery='navigation-collection'][data-gallery-kind='block']" do
+      assert_select "details[data-gallery='navigation-category']", count: 3
+      assert_select "details[data-gallery-category='shells'] > summary", text: "Shells"
+      assert_select "details[data-gallery-category='navigation'] > summary", text: "Navigation"
+      assert_select "details[data-gallery-category='sections'] > summary", text: "Sections"
+    end
+    assert_select "[data-gallery='index-group'][data-gallery-kind='flow']" do
+      assert_select "[data-gallery='index-category']", count: 7
+      assert_select "[data-gallery-category='access-and-onboarding'] h3", text: "Access & onboarding"
+      assert_select "[data-gallery-category='complete-applications'] h3", text: "Complete applications"
+    end
+  end
+
+  test "current flow category stays open and its entry remains current on every state" do
+    get gallery_flow_path(slug: "settings", state: "appearance")
+
+    assert_response :success
+    assert_select "details[data-gallery-category='workspace-and-organization'][open]" do
+      assert_select "a[href='/gallery/flows/settings/profile'][aria-current='page']", text: "Workspace settings"
+    end
+    assert_select "[data-gallery='navigation'] a[aria-current='page']", count: 1
   end
 
   test "gallery is the canonical dummy application root" do
@@ -33,17 +68,32 @@ class GalleryTest < ActionDispatch::IntegrationTest
     assert_select "script[type='importmap']"
   end
 
-  test "gallery uses deterministic theme URLs" do
+  test "appearance bootstrap precedes every stylesheet" do
+    get gallery_root_path
+
+    head = Nokogiri::HTML(response.body).at_css("head")
+    bootstrap = head.at_css("script[data-nk-appearance-default]")
+    positions = head.element_children.each_with_index.to_h
+
+    assert bootstrap
+    head.css("link[rel='stylesheet']").each do |stylesheet|
+      assert_operator positions.fetch(bootstrap), :<, positions.fetch(stylesheet)
+    end
+  end
+
+  test "gallery accepts explicit appearance defaults while unknown values return to system" do
     get gallery_root_path(theme: "dark")
 
     assert_response :success
-    assert_select "html[data-theme='dark']"
-    assert_select "[data-gallery='theme-switcher'] a[aria-current='page']", text: "Dark"
+    assert_select "html[data-theme='dark'][data-theme-preference='dark']"
+    assert_select "script[data-nk-appearance-default='dark']"
+    assert_select "[data-gallery='theme-switcher'] [data-nk='appearance-picker']"
 
     get gallery_root_path(theme: "unknown")
 
     assert_response :success
-    assert_select "html[data-theme='light']"
+    assert_select "html:not([data-theme]):not([data-theme-preference])"
+    assert_select "script[data-nk-appearance-default='system']"
   end
 
   test "catalog routes are stable and unknown entries return not found" do

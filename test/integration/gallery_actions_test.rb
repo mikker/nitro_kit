@@ -46,17 +46,20 @@ class GalleryActionsTest < ActionDispatch::IntegrationTest
 
     assert_select "#gallery-pagination-boundary-first" do
       assert_select "#gallery-pagination-boundary-first-previous[aria-disabled='true']:not([href])"
-      assert_select "#gallery-pagination-boundary-first-page-1[aria-current='page'][aria-disabled='true']:not([href])"
+      assert_select "a#gallery-pagination-boundary-first-page-1[aria-current='page']" \
+                    "[href='/gallery/search?page=1']:not([aria-disabled]):not([tabindex])"
       assert_select "#gallery-pagination-boundary-first-next[href='/gallery/search?page=2']"
     end
     assert_select "#gallery-pagination-boundary-middle" do
       assert_select "#gallery-pagination-boundary-middle-previous[href='/gallery/search?page=5']"
-      assert_select "#gallery-pagination-boundary-middle-page-6[aria-current='page']:not([href])"
+      assert_select "a#gallery-pagination-boundary-middle-page-6[aria-current='page']" \
+                    "[href='/gallery/search?page=6']:not([aria-disabled]):not([tabindex])"
       assert_select "#gallery-pagination-boundary-middle-next[href='/gallery/search?page=7']"
     end
     assert_select "#gallery-pagination-boundary-last" do
       assert_select "#gallery-pagination-boundary-last-previous[href='/gallery/search?page=11']"
-      assert_select "#gallery-pagination-boundary-last-page-12[aria-current='page']:not([href])"
+      assert_select "a#gallery-pagination-boundary-last-page-12[aria-current='page']" \
+                    "[href='/gallery/search?page=12']:not([aria-disabled]):not([tabindex])"
       assert_select "#gallery-pagination-boundary-last-next[aria-disabled='true']:not([href])"
     end
   end
@@ -79,7 +82,8 @@ class GalleryActionsTest < ActionDispatch::IntegrationTest
 
     assert_select "#gallery-pagination-pressure [data-slot='pagination-item'][data-kind='page']", count: 12
     assert_select "#gallery-pagination-pressure [aria-current='page']", count: 1
-    assert_select "#gallery-pagination-pressure-page-6[aria-current='page']:not([href])"
+    assert_select "a#gallery-pagination-pressure-page-6[aria-current='page']" \
+                  "[href='/gallery/pressure?page=6']:not([aria-disabled]):not([tabindex])"
   end
 
   test "pagination page composes searchable paginated table results" do

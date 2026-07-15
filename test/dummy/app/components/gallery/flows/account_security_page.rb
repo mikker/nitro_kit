@@ -34,7 +34,7 @@ module Gallery
           id: "gallery-account-security-header"
         ) do |header|
           header.actions NitroKit::ButtonGroup.new(label: "Security help", id: "gallery-account-security-help") do |actions|
-            actions.button("Get help", href: "#security-help", variant: :ghost)
+            actions.button("Get help", href: "#security-help")
           end
         end
       end
@@ -116,7 +116,7 @@ module Gallery
           card.footer do
             render NitroKit::ButtonGroup.new(label: "Locked account actions") do |actions|
               actions.button("Send unlock link", href: entry_path(entry, state: "unlock-sent"), variant: :primary, id: "gallery-account-security-unlock")
-              actions.button("Use a recovery code", href: entry_path(entry, state: "recovery-code"), variant: :ghost)
+              actions.button("Use a recovery code", href: entry_path(entry, state: "recovery-code"))
             end
           end
         end
@@ -232,7 +232,7 @@ module Gallery
           card.footer do
             render NitroKit::ButtonGroup.new(label: "Verification options") do |actions|
               actions.button("Authentication code", href: entry_path(entry, state: "two-factor-challenge"), variant: :primary)
-              actions.button("Recovery code", href: entry_path(entry, state: "recovery-code"), variant: :ghost)
+              actions.button("Recovery code", href: entry_path(entry, state: "recovery-code"))
             end
           end
         end

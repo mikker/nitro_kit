@@ -28,7 +28,7 @@ module Gallery
             group.button(
               section.humanize,
               href: flow_path(state: section),
-              variant: settings_section == section ? :primary : :ghost,
+              variant: settings_section == section ? :primary : :default,
               aria: { current: settings_section == section ? "page" : nil }
             )
           end

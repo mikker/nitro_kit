@@ -1,0 +1,455 @@
+@layer nitro-kit.base {
+  :where([data-nk="flex"]) {
+    display: flex;
+    min-width: 0;
+    flex-direction: var(--_nk-flex-direction);
+    flex-wrap: var(--_nk-flex-wrap);
+    gap: var(--_nk-layout-gap);
+    align-items: var(--_nk-flex-alignment);
+    justify-content: var(--_nk-flex-justification);
+  }
+}
+
+@layer nitro-kit.variant {
+  :where([data-nk="flex"][data-dir~="row"]) {
+    --_nk-flex-direction: row;
+  }
+
+  :where([data-nk="flex"][data-dir~="col"]) {
+    --_nk-flex-direction: column;
+  }
+
+  :where([data-nk="flex"][data-dir~="row-reverse"]) {
+    --_nk-flex-direction: row-reverse;
+  }
+
+  :where([data-nk="flex"][data-dir~="col-reverse"]) {
+    --_nk-flex-direction: column-reverse;
+  }
+
+  :where([data-nk="flex"][data-align~="start"]) {
+    --_nk-flex-alignment: flex-start;
+  }
+
+  :where([data-nk="flex"][data-align~="center"]) {
+    --_nk-flex-alignment: center;
+  }
+
+  :where([data-nk="flex"][data-align~="end"]) {
+    --_nk-flex-alignment: flex-end;
+  }
+
+  :where([data-nk="flex"][data-align~="stretch"]) {
+    --_nk-flex-alignment: stretch;
+  }
+
+  :where([data-nk="flex"][data-align~="baseline"]) {
+    --_nk-flex-alignment: baseline;
+  }
+
+  :where([data-nk="flex"][data-justify~="start"]) {
+    --_nk-flex-justification: flex-start;
+  }
+
+  :where([data-nk="flex"][data-justify~="center"]) {
+    --_nk-flex-justification: center;
+  }
+
+  :where([data-nk="flex"][data-justify~="end"]) {
+    --_nk-flex-justification: flex-end;
+  }
+
+  :where([data-nk="flex"][data-justify~="between"]) {
+    --_nk-flex-justification: space-between;
+  }
+
+  :where([data-nk="flex"][data-justify~="around"]) {
+    --_nk-flex-justification: space-around;
+  }
+
+  :where([data-nk="flex"][data-justify~="evenly"]) {
+    --_nk-flex-justification: space-evenly;
+  }
+
+  :where([data-nk="flex"][data-wrap~="nowrap"]) {
+    --_nk-flex-wrap: nowrap;
+  }
+
+  :where([data-nk="flex"][data-wrap~="wrap"]) {
+    --_nk-flex-wrap: wrap;
+  }
+
+  :where([data-nk="flex"][data-wrap~="wrap-reverse"]) {
+    --_nk-flex-wrap: wrap-reverse;
+  }
+
+  @media (min-width: 40rem) {
+    :where([data-nk="flex"][data-dir~="sm:row"]) {
+      --_nk-flex-direction: row;
+    }
+
+    :where([data-nk="flex"][data-dir~="sm:col"]) {
+      --_nk-flex-direction: column;
+    }
+
+    :where([data-nk="flex"][data-dir~="sm:row-reverse"]) {
+      --_nk-flex-direction: row-reverse;
+    }
+
+    :where([data-nk="flex"][data-dir~="sm:col-reverse"]) {
+      --_nk-flex-direction: column-reverse;
+    }
+
+    :where([data-nk="flex"][data-align~="sm:start"]) {
+      --_nk-flex-alignment: flex-start;
+    }
+
+    :where([data-nk="flex"][data-align~="sm:center"]) {
+      --_nk-flex-alignment: center;
+    }
+
+    :where([data-nk="flex"][data-align~="sm:end"]) {
+      --_nk-flex-alignment: flex-end;
+    }
+
+    :where([data-nk="flex"][data-align~="sm:stretch"]) {
+      --_nk-flex-alignment: stretch;
+    }
+
+    :where([data-nk="flex"][data-align~="sm:baseline"]) {
+      --_nk-flex-alignment: baseline;
+    }
+
+    :where([data-nk="flex"][data-justify~="sm:start"]) {
+      --_nk-flex-justification: flex-start;
+    }
+
+    :where([data-nk="flex"][data-justify~="sm:center"]) {
+      --_nk-flex-justification: center;
+    }
+
+    :where([data-nk="flex"][data-justify~="sm:end"]) {
+      --_nk-flex-justification: flex-end;
+    }
+
+    :where([data-nk="flex"][data-justify~="sm:between"]) {
+      --_nk-flex-justification: space-between;
+    }
+
+    :where([data-nk="flex"][data-justify~="sm:around"]) {
+      --_nk-flex-justification: space-around;
+    }
+
+    :where([data-nk="flex"][data-justify~="sm:evenly"]) {
+      --_nk-flex-justification: space-evenly;
+    }
+
+    :where([data-nk="flex"][data-wrap~="sm:nowrap"]) {
+      --_nk-flex-wrap: nowrap;
+    }
+
+    :where([data-nk="flex"][data-wrap~="sm:wrap"]) {
+      --_nk-flex-wrap: wrap;
+    }
+
+    :where([data-nk="flex"][data-wrap~="sm:wrap-reverse"]) {
+      --_nk-flex-wrap: wrap-reverse;
+    }
+  }
+
+  @media (min-width: 48rem) {
+    :where([data-nk="flex"][data-dir~="md:row"]) {
+      --_nk-flex-direction: row;
+    }
+
+    :where([data-nk="flex"][data-dir~="md:col"]) {
+      --_nk-flex-direction: column;
+    }
+
+    :where([data-nk="flex"][data-dir~="md:row-reverse"]) {
+      --_nk-flex-direction: row-reverse;
+    }
+
+    :where([data-nk="flex"][data-dir~="md:col-reverse"]) {
+      --_nk-flex-direction: column-reverse;
+    }
+
+    :where([data-nk="flex"][data-align~="md:start"]) {
+      --_nk-flex-alignment: flex-start;
+    }
+
+    :where([data-nk="flex"][data-align~="md:center"]) {
+      --_nk-flex-alignment: center;
+    }
+
+    :where([data-nk="flex"][data-align~="md:end"]) {
+      --_nk-flex-alignment: flex-end;
+    }
+
+    :where([data-nk="flex"][data-align~="md:stretch"]) {
+      --_nk-flex-alignment: stretch;
+    }
+
+    :where([data-nk="flex"][data-align~="md:baseline"]) {
+      --_nk-flex-alignment: baseline;
+    }
+
+    :where([data-nk="flex"][data-justify~="md:start"]) {
+      --_nk-flex-justification: flex-start;
+    }
+
+    :where([data-nk="flex"][data-justify~="md:center"]) {
+      --_nk-flex-justification: center;
+    }
+
+    :where([data-nk="flex"][data-justify~="md:end"]) {
+      --_nk-flex-justification: flex-end;
+    }
+
+    :where([data-nk="flex"][data-justify~="md:between"]) {
+      --_nk-flex-justification: space-between;
+    }
+
+    :where([data-nk="flex"][data-justify~="md:around"]) {
+      --_nk-flex-justification: space-around;
+    }
+
+    :where([data-nk="flex"][data-justify~="md:evenly"]) {
+      --_nk-flex-justification: space-evenly;
+    }
+
+    :where([data-nk="flex"][data-wrap~="md:nowrap"]) {
+      --_nk-flex-wrap: nowrap;
+    }
+
+    :where([data-nk="flex"][data-wrap~="md:wrap"]) {
+      --_nk-flex-wrap: wrap;
+    }
+
+    :where([data-nk="flex"][data-wrap~="md:wrap-reverse"]) {
+      --_nk-flex-wrap: wrap-reverse;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    :where([data-nk="flex"][data-dir~="lg:row"]) {
+      --_nk-flex-direction: row;
+    }
+
+    :where([data-nk="flex"][data-dir~="lg:col"]) {
+      --_nk-flex-direction: column;
+    }
+
+    :where([data-nk="flex"][data-dir~="lg:row-reverse"]) {
+      --_nk-flex-direction: row-reverse;
+    }
+
+    :where([data-nk="flex"][data-dir~="lg:col-reverse"]) {
+      --_nk-flex-direction: column-reverse;
+    }
+
+    :where([data-nk="flex"][data-align~="lg:start"]) {
+      --_nk-flex-alignment: flex-start;
+    }
+
+    :where([data-nk="flex"][data-align~="lg:center"]) {
+      --_nk-flex-alignment: center;
+    }
+
+    :where([data-nk="flex"][data-align~="lg:end"]) {
+      --_nk-flex-alignment: flex-end;
+    }
+
+    :where([data-nk="flex"][data-align~="lg:stretch"]) {
+      --_nk-flex-alignment: stretch;
+    }
+
+    :where([data-nk="flex"][data-align~="lg:baseline"]) {
+      --_nk-flex-alignment: baseline;
+    }
+
+    :where([data-nk="flex"][data-justify~="lg:start"]) {
+      --_nk-flex-justification: flex-start;
+    }
+
+    :where([data-nk="flex"][data-justify~="lg:center"]) {
+      --_nk-flex-justification: center;
+    }
+
+    :where([data-nk="flex"][data-justify~="lg:end"]) {
+      --_nk-flex-justification: flex-end;
+    }
+
+    :where([data-nk="flex"][data-justify~="lg:between"]) {
+      --_nk-flex-justification: space-between;
+    }
+
+    :where([data-nk="flex"][data-justify~="lg:around"]) {
+      --_nk-flex-justification: space-around;
+    }
+
+    :where([data-nk="flex"][data-justify~="lg:evenly"]) {
+      --_nk-flex-justification: space-evenly;
+    }
+
+    :where([data-nk="flex"][data-wrap~="lg:nowrap"]) {
+      --_nk-flex-wrap: nowrap;
+    }
+
+    :where([data-nk="flex"][data-wrap~="lg:wrap"]) {
+      --_nk-flex-wrap: wrap;
+    }
+
+    :where([data-nk="flex"][data-wrap~="lg:wrap-reverse"]) {
+      --_nk-flex-wrap: wrap-reverse;
+    }
+  }
+
+  @media (min-width: 80rem) {
+    :where([data-nk="flex"][data-dir~="xl:row"]) {
+      --_nk-flex-direction: row;
+    }
+
+    :where([data-nk="flex"][data-dir~="xl:col"]) {
+      --_nk-flex-direction: column;
+    }
+
+    :where([data-nk="flex"][data-dir~="xl:row-reverse"]) {
+      --_nk-flex-direction: row-reverse;
+    }
+
+    :where([data-nk="flex"][data-dir~="xl:col-reverse"]) {
+      --_nk-flex-direction: column-reverse;
+    }
+
+    :where([data-nk="flex"][data-align~="xl:start"]) {
+      --_nk-flex-alignment: flex-start;
+    }
+
+    :where([data-nk="flex"][data-align~="xl:center"]) {
+      --_nk-flex-alignment: center;
+    }
+
+    :where([data-nk="flex"][data-align~="xl:end"]) {
+      --_nk-flex-alignment: flex-end;
+    }
+
+    :where([data-nk="flex"][data-align~="xl:stretch"]) {
+      --_nk-flex-alignment: stretch;
+    }
+
+    :where([data-nk="flex"][data-align~="xl:baseline"]) {
+      --_nk-flex-alignment: baseline;
+    }
+
+    :where([data-nk="flex"][data-justify~="xl:start"]) {
+      --_nk-flex-justification: flex-start;
+    }
+
+    :where([data-nk="flex"][data-justify~="xl:center"]) {
+      --_nk-flex-justification: center;
+    }
+
+    :where([data-nk="flex"][data-justify~="xl:end"]) {
+      --_nk-flex-justification: flex-end;
+    }
+
+    :where([data-nk="flex"][data-justify~="xl:between"]) {
+      --_nk-flex-justification: space-between;
+    }
+
+    :where([data-nk="flex"][data-justify~="xl:around"]) {
+      --_nk-flex-justification: space-around;
+    }
+
+    :where([data-nk="flex"][data-justify~="xl:evenly"]) {
+      --_nk-flex-justification: space-evenly;
+    }
+
+    :where([data-nk="flex"][data-wrap~="xl:nowrap"]) {
+      --_nk-flex-wrap: nowrap;
+    }
+
+    :where([data-nk="flex"][data-wrap~="xl:wrap"]) {
+      --_nk-flex-wrap: wrap;
+    }
+
+    :where([data-nk="flex"][data-wrap~="xl:wrap-reverse"]) {
+      --_nk-flex-wrap: wrap-reverse;
+    }
+  }
+
+  @media (min-width: 96rem) {
+    :where([data-nk="flex"][data-dir~="2xl:row"]) {
+      --_nk-flex-direction: row;
+    }
+
+    :where([data-nk="flex"][data-dir~="2xl:col"]) {
+      --_nk-flex-direction: column;
+    }
+
+    :where([data-nk="flex"][data-dir~="2xl:row-reverse"]) {
+      --_nk-flex-direction: row-reverse;
+    }
+
+    :where([data-nk="flex"][data-dir~="2xl:col-reverse"]) {
+      --_nk-flex-direction: column-reverse;
+    }
+
+    :where([data-nk="flex"][data-align~="2xl:start"]) {
+      --_nk-flex-alignment: flex-start;
+    }
+
+    :where([data-nk="flex"][data-align~="2xl:center"]) {
+      --_nk-flex-alignment: center;
+    }
+
+    :where([data-nk="flex"][data-align~="2xl:end"]) {
+      --_nk-flex-alignment: flex-end;
+    }
+
+    :where([data-nk="flex"][data-align~="2xl:stretch"]) {
+      --_nk-flex-alignment: stretch;
+    }
+
+    :where([data-nk="flex"][data-align~="2xl:baseline"]) {
+      --_nk-flex-alignment: baseline;
+    }
+
+    :where([data-nk="flex"][data-justify~="2xl:start"]) {
+      --_nk-flex-justification: flex-start;
+    }
+
+    :where([data-nk="flex"][data-justify~="2xl:center"]) {
+      --_nk-flex-justification: center;
+    }
+
+    :where([data-nk="flex"][data-justify~="2xl:end"]) {
+      --_nk-flex-justification: flex-end;
+    }
+
+    :where([data-nk="flex"][data-justify~="2xl:between"]) {
+      --_nk-flex-justification: space-between;
+    }
+
+    :where([data-nk="flex"][data-justify~="2xl:around"]) {
+      --_nk-flex-justification: space-around;
+    }
+
+    :where([data-nk="flex"][data-justify~="2xl:evenly"]) {
+      --_nk-flex-justification: space-evenly;
+    }
+
+    :where([data-nk="flex"][data-wrap~="2xl:nowrap"]) {
+      --_nk-flex-wrap: nowrap;
+    }
+
+    :where([data-nk="flex"][data-wrap~="2xl:wrap"]) {
+      --_nk-flex-wrap: wrap;
+    }
+
+    :where([data-nk="flex"][data-wrap~="2xl:wrap-reverse"]) {
+      --_nk-flex-wrap: wrap-reverse;
+    }
+  }
+}

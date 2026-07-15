@@ -33,7 +33,7 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
       assert_select "nav[aria-label='Dashboard states'] a[aria-current='page']", text: state.humanize
       assert_select "#gallery-dashboard-surface > " \
                     "#gallery-dashboard-container[data-nk='container'][data-size='xl'] > " \
-                    "#gallery-dashboard-stack[data-nk='v-stack'][data-gap='lg'][data-align='stretch']" do
+                    "#gallery-dashboard-stack[data-nk='flex'][data-dir='col'][data-gap='6'][data-align='stretch']" do
         assert_select "> #gallery-dashboard-workspace-header[data-nk='page-header']" do
           assert_select "> h1[data-slot='page-header-title']"
         end
@@ -41,7 +41,7 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
       assert_select "#gallery-dashboard-workspace-actions[data-nk='button-group'][aria-label='Workspace actions']" do
         assert_select "[data-nk='button']", count: 2
       end
-      assert_select "#gallery-dashboard-workspace-context[data-nk='h-stack']" do
+      assert_select "#gallery-dashboard-workspace-context[data-nk='flex'][data-dir='row']" do
         assert_select "#gallery-dashboard-workspace-status[data-nk='badge']"
         assert_select "#gallery-dashboard-members[data-nk='avatar-stack']"
       end
@@ -158,7 +158,7 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
       end
       assert_select "#gallery-settings-surface > " \
                     "#gallery-settings-container[data-nk='container'][data-size='xl'] > " \
-                    "#gallery-settings-stack[data-nk='v-stack'][data-gap='lg'][data-align='stretch'] > " \
+                    "#gallery-settings-stack[data-nk='flex'][data-dir='col'][data-gap='6'][data-align='stretch'] > " \
                     "#gallery-settings-layout[data-nk='settings-layout']",
         count: 1
       assert_select "#gallery-settings-content > [data-nk]", minimum: 1

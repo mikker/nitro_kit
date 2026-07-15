@@ -34,7 +34,7 @@ module Gallery
           header.actions(
             NitroKit::ButtonGroup.new(id: "gallery-help-center-header-actions", label: "Help center navigation")
           ) do |actions|
-            actions.button("Browse FAQ", href: entry_path(entry, state: "faq"), variant: :ghost)
+            actions.button("Browse FAQ", href: entry_path(entry, state: "faq"))
             actions.button("Contact support", href: entry_path(entry, state: "contact"), variant: :primary)
           end
         end
@@ -156,7 +156,6 @@ module Gallery
                         "Read answer",
                         href: "##{question.id}",
                         size: :sm,
-                        variant: :ghost,
                         aria: { label: "Read answer: #{question.question}" }
                       )
                     end
@@ -232,7 +231,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-help-center-contact-sent-card") do |card|
           card.title("Support request sent", level: 2)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Alert.new(variant: :success, id: "gallery-help-center-contact-sent") do |alert|
                 alert.icon NitroKit::Icon.new(:circle_check, id: "gallery-help-center-contact-sent-icon")
                 alert.title("Request SUP-2048 was created")

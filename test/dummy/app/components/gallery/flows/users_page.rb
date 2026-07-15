@@ -83,7 +83,7 @@ module Gallery
               }.compact
             ) do
               render NitroKit::Container.new(size: :xl, id: "gallery-users-container") do
-                render NitroKit::VStack.new(gap: :lg, align: :stretch, id: "gallery-users-stack") do
+                render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch, id: "gallery-users-stack") do
                   turbo_frame_tag("gallery-users-frame") { render_screen }
                 end
               end
@@ -152,7 +152,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-users-detail-card") do |card|
           card.title(user.name, level: 4)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Avatar.new(
                 src: user.avatar_url,
                 alt: user.name,
@@ -203,8 +203,7 @@ module Gallery
             group.button(
               "Clear search",
               id: "gallery-users-clear-search",
-              href: entry_path(entry, state: "index"),
-              variant: :ghost
+              href: entry_path(entry, state: "index")
             )
           end
           section.table NitroKit::Table.new(id: "gallery-users-search-results") do |table|
@@ -292,7 +291,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-users-error-card") do |card|
           card.title("Users could not be loaded", level: 4)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Alert.new(id: "gallery-users-error", variant: :error) do |alert|
                 alert.icon(NitroKit::Icon.new(:circle_x, id: "gallery-users-error-icon"))
                 alert.title("The directory service did not respond")
@@ -366,8 +365,7 @@ module Gallery
             render NitroKit::Button.new(
               "Cancel bulk action",
               id: "gallery-users-bulk-cancel",
-              href: entry_path(entry, state: "index"),
-              variant: :ghost
+              href: entry_path(entry, state: "index")
             )
           end
         end
@@ -430,8 +428,7 @@ module Gallery
           zone.escape NitroKit::Button.new(
             "Back to selection",
             id: "gallery-users-bulk-confirmation-back",
-            href: entry_path(entry, state: "bulk"),
-            variant: :ghost
+            href: entry_path(entry, state: "bulk")
           )
         end
       end
@@ -440,7 +437,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-users-bulk-complete-card") do |card|
           card.title("Bulk action complete", level: 4)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Alert.new(id: "gallery-users-bulk-complete", variant: :success) do |alert|
                 alert.icon(NitroKit::Icon.new(:circle_check, id: "gallery-users-bulk-complete-icon"))
                 alert.title("2 user records were updated")
@@ -474,7 +471,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-users-mobile-card") do |card|
           card.title("Margaret Hamilton — Director of Software Engineering", level: 4)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Avatar.new(
                 alt: user.name,
                 fallback: initials(user.name),
@@ -662,7 +659,6 @@ module Gallery
                   id: "#{id}-#{user.id}-view",
                   href: entry_path(entry, state: "detail"),
                   size: :sm,
-                  variant: :ghost,
                   aria: { label: "View #{user.name}" }
                 )
               end

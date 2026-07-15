@@ -40,6 +40,9 @@ class ImportmapEngineTest < ActionDispatch::IntegrationTest
 
     assert_includes specification.files, "config/importmap.rb"
     assert_includes specification.files, "app/javascript/controllers/nk/dropdown_controller.js"
+    assert_includes specification.files, "app/javascript/controllers/nk/tooltip_controller.js"
+    refute_includes specification.files, "app/javascript/controllers/nk/accordion_controller.js"
+    refute_includes specification.files, "app/javascript/controllers/nk/dialog_controller.js"
     refute specification.files.any? { |path| path.start_with?("vendor/javascript/") }
   end
 

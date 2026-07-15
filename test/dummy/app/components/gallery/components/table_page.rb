@@ -82,7 +82,6 @@ module Gallery
                         "View",
                         id: "gallery-table-invoice-#{invoice.id}-view",
                         href: "#invoice-#{invoice.id}",
-                        variant: :ghost,
                         size: :sm
                       )
                     end
@@ -172,7 +171,6 @@ module Gallery
                           "Rotate",
                           id: "gallery-table-credential-#{api_key.id}-rotate",
                           size: :sm,
-                          variant: :ghost
                         )
                         group.button(
                           "Revoke",

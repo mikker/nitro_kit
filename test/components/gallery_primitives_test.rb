@@ -1,7 +1,7 @@
 require "test_helper"
 
 class GalleryPrimitivesTest < ActiveSupport::TestCase
-  Entry = ::Data.define(:slug, :title, :description)
+  Entry = ::Data.define(:kind, :slug, :title, :description)
 
   class ProbePage < Gallery::ComponentPage
     private
@@ -46,6 +46,17 @@ class GalleryPrimitivesTest < ActiveSupport::TestCase
     end
   end
 
+  class DuplicatePreviewPage < Gallery::Page
+    private
+
+    def page_template
+      h1 { "Discarded page chrome" }
+      2.times do
+        render_example(slug: "duplicate", title: "Duplicate") { button { "Duplicate" } }
+      end
+    end
+  end
+
   test "component page renders accessible named sections and examples" do
     fragment = render_fragment(page)
     page_node = fragment.at_css("[data-gallery='page'][data-gallery-page='button']")
@@ -70,9 +81,9 @@ class GalleryPrimitivesTest < ActiveSupport::TestCase
 
     tabs = matrix.at_css("[data-gallery='example-tabs'][data-nk='tabs']")
     assert_equal "Variant matrix example", tabs.at_css("[role='tablist']")["aria-label"]
-    assert_equal [ "Preview", "Code" ], tabs.css("[role='tab']").map(&:text)
+    assert_equal [ "Preview", "Responsive", "Code" ], tabs.css("[role='tab']").map(&:text)
     assert tabs.at_css("[data-key='preview'][data-state='active']:not([hidden])")
-    assert tabs.at_css("[data-key='code'][data-state='inactive'][hidden]")
+    assert tabs.at_css("[data-key='code'][data-state='inactive']:not([hidden])")
   end
 
   test "example modes layouts and densities are closed visible data" do
@@ -139,6 +150,23 @@ class GalleryPrimitivesTest < ActiveSupport::TestCase
     assert_includes source.content, "example_section("
     assert_includes source.content, 'example("Single example", slug: "button-single")'
     refute_includes source.content, "def component_template"
+  end
+
+  test "standalone previews discard page chrome and render only the selected block" do
+    fragment = render_fragment(ProbePage.new(entry: probe_entry, preview: "button-single"))
+
+    assert_equal "button-single", fragment.at_css("main[data-gallery-responsive-preview='true']")["data-gallery-example"]
+    assert_equal "Button", fragment.at_css("[data-gallery='example-canvas'] button").text
+    assert_empty fragment.css("h1, h2, h3, [data-gallery='code-sample']")
+  end
+
+  test "standalone previews reject unknown and duplicate example slugs" do
+    assert_raises(Gallery::Page::PreviewNotFound) do
+      ProbePage.new(entry: probe_entry, preview: "missing").call
+    end
+    assert_raises(Gallery::Page::DuplicatePreview) do
+      DuplicatePreviewPage.new(entry: probe_entry, preview: "duplicate").call
+    end
   end
 
   test "source extraction rejects multiple blocks beginning on one line" do
@@ -242,12 +270,15 @@ class GalleryPrimitivesTest < ActiveSupport::TestCase
   private
 
   def page
-    ProbePage.new(
-      entry: Entry.new(
-        slug: "button",
-        title: "Button",
-        description: "Actions and links with typed variants and sizes."
-      )
+    ProbePage.new(entry: probe_entry)
+  end
+
+  def probe_entry
+    Entry.new(
+      kind: :component,
+      slug: "button",
+      title: "Button",
+      description: "Actions and links with typed variants and sizes."
     )
   end
 

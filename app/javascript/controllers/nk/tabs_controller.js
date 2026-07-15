@@ -8,6 +8,34 @@ export default class extends Controller {
     orientation: { type: String, default: "horizontal" },
   };
 
+  connect() {
+    this.enhanced = true;
+    this.element.dataset.enhanced = "true";
+    this.synchronize();
+  }
+
+  disconnect() {
+    this.enhanced = false;
+    this.reconcileScheduled = false;
+    delete this.element.dataset.enhanced;
+
+    this.element
+      .querySelectorAll(':scope > [data-slot="tabs-panel"]')
+      .forEach((panel) => {
+        panel.hidden = false;
+        panel.removeAttribute("aria-hidden");
+        panel.removeAttribute("tabindex");
+      });
+
+    this.element
+      .querySelectorAll(
+        ':scope > [data-slot="tabs-list"] > [data-slot="tabs-tab"]',
+      )
+      .forEach((tab) => {
+        tab.tabIndex = tab.disabled ? -1 : 0;
+      });
+  }
+
   select(event) {
     if (!event.currentTarget.disabled) {
       this.activeValue = event.currentTarget.dataset.key;
@@ -56,6 +84,58 @@ export default class extends Controller {
   }
 
   activeValueChanged() {
+    if (!this.enhanced) return;
+
+    this.synchronize();
+  }
+
+  panelTargetConnected() {
+    if (this.enhanced) this.synchronize();
+  }
+
+  panelTargetDisconnected() {
+    this.scheduleReconciliation();
+  }
+
+  tabTargetConnected() {
+    if (this.enhanced) this.synchronize();
+  }
+
+  tabTargetDisconnected() {
+    this.scheduleReconciliation();
+  }
+
+  scheduleReconciliation() {
+    if (!this.enhanced || this.reconcileScheduled) return;
+
+    this.reconcileScheduled = true;
+    queueMicrotask(() => {
+      this.reconcileScheduled = false;
+      if (this.enhanced) this.reconcileTargets();
+    });
+  }
+
+  reconcileTargets() {
+    const active = this.activeValue;
+    const hasActivePair =
+      this.tabTargets.some((tab) => tab.dataset.key === active) &&
+      this.panelTargets.some((panel) => panel.dataset.key === active);
+
+    if (!hasActivePair) {
+      const fallback = this.tabTargets.find(
+        (tab) =>
+          !tab.disabled &&
+          this.panelTargets.some(
+            (panel) => panel.dataset.key === tab.dataset.key,
+          ),
+      );
+      if (fallback) this.activeValue = fallback.dataset.key;
+    }
+
+    this.synchronize();
+  }
+
+  synchronize() {
     const value = this.activeValue;
 
     this.panelTargets.forEach((panel) => {
@@ -64,6 +144,7 @@ export default class extends Controller {
       panel.hidden = !active;
       panel.setAttribute("aria-hidden", String(!active));
       panel.dataset.state = active ? "active" : "inactive";
+      panel.tabIndex = active ? 0 : -1;
     });
 
     this.tabTargets.forEach((tab) => {

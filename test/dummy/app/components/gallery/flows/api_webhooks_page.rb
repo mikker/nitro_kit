@@ -34,7 +34,7 @@ module Gallery
           id: "gallery-api-webhooks-header"
         ) do |header|
           header.actions NitroKit::ButtonGroup.new(label: "Webhook actions", id: "gallery-api-webhooks-actions") do |actions|
-            actions.button("API docs", href: "#webhook-docs", variant: :ghost)
+            actions.button("API docs", href: "#webhook-docs")
             actions.button("Create endpoint", href: entry_path(entry, state: "create"), variant: :primary, disabled: state == "loading")
           end
         end
@@ -47,7 +47,7 @@ module Gallery
           id: "gallery-api-webhooks-list-section"
         ) do |section|
           section.actions NitroKit::ButtonGroup.new(label: "Endpoint list actions") do |actions|
-            actions.button("Export endpoints", href: "#export", variant: :ghost)
+            actions.button("Export endpoints", href: "#export")
           end
           section.table NitroKit::Table.new(id: "gallery-api-webhooks-table", table_aria: { label: "Webhook endpoints" }) do |table|
             table.caption("#{rows.length} configured webhook endpoints")
@@ -79,7 +79,7 @@ module Gallery
                   end
                   table.td(align: :right) do
                     render NitroKit::ButtonGroup.new(label: "Actions for #{row.fetch(:name)}") do |actions|
-                      actions.button("View", href: entry_path(entry, state: "detail"), size: :sm, variant: :ghost)
+                      actions.button("View", href: entry_path(entry, state: "detail"), size: :sm)
                       actions.button("Deliveries", href: entry_path(entry, state: row.fetch(:status) == :failing ? "delivery-failed" : "delivery-succeeded"), size: :sm)
                     end
                   end
@@ -104,13 +104,13 @@ module Gallery
           ) do |empty|
             empty.icon NitroKit::Icon.new(:webhook)
             empty.action NitroKit::Button.new("Create first endpoint", href: entry_path(entry, state: "create"), variant: :primary, id: "gallery-api-webhooks-empty-action")
-            empty.action NitroKit::Button.new("Read delivery guide", href: "#webhook-guide", variant: :ghost)
+            empty.action NitroKit::Button.new("Read delivery guide", href: "#webhook-guide")
           end
         end
       end
 
       def render_detail
-        render NitroKit::Grid.new(cols: 3, id: "gallery-api-webhooks-detail-grid") do
+        render NitroKit::Grid.new(cols: "1 sm:2 lg:3", id: "gallery-api-webhooks-detail-grid") do
           render_detail_card("Endpoint", "Production events", "https://api.example.test/hooks/nitro")
           render_detail_card("Subscribed events", "4 events", "deployment.created · incident.updated · member.invited · invoice.paid")
           render_detail_card("Delivery policy", "Enabled", "10 second timeout · exponential retry managed by the application")
@@ -122,7 +122,7 @@ module Gallery
         render NitroKit::Card.new do |card|
           card.title(title)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               strong { value }
               p { detail }
             end
@@ -215,7 +215,7 @@ module Gallery
           id: "gallery-api-webhooks-deliveries-section"
         ) do |section|
           section.actions NitroKit::ButtonGroup.new(label: "Delivery actions") do |actions|
-            actions.button("Inspect payload", href: "#payload", variant: :ghost)
+            actions.button("Inspect payload", href: "#payload")
             actions.button("Retry now", href: entry_path(entry, state: "retrying"), variant: :primary, disabled: kind == :success)
           end
           section.table NitroKit::Table.new(id: "gallery-api-webhooks-deliveries-table") do |table|
@@ -271,7 +271,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-api-webhooks-secret-card") do |card|
           card.title("Signing secret rotated")
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Alert.new(variant: :warning, id: "gallery-api-webhooks-secret-warning") do |alert|
                 alert.title("Copy this secret now")
                 alert.description("The application displays the full value once and owns encrypted storage and rotation overlap.")
@@ -299,7 +299,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-api-webhooks-long-card") do |card|
           card.title(row.fetch(:name))
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               p { row.fetch(:url) }
               p { "Subscribed to customer-visible incident coordination, international invoice settlement, production deployment approval, and regulatory audit export completion events." }
             end
@@ -314,7 +314,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-api-webhooks-mobile-card") do |card|
           card.title("Production events")
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Badge.new("Failing", color: :danger)
               p { "https://api.example.test/hooks/nitro" }
               p { "Last response: HTTP 500 · attempt 3 scheduled" }

@@ -136,7 +136,7 @@ class ResponsiveThemeTest < ApplicationSystemTestCase
     def assert_review_probe(review_case, viewport:)
       case review_case.probe
       when :home
-        assert_selector "[data-gallery='index-group']", count: Gallery::Catalog.navigation_groups.size
+        assert_selector "[data-gallery='index-group']", count: Gallery::Catalog.collections.size
       when :dialog
         assert_dialog_containment
       when :table
@@ -151,7 +151,7 @@ class ResponsiveThemeTest < ApplicationSystemTestCase
     def assert_dialog_containment
       root = "#gallery-dialog-remove-member"
       find("#{root} [data-slot='dialog-trigger']").click
-      assert_selector "#{root} [data-slot='dialog-panel'][open][data-state='open']"
+      assert_selector "#{root} [data-slot='dialog-panel'][open]"
       assert_inside_viewport "#{root} [data-slot='dialog-panel']"
     end
 

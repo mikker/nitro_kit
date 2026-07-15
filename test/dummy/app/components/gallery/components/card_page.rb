@@ -216,7 +216,6 @@ module Gallery
                   id: "gallery-card-profile-reset",
                   type: :reset,
                   form: "gallery-card-profile-form",
-                  variant: :ghost
                 )
               end
             end

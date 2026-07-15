@@ -4,7 +4,7 @@ class GalleryContentBlocksTest < ActionDispatch::IntegrationTest
   BLOCKS = %w[page-header stat-grid data-section form-section danger-zone empty-state].freeze
 
   test "catalog exposes the six content and form block routes" do
-    entries = Gallery::Catalog.entries(kind: :block).select { |entry| entry.group == "Content and forms" }
+    entries = Gallery::Catalog.category!(kind: :block, slug: "sections").entries
 
     assert_equal BLOCKS, entries.map(&:slug)
     assert_equal(
@@ -51,7 +51,7 @@ class GalleryContentBlocksTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-stat-grid-three [data-slot='stat-grid-stat']", count: 3
     assert_select "#gallery-stat-grid-dense [data-slot='stat-grid-stat']", count: 9
     assert_select "#gallery-stat-grid-long-container > #gallery-stat-grid-long[data-nk='stat-grid']"
-    assert_select "[data-nk='stat-grid'] > [data-nk='grid'][data-cols='3']", minimum: 1
+    assert_select "[data-nk='stat-grid'] > [data-nk='grid'][data-cols='1 sm:2 lg:3']", minimum: 1
   end
 
   test "data section gallery covers table empty action dense and nested contracts" do
@@ -103,7 +103,8 @@ class GalleryContentBlocksTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-empty-state-information > [data-slot='empty-state-icon'][data-nk='icon']"
     assert_select "#gallery-empty-state-one-action [data-slot='empty-state-action']", count: 1
     assert_select "#gallery-empty-state-two-actions [data-slot='empty-state-action']", count: 2
-    assert_select "#gallery-empty-state-long > h4[data-slot='empty-state-title']"
+    assert_select "#gallery-empty-state-long > h4[data-slot='empty-state-title'] > strong"
+    assert_select "#example-empty-state-long-code [data-gallery='code-source']", text: /empty\.title/
   end
 
   private

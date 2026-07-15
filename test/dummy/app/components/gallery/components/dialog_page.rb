@@ -33,15 +33,15 @@ module Gallery
         example_section(
           "Panel states",
           slug: "dialog-states",
-          description: "Closed, open, described, title-only, and disabled-trigger states remain visible in markup."
+          description: "Declarative commands open modal dialogs; nonmodal is explicit for server-rendered open panels."
         ) do
-          example("Open and unavailable", slug: "dialog-state-combinations", layout: :matrix) do
-            sample("Open panel", slug: "open") do
+          example("Nonmodal and unavailable", slug: "dialog-state-combinations", layout: :matrix) do
+            sample("Open nonmodal panel", slug: "nonmodal") do
               render NitroKit::Dialog.new(id: "gallery-dialog-open") do |dialog|
                 dialog.dialog(
                   title: "Release notes",
-                  description: "This panel is rendered open so its complete anatomy is visible.",
-                  open: true
+                  description: "This server-rendered panel is deliberately nonmodal.",
+                  nonmodal: true
                 ) do
                   dialog.close_button
                 end

@@ -4,7 +4,7 @@ This document records the staged delivery program used for the agent-native pivo
 
 Nitro Kit 2.0 is allowed to break 1.x completely. Each stage should leave one simpler system behind rather than maintaining parallel APIs.
 
-The implementation has reached release-quality consolidation. The component migration, evidence-gathering flows, accepted layout/block extraction, expanded gallery, and 1.x removal are complete; final documentation, packaging, browser verification, and architecture acceptance remain tracked in `tk`.
+The original implementation program reached release-quality consolidation. Component migration, evidence-gathering flows, accepted layout/block extraction, the expanded gallery, 1.x removal, documentation, packaging, and browser verification are retained here as history; later contract revisions such as responsive Flex/Grid remain tracked in `tk` and the canonical contract documents.
 
 ## Definition of done
 
@@ -171,7 +171,9 @@ Extract the smallest vocabulary that removes proven repetition. The evidence pas
 - Shell: AuthShell.
 - Sections and blocks: SettingsLayout, Toolbar, PaginationBar, PageHeader, StatGrid, DataSection, FormSection, DangerZone, and EmptyState.
 
-It explicitly deferred Spacer, Split, Frame, AppShell, MarketingShell, AuthenticationPanel, and ProgressSteps. Their responsibilities were not stable across enough domains. They are not current API.
+This list records the first extraction decision. It has since been superseded: `VStack` and `HStack` were removed in favor of unified responsive `Flex`, and the fixed three-column Grid became a responsive 1–12-column `Grid`. See the canonical specification and component contracts for the current API.
+
+At that stage, the evidence pass deferred Spacer, Split, Frame, AppShell, MarketingShell, AuthenticationPanel, and ProgressSteps because their responsibilities were not stable across enough domains. A later application-layout mandate supplied enough evidence to accept AppShell; the other deferred candidates remain outside the prerelease. The settled contracts, rather than this historical stage record, live in [`agent_native_spec.md`](agent_native_spec.md) and [`component_contracts.md`](component_contracts.md).
 
 Each abstraction must:
 

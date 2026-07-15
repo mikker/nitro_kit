@@ -22,6 +22,19 @@
     transform: translateY(-50%);
   }
 
+  :where([data-nk="combobox"] > [data-slot="combobox-status"]) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    white-space: nowrap;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    border: 0;
+  }
+
   :where([data-nk="combobox"] > [data-slot="combobox-listbox"]) {
     position: absolute;
     z-index: 40;
@@ -40,30 +53,28 @@
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"][data-placement^="bottom"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"][data-placement^="bottom"]
+  ) {
     inset-block-start: 100%;
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"][data-placement^="top"]
-    ) {
+    [data-nk="combobox"] > [data-slot="combobox-listbox"][data-placement^="top"]
+  ) {
     inset-block-end: 100%;
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"][data-placement$="start"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"][data-placement$="start"]
+  ) {
     inset-inline-start: 0;
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"][data-placement$="end"]
-    ) {
+    [data-nk="combobox"] > [data-slot="combobox-listbox"][data-placement$="end"]
+  ) {
     inset-inline-end: 0;
   }
 
@@ -84,25 +95,25 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="combobox"]
-        [data-slot="combobox-option"]:is(
-          [data-active="true"],
-          [aria-selected="true"]
-        )
-    ) {
+    [data-nk="combobox"]
+      [data-slot="combobox-option"]:is(
+        [data-active="true"],
+        [aria-selected="true"]
+      )
+  ) {
     background: var(--nk-color-muted);
   }
 
   :where(
-      [data-nk="combobox"] [data-slot="combobox-option"][aria-disabled="true"]
-    ) {
+    [data-nk="combobox"] [data-slot="combobox-option"][aria-disabled="true"]
+  ) {
     cursor: not-allowed;
     opacity: 0.6;
   }
 
   :where(
-      [data-nk="combobox"] > [data-slot="combobox-listbox"][data-state="open"]
-    ) {
+    [data-nk="combobox"] > [data-slot="combobox-listbox"][data-state="open"]
+  ) {
     animation: nk-combobox-enter var(--nk-duration-normal) var(--nk-ease);
   }
 

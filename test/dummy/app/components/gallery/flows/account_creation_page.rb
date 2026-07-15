@@ -44,7 +44,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-account-creation-card") do |card|
           card.title(state == "success" ? "Account created" : "Create your Nitro account", level: 4)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               if state == "success"
                 render_success
               else

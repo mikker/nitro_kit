@@ -2,6 +2,8 @@
 
 module NitroKit
   class Component < Phlex::HTML
+    DeferredContent = Data.define(:text, :block)
+    private_constant :DeferredContent
     PUBLIC_RESERVED_DATA_ATTRIBUTES = %w[nk slot variant size state nk-escape].freeze
     INTERNAL_RESERVED_DATA_ATTRIBUTES = %w[nk slot variant size nk-escape].freeze
     ADDITIVE_DATA_ATTRIBUTES = %w[action controller].freeze
@@ -259,6 +261,40 @@ module NitroKit
       else
         nil
       end
+    end
+
+    def content_from_keyword(name, text)
+      return if text.nil?
+
+      validate_content_text!(name, text)
+      DeferredContent.new(text:, block: nil)
+    end
+
+    def declare_content(name, current, text = nil, &block)
+      raise ArgumentError, "#{name} has already been provided" if current
+      raise ArgumentError, "#{name} accepts text or a block, not both" if !text.nil? && block
+
+      unless block
+        validate_content_text!(name, text)
+      end
+
+      DeferredContent.new(text:, block:)
+    end
+
+    def require_content!(component, name, content)
+      return content if content
+
+      raise ArgumentError, "#{component} requires #{name} through the constructor or compound method"
+    end
+
+    def render_deferred_content(content)
+      text_or_block(content.text, &content.block)
+    end
+
+    def validate_content_text!(name, text)
+      return text if text.is_a?(String) && !text.strip.empty?
+
+      raise ArgumentError, "#{name} must be a non-blank String or a block"
     end
   end
 end

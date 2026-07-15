@@ -4,7 +4,7 @@ class GalleryNavigationBlocksTest < ActionDispatch::IntegrationTest
   BLOCKS = %w[settings-layout toolbar pagination-bar].freeze
 
   test "catalog exposes the three accepted navigation blocks and defers progress steps" do
-    entries = Gallery::Catalog.entries(kind: :block).select { |entry| entry.group == "Navigation and progress" }
+    entries = Gallery::Catalog.category!(kind: :block, slug: "navigation").entries
 
     assert_equal BLOCKS, entries.map(&:slug)
     assert_equal(
@@ -43,6 +43,11 @@ class GalleryNavigationBlocksTest < ActionDispatch::IntegrationTest
     end
     assert_select "#gallery-settings-layout-empty > [data-slot='settings-layout-navigation']:empty"
     assert_select "#gallery-settings-layout-empty > [data-slot='settings-layout-content']:empty"
+    assert_select "#gallery-settings-layout-workspace-navigation" do
+      assert_select "[data-nk='button'][data-variant='primary'][aria-current='page']", count: 1
+      assert_select "[data-nk='button'][data-variant='default']", count: 3
+      assert_select "[data-nk='button'][data-variant='ghost']", count: 0
+    end
     assert_select "#gallery-settings-layout-many [data-nk='card']", count: 6
     assert_select "#gallery-settings-layout-long > nav[aria-label*='International Research and Production settings']"
     assert_select "#gallery-settings-layout-audit > [data-slot='settings-layout-content']" do

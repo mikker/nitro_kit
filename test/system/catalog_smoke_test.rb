@@ -19,7 +19,10 @@ class CatalogSmokeTest < ApplicationSystemTestCase
     end
   end.freeze
 
-  raise "Expected 335 catalog URLs, found #{CATALOG_VISITS.size}" unless CATALOG_VISITS.size == 335
+  raise "Expected at least one catalog URL" if CATALOG_VISITS.empty?
+
+  duplicate_paths = CATALOG_VISITS.map(&:path).tally.select { |_path, count| count > 1 }.keys
+  raise "Catalog URLs must be unique: #{duplicate_paths.join(', ')}" if duplicate_paths.any?
 
   CATALOG_VISITS.each do |visit|
     state_label = visit.state ? " in #{visit.state}" : ""
@@ -28,12 +31,13 @@ class CatalogSmokeTest < ApplicationSystemTestCase
       visit visit.path
 
       assert_current_path visit.path
-      assert_selector "html[data-gallery='document'][data-theme='light']"
+      assert_selector "html[data-gallery='document'][data-theme-preference='system'][data-theme]"
+      assert_includes %w[light dark], find("html")["data-theme"]
       assert_selector page_marker(visit)
 
       if visit.entry.kind == :home
         assert_selector "[data-gallery='index']"
-        assert_selector "[data-gallery='index-group']", count: Gallery::Catalog.navigation_groups.size
+        assert_selector "[data-gallery='index-group']", count: Gallery::Catalog.collections.size
       else
         assert_catalog_roots(visit.entry)
       end

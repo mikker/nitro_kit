@@ -32,13 +32,13 @@ module Gallery
           id: "gallery-checkout-header"
         ) do |header|
           header.actions NitroKit::ButtonGroup.new(label: "Checkout navigation", id: "gallery-checkout-navigation") do |actions|
-            actions.button("Back to plans", href: "#plans", variant: :ghost, disabled: state == "processing")
+            actions.button("Back to plans", href: "#plans", disabled: state == "processing")
           end
         end
       end
 
       def render_review
-        render NitroKit::Grid.new(cols: 3, id: "gallery-checkout-review-grid") do
+        render NitroKit::Grid.new(cols: "1 sm:2 lg:3", id: "gallery-checkout-review-grid") do
           render_summary_card("Team plan", "$49.00 monthly", "20 members · unlimited projects · email support")
           render_summary_card("Billing contact", "Ada Lovelace", "accounts-payable@example.test")
           render_summary_card("Due today", "$49.00", "Renews August 13, 2026 unless cancelled")
@@ -61,7 +61,7 @@ module Gallery
         render NitroKit::Card.new do |card|
           card.title(title)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               strong { value }
               p { detail }
             end
@@ -125,7 +125,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-checkout-result") do |card|
           card.title(title)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Alert.new(variant:, id: "gallery-checkout-result-alert") do |alert|
                 alert.icon NitroKit::Icon.new(variant == :warning ? :triangle_alert : :circle_check)
                 alert.title(title)
@@ -200,7 +200,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-checkout-long-card") do |card|
           card.title("International Research, Production, Reliability, and Regulatory Archive Team plan")
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               p do
                 "The first charge covers 118 active members, 27 connected production environments, replicated audit storage, " \
                   "priority incident response, and tax documentation for accounts-payable+international-research-and-production@example.test."
@@ -218,7 +218,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-checkout-mobile-card") do |card|
           card.title("Team plan checkout")
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               p { "$49.00 due today" }
               p { "Visa ending in 4242 · receipt to accounts-payable@example.test" }
             end

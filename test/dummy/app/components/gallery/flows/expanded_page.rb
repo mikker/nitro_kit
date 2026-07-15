@@ -15,7 +15,7 @@ module Gallery
         render Section.new(
           slug: "#{entry.slug}-screen",
           title: entry.title,
-          description: "Block-composed #{entry.group.downcase} coverage across realistic application states."
+          description: "Block-composed #{entry_category.title.downcase} coverage across realistic application states."
         ) do
           render_example(
             slug: "#{entry.slug}-#{state}",
@@ -35,11 +35,8 @@ module Gallery
               }.compact
             ) do
               render NitroKit::Container.new(size: :xl, id: "gallery-#{entry.slug}-container") do
-                render NitroKit::VStack.new(
-                  gap: :lg,
-                  align: :stretch,
-                  id: "gallery-#{entry.slug}-stack"
-                ) do
+                render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch,
+                id: "gallery-#{entry.slug}-stack") do
                   render_page_header
                   render_state
                 end
@@ -72,7 +69,7 @@ module Gallery
                 candidate.humanize,
                 href: flow_path(state: candidate),
                 size: :sm,
-                variant: candidate == state ? :primary : :ghost,
+                variant: candidate == state ? :primary : :default,
                 aria: { current: candidate == state ? "page" : nil }
               )
             end
@@ -86,6 +83,10 @@ module Gallery
 
       def screen_title
         entry.title
+      end
+
+      def entry_category
+        Gallery::Catalog.category_for(entry)
       end
 
       def outcome_color(outcome)

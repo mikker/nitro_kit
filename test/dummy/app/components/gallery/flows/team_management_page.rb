@@ -33,7 +33,7 @@ module Gallery
               }.compact
             ) do
               render NitroKit::Container.new(size: :xl, id: "gallery-team-container") do
-                render NitroKit::VStack.new(gap: :lg, align: :stretch, id: "gallery-team-stack") do
+                render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch, id: "gallery-team-stack") do
                   turbo_frame_tag("gallery-team-management-frame") { render_screen }
                 end
               end
@@ -146,7 +146,6 @@ module Gallery
             id: "gallery-team-member-#{member.id}-change-role",
             href: entry_path(entry, state: "role-change"),
             size: :sm,
-            variant: :ghost,
             disabled: member.role == :owner
           )
           group.button(
@@ -345,7 +344,7 @@ module Gallery
               dialog.dialog(
                 title: "Remove Grace Hopper?",
                 description: "Grace will immediately lose access to every project in this workspace.",
-                open: true
+                nonmodal: true
               ) do
                 form_with(
                   model: action,
@@ -377,14 +376,13 @@ module Gallery
           zone.escape NitroKit::Button.new(
             "Keep team member",
             id: "gallery-team-remove-escape",
-            href: entry_path(entry, state: "members"),
-            variant: :ghost
+            href: entry_path(entry, state: "members")
           )
         end
       end
 
       def render_removed
-        render NitroKit::VStack.new(gap: :md, align: :stretch, id: "gallery-team-removed-stack") do
+        render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch, id: "gallery-team-removed-stack") do
           render NitroKit::Alert.new(id: "gallery-team-removed", variant: :success) do |alert|
             alert.icon(NitroKit::Icon.new(:circle_check, id: "gallery-team-removed-icon"))
             alert.title("Grace Hopper was removed")
@@ -395,7 +393,7 @@ module Gallery
       end
 
       def render_error
-        render NitroKit::VStack.new(gap: :md, align: :stretch, id: "gallery-team-error-stack") do
+        render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch, id: "gallery-team-error-stack") do
           render NitroKit::Alert.new(id: "gallery-team-error", variant: :error) do |alert|
             alert.icon(NitroKit::Icon.new(:circle_x, id: "gallery-team-error-icon"))
             alert.title("The team could not be updated")
@@ -409,8 +407,7 @@ module Gallery
         render NitroKit::Button.new(
           "Back to members",
           id: "gallery-team-footer-members",
-          href: entry_path(entry, state: "members"),
-          variant: :ghost
+          href: entry_path(entry, state: "members")
         )
       end
 

@@ -15,7 +15,7 @@ module Gallery
         example_section(
           "Placements",
           slug: "tooltip-placements",
-          description: "The description relationship is present on the focusable trigger before JavaScript runs."
+          description: "CSS exposes each description on hover and focus; a tiny controller only adds Escape dismissal."
         ) do
           example("Placement matrix", slug: "tooltip-placement-matrix", layout: :matrix) do
             NitroKit::Tooltip::PLACEMENTS.each do |placement|
@@ -87,7 +87,7 @@ module Gallery
                   id: "gallery-tooltip-rotate-key",
                   content: "Rotation immediately reveals a new secret once."
                 ) do |tooltip|
-                  tooltip.trigger("How rotation works", variant: :ghost)
+                  tooltip.trigger("How rotation works")
                 end
                 render NitroKit::Button.new(
                   "Rotate credential",
@@ -102,7 +102,7 @@ module Gallery
 
       def render_tip(id, content, placement: :top)
         render NitroKit::Tooltip.new(id:, content:, placement:) do |tooltip|
-          tooltip.trigger(placement.to_s.humanize, variant: :default)
+          tooltip.trigger(placement.to_s.humanize)
         end
       end
     end

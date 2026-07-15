@@ -92,7 +92,7 @@ class GalleryVerticalSliceTest < ActionDispatch::IntegrationTest
     end
     assert_select "#gallery-table-invoices [data-nk='badge'][data-color='success']"
     assert_select "#gallery-table-invoices [data-nk='badge'][data-color='warning']"
-    assert_select "#gallery-table-invoices a[data-nk='button'][data-variant='ghost']",
+    assert_select "#gallery-table-invoices a[data-nk='button'][data-variant='default']",
       count: Gallery::Data.invoices.size
     assert_select "#gallery-table-empty td[colspan='3']", text: /No API credentials/
   end
@@ -104,7 +104,7 @@ class GalleryVerticalSliceTest < ActionDispatch::IntegrationTest
       assert_select "[aria-labelledby='gallery-dialog-remove-member-title']"
       assert_select "[aria-describedby='gallery-dialog-remove-member-description']"
     end
-    assert_select "#gallery-dialog-open [data-slot='dialog-panel'][open][data-state='open']"
+    assert_select "#gallery-dialog-open [data-slot='dialog-panel'][open]"
     assert_select "#gallery-dialog-disabled [data-slot='dialog-trigger'][disabled]"
     assert_select "#gallery-dialog-invite form#gallery-dialog-invite-form" do
       assert_select "#gallery-dialog-invite-email-field[data-nk='field']"

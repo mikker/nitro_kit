@@ -1,30 +1,24 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  static targets = ["content"];
-  static values = { open: Boolean };
-
   disconnect() {
-    this.openValue = false;
-    this.element.dataset.state = "closed";
-    if (this.hasContentTarget) {
-      this.contentTarget.dataset.state = "closed";
-      this.contentTarget.hidden = true;
-    }
+    this.reset();
   }
 
-  open() {
-    this.openValue = true;
+  dismiss(event) {
+    event.preventDefault();
+    this.element.dataset.dismissed = "";
   }
 
-  close() {
-    this.openValue = false;
+  resetIfUninterested(event) {
+    if (event.relatedTarget && this.element.contains(event.relatedTarget))
+      return;
+    if (this.element.matches(":hover, :focus-within")) return;
+
+    this.reset();
   }
 
-  openValueChanged(open) {
-    const state = open ? "open" : "closed";
-    this.element.dataset.state = state;
-    this.contentTarget.dataset.state = state;
-    this.contentTarget.hidden = !open;
+  reset() {
+    delete this.element.dataset.dismissed;
   }
 }

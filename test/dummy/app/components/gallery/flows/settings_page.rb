@@ -35,7 +35,7 @@ module Gallery
               }.compact
             ) do
               render NitroKit::Container.new(size: :xl, id: "gallery-settings-container") do
-                render NitroKit::VStack.new(gap: :lg, align: :stretch, id: "gallery-settings-stack") do
+                render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch, id: "gallery-settings-stack") do
                   render NitroKit::SettingsLayout.new(id: "gallery-settings-layout") do |layout|
                     layout.navigation(label: "Settings sections") { render_settings_navigation }
                     layout.content(html: { id: "gallery-settings-content" }) { render_state }
@@ -57,7 +57,7 @@ module Gallery
               label,
               id: "gallery-settings-navigation-#{slug}",
               href: entry_path(entry, state: slug),
-              variant: setting_section == slug ? :primary : :ghost,
+              variant: setting_section == slug ? :primary : :default,
               aria: { current: setting_section == slug ? "page" : nil }
             )
           end
@@ -253,7 +253,6 @@ module Gallery
                       render NitroKit::Button.new(
                         index.zero? ? "Current session" : "Revoke",
                         id: "gallery-settings-session-#{index + 1}-action",
-                        variant: :ghost,
                         size: :sm,
                         disabled: disabled || index.zero?
                       )
@@ -428,7 +427,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-settings-integration-#{integration.id}") do |card|
           card.title(integration.name, level: 4)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Badge.new(
                 integration.status.to_s.humanize,
                 id: "gallery-settings-integration-#{integration.id}-status",
@@ -443,7 +442,7 @@ module Gallery
               integration.status == :available ? "Connect" : "Manage",
               id: "gallery-settings-integration-#{integration.id}-action",
               href: "#integration-#{integration.id}",
-              variant: integration.status == :action_required ? :primary : :ghost
+              variant: integration.status == :action_required ? :primary : :default
             )
           end
         end

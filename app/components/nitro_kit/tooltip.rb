@@ -26,8 +26,8 @@ module NitroKit
           data: {
             controller: "nk--tooltip",
             placement: @placement,
-            state: "closed",
-            nk__tooltip_open_value: "false"
+            dismissed: nil,
+            action: "pointerleave->nk--tooltip#resetIfUninterested focusout->nk--tooltip#resetIfUninterested"
           }
         },
         html:,
@@ -49,12 +49,7 @@ module NitroKit
             :content,
             attributes: {
               id: content_id,
-              role: "tooltip",
-              hidden: true,
-              data: {
-                state: "closed",
-                nk__tooltip_target: "content"
-              }
+              role: "tooltip"
             }
           )
         ) { plain(content) }
@@ -109,7 +104,7 @@ module NitroKit
         disabled: @trigger.disabled,
         id: trigger_id,
         html: @trigger.html,
-        aria: @trigger.aria.merge(describedby: content_id),
+        aria: with_description(@trigger.aria),
         data: owned_data(@trigger.data),
         desperately_need_a_class: @trigger.css_class
       )
@@ -126,14 +121,21 @@ module NitroKit
       app_action = action_key && data[action_key]
       data.except(action_key).merge(
         action: [
-          "pointerenter->nk--tooltip#open",
-          "pointerleave->nk--tooltip#close",
-          "focusin->nk--tooltip#open",
-          "focusout->nk--tooltip#close",
-          "keydown.esc->nk--tooltip#close",
+          "keydown.esc->nk--tooltip#dismiss",
           app_action
         ].compact.join(" ")
       )
+    end
+
+    def with_description(aria)
+      unless aria.is_a?(Hash)
+        raise ArgumentError, "aria must be a Hash"
+      end
+
+      key = aria.keys.find { |candidate| candidate.to_s.downcase.delete("_-") == "describedby" }
+      descriptions = key ? aria.fetch(key).to_s.split : []
+
+      aria.except(key).merge(describedby: (descriptions + [ content_id ]).uniq.join(" "))
     end
 
     def trigger_id

@@ -21,7 +21,7 @@ module Gallery
               id: "gallery-page-header-complete"
             ) do |header|
               header.actions NitroKit::ButtonGroup.new(label: "Member actions") do |actions|
-                actions.button("Export", href: "#export", variant: :ghost)
+                actions.button("Export", href: "#export")
                 actions.button("Invite teammate", href: "#invite", variant: :primary)
               end
             end
@@ -35,7 +35,7 @@ module Gallery
               id: "gallery-page-header-long"
             ) do |header|
               header.actions NitroKit::ButtonGroup.new(label: "Compliance actions") do |actions|
-                actions.button("Download current report", href: "#download", variant: :ghost)
+                actions.button("Download current report", href: "#download")
                 actions.button("Start quarterly review", href: "#review", variant: :primary)
               end
             end
@@ -62,7 +62,7 @@ module Gallery
       end
 
       def api_note
-        "title: is required. eyebrow: and description: are optional. actions accepts at most one NitroKit::ButtonGroup."
+        "Supply title, eyebrow, and description through constructor text or matching compound methods; title is required. actions accepts at most one NitroKit::ButtonGroup."
       end
     end
   end

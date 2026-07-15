@@ -43,7 +43,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-email-verification-card") do |card|
           card.title(screen_title, level: 4)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render_status
               render NitroKit::Badge.new(
                 badge_label,
@@ -81,8 +81,7 @@ module Gallery
           render NitroKit::Button.new(
             "Contact support",
             id: "gallery-email-verification-support",
-            href: "mailto:support@example.test",
-            variant: :default
+            href: "mailto:support@example.test"
           )
         else
           verification = Gallery::AuthFormExamples.email_verification(state == "expired" ? :expired : :valid)

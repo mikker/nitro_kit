@@ -65,30 +65,31 @@ module NitroKit
     def view_template
       div(**root_attributes) do
         render_control
-        render_hidden_field
+        render_native_select
         render_listbox
+        render_status
       end
     end
 
     private
 
     def render_control
-      span(**slot_attributes(:control)) do
+      span(**slot_attributes(:control, attributes: { hidden: true }, data: { nk__combobox_target: "control" })) do
         render_in_slot(
           Input.new(
             type: :text,
             id: input_id,
-            value: @selected_option&.label,
+            value: @selected_option&.label&.to_s,
             placeholder: @placeholder,
             disabled: @disabled,
-            required: @required,
             autocomplete: @autocomplete,
             html: { role: "combobox" },
             aria: {
               label:,
               autocomplete: "list",
               controls: listbox_id,
-              expanded: false
+              expanded: false,
+              required: @required
             },
             data: {
               nk__combobox_target: "input",
@@ -123,19 +124,22 @@ module NitroKit
       end
     end
 
-    def render_hidden_field
-      input(
-        **slot_attributes(
-          :value,
-          attributes: {
-            id: value_id,
-            type: "hidden",
-            name:,
-            value: @selected_option&.value,
-            disabled: @disabled,
-            data: { nk__combobox_target: "value" }
-          }
-        )
+    def render_native_select
+      render_in_slot(
+        Select.new(
+          options:,
+          id: value_id,
+          name:,
+          value: @selected_option&.value,
+          include_blank: @placeholder || true,
+          disabled: @disabled,
+          required: @required,
+          autocomplete: @autocomplete,
+          data: { nk__combobox_target: "native" },
+          control_aria: { label: },
+          control_data: { nk__combobox_target: "value" }
+        ),
+        :native
       )
     end
 
@@ -181,7 +185,20 @@ module NitroKit
             }
           }
         )
-      ) { plain(option.label) }
+      ) { plain(option.label.to_s) }
+    end
+
+    def render_status
+      div(
+        **slot_attributes(
+          :status,
+          attributes: {
+            role: "status",
+            aria: { live: "polite", atomic: "true" },
+            data: { nk__combobox_target: "status" }
+          }
+        )
+      )
     end
 
     def typed_options(value)

@@ -15,7 +15,7 @@ module Gallery
         example_section(
           "Submission states",
           slug: "checkbox-states",
-          description: "Checked and unchecked values remain explicit and each labelled control has deterministic identity."
+          description: "Checked, unchecked, and native indeterminate state stay synchronized as the control changes."
         ) do
           example("Boolean states", slug: "checkbox-boolean-states", layout: :matrix) do
             sample("Unchecked", slug: "unchecked") do
@@ -64,7 +64,7 @@ module Gallery
         example_section(
           "Label boundaries",
           slug: "checkbox-labels",
-          description: "Standalone controls, block labels, and long agreement text use the same native checkbox."
+          description: "Standalone controls need an explicit accessible name; block labels and long agreement text remain native."
         ) do
           example("Label pressure", slug: "checkbox-label-pressure", layout: :matrix) do
             sample("Standalone", slug: "standalone") do

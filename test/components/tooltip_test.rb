@@ -11,21 +11,21 @@ class TooltipComponentTest < ActiveSupport::TestCase
     assert_equal "help", node["id"]
     assert_equal "tooltip", node["data-nk"]
     assert_equal "top", node["data-placement"]
-    assert_equal "closed", node["data-state"]
+    assert_nil node["data-state"]
     assert_equal "nk--tooltip", node["data-controller"]
-    assert_equal "false", node["data-nk--tooltip-open-value"]
+    assert_includes node["data-action"], "pointerleave->nk--tooltip#resetIfUninterested"
+    assert_includes node["data-action"], "focusout->nk--tooltip#resetIfUninterested"
 
     assert_equal "button", trigger.name
     assert_equal "help-trigger", trigger["id"]
     assert_equal "help-content", trigger["aria-describedby"]
-    assert_includes trigger["data-action"], "focusin->nk--tooltip#open"
-    assert_includes trigger["data-action"], "pointerenter->nk--tooltip#open"
+    assert_includes trigger["data-action"], "keydown.esc->nk--tooltip#dismiss"
     assert_includes trigger["data-action"], "click->analytics#track"
 
     assert_equal "help-content", content["id"]
     assert_equal "tooltip", content["role"]
-    assert_equal "closed", content["data-state"]
-    assert content.key?("hidden")
+    assert_nil content["data-state"]
+    refute content.key?("hidden")
     assert_equal "Helpful context", content.text
     assert_empty node.css("[class], [style]")
   end
@@ -33,12 +33,21 @@ class TooltipComponentTest < ActiveSupport::TestCase
   test "supports every placement and an owned button block" do
     NitroKit::Tooltip::PLACEMENTS.each do |placement|
       node = render_tooltip(NitroKit::Tooltip.new(id: "tip-#{placement}", content: "Context", placement:)) do |tip|
-        tip.trigger(variant: :ghost) { "Details" }
+        tip.trigger { "Details" }
       end
 
       assert_equal placement.to_s, node["data-placement"]
       assert_equal "Details", node.at_css("[data-slot='button-label']").text
     end
+  end
+
+  test "appends its content to existing trigger descriptions" do
+    node = render_tooltip do |tooltip|
+      tooltip.trigger("Explain", aria: { describedby: "account-help status-help" })
+    end
+
+    assert_equal "account-help status-help help-content",
+      node.at_css("[data-slot='tooltip-trigger']")["aria-describedby"]
   end
 
   test "requires valid identity content and exactly one supported trigger" do
@@ -90,6 +99,26 @@ class TooltipComponentTest < ActiveSupport::TestCase
     assert_equal "tooltip-hook", node["class"]
     assert_equal "class", node["data-nk-escape"]
     assert_raises(ArgumentError) { NitroKit::Tooltip.new(id: "tip", content: "Context", html: { style: "x" }) }
+    assert_raises(ArgumentError) { NitroKit::Tooltip.new(id: "tip", content: "Context", data: { dismissed: true }) }
+  end
+
+  test "uses CSS for hover and focus while JavaScript only owns Escape dismissal" do
+    source = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/tooltip.css").read
+    controller = NitroKit::Engine.root.join("app/javascript/controllers/nk/tooltip_controller.js").read
+
+    assert_includes source, ":focus-within"
+    assert_includes source, "@media (hover: hover)"
+    assert_includes source, ":not([data-dismissed])"
+    assert_includes source, "visibility: hidden"
+    assert_equal 5, source.scan("::before").size
+    assert_includes source, "inset-block-start: 100%"
+    assert_includes source, "inset-inline-end: 100%"
+    assert_includes source, "inset-block-end: 100%"
+    assert_includes source, "inset-inline-start: 100%"
+    assert_includes controller, "dismiss(event)"
+    assert_includes controller, "event.preventDefault()"
+    refute_includes controller, "hidden ="
+    refute_includes controller, "openValue"
   end
 
   private

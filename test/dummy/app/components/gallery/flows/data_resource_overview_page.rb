@@ -114,8 +114,7 @@ module Gallery
                 toolbar.leading do
                   render NitroKit::Button.new(
                     "Cancel selection",
-                    href: flow_path(state: "index"),
-                    variant: :ghost
+                    href: flow_path(state: "index")
                   )
                 end
                 toolbar.trailing do

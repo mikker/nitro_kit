@@ -94,7 +94,7 @@ module Gallery
       end
 
       def api_note
-        "form requires exactly one block that renders a complete form. status accepts at most one NitroKit::Alert before it."
+        "Supply the required title and optional description through constructor text or matching compound methods. form requires exactly one block that renders a complete form. status accepts at most one NitroKit::Alert before it."
       end
     end
   end

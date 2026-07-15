@@ -23,7 +23,7 @@ module Gallery
           header.actions(
             NitroKit::ButtonGroup.new(id: "gallery-uploads-header-actions", label: "Upload navigation")
           ) do |actions|
-            actions.button("Import history", href: "#import-history", variant: :ghost)
+            actions.button("Import history", href: "#import-history")
             actions.button("Upload files", href: entry_path(entry, state: "empty"), variant: :primary)
           end
         end

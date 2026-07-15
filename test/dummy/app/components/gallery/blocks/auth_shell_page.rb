@@ -159,7 +159,7 @@ module Gallery
           end
           card.divider
           card.footer do
-            render NitroKit::Button.new("Forgot your password?", href: "#password-reset", variant: :ghost)
+            render NitroKit::Button.new("Forgot your password?", href: "#password-reset")
           end
         end
       end
@@ -258,7 +258,7 @@ module Gallery
           end
           card.divider
           card.footer do
-            render NitroKit::Button.new("Use a different account", href: "#switch-account", variant: :ghost)
+            render NitroKit::Button.new("Use a different account", href: "#switch-account")
           end
         end
       end
@@ -275,7 +275,7 @@ module Gallery
           card.divider
           card.footer do
             render NitroKit::Button.new("Request another link", href: "#request", variant: :primary)
-            render NitroKit::Button.new("Back to sign in", href: "#sign-in", variant: :ghost)
+            render NitroKit::Button.new("Back to sign in", href: "#sign-in")
           end
         end
       end

@@ -17,7 +17,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
     FLOW_STATES.each do |slug, states|
       entry = Gallery::Catalog.fetch!(kind: :flow, slug:)
       assert_equal states, entry.states
-      assert_equal %w[container v-stack button], entry.expected_roots
+      assert_equal %w[container flex button], entry.expected_roots
 
       states.each do |state|
         assert_equal "/gallery/flows/#{slug}/#{state}", Gallery::Catalog.path_for(
@@ -46,7 +46,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
         frame_id = slug == "team-management" ? "gallery-team-management-frame" : "gallery-api-credentials-frame"
         assert_select "[data-gallery='flow-surface']" do
           assert_select "##{container_id}[data-nk='container'][data-size='xl']" do
-            assert_select "##{stack_id}[data-nk='v-stack'][data-gap='lg'][data-align='stretch']" do
+            assert_select "##{stack_id}[data-nk='flex'][data-dir='col'][data-gap='6'][data-align='stretch']" do
               assert_select "> turbo-frame##{frame_id}", count: 1
             end
           end
@@ -56,7 +56,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
             "[data-gallery='flow-surface'] [data-nk='form-section'][id], " \
             "[data-gallery='flow-surface'] [data-nk='data-section'][id], " \
             "[data-gallery='flow-surface'] [data-nk='danger-zone'][id], " \
-            "[data-gallery='flow-surface'] turbo-frame > [data-nk='v-stack'][id]",
+            "[data-gallery='flow-surface'] turbo-frame > [data-nk='flex'][data-dir='col'][id]",
           minimum: 1
         )
         assert_select "[data-gallery='flow-surface'] [data-nk='button']", minimum: 1
@@ -156,9 +156,9 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
     get_flow("team-management", "remove-confirmation")
     assert_select "#gallery-team-remove-zone[data-nk='danger-zone']" do
       assert_select "> [data-slot='danger-zone-confirmation'] > #gallery-team-remove-dialog[data-nk='dialog']"
-      assert_select "> #gallery-team-remove-escape[data-slot='danger-zone-escape'][data-variant='ghost']"
+      assert_select "> #gallery-team-remove-escape[data-slot='danger-zone-escape'][data-variant='default']"
     end
-    assert_select "#gallery-team-remove-dialog[data-controller='nk--dialog'] dialog[open]" \
+    assert_select "#gallery-team-remove-dialog[data-nk='dialog']:not([data-controller]) dialog[open]" \
       "[aria-labelledby='gallery-team-remove-dialog-title']" \
       "[aria-describedby='gallery-team-remove-dialog-description']"
     assert_select "#gallery-team-remove-dialog-title", text: "Remove Grace Hopper?"
@@ -243,7 +243,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
     get_flow("api-credentials", "revoke-confirmation")
     assert_select "#gallery-api-credential-revoke-zone[data-nk='danger-zone']" do
       assert_select "> [data-slot='danger-zone-confirmation'] > #gallery-api-credential-revoke-dialog[data-nk='dialog']"
-      assert_select "> #gallery-api-credential-revoke-escape[data-slot='danger-zone-escape'][data-variant='ghost']"
+      assert_select "> #gallery-api-credential-revoke-escape[data-slot='danger-zone-escape'][data-variant='default']"
     end
     assert_select "#gallery-api-credential-revoke-dialog dialog[open]" \
       "[aria-labelledby='gallery-api-credential-revoke-dialog-title']" \

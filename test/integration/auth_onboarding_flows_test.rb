@@ -43,7 +43,7 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
         assert_select "main[data-nk='auth-shell'][data-gallery='flow-surface']" \
           "[data-gallery-flow='#{slug}']", count: 1 do
           assert_select "> [data-nk='container'][data-size='md'] > " \
-            "[data-nk='v-stack'][data-gap='lg'][data-align='stretch'] > turbo-frame", count: 1
+            "[data-nk='flex'][data-dir='col'][data-gap='6'][data-align='stretch'] > turbo-frame", count: 1
           assert_select "turbo-frame > [data-nk='card'][id]", count: 1
         end
         assert_select "[data-gallery='flow-surface'] [data-nk='card'][id]", minimum: 1

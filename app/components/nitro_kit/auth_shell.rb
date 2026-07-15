@@ -24,7 +24,7 @@ module NitroKit
 
       main(**root_attributes) do
         render NitroKit::Container.new(size: :md) do
-          render NitroKit::VStack.new(gap: :lg, align: :stretch) do
+          render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch) do
             yield
           end
         end

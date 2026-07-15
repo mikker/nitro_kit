@@ -1,35 +1,58 @@
 require "test_helper"
 
 class Gallery::CatalogTest < ActiveSupport::TestCase
-  test "catalog starts with an explicit home entry and grouped component pages" do
+  test "catalog starts with home and exposes one nested navigation tree" do
     assert_equal "home", Gallery::Catalog.home.slug
     assert_equal Gallery::Home, Gallery::Catalog.home.page
-    assert_equal %i[component block flow], Gallery::Catalog.navigation_groups.map(&:kind)
+    assert_equal %i[component block flow], Gallery::Catalog.collections.map(&:kind)
+    assert_equal [ "all" ], Gallery::Catalog.collection!(:component).categories.map(&:slug)
+    assert_nil Gallery::Catalog.collection!(:component).categories.first.title
+    assert_equal %w[shells navigation sections], Gallery::Catalog.collection!(:block).categories.map(&:slug)
+    assert_equal %w[
+      access-and-onboarding workspace-and-organization billing-and-commerce data-and-operations
+      product-and-support marketing complete-applications
+    ], Gallery::Catalog.collection!(:flow).categories.map(&:slug)
     assert_equal(
       %w[
-        button icon button-group pagination card input field label textarea select checkbox checkbox-group radio-button
-        radio-button-group switch field-group fieldset table dialog dropdown tooltip combobox datepicker toast alert avatar
-        avatar-stack badge accordion tabs v-stack h-stack grid container
+        accordion alert appearance-picker app-navigation avatar avatar-stack badge button button-group card checkbox checkbox-group
+        combobox container datepicker details-table dialog dropdown dropzone field field-group fieldset flex grid icon input label
+        pagination progressive-image radio-button radio-button-group select sortable-table switch table tabs textarea toast tooltip
       ],
       Gallery::Catalog.entries(kind: :component).map(&:slug)
     )
     assert_equal(
       %w[
-        auth-shell settings-layout toolbar pagination-bar page-header stat-grid data-section form-section danger-zone
+        auth-shell app-shell settings-layout toolbar pagination-bar page-header stat-grid data-section form-section danger-zone
         empty-state
       ],
       Gallery::Catalog.entries(kind: :block).map(&:slug)
     )
     assert_equal(
       %w[
-        sign-in password-reset email-verification invitation-acceptance account-creation onboarding dashboard settings
-        billing users team-management api-credentials organization-overview organization-settings team-activity team-member
-        data-resource-overview data-resource-activity data-resource-settings checkout account-security onboarding-branches
-        api-webhooks integration-management uploads activity-audit changelog help-center system-status landing pricing features
-        contact checkout-result
+        sign-in password-reset email-verification invitation-acceptance account-creation account-security onboarding
+        onboarding-branches dashboard settings users team-management api-credentials organization-overview organization-settings
+        team-activity team-member billing checkout checkout-result data-resource-overview data-resource-activity
+        data-resource-settings api-webhooks integration-management uploads activity-audit changelog help-center system-status
+        landing pricing features contact application-sidebar application-topbar application-hybrid
       ],
       Gallery::Catalog.entries(kind: :flow).map(&:slug)
     )
+  end
+
+  test "collections partition every entry once and reject typo category names" do
+    nested_entries = Gallery::Catalog.collections.flat_map(&:entries)
+
+    assert_equal Gallery::Catalog.entries.drop(1), nested_entries
+    assert_equal nested_entries.uniq, nested_entries
+    assert_equal "Sections", Gallery::Catalog.category!(kind: :block, slug: "sections").title
+    landing = Gallery::Catalog.fetch!(kind: :flow, slug: "landing")
+    assert_equal "Marketing", Gallery::Catalog.category_for(landing).title
+    assert_raises(Gallery::Catalog::CategoryNotFound) do
+      Gallery::Catalog.category!(kind: :flow, slug: "marketng")
+    end
+    assert_raises(Gallery::Catalog::CollectionNotFound) do
+      Gallery::Catalog.collection!(:section)
+    end
   end
 
   test "component entries declare their route contract explicitly" do
@@ -49,10 +72,14 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
     end
   end
 
-  test "flow entries declare deterministic states and page contracts" do
+  test "flow entries declare deterministic states or one complete application showcase" do
     Gallery::Catalog.entries(kind: :flow).each do |flow|
       assert flow.page < Gallery::Page
-      assert_predicate flow.states, :any?
+      if flow.page < Gallery::Flows::ApplicationPage
+        assert_empty flow.states
+      else
+        assert_predicate flow.states, :any?
+      end
       assert_equal flow.states.uniq, flow.states
       assert flow.states.all? { |state| state.match?(/\A[a-z0-9-]+\z/) }
       assert_predicate flow.expected_roots, :any?
@@ -94,7 +121,6 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
       kind:,
       slug:,
       title: slug.humanize,
-      group: kind.to_s.humanize,
       description: nil,
       page: Gallery::Home,
       states:,

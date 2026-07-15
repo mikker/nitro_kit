@@ -16,7 +16,7 @@ module Gallery
       def render_member_summary
         render NitroKit::Card.new(id: "gallery-team-member-summary") do |card|
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Toolbar.new(id: "gallery-team-member-identity") do |toolbar|
                 toolbar.leading do
                   render NitroKit::Avatar.new(

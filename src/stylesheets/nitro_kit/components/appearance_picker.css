@@ -1,0 +1,54 @@
+@layer nitro-kit.base {
+  :where([data-nk="appearance-picker"]) {
+    min-inline-size: 0;
+    padding: 0;
+    color: var(--nk-color-foreground);
+    border: 0;
+  }
+
+  :where(
+      [data-nk="appearance-picker"] > [data-slot="appearance-picker-legend"]
+    ) {
+    padding: 0;
+    font-size: var(--nk-text-sm);
+    font-weight: var(--nk-font-weight-semibold);
+  }
+
+  :where(
+      [data-nk="appearance-picker"] > [data-slot="appearance-picker-options"]
+    ) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--nk-space) * 3);
+    margin-block-start: calc(var(--nk-space) * 2);
+  }
+
+  :where([data-nk="appearance-picker"] [data-slot="appearance-picker-option"]) {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--nk-control-height-md);
+    gap: calc(var(--nk-space) * 2);
+    font-size: var(--nk-text-sm);
+    cursor: pointer;
+  }
+
+  :where(
+      [data-nk="appearance-picker"] [data-slot="appearance-picker-control"]
+    ) {
+    inline-size: 1.125rem;
+    block-size: 1.125rem;
+    margin: 0;
+    accent-color: var(--nk-color-primary);
+    cursor: pointer;
+  }
+}
+
+@layer nitro-kit.state {
+  :where(
+      [data-nk="appearance-picker"]
+        [data-slot="appearance-picker-control"]:focus-visible
+    ) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: var(--nk-focus-offset);
+  }
+}

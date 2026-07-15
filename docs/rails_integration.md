@@ -14,27 +14,23 @@ gem "nitro_kit", "2.0.0.pre.1"
 bundle install
 ```
 
-Load the static stylesheet through the Rails asset pipeline:
+Load the static stylesheet before application styles through the Rails asset pipeline:
 
 ```erb
-<%= stylesheet_link_tag "nitro_kit", "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "nitro_kit", "application", "data-turbo-track": "reload" %>
 ```
 
-Nitro Kit does not require Tailwind. A Tailwind CSS v4 application may load `nitro_kit-tailwind-v4` before Nitro Kit and its compiled Tailwind stylesheet; the adapter establishes cascade order and maps Nitro theme tokens to common Tailwind theme variables.
+Nitro Kit does not require Tailwind. A Tailwind CSS v4 application loads `nitro_kit-tailwind-v4`, Nitro Kit, compiled Tailwind, and application styles in that order. The adapter establishes cascade order and maps Nitro theme tokens to common Tailwind theme variables.
+
+Keep application token overrides after Nitro Kit. The [customization guide](customization.md) documents the exact load order, every supported token, scoped and appearance-specific overrides, the gallery wizard, and the optional Tailwind adapter.
 
 There is no install generator and no source-copy step.
 
 ## Stimulus and importmap
 
-Interactive components use seven gem-owned Stimulus controllers:
+Enhanced components use gem-owned Stimulus controllers, including `nk--app-shell`, `nk--appearance`, `nk--checkable`, `nk--combobox`, `nk--dropdown`, `nk--dropzone`, `nk--progressive-image`, `nk--tabs`, `nk--toast`, and `nk--tooltip`.
 
-- `nk--accordion`
-- `nk--combobox`
-- `nk--dialog`
-- `nk--dropdown`
-- `nk--tabs`
-- `nk--toast`
-- `nk--tooltip`
+Accordion and Dialog are controller-free: native `details` grouping and declarative `command`/`commandfor` own their complete interaction. Dropdown uses native Popover as its source of truth and adds only menu keyboard focus; Tooltip uses CSS for hover/focus and JavaScript only for Escape dismissal. Nitro does not promise dialog light dismiss.
 
 When `importmap-rails` is present, the engine adds its importmap and asset paths automatically. The application must still install Stimulus and provide the normal controller loader:
 
@@ -45,9 +41,82 @@ import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading";
 eagerLoadControllersFrom("controllers", application);
 ```
 
-Nitro Kit packages no third-party JavaScript. Datepicker and Switch use native inputs and need no controllers.
+Nitro Kit packages no third-party JavaScript. Accordion, Datepicker, Dialog, and Switch use native browser behavior and need no controllers.
 
 The engine deliberately boots when importmap is absent. In that configuration, Ruby and CSS remain available, but automatic JavaScript registration does not: a bundler-based application must expose and register the controller modules itself. This prerelease does not ship a JavaScript-package entrypoint.
+
+## Appearance and content security policy
+
+Render the non-visual bootstrap in the document `head` before every stylesheet link. Its fixed script body restores the validated `light`, `dark`, or `system` preference before CSS-visible paint. The optional picker can appear zero, one, or many times; every picker reflects the same document preference.
+
+```ruby
+class ApplicationLayout < Phlex::HTML
+  include Phlex::Rails::Layout
+  include Phlex::Rails::Helpers::ContentSecurityPolicyNonce
+
+  def view_template
+    doctype
+    html(lang: "en") do
+      head do
+        render NitroKit::AppearanceBootstrap.new(
+          default: :system,
+          nonce: content_security_policy_nonce
+        )
+        stylesheet_link_tag("nitro_kit", data: { turbo_track: "reload" })
+      end
+
+      body do
+        render NitroKit::AppearancePicker.new(
+          id: "application-appearance",
+          label: "Appearance"
+        )
+        yield
+      end
+    end
+  end
+end
+```
+
+The runtime stores the preference under `nitro-kit-appearance`. It writes `data-theme-preference="light|dark|system"` and the resolved `data-theme="light|dark"` on the document root. System mode follows live operating-system changes; explicit choices do not. Storage denial falls back to `default:` and does not prevent in-document changes. Nitro does not synchronize this browser preference to an application user record.
+
+For nonce-based policies, pass Rails' `content_security_policy_nonce` as above and include the generated nonce in the application's `script-src` policy. For hash-based policies, allow Nitro's exact fixed script body with:
+
+```text
+script-src 'self' 'sha256-Vcime4euWSeYtHSfjYjqz/XhRyzMcLpn6Ip2LlaHleY='
+```
+
+The same value is available as `NitroKit::AppearanceBootstrap::CSP_HASH`. The hash covers only the fixed inline body; `default:` lives in a data attribute and a nonce lives on the script element, so neither changes it. Recheck the constant when upgrading Nitro Kit because an intentional runtime change produces a new hash.
+
+If the bootstrap is blocked or omitted, Nitro's token CSS follows `prefers-color-scheme`. An explicit `[data-theme="light"]` or `[data-theme="dark"]` on a document or containing theme root overrides that fallback. `data-theme` always names the resolved appearance; system preference is recorded separately in `data-theme-preference`. See [Customizing Nitro Kit](customization.md#global-overrides) for matching light, dark, system-fallback, and scoped CSS recipes.
+
+## Application shells
+
+`AppShell` composes directly in Phlex and keeps Rails route policy in the application. It requires one navigation and one main region; brand and topbar regions are optional:
+
+```ruby
+render NitroKit::AppShell.new(id: "workspace", layout: :sidebar) do |shell|
+  shell.brand { strong { "Northstar" } }
+
+  shell.navigation do
+    render NitroKit::AppNavigation.new(label: "Primary navigation") do |navigation|
+      navigation.body do
+        navigation.item("Overview", href: root_path, icon: :house, current: true)
+        navigation.item("Projects", href: projects_path, icon: :folder)
+        navigation.spacer
+        navigation.item("Settings", href: settings_path, icon: :settings)
+      end
+    end
+  end
+
+  shell.topbar do
+    render NitroKit::Button.new("New project", href: new_project_path, variant: :primary)
+  end
+
+  shell.main { render Workspace::Dashboard.new }
+end
+```
+
+The same declarations work with `layout: :topbar` and `layout: :hybrid`. Nitro owns responsive disclosure and focus behavior; the application owns destinations, authorization, current-route selection, and page content. The [customization guide](customization.md#application-shells) covers shell tokens, composition boundaries, and the three complete gallery applications.
 
 ## Model-backed forms
 
@@ -115,9 +184,31 @@ Captured select blocks stay inside the native `<select>`. Explicit `selected:` v
 The complete builder surface includes:
 
 - `field`, `fieldset`, and `group`.
+- `dropzone` for native file selection with optional Active Storage direct uploads.
 - `select`, `radio_button`, `check_box`/`checkbox`, and `hidden_field`.
 - `submit` and `button`.
 - Rails-shaped color, date, datetime, email, file, month, number, password, phone/telephone, range, search, text, textarea, time, URL, and week fields.
+
+### File drops and direct uploads
+
+`form.dropzone` derives the native input ID and Rails parameter name, marks the form as multipart, and accepts the same explicit upload contract as `NitroKit::Dropzone`:
+
+```ruby
+form.dropzone(
+  :attachments,
+  title: "Upload evidence",
+  description: "Up to three PDF files, each no larger than 5 MB.",
+  multiple: true,
+  accept: "application/pdf",
+  max_files: 3,
+  max_bytes: 5 * 1024 * 1024,
+  required: true
+)
+```
+
+The labelled `<input type="file">` remains the source of truth. Without JavaScript it submits ordinary uploaded files. With the controller connected, selection and dropping add removable previews, enforce the declared count, byte, and type constraints, and announce upload and error state. Set `direct_upload: false` to keep the selected `File` objects on that input for the normal multipart request.
+
+The default `direct_upload: true` uses Rails' public `DirectUpload` client. Nitro Kit pins `@rails/activestorage` for importmap applications; bundler-based applications must make that module available alongside the Nitro controller. The host application must install Active Storage's tables, configure a service, and expose the standard `rails_direct_uploads_path` route. Successful uploads submit signed blob IDs under the same Rails parameter name. Removing or replacing a file removes its signed ID, and the form's submit controls remain unavailable while uploads are active.
 
 ## Validation responses
 

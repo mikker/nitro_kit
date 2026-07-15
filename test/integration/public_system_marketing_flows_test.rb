@@ -21,13 +21,13 @@ class PublicSystemMarketingFlowsTest < ActionDispatch::IntegrationTest
 
   test "catalog appends exact public system marketing and checkout-result routes" do
     public_slugs = Gallery::Catalog.entries(kind: :flow).map(&:slug).select { |slug| FLOW_STATES.key?(slug) }
-    assert_equal FLOW_STATES.keys, public_slugs
+    assert_equal FLOW_STATES.keys.sort, public_slugs.sort
 
     FLOW_STATES.each do |slug, states|
       entry = Gallery::Catalog.fetch!(kind: :flow, slug:)
 
       assert_equal states, entry.states
-      assert_equal %w[page-header container v-stack button-group button], entry.expected_roots
+      assert_equal %w[page-header container flex button-group button], entry.expected_roots
       states.each do |state|
         assert_equal "/gallery/flows/#{slug}/#{state}", Gallery::Catalog.path_for(
           entry,
@@ -50,7 +50,7 @@ class PublicSystemMarketingFlowsTest < ActionDispatch::IntegrationTest
           assert_select "html[data-theme='#{theme}']"
           assert_select "div[data-gallery='page'][data-gallery-page='#{slug}'][data-gallery-state='#{state}']"
           assert_select "[data-gallery-flow='#{slug}'][data-gallery-flow-state='#{state}']" do
-            assert_select "> [data-nk='container'] > [data-nk='v-stack'][data-gap='lg']" do
+            assert_select "> [data-nk='container'] > [data-nk='flex'][data-dir='col'][data-gap='6']" do
               assert_select "> [data-nk='page-header']", count: 1
             end
           end

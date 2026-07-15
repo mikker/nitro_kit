@@ -63,7 +63,7 @@ module Gallery
             sample("One surface", slug: "one") do
               render NitroKit::SettingsLayout.new(id: "gallery-settings-layout-one") do |layout|
                 layout.navigation(label: "Account settings") do
-                  render NitroKit::Button.new("Profile", href: "#profile", variant: :ghost)
+                  render NitroKit::Button.new("Profile", href: "#profile")
                 end
                 layout.content do
                   render NitroKit::Alert.new(id: "gallery-settings-layout-one-alert") do |alert|
@@ -79,7 +79,7 @@ module Gallery
                   render_navigation("dense", current: :security)
                 end
                 layout.content do
-                  render NitroKit::VStack.new(gap: :sm, align: :stretch) do
+                  render NitroKit::Flex.new(dir: :col, gap: 2, align: :stretch) do
                     6.times do |index|
                       render NitroKit::Card.new(id: "gallery-settings-layout-many-#{index + 1}") do |card|
                         card.body("Policy section #{index + 1}")
@@ -112,8 +112,8 @@ module Gallery
                     variant: :primary,
                     aria: { current: "page" }
                   )
-                  group.button("Credential rotation and browser session policy", href: "#security", variant: :ghost)
-                  group.button("Deployment notification delivery preferences", href: "#notifications", variant: :ghost)
+                  group.button("Credential rotation and browser session policy", href: "#security")
+                  group.button("Deployment notification delivery preferences", href: "#notifications")
                 end
               end
               layout.content do
@@ -140,7 +140,7 @@ module Gallery
                 render_navigation("audit", current: :activity)
               end
               layout.content do
-                render NitroKit::VStack.new(gap: :md, align: :stretch) do
+                render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
                   render NitroKit::Toolbar.new(id: "gallery-settings-layout-audit-toolbar") do |toolbar|
                     toolbar.leading { h3 { "Audit retention" } }
                     toolbar.trailing do
@@ -176,7 +176,7 @@ module Gallery
             group.button(
               destination.to_s.humanize,
               href: "##{destination}",
-              variant: destination == current ? :primary : :ghost,
+              variant: destination == current ? :primary : :default,
               aria: { current: destination == current ? "page" : nil }
             )
           end

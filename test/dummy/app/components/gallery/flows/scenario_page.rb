@@ -49,7 +49,7 @@ module Gallery
 
       def workspace_surface(size: :xl, &content)
         render NitroKit::Container.new(size:) do
-          render NitroKit::VStack.new(gap: :lg, align: :stretch), &content
+          render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch), &content
         end
       end
 

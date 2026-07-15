@@ -1,9 +1,33 @@
 @layer nitro-kit.base {
   :where([data-nk="button"]) {
-    --_nk-button-background: var(--nk-color-surface);
-    --_nk-button-foreground: var(--nk-color-foreground);
-    --_nk-button-border: var(--nk-color-border);
-    --_nk-button-hover-background: var(--nk-color-surface-hover);
+    --_nk-button-height: var(--nk-control-height-md);
+    --_nk-button-padding: calc(var(--nk-space) * 4);
+    --_nk-button-icon-padding: calc(var(--nk-space) * 3);
+    --_nk-button-radius: var(--nk-radius-lg);
+    --_nk-button-font-size: var(--nk-text-sm);
+    --_nk-button-line-height: 1.25rem;
+    --_nk-button-background: light-dark(
+      oklch(1 0 0),
+      oklch(0.37 0.013 285.805)
+    );
+    --_nk-button-hover-background: light-dark(
+      oklch(0.985 0 0),
+      oklch(0.442 0.017 285.786 / 0.75)
+    );
+    --_nk-button-foreground: light-dark(
+      oklch(0.274 0.006 286.033),
+      oklch(1 0 0)
+    );
+    --_nk-button-border-width: var(--nk-border-width);
+    --_nk-button-border: light-dark(
+      oklch(0.92 0.004 286.32),
+      oklch(0.442 0.017 285.786)
+    );
+    --_nk-button-border-bottom: light-dark(
+      oklch(0.871 0.006 286.286 / 0.8),
+      oklch(0.442 0.017 285.786)
+    );
+    --_nk-button-shadow: 0 1px 2px 0 oklch(0 0 0 / 0.05);
 
     position: relative;
     display: inline-flex;
@@ -11,26 +35,28 @@
     align-items: center;
     justify-content: center;
     max-inline-size: 100%;
-    min-block-size: var(--nk-control-height-md);
+    block-size: var(--_nk-button-height);
     gap: calc(var(--nk-space) * 2);
-    padding-inline: calc(var(--nk-space) * 4);
+    padding-inline: var(--_nk-button-padding);
     color: var(--_nk-button-foreground);
-    font-size: var(--nk-text-base);
+    font-size: var(--_nk-button-font-size);
     font-weight: var(--nk-font-weight-medium);
-    line-height: 1;
+    line-height: var(--_nk-button-line-height);
     text-align: center;
     text-decoration: none;
     white-space: nowrap;
-    cursor: pointer;
     user-select: none;
     background: var(--_nk-button-background);
-    border: var(--nk-border-width) solid var(--_nk-button-border);
-    border-radius: var(--nk-radius-md);
-    transition:
-      color var(--nk-duration-normal) var(--nk-ease),
-      background-color var(--nk-duration-normal) var(--nk-ease),
-      border-color var(--nk-duration-normal) var(--nk-ease),
-      transform var(--nk-duration-fast) var(--nk-ease);
+    border-color: var(--_nk-button-border);
+    border-style: solid;
+    border-width: var(--_nk-button-border-width);
+    border-block-end-color: var(--_nk-button-border-bottom);
+    border-radius: var(--_nk-button-radius);
+    box-shadow: var(--_nk-button-shadow);
+  }
+
+  :where(button[data-nk="button"]) {
+    cursor: default;
   }
 
   :where(
@@ -41,61 +67,121 @@
     flex: none;
   }
 
-  /* A parent narrower than the intrinsic label truncates it instead of
-     letting text escape the border box or overlap siblings. */
   :where([data-nk="button"] > [data-slot="button-label"]) {
     min-inline-size: 0;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+
+  :where([data-nk="button"]:has(> [data-slot="button-icon-start"])) {
+    padding-inline-start: var(--_nk-button-icon-padding);
+  }
+
+  :where([data-nk="button"]:has(> [data-slot="button-icon-end"])) {
+    padding-inline-end: var(--_nk-button-icon-padding);
+  }
+
+  :where([data-nk="button"]:not(:has(> [data-slot="button-label"]))) {
+    inline-size: var(--_nk-button-height);
+    padding-inline: 0;
   }
 }
 
 @layer nitro-kit.variant {
   :where([data-nk="button"][data-variant="primary"]) {
     --_nk-button-background: var(--nk-color-primary);
-    --_nk-button-foreground: var(--nk-color-primary-foreground);
-    --_nk-button-border: var(--nk-color-primary);
     --_nk-button-hover-background: var(--nk-color-primary-hover);
+    --_nk-button-foreground: var(--nk-color-primary-foreground);
+    --_nk-button-border: light-dark(oklch(0 0 0 / 0.1), transparent);
+    --_nk-button-border-bottom: var(--_nk-button-border);
+    --_nk-button-shadow: inset 0 1px oklch(1 0 0 / 0.2);
   }
 
   :where([data-nk="button"][data-variant="destructive"]) {
     --_nk-button-background: var(--nk-color-danger);
-    --_nk-button-foreground: var(--nk-color-danger-foreground);
-    --_nk-button-border: var(--nk-color-danger);
     --_nk-button-hover-background: var(--nk-color-danger-hover);
+    --_nk-button-foreground: var(--nk-color-danger-foreground);
+    --_nk-button-border-width: 0;
+    --_nk-button-border: transparent;
+    --_nk-button-border-bottom: transparent;
+    --_nk-button-shadow:
+      inset 0 1px var(--nk-color-danger), inset 0 2px oklch(1 0 0 / 0.15);
   }
 
   :where([data-nk="button"][data-variant="ghost"]) {
     --_nk-button-background: transparent;
+    --_nk-button-hover-background: light-dark(
+      oklch(0.274 0.006 286.033 / 0.05),
+      oklch(1 0 0 / 0.15)
+    );
+    --_nk-button-foreground: light-dark(
+      oklch(0.274 0.006 286.033),
+      oklch(1 0 0)
+    );
+    --_nk-button-border-width: 0;
     --_nk-button-border: transparent;
-    --_nk-button-hover-background: var(--nk-color-muted);
+    --_nk-button-border-bottom: transparent;
+    --_nk-button-shadow: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :where(
+      :root:not([data-theme])
+        [data-nk="button"]:is(
+          [data-variant="primary"],
+          [data-variant="destructive"]
+        )
+    ) {
+      --_nk-button-border-width: 0;
+    }
+
+    :where(
+      :root:not([data-theme]) [data-nk="button"][data-variant="destructive"]
+    ) {
+      --_nk-button-shadow: none;
+    }
+  }
+
+  :where([data-theme="dark"] [data-nk="button"][data-variant="primary"]) {
+    --_nk-button-border-width: 0;
+  }
+
+  :where([data-theme="dark"] [data-nk="button"][data-variant="destructive"]) {
+    --_nk-button-shadow: none;
   }
 }
 
 @layer nitro-kit.size {
   :where([data-nk="button"][data-size="xs"]) {
-    min-block-size: var(--nk-control-height-md);
-    padding-inline: calc(var(--nk-space) * 2);
-    font-size: var(--nk-text-xs);
+    --_nk-button-height: var(--nk-control-height-xs);
+    --_nk-button-padding: calc(var(--nk-space) * 2);
+    --_nk-button-icon-padding: var(--nk-space);
+    --_nk-button-radius: var(--nk-radius-md);
+    --_nk-button-font-size: var(--nk-text-xs);
+    --_nk-button-line-height: 1rem;
   }
 
   :where([data-nk="button"][data-size="sm"]) {
-    min-block-size: var(--nk-control-height-md);
-    padding-inline: calc(var(--nk-space) * 3);
-    font-size: var(--nk-text-sm);
+    --_nk-button-height: calc(var(--nk-space) * 8);
+    --_nk-button-padding: calc(var(--nk-space) * 3);
+    --_nk-button-icon-padding: calc(var(--nk-space) * 2);
+    --_nk-button-radius: var(--nk-radius-md);
   }
 
   :where([data-nk="button"][data-size="lg"]) {
-    min-block-size: var(--nk-control-height-lg);
-    padding-inline: calc(var(--nk-space) * 5);
-    font-size: var(--nk-text-lg);
+    --_nk-button-height: var(--nk-control-height-lg);
+    --_nk-button-padding: calc(var(--nk-space) * 5);
+    --_nk-button-icon-padding: calc(var(--nk-space) * 4);
   }
 
   :where([data-nk="button"][data-size="xl"]) {
-    min-block-size: var(--nk-control-height-xl);
+    --_nk-button-height: var(--nk-control-height-xl);
+    --_nk-button-padding: calc(var(--nk-space) * 8);
+    --_nk-button-icon-padding: calc(var(--nk-space) * 7);
+    --_nk-button-radius: var(--nk-radius-xl);
+    --_nk-button-font-size: var(--nk-text-base);
+    --_nk-button-line-height: 1.5rem;
     gap: calc(var(--nk-space) * 4);
-    padding-inline: calc(var(--nk-space) * 8);
-    font-size: var(--nk-text-xl);
   }
 }
 
@@ -104,10 +190,6 @@
     :where([data-nk="button"]:hover:not(:disabled, [aria-disabled="true"])) {
       background: var(--_nk-button-hover-background);
     }
-  }
-
-  :where([data-nk="button"]:active:not(:disabled, [aria-disabled="true"])) {
-    transform: scale(0.96);
   }
 
   :where([data-nk="button"]:focus-visible) {
@@ -120,13 +202,7 @@
     [data-nk="button"][aria-disabled="true"]
   ) {
     pointer-events: none;
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    :where([data-nk="button"]) {
-      transition-duration: 0.01ms;
-    }
+    cursor: default;
+    opacity: 0.75;
   }
 }

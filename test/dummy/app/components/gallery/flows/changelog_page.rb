@@ -22,7 +22,7 @@ module Gallery
             NitroKit::ButtonGroup.new(id: "gallery-changelog-header-actions", label: "Changelog navigation")
           ) do |actions|
             actions.button("Latest release", href: entry_path(entry, state: "latest"), variant: :primary)
-            actions.button("Release archive", href: entry_path(entry, state: "archive"), variant: :ghost)
+            actions.button("Release archive", href: entry_path(entry, state: "archive"))
           end
         end
       end
@@ -33,7 +33,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-changelog-latest-card") do |card|
           card.title("#{latest.version} · #{release_title(latest)}", level: 2)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Badge.new(
                 "Released #{latest.released_on.to_fs(:long)}",
                 color: :success,

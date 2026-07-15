@@ -1,9 +1,11 @@
 @layer nitro-kit.tokens {
   :where(:root) {
-    --nk-font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    --nk-font-sans:
+      ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --nk-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-      "Liberation Mono", "Courier New", monospace;
+    --nk-font-mono:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+      "Courier New", monospace;
 
     --nk-text-xs: 0.75rem;
     --nk-text-sm: 0.875rem;
@@ -35,10 +37,10 @@
     --nk-focus-offset: 2px;
 
     --nk-shadow-sm: 0 1px 2px oklch(0 0 0 / 0.08);
-    --nk-shadow-md: 0 4px 6px -1px oklch(0 0 0 / 0.1),
-      0 2px 4px -2px oklch(0 0 0 / 0.1);
-    --nk-shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 0.12),
-      0 4px 6px -4px oklch(0 0 0 / 0.12);
+    --nk-shadow-md:
+      0 4px 6px -1px oklch(0 0 0 / 0.1), 0 2px 4px -2px oklch(0 0 0 / 0.1);
+    --nk-shadow-lg:
+      0 10px 15px -3px oklch(0 0 0 / 0.12), 0 4px 6px -4px oklch(0 0 0 / 0.12);
 
     --nk-duration-fast: 100ms;
     --nk-duration-normal: 150ms;
@@ -55,6 +57,9 @@
     --nk-content-md: 32rem;
     --nk-content-lg: 48rem;
     --nk-content-xl: 64rem;
+
+    --nk-app-shell-sidebar-width: 16rem;
+    --nk-app-shell-topbar-height: 3.5rem;
   }
 
   :where(:root, [data-theme="light"]) {
@@ -69,7 +74,7 @@
     --nk-color-border: oklch(0.92 0.004 286.32);
     --nk-color-focus: oklch(0.546 0.245 262.881);
     --nk-color-primary: oklch(0.274 0.006 286.033);
-    --nk-color-primary-foreground: oklch(0.967 0.001 286.375);
+    --nk-color-primary-foreground: oklch(1 0 0);
     --nk-color-neutral: oklch(0.552 0.016 285.938);
     --nk-color-neutral-content: oklch(0.37 0.013 285.805);
     --nk-color-info: oklch(0.546 0.245 262.881);
@@ -84,6 +89,35 @@
     --nk-color-overlay: oklch(0 0 0 / 0.5);
   }
 
+  @media (prefers-color-scheme: dark) {
+    :where(:root:not([data-theme])) {
+      color-scheme: dark;
+
+      --nk-color-canvas: oklch(0.141 0.005 285.823);
+      --nk-color-surface: oklch(0.178 0.006 285.885);
+      --nk-color-elevated: oklch(0.21 0.006 285.885);
+      --nk-color-foreground: oklch(0.967 0.001 286.375);
+      --nk-color-muted: oklch(0.274 0.006 286.033);
+      --nk-color-muted-foreground: oklch(0.705 0.015 286.067);
+      --nk-color-border: oklch(0.37 0.013 285.805);
+      --nk-color-focus: oklch(0.488 0.243 264.376);
+      --nk-color-primary: oklch(1 0 0);
+      --nk-color-primary-foreground: oklch(0.274 0.006 286.033);
+      --nk-color-neutral: oklch(0.705 0.015 286.067);
+      --nk-color-neutral-content: oklch(0.92 0.004 286.32);
+      --nk-color-info: oklch(0.623 0.214 259.815);
+      --nk-color-info-content: oklch(0.882 0.059 254.128);
+      --nk-color-success: oklch(0.723 0.219 149.579);
+      --nk-color-success-content: oklch(0.925 0.084 155.995);
+      --nk-color-warning: oklch(0.828 0.189 84.429);
+      --nk-color-warning-content: oklch(0.945 0.129 101.54);
+      --nk-color-danger: oklch(0.577 0.245 27.325);
+      --nk-color-danger-foreground: oklch(0.985 0 0);
+      --nk-color-danger-content: oklch(0.704 0.191 22.216);
+      --nk-color-overlay: oklch(0 0 0 / 0.65);
+    }
+  }
+
   :where([data-theme="dark"]) {
     color-scheme: dark;
 
@@ -95,8 +129,8 @@
     --nk-color-muted-foreground: oklch(0.705 0.015 286.067);
     --nk-color-border: oklch(0.37 0.013 285.805);
     --nk-color-focus: oklch(0.488 0.243 264.376);
-    --nk-color-primary: oklch(0.985 0 0);
-    --nk-color-primary-foreground: oklch(0.21 0.006 285.885);
+    --nk-color-primary: oklch(1 0 0);
+    --nk-color-primary-foreground: oklch(0.274 0.006 286.033);
     --nk-color-neutral: oklch(0.705 0.015 286.067);
     --nk-color-neutral-content: oklch(0.92 0.004 286.32);
     --nk-color-info: oklch(0.623 0.214 259.815);
@@ -105,7 +139,7 @@
     --nk-color-success-content: oklch(0.925 0.084 155.995);
     --nk-color-warning: oklch(0.828 0.189 84.429);
     --nk-color-warning-content: oklch(0.945 0.129 101.54);
-    --nk-color-danger: oklch(0.396 0.141 25.723);
+    --nk-color-danger: oklch(0.577 0.245 27.325);
     --nk-color-danger-foreground: oklch(0.985 0 0);
     --nk-color-danger-content: oklch(0.704 0.191 22.216);
     --nk-color-overlay: oklch(0 0 0 / 0.65);
@@ -119,13 +153,18 @@
     );
     --nk-color-primary-hover: color-mix(
       in oklab,
-      var(--nk-color-primary) 90%,
-      var(--nk-color-canvas)
+      var(--nk-color-primary),
+      transparent 10%
     );
-    --nk-color-danger-hover: color-mix(
-      in oklab,
-      var(--nk-color-danger) 90%,
-      var(--nk-color-canvas)
+    --nk-color-danger-hover: light-dark(
+      oklch(0.577 0.245 27.325),
+      oklch(0.637 0.237 25.331)
     );
+    --nk-app-shell-background: var(--nk-color-canvas);
+    --nk-app-shell-sidebar-background: var(--nk-color-surface);
+    --nk-app-shell-sidebar-foreground: var(--nk-color-foreground);
+    --nk-app-shell-sidebar-accent: var(--nk-color-muted);
+    --nk-app-shell-sidebar-accent-foreground: var(--nk-color-foreground);
+    --nk-app-shell-border: var(--nk-color-border);
   }
 }

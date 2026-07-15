@@ -1,7 +1,7 @@
 require "test_helper"
 
 class TabsComponentTest < ActiveSupport::TestCase
-  test "renders paired tabs with deterministic ARIA relationships and visible state" do
+  test "renders paired tabs with deterministic ARIA relationships and a readable server fallback" do
     node = render_tabs(default: :billing_details) do |tabs|
       tabs.tab(:general, "General") { "General content" }
       tabs.tab(:billing_details, "Billing") { "Billing content" }
@@ -25,21 +25,24 @@ class TabsComponentTest < ActiveSupport::TestCase
     assert_equal "settings-general-tab", tab_nodes.first["id"]
     assert_equal "settings-general-panel", tab_nodes.first["aria-controls"]
     assert_equal "false", tab_nodes.first["aria-selected"]
-    assert_equal "-1", tab_nodes.first["tabindex"]
+    assert_equal "0", tab_nodes.first["tabindex"]
 
     assert_equal "billing-details", tab_nodes.last["data-key"]
     assert_equal "true", tab_nodes.last["aria-selected"]
     assert_equal "0", tab_nodes.last["tabindex"]
     assert_equal "settings-billing-details-panel", panels.last["id"]
     assert_equal "settings-billing-details-tab", panels.last["aria-labelledby"]
-    assert_equal "false", panels.last["aria-hidden"]
+    assert_nil panels.last["aria-hidden"]
     refute panels.last.key?("hidden")
+    assert_nil panels.last["tabindex"]
     assert_equal "active", panels.last["data-state"]
     assert_equal "Billing content", panels.last.text
 
-    assert panels.first.key?("hidden")
-    assert_equal "true", panels.first["aria-hidden"]
+    refute panels.first.key?("hidden")
+    assert_nil panels.first["aria-hidden"]
+    assert_nil panels.first["tabindex"]
     assert_equal "inactive", panels.first["data-state"]
+    assert_equal [ "General content", "Billing content" ], panels.map(&:text)
     assert_empty node.css("[class], [style]")
   end
 

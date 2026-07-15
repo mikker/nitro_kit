@@ -17,14 +17,14 @@ class DropdownComponentTest < ActiveSupport::TestCase
 
     assert_equal "account-menu", node["id"]
     assert_equal "dropdown", node["data-nk"]
-    assert_equal "closed", node["data-state"]
+    assert_nil node["data-state"]
     assert_equal "bottom-start", node["data-placement"]
     assert_equal "nk--dropdown", node["data-controller"]
 
     assert_equal "account-menu-trigger", trigger["id"]
     assert_equal "account-menu-content", trigger["popovertarget"]
-    assert_equal "account-menu-content", trigger["aria-controls"]
-    assert_equal "false", trigger["aria-expanded"]
+    assert_nil trigger["aria-controls"]
+    assert_nil trigger["aria-expanded"]
     assert_equal "menu", trigger["aria-haspopup"]
     assert_includes trigger["data-action"], "keydown->nk--dropdown#openFromKeyboard"
     assert_includes trigger["data-action"], "click->analytics#track"
@@ -34,13 +34,18 @@ class DropdownComponentTest < ActiveSupport::TestCase
     assert_equal "auto", content["popover"]
     assert_equal "account-menu-trigger", content["aria-labelledby"]
     assert_equal "bottom-start", content["data-placement"]
-    assert_equal "Account", content.at_css("[data-slot='dropdown-title']").text
+    assert_includes content["data-action"], "toggle->nk--dropdown#focusOpened"
+    title = content.at_css("[data-slot='dropdown-title']")
+    assert_equal "Account", title.text
+    assert_equal "presentation", title["role"]
+    assert_equal "true", title["aria-hidden"]
 
     assert_equal "a", items[0].name
     assert_equal "/edit", items[0]["href"]
     assert_equal "button", items[1].name
     assert_equal "destructive", items[1]["data-tone"]
     assert items[2].key?("disabled")
+    assert items.all? { |item| item["tabindex"] == "-1" }
     assert_equal 1, content.css("[data-slot='dropdown-separator']").size
     assert_empty node.css("[class], [style]")
   end
@@ -127,6 +132,24 @@ class DropdownComponentTest < ActiveSupport::TestCase
     end
     assert_equal "hook", node["class"]
     assert_equal "class", node["data-nk-escape"]
+
+    assert_raises(ArgumentError) do
+      render_dropdown do |menu|
+        menu.trigger("Open")
+        menu.title("Heading", aria: { hidden: false })
+        menu.item("Item")
+      end
+    end
+  end
+
+  test "centers the popover when anchor positioning is unavailable" do
+    source = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/dropdown.css").read
+
+    assert_includes source, "inset: 50% auto auto 50%"
+    assert_includes source, "translate: -50% -50%"
+    assert_includes source, "@supports (inset-block-start: anchor(bottom))"
+    assert_includes source, ":popover-open"
+    refute_includes source, "[data-state=\"open\"]"
   end
 
   private

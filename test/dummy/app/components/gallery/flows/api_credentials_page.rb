@@ -33,7 +33,7 @@ module Gallery
               }.compact
             ) do
               render NitroKit::Container.new(size: :xl, id: "gallery-api-credentials-container") do
-                render NitroKit::VStack.new(gap: :lg, align: :stretch, id: "gallery-api-credentials-stack") do
+                render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch, id: "gallery-api-credentials-stack") do
                   turbo_frame_tag("gallery-api-credentials-frame") { render_screen }
                 end
               end
@@ -132,8 +132,7 @@ module Gallery
             "Rotate",
             id: "gallery-api-key-#{key.id}-rotate",
             href: entry_path(entry, state: "create"),
-            size: :sm,
-            variant: :ghost
+            size: :sm
           )
           group.button(
             "Revoke",
@@ -229,7 +228,7 @@ module Gallery
       def render_reveal_once
         reveal = Gallery::Data.api_key_reveal
 
-        render NitroKit::VStack.new(gap: :md, align: :stretch, id: "gallery-api-credential-reveal-stack") do
+        render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch, id: "gallery-api-credential-reveal-stack") do
           render NitroKit::Alert.new(id: "gallery-api-credential-reveal-warning", variant: :warning) do |alert|
             alert.icon(NitroKit::Icon.new(:triangle_alert, id: "gallery-api-credential-reveal-warning-icon"))
             alert.title("Copy this credential now")
@@ -275,7 +274,7 @@ module Gallery
               dialog.dialog(
                 title: "Revoke #{key.name}?",
                 description: "Requests using #{key.prefix} will fail immediately. This action cannot be undone.",
-                open: true
+                nonmodal: true
               ) do
                 form_with(
                   model: revocation,
@@ -305,14 +304,13 @@ module Gallery
           zone.escape NitroKit::Button.new(
             "Keep credential",
             id: "gallery-api-credential-revoke-escape",
-            href: entry_path(entry, state: "list"),
-            variant: :ghost
+            href: entry_path(entry, state: "list")
           )
         end
       end
 
       def render_revoked
-        render NitroKit::VStack.new(gap: :md, align: :stretch, id: "gallery-api-credential-revoked-stack") do
+        render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch, id: "gallery-api-credential-revoked-stack") do
           render NitroKit::Alert.new(id: "gallery-api-credential-revoked", variant: :success) do |alert|
             alert.icon(NitroKit::Icon.new(:circle_check, id: "gallery-api-credential-revoked-icon"))
             alert.title("Production was revoked")
@@ -325,7 +323,7 @@ module Gallery
       def render_expired
         issue = Gallery::Data.expired_api_key_issue
 
-        render NitroKit::VStack.new(gap: :md, align: :stretch, id: "gallery-api-credential-expired-stack") do
+        render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch, id: "gallery-api-credential-expired-stack") do
           render NitroKit::Alert.new(id: "gallery-api-credential-expired", variant: :warning) do |alert|
             alert.icon(NitroKit::Icon.new(:clock_alert, id: "gallery-api-credential-expired-icon"))
             alert.title("#{issue.key.name} expired")
@@ -343,7 +341,7 @@ module Gallery
       def render_error
         issue = Gallery::Data.failed_api_key_issue
 
-        render NitroKit::VStack.new(gap: :md, align: :stretch, id: "gallery-api-credential-error-stack") do
+        render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch, id: "gallery-api-credential-error-stack") do
           render NitroKit::Alert.new(id: "gallery-api-credential-error", variant: :error) do |alert|
             alert.icon(NitroKit::Icon.new(:circle_x, id: "gallery-api-credential-error-icon"))
             alert.title("#{issue.key.name} is still active")
@@ -362,8 +360,7 @@ module Gallery
         render NitroKit::Button.new(
           "Back to credentials",
           id: "gallery-api-credentials-footer-list",
-          href: entry_path(entry, state: "list"),
-          variant: :ghost
+          href: entry_path(entry, state: "list")
         )
       end
 

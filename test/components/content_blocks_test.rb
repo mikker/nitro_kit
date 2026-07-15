@@ -39,7 +39,43 @@ class ContentBlocksTest < ActiveSupport::TestCase
             render NitroKit::Button.new("Delete workspace", type: :submit, variant: :destructive)
           end
         end
-        zone.escape NitroKit::Button.new("Keep workspace", href: "/settings", variant: :ghost)
+        zone.escape NitroKit::Button.new("Keep workspace", href: "/settings")
+      end
+    end
+  end
+
+  class DeferredContentProbe < Phlex::HTML
+    def view_template
+      div do
+        render NitroKit::PageHeader.new(id: "deferred-page-header") do |header|
+          header.description { plain "Manage "; strong { "every" }; plain " invitation." }
+          header.title { plain "Workspace "; em { "members" } }
+          header.eyebrow("Administration")
+        end
+
+        render NitroKit::DataSection.new(id: "deferred-data-section") do |section|
+          section.description { plain "The "; strong { "newest" }; plain " records." }
+          section.title("Recent invoices")
+          section.empty_state NitroKit::EmptyState.new(title: "No invoices", level: 3)
+        end
+
+        render NitroKit::FormSection.new(id: "deferred-form-section") do |section|
+          section.description { plain "Update the "; em { "public" }; plain " details." }
+          section.title("Profile")
+          section.form { form(action: "/profile") }
+        end
+
+        render NitroKit::DangerZone.new(id: "deferred-danger-zone") do |zone|
+          zone.description { plain "Every "; strong { "project" }; plain " will be removed." }
+          zone.title("Delete workspace")
+          zone.confirmation { plain "Confirmation" }
+          zone.escape NitroKit::Button.new("Keep workspace")
+        end
+
+        render NitroKit::EmptyState.new(level: 4, id: "deferred-empty-state") do |empty|
+          empty.description { plain "Try a "; strong { "broader" }; plain " query." }
+          empty.title { plain "No "; em { "records" } }
+        end
       end
     end
   end
@@ -83,7 +119,7 @@ class ContentBlocksTest < ActiveSupport::TestCase
     end
   end
 
-  test "stat grid renders ordered keyed semantic records through the proven grid" do
+  test "stat grid renders ordered keyed semantic records through the responsive grid" do
     node = render_node(NitroKit::StatGrid.new(id: "workspace-stats")) do |stats|
       stats.stat(key: :active_projects, label: "Active projects", value: "12", detail: "Across 4 teams")
       stats.stat(key: "members", label: "Members", value: "87")
@@ -93,7 +129,7 @@ class ContentBlocksTest < ActiveSupport::TestCase
     grid = node.element_children.find do |child|
       child["data-nk"] == "grid" &&
         child["data-slot"] == "stat-grid-grid" &&
-        child["data-cols"] == "3"
+        child["data-cols"] == "1 sm:2 lg:3"
     end
     assert grid
     assert_equal %w[active-projects members uptime], grid.element_children.map { |child| child["data-key"] }
@@ -134,13 +170,65 @@ class ContentBlocksTest < ActiveSupport::TestCase
     ) do |empty|
       empty.icon NitroKit::Icon.new(:users)
       empty.action NitroKit::Button.new("Invite teammate", href: "/invite", variant: :primary)
-      empty.action NitroKit::Button.new("Read access guide", href: "/guide", variant: :ghost)
+      empty.action NitroKit::Button.new("Read access guide", href: "/guide")
     end
 
     assert_equal "icon", complete.at_css("[data-slot='empty-state-icon']")["data-nk"]
     assert complete.at_css("h4[data-slot='empty-state-title']")
     assert_equal 2, complete.css("[data-slot='empty-state-actions'] > [data-slot='empty-state-action'][data-nk='button']").count
     assert_empty complete.css("[class], [style], [data-nk-escape]")
+  end
+
+  test "fixed-order blocks accept deferred text and rich Phlex content" do
+    root = Nokogiri::HTML.fragment(DeferredContentProbe.new.call).first_element_child
+
+    page_header = root.at_css("#deferred-page-header")
+    assert_equal %w[p h1 p], page_header.element_children.map(&:name)
+    assert_equal "members", page_header.at_css("[data-slot='page-header-title'] em").text
+    assert_equal "every", page_header.at_css("[data-slot='page-header-description'] strong").text
+
+    data_section = root.at_css("#deferred-data-section")
+    assert_equal "newest", data_section.at_css("[data-slot='data-section-description'] strong").text
+
+    form_section = root.at_css("#deferred-form-section")
+    assert_equal "public", form_section.at_css("[data-slot='form-section-description'] em").text
+
+    danger_zone = root.at_css("#deferred-danger-zone")
+    assert_equal "project", danger_zone.at_css("[data-slot='danger-zone-impact'] strong").text
+
+    empty_state = root.at_css("#deferred-empty-state")
+    assert_equal "records", empty_state.at_css("[data-slot='empty-state-title'] em").text
+    assert_equal "broader", empty_state.at_css("[data-slot='empty-state-description'] strong").text
+  end
+
+  test "deferred content rejects missing mixed and repeated declarations" do
+    assert_raises(ArgumentError) { render_node(NitroKit::EmptyState.new) }
+    assert_raises(ArgumentError) do
+      render_node(NitroKit::EmptyState.new(title: "Keyword title")) do |empty|
+        empty.title("Nested title")
+      end
+    end
+    assert_raises(ArgumentError) do
+      render_node(NitroKit::EmptyState.new) do |empty|
+        empty.title("First")
+        empty.title("Second")
+      end
+    end
+    assert_raises(ArgumentError) do
+      render_node(NitroKit::EmptyState.new) do |empty|
+        empty.title("Text") { "Block" }
+      end
+    end
+    assert_raises(ArgumentError) do
+      render_node(NitroKit::EmptyState.new) { |empty| empty.title("") }
+    end
+    assert_raises(ArgumentError) do
+      render_node(NitroKit::DangerZone.new) do |zone|
+        zone.title("Delete")
+        zone.confirmation { "Confirm" }
+        zone.escape NitroKit::Button.new("Leave")
+      end
+    end
   end
 
   test "empty state enforces typed unique bounded children" do
@@ -180,7 +268,7 @@ class ContentBlocksTest < ActiveSupport::TestCase
         id: "invoices"
       )
     ) do |section|
-      section.actions(button_group("Download CSV", variant: :ghost))
+      section.actions(button_group("Download CSV"))
       section.table(NitroKit::Table.new(id: "invoice-table")) do |table|
         table.caption("Invoices")
         table.tbody do
@@ -271,7 +359,7 @@ class ContentBlocksTest < ActiveSupport::TestCase
     assert_equal "Delete workspace", node.at_css("h2[data-slot='danger-zone-title']").text
     assert_equal 1, node.css("[data-slot='danger-zone-confirmation'] > form#delete-form").count
     assert_equal "destructive", node.at_css("#delete-form [data-nk='button']")["data-variant"]
-    assert_equal "ghost", node.at_css("[data-slot='danger-zone-escape']")["data-variant"]
+    assert_equal "default", node.at_css("[data-slot='danger-zone-escape']")["data-variant"]
     assert_empty node.css("[class], [style], [data-nk-escape]")
   end
 
@@ -370,7 +458,7 @@ class ContentBlocksTest < ActiveSupport::TestCase
       lambda do |**attrs|
         render_node(NitroKit::DangerZone.new(title: "Danger", description: "Permanent", **attrs)) do |zone|
           zone.confirmation { "Confirm" }
-          zone.escape NitroKit::Button.new("Leave", variant: :ghost)
+          zone.escape NitroKit::Button.new("Leave")
         end
       end,
       ->(**attrs) { render_node(NitroKit::EmptyState.new(title: "Empty", **attrs)) }

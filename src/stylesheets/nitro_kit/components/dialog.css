@@ -40,7 +40,7 @@
 }
 
 @layer nitro-kit.state {
-  :where([data-nk="dialog"] > [data-slot="dialog-panel"][data-state="open"]) {
+  :where([data-nk="dialog"] > [data-slot="dialog-panel"][open]) {
     animation: nk-dialog-enter var(--nk-duration-slow) var(--nk-ease);
   }
 

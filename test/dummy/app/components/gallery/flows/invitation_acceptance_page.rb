@@ -46,7 +46,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-invitation-card") do |card|
           card.title(card_title, level: 4)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               p do
                 "#{identity.inviter} invited #{identity.email} to join as #{identity.invited_role.downcase}."
               end

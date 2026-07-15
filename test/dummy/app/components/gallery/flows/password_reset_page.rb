@@ -40,7 +40,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-password-reset-card") do |card|
           card.title(screen_title, level: 4)
           card.body do
-            render NitroKit::VStack.new(gap: :md, align: :stretch) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               case state
               when "sent"
                 render_sent
@@ -60,7 +60,7 @@ module Gallery
               state == "expired" ? "Request a new link" : "Back to sign in",
               id: "gallery-password-reset-secondary",
               href: state == "expired" ? entry_path(entry, state: "request") : sign_in_path,
-              variant: state == "expired" ? :primary : :ghost
+              variant: state == "expired" ? :primary : :default
             )
           end
         end

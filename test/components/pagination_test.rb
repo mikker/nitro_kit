@@ -21,10 +21,12 @@ class PaginationComponentTest < ActiveSupport::TestCase
     assert_equal "Pagination", node["aria-label"]
     assert_equal "ol", list.name
     assert_equal %w[previous page page ellipsis page next], items.map { |item| item["data-kind"] }
+    assert_equal [ "ghost" ], node.css("[data-nk='button']").map { |button| button["data-variant"] }.uniq
+    assert_equal [ "sm" ], node.css("[data-nk='button']").map { |button| button["data-size"] }.uniq
     assert_empty node.css("[class], [style]")
   end
 
-  test "marks one current page without leaving it interactive" do
+  test "marks a current page link without misrepresenting it as disabled" do
     node = render_node(NitroKit::Pagination.new) do |pagination|
       pagination.page("12", href: "/pages/12", current: true)
     end
@@ -32,9 +34,9 @@ class PaginationComponentTest < ActiveSupport::TestCase
 
     assert_equal "a", current.name
     assert_equal "page", current["aria-current"]
-    assert_equal "true", current["aria-disabled"]
-    assert_equal "-1", current["tabindex"]
-    assert_nil current["href"]
+    assert_nil current["aria-disabled"]
+    assert_nil current["tabindex"]
+    assert_equal "/pages/12", current["href"]
   end
 
   test "allows a current page without an href and rejects missing destinations elsewhere" do
@@ -42,7 +44,10 @@ class PaginationComponentTest < ActiveSupport::TestCase
       pagination.page(1, current: true)
     end
 
-    assert current_node.at_css("a[data-slot='pagination-page'][aria-current='page']")
+    current = current_node.at_css("span[data-slot='pagination-page'][aria-current='page']")
+    assert current
+    assert_nil current["aria-disabled"]
+    assert_nil current["tabindex"]
     assert_raises(ArgumentError) do
       NitroKit::Pagination.new.call { |pagination| pagination.page(2) }
     end
@@ -93,7 +98,7 @@ class PaginationComponentTest < ActiveSupport::TestCase
     label = node.at_css("[data-slot='pagination-ellipsis-label']")
 
     assert_equal "…", ellipsis.text
-    assert ellipsis.key?("aria-hidden")
+    assert_equal "true", ellipsis["aria-hidden"]
     assert_equal "Pages 2 through 9 omitted", label.text
     assert_nil ellipsis["role"]
     assert_nil ellipsis["tabindex"]

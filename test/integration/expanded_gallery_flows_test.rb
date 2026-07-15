@@ -19,7 +19,7 @@ class ExpandedGalleryFlowsTest < ActionDispatch::IntegrationTest
       entry = Gallery::Catalog.fetch!(kind: :flow, slug:)
 
       assert_equal states, entry.states
-      assert_equal %w[page-header container v-stack button-group button], entry.expected_roots
+      assert_equal %w[page-header container flex button-group button], entry.expected_roots
       states.each do |state|
         assert_equal "/gallery/flows/#{slug}/#{state}", Gallery::Catalog.path_for(
           entry,
@@ -42,7 +42,7 @@ class ExpandedGalleryFlowsTest < ActionDispatch::IntegrationTest
           assert_select "html[data-theme='#{theme}']"
           assert_select "div[data-gallery='page'][data-gallery-page='#{slug}'][data-gallery-state='#{state}']"
           assert_select "[data-gallery-flow='#{slug}'][data-gallery-flow-state='#{state}']" do
-            assert_select "[data-nk='container'][data-size='xl'] > [data-nk='v-stack'][data-gap='lg']" do
+            assert_select "[data-nk='container'][data-size='xl'] > [data-nk='flex'][data-dir='col'][data-gap='6']" do
               assert_select "> [data-nk='page-header']", count: 1
             end
           end
@@ -240,7 +240,7 @@ class ExpandedGalleryFlowsTest < ActionDispatch::IntegrationTest
     get_flow("data-resource-settings", "danger")
     assert_select "#gallery-data-resource-settings-danger[data-nk='danger-zone']" do
       assert_select "> [data-slot='danger-zone-confirmation'] #gallery-data-resource-settings-danger-form"
-      assert_select "> [data-slot='danger-zone-escape'][data-variant='ghost']"
+      assert_select "> [data-slot='danger-zone-escape'][data-variant='default']"
     end
     assert_select "#archive_resource_confirmed[type='checkbox'][required]"
     assert_select "#gallery-data-resource-settings-danger-submit[data-variant='destructive']:not([disabled])"

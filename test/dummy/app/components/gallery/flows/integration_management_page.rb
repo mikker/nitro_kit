@@ -35,7 +35,7 @@ module Gallery
               label: "Integration navigation"
             )
           ) do |actions|
-            actions.button("Browse catalog", href: entry_path(entry, state: "catalog"), variant: :ghost)
+            actions.button("Browse catalog", href: entry_path(entry, state: "catalog"))
             actions.button("Connected services", href: entry_path(entry, state: "connected"), variant: :primary)
           end
         end
@@ -87,7 +87,6 @@ module Gallery
                   href: entry_path(entry, state: provider.status == :connected ? "connected" : "detail"),
                   id: "gallery-integration-#{provider.id}-action",
                   size: :sm,
-                  variant: :ghost,
                   aria: { label: "#{provider.status == :available ? 'View' : 'Manage'} #{provider.name}" }
                 )
               end
@@ -99,11 +98,11 @@ module Gallery
       def render_provider_detail
         provider = providers.fetch(2)
 
-        render NitroKit::Grid.new(cols: 3, id: "gallery-integration-detail-grid") do
+        render NitroKit::Grid.new(cols: "1 sm:2 lg:3", id: "gallery-integration-detail-grid") do
           render NitroKit::Card.new(id: "gallery-integration-detail-card") do |card|
             card.title(provider.name, level: 2)
             card.body do
-              render NitroKit::VStack.new(gap: :md, align: :stretch) do
+              render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
                 render NitroKit::Badge.new("Available", color: :info, id: "gallery-integration-detail-status")
                 p { provider.summary }
                 dl(data: { gallery: "integration-detail-metadata" }) do
@@ -235,7 +234,6 @@ module Gallery
                       "Manage",
                       href: provider.status == :configuration_error ? entry_path(entry, state: "config-error") : "#github",
                       size: :sm,
-                      variant: :ghost,
                       aria: { label: "Manage #{provider.name}" }
                     )
                   end
