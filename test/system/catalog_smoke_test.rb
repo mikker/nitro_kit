@@ -36,8 +36,8 @@ class CatalogSmokeTest < ApplicationSystemTestCase
       assert_selector page_marker(visit)
 
       if visit.entry.kind == :home
-        assert_selector "[data-gallery='index']"
-        assert_selector "[data-gallery='index-group']", count: Gallery::Catalog.collections.size
+        assert_selector "[data-gallery='introduction']"
+        assert_selector "[data-gallery='introduction'] li", count: 4
       else
         assert_catalog_roots(visit.entry)
       end

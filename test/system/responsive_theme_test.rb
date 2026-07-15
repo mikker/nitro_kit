@@ -17,7 +17,7 @@ class ResponsiveThemeTest < ApplicationSystemTestCase
       kind: :home,
       slug: "home",
       state: nil,
-      selector: "[data-gallery='index']",
+      selector: "[data-gallery='introduction']",
       probe: :home
     ),
     ReviewCase.new(
@@ -136,7 +136,7 @@ class ResponsiveThemeTest < ApplicationSystemTestCase
     def assert_review_probe(review_case, viewport:)
       case review_case.probe
       when :home
-        assert_selector "[data-gallery='index-group']", count: Gallery::Catalog.collections.size
+        assert_selector "[data-gallery='introduction'] li", count: 4
       when :dialog
         assert_dialog_containment
       when :table

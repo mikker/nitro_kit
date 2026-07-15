@@ -10,11 +10,11 @@ class GalleryTest < ActionDispatch::IntegrationTest
     assert_select "body[data-gallery='body']"
     assert_select "[data-gallery='sidebar']"
     assert_select "[data-gallery='main'] div[data-gallery='page'][data-gallery-page='home']"
-    assert_select "h1", text: "Component gallery"
-    assert_select "[data-gallery='index-group']", count: 3
-    assert_select "[data-gallery='index-group'][data-gallery-kind='component'] h2", text: "Components"
-    assert_select "[data-gallery='index-group'][data-gallery-kind='block'] h2", text: "Blocks"
-    assert_select "[data-gallery='index-group'][data-gallery-kind='flow'] h2", text: "Flows"
+    assert_select "h1", text: "Nitro Kit"
+    assert_select "[data-gallery='introduction'] section", count: 2
+    assert_select "[data-gallery='introduction'] h2", text: "The idea"
+    assert_select "[data-gallery='introduction'] h2", text: "The rules"
+    assert_select "[data-gallery='introduction'] li", count: 4
   end
 
   test "gallery renders flat alphabetical components and nested block and flow categories" do
@@ -34,10 +34,10 @@ class GalleryTest < ActionDispatch::IntegrationTest
       assert_select "details[data-gallery-category='navigation'] > summary", text: "Navigation"
       assert_select "details[data-gallery-category='sections'] > summary", text: "Sections"
     end
-    assert_select "[data-gallery='index-group'][data-gallery-kind='flow']" do
-      assert_select "[data-gallery='index-category']", count: 7
-      assert_select "[data-gallery-category='access-and-onboarding'] h3", text: "Access & onboarding"
-      assert_select "[data-gallery-category='complete-applications'] h3", text: "Complete applications"
+    assert_select "[data-gallery='navigation-collection'][data-gallery-kind='flow']" do
+      assert_select "details[data-gallery='navigation-category']", count: 7
+      assert_select "details[data-gallery-category='access-and-onboarding'] > summary", text: "Access & onboarding"
+      assert_select "details[data-gallery-category='complete-applications'] > summary", text: "Complete applications"
     end
   end
 
@@ -56,7 +56,7 @@ class GalleryTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "html[data-gallery='document']"
-    assert_select "[data-gallery-page='home'] h1", text: "Component gallery"
+    assert_select "[data-gallery-page='home'] h1", text: "Nitro Kit"
   end
 
   test "gallery loads Nitro and gallery styles with the import map" do

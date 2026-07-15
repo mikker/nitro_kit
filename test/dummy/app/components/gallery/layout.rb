@@ -48,7 +48,8 @@ module Gallery
 
         nav(aria: { label: "Gallery" }, data: { gallery: "navigation" }) do
           ul(data: { gallery: "navigation-primary" }) do
-            li { navigation_link("Overview", gallery_root_path) }
+            li { navigation_link("Introduction", gallery_root_path) }
+            li { navigation_link("FAQ", gallery_faq_path) }
             li { navigation_link("Customize", gallery_customize_path) }
           end
 

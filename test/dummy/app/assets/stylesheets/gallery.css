@@ -176,48 +176,51 @@
     text-transform: uppercase;
   }
 
-  :where([data-gallery="index"]) {
+  :where([data-gallery="introduction"]) {
     display: grid;
     gap: 2.5rem;
+    max-width: 48rem;
   }
 
-  :where([data-gallery="index-group"]) {
-    display: grid;
-    gap: 1rem;
-  }
-
-  :where([data-gallery="index-group"] header > *) {
-    margin-block: 0 0.35rem;
-  }
-
-  :where([data-gallery="index-group"] ul) {
-    display: grid;
-    gap: 0.65rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  :where([data-gallery="index-group"] li) {
-    display: grid;
-    gap: 0.15rem;
-  }
-
-  :where([data-gallery="index-categories"]) {
-    display: grid;
-    gap: 1.75rem;
-  }
-
-  :where([data-gallery="index-category"]) {
+  :where([data-gallery="introduction"] section) {
     display: grid;
     gap: 0.75rem;
   }
 
-  :where([data-gallery="index-category"] > header > *) {
-    margin-block: 0 0.25rem;
+  :where([data-gallery="introduction"] section > *) {
+    margin-block: 0;
   }
 
-  :where([data-gallery="index-group"] a) {
+  :where([data-gallery="introduction"] ul) {
+    display: grid;
+    gap: 0.85rem;
+    margin-block: 0;
+    padding-inline-start: 1.25rem;
+    line-height: 1.6;
+  }
+
+  :where([data-gallery="faq"]) {
+    display: grid;
+    gap: 2.75rem;
+    max-width: 52rem;
+  }
+
+  :where([data-gallery="faq-entry"]) {
+    display: grid;
+    gap: 0.8rem;
+  }
+
+  :where([data-gallery="faq-entry"] h2, [data-gallery="faq-answer"] p) {
+    margin-block: 0;
+  }
+
+  :where([data-gallery="faq-answer"]) {
+    display: grid;
+    gap: 0.8rem;
+    line-height: 1.65;
+  }
+
+  :where([data-gallery="faq-answer"] a) {
     color: inherit;
     font-weight: 650;
     text-underline-offset: 0.2em;

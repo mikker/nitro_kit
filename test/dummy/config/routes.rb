@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   namespace :gallery do
     root(to: "home#show")
 
+    get("faq" => "faqs#show", as: :faq)
     get("customize" => "customizations#show", as: :customize)
     get("previews/:kind/:slug/:example" => "previews#show", as: :preview)
     resources(:components, only: :show, param: :slug)

@@ -26,8 +26,8 @@ module Gallery
       Entry.new(
         kind: :home,
         slug: "home",
-        title: "Overview",
-        description: "The Nitro Kit 2.0 component and application gallery.",
+        title: "Introduction",
+        description: "What Nitro Kit is and the rules behind it.",
         page: Gallery::Home,
         states: [],
         expected_roots: []
