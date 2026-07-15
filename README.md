@@ -33,6 +33,8 @@ bundle install
 
 There is no Nitro Kit install generator. Components, CSS, and controllers stay in the gem and are upgraded with it.
 
+For a new application, the intended next installation surface is a thin Rails application template: one `rails new ... -m ...` command that installs Nitro Kit and the application-owned base without copying Nitro components. See [the new application strategy](docs/new_app_strategy.md). Until that template is published, install the gem directly as above.
+
 ### CSS
 
 Load the shipped stylesheet through the Rails asset pipeline:
@@ -137,6 +139,8 @@ end
 
 There is no `nk_form_with`, `nk_form_for`, or general ERB component bridge. [Rails and Hotwire integration](docs/rails_integration.md) documents model-backed forms, validation responses, Turbo Frames, and Turbo Streams.
 
+Complete recipes cover [queryable collections](docs/patterns/queryable_collection.md), [resource forms](docs/patterns/resource_form.md), [destructive actions](docs/patterns/destructive_action.md), [flash and toast](docs/patterns/flash_and_toast.md), and [inline editing](docs/patterns/inline_edit.md). They use one interaction grammar: ordinary Rails first, one stable Turbo Frame for one independently changing region, request-scoped Turbo Streams for multiple regions, and broadcasts only for other sessions.
+
 ## Attributes and application behavior
 
 Component semantics are explicit keywords. Less common native attributes use three deliberate boundaries:
@@ -209,6 +213,18 @@ The prerelease ships:
 - The non-visual `AppearanceBootstrap`, `NitroKit::FormBuilder`, and typed `NitroKit::Choice` values.
 
 The repository's dummy application is the canonical gallery. It exercises the component and block catalog across realistic Rails SaaS flows, narrow and wide layouts, light, dark, and system themes, and success, empty, error, loading, and destructive states. The gallery also includes a [customization wizard](/gallery/customize) and complete [sidebar](/gallery/flows/application-sidebar), [topbar](/gallery/flows/application-topbar), and [hybrid](/gallery/flows/application-hybrid) applications. Every example pairs Preview and Code tabs; the highlighted, copyable Ruby is extracted from the executable body of its Phlex block or concrete flow method so examples cannot silently drift from their source.
+
+## Coding agents
+
+The [agent guide](docs/agent_guide.md) routes an agent from a product task to the installed component contract and the matching Hotwire recipe. Add its short `AGENTS.md` block to a consuming application so every agent discovers the version-matched docs through `bundle show nitro_kit`.
+
+This repository and the packaged gem also contain a Codex plugin with separate Nitro Kit UI and Hotwire skills. Register a checked-out or installed copy as a local marketplace:
+
+```sh
+codex plugin marketplace add "$(bundle show nitro_kit)"
+```
+
+Then install **Nitro Kit** from that marketplace in the ChatGPT desktop app. The plugin contains no MCP server and needs no authentication; its skills read the documentation from the application's installed gem before they work.
 
 ## Migrating from 1.x
 

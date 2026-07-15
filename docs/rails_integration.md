@@ -261,3 +261,15 @@ end
 Deliver the submitting user's stream over the HTTP response. A successful non-Turbo POST should redirect with `303 See Other`; an invalid HTML or Turbo submission should return 422. Reserve Action Cable broadcasts for updates that must reach other sessions.
 
 The dummy application's `RailsIntegration::RegistrationForm`, `RegistrationStream`, and request tests are executable reference implementations of this contract.
+
+## Conventional interaction recipes
+
+Use the packaged recipes for complete application flows:
+
+- [Queryable collections](patterns/queryable_collection.md) for GET filters, sorting, pagination, and one results frame.
+- [Resource forms](patterns/resource_form.md) for model-backed create/update flows and 422 validation responses.
+- [Destructive actions](patterns/destructive_action.md) for reviewed dialogs, compact confirmation, and 303 redirects.
+- [Flash and toast](patterns/flash_and_toast.md) for one server-feedback path across Turbo and HTML.
+- [Inline edit](patterns/inline_edit.md) for stable resource frames and Cancel behavior.
+
+These recipes are conventions rather than new client-side abstractions. Rails owns the request and policy, Hotwire owns transport and replacement, and Nitro owns the rendered UI contract.

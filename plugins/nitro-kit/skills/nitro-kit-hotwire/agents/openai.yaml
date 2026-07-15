@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nitro Kit Hotwire"
+  short_description: "Build conventional Nitro Kit Hotwire flows"
+  default_prompt: "Use $nitro-kit-hotwire to build this interaction with Nitro Kit and conventional Hotwire."

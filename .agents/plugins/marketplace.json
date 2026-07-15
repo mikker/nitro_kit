@@ -1,0 +1,20 @@
+{
+  "name": "nitro-kit",
+  "interface": {
+    "displayName": "Nitro Kit"
+  },
+  "plugins": [
+    {
+      "name": "nitro-kit",
+      "source": {
+        "source": "local",
+        "path": "./plugins/nitro-kit"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      },
+      "category": "Developer"
+    }
+  ]
+}

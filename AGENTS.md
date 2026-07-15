@@ -1,6 +1,6 @@
 # Nitro Kit 2.0 agent guidance
 
-Nitro Kit is a gem-owned, Phlex-only UI system for Rails. Read `docs/agent_native_spec.md`, `docs/component_contracts.md`, and `STYLE_GUIDE.md` before editing components. `docs/implementation_plan.md` is the delivery record; `tk` is the source of truth for live status.
+Nitro Kit is a gem-owned, Phlex-only UI system for Rails. Read `docs/agent_native_spec.md`, `docs/component_contracts.md`, and `STYLE_GUIDE.md` before editing components. Read `docs/agent_guide.md` and the matching file under `docs/patterns/` before changing an application interaction convention. `docs/implementation_plan.md` is the delivery record; `tk` is the source of truth for live status.
 
 The `2.0-agent-native` branch intentionally breaks the 1.x API. Do not preserve obsolete helpers, generated-copy installation, Tailwind class strings, or permissive component attributes for compatibility.
 

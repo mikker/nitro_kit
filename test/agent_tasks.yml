@@ -1,0 +1,59 @@
+- name: queryable_projects
+  prompt: Build a searchable, sortable, paginated projects table with Ransack and keep updates inside the results area.
+  skills:
+    - nitro-kit-ui
+    - nitro-kit-hotwire
+  references:
+    - docs/agent_guide.md
+    - docs/component_contracts.md
+    - docs/patterns/queryable_collection.md
+  expectations:
+    - NitroKit::SortableTable
+    - NitroKit::FormBuilder
+    - turbo_frame_tag
+    - GET parameters own query state
+
+- name: invalid_project_form
+  prompt: Add a project form that shows validation errors without a full-page reload.
+  skills:
+    - nitro-kit-ui
+    - nitro-kit-hotwire
+  references:
+    - docs/agent_guide.md
+    - docs/rails_integration.md
+    - docs/patterns/resource_form.md
+  expectations:
+    - NitroKit::FormBuilder
+    - "status: :unprocessable_entity"
+    - "status: :see_other"
+    - HTML fallback
+
+- name: delete_project
+  prompt: Add a delete-project dialog that explains the impact, performs the server request, and shows success feedback.
+  skills:
+    - nitro-kit-ui
+    - nitro-kit-hotwire
+  references:
+    - docs/agent_guide.md
+    - docs/patterns/destructive_action.md
+    - docs/patterns/flash_and_toast.md
+  expectations:
+    - NitroKit::DangerZone
+    - NitroKit::Dialog
+    - "method: :delete"
+    - "status: :see_other"
+    - NitroKit::Toast::FlashMessages
+
+- name: inline_project_edit
+  prompt: Let a project panel switch between read-only and edit states with a working Cancel action.
+  skills:
+    - nitro-kit-ui
+    - nitro-kit-hotwire
+  references:
+    - docs/agent_guide.md
+    - docs/patterns/inline_edit.md
+    - docs/patterns/resource_form.md
+  expectations:
+    - one stable Turbo Frame
+    - "status: :unprocessable_entity"
+    - Cancel returns the read-only frame

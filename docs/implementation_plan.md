@@ -39,11 +39,11 @@ No compatibility layer should survive merely to keep a legacy example green. Rep
 Tickets: `nk-rzxf`, `nk-g3qu`
 
 - Work on the dedicated `2.0-agent-native` branch.
-- Keep the agent-native specification, component contracts, contributor guidance, and this plan tracked with the gem.
+- Keep the agent-native specification, component contracts, repository guidance, and this plan tracked with the gem.
 - Track the entire program in the workspace-level `.tickets` database.
 - Record implementation decisions and verification counts on each ticket before closing it.
 
-Gate: a new contributor can explain who owns Ruby, markup, CSS, behavior, theming, composition, and the class escape hatch by reading the tracked docs.
+Gate: an agent can explain who owns Ruby, markup, CSS, behavior, theming, composition, and the class escape hatch by reading the tracked docs.
 
 ## Stage 1 — kernel and distribution foundation
 
@@ -254,7 +254,7 @@ Gate: every child of `nk-rzxf` is closed with evidence and the repository contai
 | JavaScript    | Keyboard behavior; open/close/select; disconnect cleanup; Turbo navigation and morph              |
 | Gallery       | Catalog routes; exact escaped source; copy behavior; no class/style/escape; narrow/wide           |
 | Packaging     | Engine boot with optional integrations absent; gem contents and dependencies audited              |
-| Documentation | Specification, contracts, style guide, Rails boundary, theming, examples, contributor commands    |
+| Documentation | Specification, contracts, style guide, Rails boundary, theming, examples, repository commands     |
 
 ## Execution and handoff
 

@@ -307,6 +307,8 @@ The gallery includes, at minimum, sidebar, topbar, and hybrid application flows;
 
 Public documentation includes `docs/customization.md` plus aligned README and Rails-integration sections. It catalogs supported tokens, stylesheet load order, global and scoped overrides, light/dark selectors, appearance bootstrap and picker setup, CSP nonce/hash configuration, installing wizard exports, shell composition, and complete copyable Rails examples.
 
+`docs/agent_guide.md` is the packaged routing layer for coding agents. It points to version-matched component contracts and conventional Hotwire recipes for queryable collections, resource forms, destructive actions, flash/toast feedback, and inline editing. The packaged Codex plugin contains consumer UI and Hotwire skills that resolve the installed gem before reading these docs. It does not duplicate the component registry or add an MCP server.
+
 ## CSS and themes
 
 Nitro Kit ships `nitro_kit.css` as browser-ready plain CSS with no Tailwind requirement.

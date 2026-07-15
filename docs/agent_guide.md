@@ -1,0 +1,81 @@
+# Building applications with Nitro Kit
+
+This is the routing guide for coding agents working in a Rails application that uses Nitro Kit. It describes how to find the installed contract, select components, and apply the same Rails and Hotwire conventions across features.
+
+## Start from the installed version
+
+From the application root, run:
+
+```sh
+bundle show nitro_kit
+```
+
+Read this guide from that directory, then consult only the reference needed for the task:
+
+| Task                                       | Read next                               |
+| ------------------------------------------ | --------------------------------------- |
+| Choose or compose UI                       | `docs/component_contracts.md`           |
+| Forms, assets, frames, streams, appearance | `docs/rails_integration.md`             |
+| Theme tokens and application composition   | `docs/customization.md`                 |
+| Query, sort, filter, or paginate           | `docs/patterns/queryable_collection.md` |
+| Create, update, and show validation        | `docs/patterns/resource_form.md`        |
+| Delete, revoke, archive, or confirm        | `docs/patterns/destructive_action.md`   |
+| Flash messages and notifications           | `docs/patterns/flash_and_toast.md`      |
+| Edit and cancel inside a page              | `docs/patterns/inline_edit.md`          |
+
+The installed component source is the final authority for constructor and compound-method details. Do not use an API remembered from Nitro Kit 1.x or another installed version.
+
+## Select the highest-level matching component
+
+Prefer a block that owns the whole region, then compose smaller components inside it.
+
+| Product need                   | Begin with                                                |
+| ------------------------------ | --------------------------------------------------------- |
+| Application chrome             | `AppShell`, `AppNavigation`                               |
+| Authentication page            | `AuthShell`                                               |
+| Settings navigation            | `SettingsLayout`                                          |
+| Page title and primary actions | `PageHeader`                                              |
+| Data region                    | `DataSection`, then `Table` or `EmptyState`               |
+| Queryable tabular data         | `SortableTable`, `Toolbar`, `PaginationBar`               |
+| Model-backed form              | `FormSection`, Rails `form_with`, `NitroKit::FormBuilder` |
+| Destructive settings           | `DangerZone`, optionally `Dialog`                         |
+| Transient server feedback      | `Toast::FlashMessages`                                    |
+| General grouping               | `Card`, `Flex`, `Grid`, `Container`                       |
+
+Application-specific product UI belongs under the application's namespace and composes Nitro components. Nitro owns component markup, styles, accessibility structure, and narrowly scoped progressive behavior. The application owns product policy, records, routes, authorization, queries, DOM IDs, and server responses.
+
+## Use one interaction grammar
+
+Choose the smallest primitive that completes the interaction:
+
+1. Ordinary Rails links and forms under Turbo Drive.
+2. A Turbo Frame for one independently navigable or replaceable region.
+3. A request-scoped Turbo Stream response when one action changes multiple regions.
+4. A broadcast only when other sessions must receive the change.
+5. Application Stimulus only for browser-only behavior the preceding layers cannot express.
+
+Successful non-GET HTML submissions redirect with `303 See Other`. Invalid form submissions render the same invalid model with `422 Unprocessable Entity`. GET parameters remain the source of truth for queryable collections. Frame identifiers come from `dom_id` or one named constant shared by rendering, responses, and tests.
+
+## Stay inside the public boundary
+
+- Construct `NitroKit::*` classes directly from Phlex.
+- Select `NitroKit::FormBuilder` explicitly from Rails `form_with`.
+- Use component options, compound declarations, layouts, and documented `--nk-*` theme properties.
+- Keep an HTML fallback for every Turbo form flow.
+- Test semantic output and stable owned attributes.
+
+Do not copy component source, add `nk_*` helpers, invent a general ERB bridge, mutate Nitro-owned Stimulus controllers, or pass `class:` and `style:`. The intentionally loud `desperately_need_a_class:` escape exists only for external integrations that require a class hook.
+
+## Application `AGENTS.md`
+
+Put the durable project instruction in the consuming application's root. This is enough for an agent to discover the version-matched documentation even when the Nitro Kit plugin is not installed:
+
+```md
+## Nitro Kit
+
+This Rails application uses the `nitro_kit` gem. Before building or changing UI, run `bundle show nitro_kit` and read `docs/agent_guide.md` from that installed gem directory. Read the matching component contract or Hotwire recipe before editing.
+
+Compose gem-owned `NitroKit::*` Phlex components. Keep product components in the application namespace and keep routes, records, authorization, queries, DOM IDs, Turbo boundaries, and response semantics in the application. Do not copy Nitro component source or add `class:`/`style:` overrides.
+```
+
+For Codex, the repository also ships a Nitro Kit plugin with dedicated UI and Hotwire skills. The skills deliberately resolve the installed gem first, so upgrading the gem upgrades the instructions they use.
