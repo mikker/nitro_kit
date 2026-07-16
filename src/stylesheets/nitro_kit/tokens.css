@@ -146,6 +146,27 @@
   }
 
   :where(:root, [data-theme]) {
+    --nk-button-default-background: light-dark(
+      var(--nk-color-surface),
+      var(--nk-color-border)
+    );
+    --nk-button-default-hover-background: light-dark(
+      var(--nk-color-elevated),
+      color-mix(
+        in oklab,
+        var(--nk-button-default-background),
+        var(--nk-button-default-foreground) 10%
+      )
+    );
+    --nk-button-default-foreground: var(--nk-color-foreground);
+    --nk-button-default-border: light-dark(
+      var(--nk-color-border),
+      color-mix(
+        in oklab,
+        var(--nk-color-border) 90%,
+        var(--nk-color-foreground)
+      )
+    );
     --nk-color-surface-hover: color-mix(
       in oklab,
       var(--nk-color-surface) 96%,

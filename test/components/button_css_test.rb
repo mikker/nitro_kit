@@ -3,7 +3,7 @@ require "test_helper"
 load File.expand_path("../../lib/tasks/nitro_kit_tasks.rake", __dir__) unless defined?(NitroKit::CssBundle)
 
 class ButtonCssTest < ActiveSupport::TestCase
-  test "matches Flux base geometry and neutral treatment" do
+  test "matches Flux base geometry and exposes its neutral treatment" do
     css = button_css
 
     assert_includes css, "--_nk-button-height: var(--nk-control-height-md)"
@@ -12,7 +12,22 @@ class ButtonCssTest < ActiveSupport::TestCase
     assert_includes css, "--_nk-button-font-size: var(--nk-text-sm)"
     assert_includes css, "--_nk-button-line-height: 1.25rem"
     assert_includes css, "--_nk-button-shadow: 0 1px 2px 0 oklch(0 0 0 / 0.05)"
-    assert_includes css, "oklch(0.871 0.006 286.286 / 0.8)"
+    assert_includes css, "--_nk-button-background: var(--nk-button-default-background)"
+    assert_includes css, "--_nk-button-foreground: var(--nk-button-default-foreground)"
+    assert_includes css, "--_nk-button-border: var(--nk-button-default-border)"
+
+    %w[background hover-background foreground border].each do |token|
+      assert_includes tokens_css, "--nk-button-default-#{token}:"
+    end
+  end
+
+  test "shares the default action treatment with the native file selector" do
+    css = input_css
+
+    assert_includes css, "background: var(--nk-button-default-background)"
+    assert_includes css, "color: var(--nk-button-default-foreground)"
+    assert_includes css, "var(--nk-button-default-border)"
+    assert_includes css, "background: var(--nk-button-default-hover-background)"
   end
 
   test "matches Flux primary destructive and ghost treatments" do
@@ -46,5 +61,9 @@ class ButtonCssTest < ActiveSupport::TestCase
 
   def tokens_css
     NitroKit::CssBundle::ROOT.join("src/stylesheets/nitro_kit/tokens.css").read
+  end
+
+  def input_css
+    NitroKit::CssBundle::ROOT.join("src/stylesheets/nitro_kit/components/input.css").read
   end
 end

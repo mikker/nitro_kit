@@ -24,6 +24,8 @@ Nitro Kit does not require Tailwind. A Tailwind CSS v4 application loads `nitro_
 
 Keep application token overrides after Nitro Kit. The [customization guide](customization.md) documents the exact load order, every supported token, scoped and appearance-specific overrides, the gallery wizard, and the optional Tailwind adapter.
 
+Raised default Buttons have their own public background, hover, foreground, and border tokens. Override `--nk-button-default-*` rather than changing `--nk-color-surface` when form controls, cards, dialogs, and menus should retain their existing surfaces.
+
 There is no install generator and no source-copy step.
 
 ## Stimulus and importmap

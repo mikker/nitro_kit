@@ -1,7 +1,7 @@
 @layer nitro-kit.base {
   :where(
-      [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
-    ) {
+    [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
+  ) {
     display: block;
     inline-size: 100%;
     min-block-size: var(--nk-control-height-md);
@@ -32,13 +32,23 @@
     );
     margin-inline-end: calc(var(--nk-space) * 3);
     padding-inline: calc(var(--nk-space) * 3);
+    color: var(--nk-button-default-foreground);
     font-weight: var(--nk-font-weight-medium);
-    background: var(--nk-color-muted);
-    border-inline-end: var(--nk-border-width) solid var(--nk-color-border);
+    background: var(--nk-button-default-background);
+    border-inline-end: var(--nk-border-width) solid
+      var(--nk-button-default-border);
   }
 }
 
 @layer nitro-kit.state {
+  @media (hover: hover) {
+    :where(
+        [data-nk="input"][type="file"]:not(:disabled)
+      )::file-selector-button:hover {
+      background: var(--nk-button-default-hover-background);
+    }
+  }
+
   :where([data-nk="input"]:focus-visible) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);

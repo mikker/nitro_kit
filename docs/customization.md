@@ -70,6 +70,20 @@ Color tokens need a light value, a no-JavaScript system fallback, and a dark val
 
 The media query matters when JavaScript or the appearance bootstrap is unavailable. When the runtime is active, `data-theme` is always the resolved `light` or `dark` appearance. `system` is a stored preference in `data-theme-preference`, not a third palette and never a `data-theme="system"` selector.
 
+Raised default Buttons have their own tokens, so their dark treatment can change without recoloring cards, dialogs, menus, or data-entry controls:
+
+```css
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --nk-button-default-background: oklch(0.3 0.01 286);
+  }
+}
+
+[data-theme="dark"] {
+  --nk-button-default-background: oklch(0.3 0.01 286);
+}
+```
+
 ## Scoped overrides
 
 Wrap a product area in an application-owned attribute when only that subtree should change:
@@ -163,6 +177,7 @@ Treat related tokens as a system:
 
 - Accent changes usually set `--nk-color-primary`, `--nk-color-primary-foreground`, and `--nk-color-focus` for both appearances. The default hover value is derived automatically; set `--nk-color-primary-hover` only when the derived color is unsuitable.
 - Neutral changes should coordinate canvas, surface, elevated, foreground, muted, border, and neutral-content pairs for both appearances.
+- Default Button changes use the `--nk-button-default-*` tokens. They are separate from `--nk-color-surface` so a raised neutral action can change without recoloring inputs, cards, dialogs, and menus.
 - Radius changes should move `--nk-radius-xs` through `--nk-radius-xl` together. Leave `--nk-radius-full` alone unless pills and circular controls should stop being fully rounded.
 - Density changes should coordinate `--nk-space` with all five control-height tokens. Changing one component's internal gap is not a public theme contract.
 - Font changes normally set `--nk-font-sans`; set `--nk-font-mono`, text sizes, line heights, or weights only when the whole type system calls for it.
@@ -328,7 +343,7 @@ Use `@theme inline` when a Tailwind theme variable references another custom pro
 
 ## Public token reference
 
-The following 74 variables are the complete public token set. Theme-independent tokens are declared on `:root`. Appearance tokens have light, dark, and system-fallback values. Derived tokens have defaults expressed in terms of other public tokens and remain overrideable.
+The following 78 variables are the complete public token set. Theme-independent tokens are declared on `:root`. Appearance tokens have light, dark, and system-fallback values. Derived tokens have defaults expressed in terms of other public tokens and remain overrideable.
 
 ### Typography
 
@@ -420,6 +435,17 @@ The following 74 variables are the complete public token set. Theme-independent 
 | `--nk-color-danger-foreground`  | Content placed on destructive fill.     |
 | `--nk-color-danger-content`     | Error and destructive status content.   |
 | `--nk-color-overlay`            | Modal and drawer backdrop.              |
+
+### Default button colors
+
+| Token                                  | Role                                    |
+| -------------------------------------- | --------------------------------------- |
+| `--nk-button-default-background`       | Raised default-action fill.             |
+| `--nk-button-default-hover-background` | Raised default-action interaction fill. |
+| `--nk-button-default-foreground`       | Content on a raised default action.     |
+| `--nk-button-default-border`           | Border around a raised default action.  |
+
+The native file-input selector uses the same treatment. Ordinary inputs, selects, textareas, unchecked controls, cards, dialogs, and menus continue to use the general surface tokens.
 
 ### Application shell
 

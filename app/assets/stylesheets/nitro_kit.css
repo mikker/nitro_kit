@@ -161,6 +161,27 @@
   }
 
   :where(:root, [data-theme]) {
+    --nk-button-default-background: light-dark(
+      var(--nk-color-surface),
+      var(--nk-color-border)
+    );
+    --nk-button-default-hover-background: light-dark(
+      var(--nk-color-elevated),
+      color-mix(
+        in oklab,
+        var(--nk-button-default-background),
+        var(--nk-button-default-foreground) 10%
+      )
+    );
+    --nk-button-default-foreground: var(--nk-color-foreground);
+    --nk-button-default-border: light-dark(
+      var(--nk-color-border),
+      color-mix(
+        in oklab,
+        var(--nk-color-border) 90%,
+        var(--nk-color-foreground)
+      )
+    );
     --nk-color-surface-hover: color-mix(
       in oklab,
       var(--nk-color-surface) 96%,
@@ -1454,26 +1475,18 @@
     --_nk-button-radius: var(--nk-radius-lg);
     --_nk-button-font-size: var(--nk-text-sm);
     --_nk-button-line-height: 1.25rem;
-    --_nk-button-background: light-dark(
-      oklch(1 0 0),
-      oklch(0.37 0.013 285.805)
-    );
-    --_nk-button-hover-background: light-dark(
-      oklch(0.985 0 0),
-      oklch(0.442 0.017 285.786 / 0.75)
-    );
-    --_nk-button-foreground: light-dark(
-      oklch(0.274 0.006 286.033),
-      oklch(1 0 0)
-    );
+    --_nk-button-background: var(--nk-button-default-background);
+    --_nk-button-hover-background: var(--nk-button-default-hover-background);
+    --_nk-button-foreground: var(--nk-button-default-foreground);
     --_nk-button-border-width: var(--nk-border-width);
-    --_nk-button-border: light-dark(
-      oklch(0.92 0.004 286.32),
-      oklch(0.442 0.017 285.786)
-    );
+    --_nk-button-border: var(--nk-button-default-border);
     --_nk-button-border-bottom: light-dark(
-      oklch(0.871 0.006 286.286 / 0.8),
-      oklch(0.442 0.017 285.786)
+      color-mix(
+        in oklab,
+        var(--nk-button-default-border) 93%,
+        var(--nk-button-default-foreground)
+      ),
+      var(--nk-button-default-border)
     );
     --_nk-button-shadow: 0 1px 2px 0 oklch(0 0 0 / 0.05);
 
@@ -3677,8 +3690,8 @@
 /* Source: src/stylesheets/nitro_kit/components/input.css */
 @layer nitro-kit.base {
   :where(
-      [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
-    ) {
+    [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
+  ) {
     display: block;
     inline-size: 100%;
     min-block-size: var(--nk-control-height-md);
@@ -3709,13 +3722,23 @@
     );
     margin-inline-end: calc(var(--nk-space) * 3);
     padding-inline: calc(var(--nk-space) * 3);
+    color: var(--nk-button-default-foreground);
     font-weight: var(--nk-font-weight-medium);
-    background: var(--nk-color-muted);
-    border-inline-end: var(--nk-border-width) solid var(--nk-color-border);
+    background: var(--nk-button-default-background);
+    border-inline-end: var(--nk-border-width) solid
+      var(--nk-button-default-border);
   }
 }
 
 @layer nitro-kit.state {
+  @media (hover: hover) {
+    :where(
+        [data-nk="input"][type="file"]:not(:disabled)
+      )::file-selector-button:hover {
+      background: var(--nk-button-default-hover-background);
+    }
+  }
+
   :where([data-nk="input"]:focus-visible) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
