@@ -323,40 +323,6 @@
     text-align: inherit;
   }
 
-  :where(input[data-nk], [data-nk] input[data-slot])::-webkit-datetime-edit {
-    display: inline-flex;
-  }
-
-  :where(
-    input[data-nk],
-    [data-nk] input[data-slot]
-  )::-webkit-datetime-edit-fields-wrapper {
-    padding: 0;
-  }
-
-  :where(input[data-nk], [data-nk] input[data-slot])::-webkit-datetime-edit,
-  :where(
-    input[data-nk],
-    [data-nk] input[data-slot]
-  )::-webkit-datetime-edit-year-field,
-  :where(
-    input[data-nk],
-    [data-nk] input[data-slot]
-  )::-webkit-datetime-edit-month-field,
-  :where(
-    input[data-nk],
-    [data-nk] input[data-slot]
-  )::-webkit-datetime-edit-day-field {
-    padding-block: 0;
-  }
-
-  :where(
-    input[data-nk],
-    [data-nk] input[data-slot]
-  )::-webkit-calendar-picker-indicator {
-    line-height: 1;
-  }
-
   :where(input[data-nk], [data-nk] input[data-slot]):-moz-ui-invalid {
     box-shadow: none;
   }
@@ -2211,10 +2177,14 @@
   :where([data-nk="datepicker"]) {
     display: block;
     inline-size: 100%;
-    min-block-size: var(--nk-control-height-md);
+    block-size: var(--nk-control-height-md);
     padding-inline: calc(var(--nk-space) * 3);
+    padding-block: 0;
     color: var(--nk-color-foreground);
     font-size: var(--nk-text-base);
+    line-height: calc(
+      var(--nk-control-height-md) - (var(--nk-border-width) * 2)
+    );
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
     border-radius: var(--nk-radius-md);

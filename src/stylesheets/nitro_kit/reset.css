@@ -115,40 +115,6 @@
     text-align: inherit;
   }
 
-  :where(input[data-nk], [data-nk] input[data-slot])::-webkit-datetime-edit {
-    display: inline-flex;
-  }
-
-  :where(
-    input[data-nk],
-    [data-nk] input[data-slot]
-  )::-webkit-datetime-edit-fields-wrapper {
-    padding: 0;
-  }
-
-  :where(input[data-nk], [data-nk] input[data-slot])::-webkit-datetime-edit,
-  :where(
-    input[data-nk],
-    [data-nk] input[data-slot]
-  )::-webkit-datetime-edit-year-field,
-  :where(
-    input[data-nk],
-    [data-nk] input[data-slot]
-  )::-webkit-datetime-edit-month-field,
-  :where(
-    input[data-nk],
-    [data-nk] input[data-slot]
-  )::-webkit-datetime-edit-day-field {
-    padding-block: 0;
-  }
-
-  :where(
-    input[data-nk],
-    [data-nk] input[data-slot]
-  )::-webkit-calendar-picker-indicator {
-    line-height: 1;
-  }
-
   :where(input[data-nk], [data-nk] input[data-slot]):-moz-ui-invalid {
     box-shadow: none;
   }

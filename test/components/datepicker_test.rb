@@ -2,13 +2,13 @@ require "test_helper"
 
 class DatepickerTest < ActiveSupport::TestCase
   test "normalizes Safari's internal date field alignment" do
-    reset = NitroKit::Engine.root.join(
-      "src/stylesheets/nitro_kit/reset.css"
+    css = NitroKit::Engine.root.join(
+      "src/stylesheets/nitro_kit/components/datepicker.css"
     ).read
 
-    assert_includes reset, "::-webkit-datetime-edit-fields-wrapper"
-    assert_includes reset, "::-webkit-datetime-edit-day-field"
-    assert_includes reset, "::-webkit-calendar-picker-indicator"
+    assert_includes css, "block-size: var(--nk-control-height-md)"
+    assert_includes css, "padding-block: 0"
+    assert_includes css, "line-height: calc("
   end
 
   test "renders a native date field with form semantics and no JavaScript dependency" do

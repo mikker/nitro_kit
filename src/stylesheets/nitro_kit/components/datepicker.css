@@ -2,10 +2,14 @@
   :where([data-nk="datepicker"]) {
     display: block;
     inline-size: 100%;
-    min-block-size: var(--nk-control-height-md);
+    block-size: var(--nk-control-height-md);
     padding-inline: calc(var(--nk-space) * 3);
+    padding-block: 0;
     color: var(--nk-color-foreground);
     font-size: var(--nk-text-base);
+    line-height: calc(
+      var(--nk-control-height-md) - (var(--nk-border-width) * 2)
+    );
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
     border-radius: var(--nk-radius-md);
