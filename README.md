@@ -67,26 +67,37 @@ Datepicker and Switch use native inputs and do not have controllers.
 
 ## Usage
 
-Direct Phlex construction is the component API:
+Include Nitro Kit once in your base Phlex component. `NitroKit` is a
+`Phlex::Kit`, so every subclass can use its capitalized component methods
+without `render` or `.new`:
 
 ```ruby
-class AccountActions < Phlex::HTML
+class ApplicationComponent < Phlex::HTML
+  include NitroKit
+end
+
+class AccountActions < ApplicationComponent
   def view_template
-    render NitroKit::Button.new("Save", variant: :primary, type: :submit)
+    Button("Save", variant: :primary, type: :submit)
   end
 end
 ```
 
+The scoped `NitroKit::Button("Save")` form also works from a Phlex context.
+Kit methods render immediately and are unavailable from ERB. The explicit
+`NitroKit::Button.new(...)` constructor remains supported when another API
+needs a component object.
+
 Compound components use ordinary Ruby methods:
 
 ```ruby
-render NitroKit::Card.new do |card|
+Card do |card|
   card.title("Workspace")
   card.body do
-    render NitroKit::Badge.new("Active", color: :success)
+    Badge("Active", color: :success)
   end
   card.footer do
-    render NitroKit::Button.new("Manage", href: workspace_path)
+    Button("Manage", href: workspace_path)
   end
 end
 ```
@@ -98,7 +109,7 @@ Closed options such as variants, sizes, placements, and layout values are valida
 Use `Flex` for row and column composition and `Grid` for equal-track collections:
 
 ```ruby
-render NitroKit::Flex.new(
+Flex(
   dir: "col md:row",
   gap: "3 md:6",
   align: "stretch md:center",
@@ -108,7 +119,7 @@ render NitroKit::Flex.new(
   render WorkspaceActions.new
 end
 
-render NitroKit::Grid.new(cols: "1 sm:2 lg:3", gap: "3 lg:6") do
+Grid(cols: "1 sm:2 lg:3", gap: "3 lg:6") do
   records.each { |record| render RecordCard.new(record) }
 end
 ```
@@ -241,12 +252,12 @@ Then install **Nitro Kit** from that marketplace in the ChatGPT desktop app. The
 
 Nitro Kit 2.0 does not include a compatibility layer. Replace:
 
-- Generated component copies with gem-owned `NitroKit::*` classes.
-- `nk_*` ERB helpers and generated variant helpers with direct `render NitroKit::Component.new(...)` calls from Phlex.
+- Generated component copies with gem-owned Nitro Kit components.
+- `nk_*` ERB helpers and generated variant helpers with capitalized Kit methods such as `Button(...)` from Phlex.
 - `from_template`, conditional builder capture, and template-buffer bridges with normal Phlex blocks and compound methods.
 - Arbitrary component keyword attributes with explicit options or `html:`, `aria:`, and `data:`.
 - Tailwind class customization with documented `--nk-*` theme variables or application composition.
-- `VStack` and `HStack` with `Flex.new(dir: :col, ...)` and `Flex.new(dir: :row, ...)`; use responsive property strings when the direction or spacing changes by viewport.
+- `VStack` and `HStack` with `Flex(dir: :col, ...)` and `Flex(dir: :row, ...)`; use responsive property strings when the direction or spacing changes by viewport.
 - `nk_form_with` and `nk_form_for` with Rails `form_with(..., builder: NitroKit::FormBuilder)`.
 
 The old generators, helper modules, schema/variant layer, Tailwind Merge dependency, vendored Floating UI and combobox navigation code, and ERB test pages have been removed.

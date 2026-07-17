@@ -21,7 +21,7 @@ If the gem is not installed, say that the skill requires Nitro Kit and follow th
 ## Build the interface
 
 1. Reuse the highest-level Nitro block that matches the page region, then compose components inside it.
-2. Render `NitroKit::*` classes directly from Phlex. Keep product-specific components under the application's namespace, commonly `UI::*`.
+2. Include `NitroKit` once in the application's base Phlex component and use capitalized Kit methods such as `Button(...)` and `Card(...)`. Use `.new` only when another API needs a component object. Keep product-specific components under the application's namespace, commonly `UI::*`.
 3. Use `NitroKit::FormBuilder` explicitly with Rails `form_with` for model-backed forms.
 4. Keep routes, authorization, records, query policy, DOM IDs, Turbo boundaries, and response semantics in the application.
 5. Use documented `--nk-*` properties for theming and Nitro layout primitives for layout.

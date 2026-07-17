@@ -2,6 +2,26 @@
 
 Nitro Kit is a gem-owned, Phlex-only UI system for Rails. Its public surface is typed Ruby composition, self-describing markup, and static CSS driven by custom properties.
 
+`NitroKit` extends `Phlex::Kit`. Applications should include it once in their
+base Phlex component and use capitalized Kit methods as the primary composition
+syntax:
+
+```ruby
+class ApplicationComponent < Phlex::HTML
+  include NitroKit
+end
+
+class SaveButton < ApplicationComponent
+  def view_template
+    Button("Save", variant: :primary)
+  end
+end
+```
+
+The explicit `render NitroKit::Button.new(...)` form remains supported and is
+required when constructing a component object for another API. Kit methods
+render immediately and only work from a Phlex context; they do not work in ERB.
+
 ## Principles
 
 - Prefer the smallest obvious Ruby API.
@@ -122,14 +142,16 @@ Prefer direct-child contracts for component-owned structure. Do not style arbitr
 
 ## Compound components and content
 
-Direct Phlex composition replaces the old template-aware `builder do` wrapper. Compound APIs should be ordinary Ruby methods that render into the current Phlex context.
+Direct Phlex Kit composition replaces the old template-aware `builder do`
+wrapper. Compound APIs should be ordinary Ruby methods that render into the
+current Phlex context.
 
 Named leaf slots may accept arbitrary application content. That is normal composition, not an escape.
 
 When a fixed-order block exposes textual constructor keywords, expose matching deferred compound methods too:
 
 ```ruby
-render NitroKit::EmptyState.new(level: 3) do |empty|
+EmptyState(level: 3) do |empty|
   empty.title { plain "No records for "; strong { "Production" } }
   empty.description("Remove one or more filters and try again.")
 end
@@ -233,12 +255,12 @@ Parents own external placement and available width. Components own intrinsic geo
 `VStack` and `HStack` are not public components. Use `Flex` with an explicit `dir:`:
 
 ```ruby
-render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
+Flex(dir: :col, gap: 4, align: :stretch) do
   render ProfileForm.new
   render AccountActions.new
 end
 
-render NitroKit::Flex.new(
+Flex(
   dir: "col md:row",
   gap: "3 md:6",
   align: "stretch md:center",

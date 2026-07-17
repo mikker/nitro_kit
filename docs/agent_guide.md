@@ -58,7 +58,11 @@ Successful non-GET HTML submissions redirect with `303 See Other`. Invalid form 
 
 ## Stay inside the public boundary
 
-- Construct `NitroKit::*` classes directly from Phlex.
+- Include `NitroKit` once in the application's base Phlex component and use
+  capitalized Kit methods such as `Button(...)` and `Card(...)`.
+- Use the scoped `NitroKit::Button(...)` form when inclusion is not appropriate.
+- Use an explicit constructor such as `Button.new(...)` only when another API
+  needs a component object; Kit methods render immediately.
 - Select `NitroKit::FormBuilder` explicitly from Rails `form_with`.
 - Use component options, compound declarations, layouts, and documented `--nk-*` theme properties.
 - Keep an HTML fallback for every Turbo form flow.
@@ -75,7 +79,7 @@ Put the durable project instruction in the consuming application's root. This is
 
 This Rails application uses the `nitro_kit` gem. Before building or changing UI, run `bundle show nitro_kit` and read `docs/agent_guide.md` from that installed gem directory. Read the matching component contract or Hotwire recipe before editing.
 
-Compose gem-owned `NitroKit::*` Phlex components. Keep product components in the application namespace and keep routes, records, authorization, queries, DOM IDs, Turbo boundaries, and response semantics in the application. Do not copy Nitro component source or add `class:`/`style:` overrides.
+Include `NitroKit` in the application's base Phlex component and compose gem-owned components with capitalized Kit methods such as `Button(...)` and `Card(...)`. Keep product components in the application namespace and keep routes, records, authorization, queries, DOM IDs, Turbo boundaries, and response semantics in the application. Do not copy Nitro component source or add `class:`/`style:` overrides.
 ```
 
 For Codex, the repository also ships a Nitro Kit plugin with dedicated UI and Hotwire skills. The skills deliberately resolve the installed gem first, so upgrading the gem upgrades the instructions they use.
