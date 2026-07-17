@@ -11,11 +11,11 @@ gem "stimulus-rails"
 gem "turbo-rails"
 gem "importmap-rails"
 gem "hotwire-spark"
+gem "ransack", "~> 4.4"
 gem "rubocop-rails-omakase", require: false
 
 group :development, :test do
   gem "prism", "~> 1.0"
-  gem "ransack", "~> 4.4"
 end
 
 group :test do

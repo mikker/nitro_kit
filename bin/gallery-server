@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+bundle exec rake app:db:prepare app:db:seed
+exec bundle exec bin/rails server -b 0.0.0.0 -p "${PORT:-3000}"

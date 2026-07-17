@@ -3,6 +3,9 @@ require "bundler/setup"
 APP_RAKEFILE = File.expand_path("test/dummy/Rakefile", __dir__)
 load "rails/tasks/engine.rake"
 
+task "assets:precompile" => "app:assets:precompile"
+task "assets:clean" => "app:assets:clean"
+
 namespace :nitro_kit do
   namespace :css do
     desc "Build the committed Nitro Kit stylesheet"

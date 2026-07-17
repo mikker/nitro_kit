@@ -212,7 +212,18 @@ The prerelease ships:
 - Eleven blocks and shells: `AuthShell`, `AppShell`, `SettingsLayout`, `Toolbar`, `PaginationBar`, `PageHeader`, `StatGrid`, `DataSection`, `FormSection`, `DangerZone`, and `EmptyState`.
 - The non-visual `AppearanceBootstrap`, `NitroKit::FormBuilder`, and typed `NitroKit::Choice` values.
 
-The repository's dummy application is the canonical gallery. It exercises the component and block catalog across realistic Rails SaaS flows, narrow and wide layouts, light, dark, and system themes, and success, empty, error, loading, and destructive states. The gallery also includes a [customization wizard](/gallery/customize) and complete [sidebar](/gallery/flows/application-sidebar), [topbar](/gallery/flows/application-topbar), and [hybrid](/gallery/flows/application-hybrid) applications. Every example pairs Preview and Code tabs; the highlighted, copyable Ruby is extracted from the executable body of its Phlex block or concrete flow method so examples cannot silently drift from their source.
+The repository's dummy application is the canonical gallery, deployed at
+[gallery.nitrokit.dev](https://gallery.nitrokit.dev). It exercises the
+component and block catalog across realistic Rails SaaS flows, narrow and wide
+layouts, light, dark, and system themes, and success, empty, error, loading,
+and destructive states. The gallery also includes a
+[customization wizard](https://gallery.nitrokit.dev/gallery/customize) and
+complete [sidebar](https://gallery.nitrokit.dev/gallery/flows/application-sidebar),
+[topbar](https://gallery.nitrokit.dev/gallery/flows/application-topbar), and
+[hybrid](https://gallery.nitrokit.dev/gallery/flows/application-hybrid)
+applications. Every example pairs Preview and Code tabs; the highlighted,
+copyable Ruby is extracted from the executable body of its Phlex block or
+concrete flow method so examples cannot silently drift from their source.
 
 ## Coding agents
 
