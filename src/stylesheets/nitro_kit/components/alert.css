@@ -3,6 +3,7 @@
     --_nk-alert-background: var(--nk-color-surface);
     --_nk-alert-border: var(--nk-color-border);
     --_nk-alert-foreground: var(--nk-color-foreground);
+    --_nk-alert-tint-strength: 12%;
 
     position: relative;
     display: grid;
@@ -37,11 +38,11 @@
   }
 
   :where(
-      [data-nk="alert"]:has(> [data-slot="alert-icon"])
-        > [data-slot="alert-title"],
-      [data-nk="alert"]:has(> [data-slot="alert-icon"])
-        > [data-slot="alert-description"]
-    ) {
+    [data-nk="alert"]:has(> [data-slot="alert-icon"])
+      > [data-slot="alert-title"],
+    [data-nk="alert"]:has(> [data-slot="alert-icon"])
+      > [data-slot="alert-description"]
+  ) {
     grid-column: 2;
   }
 
@@ -53,45 +54,29 @@
 }
 
 @layer nitro-kit.variant {
-  :where([data-nk="alert"][data-variant="warning"]) {
+  :where([data-nk="alert"][data-color]) {
     --_nk-alert-background: color-mix(
       in oklab,
-      var(--nk-color-warning) 12%,
+      var(--_nk-palette-tint) var(--_nk-alert-tint-strength),
       transparent
     );
     --_nk-alert-border: color-mix(
       in oklab,
-      var(--nk-color-warning) 55%,
+      var(--_nk-palette-tint) 45%,
       transparent
     );
-    --_nk-alert-foreground: var(--nk-color-warning-content);
+    --_nk-alert-foreground: var(--_nk-palette-light);
   }
 
-  :where([data-nk="alert"][data-variant="error"]) {
-    --_nk-alert-background: color-mix(
-      in oklab,
-      var(--nk-color-danger) 10%,
-      transparent
-    );
-    --_nk-alert-border: color-mix(
-      in oklab,
-      var(--nk-color-danger) 55%,
-      transparent
-    );
-    --_nk-alert-foreground: var(--nk-color-danger-content);
+  :where([data-theme="dark"] [data-nk="alert"][data-color]) {
+    --_nk-alert-foreground: var(--_nk-palette-dark);
+    --_nk-alert-tint-strength: 20%;
   }
 
-  :where([data-nk="alert"][data-variant="success"]) {
-    --_nk-alert-background: color-mix(
-      in oklab,
-      var(--nk-color-success) 12%,
-      transparent
-    );
-    --_nk-alert-border: color-mix(
-      in oklab,
-      var(--nk-color-success) 55%,
-      transparent
-    );
-    --_nk-alert-foreground: var(--nk-color-success-content);
+  @media (prefers-color-scheme: dark) {
+    :where(:root:not([data-theme]) [data-nk="alert"][data-color]) {
+      --_nk-alert-foreground: var(--_nk-palette-dark);
+      --_nk-alert-tint-strength: 20%;
+    }
   }
 }

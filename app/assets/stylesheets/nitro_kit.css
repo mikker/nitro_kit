@@ -461,6 +461,7 @@
     --_nk-alert-background: var(--nk-color-surface);
     --_nk-alert-border: var(--nk-color-border);
     --_nk-alert-foreground: var(--nk-color-foreground);
+    --_nk-alert-tint-strength: 12%;
 
     position: relative;
     display: grid;
@@ -495,11 +496,11 @@
   }
 
   :where(
-      [data-nk="alert"]:has(> [data-slot="alert-icon"])
-        > [data-slot="alert-title"],
-      [data-nk="alert"]:has(> [data-slot="alert-icon"])
-        > [data-slot="alert-description"]
-    ) {
+    [data-nk="alert"]:has(> [data-slot="alert-icon"])
+      > [data-slot="alert-title"],
+    [data-nk="alert"]:has(> [data-slot="alert-icon"])
+      > [data-slot="alert-description"]
+  ) {
     grid-column: 2;
   }
 
@@ -511,46 +512,30 @@
 }
 
 @layer nitro-kit.variant {
-  :where([data-nk="alert"][data-variant="warning"]) {
+  :where([data-nk="alert"][data-color]) {
     --_nk-alert-background: color-mix(
       in oklab,
-      var(--nk-color-warning) 12%,
+      var(--_nk-palette-tint) var(--_nk-alert-tint-strength),
       transparent
     );
     --_nk-alert-border: color-mix(
       in oklab,
-      var(--nk-color-warning) 55%,
+      var(--_nk-palette-tint) 45%,
       transparent
     );
-    --_nk-alert-foreground: var(--nk-color-warning-content);
+    --_nk-alert-foreground: var(--_nk-palette-light);
   }
 
-  :where([data-nk="alert"][data-variant="error"]) {
-    --_nk-alert-background: color-mix(
-      in oklab,
-      var(--nk-color-danger) 10%,
-      transparent
-    );
-    --_nk-alert-border: color-mix(
-      in oklab,
-      var(--nk-color-danger) 55%,
-      transparent
-    );
-    --_nk-alert-foreground: var(--nk-color-danger-content);
+  :where([data-theme="dark"] [data-nk="alert"][data-color]) {
+    --_nk-alert-foreground: var(--_nk-palette-dark);
+    --_nk-alert-tint-strength: 20%;
   }
 
-  :where([data-nk="alert"][data-variant="success"]) {
-    --_nk-alert-background: color-mix(
-      in oklab,
-      var(--nk-color-success) 12%,
-      transparent
-    );
-    --_nk-alert-border: color-mix(
-      in oklab,
-      var(--nk-color-success) 55%,
-      transparent
-    );
-    --_nk-alert-foreground: var(--nk-color-success-content);
+  @media (prefers-color-scheme: dark) {
+    :where(:root:not([data-theme]) [data-nk="alert"][data-color]) {
+      --_nk-alert-foreground: var(--_nk-palette-dark);
+      --_nk-alert-tint-strength: 20%;
+    }
   }
 }
 
@@ -1406,7 +1391,8 @@
 /* Source: src/stylesheets/nitro_kit/components/badge.css */
 @layer nitro-kit.base {
   :where([data-nk="badge"]) {
-    --_nk-badge-color: var(--nk-color-neutral-content);
+    --_nk-badge-color: var(--_nk-palette-light);
+    --_nk-badge-tint-strength: 20%;
 
     display: inline-flex;
     align-items: center;
@@ -1418,7 +1404,7 @@
     vertical-align: middle;
     background-color: color-mix(
       in oklab,
-      var(--_nk-badge-color) 14%,
+      var(--_nk-palette-tint) var(--_nk-badge-tint-strength),
       transparent
     );
     border: var(--nk-border-width) solid transparent;
@@ -1434,23 +1420,19 @@
 @layer nitro-kit.variant {
   :where([data-nk="badge"][data-variant="outline"]) {
     background-color: transparent;
-    border-color: color-mix(in oklab, var(--_nk-badge-color) 50%, transparent);
+    border-color: color-mix(in oklab, var(--_nk-palette-tint) 50%, transparent);
   }
 
-  :where([data-nk="badge"][data-color="info"]) {
-    --_nk-badge-color: var(--nk-color-info-content);
+  :where([data-theme="dark"] [data-nk="badge"]) {
+    --_nk-badge-color: var(--_nk-palette-dark);
+    --_nk-badge-tint-strength: 40%;
   }
 
-  :where([data-nk="badge"][data-color="success"]) {
-    --_nk-badge-color: var(--nk-color-success-content);
-  }
-
-  :where([data-nk="badge"][data-color="warning"]) {
-    --_nk-badge-color: var(--nk-color-warning-content);
-  }
-
-  :where([data-nk="badge"][data-color="danger"]) {
-    --_nk-badge-color: var(--nk-color-danger-content);
+  @media (prefers-color-scheme: dark) {
+    :where(:root:not([data-theme]) [data-nk="badge"]) {
+      --_nk-badge-color: var(--_nk-palette-dark);
+      --_nk-badge-tint-strength: 40%;
+    }
   }
 }
 
@@ -4406,6 +4388,116 @@
       ) {
       margin-inline-start: 0;
     }
+  }
+}
+
+/* Source: src/stylesheets/nitro_kit/components/palette.css */
+@layer nitro-kit.variant {
+  :where([data-nk="badge"], [data-nk="alert"]):is(
+    [data-color="zinc"],
+    [data-color="neutral"]
+  ) {
+    --_nk-palette-light: oklch(37% 0.013 285.805);
+    --_nk-palette-dark: oklch(92% 0.004 286.32);
+    --_nk-palette-tint: oklch(70.5% 0.015 286.067);
+  }
+
+  :where([data-nk="badge"], [data-nk="alert"]):is(
+    [data-color="red"],
+    [data-color="danger"]
+  ) {
+    --_nk-palette-light: oklch(50.5% 0.213 27.518);
+    --_nk-palette-dark: oklch(88.5% 0.062 18.334);
+    --_nk-palette-tint: oklch(70.4% 0.191 22.216);
+  }
+  :where([data-nk="badge"], [data-nk="alert"])[data-color="orange"] {
+    --_nk-palette-light: oklch(55.3% 0.195 38.402);
+    --_nk-palette-dark: oklch(90.1% 0.076 70.697);
+    --_nk-palette-tint: oklch(75% 0.183 55.934);
+  }
+  :where([data-nk="badge"], [data-nk="alert"]):is(
+    [data-color="amber"],
+    [data-color="warning"]
+  ) {
+    --_nk-palette-light: oklch(55.5% 0.163 48.998);
+    --_nk-palette-dark: oklch(92.4% 0.12 95.746);
+    --_nk-palette-tint: oklch(82.8% 0.189 84.429);
+  }
+  :where([data-nk="badge"], [data-nk="alert"])[data-color="yellow"] {
+    --_nk-palette-light: oklch(47.6% 0.114 61.907);
+    --_nk-palette-dark: oklch(94.5% 0.129 101.54);
+    --_nk-palette-tint: oklch(85.2% 0.199 91.936);
+  }
+  :where([data-nk="badge"], [data-nk="alert"])[data-color="lime"] {
+    --_nk-palette-light: oklch(45.3% 0.124 130.933);
+    --_nk-palette-dark: oklch(93.8% 0.127 124.321);
+    --_nk-palette-tint: oklch(84.1% 0.238 128.85);
+  }
+  :where([data-nk="badge"], [data-nk="alert"]):is(
+    [data-color="green"],
+    [data-color="success"]
+  ) {
+    --_nk-palette-light: oklch(44.8% 0.119 151.328);
+    --_nk-palette-dark: oklch(92.5% 0.084 155.995);
+    --_nk-palette-tint: oklch(79.2% 0.209 151.711);
+  }
+  :where([data-nk="badge"], [data-nk="alert"])[data-color="emerald"] {
+    --_nk-palette-light: oklch(43.2% 0.095 166.913);
+    --_nk-palette-dark: oklch(90.5% 0.093 164.15);
+    --_nk-palette-tint: oklch(76.5% 0.177 163.223);
+  }
+  :where([data-nk="badge"], [data-nk="alert"])[data-color="teal"] {
+    --_nk-palette-light: oklch(43.7% 0.078 188.216);
+    --_nk-palette-dark: oklch(91% 0.096 180.426);
+    --_nk-palette-tint: oklch(77.7% 0.152 181.912);
+  }
+  :where([data-nk="badge"], [data-nk="alert"])[data-color="cyan"] {
+    --_nk-palette-light: oklch(45% 0.085 224.283);
+    --_nk-palette-dark: oklch(91.7% 0.08 205.041);
+    --_nk-palette-tint: oklch(78.9% 0.154 211.53);
+  }
+  :where([data-nk="badge"], [data-nk="alert"])[data-color="sky"] {
+    --_nk-palette-light: oklch(44.3% 0.11 240.79);
+    --_nk-palette-dark: oklch(90.1% 0.058 230.902);
+    --_nk-palette-tint: oklch(74.6% 0.16 232.661);
+  }
+  :where([data-nk="badge"], [data-nk="alert"]):is(
+    [data-color="blue"],
+    [data-color="info"]
+  ) {
+    --_nk-palette-light: oklch(42.4% 0.199 265.638);
+    --_nk-palette-dark: oklch(88.2% 0.059 254.128);
+    --_nk-palette-tint: oklch(70.7% 0.165 254.624);
+  }
+  :where([data-nk="badge"], [data-nk="alert"])[data-color="indigo"] {
+    --_nk-palette-light: oklch(45.7% 0.24 277.023);
+    --_nk-palette-dark: oklch(87% 0.065 274.039);
+    --_nk-palette-tint: oklch(67.3% 0.182 276.935);
+  }
+  :where([data-nk="badge"], [data-nk="alert"])[data-color="violet"] {
+    --_nk-palette-light: oklch(49.1% 0.27 292.581);
+    --_nk-palette-dark: oklch(89.4% 0.057 293.283);
+    --_nk-palette-tint: oklch(70.2% 0.183 293.541);
+  }
+  :where([data-nk="badge"], [data-nk="alert"])[data-color="purple"] {
+    --_nk-palette-light: oklch(49.6% 0.265 301.924);
+    --_nk-palette-dark: oklch(90.2% 0.063 306.703);
+    --_nk-palette-tint: oklch(71.4% 0.203 305.504);
+  }
+  :where([data-nk="badge"], [data-nk="alert"])[data-color="fuchsia"] {
+    --_nk-palette-light: oklch(51.8% 0.253 323.949);
+    --_nk-palette-dark: oklch(90.3% 0.076 319.62);
+    --_nk-palette-tint: oklch(74% 0.238 322.16);
+  }
+  :where([data-nk="badge"], [data-nk="alert"])[data-color="pink"] {
+    --_nk-palette-light: oklch(52.5% 0.223 3.958);
+    --_nk-palette-dark: oklch(89.9% 0.061 343.231);
+    --_nk-palette-tint: oklch(71.8% 0.202 349.761);
+  }
+  :where([data-nk="badge"], [data-nk="alert"])[data-color="rose"] {
+    --_nk-palette-light: oklch(51.4% 0.222 16.935);
+    --_nk-palette-dark: oklch(89.2% 0.058 10.001);
+    --_nk-palette-tint: oklch(71.2% 0.194 13.428);
   }
 }
 

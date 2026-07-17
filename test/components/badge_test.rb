@@ -5,7 +5,9 @@ class BadgeTest < ActiveSupport::TestCase
     assert_predicate NitroKit::Badge::VARIANTS, :frozen?
     assert_predicate NitroKit::Badge::SIZES, :frozen?
     assert_predicate NitroKit::Badge::COLORS, :frozen?
-    assert_equal %i[neutral info success warning danger], NitroKit::Badge::COLORS
+    assert_equal 23, NitroKit::Badge::COLORS.size
+    assert_includes NitroKit::Badge::COLORS, :zinc
+    assert_includes NitroKit::Badge::COLORS, :rose
 
     NitroKit::Badge::VARIANTS.product(NitroKit::Badge::SIZES, NitroKit::Badge::COLORS).each do |variant, size, color|
       node = render_node(NitroKit::Badge.new("Status", variant:, size:, color:))
@@ -78,6 +80,16 @@ class BadgeTest < ActiveSupport::TestCase
 
     assert_equal "external-badge", node["class"]
     assert_equal "class", node["data-nk-escape"]
+  end
+
+  test "ships the complete Tailwind color palette" do
+    css = NitroKit::Engine.root.join(
+      "src/stylesheets/nitro_kit/components/palette.css"
+    ).read
+
+    NitroKit::Badge::COLORS.first(18).each do |color|
+      assert_includes css, %(data-color="#{color}")
+    end
   end
 
   private

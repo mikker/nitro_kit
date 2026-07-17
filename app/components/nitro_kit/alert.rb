@@ -3,12 +3,20 @@
 module NitroKit
   class Alert < Component
     VARIANTS = %i[default warning error success].freeze
+    COLORS = NitroKit::Badge::COLORS
+    VARIANT_COLORS = {
+      default: :zinc,
+      warning: :amber,
+      error: :red,
+      success: :green
+    }.freeze
     LIVE_MODES = %i[off polite assertive].freeze
     Region = Data.define(:text, :content, :html, :aria, :data, :css_class)
     Child = Data.define(:component, :content)
 
     def initialize(
       variant: :default,
+      color: nil,
       live: :off,
       id: nil,
       html: {},
@@ -17,6 +25,7 @@ module NitroKit
       desperately_need_a_class: nil
     )
       @variant = validate_choice!(:variant, variant, VARIANTS)
+      @color = validate_choice!(:color, color || VARIANT_COLORS.fetch(@variant), COLORS)
       @live = validate_choice!(:live, live, LIVE_MODES)
       @icon = nil
       @title = nil
@@ -24,7 +33,7 @@ module NitroKit
 
       super(
         component: :alert,
-        attributes: { id:, role: live_role },
+        attributes: { id:, role: live_role, data: { color: @color } },
         html:,
         aria:,
         data:,

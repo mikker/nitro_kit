@@ -1,6 +1,7 @@
 @layer nitro-kit.base {
   :where([data-nk="badge"]) {
-    --_nk-badge-color: var(--nk-color-neutral-content);
+    --_nk-badge-color: var(--_nk-palette-light);
+    --_nk-badge-tint-strength: 20%;
 
     display: inline-flex;
     align-items: center;
@@ -12,7 +13,7 @@
     vertical-align: middle;
     background-color: color-mix(
       in oklab,
-      var(--_nk-badge-color) 14%,
+      var(--_nk-palette-tint) var(--_nk-badge-tint-strength),
       transparent
     );
     border: var(--nk-border-width) solid transparent;
@@ -28,23 +29,19 @@
 @layer nitro-kit.variant {
   :where([data-nk="badge"][data-variant="outline"]) {
     background-color: transparent;
-    border-color: color-mix(in oklab, var(--_nk-badge-color) 50%, transparent);
+    border-color: color-mix(in oklab, var(--_nk-palette-tint) 50%, transparent);
   }
 
-  :where([data-nk="badge"][data-color="info"]) {
-    --_nk-badge-color: var(--nk-color-info-content);
+  :where([data-theme="dark"] [data-nk="badge"]) {
+    --_nk-badge-color: var(--_nk-palette-dark);
+    --_nk-badge-tint-strength: 40%;
   }
 
-  :where([data-nk="badge"][data-color="success"]) {
-    --_nk-badge-color: var(--nk-color-success-content);
-  }
-
-  :where([data-nk="badge"][data-color="warning"]) {
-    --_nk-badge-color: var(--nk-color-warning-content);
-  }
-
-  :where([data-nk="badge"][data-color="danger"]) {
-    --_nk-badge-color: var(--nk-color-danger-content);
+  @media (prefers-color-scheme: dark) {
+    :where(:root:not([data-theme]) [data-nk="badge"]) {
+      --_nk-badge-color: var(--_nk-palette-dark);
+      --_nk-badge-tint-strength: 40%;
+    }
   }
 }
 

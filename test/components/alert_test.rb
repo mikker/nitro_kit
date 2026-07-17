@@ -19,9 +19,18 @@ class AlertTest < ActiveSupport::TestCase
 
       assert_equal "alert", node["data-nk"]
       assert_equal variant.to_s, node["data-variant"]
+      assert_equal NitroKit::Alert::VARIANT_COLORS.fetch(variant).to_s, node["data-color"]
       assert_nil node["role"]
       refute node.key?("class")
       refute node.key?("style")
+    end
+  end
+
+  test "accepts the Tailwind color palette" do
+    NitroKit::Alert::COLORS.each do |color|
+      node = render_node(NitroKit::Alert.new(color:))
+
+      assert_equal color.to_s, node["data-color"]
     end
   end
 
@@ -86,6 +95,7 @@ class AlertTest < ActiveSupport::TestCase
   test "validates options and supports the class escape hatch" do
     error = assert_raises(ArgumentError) { NitroKit::Alert.new(variant: :loud) }
     assert_match(/Unknown variant :loud/, error.message)
+    assert_raises(ArgumentError) { NitroKit::Alert.new(color: :chartreuse) }
 
     assert_raises(ArgumentError) { NitroKit::Alert.new(class: "utility") }
     assert_raises(ArgumentError) { NitroKit::Alert.new(style: "display: none") }

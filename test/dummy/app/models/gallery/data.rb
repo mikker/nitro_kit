@@ -328,13 +328,15 @@ module Gallery
       AvatarStackExample.new(slug: "lg", label: "Large stack", size: :lg, overflow: 12)
     ].freeze
 
-    BADGE_COLORS = [
-      BadgeExample.new(slug: "neutral", label: "Neutral", variant: :default, size: :md, color: :neutral),
-      BadgeExample.new(slug: "info", label: "Information", variant: :default, size: :md, color: :info),
-      BadgeExample.new(slug: "success", label: "Operational", variant: :default, size: :md, color: :success),
-      BadgeExample.new(slug: "warning", label: "Action required", variant: :default, size: :md, color: :warning),
-      BadgeExample.new(slug: "danger", label: "Failed", variant: :default, size: :md, color: :danger)
-    ].freeze
+    BADGE_COLORS = NitroKit::Badge::COLORS.map do |color|
+      BadgeExample.new(
+        slug: color.to_s,
+        label: color.to_s.humanize,
+        variant: :default,
+        size: :md,
+        color:
+      )
+    end.freeze
 
     BADGE_VARIANTS = [
       BadgeExample.new(slug: "default", label: "Default", variant: :default, size: :md, color: :info),
