@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.summary = "An agent-native Phlex UI system for Rails"
   spec.description = "Gem-owned Phlex components, layouts, blocks, static CSS, and Stimulus behavior for Rails applications."
   spec.license = "Nonstandard"
-  spec.required_ruby_version = ">= 3.2"
+  spec.required_ruby_version = ">= 4.0.6"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/mikker/nitro_kit"
