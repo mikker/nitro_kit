@@ -18,6 +18,13 @@
     --nk-leading-normal: 1.5;
     --nk-leading-relaxed: 1.625;
 
+    --nk-typeset-font-body: var(--nk-font-sans);
+    --nk-typeset-font-heading: var(--nk-font-sans);
+    --nk-typeset-font-mono: var(--nk-font-mono);
+    --nk-typeset-size: var(--nk-text-base);
+    --nk-typeset-leading: 1.75;
+    --nk-typeset-flow: 1.25em;
+
     --nk-font-weight-normal: 400;
     --nk-font-weight-medium: 500;
     --nk-font-weight-semibold: 600;

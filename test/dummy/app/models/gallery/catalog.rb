@@ -384,6 +384,15 @@ module Gallery
         expected_roots: %w[container flex grid card alert badge button]
       ),
       Entry.new(
+        kind: :component,
+        slug: "typeset",
+        title: "Typeset",
+        description: "Theme-aware reading rhythm for semantic HTML and rendered rich content.",
+        page: Gallery::Components::TypesetPage,
+        states: [],
+        expected_roots: %w[typeset container card button]
+      ),
+      Entry.new(
         kind: :block,
         slug: "auth-shell",
         title: "Authentication shell",

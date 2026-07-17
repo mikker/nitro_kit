@@ -343,7 +343,7 @@ Use `@theme inline` when a Tailwind theme variable references another custom pro
 
 ## Public token reference
 
-The following 78 variables are the complete public token set. Theme-independent tokens are declared on `:root`. Appearance tokens have light, dark, and system-fallback values. Derived tokens have defaults expressed in terms of other public tokens and remain overrideable.
+The following 84 variables are the complete public token set. Theme-independent tokens are declared on `:root`. Appearance tokens have light, dark, and system-fallback values. Derived tokens have defaults expressed in terms of other public tokens and remain overrideable.
 
 ### Typography
 
@@ -364,6 +364,12 @@ The following 78 variables are the complete public token set. Theme-independent 
 | `--nk-font-weight-medium`   | Medium text weight.                |
 | `--nk-font-weight-semibold` | Semibold text weight.              |
 | `--nk-font-weight-bold`     | Bold text weight.                  |
+| `--nk-typeset-font-body`    | Typeset body font family.          |
+| `--nk-typeset-font-heading` | Typeset heading font family.       |
+| `--nk-typeset-font-mono`    | Typeset code font family.          |
+| `--nk-typeset-size`         | Typeset base text size.            |
+| `--nk-typeset-leading`      | Typeset body line-height ratio.    |
+| `--nk-typeset-flow`         | Typeset vertical rhythm unit.      |
 
 ### Spacing and dimensions
 

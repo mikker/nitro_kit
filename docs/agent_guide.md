@@ -40,6 +40,7 @@ Prefer a block that owns the whole region, then compose smaller components insid
 | Model-backed form              | `FormSection`, Rails `form_with`, `NitroKit::FormBuilder` |
 | Destructive settings           | `DangerZone`, optionally `Dialog`                         |
 | Transient server feedback      | `Toast::FlashMessages`                                    |
+| Rendered Markdown or rich text | `Container`, then `Typeset`                               |
 | General grouping               | `Card`, `Flex`, `Grid`, `Container`                       |
 
 Application-specific product UI belongs under the application's namespace and composes Nitro components. Nitro owns component markup, styles, accessibility structure, and narrowly scoped progressive behavior. The application owns product policy, records, routes, authorization, queries, DOM IDs, and server responses.
