@@ -4,7 +4,19 @@ module NitroKit
   class Tooltip < Component
     PLACEMENTS = %i[top right bottom left].freeze
 
-    Trigger = ::Data.define(:text, :variant, :size, :disabled, :html, :aria, :data, :css_class, :content)
+    Trigger = ::Data.define(
+      :text,
+      :variant,
+      :size,
+      :icon,
+      :icon_right,
+      :disabled,
+      :html,
+      :aria,
+      :data,
+      :css_class,
+      :content
+    )
 
     def initialize(
       id:,
@@ -60,6 +72,8 @@ module NitroKit
       text = nil,
       variant: :default,
       size: :md,
+      icon: nil,
+      icon_right: nil,
       html: {},
       aria: {},
       data: {},
@@ -68,12 +82,16 @@ module NitroKit
     )
       ensure_collecting!
       raise ArgumentError, "Tooltip accepts exactly one trigger" if @trigger
-      raise ArgumentError, "Tooltip trigger requires text or a block" if text.nil? && !content
+      if text.nil? && !content && icon.nil?
+        raise ArgumentError, "Tooltip trigger requires text, a block, or an icon"
+      end
 
       @trigger = Trigger.new(
         text:,
         variant:,
         size:,
+        icon:,
+        icon_right:,
         disabled: false,
         html:,
         aria:,
@@ -101,6 +119,8 @@ module NitroKit
         @trigger.text,
         variant: @trigger.variant,
         size: @trigger.size,
+        icon: @trigger.icon,
+        icon_right: @trigger.icon_right,
         disabled: @trigger.disabled,
         id: trigger_id,
         html: @trigger.html,

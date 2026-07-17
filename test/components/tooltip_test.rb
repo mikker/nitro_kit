@@ -41,6 +41,17 @@ class TooltipComponentTest < ActiveSupport::TestCase
     end
   end
 
+  test "supports an accessible icon-only trigger" do
+    node = render_tooltip do |tooltip|
+      tooltip.trigger(icon: :copy, aria: { label: "Copy" })
+    end
+
+    trigger = node.at_css("[data-slot='tooltip-trigger']")
+    assert_equal "Copy", trigger["aria-label"]
+    assert trigger.at_css("svg[data-nk='icon'] path")
+    refute_includes trigger.text, "NitroKit::Button"
+  end
+
   test "appends its content to existing trigger descriptions" do
     node = render_tooltip do |tooltip|
       tooltip.trigger("Explain", aria: { describedby: "account-help status-help" })

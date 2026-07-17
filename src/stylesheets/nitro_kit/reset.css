@@ -15,12 +15,12 @@
   }
 
   :where(
-      button[data-nk],
-      input[data-nk],
-      select[data-nk],
-      textarea[data-nk],
-      [data-nk] :is(button, input, select, textarea)[data-slot]
-    ) {
+    button[data-nk],
+    input[data-nk],
+    select[data-nk],
+    textarea[data-nk],
+    [data-nk] :is(button, input, select, textarea)[data-slot]
+  ) {
     font: inherit;
     font-feature-settings: inherit;
     font-variation-settings: inherit;
@@ -38,19 +38,19 @@
   }
 
   :where(
-      input[data-nk],
-      textarea[data-nk],
-      [data-nk] :is(input, textarea)[data-slot]
-    )::placeholder {
+    input[data-nk],
+    textarea[data-nk],
+    [data-nk] :is(input, textarea)[data-slot]
+  )::placeholder {
     color: var(--nk-color-muted-foreground);
     opacity: 1;
   }
 
   :where(
-      button[data-nk],
-      input[data-nk],
-      [data-nk] :is(button, input)[data-slot]
-    )::file-selector-button {
+    button[data-nk],
+    input[data-nk],
+    [data-nk] :is(button, input)[data-slot]
+  )::file-selector-button {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -61,11 +61,11 @@
   }
 
   :where(
-      ol[data-nk],
-      ul[data-nk],
-      menu[data-nk],
-      [data-nk] :is(ol, ul, menu)[data-slot]
-    ) {
+    ol[data-nk],
+    ul[data-nk],
+    menu[data-nk],
+    [data-nk] :is(ol, ul, menu)[data-slot]
+  ) {
     list-style: none;
   }
 
@@ -76,11 +76,11 @@
   }
 
   :where(
-      img[data-nk],
-      svg[data-nk],
-      video[data-nk],
-      [data-nk] :is(img, svg, video)[data-slot]
-    ) {
+    img[data-nk],
+    svg[data-nk],
+    video[data-nk],
+    [data-nk] :is(img, svg, video)[data-slot]
+  ) {
     display: block;
     vertical-align: middle;
   }
@@ -101,18 +101,52 @@
   }
 
   :where(
-      input[data-nk],
-      [data-nk] input[data-slot]
-    )::-webkit-search-decoration {
+    input[data-nk],
+    [data-nk] input[data-slot]
+  )::-webkit-search-decoration {
     appearance: none;
   }
 
   :where(
-      input[data-nk],
-      [data-nk] input[data-slot]
-    )::-webkit-date-and-time-value {
+    input[data-nk],
+    [data-nk] input[data-slot]
+  )::-webkit-date-and-time-value {
     min-height: 1lh;
     text-align: inherit;
+  }
+
+  :where(input[data-nk], [data-nk] input[data-slot])::-webkit-datetime-edit {
+    display: inline-flex;
+  }
+
+  :where(
+    input[data-nk],
+    [data-nk] input[data-slot]
+  )::-webkit-datetime-edit-fields-wrapper {
+    padding: 0;
+  }
+
+  :where(input[data-nk], [data-nk] input[data-slot])::-webkit-datetime-edit,
+  :where(
+    input[data-nk],
+    [data-nk] input[data-slot]
+  )::-webkit-datetime-edit-year-field,
+  :where(
+    input[data-nk],
+    [data-nk] input[data-slot]
+  )::-webkit-datetime-edit-month-field,
+  :where(
+    input[data-nk],
+    [data-nk] input[data-slot]
+  )::-webkit-datetime-edit-day-field {
+    padding-block: 0;
+  }
+
+  :where(
+    input[data-nk],
+    [data-nk] input[data-slot]
+  )::-webkit-calendar-picker-indicator {
+    line-height: 1;
   }
 
   :where(input[data-nk], [data-nk] input[data-slot]):-moz-ui-invalid {
@@ -120,8 +154,8 @@
   }
 
   :where([data-nk][hidden], [data-nk] [data-slot][hidden]):not(
-      [hidden="until-found"]
-    ) {
+    [hidden="until-found"]
+  ) {
     display: none !important;
   }
 }
