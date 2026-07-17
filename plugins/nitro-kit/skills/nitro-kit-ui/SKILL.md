@@ -1,6 +1,6 @@
 ---
 name: nitro-kit-ui
-description: Build or refactor Rails interfaces with the Nitro Kit gem's Phlex components, layouts, blocks, FormBuilder, and theme tokens. Use when an application has nitro_kit in its bundle, mentions Nitro Kit, or asks for Rails UI that should follow Nitro Kit component conventions instead of custom markup, CSS, or copied component code.
+description: Build or refactor Rails interfaces with the Nitro Kit gem's Phlex components, layouts, blocks, FormBuilder, and theme tokens. Use when an application has nitro_kit in its bundle, mentions Nitro Kit, or asks for a Rails interface that should follow Nitro Kit component conventions instead of custom markup, CSS, or copied component code.
 ---
 
 # Nitro Kit UI

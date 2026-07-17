@@ -1,4 +1,4 @@
 interface:
   display_name: "Nitro Kit UI"
-  short_description: "Build Rails UI with Nitro Kit components"
+  short_description: "Build Rails interfaces with Nitro Kit components"
   default_prompt: "Use $nitro-kit-ui to build this Rails interface with the installed Nitro Kit components."
