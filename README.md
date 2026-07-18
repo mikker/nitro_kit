@@ -250,7 +250,7 @@ Then install **Nitro Kit** from that marketplace in the ChatGPT desktop app. The
 
 ## Migrating from 1.x
 
-Nitro Kit 2.0 does not include a compatibility layer. Replace:
+Nitro Kit 2.0 does not include a general compatibility layer. Replace:
 
 - Generated component copies with gem-owned Nitro Kit components.
 - `nk_*` ERB helpers and generated variant helpers with capitalized Kit methods such as `Button(...)` from Phlex.
@@ -259,6 +259,7 @@ Nitro Kit 2.0 does not include a compatibility layer. Replace:
 - Tailwind class customization with documented `--nk-*` theme variables or application composition.
 - `VStack` and `HStack` with `Flex(dir: :col, ...)` and `Flex(dir: :row, ...)`; use responsive property strings when the direction or spacing changes by viewport.
 - `nk_form_with` and `nk_form_for` with Rails `form_with(..., builder: NitroKit::FormBuilder)`.
+- `nk_pagy_nav(@pagy)` with `Pagination(pagy: @pagy)`. Pagination retains this direct Pagy integration because page-series adaptation is mechanical rather than application policy.
 
 The old generators, helper modules, schema/variant layer, Tailwind Merge dependency, vendored Floating UI and combobox navigation code, and ERB test pages have been removed.
 

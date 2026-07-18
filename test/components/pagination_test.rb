@@ -1,6 +1,89 @@
 require "test_helper"
 
 class PaginationComponentTest < ActiveSupport::TestCase
+  test "builds conventional navigation from a modern Pagy object" do
+    pagy = Class.new do
+      attr_reader :previous, :next
+
+      def initialize
+        @previous = 4
+        @next = 6
+      end
+
+      def page_url(page) = "/projects?page=#{page}"
+
+      protected
+
+      def series = [ 1, :gap, 4, "5", 6, :gap, 12 ]
+    end.new
+
+    node = render_node(NitroKit::Pagination.new(pagy:))
+    items = node.css("[data-slot='pagination-item']")
+
+    assert_equal %w[previous page ellipsis page page page ellipsis page next],
+      items.map { |item| item["data-kind"] }
+    assert_equal "/projects?page=4",
+      node.at_css("[data-slot='pagination-previous']")["href"]
+    assert_equal "5", node.at_css("[aria-current='page']").text
+    assert_equal "/projects?page=6",
+      node.at_css("[data-slot='pagination-next']")["href"]
+  end
+
+  test "supports older Pagy objects through an explicit page URL callable" do
+    pagy = Class.new do
+      attr_reader :prev, :next
+
+      def initialize
+        @prev = nil
+        @next = 2
+      end
+
+      protected
+
+      def series = [ "1", 2, :gap, 8 ]
+    end.new
+    page_url = ->(page) { "/legacy?page=#{page}" }
+
+    node = render_node(NitroKit::Pagination.new(pagy:, page_url:))
+
+    assert_equal "true",
+      node.at_css("[data-slot='pagination-previous']")["aria-disabled"]
+    assert_equal "/legacy?page=2",
+      node.at_css("[data-slot='pagination-next']")["href"]
+  end
+
+  test "keeps the Pagy dependency optional and validates its boundary" do
+    pagy = Object.new
+
+    assert_raises(ArgumentError) { NitroKit::Pagination.new(pagy:) }
+    assert_raises(ArgumentError) do
+      NitroKit::Pagination.new(pagy: nil, page_url: "/pages")
+    end
+    assert_raises(ArgumentError) do
+      valid_pagy = Class.new do
+        attr_reader :previous, :next
+
+        protected
+
+        def series = [ 1 ]
+      end.new
+
+      NitroKit::Pagination.new(pagy: valid_pagy).call
+    end
+    valid_pagy = Class.new do
+      attr_reader :previous, :next
+
+      protected
+
+      def series = [ "1" ]
+    end.new
+    assert_raises(ArgumentError) do
+      NitroKit::Pagination.new(pagy: valid_pagy).call do |pagination|
+        pagination.page(1, current: true)
+      end
+    end
+  end
+
   test "renders one ordered native navigation list" do
     assert_predicate NitroKit::Pagination::ITEM_KINDS, :frozen?
     assert_equal %i[previous page ellipsis next], NitroKit::Pagination::ITEM_KINDS

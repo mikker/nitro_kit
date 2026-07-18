@@ -264,6 +264,33 @@ Deliver the submitting user's stream over the HTTP response. A successful non-Tu
 
 The dummy application's `RailsIntegration::RegistrationForm`, `RegistrationStream`, and request tests are executable reference implementations of this contract.
 
+## Pagy pagination
+
+Keep the collection query in the controller and pass Pagy's result directly to Pagination:
+
+```ruby
+class ProjectsController < ApplicationController
+  def index
+    @pagy, @projects = pagy(:offset, Project.order(updated_at: :desc))
+  end
+end
+```
+
+```ruby
+Pagination(pagy: @pagy)
+```
+
+Pagination reads Pagy's previous page, visible series, gaps, current page, next page, and page URLs. Pagy remains optional: applications that do not bundle it keep using the manual declaration API. Modern Pagy objects own URL generation through their request context. For an older Pagy release or a custom compatible object, supply the URL boundary explicitly:
+
+```ruby
+Pagination(
+  pagy: @pagy,
+  page_url: ->(page) { pagy_url_for(@pagy, page) }
+)
+```
+
+This replaces the 1.x `nk_pagy_nav(@pagy)` helper without bringing the old global helper layer into Phlex composition.
+
 ## Conventional interaction recipes
 
 Use the packaged recipes for complete application flows:

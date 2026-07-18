@@ -1,5 +1,10 @@
 # frozen_string_literal: true
 
+begin
+  require "pagy/toolbox/helpers/support/series"
+rescue LoadError
+end
+
 module NitroKit
   class Pagination < Component
     Item = Data.define(:kind, :button, :content, :current, :label)
@@ -29,6 +34,8 @@ module NitroKit
 
     def initialize(
       label: "Pagination",
+      pagy: nil,
+      page_url: nil,
       id: nil,
       html: {},
       aria: {},
@@ -37,6 +44,9 @@ module NitroKit
     )
       validate_label!(label, name: "label")
       validate_aria!(aria, reserved: %w[label])
+      validate_pagy!(pagy, page_url:)
+      @pagy = pagy
+      @page_url = page_url
       @items = []
 
       super(
@@ -49,8 +59,13 @@ module NitroKit
       )
     end
 
-    def view_template
-      yield self if block_given?
+    def view_template(&content)
+      if @pagy && content
+        raise ArgumentError, "Pagination accepts a Pagy object or a block, not both"
+      end
+
+      append_pagy_items if @pagy
+      yield self if content
       validate_collection!
 
       nav(**root_attributes) do
@@ -174,6 +189,58 @@ module NitroKit
     end
 
     private
+
+    def append_pagy_items
+      previous = pagy_previous
+      prev(href: pagy_page_url(previous)) if previous
+      prev(disabled: true) unless previous
+
+      @pagy.__send__(:series).each do |item|
+        case item
+        when Integer
+          page(item, href: pagy_page_url(item))
+        when String
+          page(item, current: true)
+        when :gap
+          ellipsis
+        else
+          raise ArgumentError, "Pagination received an unknown Pagy series item: #{item.inspect}"
+        end
+      end
+
+      following = @pagy.next
+      self.next(href: pagy_page_url(following)) if following
+      self.next(disabled: true) unless following
+    end
+
+    def pagy_previous
+      return @pagy.previous if @pagy.respond_to?(:previous)
+
+      @pagy.prev
+    end
+
+    def pagy_page_url(page)
+      return @page_url.call(page) if @page_url
+      return @pagy.page_url(page) if @pagy.respond_to?(:page_url)
+
+      raise ArgumentError,
+        "Pagination requires page_url: for this Pagy version"
+    end
+
+    def validate_pagy!(pagy, page_url:)
+      if page_url && !page_url.respond_to?(:call)
+        raise ArgumentError, "Pagination page_url must be callable"
+      end
+      return unless pagy
+
+      required = %i[next]
+      required << :previous unless pagy.respond_to?(:prev)
+      missing = required.reject { |method| pagy.respond_to?(method, true) }
+      return if missing.empty?
+
+      raise ArgumentError,
+        "Pagination pagy must respond to #{missing.join(", ")}"
+    end
 
     def append_navigation_item(
       kind,
