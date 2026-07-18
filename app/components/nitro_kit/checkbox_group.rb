@@ -2,6 +2,9 @@
 
 module NitroKit
   class CheckboxGroup < Component
+    ORIENTATIONS = %i[vertical horizontal].freeze
+    PRESENTATIONS = %i[list cards].freeze
+
     alias :html_legend :legend
 
     def initialize(
@@ -11,6 +14,8 @@ module NitroKit
       value: [],
       id: nil,
       description: nil,
+      orientation: :vertical,
+      presentation: :list,
       unchecked_value: "",
       include_hidden: true,
       disabled: false,
@@ -25,6 +30,8 @@ module NitroKit
       @value = Array(value).map(&:to_s).freeze
       @id = id || deterministic_id(name)
       @description = validate_optional_text!(:description, description)
+      @orientation = validate_choice!(:orientation, orientation, ORIENTATIONS)
+      @presentation = validate_choice!(:presentation, presentation, PRESENTATIONS)
       @unchecked_value = unchecked_value
       @include_hidden = validate_boolean!(:include_hidden, include_hidden)
       @disabled = validate_boolean!(:disabled, disabled)
@@ -39,7 +46,8 @@ module NitroKit
         component: :checkbox_group,
         attributes: {
           id: @id,
-          disabled: @disabled
+          disabled: @disabled,
+          data: { orientation: @orientation, presentation: @presentation }
         }.compact,
         html:,
         aria:,
@@ -48,7 +56,7 @@ module NitroKit
       )
     end
 
-    attr_reader :legend, :options, :name, :value, :description, :id
+    attr_reader :legend, :options, :name, :value, :description, :id, :orientation, :presentation
 
     def view_template
       fieldset(**root_attributes) do
@@ -87,6 +95,7 @@ module NitroKit
       render_in_slot(
         Checkbox.new(
           label: choice.label,
+          description: choice.description,
           id: choice.id || choice_id(index),
           name:,
           value: choice.value,

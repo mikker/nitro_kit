@@ -11,7 +11,8 @@
     ) {
     flex: none;
     margin-inline-start: calc(var(--nk-space) * -3);
-    box-shadow: 0 0 0 calc(var(--nk-border-width) * 2) var(--nk-color-canvas);
+    background-color: var(--nk-color-surface);
+    box-shadow: 0 0 0 calc(var(--nk-border-width) * 2) var(--nk-color-surface);
   }
 
   :where(

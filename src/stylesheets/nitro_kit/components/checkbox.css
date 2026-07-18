@@ -56,7 +56,19 @@
   }
 
   :where([data-nk="checkbox"] [data-slot="checkbox-label-text"]) {
+    display: block;
+  }
+
+  :where([data-nk="checkbox"] [data-slot="checkbox-content"]) {
     grid-column: 2;
+  }
+
+  :where([data-nk="checkbox"] [data-slot="checkbox-description"]) {
+    display: block;
+    margin-block-start: var(--nk-space);
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-sm);
+    text-wrap: pretty;
   }
 }
 

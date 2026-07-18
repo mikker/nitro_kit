@@ -9,6 +9,7 @@ module NitroKit
 
     def initialize(
       id:,
+      dismissible: true,
       html: {},
       aria: {},
       data: {},
@@ -19,10 +20,17 @@ module NitroKit
       end
 
       @id = id
+      @dismissible = validate_boolean!(:dismissible, dismissible)
 
       super(
         component: :dialog,
-        attributes: { id: },
+        attributes: {
+          id:,
+          data: {
+            controller: "nk--dialog",
+            nk__dialog_dismissible_value: @dismissible
+          }
+        },
         html:,
         aria:,
         data:,
@@ -170,7 +178,12 @@ module NitroKit
           attributes: {
             id: element_id(:panel),
             open: @panel.nonmodal,
-            aria: owned_aria
+            closedby: @dismissible ? "any" : "none",
+            aria: owned_aria,
+            data: {
+              nk__dialog_target: "panel",
+              action: "click->nk--dialog#dismiss cancel->nk--dialog#cancel"
+            }
           },
           html: @panel.html,
           aria: @panel.aria,
@@ -185,11 +198,10 @@ module NitroKit
     end
 
     def render_panel_content
-      return unless @panel.content
-
       @close_button_rendered = false
       @rendering_panel = true
-      render(@panel.content)
+      render(@panel.content) if @panel.content
+      close_button unless @close_button_rendered || !@dismissible
     ensure
       @rendering_panel = false
     end

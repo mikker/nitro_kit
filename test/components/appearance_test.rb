@@ -94,6 +94,34 @@ class AppearanceTest < ActiveSupport::TestCase
     [ nil, "", "   ", :appearance ].each do |label|
       assert_raises(ArgumentError) { NitroKit::AppearancePicker.new(id: "appearance", label:) }
     end
+
+
+    assert_raises(ArgumentError) do
+      NitroKit::AppearancePicker.new(
+        id: "appearance",
+        presentation: :buttons
+      )
+    end
+  end
+
+  test "picker renders radio and select presentations" do
+    radios = render_node(
+      NitroKit::AppearancePicker.new(
+        id: "radios",
+        presentation: :radios
+      )
+    )
+    select = render_node(
+      NitroKit::AppearancePicker.new(
+        id: "select",
+        presentation: :select
+      )
+    )
+
+    assert_equal "radios", radios["data-presentation"]
+    assert_equal "select", select["data-presentation"]
+    assert_equal %w[light dark system], select.css("option").map { |option| option["value"] }
+    assert_equal "input", select.at_css("select")["data-nk--appearance-target"]
   end
 
   test "picker preserves the shared class and reserved attribute boundaries" do

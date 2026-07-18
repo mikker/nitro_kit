@@ -158,7 +158,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
       assert_select "> [data-slot='danger-zone-confirmation'] > #gallery-team-remove-dialog[data-nk='dialog']"
       assert_select "> #gallery-team-remove-escape[data-slot='danger-zone-escape'][data-variant='default']"
     end
-    assert_select "#gallery-team-remove-dialog[data-nk='dialog']:not([data-controller]) dialog[open]" \
+    assert_select "#gallery-team-remove-dialog[data-nk='dialog'][data-controller='nk--dialog'] dialog[open]" \
       "[aria-labelledby='gallery-team-remove-dialog-title']" \
       "[aria-describedby='gallery-team-remove-dialog-description']"
     assert_select "#gallery-team-remove-dialog-title", text: "Remove Grace Hopper?"

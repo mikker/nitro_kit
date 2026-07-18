@@ -26,4 +26,36 @@
     gap: var(--nk-space);
     margin-block-start: calc(var(--nk-space) * 2);
   }
+
+  :where(
+      [data-nk="checkbox-group"][data-orientation="horizontal"]
+        > [data-slot="checkbox-group-choices"]
+    ) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--nk-space) * 4);
+  }
+
+  :where(
+      [data-nk="checkbox-group"][data-presentation="cards"]
+        > [data-slot="checkbox-group-choices"]
+        > [data-slot="checkbox-group-choice"]
+    ) {
+    inline-size: 100%;
+    padding: calc(var(--nk-space) * 3);
+    background: var(--nk-color-surface);
+    border: var(--nk-border-width) solid var(--nk-color-border);
+    border-radius: var(--nk-radius-md);
+  }
+}
+
+@layer nitro-kit.state {
+  :where(
+      [data-nk="checkbox-group"][data-presentation="cards"]
+        > [data-slot="checkbox-group-choices"]
+        > [data-slot="checkbox-group-choice"]:has(input:checked)
+    ) {
+    border-color: var(--nk-color-primary);
+    box-shadow: 0 0 0 var(--nk-border-width) var(--nk-color-primary);
+  }
 }

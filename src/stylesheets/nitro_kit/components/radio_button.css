@@ -68,7 +68,19 @@
   }
 
   :where([data-nk="radio-button"] [data-slot="radio-button-label-text"]) {
+    display: block;
+  }
+
+  :where([data-nk="radio-button"] [data-slot="radio-button-content"]) {
     grid-column: 2;
+  }
+
+  :where([data-nk="radio-button"] [data-slot="radio-button-description"]) {
+    display: block;
+    margin-block-start: var(--nk-space);
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-sm);
+    text-wrap: pretty;
   }
 }
 

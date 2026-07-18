@@ -142,11 +142,12 @@ class DropdownComponentTest < ActiveSupport::TestCase
     end
   end
 
-  test "centers the popover when anchor positioning is unavailable" do
+  test "positions the popover from controller-owned coordinates" do
     source = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/dropdown.css").read
 
-    assert_includes source, "inset: 50% auto auto 50%"
-    assert_includes source, "translate: -50% -50%"
+    assert_includes source, "--_nk-overlay-top"
+    assert_includes source, "--_nk-overlay-left"
+    assert_includes source, "translate: none"
     assert_includes source, "@supports (inset-block-start: anchor(bottom))"
     assert_includes source, ":popover-open"
     refute_includes source, "[data-state=\"open\"]"

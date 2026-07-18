@@ -2,6 +2,9 @@
 
 module NitroKit
   class RadioButtonGroup < Component
+    ORIENTATIONS = %i[vertical horizontal].freeze
+    PRESENTATIONS = %i[list cards segmented].freeze
+
     alias :html_legend :legend
 
     def initialize(
@@ -11,6 +14,8 @@ module NitroKit
       value: nil,
       id: nil,
       description: nil,
+      orientation: :vertical,
+      presentation: :list,
       disabled: false,
       required: false,
       size: :md,
@@ -25,6 +30,8 @@ module NitroKit
       @value = value
       @id = id || deterministic_id(name)
       @description = validate_optional_text!(:description, description)
+      @orientation = validate_choice!(:orientation, orientation, ORIENTATIONS)
+      @presentation = validate_choice!(:presentation, presentation, PRESENTATIONS)
       @disabled = validate_boolean!(:disabled, disabled)
       @required = validate_boolean!(:required, required)
       @size = validate_choice!(:size, size.to_s.to_sym, RadioButton::SIZES)
@@ -38,7 +45,11 @@ module NitroKit
         attributes: {
           id: @id,
           disabled: @disabled,
-          data: { required: @required ? "true" : nil }.compact
+          data: {
+            required: @required ? "true" : nil,
+            orientation: @orientation,
+            presentation: @presentation
+          }.compact
         }.compact,
         html:,
         aria:,
@@ -47,7 +58,7 @@ module NitroKit
       )
     end
 
-    attr_reader :legend, :options, :name, :value, :description, :id, :size
+    attr_reader :legend, :options, :name, :value, :description, :id, :size, :orientation, :presentation
 
     def view_template
       fieldset(**root_attributes) do
@@ -70,6 +81,7 @@ module NitroKit
       render_in_slot(
         RadioButton.new(
           label: choice.label,
+          description: choice.description,
           id: choice.id || choice_id(index),
           name:,
           value: choice.value,

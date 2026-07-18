@@ -14,12 +14,14 @@ class DialogTest < ActiveSupport::TestCase
 
     assert_equal "delete-account", node["id"]
     assert_equal "dialog", node["data-nk"]
-    assert_nil node["data-controller"]
+    assert_equal "nk--dialog", node["data-controller"]
+    assert node.key?("data-nk--dialog-dismissible-value")
     assert_equal "dialog", panel.name
     assert_equal "delete-account-panel", panel["id"]
     refute panel.key?("open")
     assert_equal "delete-account-title", panel["aria-labelledby"]
     assert_equal "delete-account-description", panel["aria-describedby"]
+    assert_equal "any", panel["closedby"]
     assert_equal "show-modal", trigger["command"]
     assert_equal "delete-account-panel", trigger["commandfor"]
     assert_equal "dialog", trigger["aria-haspopup"]
@@ -31,6 +33,25 @@ class DialogTest < ActiveSupport::TestCase
     assert_equal "ghost", close["data-variant"]
     assert_equal "sm", close["data-size"]
     assert_empty node.css("[class], [style]")
+  end
+
+  test "adds a close button by default and supports required decisions" do
+    default = render_node(NitroKit::Dialog.new(id: "default")) do |dialog|
+      dialog.dialog(title: "Default")
+    end
+    required = render_node(
+      NitroKit::Dialog.new(id: "required", dismissible: false)
+    ) do |dialog|
+      dialog.dialog(title: "Required")
+    end
+
+    assert_equal 1, default.css("[data-slot='dialog-close']").size
+    assert_equal "any", default.at_css("dialog")["closedby"]
+    assert_equal "none", required.at_css("dialog")["closedby"]
+    assert_empty required.css("[data-slot='dialog-close']")
+    assert_raises(ArgumentError) do
+      NitroKit::Dialog.new(id: "bad", dismissible: nil)
+    end
   end
 
   test "supports an explicitly non-modal open panel and omits an absent description" do

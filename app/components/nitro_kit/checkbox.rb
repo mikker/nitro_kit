@@ -4,6 +4,7 @@ module NitroKit
   class Checkbox < Component
     def initialize(
       label: nil,
+      description: nil,
       id: nil,
       name: nil,
       value: "1",
@@ -22,6 +23,7 @@ module NitroKit
       desperately_need_a_class: nil
     )
       @label = validate_optional_text!(:label, label)
+      @description = validate_optional_text!(:description, description)
       @id = id
       @name = name
       @value = value
@@ -37,6 +39,9 @@ module NitroKit
 
       if include_hidden && unchecked_value.nil?
         raise ArgumentError, "unchecked_value cannot be nil when include_hidden is true"
+      end
+      if description && (!id.is_a?(String) || id.strip.empty?)
+        raise ArgumentError, "checkbox requires a non-blank String id when description is present"
       end
 
       super(
@@ -57,7 +62,7 @@ module NitroKit
       )
     end
 
-    attr_reader :label, :id, :name, :value, :unchecked_value
+    attr_reader :label, :description, :id, :name, :value, :unchecked_value
 
     def view_template(&block)
       require_accessible_name!(&block)
@@ -72,7 +77,10 @@ module NitroKit
           render_in_slot(Label.new(for: id), :label) do
             render_control
             span(**slot_attributes(:indicator), aria: { hidden: "true" })
-            span(**slot_attributes(:label_text)) { text_or_block(label, &block) }
+            span(**slot_attributes(:content)) do
+              span(**slot_attributes(:label_text)) { text_or_block(label, &block) }
+              span(**slot_attributes(:description, attributes: { id: description_id })) { plain(description) } if description
+            end
           end
         end
       end
@@ -114,9 +122,20 @@ module NitroKit
     end
 
     def checkbox_aria
-      return @control_aria unless @indeterminate
+      attributes = @control_aria.dup
+      key = attributes.keys.find do |candidate|
+        candidate.to_s.downcase.tr("_", "-").delete_prefix("aria-") == "describedby"
+      end
+      describedby = [ attributes.delete(key), description_id ].compact.join(" ").presence
+      attributes = attributes.merge(describedby:)
 
-      @control_aria.merge(checked: "mixed")
+      return attributes unless @indeterminate
+
+      attributes.merge(checked: "mixed")
+    end
+
+    def description_id
+      "#{id}-description" if description
     end
 
     def require_accessible_name!

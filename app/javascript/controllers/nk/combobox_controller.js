@@ -1,4 +1,8 @@
 import { Controller } from "@hotwired/stimulus";
+import {
+  observeOverlayPosition,
+  positionOverlay,
+} from "controllers/nk/overlay_position";
 
 export default class extends Controller {
   static targets = [
@@ -26,6 +30,7 @@ export default class extends Controller {
   }
 
   disconnect() {
+    this.stopPositioning?.();
     this.enhanced = false;
     const control = this.element.querySelector(
       ':scope > [data-slot="combobox-control"]',
@@ -227,6 +232,26 @@ export default class extends Controller {
         this.activeOption.id,
       );
     }
+
+    if (open) {
+      this.startPositioning();
+    } else {
+      this.stopPositioning?.();
+      this.stopPositioning = null;
+    }
+  }
+
+  startPositioning() {
+    this.stopPositioning?.();
+    const update = () =>
+      positionOverlay(
+        this.inputTarget,
+        this.listboxTarget,
+        this.element.dataset.placement,
+      );
+
+    update();
+    this.stopPositioning = observeOverlayPosition(update);
   }
 
   commit(option) {
@@ -284,7 +309,9 @@ export default class extends Controller {
     if (count === 0) {
       this.statusTarget.textContent = "No options found.";
     } else {
-      this.statusTarget.textContent = `${count} ${count === 1 ? "option" : "options"} available.`;
+      this.statusTarget.textContent = `${count} ${
+        count === 1 ? "option" : "options"
+      } available.`;
     }
   }
 

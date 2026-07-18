@@ -31,6 +31,24 @@
     color: var(--nk-color-muted-foreground);
     pointer-events: none;
   }
+
+  :where([data-nk="select"]:has(> [data-slot="select-control"][multiple])) {
+    display: block;
+    inline-size: 100%;
+  }
+
+  :where([data-nk="select"] > [data-slot="select-control"][multiple]) {
+    min-block-size: calc(var(--nk-control-height-md) * 3);
+    padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
+    appearance: auto;
+  }
+
+  :where(
+      [data-nk="select"]:has(> [data-slot="select-control"][multiple])
+        > [data-slot="select-icon"]
+    ) {
+    display: none;
+  }
 }
 
 @layer nitro-kit.state {

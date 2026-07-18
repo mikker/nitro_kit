@@ -2,6 +2,7 @@
 
 module NitroKit
   class AppearancePicker < Component
+    PRESENTATIONS = %i[segmented radios select].freeze
     PREFERENCES = %i[light dark system].freeze
     LABELS = {
       light: "Light",
@@ -12,6 +13,7 @@ module NitroKit
     def initialize(
       id:,
       label: "Appearance",
+      presentation: :segmented,
       html: {},
       aria: {},
       data: {},
@@ -19,6 +21,7 @@ module NitroKit
     )
       @identifier = component_id(id)
       @label = validate_label!(label)
+      @presentation = validate_choice!(:presentation, presentation, PRESENTATIONS)
 
       super(
         component: :appearance_picker,
@@ -26,6 +29,7 @@ module NitroKit
           id: @identifier,
           data: {
             controller: "nk--appearance",
+            presentation: @presentation,
             state: "system",
             action: "change->nk--appearance#select nitro-kit:appearance-change@window->nk--appearance#synchronize"
           }
@@ -40,6 +44,8 @@ module NitroKit
     attr_reader :identifier
 
     def view_template
+      return render_select if @presentation == :select
+
       fieldset(**root_attributes) do
         legend(**slot_attributes(:legend)) { plain(@label) }
         div(**slot_attributes(:options)) do
@@ -49,6 +55,27 @@ module NitroKit
     end
 
     private
+
+    def render_select
+      label(**root_attributes) do
+        span(**slot_attributes(:legend)) { plain(@label) }
+        select(
+          **slot_attributes(
+            :select,
+            data: {
+              nk__appearance_target: "input",
+              action: "change->nk--appearance#select"
+            }
+          )
+        ) do
+          PREFERENCES.each do |preference|
+            option(value: preference, selected: preference == :system) do
+              plain(LABELS.fetch(preference))
+            end
+          end
+        end
+      end
+    end
 
     def render_option(preference)
       label(

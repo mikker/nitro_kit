@@ -3,7 +3,7 @@ require "test_helper"
 class InteractionControllerContractTest < ActiveSupport::TestCase
   CONTROLLER_ROOT = NitroKit::Engine.root.join("app/javascript/controllers/nk")
 
-  test "interaction controllers no longer depend on positioning or combobox packages" do
+  test "interaction controllers use only packaged browser positioning" do
     sources = %w[dropdown tooltip combobox toast].to_h do |name|
       [ name, CONTROLLER_ROOT.join("#{name}_controller.js").read ]
     end
@@ -23,7 +23,10 @@ class InteractionControllerContractTest < ActiveSupport::TestCase
     assert_includes sources.fetch("combobox"), "setCustomValidity"
     refute_includes sources.fetch("combobox"), 'removeAttribute("role")'
     refute CONTROLLER_ROOT.join("accordion_controller.js").exist?
-    refute CONTROLLER_ROOT.join("dialog_controller.js").exist?
+    assert CONTROLLER_ROOT.join("dialog_controller.js").exist?
+    positioning = CONTROLLER_ROOT.join("overlay_position.js").read
+    assert_includes positioning, 'document.addEventListener("scroll", callback, true)'
+    assert_includes positioning, 'document.removeEventListener("scroll", callback, true)'
     refute NitroKit::Engine.root.join("app/javascript/controllers/nk/datepicker_controller.js").exist?
   end
 

@@ -81,7 +81,7 @@ module NitroKit
           )
         ) do |icon|
           icon.path(d: "m6.5 8 3.5 3.5L13.5 8", stroke_linecap: "round", stroke_linejoin: "round")
-        end
+        end unless @multiple
       end
     end
 

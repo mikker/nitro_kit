@@ -1,7 +1,15 @@
 import { Controller } from "@hotwired/stimulus";
+import {
+  observeOverlayPosition,
+  positionOverlay,
+} from "controllers/nk/overlay_position";
 
 export default class extends Controller {
   static targets = ["trigger", "content", "item"];
+
+  disconnect() {
+    this.stopPositioning?.();
+  }
 
   openFromKeyboard(event) {
     if (!["ArrowDown", "ArrowUp"].includes(event.key)) return;
@@ -19,10 +27,26 @@ export default class extends Controller {
 
   focusOpened(event) {
     if (event.newState === "open") {
+      this.startPositioning();
       this.focusInitialItem();
     } else {
+      this.stopPositioning?.();
+      this.stopPositioning = null;
       this.focusLast = false;
     }
+  }
+
+  startPositioning() {
+    this.stopPositioning?.();
+    const update = () =>
+      positionOverlay(
+        this.triggerTarget,
+        this.contentTarget,
+        this.element.dataset.placement,
+      );
+
+    update();
+    this.stopPositioning = observeOverlayPosition(update);
   }
 
   navigate(event) {

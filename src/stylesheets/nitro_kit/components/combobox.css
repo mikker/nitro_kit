@@ -36,9 +36,9 @@
   }
 
   :where([data-nk="combobox"] > [data-slot="combobox-listbox"]) {
-    position: absolute;
-    z-index: 40;
-    min-inline-size: 100%;
+    position: fixed;
+    z-index: 50;
+    inline-size: max(var(--_nk-combobox-width, 12rem), 12rem);
     max-inline-size: min(28rem, calc(100vw - (var(--nk-space) * 8)));
     max-block-size: 15rem;
     margin-block: var(--nk-space);
@@ -50,32 +50,7 @@
     border: var(--nk-border-width) solid var(--nk-color-border);
     border-radius: var(--nk-radius-lg);
     box-shadow: var(--nk-shadow-md);
-  }
-
-  :where(
-    [data-nk="combobox"]
-      > [data-slot="combobox-listbox"][data-placement^="bottom"]
-  ) {
-    inset-block-start: 100%;
-  }
-
-  :where(
-    [data-nk="combobox"] > [data-slot="combobox-listbox"][data-placement^="top"]
-  ) {
-    inset-block-end: 100%;
-  }
-
-  :where(
-    [data-nk="combobox"]
-      > [data-slot="combobox-listbox"][data-placement$="start"]
-  ) {
-    inset-inline-start: 0;
-  }
-
-  :where(
-    [data-nk="combobox"] > [data-slot="combobox-listbox"][data-placement$="end"]
-  ) {
-    inset-inline-end: 0;
+    inset: var(--_nk-overlay-top, auto) auto auto var(--_nk-overlay-left, auto);
   }
 
   :where([data-nk="combobox"] [data-slot="combobox-option"]) {
@@ -95,25 +70,25 @@
 
 @layer nitro-kit.state {
   :where(
-    [data-nk="combobox"]
-      [data-slot="combobox-option"]:is(
-        [data-active="true"],
-        [aria-selected="true"]
-      )
-  ) {
+      [data-nk="combobox"]
+        [data-slot="combobox-option"]:is(
+          [data-active="true"],
+          [aria-selected="true"]
+        )
+    ) {
     background: var(--nk-color-muted);
   }
 
   :where(
-    [data-nk="combobox"] [data-slot="combobox-option"][aria-disabled="true"]
-  ) {
+      [data-nk="combobox"] [data-slot="combobox-option"][aria-disabled="true"]
+    ) {
     cursor: not-allowed;
     opacity: 0.6;
   }
 
   :where(
-    [data-nk="combobox"] > [data-slot="combobox-listbox"][data-state="open"]
-  ) {
+      [data-nk="combobox"] > [data-slot="combobox-listbox"][data-state="open"]
+    ) {
     animation: nk-combobox-enter var(--nk-duration-normal) var(--nk-ease);
   }
 

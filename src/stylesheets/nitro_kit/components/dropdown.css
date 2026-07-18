@@ -11,7 +11,7 @@
     min-inline-size: 12rem;
     max-inline-size: min(24rem, calc(100vw - (var(--nk-space) * 8)));
     max-block-size: min(24rem, calc(100dvh - (var(--nk-space) * 8)));
-    inset: 50% auto auto 50%;
+    inset: var(--_nk-overlay-top, 50%) auto auto var(--_nk-overlay-left, 50%);
     margin: 0;
     padding: var(--nk-space);
     overflow: auto;
@@ -20,7 +20,7 @@
     border: var(--nk-border-width) solid var(--nk-color-border);
     border-radius: var(--nk-radius-lg);
     box-shadow: var(--nk-shadow-md);
-    translate: -50% -50%;
+    translate: none;
   }
 
   :where([data-nk="dropdown"] > [data-slot="dropdown-content"]:popover-open) {
@@ -36,33 +36,33 @@
     }
 
     :where(
-      [data-nk="dropdown"]
-        > [data-slot="dropdown-content"][data-placement="bottom-start"]
-    ) {
+        [data-nk="dropdown"]
+          > [data-slot="dropdown-content"][data-placement="bottom-start"]
+      ) {
       inset-block-start: anchor(bottom);
       inset-inline-start: anchor(left);
     }
 
     :where(
-      [data-nk="dropdown"]
-        > [data-slot="dropdown-content"][data-placement="bottom-end"]
-    ) {
+        [data-nk="dropdown"]
+          > [data-slot="dropdown-content"][data-placement="bottom-end"]
+      ) {
       inset-block-start: anchor(bottom);
       inset-inline-end: anchor(right);
     }
 
     :where(
-      [data-nk="dropdown"]
-        > [data-slot="dropdown-content"][data-placement="top-start"]
-    ) {
+        [data-nk="dropdown"]
+          > [data-slot="dropdown-content"][data-placement="top-start"]
+      ) {
       inset-block-end: anchor(top);
       inset-inline-start: anchor(left);
     }
 
     :where(
-      [data-nk="dropdown"]
-        > [data-slot="dropdown-content"][data-placement="top-end"]
-    ) {
+        [data-nk="dropdown"]
+          > [data-slot="dropdown-content"][data-placement="top-end"]
+      ) {
       inset-block-end: anchor(top);
       inset-inline-end: anchor(right);
     }
@@ -110,8 +110,8 @@
 
 @layer nitro-kit.variant {
   :where(
-    [data-nk="dropdown"] [data-slot="dropdown-item"][data-tone="destructive"]
-  ) {
+      [data-nk="dropdown"] [data-slot="dropdown-item"][data-tone="destructive"]
+    ) {
     color: var(--nk-color-danger-content);
   }
 }
@@ -119,19 +119,22 @@
 @layer nitro-kit.state {
   @media (hover: hover) {
     :where(
-      [data-nk="dropdown"]
-        [data-slot="dropdown-item"]:hover:not(:disabled, [aria-disabled="true"])
-    ) {
+        [data-nk="dropdown"]
+          [data-slot="dropdown-item"]:hover:not(
+            :disabled,
+            [aria-disabled="true"]
+          )
+      ) {
       background: var(--nk-color-muted);
     }
 
     :where(
-      [data-nk="dropdown"]
-        [data-slot="dropdown-item"][data-tone="destructive"]:hover:not(
-          :disabled,
-          [aria-disabled="true"]
-        )
-    ) {
+        [data-nk="dropdown"]
+          [data-slot="dropdown-item"][data-tone="destructive"]:hover:not(
+            :disabled,
+            [aria-disabled="true"]
+          )
+      ) {
       color: var(--nk-color-danger-foreground);
       background: var(--nk-color-danger);
     }
@@ -143,9 +146,9 @@
   }
 
   :where(
-    [data-nk="dropdown"]
-      [data-slot="dropdown-item"]:is(:disabled, [aria-disabled="true"])
-  ) {
+      [data-nk="dropdown"]
+        [data-slot="dropdown-item"]:is(:disabled, [aria-disabled="true"])
+    ) {
     cursor: not-allowed;
     opacity: 0.6;
   }

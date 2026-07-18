@@ -23,6 +23,24 @@
     margin-block-start: calc(var(--nk-space) * 2);
   }
 
+  :where(
+      [data-nk="appearance-picker"][data-presentation="radios"]
+        > [data-slot="appearance-picker-options"]
+    ) {
+    display: grid;
+  }
+
+  :where(
+      [data-nk="appearance-picker"][data-presentation="segmented"]
+        > [data-slot="appearance-picker-options"]
+    ) {
+    display: inline-flex;
+    gap: 0;
+    padding: var(--nk-space);
+    background: var(--nk-color-muted);
+    border-radius: var(--nk-radius-md);
+  }
+
   :where([data-nk="appearance-picker"] [data-slot="appearance-picker-option"]) {
     display: inline-flex;
     align-items: center;
@@ -41,9 +59,54 @@
     accent-color: var(--nk-color-primary);
     cursor: pointer;
   }
+
+  :where(
+      [data-nk="appearance-picker"][data-presentation="segmented"]
+        [data-slot="appearance-picker-option"]
+    ) {
+    position: relative;
+    padding-inline: calc(var(--nk-space) * 3);
+    border-radius: calc(var(--nk-radius-md) - var(--nk-space));
+  }
+
+  :where(
+      [data-nk="appearance-picker"][data-presentation="segmented"]
+        [data-slot="appearance-picker-control"]
+    ) {
+    position: absolute;
+    opacity: 0;
+  }
+
+  :where(
+      [data-nk="appearance-picker"][data-presentation="select"]
+        > [data-slot="appearance-picker-select"]
+    ) {
+    display: block;
+    inline-size: 100%;
+    min-block-size: var(--nk-control-height-md);
+    margin-block-start: calc(var(--nk-space) * 2);
+    padding-inline: calc(var(--nk-space) * 3);
+    color: inherit;
+    font: inherit;
+    background: var(--nk-color-surface);
+    border: var(--nk-border-width) solid var(--nk-color-border);
+    border-radius: var(--nk-radius-md);
+  }
 }
 
 @layer nitro-kit.state {
+  :where(
+      [data-nk="appearance-picker"][data-presentation="segmented"][data-state="light"]
+        [data-slot="appearance-picker-option"]:has([value="light"]),
+      [data-nk="appearance-picker"][data-presentation="segmented"][data-state="dark"]
+        [data-slot="appearance-picker-option"]:has([value="dark"]),
+      [data-nk="appearance-picker"][data-presentation="segmented"][data-state="system"]
+        [data-slot="appearance-picker-option"]:has([value="system"])
+    ) {
+    background: var(--nk-color-surface);
+    box-shadow: var(--nk-shadow-sm);
+  }
+
   :where(
       [data-nk="appearance-picker"]
         [data-slot="appearance-picker-control"]:focus-visible

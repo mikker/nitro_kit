@@ -16,7 +16,8 @@ export default class extends Controller {
   select(event) {
     const input = event.target;
 
-    if (!this.inputTargets.includes(input) || !input.checked) return;
+    if (!this.inputTargets.includes(input)) return;
+    if (input.type === "radio" && !input.checked) return;
 
     window.dispatchEvent(
       new CustomEvent("nitro-kit:appearance-request", {
@@ -35,7 +36,11 @@ export default class extends Controller {
 
     this.element.dataset.state = preference;
     this.inputTargets.forEach((input) => {
-      input.checked = input.value === preference;
+      if (input.type === "radio") {
+        input.checked = input.value === preference;
+      } else {
+        input.value = preference;
+      }
     });
   }
 }

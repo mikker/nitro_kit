@@ -6,6 +6,7 @@ module NitroKit
 
     def initialize(
       label: nil,
+      description: nil,
       id: nil,
       name: nil,
       value: "1",
@@ -22,6 +23,7 @@ module NitroKit
       desperately_need_a_class: nil
     )
       @label = validate_optional_text!(:label, label)
+      @description = validate_optional_text!(:description, description)
       @id = id
       @name = name
       @value = value
@@ -32,6 +34,10 @@ module NitroKit
       @control_html = control_html
       @control_aria = control_aria
       @control_data = control_data
+
+      if description && (!id.is_a?(String) || id.strip.empty?)
+        raise ArgumentError, "radio button requires a non-blank String id when description is present"
+      end
 
       super(
         component: :radio_button,
@@ -51,7 +57,7 @@ module NitroKit
       )
     end
 
-    attr_reader :label, :id, :name, :value, :size
+    attr_reader :label, :description, :id, :name, :value, :size
 
     def view_template(&block)
       require_accessible_name!(&block)
@@ -64,7 +70,10 @@ module NitroKit
           render_in_slot(Label.new(for: id), :label) do
             render_control
             span(**slot_attributes(:indicator), aria: { hidden: "true" })
-            span(**slot_attributes(:label_text)) { text_or_block(label, &block) }
+            span(**slot_attributes(:content)) do
+              span(**slot_attributes(:label_text)) { text_or_block(label, &block) }
+              span(**slot_attributes(:description, attributes: { id: description_id })) { plain(description) } if description
+            end
           end
         end
       end
@@ -83,11 +92,25 @@ module NitroKit
           disabled: @disabled,
           required: @required,
           html: @control_html,
-          aria: @control_aria,
+          aria: control_aria,
           data: @control_data.merge(nk__checkable_target: "control")
         ),
         :control
       )
+    end
+
+    def control_aria
+      attributes = @control_aria.dup
+      key = attributes.keys.find do |candidate|
+        candidate.to_s.downcase.tr("_", "-").delete_prefix("aria-") == "describedby"
+      end
+      describedby = [ attributes.delete(key), description_id ].compact.join(" ").presence
+
+      attributes.merge(describedby:)
+    end
+
+    def description_id
+      "#{id}-description" if description
     end
 
     def require_accessible_name!

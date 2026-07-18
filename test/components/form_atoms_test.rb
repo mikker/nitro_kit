@@ -99,7 +99,7 @@ class FormAtomsTest < ActiveSupport::TestCase
     assert control.at_css("option[value='designer']").key?("disabled")
     assert_equal "role-designer", control.at_css("option[value='designer']")["id"]
     assert_equal "roles", control["data-tracking-id"]
-    assert_equal "select-icon", node.at_css("svg")["data-slot"]
+    assert_nil node.at_css("svg")
     assert_empty node.css("[class], [style]")
   end
 
@@ -158,6 +158,69 @@ class FormAtomsTest < ActiveSupport::TestCase
     assert_equal "terms", node.at_css("label")["for"]
     assert_equal "true", node.at_css("[data-slot='checkbox-indicator']")["aria-hidden"]
     assert_empty node.css("[class], [style]")
+  end
+
+
+  test "checkable descriptions are wired to native controls" do
+    checkbox = render_node(
+      NitroKit::Checkbox.new(
+        id: "updates",
+        label: "Updates",
+        description: "Occasional product news."
+      )
+    )
+    radio = render_node(
+      NitroKit::RadioButton.new(
+        id: "pro-plan",
+        name: "plan",
+        label: "Pro",
+        description: "For shipping products."
+      )
+    )
+
+    assert_equal "updates-description", checkbox.at_css("input[type='checkbox']")["aria-describedby"]
+    assert_equal "Occasional product news.", checkbox.at_css("[data-slot='checkbox-description']").text
+    assert_equal "pro-plan-description", radio.at_css("input[type='radio']")["aria-describedby"]
+    assert_equal "For shipping products.", radio.at_css("[data-slot='radio-button-description']").text
+  end
+
+  test "choice groups expose closed layout presentations" do
+    checkbox = render_node(
+      NitroKit::CheckboxGroup.new(
+        legend: "Services",
+        name: "services",
+        options: [
+          {
+            label: "Analytics",
+            value: "analytics",
+            description: "Traffic and conversion reports."
+          }
+        ],
+        presentation: :cards,
+        orientation: :horizontal
+      )
+    )
+    radio = render_node(
+      NitroKit::RadioButtonGroup.new(
+        legend: "Density",
+        name: "density",
+        options: [ [ "Compact", "compact" ] ],
+        presentation: :segmented,
+        orientation: :horizontal
+      )
+    )
+
+    assert_equal "cards", checkbox["data-presentation"]
+    assert_equal "horizontal", checkbox["data-orientation"]
+    assert_equal "segmented", radio["data-presentation"]
+    assert_raises(ArgumentError) do
+      NitroKit::CheckboxGroup.new(
+        legend: "Bad",
+        name: "bad",
+        options: [ "One" ],
+        presentation: :pills
+      )
+    end
   end
 
   test "checkbox supports honest standalone and indeterminate states" do
