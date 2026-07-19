@@ -8,9 +8,16 @@ Rails application templates are designed to configure a new app during `rails ne
 rails new my_app -m https://nitrokit.dev/template.rb
 ```
 
-The template should remain thin while the conventions settle. Its first version should add Nitro Kit and Phlex, verify Hotwire and the asset path, add the short Nitro Kit section to the application's `AGENTS.md`, and install an application layout that renders the stylesheet, appearance bootstrap, and flash toasts. It should not copy Nitro components or their controllers.
+The template should remain thin while the conventions settle. Its first
+version should add Nitro Kit and invoke `nitro_kit:install`. The generator owns
+the project-local skills and `AGENTS.md`; the template may add an application
+layout that renders the stylesheet, appearance bootstrap, and flash toasts. It
+must not copy Nitro components or their controllers.
 
-Existing applications should continue to install the gem directly. The engine already owns its components and assets, so an install generator should exist only if there is meaningful application-owned setup to perform.
+Existing applications install the gem directly and run the setup generator.
+Agent discovery, version-matched skill routing, diagnostics, and initialization
+handoff are meaningful application-owned setup; component source remains
+gem-owned.
 
 An optional `nitro_kit:application` generator can later create an application-owned base: layout, `UI` namespace, shell choice, root screen, and authentication hooks. Keep that separate from installing the UI gem so teams can adopt Nitro Kit without adopting an application architecture.
 

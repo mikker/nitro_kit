@@ -87,7 +87,7 @@
   :where(:root, [data-theme="light"]) {
     color-scheme: light;
 
-    --nk-color-canvas: oklch(1 0 0);
+    --nk-color-canvas: oklch(0.993 0 0);
     --nk-color-surface: oklch(1 0 0);
     --nk-color-elevated: oklch(0.985 0 0);
     --nk-color-foreground: oklch(0.21 0.006 285.885);
@@ -563,14 +563,18 @@
       [data-nk="app-navigation"] > [data-slot="app-navigation-footer"]
     ) {
     flex: 0 0 auto;
-    padding: calc(var(--nk-space) * 3);
   }
 
   :where([data-nk="app-navigation"] > [data-slot="app-navigation-header"]) {
+    display: flex;
+    align-items: center;
+    min-block-size: var(--nk-app-shell-topbar-height);
+    padding-inline: calc(var(--nk-space) * 4);
     border-block-end: var(--nk-border-width) solid var(--nk-app-shell-border);
   }
 
   :where([data-nk="app-navigation"] > [data-slot="app-navigation-footer"]) {
+    padding: calc(var(--nk-space) * 3);
     border-block-start: var(--nk-border-width) solid var(--nk-app-shell-border);
   }
 
@@ -813,6 +817,21 @@
     border-block-end: var(--nk-border-width) solid var(--nk-app-shell-border);
   }
 
+  :where(
+    [data-nk="app-shell"]
+      [data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])
+  ) {
+    justify-content: stretch;
+  }
+
+  :where(
+    [data-nk="app-shell"]
+      [data-slot="app-shell-topbar"]
+      > [data-nk="toolbar"]
+  ) {
+    flex: 1 1 auto;
+  }
+
   :where([data-nk="app-shell"] > [data-slot="app-shell-main"]) {
     grid-row: 2;
     grid-column: 2;
@@ -1041,6 +1060,13 @@
     :where([data-nk="app-shell"] [data-slot="app-shell-topbar"]) {
       flex: 0 0 auto;
       order: 1;
+    }
+
+    :where(
+      [data-nk="app-shell"]
+        [data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])
+    ) {
+      flex: 1 1 auto;
     }
 
     :where(
@@ -2451,46 +2477,6 @@
     flex-direction: column;
   }
 
-  @supports (inset-block-start: anchor(bottom)) {
-    :where([data-nk="dropdown"] > [data-slot="dropdown-content"]) {
-      inset: auto;
-      margin: var(--nk-space);
-      translate: none;
-    }
-
-    :where(
-        [data-nk="dropdown"]
-          > [data-slot="dropdown-content"][data-placement="bottom-start"]
-      ) {
-      inset-block-start: anchor(bottom);
-      inset-inline-start: anchor(left);
-    }
-
-    :where(
-        [data-nk="dropdown"]
-          > [data-slot="dropdown-content"][data-placement="bottom-end"]
-      ) {
-      inset-block-start: anchor(bottom);
-      inset-inline-end: anchor(right);
-    }
-
-    :where(
-        [data-nk="dropdown"]
-          > [data-slot="dropdown-content"][data-placement="top-start"]
-      ) {
-      inset-block-end: anchor(top);
-      inset-inline-start: anchor(left);
-    }
-
-    :where(
-        [data-nk="dropdown"]
-          > [data-slot="dropdown-content"][data-placement="top-end"]
-      ) {
-      inset-block-end: anchor(top);
-      inset-inline-end: anchor(right);
-    }
-  }
-
   :where([data-nk="dropdown"] [data-slot="dropdown-title"]) {
     padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
     color: var(--nk-color-muted-foreground);
@@ -3388,12 +3374,12 @@
 @layer nitro-kit.base {
   :where([data-nk="form-section"]) {
     display: grid;
-    gap: calc(var(--nk-space) * 5);
-    padding: calc(var(--nk-space) * 6);
+    grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr);
+    column-gap: calc(var(--nk-space) * 8);
+    row-gap: calc(var(--nk-space) * 5);
+    align-items: start;
+    min-width: 0;
     color: var(--nk-color-foreground);
-    background: var(--nk-color-surface);
-    border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-lg);
   }
 
   :where([data-nk="form-section"] > [data-slot="form-section-header"]) {
@@ -3418,16 +3404,42 @@
 
   :where([data-nk="form-section"] > [data-slot="form-section-form"]) {
     display: grid;
+    grid-column: 2;
     gap: calc(var(--nk-space) * 4);
+    width: 100%;
+    max-width: var(--nk-content-lg);
   }
 
   :where([data-nk="form-section"] > [data-slot="form-section-status"]) {
+    grid-column: 2;
     width: 100%;
+    max-width: var(--nk-content-lg);
   }
 
   :where([data-nk="form-section"] > [data-slot="form-section-form"] > form) {
     display: grid;
     gap: calc(var(--nk-space) * 5);
+  }
+
+  :where([data-nk="form-section"] + [data-nk="form-section"]) {
+    padding-block-start: calc(var(--nk-space) * 8);
+    border-block-start: var(--nk-border-width) solid var(--nk-color-border);
+  }
+}
+
+@layer nitro-kit.state {
+  @media (max-width: 48rem) {
+    :where([data-nk="form-section"]) {
+      grid-template-columns: minmax(0, 1fr);
+      row-gap: calc(var(--nk-space) * 4);
+    }
+
+    :where(
+      [data-nk="form-section"] > [data-slot="form-section-status"],
+      [data-nk="form-section"] > [data-slot="form-section-form"]
+    ) {
+      grid-column: 1;
+    }
   }
 }
 
@@ -5719,6 +5731,35 @@
     :where([data-nk="toolbar"] > [data-slot="toolbar-trailing"]) {
       justify-content: flex-start;
       margin-inline-start: 0;
+    }
+
+    :where(
+      [data-nk="app-shell"] [data-slot="app-shell-topbar"]
+        > [data-nk="toolbar"]
+    ) {
+      flex-direction: row;
+      flex-wrap: nowrap;
+      align-items: center;
+    }
+
+    :where(
+      [data-nk="app-shell"] [data-slot="app-shell-topbar"]
+        > [data-nk="toolbar"]
+        > [data-slot="toolbar-leading"]
+    ) {
+      flex: 1 1 auto;
+      flex-wrap: nowrap;
+      overflow: hidden;
+    }
+
+    :where(
+      [data-nk="app-shell"] [data-slot="app-shell-topbar"]
+        > [data-nk="toolbar"]
+        > [data-slot="toolbar-trailing"]
+    ) {
+      flex: 0 0 auto;
+      justify-content: flex-end;
+      margin-inline-start: auto;
     }
   }
 }

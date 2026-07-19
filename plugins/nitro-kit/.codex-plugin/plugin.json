@@ -1,7 +1,7 @@
 {
   "name": "nitro-kit",
-  "version": "0.1.0",
-  "description": "Build conventional Rails interfaces with Nitro Kit, Phlex, and Hotwire.",
+  "version": "0.2.0",
+  "description": "Build conventional Nitro Kit 2 Rails applications with Phlex and Hotwire.",
   "author": {
     "name": "Mikkel Malmberg",
     "url": "https://nitrokit.dev"
@@ -14,12 +14,13 @@
   "interface": {
     "displayName": "Nitro Kit",
     "shortDescription": "Build Rails UI with Nitro Kit and Hotwire",
-    "longDescription": "Select and compose Nitro Kit components, then implement Rails interactions with repeatable Hotwire conventions from the installed gem version.",
+    "longDescription": "Model conventional Rails resources, compose Nitro Kit components, and implement Hotwire interactions from the installed gem version.",
     "developerName": "Mikkel Malmberg",
     "category": "Developer",
     "capabilities": ["Read", "Write"],
     "websiteURL": "https://nitrokit.dev",
     "defaultPrompt": [
+      "Build this Rails feature on the Nitro Kit Rails path.",
       "Build this Rails interface with Nitro Kit components.",
       "Implement this interaction with Nitro Kit and conventional Hotwire."
     ]

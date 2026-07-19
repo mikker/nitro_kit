@@ -307,7 +307,7 @@ The gallery includes, at minimum, sidebar, topbar, and hybrid application flows;
 
 Public documentation includes `docs/customization.md` plus aligned README and Rails-integration sections. It catalogs supported tokens, stylesheet load order, global and scoped overrides, light/dark selectors, appearance bootstrap and picker setup, CSP nonce/hash configuration, installing wizard exports, shell composition, and complete copyable Rails examples.
 
-`docs/agent_guide.md` is the packaged routing layer for coding agents. It points to version-matched component contracts and conventional Hotwire recipes for queryable collections, resource forms, destructive actions, flash/toast feedback, and inline editing. The packaged Codex plugin contains consumer UI and Hotwire skills that resolve the installed gem before reading these docs. It does not duplicate the component registry or add an MCP server.
+`docs/agent_guide.md` is the packaged routing layer for coding agents. It points to version-matched Rails conventions, component contracts, Hotwire guidance, and recipes for queryable collections, resource forms, destructive actions, flash/toast feedback, and inline editing. The packaged plugin contains consumer Rails, UI, and Hotwire skills that resolve the installed gem before reading these docs. The setup generator installs the same thin routers into supported project-local skill directories and maintains a bounded `AGENTS.md` block. It does not duplicate the component registry or add an MCP server.
 
 ## CSS and themes
 

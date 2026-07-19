@@ -148,7 +148,7 @@ class DropdownComponentTest < ActiveSupport::TestCase
     assert_includes source, "--_nk-overlay-top"
     assert_includes source, "--_nk-overlay-left"
     assert_includes source, "translate: none"
-    assert_includes source, "@supports (inset-block-start: anchor(bottom))"
+    refute_includes source, "anchor("
     assert_includes source, ":popover-open"
     refute_includes source, "[data-state=\"open\"]"
   end

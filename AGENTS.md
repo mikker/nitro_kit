@@ -24,7 +24,9 @@ Nitro Kit owns and versions component Ruby, rendered `data-nk` contracts, CSS, S
 
 Composition is the stable extension path. Subclassing is possible, but private methods are not an API.
 
-Core components are loaded from the gem. Do not add or restore generators that copy component source into applications.
+Core components are loaded from the gem. The setup generator may install
+agent guidance and application-owned integration files; do not add or restore
+generators that copy component source into applications.
 
 ## Public API
 

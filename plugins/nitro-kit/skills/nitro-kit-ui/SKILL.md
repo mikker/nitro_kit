@@ -1,6 +1,6 @@
 ---
 name: nitro-kit-ui
-description: Build or refactor Rails interfaces with the Nitro Kit gem's Phlex components, layouts, blocks, FormBuilder, and theme tokens. Use when an application has nitro_kit in its bundle, mentions Nitro Kit, or asks for a Rails interface that should follow Nitro Kit component conventions instead of custom markup, CSS, or copied component code.
+description: Build or refactor Rails interfaces with Nitro Kit 2's Phlex components, layouts, blocks, FormBuilder, and theme tokens. Use when an application has nitro_kit 2.x in its bundle, mentions Nitro Kit, or asks for a Rails interface that should follow the installed component contract instead of Nitro Kit 1.x helpers, custom markup, CSS overrides, or copied component code.
 ---
 
 # Nitro Kit UI
@@ -26,6 +26,10 @@ If the gem is not installed, say that the skill requires Nitro Kit and follow th
 4. Keep routes, authorization, records, query policy, DOM IDs, Turbo boundaries, and response semantics in the application.
 5. Use documented `--nk-*` properties for theming and Nitro layout primitives for layout.
 6. Verify closed options and required compound declarations before rendering.
+7. For authenticated CRUD, prefer a hybrid `AppShell` with a `Toolbar` that
+   owns the route's single `h1` and basic actions. The shell main region owns
+   one content gutter. Do not repeat that heading in `PageHeader`, or wrap each
+   table, form, and detail region in another Card.
 
 ## Preserve the boundary
 

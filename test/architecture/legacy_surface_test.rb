@@ -8,7 +8,8 @@ class LegacySurfaceTest < ActiveSupport::TestCase
 
   test "ships only the direct Phlex component surface" do
     assert_empty ROOT.glob("app/helpers/nitro_kit/**/*")
-    assert_empty ROOT.glob("lib/generators/nitro_kit/**/*")
+    assert_equal [ ROOT.join("lib/generators/nitro_kit/install_generator.rb") ],
+      ROOT.glob("lib/generators/nitro_kit/**/*").select(&:file?)
     refute ROOT.join("lib/nitro_kit/schema_builder.rb").exist?
     refute ROOT.join("lib/nitro_kit/variants.rb").exist?
     refute NitroKit::Component.respond_to?(:from_template)
@@ -22,7 +23,8 @@ class LegacySurfaceTest < ActiveSupport::TestCase
 
     refute_includes specification.dependencies.map(&:name), "tailwind_merge"
     refute specification.files.any? { |path| path.start_with?("app/helpers/") }
-    refute specification.files.any? { |path| path.start_with?("lib/generators/") }
+    assert_equal [ "lib/generators/nitro_kit/install_generator.rb" ],
+      specification.files.grep(%r{\Alib/generators/})
     refute specification.files.any? { |path| path.start_with?("vendor/javascript/") }
     refute_includes specification.files, "Rakefile"
     refute ROOT.join("Gemfile").read.include?("tailwindcss-rails")

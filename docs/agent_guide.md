@@ -12,36 +12,40 @@ bundle show nitro_kit
 
 Read this guide from that directory, then consult only the reference needed for the task:
 
-| Task                                       | Read next                               |
-| ------------------------------------------ | --------------------------------------- |
-| Choose or compose UI                       | `docs/component_contracts.md`           |
-| Forms, assets, frames, streams, appearance | `docs/rails_integration.md`             |
-| Theme tokens and application composition   | `docs/customization.md`                 |
-| Query, sort, filter, or paginate           | `docs/patterns/queryable_collection.md` |
-| Create, update, and show validation        | `docs/patterns/resource_form.md`        |
-| Delete, revoke, archive, or confirm        | `docs/patterns/destructive_action.md`   |
-| Flash messages and notifications           | `docs/patterns/flash_and_toast.md`      |
-| Edit and cancel inside a page              | `docs/patterns/inline_edit.md`          |
+| Task                                        | Read next                               |
+| ------------------------------------------- | --------------------------------------- |
+| Rails models, routes, CRUD, and tests       | `docs/rails_conventions.md`             |
+| Build a complete product resource          | `docs/patterns/crud_resource.md`        |
+| Choose or compose UI                        | `docs/component_contracts.md`           |
+| Rails assets, forms, and application shells | `docs/rails_integration.md`             |
+| Turbo, Frames, Streams, morphs, or Stimulus | `docs/hotwire.md`                       |
+| Theme tokens and application composition    | `docs/customization.md`                 |
+| Query, sort, filter, or paginate            | `docs/patterns/queryable_collection.md` |
+| Create, update, and show validation         | `docs/patterns/resource_form.md`        |
+| Delete, revoke, archive, or confirm         | `docs/patterns/destructive_action.md`   |
+| Flash messages and notifications            | `docs/patterns/flash_and_toast.md`      |
+| Edit and cancel inside a page               | `docs/patterns/inline_edit.md`          |
 
-The installed component source is the final authority for constructor and compound-method details. Do not use an API remembered from Nitro Kit 1.x or another installed version.
+The installed component source is the final authority for constructor and compound-method details. This guide describes Nitro Kit 2.x. Do not use an API remembered from Nitro Kit 1.x or another installed version.
 
 ## Select the highest-level matching component
 
 Prefer a block that owns the whole region, then compose smaller components inside it.
 
-| Product need                   | Begin with                                                |
-| ------------------------------ | --------------------------------------------------------- |
-| Application chrome             | `AppShell`, `AppNavigation`                               |
-| Authentication page            | `AuthShell`                                               |
-| Settings navigation            | `SettingsLayout`                                          |
-| Page title and primary actions | `PageHeader`                                              |
-| Data region                    | `DataSection`, then `Table` or `EmptyState`               |
-| Queryable tabular data         | `SortableTable`, `Toolbar`, `PaginationBar`               |
-| Model-backed form              | `FormSection`, Rails `form_with`, `NitroKit::FormBuilder` |
-| Destructive settings           | `DangerZone`, optionally `Dialog`                         |
-| Transient server feedback      | `Toast::FlashMessages`                                    |
-| Rendered Markdown or rich text | `Container`, then `Typeset`                               |
-| General grouping               | `Card`, `Flex`, `Grid`, `Container`                       |
+| Product need                     | Begin with                                                |
+| -------------------------------- | --------------------------------------------------------- |
+| Application chrome               | `AppShell`, `AppNavigation`                               |
+| Authentication page              | `AuthShell`                                               |
+| Settings navigation              | `SettingsLayout`                                          |
+| App page title and basic actions | `AppShell`, then `Toolbar`                                |
+| Content-led page introduction    | `PageHeader`                                              |
+| Data region                      | `DataSection`, then `Table` or `EmptyState`               |
+| Queryable tabular data           | `SortableTable`, `Toolbar`, `PaginationBar`               |
+| Model-backed form                | `FormSection`, Rails `form_with`, `NitroKit::FormBuilder` |
+| Destructive settings             | `DangerZone`, optionally `Dialog`                         |
+| Transient server feedback        | `Toast::FlashMessages`                                    |
+| Rendered Markdown or rich text   | `Container`, then `Typeset`                               |
+| General grouping                 | `Card`, `Flex`, `Grid`, `Container`                       |
 
 Application-specific product UI belongs under the application's namespace and composes Nitro components. Nitro owns component markup, styles, accessibility structure, and narrowly scoped progressive behavior. The application owns product policy, records, routes, authorization, queries, DOM IDs, and server responses.
 
@@ -73,14 +77,15 @@ Do not copy component source, add `nk_*` helpers, invent a general ERB bridge, m
 
 ## Application `AGENTS.md`
 
-Put the durable project instruction in the consuming application's root. This is enough for an agent to discover the version-matched documentation even when the Nitro Kit plugin is not installed:
+Install the durable project instruction and local skills from the consuming
+application root:
 
-```md
-## Nitro Kit
-
-This Rails application uses the `nitro_kit` gem. Before building or changing UI, run `bundle show nitro_kit` and read `docs/agent_guide.md` from that installed gem directory. Read the matching component contract or Hotwire recipe before editing.
-
-Include `NitroKit` in the application's base Phlex component and compose gem-owned components with capitalized Kit methods such as `Button(...)` and `Card(...)`. Keep product components in the application namespace and keep routes, records, authorization, queries, DOM IDs, Turbo boundaries, and response semantics in the application. Do not copy Nitro component source or add `class:`/`style:` overrides.
+```sh
+bin/rails generate nitro_kit:install
 ```
 
-For Codex, the repository also ships a Nitro Kit plugin with dedicated UI and Hotwire skills. The skills deliberately resolve the installed gem first, so upgrading the gem upgrades the instructions they use.
+The installer preserves application-owned content around a bounded Nitro Kit 2
+block in `AGENTS.md` and adds project-local Rails, Hotwire, and UI skills for
+supported agents. The skills deliberately resolve the installed gem first, so
+upgrading the gem upgrades the instructions they use. Re-run the generator
+after an upgrade; it never copies component or controller source.

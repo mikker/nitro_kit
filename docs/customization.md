@@ -416,7 +416,7 @@ The following 84 variables are the complete public token set. Theme-independent 
 
 | Token                           | Role                                    |
 | ------------------------------- | --------------------------------------- |
-| `--nk-color-canvas`             | Page canvas and overscroll background.  |
+| `--nk-color-canvas`             | Page canvas and overscroll; light zinc uses a zinc-25-like near-white. |
 | `--nk-color-surface`            | Default component surface.              |
 | `--nk-color-surface-hover`      | Derived interactive surface hover.      |
 | `--nk-color-elevated`           | Raised or inset-neutral surface.        |

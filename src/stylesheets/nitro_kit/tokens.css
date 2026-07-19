@@ -72,7 +72,7 @@
   :where(:root, [data-theme="light"]) {
     color-scheme: light;
 
-    --nk-color-canvas: oklch(1 0 0);
+    --nk-color-canvas: oklch(0.993 0 0);
     --nk-color-surface: oklch(1 0 0);
     --nk-color-elevated: oklch(0.985 0 0);
     --nk-color-foreground: oklch(0.21 0.006 285.885);

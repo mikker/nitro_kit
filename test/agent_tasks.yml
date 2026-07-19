@@ -1,6 +1,7 @@
 - name: queryable_projects
   prompt: Build a searchable, sortable, paginated projects table with Ransack and keep updates inside the results area.
   skills:
+    - nitro-kit-rails
     - nitro-kit-ui
     - nitro-kit-hotwire
   references:
@@ -16,6 +17,7 @@
 - name: invalid_project_form
   prompt: Add a project form that shows validation errors without a full-page reload.
   skills:
+    - nitro-kit-rails
     - nitro-kit-ui
     - nitro-kit-hotwire
   references:
@@ -31,6 +33,7 @@
 - name: delete_project
   prompt: Add a delete-project dialog that explains the impact, performs the server request, and shows success feedback.
   skills:
+    - nitro-kit-rails
     - nitro-kit-ui
     - nitro-kit-hotwire
   references:
@@ -47,6 +50,7 @@
 - name: inline_project_edit
   prompt: Let a project panel switch between read-only and edit states with a working Cancel action.
   skills:
+    - nitro-kit-rails
     - nitro-kit-ui
     - nitro-kit-hotwire
   references:

@@ -126,6 +126,21 @@
     border-block-end: var(--nk-border-width) solid var(--nk-app-shell-border);
   }
 
+  :where(
+    [data-nk="app-shell"]
+      [data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])
+  ) {
+    justify-content: stretch;
+  }
+
+  :where(
+    [data-nk="app-shell"]
+      [data-slot="app-shell-topbar"]
+      > [data-nk="toolbar"]
+  ) {
+    flex: 1 1 auto;
+  }
+
   :where([data-nk="app-shell"] > [data-slot="app-shell-main"]) {
     grid-row: 2;
     grid-column: 2;
@@ -354,6 +369,13 @@
     :where([data-nk="app-shell"] [data-slot="app-shell-topbar"]) {
       flex: 0 0 auto;
       order: 1;
+    }
+
+    :where(
+      [data-nk="app-shell"]
+        [data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])
+    ) {
+      flex: 1 1 auto;
     }
 
     :where(

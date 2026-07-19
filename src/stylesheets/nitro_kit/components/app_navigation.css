@@ -14,14 +14,18 @@
       [data-nk="app-navigation"] > [data-slot="app-navigation-footer"]
     ) {
     flex: 0 0 auto;
-    padding: calc(var(--nk-space) * 3);
   }
 
   :where([data-nk="app-navigation"] > [data-slot="app-navigation-header"]) {
+    display: flex;
+    align-items: center;
+    min-block-size: var(--nk-app-shell-topbar-height);
+    padding-inline: calc(var(--nk-space) * 4);
     border-block-end: var(--nk-border-width) solid var(--nk-app-shell-border);
   }
 
   :where([data-nk="app-navigation"] > [data-slot="app-navigation-footer"]) {
+    padding: calc(var(--nk-space) * 3);
     border-block-start: var(--nk-border-width) solid var(--nk-app-shell-border);
   }
 

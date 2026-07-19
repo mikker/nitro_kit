@@ -12,12 +12,15 @@ class AgentGuidanceTest < ActiveSupport::TestCase
     queryable_collection
     resource_form
   ].freeze
-  SKILLS = %w[nitro-kit-hotwire nitro-kit-ui].freeze
+  SKILLS = %w[nitro-kit-hotwire nitro-kit-rails nitro-kit-ui].freeze
 
   test "ships version-matched agent guidance and recipes in the gem" do
     specification = Gem::Specification.load(ROOT.join("nitro_kit.gemspec").to_s)
 
     assert_includes specification.files, "docs/agent_guide.md"
+    assert_includes specification.files, "docs/hotwire.md"
+    assert_includes specification.files, "docs/initialization_prompt.md"
+    assert_includes specification.files, "docs/rails_conventions.md"
     assert_includes specification.files, ".agents/plugins/marketplace.json"
     assert_includes specification.files, "plugins/nitro-kit/.codex-plugin/plugin.json"
     PATTERNS.each do |pattern|
@@ -28,7 +31,7 @@ class AgentGuidanceTest < ActiveSupport::TestCase
     end
   end
 
-  test "publishes one consumer plugin with UI and Hotwire skills" do
+  test "publishes one consumer plugin with Rails UI and Hotwire skills" do
     manifest = JSON.parse(PLUGIN_ROOT.join(".codex-plugin/plugin.json").read)
     marketplace = JSON.parse(ROOT.join(".agents/plugins/marketplace.json").read)
     plugin = marketplace.fetch("plugins").sole
@@ -48,6 +51,7 @@ class AgentGuidanceTest < ActiveSupport::TestCase
       assert_includes instructions, "bundle show nitro_kit"
       assert_includes instructions, "docs/agent_guide.md"
       assert_includes instructions, "installed"
+      assert_includes instructions, "2"
       refute_includes instructions, "TODO"
     end
   end

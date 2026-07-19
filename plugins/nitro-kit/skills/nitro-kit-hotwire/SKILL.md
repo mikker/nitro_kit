@@ -1,6 +1,6 @@
 ---
 name: nitro-kit-hotwire
-description: Implement or refactor Hotwire interactions in Rails applications using Nitro Kit's conventional Turbo Frame, Turbo Stream, form, dialog, sortable-table, flash, and toast patterns. Use for CRUD forms, validation, filtering, sorting, pagination, destructive confirmations, inline editing, server-rendered notifications, or any Nitro Kit interaction that should work progressively without custom JavaScript.
+description: Implement or refactor Nitro Kit 2 Hotwire interactions using conventional Turbo Drive, Frame, Stream, morph, form, dialog, flash, and toast patterns. Use for CRUD forms, validation, filtering, sorting, pagination, destructive confirmations, inline editing, self-submitting controls, server-rendered notifications, or any Nitro Kit interaction that should work progressively without copied controllers or custom request JavaScript.
 ---
 
 # Nitro Kit Hotwire
@@ -13,13 +13,16 @@ Make the server response and stable DOM boundary the interaction API. Add Stimul
 2. Confirm `nitro_kit` appears in `Gemfile.lock`.
 3. Run `bundle show nitro_kit` and treat its output as `NITRO_KIT_ROOT`.
 4. Read `NITRO_KIT_ROOT/docs/agent_guide.md` completely.
-5. Read `NITRO_KIT_ROOT/docs/rails_integration.md` and only the matching files under `NITRO_KIT_ROOT/docs/patterns/`:
+5. Read `NITRO_KIT_ROOT/docs/hotwire.md`, then only the matching files under `NITRO_KIT_ROOT/docs/patterns/`:
    - query/filter/sort/paginate: `queryable_collection.md`
    - create/update/validation: `resource_form.md`
    - delete/revoke/archive confirmation: `destructive_action.md`
    - notices/errors after responses: `flash_and_toast.md`
    - row or panel edit/cancel: `inline_edit.md`
 6. Inspect the installed Nitro component contract used by the recipe. Never assume a recipe from another version still matches.
+
+Do not proceed with a remembered Nitro Kit 1.x API. Do not copy or recreate
+the installed gem's `nk--*` controllers under `app/javascript/controllers/nk`.
 
 ## Choose the smallest Hotwire primitive
 

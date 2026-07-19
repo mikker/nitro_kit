@@ -12,6 +12,7 @@ gem "nitro_kit", "2.0.0.pre.1"
 
 ```sh
 bundle install
+bin/rails generate nitro_kit:install
 ```
 
 Load the static stylesheet before application styles through the Rails asset pipeline:
@@ -26,7 +27,10 @@ Keep application token overrides after Nitro Kit. The [customization guide](cust
 
 Raised default Buttons have their own public background, hover, foreground, and border tokens. Override `--nk-button-default-*` rather than changing `--nk-color-surface` when form controls, cards, dialogs, and menus should retain their existing surfaces.
 
-There is no install generator and no source-copy step.
+The install generator writes only project-owned agent guidance: a managed
+Nitro Kit 2 block in `AGENTS.md` and thin skill routers under `.agents/skills`
+and `.claude/skills`. There is no component source-copy step. Re-run the
+generator after upgrading the gem, then run `bin/rails nitro_kit:doctor`.
 
 ## Stimulus and importmap
 

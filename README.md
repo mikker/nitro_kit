@@ -12,7 +12,7 @@ The `2.0.0.pre.1` release is a complete break from Nitro Kit 1.x. Components are
 
 ## Requirements
 
-- Ruby 3.2 or newer.
+- Ruby 4.0.6 or newer.
 - Rails 7.0 or newer.
 - A Phlex Rails view layer through `phlex-rails`.
 - Stimulus when using interactive components. Importmap is the verified automatic-loading path for this prerelease.
@@ -29,11 +29,26 @@ Then install it:
 
 ```sh
 bundle install
+bin/rails generate nitro_kit:install
 ```
 
-There is no Nitro Kit install generator. Components, CSS, and controllers stay in the gem and are upgraded with it.
+The setup generator installs project-local Rails, Hotwire, and UI skills for
+Codex and Claude, and maintains the Nitro Kit 2 section in `AGENTS.md`. It does
+not copy component Ruby, CSS, helpers, or controllers into the application.
+Run it again after upgrading Nitro Kit to refresh the thin skill routers.
 
-For a new application, the intended next installation surface is a thin Rails application template: one `rails new ... -m ...` command that installs Nitro Kit and the application-owned base without copying Nitro components. See [the new application strategy](docs/new_app_strategy.md). Until that template is published, install the gem directly as above.
+Verify the integration or print the application initialization prompt at any
+time:
+
+```sh
+bin/rails nitro_kit:doctor
+bin/rails nitro_kit:prompt
+bin/rails nitro_kit:prompt --copy
+```
+
+The installer never launches an agent. Its final interactive step only offers
+to copy the initialization prompt to the clipboard. Use `--no-prompt` for CI
+and scripted installation.
 
 ### CSS
 
@@ -240,7 +255,7 @@ concrete flow method so examples cannot silently drift from their source.
 
 The [agent guide](docs/agent_guide.md) routes an agent from a product task to the installed component contract and the matching Hotwire recipe. Add its short `AGENTS.md` block to a consuming application so every agent discovers the version-matched docs through `bundle show nitro_kit`.
 
-This repository and the packaged gem also contain a Codex plugin with separate Nitro Kit UI and Hotwire skills. Register a checked-out or installed copy as a local marketplace:
+This repository and the packaged gem also contain a Codex plugin with separate Nitro Kit Rails, UI, and Hotwire skills. Register a checked-out or installed copy as a local marketplace:
 
 ```sh
 codex plugin marketplace add "$(bundle show nitro_kit)"

@@ -102,7 +102,7 @@ module Gallery
       },
       light: {
         "--nk-color-border" => "oklch(0.92 0.004 286.32)",
-        "--nk-color-canvas" => "oklch(1 0 0)",
+        "--nk-color-canvas" => "oklch(0.993 0 0)",
         "--nk-color-elevated" => "oklch(0.985 0 0)",
         "--nk-color-focus" => "oklch(0.546 0.245 262.881)",
         "--nk-color-foreground" => "oklch(0.21 0.006 285.885)",
@@ -221,7 +221,7 @@ module Gallery
         slate: {
           light: {
             "--nk-color-border" => "oklch(0.929 0.013 255.508)",
-            "--nk-color-canvas" => "oklch(0.984 0.003 247.858)",
+            "--nk-color-canvas" => "oklch(0.992 0.002 247.858)",
             "--nk-color-elevated" => "oklch(0.968 0.007 247.896)",
             "--nk-color-foreground" => "oklch(0.208 0.042 265.755)",
             "--nk-color-muted" => "oklch(0.968 0.007 247.896)",
@@ -245,7 +245,7 @@ module Gallery
         gray: {
           light: {
             "--nk-color-border" => "oklch(0.928 0.006 264.531)",
-            "--nk-color-canvas" => "oklch(0.985 0.002 247.839)",
+            "--nk-color-canvas" => "oklch(0.993 0.001 247.839)",
             "--nk-color-elevated" => "oklch(0.967 0.003 264.542)",
             "--nk-color-foreground" => "oklch(0.21 0.034 264.665)",
             "--nk-color-muted" => "oklch(0.967 0.003 264.542)",
@@ -281,7 +281,7 @@ module Gallery
         neutral: {
           light: {
             "--nk-color-border" => "oklch(0.922 0 0)",
-            "--nk-color-canvas" => "oklch(0.985 0 0)",
+            "--nk-color-canvas" => "oklch(0.993 0 0)",
             "--nk-color-elevated" => "oklch(0.97 0 0)",
             "--nk-color-foreground" => "oklch(0.205 0 0)",
             "--nk-color-muted" => "oklch(0.97 0 0)",
@@ -305,7 +305,7 @@ module Gallery
         stone: {
           light: {
             "--nk-color-border" => "oklch(0.923 0.003 48.717)",
-            "--nk-color-canvas" => "oklch(0.985 0.001 106.423)",
+            "--nk-color-canvas" => "oklch(0.993 0.001 106.423)",
             "--nk-color-elevated" => "oklch(0.97 0.001 106.424)",
             "--nk-color-foreground" => "oklch(0.216 0.006 56.043)",
             "--nk-color-muted" => "oklch(0.97 0.001 106.424)",

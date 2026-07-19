@@ -28,46 +28,6 @@
     flex-direction: column;
   }
 
-  @supports (inset-block-start: anchor(bottom)) {
-    :where([data-nk="dropdown"] > [data-slot="dropdown-content"]) {
-      inset: auto;
-      margin: var(--nk-space);
-      translate: none;
-    }
-
-    :where(
-        [data-nk="dropdown"]
-          > [data-slot="dropdown-content"][data-placement="bottom-start"]
-      ) {
-      inset-block-start: anchor(bottom);
-      inset-inline-start: anchor(left);
-    }
-
-    :where(
-        [data-nk="dropdown"]
-          > [data-slot="dropdown-content"][data-placement="bottom-end"]
-      ) {
-      inset-block-start: anchor(bottom);
-      inset-inline-end: anchor(right);
-    }
-
-    :where(
-        [data-nk="dropdown"]
-          > [data-slot="dropdown-content"][data-placement="top-start"]
-      ) {
-      inset-block-end: anchor(top);
-      inset-inline-start: anchor(left);
-    }
-
-    :where(
-        [data-nk="dropdown"]
-          > [data-slot="dropdown-content"][data-placement="top-end"]
-      ) {
-      inset-block-end: anchor(top);
-      inset-inline-end: anchor(right);
-    }
-  }
-
   :where([data-nk="dropdown"] [data-slot="dropdown-title"]) {
     padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
     color: var(--nk-color-muted-foreground);

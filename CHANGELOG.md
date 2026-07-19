@@ -9,6 +9,8 @@ Nitro Kit 2.0 is a complete, intentionally incompatible rewrite around gem-owned
 - Replace generated editable component copies with versioned `NitroKit::*` classes loaded from the gem.
 - Remove all `nk_*` ERB helpers, generated variant helpers, `from_template`, and template-buffer bridges.
 - Remove copied-component generators, schema/variant metadata, and legacy installation paths.
+- Add a setup-only generator, project-local Rails/Hotwire/UI skills, integration
+  diagnostics, and an agent initialization prompt for Nitro Kit 2.
 - Remove Tailwind Merge, consumer Tailwind requirements, old Tailwind assets, and internal component class strings.
 - Replace permissive component attributes with explicit options and `html:`, `aria:`, and `data:` boundaries.
 - Reject `class` and `style`; add the observable `desperately_need_a_class:` integration escape.

@@ -243,6 +243,24 @@ Tickets: `nk-g3qu`, `nk-obb7`
 
 Gate: every child of `nk-rzxf` is closed with evidence and the repository contains one coherent 2.0 architecture.
 
+## Stage 12 — deterministic agent installation
+
+Ticket: `2an-5ayl`
+
+- Ship concise Nitro Kit Rails, Hotwire, and UI skills that resolve the
+  installed gem before acting.
+- Add a setup-only generator that installs the skills for Codex and Claude and
+  maintains a bounded `AGENTS.md` section without copying component source.
+- Add diagnostics for the resolved version, agent guidance, Hotwire wiring,
+  Phlex Kit inclusion, stylesheet loading, and Nitro Kit 1.x shadows.
+- Print or copy an initialization prompt without launching an agent.
+- Make guided and Pro eval profiles run the real installer and name Nitro Kit
+  2.x explicitly; retain cold profiles for diagnostic comparisons.
+
+Gate: installation is idempotent, preserves application-owned instructions,
+routes agents to version-matched doctrine, and is exercised by the eval
+harness.
+
 ## Verification matrix
 
 | Surface       | Required verification                                                                             |

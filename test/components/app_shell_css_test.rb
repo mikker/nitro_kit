@@ -5,6 +5,7 @@ load File.expand_path("../../lib/tasks/nitro_kit_tasks.rake", __dir__) unless de
 class AppShellCssTest < ActiveSupport::TestCase
   SHELL = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/app_shell.css")
   NAVIGATION = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/app_navigation.css")
+  TOOLBAR = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/toolbar.css")
   CONTROLLER = NitroKit::Engine.root.join("app/javascript/controllers/nk/app_shell_controller.js")
 
   test "owns semantic shell tokens and layout-specific placement" do
@@ -44,6 +45,17 @@ class AppShellCssTest < ActiveSupport::TestCase
     assert_includes unenhanced_mobile, "display: none"
   end
 
+  test "lets a toolbar own the full topbar at wide and narrow widths" do
+    shell = SHELL.read
+    toolbar = TOOLBAR.read
+
+    assert_includes shell, '[data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])'
+    assert_includes shell, "> [data-nk=\"toolbar\"]"
+    assert_includes toolbar, '[data-nk="app-shell"] [data-slot="app-shell-topbar"]'
+    assert_includes toolbar, "flex-direction: row"
+    assert_includes toolbar, "flex-wrap: nowrap"
+  end
+
   test "styles the complete navigation anatomy without utility classes" do
     navigation = NAVIGATION.read
 
@@ -51,6 +63,8 @@ class AppShellCssTest < ActiveSupport::TestCase
       assert_includes navigation, %(app-navigation-#{slot})
     end
     assert_includes navigation, '[data-state="current"]'
+    assert_includes navigation, "min-block-size: var(--nk-app-shell-topbar-height)"
+    assert_includes navigation, "padding-inline: calc(var(--nk-space) * 4)"
     assert_includes navigation, "font-variant-numeric: tabular-nums"
     assert_includes navigation, ":focus-visible"
     assert_includes SHELL.read, "scale: 0.96"
