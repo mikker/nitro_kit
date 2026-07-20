@@ -8,7 +8,11 @@ class SortableTableTest < ActiveSupport::TestCase
       table.caption("People")
       table.thead do
         table.tr do
-          table.sortable_th(:name, href: "/people?q%5Bs%5D=name+desc")
+          table.sortable_th(
+            :name,
+            href: "/people?q%5Bs%5D=name+desc",
+            data: { turbo_action: "replace" }
+          )
           table.sortable_th(:balance, "Balance", href: "/people?q%5Bs%5D=balance+asc", align: :right)
           table.th("Actions")
         end
@@ -36,6 +40,7 @@ class SortableTableTest < ActiveSupport::TestCase
 
     active_link = headers.first.at_css("[data-slot='sortable-table-link']")
     assert_equal "/people?q%5Bs%5D=name+desc", active_link["href"]
+    assert_equal "replace", active_link["data-turbo-action"]
     assert_equal "Name↑", active_link.text
     assert_equal "true", active_link.at_css("[data-slot='sortable-table-indicator']")["aria-hidden"]
     assert_empty node.css("[class], [style]")

@@ -51,7 +51,7 @@ module NitroKit
     def th(...) = @table.th(...)
     def td(...) = @table.td(...)
 
-    def sortable_th(key, label = nil, href:, align: :left)
+    def sortable_th(key, label = nil, href:, align: :left, data: {})
       key = normalize_key(key, name: "sortable header key")
       label = key.humanize if label.nil?
       validate_label!(label)
@@ -66,7 +66,7 @@ module NitroKit
         aria: active ? { sort: aria_sort } : {},
         data: { sort_key: key }
       ) do
-        a(**slot_attributes(:link, attributes: { href: })) do
+        a(**slot_attributes(:link, attributes: { href: }, data:)) do
           plain(label)
           sort_indicator if active
         end

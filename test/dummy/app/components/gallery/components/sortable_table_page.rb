@@ -16,7 +16,7 @@ module Gallery
       end
 
       def api_note
-        "NitroKit::SortableTable.new(current:, direction:) { |table| table.sortable_th(key, label, href:, align:) }"
+        "NitroKit::SortableTable.new(current:, direction:) { |table| table.sortable_th(key, label, href:, align:, data:) }"
       end
 
       def component_template
@@ -132,7 +132,7 @@ module Gallery
         page = current_page(total_count)
         records = relation.offset((page - 1) * PER_PAGE).limit(PER_PAGE)
 
-        turbo_frame_tag(FRAME_ID) do
+        turbo_frame_tag(FRAME_ID, data: { turbo_action: "advance" }) do
           render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch, id: "gallery-sortable-table-recipe") do
             render_filter_form(sort)
             render_bulk_toolbar(records)
@@ -149,7 +149,10 @@ module Gallery
           method: :get,
           builder: NitroKit::FormBuilder,
           id: "gallery-sortable-table-filter",
-          data: { turbo_frame: FRAME_ID }
+          data: {
+            turbo_frame: FRAME_ID,
+            turbo_action: "replace"
+          }
         ) do |form|
           form.hidden_field(:s, value: sort.parameters.fetch("s"))
           form.group do
@@ -176,7 +179,10 @@ module Gallery
               render NitroKit::Button.new(
                 "Reset",
                 href: entry_path(entry),
-                data: { turbo_frame: FRAME_ID }
+                data: {
+                  turbo_frame: FRAME_ID,
+                  turbo_action: "replace"
+                }
               )
               form.submit("Apply filters", id: "gallery-sortable-table-filter-submit")
             end
@@ -210,11 +216,35 @@ module Gallery
           table.thead do
             table.tr do
               table.th("Select")
-              table.sortable_th(:name, "Workspace", href: sort.href_for(:name))
-              table.sortable_th(:owner, href: sort.href_for(:owner))
-              table.sortable_th(:status, href: sort.href_for(:status))
-              table.sortable_th(:seats, href: sort.href_for(:seats), align: :right)
-              table.sortable_th(:updated_at, "Updated", href: sort.href_for(:updated_at), align: :right)
+              table.sortable_th(
+                :name,
+                "Workspace",
+                href: sort.href_for(:name),
+                data: { turbo_action: "replace" }
+              )
+              table.sortable_th(
+                :owner,
+                href: sort.href_for(:owner),
+                data: { turbo_action: "replace" }
+              )
+              table.sortable_th(
+                :status,
+                href: sort.href_for(:status),
+                data: { turbo_action: "replace" }
+              )
+              table.sortable_th(
+                :seats,
+                href: sort.href_for(:seats),
+                align: :right,
+                data: { turbo_action: "replace" }
+              )
+              table.sortable_th(
+                :updated_at,
+                "Updated",
+                href: sort.href_for(:updated_at),
+                align: :right,
+                data: { turbo_action: "replace" }
+              )
             end
           end
           table.tbody do

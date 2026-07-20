@@ -5,12 +5,13 @@ Use one GET-driven Turbo Frame for filters, sorting, results, and pagination. Th
 ## Contract
 
 - The frame has one stable ID.
-- The frame promotes navigations with `data-turbo-action="advance"` so the
-  address bar, Back, and Forward reflect every query state.
-- Filter forms use GET and target that frame.
+- The frame promotes pagination with `data-turbo-action="advance"` so each page
+  remains a meaningful Back and Forward step.
+- Filter forms use GET, target that frame, and replace the current history entry.
 - A small filter set stays in one responsive row at wide widths and stacks on
   narrow screens. Do not turn two fields and two actions into a full-page form.
-- Sort and pagination links preserve the active query parameters.
+- Sort and pagination links preserve the active query parameters. Sort links
+  replace the current history entry; pagination inherits the frame's `advance`.
 - `NitroKit::SortableTable` renders the table contract but does not own query policy.
 - The HTML response always contains the same frame, including empty results.
 - No Stimulus controller is required for submit-based filters. An optional autosubmit controller may submit the same GET form without becoming the source of truth.
@@ -62,14 +63,24 @@ module UI
           url: "/projects",
           method: :get,
           builder: NitroKit::FormBuilder,
-          data: { turbo_frame: FRAME_ID }
+          data: {
+            turbo_frame: FRAME_ID,
+            turbo_action: "replace"
+          }
         ) do |form|
           form.hidden_field(:s, value: query.filters["s"])
           render NitroKit::Grid.new(cols: "1 md:3", gap: 3) do
             form.field(:name_cont, as: :search, label: "Search", value: query.filters["name_cont"])
             form.field(:status_eq, as: :select, label: "Status", options: Project.statuses.keys, include_blank: "All statuses", value: query.filters["status_eq"])
             render NitroKit::Flex.new(dir: :row, gap: 2, align: :end, justify: :end) do
-              render NitroKit::Button.new("Reset", href: "/projects", data: { turbo_frame: FRAME_ID })
+              render NitroKit::Button.new(
+                "Reset",
+                href: "/projects",
+                data: {
+                  turbo_frame: FRAME_ID,
+                  turbo_action: "replace"
+                }
+              )
               form.submit("Apply filters", data: { turbo_submits_with: "Filtering…" })
             end
           end
@@ -84,9 +95,23 @@ module UI
           table.caption("Projects")
           table.thead do
             table.tr do
-              table.sortable_th(:name, href: query.sort_url(:name))
-              table.sortable_th(:status, href: query.sort_url(:status))
-              table.sortable_th(:updated_at, "Updated", href: query.sort_url(:updated_at), align: :right)
+              table.sortable_th(
+                :name,
+                href: query.sort_url(:name),
+                data: { turbo_action: "replace" }
+              )
+              table.sortable_th(
+                :status,
+                href: query.sort_url(:status),
+                data: { turbo_action: "replace" }
+              )
+              table.sortable_th(
+                :updated_at,
+                "Updated",
+                href: query.sort_url(:updated_at),
+                align: :right,
+                data: { turbo_action: "replace" }
+              )
               table.th("Actions", align: :right)
             end
           end
@@ -125,8 +150,10 @@ module UI
 end
 ```
 
-Sorting and pagination links rendered inside the frame naturally navigate it,
-and the frame's `advance` action promotes their URLs into browser history. Use
+Sorting and pagination links rendered inside the frame naturally navigate it.
+The frame's `advance` action makes pagination a browser-history step. Filters,
+reset links, and sort links override that default with `turbo_action: "replace"`
+so repeated query refinements do not fill history with disposable states. Use
 `data: { turbo_frame: FRAME_ID }` when a query control sits outside the frame.
 Reset with a plain collection URL so stale query parameters disappear.
 
@@ -139,6 +166,8 @@ destination response and replace the region with “Content missing.”
 
 Request tests should prove that query parameters survive sort and page changes,
 invalid sort keys fall back safely, and the response always contains
-`turbo-frame#projects-results`. A system test should cover filter → sort →
-paginate → Back, assert the address bar after each query transition, and open a
-row action without a frame-missing error.
+`turbo-frame#projects-results`. A system test should use real clicks, scope
+result assertions to that frame, cover filter → sort → paginate → Back and
+Forward, assert the address bar after each query transition, and open a row
+action without a frame-missing error. Use Capybara's retrying assertions rather
+than sleeps or arbitrary waits.
