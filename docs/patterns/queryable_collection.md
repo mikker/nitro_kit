@@ -5,7 +5,11 @@ Use one GET-driven Turbo Frame for filters, sorting, results, and pagination. Th
 ## Contract
 
 - The frame has one stable ID.
+- The frame promotes navigations with `data-turbo-action="advance"` so the
+  address bar, Back, and Forward reflect every query state.
 - Filter forms use GET and target that frame.
+- A small filter set stays in one responsive row at wide widths and stacks on
+  narrow screens. Do not turn two fields and two actions into a full-page form.
 - Sort and pagination links preserve the active query parameters.
 - `NitroKit::SortableTable` renders the table contract but does not own query policy.
 - The HTML response always contains the same frame, including empty results.
@@ -40,7 +44,7 @@ module UI
     end
 
     def view_template
-      turbo_frame_tag(FRAME_ID) do
+      turbo_frame_tag(FRAME_ID, data: { turbo_action: "advance" }) do
         render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch) do
           render_filters
           render_results
@@ -61,11 +65,14 @@ module UI
           data: { turbo_frame: FRAME_ID }
         ) do |form|
           form.hidden_field(:s, value: query.filters["s"])
-          form.group do
+          render NitroKit::Grid.new(cols: "1 md:3", gap: 3) do
             form.field(:name_cont, as: :search, label: "Search", value: query.filters["name_cont"])
             form.field(:status_eq, as: :select, label: "Status", options: Project.statuses.keys, include_blank: "All statuses", value: query.filters["status_eq"])
+            render NitroKit::Flex.new(dir: :row, gap: 2, align: :end, justify: :end) do
+              render NitroKit::Button.new("Reset", href: "/projects", data: { turbo_frame: FRAME_ID })
+              form.submit("Apply filters", data: { turbo_submits_with: "Filtering…" })
+            end
           end
-          form.submit("Apply filters", data: { turbo_submits_with: "Filtering…" })
         end
       end
 
@@ -80,13 +87,14 @@ module UI
               table.sortable_th(:name, href: query.sort_url(:name))
               table.sortable_th(:status, href: query.sort_url(:status))
               table.sortable_th(:updated_at, "Updated", href: query.sort_url(:updated_at), align: :right)
+              table.th("Actions", align: :right)
             end
           end
           table.tbody do
             if query.records.any?
               query.records.each { |project| render_row(table, project) }
             else
-              table.tr { table.td("No projects match these filters.", html: { colspan: 3 }) }
+              table.tr { table.td("No projects match these filters.", html: { colspan: 4 }) }
             end
           end
         end
@@ -97,6 +105,13 @@ module UI
           table.th(project.name, scope: :row)
           table.td { render NitroKit::Badge.new(project.status.humanize) }
           table.td(project.updated_at.to_date.to_fs(:long), align: :right)
+          table.td(align: :right) do
+            render NitroKit::Button.new(
+              "View",
+              href: project_path(project),
+              data: { turbo_frame: "_top" }
+            )
+          end
         end
       end
 
@@ -110,8 +125,20 @@ module UI
 end
 ```
 
-Sorting and pagination links rendered inside the frame naturally navigate it. Use `data: { turbo_frame: FRAME_ID }` when a control sits outside the frame. Reset with a plain collection URL so stale query parameters disappear.
+Sorting and pagination links rendered inside the frame naturally navigate it,
+and the frame's `advance` action promotes their URLs into browser history. Use
+`data: { turbo_frame: FRAME_ID }` when a query control sits outside the frame.
+Reset with a plain collection URL so stale query parameters disappear.
+
+Links that leave the collection, including View, Edit, and New, are not frame
+navigations. Give them `data: { turbo_frame: "_top" }`, or place them outside
+the results frame. Otherwise Turbo will look for the collection frame in the
+destination response and replace the region with “Content missing.”
 
 ## Tests
 
-Request tests should prove that query parameters survive sort and page changes, invalid sort keys fall back safely, and the response always contains `turbo-frame#projects-results`. A system test should cover filter → sort → paginate → Back when this is a central product flow.
+Request tests should prove that query parameters survive sort and page changes,
+invalid sort keys fall back safely, and the response always contains
+`turbo-frame#projects-results`. A system test should cover filter → sort →
+paginate → Back, assert the address bar after each query transition, and open a
+row action without a frame-missing error.
