@@ -30,6 +30,10 @@ If the gem is not installed, say that the skill requires Nitro Kit and follow th
    owns the route's single `h1` and basic actions. The shell main region owns
    one content gutter. Do not repeat that heading in `PageHeader`, or wrap each
    table, form, and detail region in another Card.
+8. For team administration and account settings, read
+   `docs/patterns/application_foundation.md`. Put Settings after an
+   `AppNavigation` spacer and use `SettingsLayout` with plain `FormSection`
+   regions instead of a stack of Cards.
 
 ## Preserve the boundary
 

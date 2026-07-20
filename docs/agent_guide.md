@@ -15,6 +15,7 @@ Read this guide from that directory, then consult only the reference needed for 
 | Task                                        | Read next                               |
 | ------------------------------------------- | --------------------------------------- |
 | Rails models, routes, CRUD, and tests       | `docs/rails_conventions.md`             |
+| Authentication, teams, shell, and settings | `docs/patterns/application_foundation.md` |
 | Build a complete product resource          | `docs/patterns/crud_resource.md`        |
 | Choose or compose UI                        | `docs/component_contracts.md`           |
 | Rails assets, forms, and application shells | `docs/rails_integration.md`             |
@@ -37,6 +38,7 @@ Prefer a block that owns the whole region, then compose smaller components insid
 | Application chrome               | `AppShell`, `AppNavigation`                               |
 | Authentication page              | `AuthShell`                                               |
 | Settings navigation              | `SettingsLayout`                                          |
+| Team or account administration   | `AppShell`, `Toolbar`, `Table`, `FormSection`             |
 | App page title and basic actions | `AppShell`, then `Toolbar`                                |
 | Content-led page introduction    | `PageHeader`                                              |
 | Data region                      | `DataSection`, then `Table` or `EmptyState`               |

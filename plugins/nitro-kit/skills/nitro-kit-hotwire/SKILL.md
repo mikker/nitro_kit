@@ -19,6 +19,8 @@ Make the server response and stable DOM boundary the interaction API. Add Stimul
    - delete/revoke/archive confirmation: `destructive_action.md`
    - notices/errors after responses: `flash_and_toast.md`
    - row or panel edit/cancel: `inline_edit.md`
+   - application-wide confirmation and settings forms:
+     `application_foundation.md`
 6. Inspect the installed Nitro component contract used by the recipe. Never assume a recipe from another version still matches.
 
 Do not proceed with a remembered Nitro Kit 1.x API. Do not copy or recreate

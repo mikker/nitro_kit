@@ -18,7 +18,9 @@ established application outside the requested scope.
 5. Read `NITRO_KIT_ROOT/docs/rails_conventions.md` completely.
 6. For a complete product resource, read
    `NITRO_KIT_ROOT/docs/patterns/crud_resource.md` completely.
-7. Read the matching Hotwire recipe before implementing an interaction.
+7. For authentication, teams, application navigation, or settings, read
+   `NITRO_KIT_ROOT/docs/patterns/application_foundation.md` completely.
+8. Read the matching Hotwire recipe before implementing an interaction.
 
 Never use a Nitro Kit 1.x helper, copied component, controller, or Tailwind
 contract as a substitute for the installed API.
@@ -39,6 +41,9 @@ contract as a substitute for the installed API.
 - In authenticated admin areas, default to a hybrid `AppShell` with the route's
   one `h1` and basic actions in its `Toolbar`. Keep one page gutter and avoid
   repeated headings or automatic Card wrappers.
+- In a new team-aware application, create the first user's `Team` and owner
+  `Membership` together. Put roles on memberships and scope product records
+  through `Current.team`.
 
 Preserve a clear ownership boundary: Rails owns product policy and records;
 Nitro Kit owns component contracts and focused progressive behavior.

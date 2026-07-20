@@ -12,6 +12,11 @@ explicitly includes changing them.
 - Scope tenant-owned records through `Current.team` or `Current.account`.
   Record `Current.user` as the actor or creator instead of using the user as
   the tenancy boundary.
+- For a new team-aware application, use `User`, `Team`, and `Membership` from
+  the first signup. Put roles on the membership and create the first user's
+  team plus owner membership in the same transaction. Read
+  `docs/patterns/application_foundation.md` before adding authentication,
+  invitations, team administration, or account settings.
 - Represent meaningful lifecycle state with a record when the state has
   identity, timing, provenance, or behavior. A published post has a
   `Post::Publication`; it is not merely a `published` boolean.

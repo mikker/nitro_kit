@@ -46,6 +46,11 @@ The application stylesheet gives `admin-main` one responsive padding rule.
 Child pages do not add another outer gutter. `Container` constrains measure;
 it does not own page padding.
 
+Use the same shell and gutter on team administration and settings routes.
+Place a bottom-anchored Settings destination after `AppNavigation#spacer`, then
+compose settings subsections with `SettingsLayout` and plain `FormSection`
+regions. Read `application_foundation.md` for the complete application frame.
+
 ## Spend hierarchy once
 
 - One route, one `h1`, normally in the shell toolbar.
