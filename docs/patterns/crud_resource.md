@@ -70,7 +70,8 @@ with one intentional `EmptyState`; keep the primary New action in the toolbar.
 A new or edit page begins with `FormSection`. Use one form component for new,
 edit, and invalid renders. Put the primary submit in the toolbar by setting the
 button's `form:` to the form's stable DOM ID. Invalid submissions render the
-same model and form with `422 Unprocessable Entity`.
+same model and form with `422 Unprocessable Entity`. The toolbar owns that
+action: do not render a second Save or Create submit inside the form body.
 
 A detail page begins with status or stable metadata, then the resource itself.
 Use the authenticated `show` route as the operational detail or draft preview.
@@ -107,6 +108,10 @@ assertions should also protect the high-level composition: hybrid AppShell,
 one `h1`, navigation, toolbar action, actual form association, table or empty
 state, and destructive confirmation. Add one browser test for the meaningful
 end-to-end path, using Capybara waiting assertions instead of sleeps.
+
+Assert that each primary action has one visible control. A toolbar-associated
+form submit plus an identical body submit is duplication, even when both invoke
+the same valid form.
 
 Before finishing, inspect a populated index, empty index, invalid form, narrow
 form, draft detail, published detail, and destructive dialog. Remove any extra

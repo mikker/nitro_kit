@@ -9,8 +9,12 @@ module UI
   class ProjectForm < Phlex::HTML
     include Phlex::Rails::Helpers::FormWith
 
-    def initialize(project)
+    def initialize(
+      project,
+      form_id: ActionView::RecordIdentifier.dom_id(project, :form)
+    )
       @project = project
+      @form_id = form_id
     end
 
     def view_template
@@ -19,21 +23,46 @@ module UI
         description: "Project details are visible to every workspace member."
       ) do |section|
         section.form do
-          form_with(model: project, builder: NitroKit::FormBuilder) do |form|
+          form_with(
+            model: project,
+            builder: NitroKit::FormBuilder,
+            id: form_id
+          ) do |form|
             form.field(:name, required: true, autofocus: true)
-            form.field(:status, as: :select, options: Project.statuses.keys.map { |value| [value.humanize, value] })
+            form.field(
+              :status,
+              as: :select,
+              options: Project.statuses.keys.map do |value|
+                [ value.humanize, value ]
+              end
+            )
             form.field(:description, as: :textarea)
-            form.submit(project.persisted? ? "Save project" : "Create project", data: { turbo_submits_with: "Saving…" })
           end
         end
       end
     end
 
     private
-      attr_reader :project
+      attr_reader :project, :form_id
   end
 end
 ```
+
+In an application shell, render exactly one primary submit in the route
+toolbar and associate it with `form_id`:
+
+```ruby
+Button(
+  project.persisted? ? "Save project" : "Create project",
+  type: :submit,
+  form: form_id,
+  variant: :primary,
+  data: { turbo_submits_with: "Saving…" }
+)
+```
+
+Do not also call `form.submit` in the form body. Use an in-form submit only
+when the form is genuinely standalone and has no toolbar action.
 
 ## Controller
 

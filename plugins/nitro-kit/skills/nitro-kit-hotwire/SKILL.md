@@ -57,3 +57,11 @@ Do not create a universal interaction controller, hide server behavior inside a 
 ## Verify end to end
 
 Cover the HTML fallback and Turbo response in request tests. Add a system test when focus, dialog behavior, frame navigation, or multiple DOM updates are central to the interaction. Assert response status and stable frame or target IDs, not Turbo internals.
+
+Some headless browser sessions throttle `requestAnimationFrame`, which Turbo
+uses before rendering a completed visit. If a request succeeds but the page or
+frame never renders only in automation, reproduce it in a Rails system test
+before changing application code. Disable Chrome's background throttling or
+use a test-only `requestAnimationFrame` shim when necessary. Never ship that
+workaround in the application or replace a conventional Turbo flow to satisfy
+one browser driver.
