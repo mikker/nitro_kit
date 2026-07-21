@@ -44,13 +44,15 @@ self-submitting control, the complete controller can be:
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-  submit(event) {
-    event.currentTarget.form?.requestSubmit();
+  submit() {
+    this.element.requestSubmit();
   }
 }
 ```
 
-Use `data-action` instead of manually registering DOM listeners. If a
+Attach `data-action="change->auto-submit#submit"` to the form so change events
+bubble to that one controller root. Keep a submit button inside `noscript` as
+the HTML fallback. Use `data-action` instead of manually registering DOM listeners. If a
 controller owns a listener, observer, timer, object URL, or third-party
 instance, release it in `disconnect`.
 

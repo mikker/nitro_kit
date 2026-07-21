@@ -42,14 +42,21 @@ AppShell(id: "admin", layout: :hybrid) do |shell|
 end
 ```
 
+Child routes add one compact Back link before the title. Prefer an icon-only
+Button with an explicit label such as `aria: { label: "Back to projects" }`.
+Do not repeat that navigation as a trailing Cancel action.
+
 The application stylesheet gives `admin-main` one responsive padding rule.
 Child pages do not add another outer gutter. `Container` constrains measure;
 it does not own page padding.
 
-Use the same shell and gutter on team administration and settings routes.
+Do not add viewport height or another outer padding rule to `admin-main`; the
+shell owns viewport geometry and the wrapper owns the one page gutter. Use the
+same shell and gutter on team administration and settings routes.
 Place a bottom-anchored Settings destination after `AppNavigation#spacer`, then
 compose settings subsections with `SettingsLayout` and plain `FormSection`
-regions. Read `application_foundation.md` for the complete application frame.
+regions. Settings destinations are links with `aria-current`, not action
+Buttons. Read `application_foundation.md` for the complete application frame.
 
 ## Spend hierarchy once
 
@@ -74,10 +81,13 @@ same model and form with `422 Unprocessable Entity`. The toolbar owns that
 action: do not render a second Save or Create submit inside the form body.
 
 A detail page begins with status or stable metadata, then the resource itself.
+Keep status inside that normal details flow instead of detaching it into a
+second side panel.
 Use the authenticated `show` route as the operational detail or draft preview.
 Put lifecycle forms in the page and associate their toolbar buttons with
-`form:`. Keep destructive confirmation in one separate `DangerZone` with a
-safe escape.
+`form:`. Put destructive confirmation in one separate `DangerZone` on edit,
+with a safe escape back to the record. Do not make every show page end in a
+large deletion surface.
 
 ## Model and route the lifecycle
 
@@ -114,5 +124,5 @@ form submit plus an identical body submit is duplication, even when both invoke
 the same valid form.
 
 Before finishing, inspect a populated index, empty index, invalid form, narrow
-form, draft detail, published detail, and destructive dialog. Remove any extra
+form, draft detail, published detail, and edit-owned destructive dialog. Remove any extra
 heading, surface, wrapper, or page gutter that does not communicate information.

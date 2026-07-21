@@ -4,6 +4,9 @@ Use a native Nitro Dialog when the user needs to review impact or type confirmat
 
 ## Reviewed deletion
 
+Place this composition on the resource's edit page. A show page is the
+operational home; it should not advertise permanent deletion on every visit.
+
 ```ruby
 module UI
   class DeleteProject < Phlex::HTML

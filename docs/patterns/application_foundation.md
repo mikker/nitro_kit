@@ -37,17 +37,26 @@ controls at the bottom of the sidebar:
 
 ```ruby
 shell.navigation do
-  AppNavigation do |navigation|
-    navigation.item("Inventory", href: assets_path, icon: :archive)
-    navigation.item("Team", href: team_path, icon: :users)
-    navigation.spacer
-    navigation.item("Settings", href: settings_profile_path, icon: :settings)
+  AppNavigation(label: "Workspace navigation") do |navigation|
+    navigation.body do
+      navigation.item("Inventory", href: assets_path, icon: :archive)
+      navigation.item("Team", href: team_path, icon: :users)
+      navigation.spacer
+      navigation.item("Settings", href: settings_profile_path, icon: :settings)
+    end
   end
 end
 ```
 
 Application code owns destinations and current-route policy. Nitro owns shell
 layout, mobile disclosure, focus management, and navigation semantics.
+Let the shell own viewport height and scrolling; do not add `min-height: 100vh`
+to its main region or page wrapper. Put brand and destination icons through the
+navigation slots so they share the same left alignment.
+
+Team is an administration surface, not merely a roster. Include pending
+invitations and the complete invite, role-change, removal, and revoke paths,
+with last-owner protection in the model and authorization on every mutation.
 
 ## Keep settings plain
 
@@ -55,6 +64,13 @@ Use `SettingsLayout` inside the normal shell main region. Its navigation lists
 stable subsections such as Profile, Notifications, Appearance, and Password;
 its content renders the selected form. Use `FormSection` for genuinely distinct
 form regions and ordinary whitespace or dividers between them.
+
+Render subsection destinations as links and mark the active link with
+`aria-current="page"`. They navigate between routes; Buttons and ButtonGroup
+would incorrectly present them as in-page actions. Small preferences may
+submit on change through a tiny application Stimulus controller that calls the
+form's native `requestSubmit`. Keep a submit control in `noscript` so the form
+still works without JavaScript.
 
 The route still has one `h1` in the shell toolbar. Do not repeat “Settings” in
 the page body, wrap each subsection in a Card, or give every form its own outer
@@ -73,7 +89,8 @@ a branded confirmation, adapt `Turbo.config.forms.confirm` once in the
 application layout and resolve its Promise from one reusable Nitro `Dialog`.
 Do not build a separate dialog for every row action. Use a dedicated reviewed
 `Dialog` inside `DangerZone` only when the user needs more context than one
-sentence.
+sentence. Put record deletion on the edit route rather than adding a danger
+surface to every operational show page.
 
 ## Baseline acceptance path
 

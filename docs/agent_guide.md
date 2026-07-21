@@ -51,6 +51,12 @@ Prefer a block that owns the whole region, then compose smaller components insid
 
 Application-specific product UI belongs under the application's namespace and composes Nitro components. Nitro owns component markup, styles, accessibility structure, and narrowly scoped progressive behavior. The application owns product policy, records, routes, authorization, queries, DOM IDs, and server responses.
 
+For admin CRUD, treat the starter and entitled flows as complete compositions:
+use toolbar Back links on child routes, keep deletion on edit, keep status in
+the details flow, implement full invitation and membership management, and use
+native links for settings destinations. Do not stop after rendering a screen
+that only looks structurally similar.
+
 ## Use one interaction grammar
 
 Choose the smallest primitive that completes the interaction:

@@ -64,7 +64,7 @@ class AppShellCssTest < ActiveSupport::TestCase
     end
     assert_includes navigation, '[data-state="current"]'
     assert_includes navigation, "min-block-size: var(--nk-app-shell-topbar-height)"
-    assert_includes navigation, "padding-inline: calc(var(--nk-space) * 4)"
+    assert_includes navigation, "padding-inline: calc(var(--nk-space) * 6)"
     assert_includes navigation, "font-variant-numeric: tabular-nums"
     assert_includes navigation, ":focus-visible"
     assert_includes SHELL.read, "scale: 0.96"
