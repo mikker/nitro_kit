@@ -84,39 +84,41 @@ module Gallery
           id: "gallery-account-creation-form",
           data: { turbo_frame: "gallery-account-creation-frame" }
         ) do |form|
-          form.field(:name, label: "Full name", autocomplete: "name", required: true, disabled:)
-          form.field(
-            :email,
-            as: :email,
-            label: "Email address",
-            description: "We will ask you to verify this address before onboarding.",
-            autocomplete: "email",
-            required: true,
-            disabled:
-          )
-          form.field(
-            :password,
-            as: :password,
-            label: "Password",
-            description: "Use 12 or more characters.",
-            autocomplete: "new-password",
-            value: nil,
-            required: true,
-            disabled:
-          )
-          form.field(
-            :terms,
-            as: :checkbox,
-            label: "I agree to the terms and privacy policy",
-            required: true,
-            disabled:
-          )
-          form.submit(
-            disabled ? "Creating account…" : "Create account",
-            id: "gallery-account-creation-submit",
-            disabled:,
-            data: { turbo_submits_with: "Creating account…" }
-          )
+          form.group do
+            form.field(:name, label: "Full name", autocomplete: "name", required: true, disabled:)
+            form.field(
+              :email,
+              as: :email,
+              label: "Email address",
+              description: "We will ask you to verify this address before onboarding.",
+              autocomplete: "email",
+              required: true,
+              disabled:
+            )
+            form.field(
+              :password,
+              as: :password,
+              label: "Password",
+              description: "Use 12 or more characters.",
+              autocomplete: "new-password",
+              value: nil,
+              required: true,
+              disabled:
+            )
+            form.field(
+              :terms,
+              as: :checkbox,
+              label: "I agree to the terms and privacy policy",
+              required: true,
+              disabled:
+            )
+            form.submit(
+              disabled ? "Creating account…" : "Create account",
+              id: "gallery-account-creation-submit",
+              disabled:,
+              data: { turbo_submits_with: "Creating account…" }
+            )
+          end
         end
       end
 

@@ -28,15 +28,17 @@ module UI
             builder: NitroKit::FormBuilder,
             id: form_id
           ) do |form|
-            form.field(:name, required: true, autofocus: true)
-            form.field(
-              :status,
-              as: :select,
-              options: Project.statuses.keys.map do |value|
-                [ value.humanize, value ]
-              end
-            )
-            form.field(:description, as: :textarea)
+            form.group do
+              form.field(:name, required: true, autofocus: true)
+              form.field(
+                :status,
+                as: :select,
+                options: Project.statuses.keys.map do |value|
+                  [ value.humanize, value ]
+                end
+              )
+              form.field(:description, as: :textarea)
+            end
           end
         end
       end
@@ -62,7 +64,8 @@ Button(
 ```
 
 Do not also call `form.submit` in the form body. Use an in-form submit only
-when the form is genuinely standalone and has no toolbar action.
+when the form is genuinely standalone and has no toolbar action; put that
+submit inside the same `form.group` as its visible fields.
 
 ## Controller
 

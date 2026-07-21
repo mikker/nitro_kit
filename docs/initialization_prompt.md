@@ -21,9 +21,14 @@ APIs or examples.
    `NitroKit` components, `nk_*` helpers, or `controllers/nk` only when this
    task is authorized to migrate the application.
 8. Use ordinary Rails routes, models, forms, and server-rendered HTML. Follow
-   the installed Rails and Hotwire guidance for new work.
+   the installed Rails and Hotwire guidance for new work. During a migration,
+   replace an existing control only when Nitro Kit 2 has a genuine semantic
+   and behavioral equivalent. Otherwise preserve it as application-owned
+   Rails and semantic HTML; never downgrade specialized behavior or retain
+   copied Nitro Kit 1.x source as the fallback.
 9. Run `bin/rails nitro_kit:doctor`, fix actionable failures, and run the
    application's relevant tests.
 
 Report what you changed, any existing convention you deliberately preserved,
-and any warning that still needs a product decision.
+any unsupported control recorded as a Nitro Kit coverage gap, and any warning
+that still needs a product decision.

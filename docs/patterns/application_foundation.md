@@ -58,6 +58,12 @@ Team is an administration surface, not merely a roster. Include pending
 invitations and the complete invite, role-change, removal, and revoke paths,
 with last-owner protection in the model and authorization on every mutation.
 
+Authentication is a standalone form surface. Inside `AuthShell`, use Rails
+`form_with` with `NitroKit::FormBuilder` and put the visible fields, submit
+control, and related recovery link in one `form.group`. The group owns their
+vertical rhythm; `AuthShell` owns only the page container and spacing between
+its major regions.
+
 ## Keep settings plain
 
 Use `SettingsLayout` inside the normal shell main region. Its navigation lists

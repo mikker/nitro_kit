@@ -88,36 +88,38 @@ module Gallery
           data: { turbo_frame: "gallery-invitation-frame" }
         ) do |form|
           form.hidden_field(:token)
-          form.field(
-            :name,
-            label: "Your name",
-            autocomplete: "name",
-            required: true,
-            disabled:
-          )
-          form.field(
-            :password,
-            as: :password,
-            label: "Create a password",
-            description: "Use at least 12 characters.",
-            autocomplete: "new-password",
-            value: nil,
-            required: true,
-            disabled:
-          )
-          form.field(
-            :terms,
-            as: :checkbox,
-            label: "I agree to the terms and workspace access policy",
-            required: true,
-            disabled:
-          )
-          form.submit(
-            disabled ? "Joining workspace…" : "Accept invitation",
-            id: "gallery-invitation-submit",
-            disabled:,
-            data: { turbo_submits_with: "Joining workspace…" }
-          )
+          form.group do
+            form.field(
+              :name,
+              label: "Your name",
+              autocomplete: "name",
+              required: true,
+              disabled:
+            )
+            form.field(
+              :password,
+              as: :password,
+              label: "Create a password",
+              description: "Use at least 12 characters.",
+              autocomplete: "new-password",
+              value: nil,
+              required: true,
+              disabled:
+            )
+            form.field(
+              :terms,
+              as: :checkbox,
+              label: "I agree to the terms and workspace access policy",
+              required: true,
+              disabled:
+            )
+            form.submit(
+              disabled ? "Joining workspace…" : "Accept invitation",
+              id: "gallery-invitation-submit",
+              disabled:,
+              data: { turbo_submits_with: "Joining workspace…" }
+            )
+          end
         end
       end
 

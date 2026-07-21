@@ -61,22 +61,24 @@ module Gallery
           end
           section.form do
             form_with(url: "#recovery", scope: :recovery, builder: NitroKit::FormBuilder, id: "gallery-account-security-recovery-form") do |form|
-              form.field(
-                :email,
-                as: :email,
-                label: "Account email",
-                value: invalid ? "missing-at-sign" : "ada@example.test",
-                errors: invalid ? [ "is invalid" ] : nil,
-                autocomplete: "email",
-                required: true,
-                disabled:
-              )
-              form.submit(
-                disabled ? "Requesting recovery…" : "Send recovery link",
-                id: "gallery-account-security-recovery-submit",
-                disabled:,
-                data: { turbo_submits_with: "Requesting recovery…" }
-              )
+              form.group do
+                form.field(
+                  :email,
+                  as: :email,
+                  label: "Account email",
+                  value: invalid ? "missing-at-sign" : "ada@example.test",
+                  errors: invalid ? [ "is invalid" ] : nil,
+                  autocomplete: "email",
+                  required: true,
+                  disabled:
+                )
+                form.submit(
+                  disabled ? "Requesting recovery…" : "Send recovery link",
+                  id: "gallery-account-security-recovery-submit",
+                  disabled:,
+                  data: { turbo_submits_with: "Requesting recovery…" }
+                )
+              end
             end
           end
         end
@@ -95,9 +97,11 @@ module Gallery
           section.form do
             form_with(url: "#password-reset", scope: :password_reset, builder: NitroKit::FormBuilder, id: "gallery-account-security-reset-form") do |form|
               form.hidden_field(:token, value: "reset_4F8M")
-              form.field(:password, as: :password, label: "New password", autocomplete: "new-password", required: true)
-              form.field(:password_confirmation, as: :password, label: "Confirm new password", autocomplete: "new-password", required: true)
-              form.submit("Reset password and revoke sessions", id: "gallery-account-security-reset-submit")
+              form.group do
+                form.field(:password, as: :password, label: "New password", autocomplete: "new-password", required: true)
+                form.field(:password_confirmation, as: :password, label: "Confirm new password", autocomplete: "new-password", required: true)
+                form.submit("Reset password and revoke sessions", id: "gallery-account-security-reset-submit")
+              end
             end
           end
         end
@@ -138,17 +142,19 @@ module Gallery
           end
           section.form do
             form_with(url: "#two-factor", scope: :two_factor, builder: NitroKit::FormBuilder, id: "gallery-account-security-two-factor-form") do |form|
-              form.field(
-                :code,
-                label: "Six-digit authentication code",
-                value: invalid ? "12345" : nil,
-                errors: invalid ? [ "must contain six digits" ] : nil,
-                autocomplete: "one-time-code",
-                inputmode: "numeric",
-                pattern: "[0-9]{6}",
-                required: true
-              )
-              form.submit("Verify identity", id: "gallery-account-security-two-factor-submit")
+              form.group do
+                form.field(
+                  :code,
+                  label: "Six-digit authentication code",
+                  value: invalid ? "12345" : nil,
+                  errors: invalid ? [ "must contain six digits" ] : nil,
+                  autocomplete: "one-time-code",
+                  inputmode: "numeric",
+                  pattern: "[0-9]{6}",
+                  required: true
+                )
+                form.submit("Verify identity", id: "gallery-account-security-two-factor-submit")
+              end
             end
           end
         end
@@ -170,15 +176,17 @@ module Gallery
           end
           section.form do
             form_with(url: "#recovery-code", scope: :recovery_code, builder: NitroKit::FormBuilder, id: "gallery-account-security-code-form") do |form|
-              form.field(
-                :code,
-                label: "Recovery code",
-                value: invalid ? "USED-CODE" : nil,
-                errors: invalid ? [ "is invalid or already used" ] : nil,
-                autocomplete: "one-time-code",
-                required: true
-              )
-              form.submit("Use recovery code", id: "gallery-account-security-code-submit")
+              form.group do
+                form.field(
+                  :code,
+                  label: "Recovery code",
+                  value: invalid ? "USED-CODE" : nil,
+                  errors: invalid ? [ "is invalid or already used" ] : nil,
+                  autocomplete: "one-time-code",
+                  required: true
+                )
+                form.submit("Use recovery code", id: "gallery-account-security-code-submit")
+              end
             end
           end
         end
@@ -196,8 +204,10 @@ module Gallery
           end
           section.form do
             form_with(url: "#trusted-device", scope: :trusted_device, builder: NitroKit::FormBuilder, id: "gallery-account-security-trust-form") do |form|
-              form.field(:trusted, as: :checkbox, label: "Trust this browser for 30 days", checked: false)
-              form.submit("Continue", id: "gallery-account-security-trust-submit")
+              form.group do
+                form.field(:trusted, as: :checkbox, label: "Trust this browser for 30 days", checked: false)
+                form.submit("Continue", id: "gallery-account-security-trust-submit")
+              end
             end
           end
         end

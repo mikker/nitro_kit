@@ -100,25 +100,27 @@ module Gallery
           id: "gallery-onboarding-workspace-form",
           data: { turbo_frame: "gallery-onboarding-frame" }
         ) do |form|
-          form.field(
-            :workspace_name,
-            label: "Workspace name",
-            description: "Teammates will see this name in navigation, invitations, and security notices.",
-            required: true
-          )
-          form.field(
-            :team_size,
-            as: :select,
-            label: "Expected team size",
-            options: [ [ "Just me", 1 ], [ "2–5 people", 5 ], [ "6–20 people", 20 ], [ "21–50 people", 50 ] ],
-            prompt: "Choose a range",
-            required: true
-          )
-          form.submit(
-            "Continue to team",
-            id: "gallery-onboarding-workspace-submit",
-            data: { turbo_submits_with: "Saving workspace…" }
-          )
+          form.group do
+            form.field(
+              :workspace_name,
+              label: "Workspace name",
+              description: "Teammates will see this name in navigation, invitations, and security notices.",
+              required: true
+            )
+            form.field(
+              :team_size,
+              as: :select,
+              label: "Expected team size",
+              options: [ [ "Just me", 1 ], [ "2–5 people", 5 ], [ "6–20 people", 20 ], [ "21–50 people", 50 ] ],
+              prompt: "Choose a range",
+              required: true
+            )
+            form.submit(
+              "Continue to team",
+              id: "gallery-onboarding-workspace-submit",
+              data: { turbo_submits_with: "Saving workspace…" }
+            )
+          end
         end
       end
 
@@ -132,18 +134,20 @@ module Gallery
           id: "gallery-onboarding-team-form",
           data: { turbo_frame: "gallery-onboarding-frame" }
         ) do |form|
-          form.field(
-            :invitees,
-            as: :textarea,
-            label: "Teammate email addresses",
-            description: "Enter one address per line. Invitations are sent after you confirm the workspace.",
-            placeholder: "grace@example.test\nkatherine@example.test"
-          )
-          form.submit(
-            "Continue to integrations",
-            id: "gallery-onboarding-team-submit",
-            data: { turbo_submits_with: "Saving invitations…" }
-          )
+          form.group do
+            form.field(
+              :invitees,
+              as: :textarea,
+              label: "Teammate email addresses",
+              description: "Enter one address per line. Invitations are sent after you confirm the workspace.",
+              placeholder: "grace@example.test\nkatherine@example.test"
+            )
+            form.submit(
+              "Continue to integrations",
+              id: "gallery-onboarding-team-submit",
+              data: { turbo_submits_with: "Saving invitations…" }
+            )
+          end
         end
       end
 
@@ -157,23 +161,25 @@ module Gallery
           id: "gallery-onboarding-integrations-form",
           data: { turbo_frame: "gallery-onboarding-frame" }
         ) do |form|
-          form.field(
-            :integration,
-            as: :radio_group,
-            label: "First integration",
-            description: "You can connect more tools after setup.",
-            options: [
-              [ "GitHub — repositories and deployments", "github" ],
-              [ "Slack — notifications and approvals", "slack" ],
-              [ "Skip for now", "none" ]
-            ],
-            required: true
-          )
-          form.submit(
-            "Review setup",
-            id: "gallery-onboarding-integrations-submit",
-            data: { turbo_submits_with: "Saving integration…" }
-          )
+          form.group do
+            form.field(
+              :integration,
+              as: :radio_group,
+              label: "First integration",
+              description: "You can connect more tools after setup.",
+              options: [
+                [ "GitHub — repositories and deployments", "github" ],
+                [ "Slack — notifications and approvals", "slack" ],
+                [ "Skip for now", "none" ]
+              ],
+              required: true
+            )
+            form.submit(
+              "Review setup",
+              id: "gallery-onboarding-integrations-submit",
+              data: { turbo_submits_with: "Saving integration…" }
+            )
+          end
         end
       end
 
@@ -199,19 +205,21 @@ module Gallery
           id: "gallery-onboarding-review-form",
           data: { turbo_frame: "gallery-onboarding-frame" }
         ) do |form|
-          form.field(
-            :terms,
-            as: :checkbox,
-            label: "I confirm this workspace setup",
-            required: true,
-            disabled:
-          )
-          form.submit(
-            disabled ? "Creating workspace…" : "Create workspace",
-            id: "gallery-onboarding-review-submit",
-            disabled:,
-            data: { turbo_submits_with: "Creating workspace…" }
-          )
+          form.group do
+            form.field(
+              :terms,
+              as: :checkbox,
+              label: "I confirm this workspace setup",
+              required: true,
+              disabled:
+            )
+            form.submit(
+              disabled ? "Creating workspace…" : "Create workspace",
+              id: "gallery-onboarding-review-submit",
+              disabled:,
+              data: { turbo_submits_with: "Creating workspace…" }
+            )
+          end
         end
       end
 

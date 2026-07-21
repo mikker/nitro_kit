@@ -102,40 +102,42 @@ module Gallery
           end
           section.form do
             form_with(url: "#company-onboarding", scope: :company, builder: NitroKit::FormBuilder, id: "gallery-onboarding-company-form") do |form|
-              form.field(
-                :workspace_name,
-                label: "Workspace name",
-                value: invalid ? "" : "Analytical Engines",
-                errors: invalid ? [ "cannot be blank" ] : nil,
-                required: true,
-                disabled:
-              )
-              form.field(
-                :team_size,
-                as: :select,
-                label: "Expected team size",
-                options: [ [ "Up to 5", "5" ], [ "Up to 20", "20" ], [ "Up to 50", "50" ] ],
-                value: invalid ? "" : "20",
-                errors: invalid ? [ "must be selected" ] : nil,
-                required: true,
-                disabled:
-              )
-              form.field(:region, as: :select, label: "Primary data region", options: [ [ "European Union", "eu" ], [ "United States", "us" ] ], value: "eu", required: true, disabled:)
-              form.field(
-                :terms,
-                as: :checkbox,
-                label: "I can accept the organization terms",
-                checked: !invalid,
-                errors: invalid ? [ "must be accepted" ] : nil,
-                required: true,
-                disabled:
-              )
-              form.submit(
-                disabled ? "Saving workspace…" : "Continue to team",
-                id: "gallery-onboarding-company-submit",
-                disabled:,
-                data: { turbo_submits_with: "Saving workspace…" }
-              )
+              form.group do
+                form.field(
+                  :workspace_name,
+                  label: "Workspace name",
+                  value: invalid ? "" : "Analytical Engines",
+                  errors: invalid ? [ "cannot be blank" ] : nil,
+                  required: true,
+                  disabled:
+                )
+                form.field(
+                  :team_size,
+                  as: :select,
+                  label: "Expected team size",
+                  options: [ [ "Up to 5", "5" ], [ "Up to 20", "20" ], [ "Up to 50", "50" ] ],
+                  value: invalid ? "" : "20",
+                  errors: invalid ? [ "must be selected" ] : nil,
+                  required: true,
+                  disabled:
+                )
+                form.field(:region, as: :select, label: "Primary data region", options: [ [ "European Union", "eu" ], [ "United States", "us" ] ], value: "eu", required: true, disabled:)
+                form.field(
+                  :terms,
+                  as: :checkbox,
+                  label: "I can accept the organization terms",
+                  checked: !invalid,
+                  errors: invalid ? [ "must be accepted" ] : nil,
+                  required: true,
+                  disabled:
+                )
+                form.submit(
+                  disabled ? "Saving workspace…" : "Continue to team",
+                  id: "gallery-onboarding-company-submit",
+                  disabled:,
+                  data: { turbo_submits_with: "Saving workspace…" }
+                )
+              end
             end
           end
         end
@@ -149,9 +151,11 @@ module Gallery
         ) do |section|
           section.form do
             form_with(url: "#solo-onboarding", scope: :solo, builder: NitroKit::FormBuilder, id: "gallery-onboarding-solo-form") do |form|
-              form.field(:workspace_name, label: "Workspace name", value: "Ada's research", required: true)
-              form.field(:use_case, as: :select, label: "Primary use", options: [ [ "Personal projects", "personal" ], [ "Research", "research" ] ], value: "research", required: true)
-              form.submit("Review personal workspace", id: "gallery-onboarding-solo-submit")
+              form.group do
+                form.field(:workspace_name, label: "Workspace name", value: "Ada's research", required: true)
+                form.field(:use_case, as: :select, label: "Primary use", options: [ [ "Personal projects", "personal" ], [ "Research", "research" ] ], value: "research", required: true)
+                form.submit("Review personal workspace", id: "gallery-onboarding-solo-submit")
+              end
             end
           end
         end
@@ -169,9 +173,11 @@ module Gallery
           end
           section.form do
             form_with(url: "#onboarding-import", scope: :workspace_import, builder: NitroKit::FormBuilder, id: "gallery-onboarding-import-form") do |form|
-              form.field(:archive, as: :file, label: "Workspace export", accept: ".json,.zip", required: true)
-              form.field(:confirm, as: :checkbox, label: "I reviewed the source workspace before export", required: true)
-              form.submit("Validate import", id: "gallery-onboarding-import-submit")
+              form.group do
+                form.field(:archive, as: :file, label: "Workspace export", accept: ".json,.zip", required: true)
+                form.field(:confirm, as: :checkbox, label: "I reviewed the source workspace before export", required: true)
+                form.submit("Validate import", id: "gallery-onboarding-import-submit")
+              end
             end
           end
         end
@@ -185,9 +191,11 @@ module Gallery
         ) do |section|
           section.form do
             form_with(url: "#onboarding-team", scope: :team, builder: NitroKit::FormBuilder, id: "gallery-onboarding-invite-form") do |form|
-              form.field(:invitees, as: :textarea, label: "Email addresses", description: "One email address per line.", value: "grace@example.test\nkatherine@example.test")
-              form.field(:default_role, as: :select, label: "Default role", options: [ [ "Member", "member" ], [ "Viewer", "viewer" ] ], value: "member", required: true)
-              form.submit("Continue with invitations", id: "gallery-onboarding-invite-submit")
+              form.group do
+                form.field(:invitees, as: :textarea, label: "Email addresses", description: "One email address per line.", value: "grace@example.test\nkatherine@example.test")
+                form.field(:default_role, as: :select, label: "Default role", options: [ [ "Member", "member" ], [ "Viewer", "viewer" ] ], value: "member", required: true)
+                form.submit("Continue with invitations", id: "gallery-onboarding-invite-submit")
+              end
             end
           end
         end

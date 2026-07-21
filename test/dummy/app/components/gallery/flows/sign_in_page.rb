@@ -85,38 +85,40 @@ module Gallery
           id: "gallery-sign-in-form",
           data: { turbo_frame: "gallery-sign-in-frame" }
         ) do |form|
-          form.field(
-            :email,
-            as: :email,
-            label: "Email address",
-            autocomplete: "email",
-            required: true,
-            disabled:
-          )
-          form.field(
-            :password,
-            as: :password,
-            label: "Password",
-            description: "Use at least 12 characters.",
-            autocomplete: "current-password",
-            required: true,
-            disabled:,
-            value: nil
-          )
-          form.field(
-            :remember_me,
-            as: :checkbox,
-            label: "Keep me signed in on this device",
-            disabled:
-          )
-          form.submit(
-            disabled ? "Signing in…" : "Sign in",
-            id: "gallery-sign-in-submit",
-            disabled:,
-            data: { turbo_submits_with: "Signing in…" }
-          )
-          a(href: entry_path(Gallery::Catalog.fetch!(kind: :flow, slug: "password-reset"))) do
-            "Forgot your password?"
+          form.group do
+            form.field(
+              :email,
+              as: :email,
+              label: "Email address",
+              autocomplete: "email",
+              required: true,
+              disabled:
+            )
+            form.field(
+              :password,
+              as: :password,
+              label: "Password",
+              description: "Use at least 12 characters.",
+              autocomplete: "current-password",
+              required: true,
+              disabled:,
+              value: nil
+            )
+            form.field(
+              :remember_me,
+              as: :checkbox,
+              label: "Keep me signed in on this device",
+              disabled:
+            )
+            form.submit(
+              disabled ? "Signing in…" : "Sign in",
+              id: "gallery-sign-in-submit",
+              disabled:,
+              data: { turbo_submits_with: "Signing in…" }
+            )
+            a(href: entry_path(Gallery::Catalog.fetch!(kind: :flow, slug: "password-reset"))) do
+              "Forgot your password?"
+            end
           end
         end
       end

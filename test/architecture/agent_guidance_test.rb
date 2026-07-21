@@ -56,6 +56,23 @@ class AgentGuidanceTest < ActiveSupport::TestCase
     end
   end
 
+  test "migration guidance preserves unsupported application controls" do
+    guidance = [
+      ROOT.join("docs/agent_guide.md"),
+      ROOT.join("docs/initialization_prompt.md"),
+      PLUGIN_ROOT.join("skills/nitro-kit-rails/SKILL.md"),
+      PLUGIN_ROOT.join("skills/nitro-kit-ui/SKILL.md")
+    ]
+
+    guidance.each do |path|
+      instructions = path.read
+
+      assert_match(/genuine semantic\s+and behavioral equivalent/, instructions)
+      assert_match(/application-owned\s+Rails and semantic HTML/, instructions)
+      assert_match(/copied\s+Nitro Kit 1\.x source/, instructions)
+    end
+  end
+
   test "Hotwire recipes preserve the shared response grammar" do
     resource_form = ROOT.join("docs/patterns/resource_form.md").read
     destructive_action = ROOT.join("docs/patterns/destructive_action.md").read

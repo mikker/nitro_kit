@@ -303,9 +303,11 @@ class ProfileForm < Phlex::HTML
 
   def view_template
     form_with(model: @profile, builder: NitroKit::FormBuilder) do |form|
-      form.field(:name, required: true)
-      form.field(:timezone, as: :select, options: timezone_choices)
-      form.submit("Save profile")
+      form.group do
+        form.field(:name, required: true)
+        form.field(:timezone, as: :select, options: timezone_choices)
+        form.submit("Save profile")
+      end
     end
   end
 end

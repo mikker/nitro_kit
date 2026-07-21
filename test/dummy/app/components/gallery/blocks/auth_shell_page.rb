@@ -137,24 +137,26 @@ module Gallery
               builder: NitroKit::FormBuilder,
               id: "gallery-auth-shell-credentials-form"
             ) do |form|
-              form.field(
-                :email,
-                as: :email,
-                id: "gallery-auth-shell-credentials-email",
-                label: "Email address",
-                autocomplete: "email",
-                required: true
-              )
-              form.field(
-                :password,
-                as: :password,
-                id: "gallery-auth-shell-credentials-password",
-                label: "Password",
-                autocomplete: "current-password",
-                required: true,
-                value: nil
-              )
-              form.submit("Sign in", id: "gallery-auth-shell-credentials-submit")
+              form.group do
+                form.field(
+                  :email,
+                  as: :email,
+                  id: "gallery-auth-shell-credentials-email",
+                  label: "Email address",
+                  autocomplete: "email",
+                  required: true
+                )
+                form.field(
+                  :password,
+                  as: :password,
+                  id: "gallery-auth-shell-credentials-password",
+                  label: "Password",
+                  autocomplete: "current-password",
+                  required: true,
+                  value: nil
+                )
+                form.submit("Sign in", id: "gallery-auth-shell-credentials-submit")
+              end
             end
           end
           card.divider
@@ -208,24 +210,26 @@ module Gallery
               builder: NitroKit::FormBuilder,
               id: "gallery-auth-shell-validation-form"
             ) do |form|
-              form.field(
-                :email,
-                as: :email,
-                id: "gallery-auth-shell-validation-email",
-                label: "Email address",
-                autocomplete: "email",
-                required: true
-              )
-              form.field(
-                :password,
-                as: :password,
-                id: "gallery-auth-shell-validation-password",
-                label: "Password",
-                autocomplete: "current-password",
-                required: true,
-                value: nil
-              )
-              form.submit("Try again", id: "gallery-auth-shell-validation-submit")
+              form.group do
+                form.field(
+                  :email,
+                  as: :email,
+                  id: "gallery-auth-shell-validation-email",
+                  label: "Email address",
+                  autocomplete: "email",
+                  required: true
+                )
+                form.field(
+                  :password,
+                  as: :password,
+                  id: "gallery-auth-shell-validation-password",
+                  label: "Password",
+                  autocomplete: "current-password",
+                  required: true,
+                  value: nil
+                )
+                form.submit("Try again", id: "gallery-auth-shell-validation-submit")
+              end
             end
           end
         end

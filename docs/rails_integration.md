@@ -148,17 +148,19 @@ class RegistrationForm < Phlex::HTML
         id: dom_id(@registration, :details)
       ) do |form|
         form.hidden_field(:source)
-        form.field(:email, as: :email, required: true)
-        form.field(
-          :role,
-          as: :select,
-          options: [["Developer", "developer"], ["Designer", "designer"]],
-          prompt: "Choose a role",
-          required: true
-        )
-        form.field(:terms, as: :checkbox, label: "I accept the terms")
-        form.field(:attachment, as: :file, accept: "text/plain")
-        form.submit("Register", data: { turbo_submits_with: "Registering…" })
+        form.group do
+          form.field(:email, as: :email, required: true)
+          form.field(
+            :role,
+            as: :select,
+            options: [["Developer", "developer"], ["Designer", "designer"]],
+            prompt: "Choose a role",
+            required: true
+          )
+          form.field(:terms, as: :checkbox, label: "I accept the terms")
+          form.field(:attachment, as: :file, accept: "text/plain")
+          form.submit("Register", data: { turbo_submits_with: "Registering…" })
+        end
       end
     end
   end
@@ -166,6 +168,11 @@ end
 ```
 
 `form.field` is the canonical Nitro API. It preserves Rails-generated names, IDs, model values, values-before-type-cast, and errors while rendering the Nitro `Field` and control contracts. A file field marks the enclosing form as `multipart/form-data`. Checkbox fields emit the unchecked hidden value before the checkbox.
+
+`form.group` supplies the default vertical rhythm between a standalone form's
+visible fields, submit control, and related links. Keep hidden fields outside
+the group when convenient; they do not participate in layout. Use more than
+one group only when the form has genuinely distinct sections.
 
 The builder also supports Rails-shaped control methods such as `text_field`, `email_field`, `file_field`, `check_box`, `hidden_field`, and `select`. Their ordinary native options belong to the control:
 

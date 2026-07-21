@@ -77,21 +77,23 @@ module Gallery
           id: "gallery-password-reset-request-form",
           data: { turbo_frame: "gallery-password-reset-frame" }
         ) do |form|
-          p { "Enter the email attached to your account. We will send a link that expires after 30 minutes." }
-          form.field(
-            :email,
-            as: :email,
-            label: "Account email",
-            autocomplete: "email",
-            required: true,
-            disabled:
-          )
-          form.submit(
-            disabled ? "Sending link…" : "Send reset link",
-            id: "gallery-password-reset-submit",
-            disabled:,
-            data: { turbo_submits_with: "Sending link…" }
-          )
+          form.group do
+            p { "Enter the email attached to your account. We will send a link that expires after 30 minutes." }
+            form.field(
+              :email,
+              as: :email,
+              label: "Account email",
+              autocomplete: "email",
+              required: true,
+              disabled:
+            )
+            form.submit(
+              disabled ? "Sending link…" : "Send reset link",
+              id: "gallery-password-reset-submit",
+              disabled:,
+              data: { turbo_submits_with: "Sending link…" }
+            )
+          end
         end
       end
 
@@ -106,28 +108,30 @@ module Gallery
           data: { turbo_frame: "gallery-password-reset-frame" }
         ) do |form|
           form.hidden_field(:token)
-          form.field(
-            :password,
-            as: :password,
-            label: "New password",
-            description: "Use 12 or more characters you do not use elsewhere.",
-            autocomplete: "new-password",
-            value: nil,
-            required: true
-          )
-          form.field(
-            :password_confirmation,
-            as: :password,
-            label: "Confirm new password",
-            autocomplete: "new-password",
-            value: nil,
-            required: true
-          )
-          form.submit(
-            "Update password",
-            id: "gallery-password-update-submit",
-            data: { turbo_submits_with: "Updating password…" }
-          )
+          form.group do
+            form.field(
+              :password,
+              as: :password,
+              label: "New password",
+              description: "Use 12 or more characters you do not use elsewhere.",
+              autocomplete: "new-password",
+              value: nil,
+              required: true
+            )
+            form.field(
+              :password_confirmation,
+              as: :password,
+              label: "Confirm new password",
+              autocomplete: "new-password",
+              value: nil,
+              required: true
+            )
+            form.submit(
+              "Update password",
+              id: "gallery-password-update-submit",
+              data: { turbo_submits_with: "Updating password…" }
+            )
+          end
         end
       end
 

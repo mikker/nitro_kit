@@ -68,6 +68,7 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
   test "sign-in covers validation disabled submission success and mobile pressure" do
     get_flow("sign-in", "invalid")
     assert_select "turbo-frame#gallery-sign-in-frame form#gallery-sign-in-form"
+    assert_select "#gallery-sign-in-form > [data-nk='field-group']", count: 1
     assert_select "#gallery-sign-in-error[data-nk='alert'][data-variant='error']"
     assert_select "input[type='email'][aria-invalid='true'][aria-describedby*='errors']"
     assert_select "input[type='password'][value]", count: 0
@@ -87,9 +88,11 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
   test "password reset preserves hidden tokens new-password semantics and recoverable expiration" do
     get_flow("password-reset", "validation")
     assert_select "#gallery-password-reset-error[data-variant='error']"
+    assert_select "#gallery-password-reset-request-form > [data-nk='field-group']", count: 1
     assert_select "input[type='email'][aria-invalid='true']"
 
     get_flow("password-reset", "update")
+    assert_select "#gallery-password-reset-update-form > [data-nk='field-group']", count: 1
     assert_select "#gallery-password-reset-update-form input[type='hidden'][name*='[token]'][value^='verify_']"
     assert_select "#gallery-password-reset-update-form input[type='password'][autocomplete='new-password']", count: 2
     assert_select "#gallery-password-reset-update-form input[type='password'][value]", count: 0
@@ -125,6 +128,7 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
 
   test "invitation acceptance carries workspace role validation loading and token recovery" do
     get_flow("invitation-acceptance", "valid")
+    assert_select "#gallery-invitation-form > [data-nk='field-group']", count: 1
     assert_select "#gallery-invitation-form input[type='hidden'][name*='[token]'][value^='invite_']"
     assert_select "#gallery-invitation-role[data-color='info']", text: "Administrator"
     assert_select "#gallery-invitation-card", text: /Analytical Engines — Research and Production/
@@ -149,6 +153,7 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
 
   test "account creation covers consent validation privacy loading and verification handoff" do
     get_flow("account-creation", "validation")
+    assert_select "#gallery-account-creation-form > [data-nk='field-group']", count: 1
     assert_select "#gallery-account-creation-validation[data-variant='error']"
     assert_select "#gallery-account-creation-form [data-nk='field'][data-state='invalid']", minimum: 4
 
@@ -171,6 +176,7 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
     get_flow("onboarding", "workspace")
     assert_select "#gallery-onboarding-progress", text: "Step 1 of 4"
     assert_select "[data-gallery='flow-progress'] li[aria-current='step']", text: /Name your workspace/
+    assert_select "#gallery-onboarding-workspace-form > [data-nk='field-group']", count: 1
     assert_select "#gallery-onboarding-workspace-form select[name*='[team_size]']"
 
     get_flow("onboarding", "workspace-validation")
@@ -178,9 +184,11 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-onboarding-workspace-form [data-nk='field'][data-state='invalid']", minimum: 2
 
     get_flow("onboarding", "team")
+    assert_select "#gallery-onboarding-team-form > [data-nk='field-group']", count: 1
     assert_select "#gallery-onboarding-team-form textarea[name*='[invitees]']", text: /grace@example\.test/
 
     get_flow("onboarding", "integrations")
+    assert_select "#gallery-onboarding-integrations-form > [data-nk='field-group']", count: 1
     assert_select "#gallery-onboarding-integrations-form fieldset[data-nk='radio-button-group']" do
       assert_select "legend", text: "First integration"
       assert_select "input[type='radio'][name*='[integration]']", count: 3
@@ -188,6 +196,7 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
 
     get_flow("onboarding", "review")
     assert_select "[data-gallery='flow-summary'] dt", count: 4
+    assert_select "#gallery-onboarding-review-form > [data-nk='field-group']", count: 1
     assert_select "#gallery-onboarding-review-form input[type='checkbox'][required][checked]"
 
     get_flow("onboarding", "loading")

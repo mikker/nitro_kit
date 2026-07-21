@@ -57,6 +57,21 @@ the details flow, implement full invitation and membership management, and use
 native links for settings destinations. Do not stop after rendering a screen
 that only looks structurally similar.
 
+## Preserve controls during migration
+
+In an existing application, replace a form control only when the installed
+Nitro Kit catalog provides a genuine semantic and behavioral equivalent.
+Preserve its parameter name, IDs, values, errors, accessibility, uploads, and
+browser behavior. If no equivalent exists, keep or re-express the control as
+application-owned Rails and semantic HTML, optionally inside a custom
+`form.field` composition. Never downgrade an editor, autocomplete, date range,
+upload, or other specialized input to the nearest generic Nitro control merely
+for visual consistency.
+
+Do not retain copied Nitro Kit 1.x source as the fallback. Remove the legacy
+component and preserve the unsupported behavior in clearly application-owned
+code. Report the missing equivalent as a Nitro Kit coverage gap.
+
 ## Use one interaction grammar
 
 Choose the smallest primitive that completes the interaction:
@@ -77,6 +92,8 @@ Successful non-GET HTML submissions redirect with `303 See Other`. Invalid form 
 - Use an explicit constructor such as `Button.new(...)` only when another API
   needs a component object; Kit methods render immediately.
 - Select `NitroKit::FormBuilder` explicitly from Rails `form_with`.
+- Put a standalone form's visible fields, submit control, and related links
+  inside `form.group`; hidden fields may remain before the group.
 - Use component options, compound declarations, layouts, and documented `--nk-*` theme properties.
 - Keep an HTML fallback for every Turbo form flow.
 - Test semantic output and stable owned attributes.

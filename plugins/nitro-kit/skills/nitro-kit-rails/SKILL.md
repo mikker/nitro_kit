@@ -35,6 +35,11 @@ contract as a substitute for the installed API.
 - Keep controllers focused on scoped loading, one domain operation, and one
   conventional response.
 - Use Rails `form_with` with `NitroKit::FormBuilder`.
+- In an existing application, replace a form control only when Nitro Kit has a
+  genuine semantic and behavioral equivalent. Otherwise preserve it as
+  application-owned Rails and semantic HTML, including its names, values,
+  errors, accessibility, uploads, and browser behavior. Do not retain copied
+  Nitro Kit 1.x source as the fallback.
 - Redirect successful mutations with `303`; render invalid models with `422`.
 - Render HTML on the server and add Hotwire progressively.
 - Test with Minitest and fixtures, including tenancy and unhappy paths.

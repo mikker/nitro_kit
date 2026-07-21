@@ -22,6 +22,11 @@ module NitroKit
       application-owned `controllers/nk`. Compose the installed Phlex Kit and keep
       routes, records, authorization, queries, DOM IDs, and server responses in the
       application.
+
+      During migration, replace an existing form control only when Nitro Kit 2 has
+      a genuine semantic and behavioral equivalent. Otherwise preserve the control
+      as application-owned Rails and semantic HTML. Never downgrade specialized
+      behavior or retain copied Nitro Kit 1.x source as the fallback.
       #{AGENTS_END}
     MARKDOWN
 

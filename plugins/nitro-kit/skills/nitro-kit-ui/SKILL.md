@@ -38,6 +38,14 @@ If the gem is not installed, say that the skill requires Nitro Kit and follow th
 ## Preserve the boundary
 
 - Do not copy Nitro components into the application.
+- During migration, replace an existing control only when the installed catalog
+  provides a genuine semantic and behavioral equivalent. Otherwise keep or
+  re-express it as application-owned Rails and semantic HTML, optionally inside
+  a custom `form.field` composition. Preserve names, IDs, values, errors,
+  accessibility, uploads, and browser behavior; report the missing equivalent
+  as a Nitro Kit coverage gap.
+- Never downgrade a specialized control to a generic Nitro control for visual
+  consistency, and never retain copied Nitro Kit 1.x source as the fallback.
 - Do not introduce `nk_*` helpers, a general ERB bridge, or generated variant helpers.
 - Do not pass `class:` or `style:`. Prefer component options, composition, or theme tokens. Use `desperately_need_a_class:` only for a genuine external integration boundary.
 - Do not add application-specific behavior to Nitro-owned Stimulus controllers.

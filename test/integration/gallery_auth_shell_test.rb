@@ -56,6 +56,7 @@ class GalleryAuthShellTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "#gallery-auth-shell-credentials-card[data-nk='card']"
+    assert_select "#gallery-auth-shell-credentials-form > [data-nk='field-group']", count: 1
     assert_select "#gallery-auth-shell-credentials-form input[type='email'][required]"
     assert_select "#gallery-auth-shell-credentials-form input[type='password'][value]", count: 0
 
@@ -66,6 +67,7 @@ class GalleryAuthShellTest < ActionDispatch::IntegrationTest
 
     assert_select "turbo-frame#gallery-auth-shell-frame > #gallery-auth-shell-turbo[data-nk='auth-shell']"
     assert_select "#gallery-auth-shell-validation-alert[data-variant='error']"
+    assert_select "#gallery-auth-shell-validation-form > [data-nk='field-group']", count: 1
     assert_select "#gallery-auth-shell-validation-form [data-nk='field'][data-state='invalid']", minimum: 2
     assert_select "#gallery-auth-shell-success-alert[data-variant='success']"
     assert_select "#gallery-auth-shell-long-copy-card", text: /katherine\.johnson\+analytical-engines/
