@@ -14,14 +14,18 @@ export default class extends Controller {
   }
 
   select(event) {
-    const input = event.target;
+    const input = this.inputTargets.find(
+      (target) => target === event.target || target === event.currentTarget,
+    );
 
-    if (!this.inputTargets.includes(input)) return;
+    if (!input) return;
     if (input.type === "radio" && !input.checked) return;
+
+    const preference = input.dataset.appearancePreference ?? input.value;
 
     window.dispatchEvent(
       new CustomEvent("nitro-kit:appearance-request", {
-        detail: { preference: input.value },
+        detail: { preference },
       }),
     );
   }
@@ -38,7 +42,7 @@ export default class extends Controller {
     this.inputTargets.forEach((input) => {
       if (input.type === "radio") {
         input.checked = input.value === preference;
-      } else {
+      } else if (input.localName === "select") {
         input.value = preference;
       }
     });

@@ -210,7 +210,7 @@ The following additions ship in the 2.0 prerelease. Their exact public construct
 
 ### Appearance
 
-Nitro Kit owns the complete light, dark, and system appearance lifecycle. Applications render the bootstrap in `head` before stylesheet links, then place the native-radio control wherever appearance is selected:
+Nitro Kit owns the complete light, dark, and system appearance lifecycle. Applications render the bootstrap in `head` before stylesheet links, then place the appearance control wherever appearance is selected:
 
 ```ruby
 render NitroKit::AppearanceBootstrap.new(
@@ -228,7 +228,7 @@ render NitroKit::AppearancePicker.new(
 
 The bootstrap installs one idempotent document runtime before CSS-visible paint. That runtime reads and validates `nitro-kit-appearance`, writes `data-theme-preference` plus effective `data-theme="light|dark"`, owns the single `matchMedia` listener, listens for cross-tab storage changes, and broadcasts one appearance-change event. It exists when a page has zero pickers and is not duplicated when a page has several. Storage denial or malformed data falls back to `default:` without throwing or blocking the page.
 
-`AppearancePicker` reads the initialized document preference. Its root is `fieldset[data-nk="appearance-picker"]`; its legend and options use `appearance-picker-*` slots. Its `nk--appearance` controller only requests preference changes and synchronizes its native radios from runtime events. Any number of pickers remain in sync. Native inputs remain labelled and operable without custom pointer behavior, and each picker releases its subscription on disconnect.
+`AppearancePicker` reads the initialized document preference. Segmented and radio presentations use a `fieldset`, select uses a labelled native `select`, and dropdown uses an icon-only sun or moon trigger with labelled Light, Dark, and System menu buttons. Its `nk--appearance` controller only requests preference changes and synchronizes controls from runtime events. Any number of pickers remain in sync. Native inputs remain labelled and operable without custom pointer behavior, the dropdown composes Nitro's native Popover menu, and each picker releases its subscription on disconnect.
 
 CSS supplies a system-color fallback if the bootstrap cannot run. Appearance initialization must not flash a persisted explicit choice or leave an incorrect selection. Tests cover zero, one, and multiple pickers; system and cross-tab changes; repeated bootstrap execution; Turbo removal and reconnection; denied and malformed storage; and both documented CSP modes. Nitro does not synchronize preferences to a user record; applications may do that separately.
 

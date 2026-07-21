@@ -2,12 +2,17 @@
 
 module NitroKit
   class AppearancePicker < Component
-    PRESENTATIONS = %i[segmented radios select].freeze
+    PRESENTATIONS = %i[segmented radios select dropdown].freeze
     PREFERENCES = %i[light dark system].freeze
     LABELS = {
       light: "Light",
       dark: "Dark",
       system: "System"
+    }.freeze
+    ICONS = {
+      light: :sun,
+      dark: :moon,
+      system: :monitor
     }.freeze
 
     def initialize(
@@ -45,6 +50,7 @@ module NitroKit
 
     def view_template
       return render_select if @presentation == :select
+      return render_dropdown if @presentation == :dropdown
 
       fieldset(**root_attributes) do
         legend(**slot_attributes(:legend)) { plain(@label) }
@@ -55,6 +61,38 @@ module NitroKit
     end
 
     private
+
+    def render_dropdown
+      div(**root_attributes) do
+        render Dropdown.new(id: "#{identifier}-dropdown", placement: :bottom_end) do |menu|
+          menu.trigger(variant: :ghost, aria: { label: @label }) do
+            %i[light dark].each do |appearance|
+              span(
+                **slot_attributes(
+                  :trigger_icon,
+                  attributes: { data: { appearance: } }
+                )
+              ) { render Icon.new(ICONS.fetch(appearance)) }
+            end
+          end
+          menu.title(@label)
+          PREFERENCES.each do |preference|
+            menu.item(
+              data: {
+                appearance_preference: preference,
+                nk__appearance_target: "input",
+                action: "click->nk--appearance#select"
+              }
+            ) do
+              span(**slot_attributes(:option_icon)) do
+                render Icon.new(ICONS.fetch(preference), size: :sm)
+              end
+              span(**slot_attributes(:label)) { plain(LABELS.fetch(preference)) }
+            end
+          end
+        end
+      end
+    end
 
     def render_select
       label(**root_attributes) do

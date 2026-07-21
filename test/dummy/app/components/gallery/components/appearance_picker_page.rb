@@ -27,6 +27,14 @@ module Gallery
               label: "Color appearance"
             )
           end
+
+
+          example("Navigation dropdown", slug: "appearance-picker-dropdown") do
+            render NitroKit::AppearancePicker.new(
+              id: "gallery-appearance-dropdown",
+              presentation: :dropdown
+            )
+          end
         end
 
         example_section(

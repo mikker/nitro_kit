@@ -1318,6 +1318,41 @@
     border: var(--nk-border-width) solid var(--nk-color-border);
     border-radius: var(--nk-radius-md);
   }
+
+  :where(
+      [data-nk="appearance-picker"][data-presentation="dropdown"]
+        > [data-nk="dropdown"]
+        > [data-nk="button"]
+    ) {
+    inline-size: var(--nk-control-height-md);
+    padding-inline: 0;
+  }
+
+  :where(
+      [data-nk="appearance-picker"][data-presentation="dropdown"]
+        [data-slot="button-label"],
+      [data-nk="appearance-picker"][data-presentation="dropdown"]
+        [data-slot="appearance-picker-trigger-icon"],
+      [data-nk="appearance-picker"][data-presentation="dropdown"]
+        [data-slot="appearance-picker-option-icon"]
+    ) {
+    display: inline-flex;
+    flex: none;
+  }
+
+  :where(
+      [data-nk="appearance-picker"][data-presentation="dropdown"]
+        [data-slot="appearance-picker-trigger-icon"][data-appearance="dark"]
+    ) {
+    display: none;
+  }
+
+  :where(
+      [data-nk="appearance-picker"][data-presentation="dropdown"]
+        [data-slot="dropdown-item"]
+    ) {
+    gap: calc(var(--nk-space) * 2);
+  }
 }
 
 @layer nitro-kit.state {
@@ -1339,6 +1374,40 @@
     ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :where(
+        :root:not([data-theme])
+          [data-nk="appearance-picker"][data-presentation="dropdown"]
+          [data-slot="appearance-picker-trigger-icon"][data-appearance="light"]
+      ) {
+      display: none;
+    }
+
+    :where(
+        :root:not([data-theme])
+          [data-nk="appearance-picker"][data-presentation="dropdown"]
+          [data-slot="appearance-picker-trigger-icon"][data-appearance="dark"]
+      ) {
+      display: inline-flex;
+    }
+  }
+
+  :where(
+      [data-theme="dark"]
+        [data-nk="appearance-picker"][data-presentation="dropdown"]
+        [data-slot="appearance-picker-trigger-icon"][data-appearance="light"]
+    ) {
+    display: none;
+  }
+
+  :where(
+      [data-theme="dark"]
+        [data-nk="appearance-picker"][data-presentation="dropdown"]
+        [data-slot="appearance-picker-trigger-icon"][data-appearance="dark"]
+    ) {
+    display: inline-flex;
   }
 }
 

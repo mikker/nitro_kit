@@ -124,6 +124,27 @@ class AppearanceTest < ActiveSupport::TestCase
     assert_equal "input", select.at_css("select")["data-nk--appearance-target"]
   end
 
+  test "picker renders an icon-only dropdown trigger and labelled preference buttons" do
+    node = render_node(
+      NitroKit::AppearancePicker.new(
+        id: "navigation-appearance",
+        presentation: :dropdown
+      )
+    )
+    trigger = node.at_css("[data-nk='dropdown'] > [data-nk='button']")
+    items = node.css("[data-slot='dropdown-item']")
+
+    assert_equal "div", node.name
+    assert_equal "dropdown", node["data-presentation"]
+    assert_equal "Appearance", trigger["aria-label"]
+    assert_equal %w[light dark], trigger.css("[data-slot='appearance-picker-trigger-icon']").map { _1["data-appearance"] }
+    assert_equal %w[Light Dark System], items.map { _1.text }
+    assert_equal %w[light dark system], items.map { _1["data-appearance-preference"] }
+    assert items.all? { _1.name == "button" }
+    assert items.all? { _1["data-nk--appearance-target"] == "input" }
+    assert items.all? { _1["data-action"].include?("click->nk--appearance#select") }
+  end
+
   test "picker preserves the shared class and reserved attribute boundaries" do
     node = render_node(
       NitroKit::AppearancePicker.new(
@@ -157,6 +178,9 @@ class AppearanceTest < ActiveSupport::TestCase
     assert_includes source, "document.documentElement.dataset.themePreference"
     assert_includes source, "this.inputTargets.forEach"
     assert_includes source, "inputTargetConnected()"
+    assert_includes source, "event.currentTarget"
+    assert_includes source, "input.dataset.appearancePreference"
+    assert_includes source, 'input.localName === "select"'
     refute_includes source, "localStorage"
     refute_includes source, "matchMedia"
     refute_includes source, "addEventListener"

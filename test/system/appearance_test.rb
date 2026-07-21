@@ -14,7 +14,7 @@ class AppearanceSystemTest < ApplicationSystemTestCase
     picker_count = all("[data-nk='appearance-picker']").size
     assert_operator picker_count, :>=, 3
 
-    find("#gallery-appearance-dark").click
+    find("label[for='gallery-appearance-default-dark']").click
     assert_document_appearance(preference: "dark", theme: "dark")
     assert_synchronized_pickers("dark", count: picker_count)
     assert_equal "dark", evaluate_script("localStorage.getItem(arguments[0])", STORAGE_KEY)
@@ -34,7 +34,7 @@ class AppearanceSystemTest < ApplicationSystemTestCase
       window.__appearanceChangeCount = 0;
       window.addEventListener("nitro-kit:appearance-change", () => window.__appearanceChangeCount += 1);
     JAVASCRIPT
-    find("#gallery-appearance-light").click
+    request_appearance("light")
 
     assert_document_appearance(preference: "light", theme: "light")
     assert_equal 1, evaluate_script("window.__appearanceChangeCount")
@@ -67,10 +67,30 @@ class AppearanceSystemTest < ApplicationSystemTestCase
     assert_document_appearance(preference: "system", theme: "dark")
 
     browser.navigate.refresh
-    find("#gallery-appearance-dark").click
+    request_appearance("dark")
     emulate_system_theme("light")
 
     assert_document_appearance(preference: "dark", theme: "dark")
+    assert_no_severe_console_errors
+  end
+
+  test "dropdown presentation changes preference and reflects the resolved theme icon" do
+    visit_without_saved_preference(gallery_component_path("appearance-picker"))
+
+    find("#gallery-appearance-dropdown-dropdown-trigger").click
+    within("#gallery-appearance-dropdown-dropdown-content") { click_button("Dark") }
+
+    assert_document_appearance(preference: "dark", theme: "dark")
+    assert_equal "none", evaluate_script(<<~JAVASCRIPT)
+      getComputedStyle(document.querySelector(
+        "#gallery-appearance-dropdown [data-appearance='light']"
+      )).display
+    JAVASCRIPT
+    refute_equal "none", evaluate_script(<<~JAVASCRIPT)
+      getComputedStyle(document.querySelector(
+        "#gallery-appearance-dropdown [data-appearance='dark']"
+      )).display
+    JAVASCRIPT
     assert_no_severe_console_errors
   end
 
@@ -136,7 +156,7 @@ class AppearanceSystemTest < ApplicationSystemTestCase
     browser.navigate.refresh
 
     assert_document_appearance(preference: "system", theme: resolved_system_theme)
-    find("#gallery-appearance-dark").click
+    request_appearance("dark")
     assert_document_appearance(preference: "dark", theme: "dark")
     assert_no_severe_console_errors
   ensure
@@ -164,13 +184,26 @@ class AppearanceSystemTest < ApplicationSystemTestCase
     )
   end
 
+  def request_appearance(preference)
+    execute_script <<~JAVASCRIPT, preference
+      window.dispatchEvent(new CustomEvent("nitro-kit:appearance-request", {
+        detail: { preference: arguments[0] }
+      }));
+    JAVASCRIPT
+  end
+
   def assert_document_appearance(preference:, theme:)
     assert_selector "html[data-theme-preference='#{preference}'][data-theme='#{theme}']"
   end
 
   def assert_synchronized_pickers(preference, count:)
     assert_selector "[data-nk='appearance-picker'][data-state='#{preference}']", count: count
-    assert_selector "[data-nk='appearance-picker'] input[value='#{preference}']:checked", count: count
+    native_picker_count = all("[data-nk='appearance-picker']:not([data-presentation='dropdown'])").size
+    assert_selector(
+      "[data-nk='appearance-picker'] input[value='#{preference}']:checked",
+      count: native_picker_count,
+      visible: :all
+    )
   end
 
   def resolved_system_theme
