@@ -7,7 +7,7 @@ module NitroKit
       button color date datetime datetime_local email file hidden month number password range
       search string tel text time url week
     ].freeze
-    TYPES = (INPUT_TYPES + %i[select textarea checkbox radio radio_button radio_group switch]).freeze
+    TYPES = (INPUT_TYPES + %i[select textarea rich_text checkbox radio radio_button radio_group switch]).freeze
 
     def initialize(
       form = nil,
@@ -46,6 +46,7 @@ module NitroKit
       control_html: {},
       control_aria: {},
       control_data: {},
+      rich_text_content: nil,
       desperately_need_a_class: nil
     )
       @form = form
@@ -81,6 +82,7 @@ module NitroKit
       @control_html = control_html
       @control_aria = control_aria
       @control_data = control_data
+      @rich_text_content = rich_text_content
 
       if @options.is_a?(ActiveSupport::SafeBuffer)
         raise ArgumentError, "pass captured option markup through option_tags:"
@@ -172,6 +174,8 @@ module NitroKit
         select_control(html:, aria:, data:)
       when :textarea
         textarea_control(html:, aria:, data:)
+      when :rich_text
+        rich_text_control
       when :checkbox
         checkbox_control(html:, aria:, data:)
       when :switch
@@ -274,6 +278,10 @@ module NitroKit
         ),
         :control
       )
+    end
+
+    def rich_text_control
+      render_in_slot(RichTextArea.new(@rich_text_content), :control)
     end
 
     def checkbox_control(html:, aria:, data:)

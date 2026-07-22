@@ -83,6 +83,28 @@ class FormBuilderRailsTest < ActiveSupport::TestCase
     end
   end
 
+  class RichTextProbe < Phlex::HTML
+    include Phlex::Rails::Helpers::FormWith
+
+    class RichTextFormBuilder < NitroKit::FormBuilder
+      def rich_text_area(field_name, options = {})
+        @template.tag.lexxy_editor(
+          @template.tag.input(type: "hidden", name: self.field_name(field_name), id: options[:id]),
+          input: options[:id]
+        )
+      end
+    end
+
+    def view_template
+      registration = Registration.new
+      registration.define_singleton_method(:notes) { "<p>Useful context</p>" }
+
+      form_with(model: registration, url: "/registration", builder: RichTextFormBuilder) do |form|
+        form.field(:notes, as: :rich_text, description: "Add useful context")
+      end
+    end
+  end
+
   test "captures select blocks inside the native select control" do
     form = render_form(SelectBlockProbe.new(Registration.new(role: "designer")))
     select = form.at_css("[data-nk='select'][data-slot='field-control'] select")
@@ -141,6 +163,17 @@ class FormBuilderRailsTest < ActiveSupport::TestCase
     assert_equal "Role", radio_group.at_css("legend").text
     assert_equal %w[registration[role] registration[role]], radio_group.css("input[type='radio']").map { |input| input["name"] }
     assert_empty form.css("[class], [style]")
+  end
+
+  test "wraps the installed Action Text editor in the Nitro field contract" do
+    form = render_form(RichTextProbe.new)
+    field = form.at_css("[data-nk='field']")
+
+    assert_equal "rich-text", field["data-type"]
+    assert_equal "Notes", field.at_css("[data-slot='field-label']").text
+    assert_equal "Add useful context", field.at_css("[data-slot='field-description']").text
+    assert form.at_css("[data-nk='rich-text-area']")
+    assert form.at_css("input[type='hidden'][name='registration[notes]']")
   end
 
   private

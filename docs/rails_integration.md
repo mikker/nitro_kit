@@ -194,13 +194,28 @@ Captured select blocks stay inside the native `<select>`. Explicit `selected:` v
 
 `hidden_field` intentionally renders a standalone hidden Nitro input rather than a visible Field wrapper. `class` and `style` remain rejected. When calling `form.field` directly, use its `control_html:`, `control_aria:`, and `control_data:` boundaries for uncommon control attributes; `html:`, `aria:`, and `data:` describe the Field root.
 
+### Rich text with Lexxy
+
+Lexxy is Nitro Kit's preferred Action Text editor. Once the application has
+installed Action Text and Lexxy, use the same builder API as every other field:
+
+```ruby
+form.field(:brief, as: :rich_text, placeholder: "Describe the project")
+```
+
+Nitro wraps the editor in the ordinary Field contract, so labels, descriptions,
+validation errors, layout, and theme tokens remain consistent. Lexxy continues
+to own its hidden input, attachment flow, editor behavior, prompts, and native
+options; pass editor-specific attributes through `control_html:`. Nitro Kit does
+not bundle or fork Lexxy's JavaScript.
+
 The complete builder surface includes:
 
 - `field`, `fieldset`, and `group`.
 - `dropzone` for native file selection with optional Active Storage direct uploads.
 - `select`, `radio_button`, `check_box`/`checkbox`, and `hidden_field`.
 - `submit` and `button`.
-- Rails-shaped color, date, datetime, email, file, month, number, password, phone/telephone, range, search, text, textarea, time, URL, and week fields.
+- Rails-shaped color, date, datetime, email, file, month, number, password, phone/telephone, range, rich text, search, text, textarea, time, URL, and week fields.
 
 ### File drops and direct uploads
 

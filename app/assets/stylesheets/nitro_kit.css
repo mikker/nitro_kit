@@ -5058,6 +5058,21 @@
   }
 }
 
+/* Source: src/stylesheets/nitro_kit/components/rich_text_area.css */
+@layer nitro-kit.base {
+  :where([data-nk="rich-text-area"]) {
+    --lexxy-color-canvas: var(--nk-color-surface);
+    --lexxy-color-text: var(--nk-color-foreground);
+    --lexxy-color-text-subtle: var(--nk-color-muted-foreground);
+    --lexxy-color-link: var(--nk-color-primary);
+    --lexxy-color-accent-dark: var(--nk-color-primary);
+    --lexxy-color-ink-lighter: var(--nk-color-border);
+    --lexxy-color-ink-lightest: var(--nk-color-muted);
+    --lexxy-radius: var(--nk-radius-md);
+    display: block;
+  }
+}
+
 /* Source: src/stylesheets/nitro_kit/components/select.css */
 @layer nitro-kit.base {
   :where([data-nk="select"]) {

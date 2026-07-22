@@ -35,6 +35,7 @@ module NitroKit
     def field(field_name, label: nil, errors: nil, **attributes, &block)
       label = field_name.to_s.humanize if label.nil?
       errors ||= errors_for(field_name)
+      return rich_text_field(field_name, label:, errors:, **attributes) if attributes[:as].to_s.tr("-", "_") == "rich_text"
       self.multipart = true if attributes[:as].to_s.tr("-", "_") == "file"
 
       @template.render(
@@ -186,6 +187,30 @@ module NitroKit
     end
 
     private
+
+    def rich_text_field(field_name, label:, errors:, description: nil, control_html: {}, **attributes)
+      editor_options = {
+        id: field_id(field_name),
+        placeholder: attributes[:placeholder],
+        required: attributes[:required],
+        data: attributes[:control_data],
+        aria: attributes[:control_aria]
+      }.compact.merge(control_html)
+      editor = rich_text_area(field_name, editor_options)
+
+      @template.render(
+        NitroKit::Field.new(
+          self,
+          field_name,
+          as: :rich_text,
+          label:,
+          description:,
+          errors:,
+          rich_text_content: editor,
+          **attributes
+        )
+      )
+    end
 
     def accessible_control_aria(field_name, aria)
       has_name = aria.any? do |key, value|

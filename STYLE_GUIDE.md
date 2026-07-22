@@ -298,6 +298,12 @@ Default form composition uses `Fieldset` and `FieldGroup` where semantics call f
 
 ## Optional Rails integrations
 
+Lexxy is Nitro Kit's preferred Action Text editor. `FormBuilder#field(as:
+:rich_text)` must preserve Lexxy's native Action Text naming, hidden input,
+attachments, prompts, validation, and editor behavior while providing the
+ordinary Nitro Field label, description, error, theme, and layout contract.
+Nitro does not fork Lexxy or own its JavaScript.
+
 Active Storage components preserve native inputs and ordinary form submission without JavaScript. Keep upload limits and image sizes explicit and validated. File drops are an enhancement to a labelled, keyboard-operable native input; expose progress with native progress semantics and announce status and errors. Progressive images expose exactly one accessible image while placeholders remain decorative. Reflect asynchronous progress and errors through owned state and accessible native elements.
 
 Do not add mandatory Dropzone.js, Ransack, or image-processing dependencies to Nitro Kit. A generic component may document an app-level or gallery adapter for an optional gem, but Nitro must not absorb that gem's query, route, or authorization policy.
