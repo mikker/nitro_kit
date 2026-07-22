@@ -15,6 +15,10 @@ class ButtonCssTest < ActiveSupport::TestCase
     assert_includes css, "--_nk-button-background: var(--nk-button-default-background)"
     assert_includes css, "--_nk-button-foreground: var(--nk-button-default-foreground)"
     assert_includes css, "--_nk-button-border: var(--nk-button-default-border)"
+    assert_includes css, ':where([data-nk="button"]::before)'
+    assert_includes css, "inset: var(--_nk-button-border-width)"
+    assert_includes css, "background: var(--_nk-button-background)"
+    assert_includes css, "box-shadow: var(--_nk-button-shadow)"
 
     %w[background hover-background foreground border].each do |token|
       assert_includes tokens_css, "--nk-button-default-#{token}:"
@@ -51,6 +55,15 @@ class ButtonCssTest < ActiveSupport::TestCase
     assert_includes css, "opacity: 0.75"
     refute_includes css, "scale("
     refute_includes css, "transition:"
+  end
+
+  test "expands compact buttons to a coarse-pointer hit target" do
+    css = button_css
+
+    assert_includes css, "@media (pointer: coarse)"
+    assert_includes css, ':not([data-slot="button-group-button"])::after'
+    assert_includes css, "inline-size: max(100%, 2.75rem)"
+    assert_includes css, "block-size: max(100%, 2.75rem)"
   end
 
   private

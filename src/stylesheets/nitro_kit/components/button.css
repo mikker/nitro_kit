@@ -22,6 +22,7 @@
     --_nk-button-shadow: 0 1px 2px 0 oklch(0 0 0 / 0.05);
 
     position: relative;
+    isolation: isolate;
     display: inline-flex;
     flex: none;
     align-items: center;
@@ -38,13 +39,41 @@
     text-decoration: none;
     white-space: nowrap;
     user-select: none;
-    background: var(--_nk-button-background);
-    border-color: var(--_nk-button-border);
+    background: linear-gradient(
+      to bottom,
+      var(--_nk-button-border),
+      var(--_nk-button-border-bottom)
+    );
+    border-color: transparent;
     border-style: solid;
     border-width: var(--_nk-button-border-width);
-    border-block-end-color: var(--_nk-button-border-bottom);
     border-radius: var(--_nk-button-radius);
+  }
+
+  :where([data-nk="button"]::before) {
+    position: absolute;
+    z-index: -1;
+    inset: var(--_nk-button-border-width);
+    background: var(--_nk-button-background);
+    border-radius: calc(
+      var(--_nk-button-radius) - var(--_nk-button-border-width)
+    );
     box-shadow: var(--_nk-button-shadow);
+    content: "";
+  }
+
+  @media (pointer: coarse) {
+    :where(
+      [data-nk="button"]:not([data-slot="button-group-button"])::after
+    ) {
+      position: absolute;
+      inset-block-start: 50%;
+      inset-inline-start: 50%;
+      inline-size: max(100%, 2.75rem);
+      block-size: max(100%, 2.75rem);
+      content: "";
+      translate: -50% -50%;
+    }
   }
 
   :where(button[data-nk="button"]) {
@@ -180,7 +209,7 @@
 @layer nitro-kit.state {
   @media (hover: hover) {
     :where([data-nk="button"]:hover:not(:disabled, [aria-disabled="true"])) {
-      background: var(--_nk-button-hover-background);
+      --_nk-button-background: var(--_nk-button-hover-background);
     }
   }
 
