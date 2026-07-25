@@ -34,22 +34,24 @@ generator after upgrading the gem, then run `bin/rails nitro_kit:doctor`.
 
 ## Stimulus and importmap
 
-Enhanced components use gem-owned Stimulus controllers, including `nk--app-shell`, `nk--appearance`, `nk--checkable`, `nk--combobox`, `nk--dropdown`, `nk--dropzone`, `nk--progressive-image`, `nk--tabs`, `nk--toast`, and `nk--tooltip`.
+Enhanced components use gem-owned Stimulus controllers, including `nk--app-shell`, `nk--appearance`, `nk--checkable`, `nk--combobox`, `nk--confirm-dialog`, `nk--dropdown`, `nk--dropzone`, `nk--progressive-image`, `nk--tabs`, `nk--toast`, and `nk--tooltip`.
 
 Accordion and Dialog are controller-free: native `details` grouping and declarative `command`/`commandfor` own their complete interaction. Dropdown uses native Popover as its source of truth and adds only menu keyboard focus; Tooltip uses CSS for hover/focus and JavaScript only for Escape dismissal. Nitro does not promise dialog light dismiss.
 
 When `importmap-rails` is present, the engine adds its importmap and asset paths automatically. The application must still install Stimulus and provide the normal controller loader:
 
 ```js
+import { NitroKit } from "nitro_kit";
 import { application } from "controllers/application";
 import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading";
 
+NitroKit.start();
 eagerLoadControllersFrom("controllers", application);
 ```
 
-Nitro Kit packages no third-party JavaScript. Accordion, Datepicker, Dialog, and Switch use native browser behavior and need no controllers.
+`NitroKit.start()` idempotently installs application-wide integrations, including the Turbo confirmation hook used by `ConfirmDialog`. Nitro Kit packages no third-party JavaScript. Accordion, Datepicker, Dialog, and Switch use native browser behavior and need no controllers.
 
-The engine deliberately boots when importmap is absent. In that configuration, Ruby and CSS remain available, but automatic JavaScript registration does not: a bundler-based application must expose and register the controller modules itself. This prerelease does not ship a JavaScript-package entrypoint.
+The engine deliberately boots when importmap is absent. In that configuration, Ruby and CSS remain available, but automatic JavaScript registration does not: a bundler-based application must expose the Nitro Kit entrypoint and register the controller modules itself. The gem's `nitro_kit` JavaScript entrypoint is distributed through the Rails asset pipeline and importmap, not as an npm package.
 
 ## Appearance and content security policy
 

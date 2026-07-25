@@ -90,9 +90,25 @@ Render `Toast::FlashMessages` once in the application layout. Keep using
 ordinary Rails flash and `303 See Other` redirects from controllers.
 
 Compact destructive actions should continue to declare
-`data: { turbo_confirm: "…" }`. If the product replaces the browser prompt with
-a branded confirmation, adapt `Turbo.config.forms.confirm` once in the
-application layout and resolve its Promise from one reusable Nitro `Dialog`.
+`data: { turbo_confirm: "…" }`. Render `NitroKit::ConfirmDialog` once in the
+application layout and start Nitro once in `application.js` to route those
+declarations through the packaged Promise-based Turbo adapter:
+
+```js
+import { NitroKit } from "nitro_kit";
+
+NitroKit.start();
+```
+
+```ruby
+body do
+  render NitroKit::Toast::FlashMessages.new(flash:)
+  render NitroKit::ConfirmDialog.new
+
+  yield
+end
+```
+
 Do not build a separate dialog for every row action. Use a dedicated reviewed
 `Dialog` inside `DangerZone` only when the user needs more context than one
 sentence. Put record deletion on the edit route rather than adding a danger

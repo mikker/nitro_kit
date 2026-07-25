@@ -14,9 +14,10 @@ APIs or examples.
 5. Ensure the application layout loads `nitro_kit` before application token
    overrides. Add the appearance bootstrap and flash toast rendering when the
    application uses those features.
-6. Ensure Turbo and Stimulus are wired and the normal Stimulus loader can
-   discover the gem-owned `nk--*` controllers. Never copy Nitro components,
-   helpers, or controllers into the application.
+6. Ensure Turbo and Stimulus are wired, `NitroKit.start()` is called from the
+   `nitro_kit` JavaScript entrypoint, and the normal Stimulus loader can discover the gem-owned
+   `nk--*` controllers. Never copy Nitro components, helpers, or controllers
+   into the application.
 7. Remove confirmed Nitro Kit 1.x shadows such as application-owned
    `NitroKit` components, `nk_*` helpers, or `controllers/nk` only when this
    task is authorized to migrate the application.

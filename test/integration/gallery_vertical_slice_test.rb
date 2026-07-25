@@ -114,6 +114,17 @@ class GalleryVerticalSliceTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "confirm dialog page connects one Turbo form to the packaged dialog" do
+    get_component("confirm-dialog")
+
+    assert_select "form#gallery-confirm-dialog-form[data-turbo-confirm='Delete the Apollo project permanently?']"
+    assert_select "#gallery-confirm-dialog[data-controller~='nk--confirm-dialog']" do
+      assert_select "dialog#gallery-confirm-dialog-panel[closedby='none']"
+      assert_select "#gallery-confirm-dialog-message[data-nk--confirm-dialog-target='message']"
+      assert_select "[data-nk='button'][data-variant='destructive']", text: "Delete project"
+    end
+  end
+
   private
 
   def get_component(slug)

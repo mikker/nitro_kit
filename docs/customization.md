@@ -317,13 +317,15 @@ Nitro Kit's engine contributes its controller pins automatically when `importmap
 
 ```js
 // app/javascript/controllers/index.js
+import { NitroKit } from "nitro_kit";
 import { application } from "controllers/application";
 import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading";
 
+NitroKit.start();
 eagerLoadControllersFrom("controllers", application);
 ```
 
-This registers Nitro's `controllers/nk/*` modules together with application controllers. Without importmap, Ruby and CSS still work, but a bundler-based application must expose and register those Stimulus modules itself. Nitro Kit ships no third-party JavaScript runtime and no JavaScript-package entrypoint in this prerelease.
+`NitroKit.start()` installs application-wide integrations such as the Turbo confirmation hook. The loader registers Nitro's `controllers/nk/*` modules together with application controllers. Without importmap, Ruby and CSS still work, but a bundler-based application must expose the Nitro Kit entrypoint and register those Stimulus modules itself. Nitro Kit ships no third-party JavaScript runtime or npm package.
 
 ## Optional Tailwind CSS v4 adapter
 
