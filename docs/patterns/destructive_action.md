@@ -72,7 +72,7 @@ Authorize and load the record on the server even when the dialog is open. The co
 
 ## Compact confirmation
 
-When the consequence fits in one sentence and needs no review UI, keep the ordinary request and use Turbo's confirm hook:
+When the consequence fits in one sentence and needs no review UI, keep the ordinary request and use Turbo's native browser confirmation:
 
 ```ruby
 form_with(model: project, url: project_path(project), method: :delete) do

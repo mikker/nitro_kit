@@ -15,9 +15,9 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
     assert_equal(
       %w[
         accordion alert appearance-picker app-navigation avatar avatar-stack badge button button-group card checkbox checkbox-group
-        combobox confirm-dialog container datepicker details-table dialog dropdown dropzone field field-group fieldset flex grid icon
-        input label pagination progressive-image radio-button radio-button-group select sortable-table switch table tabs textarea
-        toast tooltip typeset
+        combobox container datepicker details-table dialog dropdown dropzone field field-group fieldset flex grid icon input label
+        pagination progressive-image radio-button radio-button-group select sortable-table switch table tabs textarea toast tooltip
+        typeset
       ],
       Gallery::Catalog.entries(kind: :component).map(&:slug)
     )

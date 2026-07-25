@@ -26,14 +26,6 @@ class ImportmapEngineTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "pins the Nitro Kit bootstrap" do
-    asset = imports.fetch("nitro_kit")
-
-    get asset
-    assert_response :success
-    assert_includes response.body, "Turbo.config.forms.confirm"
-  end
-
   test "does not pin removed third-party controller runtimes" do
     stale_pins = [ "@github/combobox-nav", "@floating-ui/core", "@floating-ui/dom" ]
 
@@ -47,7 +39,6 @@ class ImportmapEngineTest < ActionDispatch::IntegrationTest
     specification = Gem::Specification.load(NitroKit::Engine.root.join("nitro_kit.gemspec").to_s)
 
     assert_includes specification.files, "config/importmap.rb"
-    assert_includes specification.files, "app/javascript/nitro_kit.js"
     assert_includes specification.files, "app/javascript/controllers/nk/dropdown_controller.js"
     assert_includes specification.files, "app/javascript/controllers/nk/tooltip_controller.js"
     refute_includes specification.files, "app/javascript/controllers/nk/accordion_controller.js"

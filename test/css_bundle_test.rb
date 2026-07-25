@@ -69,10 +69,6 @@ class CssBundleTest < ActiveSupport::TestCase
     assert_includes specification.files, "app/components/nitro_kit/responsive_value.rb"
     assert_includes specification.files, "app/components/nitro_kit/flex.rb"
     assert_includes specification.files, "app/components/nitro_kit/grid.rb"
-    assert_includes specification.files, "app/components/nitro_kit/confirm_dialog.rb"
-    assert_includes specification.files, "app/javascript/nitro_kit.js"
-    assert_includes specification.files, "app/javascript/controllers/nk/confirm_dialog_controller.js"
-    assert_includes specification.files, "src/stylesheets/nitro_kit/components/confirm_dialog.css"
 
     %w[h_stack.rb v_stack.rb].each do |name|
       refute_includes specification.files, "app/components/nitro_kit/#{name}"

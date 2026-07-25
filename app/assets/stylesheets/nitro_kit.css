@@ -2232,28 +2232,6 @@
   }
 }
 
-/* Source: src/stylesheets/nitro_kit/components/confirm_dialog.css */
-@layer nitro-kit.base {
-  :where(
-      [data-nk="dialog"][data-controller~="nk--confirm-dialog"]
-        [data-nk--confirm-dialog-target~="message"]
-    ) {
-    margin-block: calc(var(--nk-space) * 4) 0;
-    color: var(--nk-color-muted-foreground);
-    line-height: var(--nk-leading-relaxed);
-  }
-
-  :where(
-      [data-nk="dialog"][data-controller~="nk--confirm-dialog"]
-        [data-nk-confirm-dialog="actions"]
-    ) {
-    display: flex;
-    justify-content: flex-end;
-    gap: calc(var(--nk-space) * 2);
-    margin-block-start: calc(var(--nk-space) * 6);
-  }
-}
-
 /* Source: src/stylesheets/nitro_kit/components/container.css */
 @layer nitro-kit.base {
   :where([data-nk="container"]) {

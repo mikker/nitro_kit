@@ -241,15 +241,6 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        slug: "confirm-dialog",
-        title: "Confirm dialog",
-        description: "One application-wide dialog for compact Turbo confirmation messages.",
-        page: Gallery::Components::ConfirmDialogPage,
-        states: [],
-        expected_roots: %w[dialog button]
-      ),
-      Entry.new(
-        kind: :component,
         slug: "dropdown",
         title: "Dropdown",
         description: "Native popover menus with typed triggers, entries, placement, and keyboard state.",

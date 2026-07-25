@@ -139,9 +139,9 @@ Native elements remain native. Nitro reflects application-owned state through AR
 
 The authoritative initializer, root, closed-option, and cardinality inventory lives in [`component_contracts.md`](component_contracts.md).
 
-The prerelease contains 37 atoms and components:
+The prerelease contains 36 atoms and components:
 
-- Actions, display, and navigation: Alert, AppNavigation, Avatar, AvatarStack, Badge, Button, ButtonGroup, ConfirmDialog, Icon, Pagination.
+- Actions, display, and navigation: Alert, AppNavigation, Avatar, AvatarStack, Badge, Button, ButtonGroup, Icon, Pagination.
 - Forms: AppearancePicker, Checkbox, CheckboxGroup, Datepicker, Dropzone, Field, FieldGroup, Fieldset, Input, Label, RadioButton, RadioButtonGroup, Select, Switch, Textarea.
 - Structured content and interaction: Accordion, Card, Combobox, DetailsTable, Dialog, Dropdown, ProgressiveImage, SortableTable, Table, Tabs, Toast, Tooltip.
 
@@ -153,7 +153,6 @@ Nitro uses current evergreen HTML primitives as the source of truth before addin
 
 - Accordion items are native `details`/`summary` disclosures. Single mode uses one shared `name`; it has no controller or disabled-item abstraction.
 - Dialog declarations produce exactly one native panel in fixed order. `command="show-modal"` and `command="close"` controls target it through `commandfor`; `nonmodal: true` is the only server-rendered open mode. The component does not promise light dismiss.
-- ConfirmDialog specializes Dialog as the single application-wide interface for compact `data-turbo-confirm` decisions. `NitroKit.start()` idempotently installs Turbo's Promise-based confirm hook, while the packaged controller only presents and resolves the decision; applications start Nitro once, render the component once, and keep confirmation copy on the initiating form or link.
 - Dropdown visibility and invoker state belong to `popover="auto"`. Its small controller only supplies menu focus and keyboard navigation. CSS anchor positioning follows the trigger when supported and otherwise centers the menu safely in the viewport.
 - Tooltip visibility belongs to CSS hover and focus selectors, including a hoverable bridge across the visual gap. Its controller only implements Escape dismissal and reset.
 
