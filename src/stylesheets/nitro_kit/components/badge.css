@@ -1,0 +1,58 @@
+@layer nitro-kit.base {
+  :where([data-nk="badge"]) {
+    --_nk-badge-color: var(--_nk-palette-light);
+    --_nk-badge-tint-strength: 20%;
+
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    font-weight: var(--nk-font-weight-medium);
+    line-height: var(--nk-leading-tight);
+    color: var(--_nk-badge-color);
+    white-space: nowrap;
+    vertical-align: middle;
+    background-color: color-mix(
+      in oklab,
+      var(--_nk-palette-tint) var(--_nk-badge-tint-strength),
+      transparent
+    );
+    border: var(--nk-border-width) solid transparent;
+    border-radius: var(--nk-radius-md);
+  }
+
+  :where([data-nk="badge"] > [data-slot="badge-label"]) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@layer nitro-kit.variant {
+  :where([data-nk="badge"][data-variant="outline"]) {
+    background-color: transparent;
+    border-color: color-mix(in oklab, var(--_nk-palette-tint) 50%, transparent);
+  }
+
+  :where([data-theme="dark"] [data-nk="badge"]) {
+    --_nk-badge-color: var(--_nk-palette-dark);
+    --_nk-badge-tint-strength: 40%;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :where(:root:not([data-theme]) [data-nk="badge"]) {
+      --_nk-badge-color: var(--_nk-palette-dark);
+      --_nk-badge-tint-strength: 40%;
+    }
+  }
+}
+
+@layer nitro-kit.size {
+  :where([data-nk="badge"][data-size="sm"]) {
+    padding: calc(var(--nk-space) * 0.5) calc(var(--nk-space) * 1.5);
+    font-size: var(--nk-text-xs);
+  }
+
+  :where([data-nk="badge"][data-size="md"]) {
+    padding: calc(var(--nk-space) * 0.5) calc(var(--nk-space) * 2);
+    font-size: var(--nk-text-sm);
+  }
+}

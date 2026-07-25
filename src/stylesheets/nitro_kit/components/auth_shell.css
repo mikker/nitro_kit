@@ -1,0 +1,8 @@
+@layer nitro-kit.base {
+  :where([data-nk="auth-shell"]) {
+    width: 100%;
+    min-width: 0;
+    padding-block: calc(var(--nk-space) * 8);
+    padding-inline: calc(var(--nk-space) * 4);
+  }
+}

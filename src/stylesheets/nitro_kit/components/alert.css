@@ -1,0 +1,82 @@
+@layer nitro-kit.base {
+  :where([data-nk="alert"]) {
+    --_nk-alert-background: var(--nk-color-surface);
+    --_nk-alert-border: var(--nk-color-border);
+    --_nk-alert-foreground: var(--nk-color-foreground);
+    --_nk-alert-tint-strength: 12%;
+
+    position: relative;
+    display: grid;
+    width: 100%;
+    gap: calc(var(--nk-space) * 2);
+    padding: calc(var(--nk-space) * 4);
+    font-size: var(--nk-text-sm);
+    line-height: var(--nk-leading-normal);
+    color: var(--_nk-alert-foreground);
+    background-color: var(--_nk-alert-background);
+    border-width: var(--nk-border-width);
+    border-color: var(--_nk-alert-border);
+    border-radius: var(--nk-radius-lg);
+  }
+
+  :where([data-nk="alert"] > [data-slot="alert-title"]) {
+    font-size: var(--nk-text-base);
+    font-weight: var(--nk-font-weight-semibold);
+    line-height: var(--nk-leading-tight);
+    text-wrap: balance;
+  }
+
+  :where([data-nk="alert"]:has(> [data-slot="alert-icon"])) {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  :where([data-nk="alert"] > [data-slot="alert-icon"]) {
+    grid-row: 1 / -1;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-block-start: 0.0625rem;
+  }
+
+  :where(
+    [data-nk="alert"]:has(> [data-slot="alert-icon"])
+      > [data-slot="alert-title"],
+    [data-nk="alert"]:has(> [data-slot="alert-icon"])
+      > [data-slot="alert-description"]
+  ) {
+    grid-column: 2;
+  }
+
+  :where([data-nk="alert"] > [data-slot="alert-description"]) {
+    max-width: var(--nk-content-lg);
+    color: color-mix(in oklab, var(--_nk-alert-foreground) 82%, transparent);
+    text-wrap: pretty;
+  }
+}
+
+@layer nitro-kit.variant {
+  :where([data-nk="alert"][data-color]) {
+    --_nk-alert-background: color-mix(
+      in oklab,
+      var(--_nk-palette-tint) var(--_nk-alert-tint-strength),
+      transparent
+    );
+    --_nk-alert-border: color-mix(
+      in oklab,
+      var(--_nk-palette-tint) 45%,
+      transparent
+    );
+    --_nk-alert-foreground: var(--_nk-palette-light);
+  }
+
+  :where([data-theme="dark"] [data-nk="alert"][data-color]) {
+    --_nk-alert-foreground: var(--_nk-palette-dark);
+    --_nk-alert-tint-strength: 20%;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :where(:root:not([data-theme]) [data-nk="alert"][data-color]) {
+      --_nk-alert-foreground: var(--_nk-palette-dark);
+      --_nk-alert-tint-strength: 20%;
+    }
+  }
+}

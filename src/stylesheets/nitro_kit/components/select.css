@@ -1,0 +1,70 @@
+@layer nitro-kit.base {
+  :where([data-nk="select"]) {
+    display: inline-grid;
+    min-inline-size: 10rem;
+    color: var(--nk-color-foreground);
+  }
+
+  :where([data-nk="select"] > [data-slot="select-control"]) {
+    grid-area: 1 / 1;
+    inline-size: 100%;
+    min-block-size: var(--nk-control-height-md);
+    padding-inline: calc(var(--nk-space) * 3) calc(var(--nk-space) * 9);
+    color: inherit;
+    font: inherit;
+    appearance: none;
+    background: var(--nk-color-surface);
+    border: var(--nk-border-width) solid var(--nk-color-border);
+    border-radius: var(--nk-radius-md);
+    transition:
+      border-color var(--nk-duration-normal) var(--nk-ease),
+      box-shadow var(--nk-duration-normal) var(--nk-ease);
+  }
+
+  :where([data-nk="select"] > [data-slot="select-icon"]) {
+    grid-area: 1 / 1;
+    align-self: center;
+    justify-self: end;
+    inline-size: 1rem;
+    block-size: 1rem;
+    margin-inline-end: calc(var(--nk-space) * 3);
+    color: var(--nk-color-muted-foreground);
+    pointer-events: none;
+  }
+
+  :where([data-nk="select"]:has(> [data-slot="select-control"][multiple])) {
+    display: block;
+    inline-size: 100%;
+  }
+
+  :where([data-nk="select"] > [data-slot="select-control"][multiple]) {
+    min-block-size: calc(var(--nk-control-height-md) * 3);
+    padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
+    appearance: auto;
+  }
+
+  :where(
+      [data-nk="select"]:has(> [data-slot="select-control"][multiple])
+        > [data-slot="select-icon"]
+    ) {
+    display: none;
+  }
+}
+
+@layer nitro-kit.state {
+  :where([data-nk="select"] > [data-slot="select-control"]:focus-visible) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: var(--nk-focus-offset);
+  }
+
+  :where([data-nk="select"] > [data-slot="select-control"]:disabled) {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  :where(
+      [data-nk="select"] > [data-slot="select-control"][aria-invalid="true"]
+    ) {
+    border-color: var(--nk-color-danger);
+  }
+}

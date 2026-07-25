@@ -1,0 +1,25 @@
+@layer nitro-kit.base {
+  :where([data-nk="container"]) {
+    width: 100%;
+    min-width: 0;
+    margin-inline: auto;
+  }
+}
+
+@layer nitro-kit.size {
+  :where([data-nk="container"][data-size="sm"]) {
+    max-width: var(--nk-content-sm);
+  }
+
+  :where([data-nk="container"][data-size="md"]) {
+    max-width: var(--nk-content-md);
+  }
+
+  :where([data-nk="container"][data-size="lg"]) {
+    max-width: var(--nk-content-lg);
+  }
+
+  :where([data-nk="container"][data-size="xl"]) {
+    max-width: var(--nk-content-xl);
+  }
+}

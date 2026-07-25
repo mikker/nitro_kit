@@ -1,0 +1,24 @@
+@layer nitro-kit.base {
+  :where([data-nk="settings-layout"]) {
+    display: grid;
+    grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr);
+    gap: calc(var(--nk-space) * 6);
+    align-items: start;
+    min-width: 0;
+  }
+
+  :where(
+      [data-nk="settings-layout"] > [data-slot="settings-layout-navigation"],
+      [data-nk="settings-layout"] > [data-slot="settings-layout-content"]
+    ) {
+    min-width: 0;
+  }
+}
+
+@layer nitro-kit.state {
+  @media (max-width: 48rem) {
+    :where([data-nk="settings-layout"]) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}

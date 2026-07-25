@@ -1,0 +1,6 @@
+@layer nitro-kit.compound {
+  :where([data-nk="field-group"]) {
+    display: grid;
+    gap: calc(var(--nk-space) * 6);
+  }
+}

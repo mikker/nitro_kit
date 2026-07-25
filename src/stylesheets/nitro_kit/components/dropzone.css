@@ -1,0 +1,158 @@
+@layer nitro-kit.base {
+  :where([data-nk="dropzone"]) {
+    display: grid;
+    gap: calc(var(--nk-space) * 3);
+    padding: calc(var(--nk-space) * 4);
+    color: var(--nk-color-foreground);
+    background: var(--nk-color-surface);
+    border: calc(var(--nk-border-width) * 2) dashed var(--nk-color-border);
+    border-radius: var(--nk-radius-lg);
+  }
+
+  :where([data-nk="dropzone"] > [data-slot="dropzone-message"]) {
+    display: grid;
+    gap: var(--nk-space);
+    cursor: pointer;
+    text-align: center;
+  }
+
+  :where(
+      [data-nk="dropzone"] [data-slot="dropzone-instruction"],
+      [data-nk="dropzone"] [data-slot="dropzone-description"],
+      [data-nk="dropzone"] [data-slot="dropzone-file-size"],
+      [data-nk="dropzone"] [data-slot="dropzone-file-status"],
+      [data-nk="dropzone"] > [data-slot="dropzone-status"]
+    ) {
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-sm);
+  }
+
+  :where([data-nk="dropzone"] > [data-slot="dropzone-input"]) {
+    inline-size: 100%;
+    min-block-size: var(--nk-control-height-md);
+    color: var(--nk-color-foreground);
+    background: var(--nk-color-canvas);
+    border: var(--nk-border-width) solid var(--nk-color-border);
+    border-radius: var(--nk-radius-md);
+  }
+
+  :where(
+      [data-nk="dropzone"] > [data-slot="dropzone-input"]
+    )::file-selector-button {
+    min-block-size: calc(
+      var(--nk-control-height-md) - (var(--nk-border-width) * 2)
+    );
+    margin-inline-end: calc(var(--nk-space) * 3);
+    padding-inline: calc(var(--nk-space) * 3);
+    color: var(--nk-color-foreground);
+    font-weight: var(--nk-font-weight-medium);
+    background: var(--nk-color-muted);
+    border: 0;
+    border-inline-end: var(--nk-border-width) solid var(--nk-color-border);
+  }
+
+  :where([data-nk="dropzone"] > [data-slot="dropzone-preview-list"]) {
+    display: grid;
+    gap: calc(var(--nk-space) * 2);
+    padding: 0;
+    list-style: none;
+  }
+
+  :where([data-nk="dropzone"] [data-slot="dropzone-preview"]) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: calc(var(--nk-space) * 2);
+    align-items: center;
+    padding: calc(var(--nk-space) * 2);
+    background: var(--nk-color-canvas);
+    border: var(--nk-border-width) solid var(--nk-color-border);
+    border-radius: var(--nk-radius-md);
+  }
+
+  :where([data-nk="dropzone"] [data-slot="dropzone-preview-image"]) {
+    grid-row: span 2;
+    inline-size: 3rem;
+    block-size: 3rem;
+    object-fit: cover;
+    border-radius: var(--nk-radius-sm);
+  }
+
+  :where([data-nk="dropzone"] [data-slot="dropzone-file"]) {
+    display: grid;
+    min-inline-size: 0;
+  }
+
+  :where([data-nk="dropzone"] [data-slot="dropzone-file-name"]) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  :where([data-nk="dropzone"] [data-slot="dropzone-progress"]) {
+    inline-size: 100%;
+    block-size: calc(var(--nk-space) * 2);
+    accent-color: var(--nk-color-primary);
+  }
+
+  :where([data-nk="dropzone"] [data-slot="dropzone-remove-control"]) {
+    min-block-size: var(--nk-control-height-sm);
+    padding-inline: calc(var(--nk-space) * 2);
+    color: var(--nk-color-foreground);
+    background: var(--nk-color-surface);
+    border: var(--nk-border-width) solid var(--nk-color-border);
+    border-radius: var(--nk-radius-sm);
+  }
+}
+
+@layer nitro-kit.state {
+  :where([data-nk="dropzone"][data-state="drag"]) {
+    background: var(--nk-color-muted);
+    border-color: var(--nk-color-primary);
+  }
+
+  :where([data-nk="dropzone"][data-state="uploading"]) {
+    border-color: var(--nk-color-info);
+  }
+
+  :where([data-nk="dropzone"][data-state="success"]) {
+    border-color: var(--nk-color-success);
+  }
+
+  :where([data-nk="dropzone"][data-state="error"]) {
+    border-color: var(--nk-color-danger);
+  }
+
+  :where([data-nk="dropzone"][data-state="disabled"]) {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  :where(
+      [data-nk="dropzone"] > [data-slot="dropzone-input"]:focus-visible,
+      [data-nk="dropzone"] [data-slot="dropzone-remove-control"]:focus-visible
+    ) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: var(--nk-focus-offset);
+  }
+
+  :where([data-nk="dropzone"] [data-slot="dropzone-remove-control"]:hover) {
+    background: var(--nk-color-surface-hover);
+  }
+
+  :where([data-nk="dropzone"] > [data-slot="dropzone-error"]) {
+    color: var(--nk-color-danger-content);
+    font-size: var(--nk-text-sm);
+  }
+}
+
+@media (max-width: 40rem) {
+  @layer nitro-kit.base {
+    :where([data-nk="dropzone"] [data-slot="dropzone-preview"]) {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    :where([data-nk="dropzone"] [data-slot="dropzone-preview-image"]) {
+      display: none;
+    }
+  }
+}

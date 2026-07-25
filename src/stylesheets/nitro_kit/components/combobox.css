@@ -1,0 +1,111 @@
+@layer nitro-kit.base {
+  :where([data-nk="combobox"]) {
+    position: relative;
+    inline-size: 100%;
+  }
+
+  :where([data-nk="combobox"] > [data-slot="combobox-control"]) {
+    position: relative;
+    display: block;
+  }
+
+  :where([data-nk="combobox"] [data-slot="combobox-input"]) {
+    padding-inline-end: calc(var(--nk-space) * 10);
+  }
+
+  :where([data-nk="combobox"] [data-slot="combobox-icon"]) {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-end: calc(var(--nk-space) * 3);
+    color: var(--nk-color-muted-foreground);
+    pointer-events: none;
+    transform: translateY(-50%);
+  }
+
+  :where([data-nk="combobox"] > [data-slot="combobox-status"]) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    white-space: nowrap;
+    clip: rect(0, 0, 0, 0);
+    clip-path: inset(50%);
+    border: 0;
+  }
+
+  :where([data-nk="combobox"] > [data-slot="combobox-listbox"]) {
+    position: fixed;
+    z-index: 50;
+    inline-size: max(var(--_nk-combobox-width, 12rem), 12rem);
+    max-inline-size: min(28rem, calc(100vw - (var(--nk-space) * 8)));
+    max-block-size: 15rem;
+    margin-block: var(--nk-space);
+    padding: var(--nk-space);
+    overflow-y: auto;
+    color: var(--nk-color-foreground);
+    list-style: none;
+    background: var(--nk-color-surface);
+    border: var(--nk-border-width) solid var(--nk-color-border);
+    border-radius: var(--nk-radius-lg);
+    box-shadow: var(--nk-shadow-md);
+    inset: var(--_nk-overlay-top, auto) auto auto var(--_nk-overlay-left, auto);
+  }
+
+  :where([data-nk="combobox"] [data-slot="combobox-option"]) {
+    display: flex;
+    align-items: center;
+    min-block-size: var(--nk-control-height-md);
+    padding-inline: calc(var(--nk-space) * 3);
+    font-size: var(--nk-text-sm);
+    line-height: var(--nk-leading-normal);
+    cursor: pointer;
+    border-radius: var(--nk-radius-md);
+    transition:
+      color var(--nk-duration-normal) var(--nk-ease),
+      background-color var(--nk-duration-normal) var(--nk-ease);
+  }
+}
+
+@layer nitro-kit.state {
+  :where(
+      [data-nk="combobox"]
+        [data-slot="combobox-option"]:is(
+          [data-active="true"],
+          [aria-selected="true"]
+        )
+    ) {
+    background: var(--nk-color-muted);
+  }
+
+  :where(
+      [data-nk="combobox"] [data-slot="combobox-option"][aria-disabled="true"]
+    ) {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  :where(
+      [data-nk="combobox"] > [data-slot="combobox-listbox"][data-state="open"]
+    ) {
+    animation: nk-combobox-enter var(--nk-duration-normal) var(--nk-ease);
+  }
+
+  @keyframes nk-combobox-enter {
+    from {
+      opacity: 0;
+      transform: translateY(-0.25rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where([data-nk="combobox"] > [data-slot="combobox-listbox"]) {
+      animation-duration: 0.01ms;
+    }
+  }
+}

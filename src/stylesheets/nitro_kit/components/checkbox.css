@@ -1,0 +1,128 @@
+@layer nitro-kit.base {
+  :where([data-nk="checkbox"]) {
+    display: inline-grid;
+    min-inline-size: var(--nk-control-height-md);
+    min-block-size: var(--nk-control-height-md);
+    color: var(--nk-color-foreground);
+  }
+
+  :where([data-nk="checkbox"] > [data-slot="checkbox-label"]) {
+    display: grid;
+    grid-template-columns: 1.125rem minmax(0, 1fr);
+    gap: calc(var(--nk-space) * 2);
+    align-items: center;
+    min-block-size: var(--nk-control-height-md);
+    cursor: pointer;
+  }
+
+  :where(
+      [data-nk="checkbox"] [data-slot="checkbox-control"],
+      [data-nk="checkbox"] [data-slot="checkbox-indicator"]
+    ) {
+    grid-area: 1 / 1;
+    inline-size: 1.125rem;
+    block-size: 1.125rem;
+  }
+
+  :where([data-nk="checkbox"] [data-slot="checkbox-control"]) {
+    z-index: 1;
+    margin: 0;
+    cursor: pointer;
+    appearance: none;
+    opacity: 0;
+  }
+
+  :where([data-nk="checkbox"] [data-slot="checkbox-indicator"]) {
+    display: grid;
+    place-items: center;
+    color: var(--nk-color-primary-foreground);
+    pointer-events: none;
+    background: var(--nk-color-surface);
+    border: var(--nk-border-width) solid var(--nk-color-border);
+    border-radius: var(--nk-radius-sm);
+    transition:
+      background-color var(--nk-duration-fast) var(--nk-ease),
+      border-color var(--nk-duration-fast) var(--nk-ease);
+  }
+
+  :where([data-nk="checkbox"] [data-slot="checkbox-indicator"])::after {
+    inline-size: 0.5rem;
+    block-size: 0.3rem;
+    content: "";
+    border-block-end: 0.125rem solid currentcolor;
+    border-inline-start: 0.125rem solid currentcolor;
+    opacity: 0;
+    transform: translateY(-0.0625rem) rotate(-45deg);
+  }
+
+  :where([data-nk="checkbox"] [data-slot="checkbox-label-text"]) {
+    display: block;
+  }
+
+  :where([data-nk="checkbox"] [data-slot="checkbox-content"]) {
+    grid-column: 2;
+  }
+
+  :where([data-nk="checkbox"] [data-slot="checkbox-description"]) {
+    display: block;
+    margin-block-start: var(--nk-space);
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-sm);
+    text-wrap: pretty;
+  }
+}
+
+@layer nitro-kit.state {
+  :where(
+      [data-nk="checkbox"]
+        [data-slot="checkbox-control"]:checked
+        + [data-slot="checkbox-indicator"],
+      [data-nk="checkbox"][data-state="indeterminate"]
+        [data-slot="checkbox-indicator"]
+    ) {
+    background: var(--nk-color-primary);
+    border-color: var(--nk-color-primary);
+  }
+
+  :where(
+      [data-nk="checkbox"]
+        [data-slot="checkbox-control"]:checked
+        + [data-slot="checkbox-indicator"]
+    )::after {
+    opacity: 1;
+  }
+
+  :where(
+      [data-nk="checkbox"][data-state="indeterminate"]
+        [data-slot="checkbox-indicator"]
+    )::after {
+    inline-size: 0.55rem;
+    block-size: 0;
+    border-block-end: 0.125rem solid currentcolor;
+    border-inline-start: 0;
+    opacity: 1;
+    transform: none;
+  }
+
+  :where(
+      [data-nk="checkbox"]
+        [data-slot="checkbox-control"]:focus-visible
+        + [data-slot="checkbox-indicator"]
+    ) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: var(--nk-focus-offset);
+  }
+
+  :where([data-nk="checkbox"][data-disabled="true"]) {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  :where(
+      [data-nk="checkbox"]
+        [data-slot="checkbox-control"][aria-invalid="true"]
+        + [data-slot="checkbox-indicator"]
+    ) {
+    border-color: var(--nk-color-danger);
+  }
+}

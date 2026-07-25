@@ -2,103 +2,208 @@
 
 module NitroKit
   class Tabs < Component
-    def initialize(default: nil, **attrs)
-      @default = default
-      @id = attrs[:id] || SecureRandom.hex(6)
+    ORIENTATIONS = %i[horizontal vertical].freeze
+    ACTIVATIONS = %i[automatic manual].freeze
+    Tab = ::Data.define(:key, :label, :disabled, :content)
+
+    def initialize(
+      default: nil,
+      id:,
+      label: "Tabs",
+      orientation: :horizontal,
+      activation: :automatic,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil
+    )
+      @identifier = component_id(id)
+      @default = default.nil? ? nil : normalize_identity(default, name: "default tab key")
+      @label = validate_label!(label)
+      @orientation = validate_choice!(:orientation, orientation, ORIENTATIONS)
+      @activation = validate_choice!(:activation, activation, ACTIVATIONS)
+      @tabs = []
 
       super(
-        attrs,
-        data: { controller: "nk--tabs", nk__tabs_active_value: default },
-        class: base_class
+        component: :tabs,
+        attributes: {
+          id: @identifier,
+          data: {
+            controller: "nk--tabs",
+            orientation: @orientation,
+            activation: @activation,
+            nk__tabs_active_value: @default || "",
+            nk__tabs_orientation_value: @orientation,
+            nk__tabs_activation_value: @activation
+          }
+        },
+        html:,
+        aria:,
+        data:,
+        desperately_need_a_class:
       )
     end
 
-    attr_reader :default, :id
+    attr_reader :identifier, :default, :label, :orientation, :activation
 
-    def view_template
-      div(**attrs) do
-        yield
+    def view_template(&block)
+      collect_tabs(&block)
+      active_key = resolve_active_key
+
+      div(**root_attributes_for(active_key)) do
+        render_tablist(active_key)
+        @tabs.each { |tab| render_panel(tab, active_key:) }
       end
     end
 
-    def tabs(**attrs)
-      builder do
-        div(**mattr, role: "tabtabs", class: tabs_class) do
-          yield
-        end
-      end
-    end
+    def tab(key, label, disabled: false, &content)
+      ensure_collecting!
 
-    def tab(key, text = nil, **attrs, &block)
-      builder do
-        button(
-          **mattr(
-            attrs,
-            aria: {
-              selected: (default == key).to_s,
-              controls: tab_id(key, :panel)
-            },
-            class: tab_class,
-            data: {
-              action: "nk--tabs#setActiveTab keydown.left->nk--tabs#prevTab keydown.right->nk--tabs#nextTab",
-              key:,
-              nk__tabs_key_param: key,
-              nk__tabs_target: "tab"
-            },
-            id: tab_id(key, :tab),
-            role: "tab",
-            tabindex: default == key ? 0 : -1
-          )
-        ) do
-          text_or_block(text, &block)
-        end
-      end
-    end
+      key = normalize_identity(key, name: "tab key")
+      label = validate_label!(label)
+      disabled = validate_boolean!(:disabled, disabled)
+      raise ArgumentError, "Tab #{key.inspect} requires panel content" unless content
+      raise ArgumentError, "Duplicate tab key #{key.inspect}" if find_tab(key)
 
-    def panel(key, **attrs)
-      builder do
-        div(
-          **mattr(
-            attrs,
-            aria: {
-              hidden: (default != key).to_s,
-              labelledby: tab_id(key, :tab)
-            },
-            class: panel_class,
-            data: {
-              key:,
-              nk__tabs_target: "panel"
-            },
-            id: tab_id(key, :panel),
-            name: key,
-            role: "tabpanel"
-          )
-        ) do
-          yield
-        end
-      end
+      @tabs << Tab.new(key:, label:, disabled:, content:)
+      nil
     end
 
     private
 
-    def tab_id(key, suffix)
-      "#{id}-#{key}-#{suffix}"
+    def collect_tabs
+      raise ArgumentError, "Tabs requires a tab declaration block" unless block_given?
+
+      @collecting = true
+      yield(self)
+      raise ArgumentError, "Tabs requires at least one tab" if @tabs.empty?
+    ensure
+      @collecting = false
     end
 
-    def base_class
-      "w-full"
+    def render_tablist(active_key)
+      div(
+        **slot_attributes(
+          :list,
+          attributes: {
+            role: "tablist",
+            aria: {
+              label:,
+              orientation:
+            }
+          }
+        )
+      ) do
+        @tabs.each { |tab| render_tab(tab, active_key:) }
+      end
     end
 
-    def tabs_class
-      "flex gap-4 border-b h-10"
+    def render_tab(tab, active_key:)
+      active = tab.key == active_key
+
+      button(
+        **slot_attributes(
+          :tab,
+          attributes: {
+            id: tab_id(tab),
+            type: "button",
+            role: "tab",
+            disabled: tab.disabled,
+            tabindex: tab.disabled ? -1 : 0,
+            aria: {
+              controls: panel_id(tab),
+              selected: active
+            },
+            data: {
+              key: tab.key,
+              state: active ? "active" : "inactive",
+              action: "click->nk--tabs#select keydown->nk--tabs#navigate",
+              nk__tabs_target: "tab"
+            }
+          }
+        )
+      ) { tab.label }
     end
 
-    def tab_class
-      "border-b-2 border-transparent hover:border-primary focus-visible:border-primary cursor-pointer text-muted-content aria-[selected=true]:text-foreground font-medium aria-[selected=true]:border-primary -mb-px px-2"
+    def render_panel(tab, active_key:)
+      active = tab.key == active_key
+
+      div(
+        **slot_attributes(
+          :panel,
+          attributes: {
+            id: panel_id(tab),
+            role: "tabpanel",
+            aria: {
+              labelledby: tab_id(tab)
+            },
+            data: {
+              key: tab.key,
+              state: active ? "active" : "inactive",
+              nk__tabs_target: "panel"
+            }
+          }
+        )
+      ) do
+        render(tab.content)
+      end
     end
 
-    def panel_class
-      "aria-[hidden=true]:hidden py-4"
+    def resolve_active_key
+      enabled_tabs = @tabs.reject(&:disabled)
+      raise ArgumentError, "Tabs requires at least one enabled tab" if enabled_tabs.empty?
+
+      return enabled_tabs.first.key unless default
+
+      selected = find_tab(default)
+      raise ArgumentError, "Default tab key #{default.inspect} is not declared" unless selected
+      raise ArgumentError, "Default tab #{default.inspect} cannot be disabled" if selected.disabled
+
+      selected.key
+    end
+
+    def root_attributes_for(active_key)
+      attributes = root_attributes
+
+      attributes.merge(
+        data: attributes.fetch(:data).merge(nk__tabs_active_value: active_key)
+      )
+    end
+
+    def tab_id(tab)
+      "#{identifier}-#{tab.key}-tab"
+    end
+
+    def panel_id(tab)
+      "#{identifier}-#{tab.key}-panel"
+    end
+
+    def find_tab(key)
+      @tabs.find { |tab| tab.key == key }
+    end
+
+    def ensure_collecting!
+      return if @collecting
+
+      raise ArgumentError, "Tabs must be declared inside the render block"
+    end
+
+    def validate_label!(value)
+      return value if value.is_a?(String) && value.present?
+
+      raise ArgumentError, "Tabs labels must be non-blank Strings"
+    end
+
+    def validate_boolean!(name, value)
+      return value if value == true || value == false
+
+      raise ArgumentError, "Tabs #{name} must be true or false"
+    end
+
+    def component_id(value)
+      return value if value.is_a?(String) && value.present? && !value.match?(/\s/)
+
+      raise ArgumentError, "Tabs id must be a non-blank String without whitespace"
     end
   end
 end

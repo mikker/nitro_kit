@@ -1,0 +1,4 @@
+interface:
+  display_name: "Nitro Kit Rails"
+  short_description: "Build conventional Rails applications with Nitro Kit"
+  default_prompt: "Use $nitro-kit-rails to build this feature on the Nitro Kit Rails path."

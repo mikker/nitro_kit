@@ -1,0 +1,533 @@
+@layer nitro-kit.base {
+  :where([data-nk="app-shell"]) {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-rows: var(--nk-app-shell-topbar-height) minmax(0, 1fr);
+    grid-template-columns: var(--nk-app-shell-sidebar-width) minmax(0, 1fr);
+    min-inline-size: 0;
+    min-block-size: 100vh;
+    min-block-size: 100dvh;
+    color: var(--nk-color-foreground);
+    background: var(--nk-app-shell-background);
+    overscroll-behavior: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :where([data-nk="app-shell"] > [data-slot="app-shell-skip-link"]) {
+    position: fixed;
+    inset-block-start: calc(var(--nk-space) * 2);
+    inset-inline-start: calc(var(--nk-space) * 2);
+    z-index: 100;
+    padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
+    color: var(--nk-color-primary-foreground);
+    text-decoration: none;
+    background: var(--nk-color-primary);
+    border-radius: var(--nk-radius-md);
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    transform: translateY(calc(-100% - (var(--nk-space) * 4)));
+    transition: transform var(--nk-duration-fast) var(--nk-ease);
+  }
+
+  :where(
+    [data-nk="app-shell"] > [data-slot="app-shell-skip-link"]:focus-visible
+  ) {
+    transform: translateY(0);
+  }
+
+  :where([data-nk="app-shell"] > [data-slot="app-shell-header"]) {
+    display: contents;
+  }
+
+  :where([data-nk="app-shell"] [data-slot="app-shell-brand"]) {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 20;
+    display: flex;
+    grid-row: 1;
+    grid-column: 1;
+    align-items: center;
+    min-inline-size: 0;
+    min-block-size: var(--nk-app-shell-topbar-height);
+    padding-inline: calc(var(--nk-space) * 4);
+    color: var(--nk-app-shell-sidebar-foreground);
+    background: var(--nk-app-shell-sidebar-background);
+    border-inline-end: var(--nk-border-width) solid var(--nk-app-shell-border);
+    border-block-end: var(--nk-border-width) solid var(--nk-app-shell-border);
+  }
+
+  :where(
+    [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"],
+    [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]
+  ) {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    inline-size: var(--nk-control-height-md);
+    block-size: var(--nk-control-height-md);
+    padding: 0;
+    color: inherit;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    border-radius: var(--nk-radius-md);
+    transition:
+      background-color var(--nk-duration-fast) var(--nk-ease),
+      scale var(--nk-duration-fast) var(--nk-ease);
+  }
+
+  :where([data-nk="app-shell"] > [data-slot="app-shell-sidebar"]) {
+    position: sticky;
+    inset-block-start: var(--nk-app-shell-topbar-height);
+    z-index: 10;
+    display: flex;
+    grid-row: 2;
+    grid-column: 1;
+    flex-direction: column;
+    min-inline-size: 0;
+    min-block-size: 0;
+    block-size: calc(100vh - var(--nk-app-shell-topbar-height));
+    block-size: calc(100dvh - var(--nk-app-shell-topbar-height));
+    overflow: hidden;
+    color: var(--nk-app-shell-sidebar-foreground);
+    background: var(--nk-app-shell-sidebar-background);
+    border-inline-end: var(--nk-border-width) solid var(--nk-app-shell-border);
+  }
+
+  :where(
+    [data-nk="app-shell"]
+      > [data-slot="app-shell-sidebar"]
+      > [data-slot="app-shell-navigation"],
+    [data-nk="app-shell"]
+      > [data-slot="app-shell-dialog"]
+      > [data-slot="app-shell-navigation"]
+  ) {
+    display: flex;
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    min-block-size: 0;
+  }
+
+  :where([data-nk="app-shell"] [data-slot="app-shell-topbar"]) {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 20;
+    display: flex;
+    grid-row: 1;
+    grid-column: 2;
+    gap: calc(var(--nk-space) * 2);
+    align-items: center;
+    justify-content: flex-end;
+    min-inline-size: 0;
+    min-block-size: var(--nk-app-shell-topbar-height);
+    padding-inline: calc(var(--nk-space) * 4);
+    background: var(--nk-app-shell-background);
+    border-block-end: var(--nk-border-width) solid var(--nk-app-shell-border);
+  }
+
+  :where(
+    [data-nk="app-shell"]
+      [data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])
+  ) {
+    justify-content: stretch;
+  }
+
+  :where(
+    [data-nk="app-shell"]
+      [data-slot="app-shell-topbar"]
+      > [data-nk="toolbar"]
+  ) {
+    flex: 1 1 auto;
+  }
+
+  :where([data-nk="app-shell"] > [data-slot="app-shell-main"]) {
+    grid-row: 2;
+    grid-column: 2;
+    min-inline-size: 0;
+    min-block-size: 0;
+    outline: 0;
+  }
+
+  :where([data-nk="app-shell"] > [data-slot="app-shell-dialog"]) {
+    display: none;
+    margin: 0;
+    padding: 0;
+    color: var(--nk-app-shell-sidebar-foreground);
+    background: var(--nk-app-shell-sidebar-background);
+    border: 0;
+  }
+
+  :where([data-nk="app-shell"] > [data-slot="app-shell-dialog"])::backdrop {
+    background: var(--nk-color-overlay);
+  }
+}
+
+@layer nitro-kit.variant {
+  :where(
+    [data-nk="app-shell"][data-variant="sidebar"] [data-slot="app-shell-topbar"]
+  ) {
+    display: none;
+  }
+
+  :where(
+    [data-nk="app-shell"][data-variant="sidebar"] > [data-slot="app-shell-main"]
+  ) {
+    grid-row: 1 / 3;
+  }
+
+  :where(
+    [data-nk="app-shell"]:is(
+        [data-variant="sidebar"],
+        [data-variant="hybrid"]
+      ):not(
+        :has(> [data-slot="app-shell-header"] > [data-slot="app-shell-brand"])
+      )
+      > [data-slot="app-shell-sidebar"]
+  ) {
+    inset-block-start: 0;
+    grid-row: 1 / 3;
+    block-size: 100vh;
+    block-size: 100dvh;
+  }
+
+  :where([data-nk="app-shell"][data-variant="topbar"]) {
+    grid-template-columns: max-content minmax(0, 1fr) max-content;
+  }
+
+  :where(
+    [data-nk="app-shell"][data-variant="topbar"]
+      > [data-slot="app-shell-sidebar"]
+  ) {
+    display: contents;
+  }
+
+  :where(
+    [data-nk="app-shell"][data-variant="topbar"]
+      > [data-slot="app-shell-sidebar"]
+      > [data-slot="app-shell-navigation"]
+  ) {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 20;
+    grid-row: 1;
+    grid-column: 2;
+    min-block-size: var(--nk-app-shell-topbar-height);
+    background: var(--nk-app-shell-background);
+    border-block-end: var(--nk-border-width) solid var(--nk-app-shell-border);
+  }
+
+  :where(
+    [data-nk="app-shell"][data-variant="topbar"] [data-slot="app-shell-brand"]
+  ) {
+    grid-column: 1;
+    background: var(--nk-app-shell-background);
+    border-inline-end: 0;
+  }
+
+  :where(
+    [data-nk="app-shell"][data-variant="topbar"] [data-slot="app-shell-topbar"]
+  ) {
+    grid-column: 3;
+  }
+
+  :where(
+    [data-nk="app-shell"][data-variant="topbar"] > [data-slot="app-shell-main"]
+  ) {
+    grid-row: 2;
+    grid-column: 1 / -1;
+  }
+
+  :where(
+    [data-nk="app-shell"][data-variant="topbar"] [data-nk="app-navigation"]
+  ) {
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  :where(
+    [data-nk="app-shell"][data-variant="topbar"]
+      [data-nk="app-navigation"]
+      > [data-slot="app-navigation-body"]
+  ) {
+    flex-direction: row;
+    align-items: center;
+    padding-block: calc(var(--nk-space) * 2);
+    overflow: auto hidden;
+  }
+
+  :where(
+    [data-nk="app-shell"][data-variant="topbar"]
+      [data-nk="app-navigation"]
+      [data-slot="app-navigation-section"]
+  ) {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  :where(
+    [data-nk="app-shell"][data-variant="topbar"]
+      [data-nk="app-navigation"]
+      [data-slot="app-navigation-section-label"]
+  ) {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  :where(
+    [data-nk="app-shell"][data-variant="topbar"]
+      [data-nk="app-navigation"]
+      [data-slot="app-navigation-divider"]
+  ) {
+    inline-size: var(--nk-border-width);
+    block-size: calc(var(--nk-control-height-md) - (var(--nk-space) * 2));
+    margin: calc(var(--nk-space) * 2);
+  }
+
+  :where(
+    [data-nk="app-shell"][data-variant="topbar"]
+      [data-nk="app-navigation"]
+      [data-slot="app-navigation-spacer"]
+  ) {
+    flex-basis: calc(var(--nk-space) * 4);
+    min-inline-size: calc(var(--nk-space) * 4);
+    min-block-size: 0;
+  }
+}
+
+@layer nitro-kit.state {
+  @media (hover: hover) {
+    :where(
+      [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"]:hover,
+      [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]:hover
+    ) {
+      background: var(--nk-app-shell-sidebar-accent);
+    }
+  }
+
+  :where(
+    [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"]:active,
+    [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]:active
+  ) {
+    scale: 0.96;
+  }
+
+  :where(
+    [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"]:focus-visible,
+    [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]:focus-visible
+  ) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: var(--nk-focus-offset);
+  }
+
+  @media (max-width: 48rem) {
+    :where([data-nk="app-shell"]) {
+      grid-template-rows: auto auto minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    :where([data-nk="app-shell"] > [data-slot="app-shell-header"]) {
+      position: sticky;
+      inset-block-start: 0;
+      z-index: 30;
+      display: flex;
+      grid-row: 1;
+      grid-column: 1;
+      gap: calc(var(--nk-space) * 2);
+      align-items: center;
+      min-inline-size: 0;
+      min-block-size: var(--nk-app-shell-topbar-height);
+      padding-inline: calc(var(--nk-space) * 3);
+      background: var(--nk-app-shell-background);
+      border-block-end: var(--nk-border-width) solid var(--nk-app-shell-border);
+    }
+
+    :where(
+      [data-nk="app-shell"] [data-slot="app-shell-brand"],
+      [data-nk="app-shell"] [data-slot="app-shell-topbar"]
+    ) {
+      position: static;
+      display: flex;
+      min-block-size: auto;
+      padding: 0;
+      background: transparent;
+      border: 0;
+    }
+
+    :where([data-nk="app-shell"] [data-slot="app-shell-brand"]) {
+      flex: 1 1 auto;
+      order: 0;
+    }
+
+    :where([data-nk="app-shell"] [data-slot="app-shell-topbar"]) {
+      flex: 0 0 auto;
+      order: 1;
+    }
+
+    :where(
+      [data-nk="app-shell"]
+        [data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])
+    ) {
+      flex: 1 1 auto;
+    }
+
+    :where(
+      [data-nk="app-shell"][data-enhanced]
+        [data-slot="app-shell-mobile-trigger"]
+    ) {
+      display: inline-flex;
+      flex: 0 0 auto;
+      order: -1;
+    }
+
+    :where([data-nk="app-shell"] > [data-slot="app-shell-sidebar"]) {
+      position: static;
+      display: flex;
+      grid-row: 2;
+      grid-column: 1;
+      block-size: auto;
+      max-block-size: none;
+      overflow: visible;
+      border-inline-end: 0;
+      border-block-end: var(--nk-border-width) solid var(--nk-app-shell-border);
+      transform: none;
+    }
+
+    :where(
+      [data-nk="app-shell"]
+        > [data-slot="app-shell-sidebar"]
+        > [data-slot="app-shell-navigation"]
+    ) {
+      min-block-size: auto;
+    }
+
+    :where(
+      [data-nk="app-shell"][data-variant="topbar"] [data-nk="app-navigation"]
+    ) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    :where(
+      [data-nk="app-shell"][data-variant="topbar"]
+        [data-nk="app-navigation"]
+        > [data-slot="app-navigation-body"]
+    ) {
+      flex-direction: column;
+      align-items: stretch;
+      padding: calc(var(--nk-space) * 3);
+      overflow: visible;
+    }
+
+    :where(
+      [data-nk="app-shell"][data-variant="topbar"]
+        [data-nk="app-navigation"]
+        [data-slot="app-navigation-section"]
+    ) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    :where(
+      [data-nk="app-shell"][data-variant="topbar"]
+        [data-nk="app-navigation"]
+        [data-slot="app-navigation-section-label"]
+    ) {
+      position: static;
+      inline-size: auto;
+      block-size: auto;
+      padding: 0;
+      margin: calc(var(--nk-space) * 4) calc(var(--nk-space) * 2)
+        var(--nk-space);
+      overflow: visible;
+      clip: auto;
+      white-space: normal;
+    }
+
+    :where(
+      [data-nk="app-shell"][data-enhanced] > [data-slot="app-shell-sidebar"]
+    ) {
+      display: none;
+    }
+
+    :where(
+      [data-nk="app-shell"][data-enhanced]
+        > [data-slot="app-shell-dialog"][open]
+    ) {
+      --_nk-app-shell-dialog-enter-x: -100%;
+
+      position: fixed;
+      inset-block: 0;
+      inset-inline-start: 0;
+      inset-inline-end: auto;
+      display: flex;
+      flex-direction: column;
+      inline-size: min(
+        var(--nk-app-shell-sidebar-width),
+        calc(100vw - (var(--nk-space) * 12))
+      );
+      max-inline-size: 100%;
+      block-size: 100vh;
+      block-size: 100dvh;
+      max-block-size: 100dvh;
+      overflow: hidden;
+      border-inline-end: var(--nk-border-width) solid var(--nk-app-shell-border);
+      box-shadow: var(--nk-shadow-lg);
+      animation: nk-app-shell-dialog-enter var(--nk-duration-normal)
+        var(--nk-ease);
+    }
+
+    :where(
+      [dir="rtl"]
+        [data-nk="app-shell"][data-enhanced]
+        > [data-slot="app-shell-dialog"][open]
+    ) {
+      --_nk-app-shell-dialog-enter-x: 100%;
+    }
+
+    :where(
+      [data-nk="app-shell"][data-enhanced]
+        > [data-slot="app-shell-dialog"][open]
+        [data-slot="app-shell-mobile-close"]
+    ) {
+      display: inline-flex;
+      flex: 0 0 auto;
+      align-self: flex-end;
+      margin: calc(var(--nk-space) * 3);
+      margin-block-end: 0;
+    }
+
+    :where([data-nk="app-shell"] > [data-slot="app-shell-main"]) {
+      grid-row: 3;
+      grid-column: 1;
+    }
+  }
+
+  @keyframes nk-app-shell-dialog-enter {
+    from {
+      transform: translateX(var(--_nk-app-shell-dialog-enter-x));
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(
+      [data-nk="app-shell"] > [data-slot="app-shell-skip-link"],
+      [data-nk="app-shell"] > [data-slot="app-shell-dialog"],
+      [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"],
+      [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]
+    ) {
+      animation-duration: 0.01ms;
+      transition-duration: 0.01ms;
+    }
+  }
+}

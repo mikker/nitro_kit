@@ -1,0 +1,119 @@
+@layer nitro-kit.base {
+  :where([data-nk="accordion"]) {
+    inline-size: 100%;
+    color: var(--nk-color-foreground);
+  }
+
+  :where([data-nk="accordion"] > [data-slot="accordion-item"]) {
+    border-block-end: var(--nk-border-width) solid var(--nk-color-border);
+  }
+
+  :where([data-nk="accordion"] > [data-slot="accordion-item"]:first-child) {
+    border-block-start: var(--nk-border-width) solid var(--nk-color-border);
+  }
+
+  :where(
+    [data-nk="accordion"]
+      > [data-slot="accordion-item"]
+      > [data-slot="accordion-trigger"]
+  ) {
+    display: flex;
+    width: 100%;
+    min-height: 2.75rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: calc(var(--nk-space) * 3);
+    padding: calc(var(--nk-space) * 3) 0;
+    font: inherit;
+    font-weight: var(--nk-font-weight-medium);
+    color: inherit;
+    text-align: start;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    list-style: none;
+  }
+
+  :where(
+    [data-nk="accordion"]
+      > [data-slot="accordion-item"]
+      > [data-slot="accordion-trigger"]
+  )::-webkit-details-marker {
+    display: none;
+  }
+
+  :where(
+    [data-nk="accordion"]
+      > [data-slot="accordion-item"]
+      > [data-slot="accordion-trigger"]
+      > [data-slot="accordion-label"]
+  ) {
+    flex: 1;
+  }
+
+  :where(
+    [data-nk="accordion"]
+      > [data-slot="accordion-item"]
+      > [data-slot="accordion-trigger"]
+      > [data-slot="accordion-icon"]
+  ) {
+    flex: none;
+    width: 1rem;
+    height: 1rem;
+    color: var(--nk-color-muted-foreground);
+    transition:
+      color var(--nk-duration-fast) var(--nk-ease),
+      transform var(--nk-duration-fast) var(--nk-ease);
+  }
+
+  :where(
+    [data-nk="accordion"]
+      > [data-slot="accordion-item"][open]
+      > [data-slot="accordion-trigger"]
+      > [data-slot="accordion-icon"]
+  ) {
+    transform: rotate(180deg);
+  }
+
+  :where(
+    [data-nk="accordion"]
+      > [data-slot="accordion-item"]
+      > [data-slot="accordion-content"]
+  ) {
+    padding-block-end: calc(var(--nk-space) * 4);
+    line-height: var(--nk-leading-normal);
+    color: var(--nk-color-muted-foreground);
+  }
+}
+
+@layer nitro-kit.state {
+  @media (hover: hover) {
+    :where(
+      [data-nk="accordion"]
+        > [data-slot="accordion-item"]
+        > [data-slot="accordion-trigger"]:hover
+    ) {
+      color: var(--nk-color-primary);
+    }
+  }
+
+  :where(
+    [data-nk="accordion"]
+      > [data-slot="accordion-item"]
+      > [data-slot="accordion-trigger"]:focus-visible
+  ) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: var(--nk-focus-offset);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(
+      [data-nk="accordion"]
+        > [data-slot="accordion-item"]
+        > [data-slot="accordion-trigger"]
+        > [data-slot="accordion-icon"]
+    ) {
+      transition-duration: 0.01ms;
+    }
+  }
+}

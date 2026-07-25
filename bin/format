@@ -5,6 +5,3 @@ rubocop -a
 
 # js,css,yaml
 prettier . --write
-
-# erb
-npm run herb:format

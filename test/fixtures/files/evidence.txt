@@ -1,0 +1,1 @@
+Nitro Kit direct upload browser fixture.

@@ -1,0 +1,83 @@
+@layer nitro-kit.base {
+  :where([data-nk="field"]) {
+    display: grid;
+    align-items: start;
+    color: var(--nk-color-foreground);
+  }
+
+  :where([data-nk="field"] > [data-slot="field-label"]) {
+    font-size: var(--nk-text-sm);
+    font-weight: var(--nk-font-weight-medium);
+  }
+
+  :where([data-nk="field"] > [data-slot="field-description"]) {
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-sm);
+    text-wrap: pretty;
+  }
+
+  :where([data-nk="field"] > [data-slot="field-error"]) {
+    padding: 0;
+    color: var(--nk-color-danger-content);
+    font-size: var(--nk-text-sm);
+    list-style: none;
+  }
+
+  :where([data-nk="field"] > [data-slot="field-control"][data-nk="select"]) {
+    inline-size: 100%;
+  }
+}
+
+@layer nitro-kit.compound {
+  :where(
+      [data-nk="field"]
+        > [data-slot="field-label"]
+        + [data-slot="field-control"]
+    ) {
+    margin-block-start: calc(var(--nk-space) * 2);
+  }
+
+  :where(
+      [data-nk="field"]
+        > [data-slot="field-label"]
+        + [data-slot="field-description"]
+    ) {
+    margin-block-start: var(--nk-space);
+  }
+
+  :where(
+      [data-nk="field"]
+        > [data-slot="field-description"]
+        + [data-slot="field-control"]
+    ) {
+    margin-block-start: calc(var(--nk-space) * 3);
+  }
+
+  :where(
+      [data-nk="field"]
+        > [data-slot="field-control"]
+        + [data-slot="field-description"],
+      [data-nk="field"]
+        > [data-slot="field-control"]
+        + [data-slot="field-error"],
+      [data-nk="field"]
+        > [data-slot="field-description"]
+        + [data-slot="field-error"]
+    ) {
+    margin-block-start: calc(var(--nk-space) * 2);
+  }
+}
+
+@layer nitro-kit.state {
+  :where(
+      [data-nk="field"][data-state="invalid"]
+        > [data-slot="field-control"][data-nk="select"]
+        > [data-slot="select-control"],
+      [data-nk="field"][data-state="invalid"]
+        > [data-slot="field-control"][data-nk="textarea"],
+      [data-nk="field"][data-state="invalid"]
+        > [data-slot="field-control"][data-nk="input"]
+    ) {
+    border-color: var(--nk-color-danger);
+  }
+}

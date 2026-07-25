@@ -1,0 +1,34 @@
+@layer nitro-kit.base {
+  :where([data-nk="textarea"]) {
+    display: block;
+    inline-size: 100%;
+    min-block-size: 6rem;
+    padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
+    color: var(--nk-color-foreground);
+    font: inherit;
+    line-height: var(--nk-leading-normal);
+    resize: vertical;
+    background: var(--nk-color-surface);
+    border: var(--nk-border-width) solid var(--nk-color-border);
+    border-radius: var(--nk-radius-md);
+    transition:
+      border-color var(--nk-duration-normal) var(--nk-ease),
+      box-shadow var(--nk-duration-normal) var(--nk-ease);
+  }
+}
+
+@layer nitro-kit.state {
+  :where([data-nk="textarea"]:focus-visible) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: var(--nk-focus-offset);
+  }
+
+  :where([data-nk="textarea"]:disabled) {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  :where([data-nk="textarea"][aria-invalid="true"]) {
+    border-color: var(--nk-color-danger);
+  }
+}

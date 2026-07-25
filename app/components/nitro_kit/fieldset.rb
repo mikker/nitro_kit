@@ -2,57 +2,59 @@
 
 module NitroKit
   class Fieldset < Component
-    def initialize(legend: nil, description: nil, **attrs)
-      @legend = legend
-      @description = description
+    def initialize(
+      legend:,
+      description: nil,
+      disabled: false,
+      name: nil,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil
+    )
+      @legend = validate_text!(:legend, legend)
+      @description = validate_optional_text!(:description, description)
+      disabled = validate_boolean!(:disabled, disabled)
+
       super(
-        attrs,
-        class: base_class
+        component: :fieldset,
+        attributes: { disabled:, name: }.compact,
+        html:,
+        aria:,
+        data:,
+        desperately_need_a_class:
       )
-    end
-
-    def view_template
-      fieldset(**attrs) do
-        legend(@legend) if @legend
-        description(@description) if @description
-
-        yield
-      end
     end
 
     alias :html_legend :legend
 
-    def legend(text = nil, **attrs, &block)
-      builder do
-        html_legend(**mattr(attrs, class: legend_class)) do
-          text_or_block(text, &block)
-        end
-      end
-    end
+    attr_reader :legend, :description
 
-    def description(text = nil, **attrs, &block)
-      builder do
-        div(**mattr(attrs, class: description_class, data: { slot: "text" })) do
-          text_or_block(text, &block)
+    def view_template(&block)
+      raise ArgumentError, "fieldset requires a block" unless block
+
+      fieldset(**root_attributes) do
+        html_legend(**slot_attributes(:legend)) { plain(legend) }
+        if description
+          p(**slot_attributes(:description)) { plain(description.to_s) }
         end
+        div(**slot_attributes(:fields), &block)
       end
     end
 
     private
 
-    def base_class
-      [
-        "[&>*+[data-slot=control]]:mt-6 [&>*+[data-slot=text]]:mt-1",
-        "[&+&]:mt-8"
-      ]
+    def validate_text!(name, text)
+      return text if text.is_a?(String) && !text.strip.empty?
+
+      raise ArgumentError, "#{name} must be a non-blank String"
     end
 
-    def legend_class
-      "text-lg font-semibold"
-    end
+    def validate_optional_text!(name, text)
+      return if text.nil?
+      return text if text.is_a?(String) && !text.strip.empty?
 
-    def description_class
-      "text-sm text-muted-content"
+      raise ArgumentError, "#{name} must be a non-blank String or nil"
     end
   end
 end

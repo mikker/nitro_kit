@@ -1,0 +1,146 @@
+@layer nitro-kit.base {
+  :where([data-nk="switch"]) {
+    display: inline-grid;
+    color: var(--nk-color-foreground);
+  }
+
+  :where([data-nk="switch"] > [data-slot="switch-label"]) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: calc(var(--nk-space) * 3);
+    align-items: center;
+    min-block-size: var(--nk-control-height-md);
+    cursor: pointer;
+  }
+
+  :where(
+    [data-nk="switch"] [data-slot="switch-control"],
+    [data-nk="switch"] [data-slot="switch-track"]
+  ) {
+    grid-area: 1 / 1;
+  }
+
+  :where([data-nk="switch"] [data-slot="switch-control"]) {
+    z-index: 1;
+    inline-size: 2.5rem;
+    block-size: 1.5rem;
+    margin: 0;
+    cursor: pointer;
+    appearance: none;
+    opacity: 0;
+  }
+
+  :where([data-nk="switch"] [data-slot="switch-track"]) {
+    display: flex;
+    align-items: center;
+    inline-size: 2.5rem;
+    block-size: 1.5rem;
+    padding: 0.1875rem;
+    pointer-events: none;
+    background: var(--nk-color-muted);
+    border: var(--nk-border-width) solid var(--nk-color-border);
+    border-radius: var(--nk-radius-full);
+    transition:
+      background-color var(--nk-duration-normal) var(--nk-ease),
+      border-color var(--nk-duration-normal) var(--nk-ease);
+  }
+
+  :where(
+    [data-nk="switch"][data-size="sm"] [data-slot="switch-control"],
+    [data-nk="switch"][data-size="sm"] [data-slot="switch-track"]
+  ) {
+    inline-size: 2rem;
+    block-size: 1.25rem;
+  }
+
+  :where([data-nk="switch"] [data-slot="switch-handle"]) {
+    inline-size: 1rem;
+    block-size: 1rem;
+    background: var(--nk-color-surface);
+    border-radius: var(--nk-radius-full);
+    box-shadow: var(--nk-shadow-sm);
+    transition: transform var(--nk-duration-normal) var(--nk-ease);
+  }
+
+  :where([data-nk="switch"][data-size="sm"] [data-slot="switch-handle"]) {
+    inline-size: 0.75rem;
+    block-size: 0.75rem;
+  }
+
+  :where([data-nk="switch"] [data-slot="switch-label-text"]) {
+    grid-column: 2;
+  }
+
+  :where([data-nk="switch"] [data-slot="switch-description"]) {
+    padding-inline-start: calc(2.5rem + (var(--nk-space) * 3));
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-sm);
+    font-weight: var(--nk-font-weight-normal);
+  }
+
+  :where([data-nk="switch"][data-size="sm"] [data-slot="switch-description"]) {
+    padding-inline-start: calc(2rem + (var(--nk-space) * 3));
+  }
+}
+
+@layer nitro-kit.state {
+  :where(
+    [data-nk="switch"]
+      [data-slot="switch-control"]:checked
+      + [data-slot="switch-track"]
+  ) {
+    background: var(--nk-color-primary);
+    border-color: var(--nk-color-primary);
+  }
+
+  :where(
+    [data-nk="switch"]
+      [data-slot="switch-control"]:checked
+      + [data-slot="switch-track"]
+      > [data-slot="switch-handle"]
+  ) {
+    transform: translateX(1rem);
+  }
+
+  :where(
+    [data-nk="switch"][data-size="sm"]
+      [data-slot="switch-control"]:checked
+      + [data-slot="switch-track"]
+      > [data-slot="switch-handle"]
+  ) {
+    transform: translateX(0.75rem);
+  }
+
+  :where(
+    [data-nk="switch"]
+      [data-slot="switch-control"]:focus-visible
+      + [data-slot="switch-track"]
+  ) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: var(--nk-focus-offset);
+  }
+
+  :where([data-nk="switch"][data-disabled="true"]) {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  :where(
+    [data-nk="switch"]
+      [data-slot="switch-control"][aria-invalid="true"]
+      + [data-slot="switch-track"]
+  ) {
+    border-color: var(--nk-color-danger);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @layer nitro-kit.base {
+    :where(
+      [data-nk="switch"] [data-slot="switch-track"],
+      [data-nk="switch"] [data-slot="switch-handle"]
+    ) {
+      transition-duration: 0.01ms;
+    }
+  }
+}

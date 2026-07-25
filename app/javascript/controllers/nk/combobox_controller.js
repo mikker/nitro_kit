@@ -1,130 +1,324 @@
 import { Controller } from "@hotwired/stimulus";
-import Combobox from "@github/combobox-nav";
 import {
-  computePosition,
-  offset,
-  flip,
-  shift,
-  autoUpdate,
-} from "@floating-ui/dom";
+  observeOverlayPosition,
+  positionOverlay,
+} from "controllers/nk/overlay_position";
 
 export default class extends Controller {
-  static targets = ["input", "list", "hiddenField", "clearButton"];
-  static values = {
-    open: { type: Boolean, default: false },
-    // Options for floating-ui
-    placement: { type: String },
-    // Options for combobox-nav
-    tabInsertsSuggestions: { type: Boolean },
-    firstOptionSelectionMode: { type: String },
-    scrollIntoViewOptions: { type: Object },
-  };
+  static targets = [
+    "control",
+    "input",
+    "native",
+    "value",
+    "listbox",
+    "option",
+    "status",
+  ];
+  static values = { open: Boolean, required: Boolean };
 
   connect() {
-    this.combobox = new Combobox(this.inputTarget, this.listTarget, {
-      tabInsertsSuggestions: this.tabInsertsSuggestionsValue,
-      firstOptionSelectionMode: this.firstOptionSelectionModeValue,
-      scrollIntoViewOptions: this.scrollIntoViewOptionsValue,
-    });
-
-    this.updatePosition();
-
-    this.listTarget.addEventListener("combobox-commit", (event) => {
-      this.select(event);
-      this.close();
-    });
+    this.activeOption = null;
+    this.enhanced = true;
+    this.nativeRequired = this.requiredValue;
+    this.element.dataset.enhanced = "true";
+    this.controlTarget.hidden = false;
+    this.nativeTarget.hidden = true;
+    this.valueTarget.required = false;
+    this.syncSelection();
+    this.syncValidity();
+    this.reflectOpenState();
   }
 
   disconnect() {
-    this.combobox.destroy();
+    this.stopPositioning?.();
+    this.enhanced = false;
+    const control = this.element.querySelector(
+      ':scope > [data-slot="combobox-control"]',
+    );
+    const input = control?.querySelector('[data-nk--combobox-target~="input"]');
+    const native = this.element.querySelector(
+      ':scope > [data-slot="combobox-native"]',
+    );
+    const value = native?.querySelector('[data-nk--combobox-target~="value"]');
+    const listbox = this.element.querySelector(
+      ':scope > [data-slot="combobox-listbox"]',
+    );
+    const status = this.element.querySelector(
+      ':scope > [data-slot="combobox-status"]',
+    );
+
+    this.element.setAttribute("data-nk--combobox-open-value", "false");
+    this.element.dataset.state = "closed";
+    if (listbox) {
+      listbox.dataset.state = "closed";
+      listbox.hidden = true;
+    }
+    if (input) {
+      input.setAttribute("aria-expanded", "false");
+      input.setCustomValidity("");
+      input.removeAttribute("aria-activedescendant");
+    }
+    if (control) control.hidden = true;
+    if (native) native.hidden = false;
+    if (value) value.required = this.nativeRequired;
+    if (status) status.textContent = "";
+    delete this.element.dataset.enhanced;
   }
 
-  select(event) {
-    this.inputTarget.value = event.target.textContent;
-    this.hiddenFieldTarget.value =
-      event.target.dataset.value || event.target.textContent;
+  controlTargetConnected(control) {
+    if (this.enhanced) control.hidden = false;
+  }
+
+  nativeTargetConnected(native) {
+    if (this.enhanced) native.hidden = true;
+  }
+
+  valueTargetConnected(value) {
+    if (!this.enhanced) return;
+
+    this.nativeRequired = this.requiredValue;
+    value.required = false;
+    if (this.hasInputTarget) {
+      this.syncSelection();
+      this.syncValidity();
+    }
+  }
+
+  inputTargetConnected() {
+    if (!this.enhanced) return;
+
+    if (this.hasValueTarget) this.syncValidity();
+    this.reflectOpenState();
+  }
+
+  inputTargetDisconnected() {
+    this.activeOption = null;
+  }
+
+  listboxTargetConnected() {
+    if (this.enhanced) this.reflectOpenState();
+  }
+
+  optionTargetConnected() {
+    if (this.enhanced && this.hasValueTarget) this.syncSelection();
+  }
+
+  optionTargetDisconnected(option) {
+    if (this.activeOption === option) this.setActive(null);
   }
 
   open() {
+    if (this.inputTarget.disabled) return;
+
     this.openValue = true;
   }
 
   close() {
     this.openValue = false;
+    this.setActive(null);
   }
 
-  focusShift({ target }) {
-    if (!this.openValue) return;
-    if (this.element.contains(target)) return;
-
-    this.close();
+  closeFromOutside(event) {
+    if (!this.element.contains(event.target)) this.close();
   }
 
-  windowClick({ target }) {
-    if (!this.openValue) return;
-    if (this.element.contains(target)) return;
+  filter() {
+    const query = this.inputTarget.value.trim().toLocaleLowerCase();
+    let exactMatch = null;
 
-    this.close();
-  }
+    this.optionTargets.forEach((option) => {
+      const label = this.optionLabel(option);
+      option.hidden = !label.toLocaleLowerCase().includes(query);
 
-  clear() {
-    this.combobox.resetSelection();
-    this.inputTarget.value = "";
-    this.input();
-    this.hiddenFieldTarget.value = "";
-  }
-
-  input(_event) {
-    if (!this.isOpen) this.open();
-
-    const filter = this.inputTarget.value.toLowerCase();
-
-    Array.from(this.listTarget.children).forEach((item) => {
-      const value = item.dataset.value?.toLowerCase();
-      const text = item.textContent.toLowerCase();
-
-      if (value?.includes(filter) || text.includes(filter)) {
-        item.setAttribute("role", "option");
-      } else {
-        item.removeAttribute("role");
+      if (
+        label.toLocaleLowerCase() === query &&
+        option.getAttribute("aria-disabled") !== "true"
+      ) {
+        exactMatch = option;
       }
     });
 
-    this.hiddenFieldTarget.value = this.inputTarget.value;
+    this.valueTarget.value = exactMatch?.dataset.value ?? "";
+    this.syncSelection();
+    this.setActive(null);
+    this.syncValidity();
+    this.announceResults();
+    this.open();
   }
 
-  openValueChanged(state, _previous) {
-    if (!this.combobox) return;
+  select(event) {
+    this.commit(event.currentTarget);
+  }
 
-    if (state) {
-      this.combobox.start();
+  activate(event) {
+    this.setActive(event.currentTarget);
+  }
 
-      this.listTarget.dataset.state = "open";
+  navigate(event) {
+    const options = this.visibleOptions;
+    const currentIndex = options.indexOf(this.activeOption);
+    let nextIndex;
 
-      this.clearAutoUpdate = autoUpdate(
-        this.inputTarget,
-        this.listTarget,
-        this.updatePosition,
+    switch (event.key) {
+      case "ArrowDown":
+        event.preventDefault();
+        this.open();
+        nextIndex = (currentIndex + 1) % options.length;
+        break;
+      case "ArrowUp":
+        event.preventDefault();
+        this.open();
+        nextIndex = (currentIndex - 1 + options.length) % options.length;
+        break;
+      case "Home":
+        if (!this.openValue) return;
+        event.preventDefault();
+        nextIndex = 0;
+        break;
+      case "End":
+        if (!this.openValue) return;
+        event.preventDefault();
+        nextIndex = options.length - 1;
+        break;
+      case "Enter":
+        if (!this.openValue || !this.activeOption) return;
+        event.preventDefault();
+        this.commit(this.activeOption);
+        return;
+      case "Escape":
+        if (!this.openValue) return;
+        event.preventDefault();
+        this.close();
+        return;
+      case "Tab":
+        this.close();
+        this.syncValidity();
+        return;
+      default:
+        return;
+    }
+
+    if (options.length > 0) this.setActive(options[nextIndex]);
+  }
+
+  validate() {
+    this.syncValidity();
+  }
+
+  openValueChanged(open) {
+    if (!this.enhanced) return;
+
+    this.reflectOpenState(open);
+  }
+
+  reflectOpenState(open = this.openValue) {
+    if (!this.hasListboxTarget || !this.hasInputTarget) return;
+
+    const state = open ? "open" : "closed";
+    this.element.dataset.state = state;
+    this.listboxTarget.dataset.state = state;
+    this.listboxTarget.hidden = !open;
+    this.inputTarget.setAttribute("aria-expanded", String(open));
+
+    if (open && (!this.activeOption || !this.activeOption.isConnected)) {
+      const selected = this.optionTargets.find(
+        (option) =>
+          option.getAttribute("aria-selected") === "true" && !option.hidden,
       );
+      this.setActive(selected ?? this.visibleOptions[0] ?? null);
+    } else if (open && this.activeOption) {
+      this.inputTarget.setAttribute(
+        "aria-activedescendant",
+        this.activeOption.id,
+      );
+    }
+
+    if (open) {
+      this.startPositioning();
     } else {
-      this.combobox.stop();
-
-      this.listTarget.dataset.state = "closed";
-
-      if (this.clearAutoUpdate) {
-        this.clearAutoUpdate();
-      }
+      this.stopPositioning?.();
+      this.stopPositioning = null;
     }
   }
 
-  updatePosition = () => {
-    computePosition(this.inputTarget, this.listTarget, {
-      placement: this.placementValue,
-      middleware: [offset(5), flip(), shift({ padding: 5 })],
-    }).then(({ x, y }) => {
-      this.listTarget.style.left = `${x}px`;
-      this.listTarget.style.top = `${y}px`;
-      this.listTarget.style.width = `${this.inputTarget.clientWidth}px`;
+  startPositioning() {
+    this.stopPositioning?.();
+    const update = () =>
+      positionOverlay(
+        this.inputTarget,
+        this.listboxTarget,
+        this.element.dataset.placement,
+      );
+
+    update();
+    this.stopPositioning = observeOverlayPosition(update);
+  }
+
+  commit(option) {
+    if (!option || option.getAttribute("aria-disabled") === "true") return;
+
+    this.inputTarget.value = this.optionLabel(option);
+    this.valueTarget.value = option.dataset.value;
+    this.syncSelection();
+    this.syncValidity();
+    this.close();
+    this.inputTarget.focus();
+    this.valueTarget.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+
+  syncSelection() {
+    this.optionTargets.forEach((option) => {
+      const selected = option.dataset.value === this.valueTarget.value;
+      option.setAttribute("aria-selected", String(selected));
+      option.dataset.state = selected ? "selected" : "unselected";
     });
-  };
+  }
+
+  syncValidity() {
+    const hasVisibleValue = this.inputTarget.value.trim() !== "";
+    const hasSubmittedValue = this.valueTarget.value !== "";
+    const invalid =
+      (this.requiredValue && !hasSubmittedValue) ||
+      (hasVisibleValue && !hasSubmittedValue);
+    this.inputTarget.setCustomValidity(invalid ? "Choose an option." : "");
+    this.inputTarget.setAttribute("aria-invalid", String(invalid));
+  }
+
+  setActive(option) {
+    this.optionTargets.forEach((candidate) => {
+      candidate.dataset.active = String(candidate === option);
+    });
+
+    this.activeOption = option;
+
+    if (option && this.hasInputTarget) {
+      this.inputTarget.setAttribute("aria-activedescendant", option.id);
+      option.scrollIntoView({ block: "nearest" });
+    } else if (this.hasInputTarget) {
+      this.inputTarget.removeAttribute("aria-activedescendant");
+    }
+  }
+
+  optionLabel(option) {
+    return option.textContent.trim();
+  }
+
+  announceResults() {
+    const count = this.optionTargets.filter((option) => !option.hidden).length;
+
+    if (count === 0) {
+      this.statusTarget.textContent = "No options found.";
+    } else {
+      this.statusTarget.textContent = `${count} ${
+        count === 1 ? "option" : "options"
+      } available.`;
+    }
+  }
+
+  get visibleOptions() {
+    return this.optionTargets.filter(
+      (option) =>
+        !option.hidden && option.getAttribute("aria-disabled") !== "true",
+    );
+  }
 }

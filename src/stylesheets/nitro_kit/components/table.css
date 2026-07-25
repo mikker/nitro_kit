@@ -1,0 +1,51 @@
+@layer nitro-kit.base {
+  :where([data-nk="table"]) {
+    inline-size: 100%;
+    overflow-x: auto;
+    color: var(--nk-color-foreground);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  :where([data-nk="table"] > [data-slot="table-element"]) {
+    inline-size: 100%;
+    font-size: var(--nk-text-sm);
+    border-collapse: collapse;
+  }
+
+  :where([data-nk="table"] [data-slot="table-caption"]) {
+    padding-block: calc(var(--nk-space) * 2);
+    color: var(--nk-color-muted-foreground);
+    text-align: start;
+  }
+
+  :where([data-nk="table"] [data-slot="table-row"]) {
+    border-block-end: var(--nk-border-width) solid var(--nk-color-border);
+  }
+
+  :where(
+      [data-nk="table"] [data-slot="table-header"],
+      [data-nk="table"] [data-slot="table-cell"]
+    ) {
+    min-block-size: var(--nk-control-height-md);
+    padding: calc(var(--nk-space) * 2);
+    vertical-align: middle;
+  }
+
+  :where([data-nk="table"] [data-slot="table-header"]) {
+    color: var(--nk-color-muted-foreground);
+    font-weight: var(--nk-font-weight-medium);
+  }
+}
+
+@layer nitro-kit.compound {
+  :where([data-nk="table"] [data-align="left"]) {
+    text-align: left;
+  }
+  :where([data-nk="table"] [data-align="center"]) {
+    text-align: center;
+  }
+  :where([data-nk="table"] [data-align="right"]) {
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+  }
+}

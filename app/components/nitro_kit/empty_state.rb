@@ -1,0 +1,93 @@
+# frozen_string_literal: true
+
+module NitroKit
+  class EmptyState < Component
+    Child = Data.define(:component, :content)
+    TITLE_LEVELS = (2..6).freeze
+
+    def initialize(
+      title: nil,
+      description: nil,
+      level: 2,
+      id: nil,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil
+    )
+      @title_content = content_from_keyword(:title, title)
+      @description_content = content_from_keyword(:description, description)
+      @level = validate_choice!(:level, level, TITLE_LEVELS)
+      @icon = nil
+      @actions = []
+
+      super(
+        component: :empty_state,
+        attributes: { id: }.compact,
+        html:,
+        aria:,
+        data:,
+        desperately_need_a_class:
+      )
+    end
+
+    attr_reader :level
+
+    def view_template
+      yield self if block_given?
+      require_content!("EmptyState", :title, @title_content)
+
+      section(**root_attributes) do
+        render_in_slot(@icon.component, :icon, &@icon.content) if @icon
+        public_send(:"h#{level}", **slot_attributes(:title)) { render_deferred_content(@title_content) }
+        if @description_content
+          p(**slot_attributes(:description)) { render_deferred_content(@description_content) }
+        end
+        render_actions if @actions.any?
+      end
+    end
+
+    def title(text = nil, &block)
+      @title_content = declare_content(:title, @title_content, text, &block)
+      nil
+    end
+
+    def description(text = nil, &block)
+      @description_content = declare_content(:description, @description_content, text, &block)
+      nil
+    end
+
+    def icon(component, &content)
+      unless component.is_a?(NitroKit::Icon)
+        raise ArgumentError, "EmptyState icon must be a NitroKit::Icon"
+      end
+      raise ArgumentError, "EmptyState accepts at most one icon" if @icon
+
+      @icon = Child.new(component:, content:)
+      nil
+    end
+
+    def action(component, &content)
+      unless component.is_a?(NitroKit::Button)
+        raise ArgumentError, "EmptyState actions must be NitroKit::Button instances"
+      end
+      if @actions.any? { |action| action.component.equal?(component) }
+        raise ArgumentError, "EmptyState cannot contain the same Button twice"
+      end
+      raise ArgumentError, "EmptyState accepts at most two actions" if @actions.size == 2
+
+      @actions << Child.new(component:, content:)
+      nil
+    end
+
+    private
+
+    def render_actions
+      div(**slot_attributes(:actions)) do
+        @actions.each do |action|
+          render_in_slot(action.component, :action, &action.content)
+        end
+      end
+    end
+  end
+end

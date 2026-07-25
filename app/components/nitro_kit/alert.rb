@@ -2,72 +2,127 @@
 
 module NitroKit
   class Alert < Component
-    VARIANTS = %i[default warning error success]
+    VARIANTS = %i[default warning error success].freeze
+    COLORS = NitroKit::Badge::COLORS
+    VARIANT_COLORS = {
+      default: :zinc,
+      warning: :amber,
+      error: :red,
+      success: :green
+    }.freeze
+    LIVE_MODES = %i[off polite assertive].freeze
+    Region = Data.define(:text, :content, :html, :aria, :data, :css_class)
+    Child = Data.define(:component, :content)
 
-    def initialize(variant: :default, **attrs)
-      @variant = variant
+    def initialize(
+      variant: :default,
+      color: nil,
+      live: :off,
+      id: nil,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil
+    )
+      @variant = validate_choice!(:variant, variant, VARIANTS)
+      @color = validate_choice!(:color, color || VARIANT_COLORS.fetch(@variant), COLORS)
+      @live = validate_choice!(:live, live, LIVE_MODES)
+      @icon = nil
+      @title = nil
+      @description = nil
 
       super(
-        attrs,
-        role: "alert",
-        class: [ base_class, variant_class ]
+        component: :alert,
+        attributes: { id:, role: live_role, data: { color: @color } },
+        html:,
+        aria:,
+        data:,
+        variant:,
+        desperately_need_a_class:
       )
     end
 
     attr_reader :variant
 
     def view_template
-      div(**attrs) do
-        yield
+      yield self if block_given?
+
+      div(**root_attributes) do
+        render_in_slot(@icon.component, :icon, &@icon.content) if @icon
+        render_region(:title, @title) if @title
+        render_region(:description, @description) if @description
       end
     end
 
-    def title(text = nil, **attrs, &block)
-      builder do
-        h5(**mattr(attrs, class: title_class)) do
-          text_or_block(text, &block)
-        end
+    def icon(component, &block)
+      raise ArgumentError, "Alert accepts at most one icon" if @icon
+      unless component.is_a?(NitroKit::Component)
+        raise ArgumentError, "Alert icon must be a NitroKit::Component"
       end
+
+      @icon = Child.new(component:, content: block)
+      nil
     end
 
-    def description(text = nil, **attrs, &block)
-      builder do
-        div(**mattr(attrs, class: description_class)) do
-          text_or_block(text, &block)
-        end
-      end
+    def title(
+      text = nil,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil,
+      &block
+    )
+      @title = declare_region(:title, @title, text, block, html, aria, data, desperately_need_a_class)
+      nil
+    end
+
+    def description(
+      text = nil,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil,
+      &block
+    )
+      @description = declare_region(
+        :description,
+        @description,
+        text,
+        block,
+        html,
+        aria,
+        data,
+        desperately_need_a_class
+      )
+      nil
     end
 
     private
 
-    def base_class
-      [
-        "relative border w-full rounded-md p-5 text-sm space-y-2",
-        "[&>svg~*]:pl-8 [&>svg]:absolute [&>svg]:top-5 [&>svg]:left-5"
-      ]
+    def declare_region(name, current, text, content, html, aria, data, css_class)
+      raise ArgumentError, "Alert accepts at most one #{name}" if current
+      raise ArgumentError, "Alert #{name} accepts text or a block, not both" if !text.nil? && content
+      validate_content_text!("Alert #{name}", text) unless content
+
+      Region.new(text:, content:, html:, aria:, data:, css_class:)
     end
 
-    def variant_class
-      case variant
-      when :default
-        "border-border bg-background text-foreground"
-      when :warning
-        "bg-yellow-300/20 dark:bg-yellow-300/20 text-yellow-900 dark:text-yellow-100 border-yellow-500/80 dark:border-yellow-400/50"
-      when :success
-        "bg-green-300/20 dark:bg-green-300/20 text-green-900 dark:text-green-100 border-green-500/80 dark:border-green-400/50"
-      when :error
-        "bg-red-300/20 dark:bg-red-300/20 text-red-900 dark:text-red-100 border-red-400/80 dark:border-red-400/50"
-      else
-        raise ArgumentError, "Invalid variant: #{variant}"
+    def render_region(name, region)
+      div(
+        **slot_attributes(
+          name,
+          html: region.html,
+          aria: region.aria,
+          data: region.data,
+          desperately_need_a_class: region.css_class
+        )
+      ) do
+        text_or_block(region.text, &region.content)
       end
     end
 
-    def title_class
-      "font-medium text-lg leading-5"
-    end
-
-    def description_class
-      ""
+    def live_role
+      { off: nil, polite: "status", assertive: "alert" }.fetch(@live)
     end
   end
 end

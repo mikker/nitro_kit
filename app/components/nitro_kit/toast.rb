@@ -2,122 +2,216 @@
 
 module NitroKit
   class Toast < Component
-    class FlashMessages < Component
-      def initialize(flash)
-        @flash = flash
-      end
-
-      attr_reader :flash
-
-      def view_template
-        flash.each do |severity, message|
-          render(
-            Toast::Item.new(
-              description: message,
-              variant: severity.to_sym == :alert ? :error : :default
-            )
-          )
-        end
-      end
-    end
+    ItemDeclaration = ::Data.define(:component, :content)
 
     class Item < Component
-      VARIANTS = %i[default warning error success]
+      VARIANTS = %i[default info success warning error].freeze
 
-      def initialize(title: nil, description: nil, variant: :default, **attrs)
-        @title = title
-        @description = description
-        @variant = variant
+      def initialize(
+        title: nil,
+        description: nil,
+        variant: :default,
+        dismissible: true,
+        html: {},
+        aria: {},
+        data: {},
+        desperately_need_a_class: nil
+      )
+        @title = optional_text(:title, title)
+        @description = optional_text(:description, description)
+        @variant = validate_choice!(:variant, variant, VARIANTS)
+        @dismissible = validate_boolean!(:dismissible, dismissible)
 
         super(
-          **mattr(
-            attrs,
-            class: [
-              base_class,
-              variant_class
-            ],
-            role: "status",
-            aria: { live: "off", atomic: "true" },
-            tabindex: "0",
-            data: { state: "closed" }
-          )
+          component: :toast_item,
+          attributes: {
+            data: {
+              state: "open",
+              turbo_temporary: dismissible ? true : nil,
+              nk__toast_target: "item",
+              nk__toast_permanent: dismissible ? nil : "true",
+              action: [
+                "pointerenter->nk--toast#pause",
+                "pointerleave->nk--toast#resume",
+                "focusin->nk--toast#pause",
+                "focusout->nk--toast#resume",
+                "transitionend->nk--toast#remove"
+              ].join(" ")
+            }
+          },
+          html:,
+          aria: aria.merge(atomic: true),
+          data:,
+          variant:,
+          desperately_need_a_class:
         )
       end
 
-      attr_reader :title, :description, :variant
+      attr_reader :title, :description, :variant, :dismissible
 
       def view_template(&block)
-        li(**attrs) do
-          div(class: "grid gap-1") do
-            div(class: "text-sm font-semibold", data: { slot: "title" }) do
-              title && plain(title)
-            end
+        if title.nil? && description.nil? && !block
+          raise ArgumentError, "Toast item requires a title, description, or block"
+        end
 
-            div(class: "text-sm opacity-90", data: { slot: "description" }) do
-              text_or_block(description, &block)
-            end
+        li(**root_attributes) do
+          div(**slot_attributes(:content)) do
+            p(**slot_attributes(:title)) { plain(title) } if title
+            div(**slot_attributes(:description)) do
+              block ? yield : plain(description.to_s)
+            end if description || block
           end
+
+          dismiss_button if dismissible
         end
       end
 
       private
 
-      def base_class
-        "shrink-0 pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md p-4 pr-8 shadow-lg transition-all border opacity-0 transition-all data-[state=open]:opacity-100 data-[state=open]:-translate-y-full"
+      def dismiss_button
+        render_in_slot(
+          Button.new(
+            icon: :x,
+            variant: :ghost,
+            size: :sm,
+            aria: { label: "Dismiss notification" },
+            data: { action: "click->nk--toast#dismiss" }
+          ),
+          :dismiss
+        )
       end
 
-      def variant_class
-        case variant
-        when :default
-          "border-border bg-background text-foreground"
-        when :warning
-          "bg-yellow-50 dark:bg-yellow-950 text-yellow-900 dark:text-yellow-100 border-yellow-500/80 dark:border-yellow-400/50"
-        when :success
-          "bg-green-50 dark:bg-green-950 text-green-900 dark:text-green-100 border-green-500/80 dark:border-green-400/50"
-        when :error
-          "bg-red-50 dark:bg-red-950 text-red-900 dark:text-red-100 border-red-400/80 dark:border-red-400/50"
-        else
-          raise ArgumentError, "Invalid variant `#{variant}'"
+      def optional_text(name, value)
+        return if value.nil?
+        return value if value.is_a?(String) && value.present?
+
+        raise ArgumentError, "Toast item #{name} must be nil or a non-blank String"
+      end
+    end
+
+    class FlashMessages < Toast
+      VARIANT_BY_SEVERITY = {
+        "alert" => :error,
+        "error" => :error,
+        "warning" => :warning,
+        "success" => :success,
+        "info" => :info,
+        "notice" => :default
+      }.freeze
+
+      def initialize(flash:, **attributes)
+        unless flash.respond_to?(:each)
+          raise ArgumentError, "Toast::FlashMessages flash must be enumerable"
+        end
+
+        @flash = flash
+        super(**attributes)
+      end
+
+      attr_reader :flash
+
+      def view_template
+        super do |toast|
+          flash.each do |severity, message|
+            toast.item(
+              description: message.to_s,
+              variant: VARIANT_BY_SEVERITY.fetch(severity.to_s, :default)
+            )
+          end
         end
       end
     end
 
-    def initialize(**attrs)
+    def initialize(
+      duration: 5_000,
+      label: "Notifications",
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil
+    )
+      unless duration.is_a?(Integer) && duration.positive?
+        raise ArgumentError, "Toast duration must be a positive Integer"
+      end
+      unless label.is_a?(String) && label.present?
+        raise ArgumentError, "Toast label must be a non-blank String"
+      end
+
+      @duration = duration
+      @items = []
+
       super(
-        attrs,
-        role: "region",
-        tabindex: "-1",
-        aria: { label: "Notifications" },
-        class: "pointer-events-none"
+        component: :toast,
+        attributes: {
+          role: "region",
+          data: {
+            controller: "nk--toast",
+            action: "turbo:before-cache@document->nk--toast#teardown",
+            nk__toast_duration_value: duration
+          }
+        },
+        html:,
+        aria: aria.merge(label:, live: "polite"),
+        data:,
+        desperately_need_a_class:
       )
     end
 
-    def view_template
-      div(**attrs) do
-        ol(class: list_class, data: { nk__toast_target: "list" })
-      end
+    attr_reader :duration
 
-      flash_sink
+    def view_template(&block)
+      collect_items(&block)
 
-      template(data: { nk__toast_target: "template" }) do
-        item
+      section(**root_attributes) do
+        ol(**slot_attributes(:list)) do
+          @items.each do |entry|
+            render_in_slot(entry.component, :item, &entry.content)
+          end
+        end
       end
     end
 
-    def item(title: nil, description: nil, **attrs, &block)
-      render(Item.new(title:, description:, **attrs), &block)
-    end
-
-    def flash_sink
-      div(id: "nk--toast-sink", data: { nk__toast_target: "sink" }, hidden: true) do
-        render(FlashMessages.new(view_context.flash))
-      end
+    def item(
+      title: nil,
+      description: nil,
+      variant: :default,
+      dismissible: true,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil,
+      &content
+    )
+      ensure_collecting!
+      component = Item.new(
+        title:,
+        description:,
+        variant:,
+        dismissible:,
+        html:,
+        aria:,
+        data:,
+        desperately_need_a_class:
+      )
+      @items << ItemDeclaration.new(component:, content:)
+      nil
     end
 
     private
 
-    def list_class
-      "fixed z-[100] flex max-h-screen w-full p-5 bottom-0 right-0 flex-col h-0 md:max-w-[420px]"
+    def collect_items
+      return unless block_given?
+
+      @collecting = true
+      yield(self)
+    ensure
+      @collecting = false
+    end
+
+    def ensure_collecting!
+      return if @collecting
+
+      raise ArgumentError, "Toast items must be declared inside the render block"
     end
   end
 end
