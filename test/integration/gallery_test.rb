@@ -17,36 +17,40 @@ class GalleryTest < ActionDispatch::IntegrationTest
     assert_select "[data-gallery='introduction'] li", count: 4
   end
 
-  test "gallery renders flat alphabetical components and nested block and flow categories" do
+  test "gallery renders components grouped by subcategory and nested composition categories" do
     get gallery_root_path
 
     assert_response :success
     assert_select "[data-gallery='navigation-collection'][data-gallery-kind='component']" do |collections|
-      assert_select "[data-gallery='navigation-category']", count: 0
+      assert_select "details[data-gallery='navigation-category']", count: 6
+      assert_select "details[data-gallery-category='layout'] > summary", text: "Layout"
+      assert_select "details[data-gallery-category='navigation'] > summary", text: "Navigation"
+      assert_select "details[data-gallery-category='forms'] > summary", text: "Forms"
+      assert_select "details[data-gallery-category='data'] > summary", text: "Data display"
+      assert_select "details[data-gallery-category='feedback'] > summary", text: "Feedback"
+      assert_select "details[data-gallery-category='actions'] > summary", text: "Actions"
       assert_equal(
         Gallery::Catalog.entries(kind: :component).map(&:title),
         collections.first.css("ul a").map(&:text)
       )
     end
-    assert_select "[data-gallery='navigation-collection'][data-gallery-kind='block']" do
-      assert_select "details[data-gallery='navigation-category']", count: 3
-      assert_select "details[data-gallery-category='shells'] > summary", text: "Shells"
-      assert_select "details[data-gallery-category='navigation'] > summary", text: "Navigation"
-      assert_select "details[data-gallery-category='sections'] > summary", text: "Sections"
-    end
-    assert_select "[data-gallery='navigation-collection'][data-gallery-kind='flow']" do
+    assert_select "[data-gallery='navigation-collection'][data-gallery-kind='composition']" do
+      assert_select "[data-gallery='navigation-description']",
+        text: "Executable composition tests: the system exercised whole."
       assert_select "details[data-gallery='navigation-category']", count: 7
       assert_select "details[data-gallery-category='access-and-onboarding'] > summary", text: "Access & onboarding"
       assert_select "details[data-gallery-category='complete-applications'] > summary", text: "Complete applications"
     end
+    assert_select "[data-gallery='navigation'] a", text: "Blocks", count: 0
+    assert_select "[data-gallery='navigation'] a", text: "Flows", count: 0
   end
 
-  test "current flow category stays open and its entry remains current on every state" do
-    get gallery_flow_path(slug: "settings", state: "appearance")
+  test "current composition category stays open and its entry remains current on every state" do
+    get gallery_composition_path(slug: "settings", state: "appearance")
 
     assert_response :success
     assert_select "details[data-gallery-category='workspace-and-organization'][open]" do
-      assert_select "a[href='/gallery/flows/settings/profile'][aria-current='page']", text: "Workspace settings"
+      assert_select "a[href='/gallery/compositions/settings/profile'][aria-current='page']", text: "Workspace settings"
     end
     assert_select "[data-gallery='navigation'] a[aria-current='page']", count: 1
   end
@@ -104,14 +108,14 @@ class GalleryTest < ActionDispatch::IntegrationTest
       slug: "button"
     )
     assert_routing(
-      "/gallery/blocks/page-header",
-      controller: "gallery/blocks",
+      "/gallery/components/page-header",
+      controller: "gallery/components",
       action: "show",
       slug: "page-header"
     )
     assert_routing(
-      "/gallery/flows/dashboard/active",
-      controller: "gallery/flows",
+      "/gallery/compositions/dashboard/active",
+      controller: "gallery/compositions",
       action: "show",
       slug: "dashboard",
       state: "active"
@@ -120,18 +124,18 @@ class GalleryTest < ActionDispatch::IntegrationTest
     get gallery_component_path("button")
     assert_response :success
 
-    get gallery_block_path("page-header")
+    get gallery_component_path("page-header")
     assert_response :success
     assert_select "div[data-gallery-page='page-header']"
 
-    get gallery_flow_path(slug: "dashboard", state: "active")
+    get gallery_composition_path(slug: "dashboard", state: "active")
     assert_response :success
     assert_select "div[data-gallery-page='dashboard'][data-gallery-state='active']"
 
     get gallery_component_path("missing")
     assert_response :not_found
 
-    get gallery_block_path("missing")
+    get gallery_component_path("missing")
     assert_response :not_found
   end
 

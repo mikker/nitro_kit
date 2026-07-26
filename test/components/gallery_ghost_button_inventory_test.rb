@@ -6,13 +6,13 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
   GHOST_PATTERN = /:ghost\b/
   OWNED_FILES = [
     *ROOT.glob("test/dummy/app/components/gallery/components/**/*.rb"),
-    *ROOT.glob("test/dummy/app/components/gallery/blocks/**/*.rb"),
-    *ROOT.glob("test/dummy/app/components/gallery/flows/**/*.rb"),
+    *ROOT.glob("test/dummy/app/components/gallery/components/**/*.rb"),
+    *ROOT.glob("test/dummy/app/components/gallery/compositions/**/*.rb"),
     ROOT.join("test/dummy/app/components/gallery/customize_page.rb"),
     ROOT.join("test/dummy/app/components/gallery/code_sample.rb")
   ].freeze
   RETAINED_GHOSTS = {
-    "test/dummy/app/components/gallery/blocks/app_shell_page.rb" => [
+    "test/dummy/app/components/gallery/components/app_shell_page.rb" => [
       GhostUse.new(
         pattern: /group\.button\("Search", href: "#search", variant: :ghost, size: :sm, icon: :search\)/,
         reason: "topbar utility embedded in application-shell chrome"
@@ -60,19 +60,19 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
         reason: "icon-only copy control in the Tooltip showcase"
       )
     ],
-    "test/dummy/app/components/gallery/flows/hybrid_application_page.rb" => [
+    "test/dummy/app/components/gallery/compositions/hybrid_application_page.rb" => [
       GhostUse.new(
         pattern: /menu\.trigger\("Ada Lovelace", variant: :ghost, size: :sm\)/,
         reason: "compact account menu trigger embedded in application-shell topbar chrome"
       )
     ],
-    "test/dummy/app/components/gallery/flows/sidebar_application_page.rb" => [
+    "test/dummy/app/components/gallery/compositions/sidebar_application_page.rb" => [
       GhostUse.new(
         pattern: /menu\.trigger\("Account", variant: :ghost, size: :sm\)/,
         reason: "compact account menu trigger embedded in application-shell topbar chrome"
       )
     ],
-    "test/dummy/app/components/gallery/flows/topbar_application_page.rb" => [
+    "test/dummy/app/components/gallery/compositions/topbar_application_page.rb" => [
       GhostUse.new(
         pattern: /group\.button\("Search", href: "#search", variant: :ghost, size: :sm, icon: :search\)/,
         reason: "compact search control embedded in application-shell topbar chrome"

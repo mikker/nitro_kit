@@ -20,16 +20,16 @@ class PublicSystemMarketingFlowsTest < ActionDispatch::IntegrationTest
   }.freeze
 
   test "catalog appends exact public system marketing and checkout-result routes" do
-    public_slugs = Gallery::Catalog.entries(kind: :flow).map(&:slug).select { |slug| FLOW_STATES.key?(slug) }
+    public_slugs = Gallery::Catalog.entries(kind: :composition).map(&:slug).select { |slug| FLOW_STATES.key?(slug) }
     assert_equal FLOW_STATES.keys.sort, public_slugs.sort
 
     FLOW_STATES.each do |slug, states|
-      entry = Gallery::Catalog.fetch!(kind: :flow, slug:)
+      entry = Gallery::Catalog.fetch!(kind: :composition, slug:)
 
       assert_equal states, entry.states
       assert_equal %w[page-header container flex button-group button], entry.expected_roots
       states.each do |state|
-        assert_equal "/gallery/flows/#{slug}/#{state}", Gallery::Catalog.path_for(
+        assert_equal "/gallery/compositions/#{slug}/#{state}", Gallery::Catalog.path_for(
           entry,
           routes: Rails.application.routes.url_helpers,
           state:
@@ -37,7 +37,7 @@ class PublicSystemMarketingFlowsTest < ActionDispatch::IntegrationTest
       end
     end
 
-    get gallery_flow_path(slug: "system-status", state: "invented")
+    get gallery_composition_path(slug: "system-status", state: "invented")
     assert_response :not_found
   end
 
@@ -49,7 +49,7 @@ class PublicSystemMarketingFlowsTest < ActionDispatch::IntegrationTest
 
           assert_select "html[data-theme='#{theme}']"
           assert_select "div[data-gallery='page'][data-gallery-page='#{slug}'][data-gallery-state='#{state}']"
-          assert_select "[data-gallery-flow='#{slug}'][data-gallery-flow-state='#{state}']" do
+          assert_select "[data-gallery-composition='#{slug}'][data-gallery-composition-state='#{state}']" do
             assert_select "> [data-nk='container'] > [data-nk='flex'][data-dir='col'][data-gap='6']" do
               assert_select "> [data-nk='page-header']", count: 1
             end
@@ -181,7 +181,7 @@ class PublicSystemMarketingFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#contact_email[aria-invalid='true'][value='invalid']"
 
     get_flow("contact", "sending")
-    assert_select "[data-gallery-flow='contact'][aria-busy='true']"
+    assert_select "[data-gallery-composition='contact'][aria-busy='true']"
     assert_select "#gallery-contact-fieldset[disabled]"
     assert_select "#gallery-contact-submit[disabled]", text: "Sending inquiry…"
 
@@ -217,8 +217,8 @@ class PublicSystemMarketingFlowsTest < ActionDispatch::IntegrationTest
       assert_select "#gallery-checkout-result-page-actions [data-nk='button']", count: 2
     end
 
-    checkout_states = Gallery::Catalog.fetch!(kind: :flow, slug: "checkout").states
-    result_states = Gallery::Catalog.fetch!(kind: :flow, slug: "checkout-result").states
+    checkout_states = Gallery::Catalog.fetch!(kind: :composition, slug: "checkout").states
+    result_states = Gallery::Catalog.fetch!(kind: :composition, slug: "checkout-result").states
     assert_empty (result_states - %w[long mobile]) & (checkout_states - %w[long mobile])
 
     get_flow("checkout-result", "long")
@@ -233,16 +233,16 @@ class PublicSystemMarketingFlowsTest < ActionDispatch::IntegrationTest
   private
 
   def get_flow(slug, state, theme: nil)
-    get gallery_flow_path(slug:, state:, theme:)
+    get gallery_composition_path(slug:, state:, theme:)
     assert_response :success
   end
 
   def assert_labelled_controls
     document = Nokogiri::HTML(response.body)
     document.css(
-      "[data-gallery='flow-surface'] input:not([type='hidden'])[id], " \
-        "[data-gallery='flow-surface'] select[id], " \
-        "[data-gallery='flow-surface'] textarea[id]"
+      "[data-gallery='composition-surface'] input:not([type='hidden'])[id], " \
+        "[data-gallery='composition-surface'] select[id], " \
+        "[data-gallery='composition-surface'] textarea[id]"
     ).each do |control|
       assert document.at_css("label[for='#{control['id']}']"), "missing label for #{control['id']}"
     end

@@ -48,7 +48,7 @@ class GalleryResponsivePreviewTest < ActionDispatch::IntegrationTest
 
   test "flow preview keeps its state while unknown entries states and examples are not found" do
     get gallery_preview_path(
-      kind: :flow,
+      kind: :composition,
       slug: "settings",
       example: "settings-appearance",
       state: "appearance"
@@ -56,11 +56,11 @@ class GalleryResponsivePreviewTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "[data-gallery-example='settings-appearance'][data-gallery-responsive-preview='true']"
-    assert_select "[data-gallery-flow-state='appearance']"
+    assert_select "[data-gallery-composition-state='appearance']"
 
     get gallery_preview_path(kind: :component, slug: "missing", example: "anything")
     assert_response :not_found
-    get gallery_preview_path(kind: :flow, slug: "settings", example: "settings-appearance", state: "missing")
+    get gallery_preview_path(kind: :composition, slug: "settings", example: "settings-appearance", state: "missing")
     assert_response :not_found
     get gallery_preview_path(kind: :component, slug: "flex", example: "missing")
     assert_response :not_found

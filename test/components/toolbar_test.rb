@@ -129,9 +129,9 @@ class ToolbarTest < ActiveSupport::TestCase
   end
 
   test "is reachable through the gallery catalog" do
-    entry = Gallery::Catalog.fetch!(kind: :block, slug: "toolbar")
+    entry = Gallery::Catalog.fetch!(kind: :component, slug: "toolbar")
 
-    assert_equal Gallery::Blocks::ToolbarPage, entry.page
+    assert_equal Gallery::Components::ToolbarPage, entry.page
     assert_includes entry.expected_roots, "toolbar"
   end
 

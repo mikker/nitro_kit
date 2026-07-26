@@ -244,12 +244,12 @@ component and block catalog across realistic Rails SaaS flows, narrow and wide
 layouts, light, dark, and system themes, and success, empty, error, loading,
 and destructive states. The gallery also includes a
 [customization wizard](https://gallery.nitrokit.dev/gallery/customize) and
-complete [sidebar](https://gallery.nitrokit.dev/gallery/flows/application-sidebar),
-[topbar](https://gallery.nitrokit.dev/gallery/flows/application-topbar), and
-[hybrid](https://gallery.nitrokit.dev/gallery/flows/application-hybrid)
+complete [sidebar](https://gallery.nitrokit.dev/gallery/compositions/application-sidebar),
+[topbar](https://gallery.nitrokit.dev/gallery/compositions/application-topbar), and
+[hybrid](https://gallery.nitrokit.dev/gallery/compositions/application-hybrid)
 applications. Every example pairs Preview and Code tabs; the highlighted,
 copyable Ruby is extracted from the executable body of its Phlex block or
-concrete flow method so examples cannot silently drift from their source.
+concrete composition method so examples cannot silently drift from their source.
 
 Every component and block page is also self-contained for a coding agent that
 fetches only that page. Below the examples it renders that component's row from

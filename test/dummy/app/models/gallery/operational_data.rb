@@ -168,7 +168,7 @@ module Gallery
         id: "release_2_0_0_beta_3",
         version: "2.0.0-beta.3",
         released_on: Date.new(2026, 7, 13),
-        title: "Typed application blocks",
+        title: "Typed application sections",
         summary: "Adds explicit data, form, navigation, and safety compositions for Rails applications.",
         changes: [
           "Added DataSection, FormSection, DangerZone, and EmptyState.",

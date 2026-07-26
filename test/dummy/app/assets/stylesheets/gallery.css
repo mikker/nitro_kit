@@ -127,6 +127,13 @@
     text-transform: uppercase;
   }
 
+  :where([data-gallery="navigation-description"]) {
+    margin: -0.2rem 0 0;
+    color: color-mix(in srgb, currentColor 52%, transparent);
+    font-size: 0.72rem;
+    line-height: 1.35;
+  }
+
   :where([data-gallery="navigation-category"] > ul) {
     margin-block-start: 0.45rem;
     padding-inline-start: 1rem;
@@ -888,67 +895,67 @@
     min-width: 0;
   }
 
-  :where([data-gallery="flow-header"]) {
+  :where([data-gallery="composition-header"]) {
     display: grid;
     gap: 0.75rem;
     max-width: 54rem;
   }
 
-  :where([data-gallery="flow-header"] > *) {
+  :where([data-gallery="composition-header"] > *) {
     margin: 0;
   }
 
-  :where([data-gallery="flow-header"] h1) {
+  :where([data-gallery="composition-header"] h1) {
     font-size: clamp(2rem, 5vw, 3.5rem);
     letter-spacing: -0.04em;
     line-height: 1;
     text-wrap: balance;
   }
 
-  :where([data-gallery="flow-header"] > p:not([data-gallery="eyebrow"])) {
+  :where([data-gallery="composition-header"] > p:not([data-gallery="eyebrow"])) {
     color: color-mix(in srgb, currentColor 72%, transparent);
     line-height: 1.6;
     text-wrap: pretty;
   }
 
-  :where([data-gallery="flow-states"]) {
+  :where([data-gallery="composition-states"]) {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem 0.9rem;
     margin-block-start: 0.5rem;
   }
 
-  :where([data-gallery="flow-states"] a) {
+  :where([data-gallery="composition-states"] a) {
     color: inherit;
     font-size: 0.85rem;
     text-underline-offset: 0.2em;
   }
 
-  :where([data-gallery="flow-states"] a[aria-current="page"]) {
+  :where([data-gallery="composition-states"] a[aria-current="page"]) {
     font-weight: 700;
     text-decoration: none;
   }
 
-  :where([data-gallery="flow-surface"][data-gallery-mobile="true"]) {
+  :where([data-gallery="composition-surface"][data-gallery-mobile="true"]) {
     width: min(100%, 20rem);
   }
 
-  :where([data-gallery="flow-surface"] turbo-frame) {
+  :where([data-gallery="composition-surface"] turbo-frame) {
     display: block;
   }
 
-  :where([data-gallery="flow-surface"] form) {
+  :where([data-gallery="composition-surface"] form) {
     display: grid;
     gap: 1.25rem;
   }
 
-  :where([data-gallery="flow-surface"] form > a) {
+  :where([data-gallery="composition-surface"] form > a) {
     color: inherit;
     font-size: 0.875rem;
     text-underline-offset: 0.2em;
   }
 
-  :where([data-gallery="flow-progress"]) {
+  :where([data-gallery="composition-progress"]) {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.5rem;
@@ -960,27 +967,27 @@
   }
 
   :where(
-    [data-gallery="flow-progress"] li[aria-current="step"],
-    [data-gallery="flow-progress"] li[data-complete="true"]
+    [data-gallery="composition-progress"] li[aria-current="step"],
+    [data-gallery="composition-progress"] li[data-complete="true"]
   ) {
     color: inherit;
     font-weight: 700;
   }
 
-  :where([data-gallery="flow-summary"]) {
+  :where([data-gallery="composition-summary"]) {
     display: grid;
     grid-template-columns: minmax(7rem, auto) minmax(0, 1fr);
     gap: 0.6rem 1rem;
     margin: 1rem 0;
   }
 
-  :where([data-gallery="flow-summary"] dt) {
+  :where([data-gallery="composition-summary"] dt) {
     color: color-mix(in srgb, currentColor 62%, transparent);
     font-size: 0.875rem;
     font-weight: 650;
   }
 
-  :where([data-gallery="flow-summary"] dd) {
+  :where([data-gallery="composition-summary"] dd) {
     min-width: 0;
     margin: 0;
     overflow-wrap: anywhere;
@@ -1036,16 +1043,16 @@
       min-inline-size: 0;
     }
 
-    :where([data-gallery="flow-progress"]) {
+    :where([data-gallery="composition-progress"]) {
       grid-template-columns: minmax(0, 1fr);
     }
 
-    :where([data-gallery="flow-summary"]) {
+    :where([data-gallery="composition-summary"]) {
       grid-template-columns: minmax(0, 1fr);
       gap: 0.2rem;
     }
 
-    :where([data-gallery="flow-summary"] dd + dt) {
+    :where([data-gallery="composition-summary"] dd + dt) {
       margin-block-start: 0.6rem;
     }
   }

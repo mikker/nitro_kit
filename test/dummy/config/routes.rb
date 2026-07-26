@@ -19,9 +19,8 @@ Rails.application.routes.draw do
     get("customize" => "customizations#show", as: :customize)
     get("previews/:kind/:slug/:example" => "previews#show", as: :preview)
     resources(:components, only: :show, param: :slug)
-    resources(:blocks, only: :show, param: :slug)
     resources(:upload_submissions, only: :create)
-    get("flows/:slug(/:state)" => "flows#show", :as => :flow)
+    get("compositions/:slug(/:state)" => "compositions#show", :as => :composition)
   end
 
   root(to: "gallery/home#show")

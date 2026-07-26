@@ -11,16 +11,16 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
   }.freeze
 
   test "catalog exposes stable deterministic routes for every team and credential state" do
-    operation_slugs = Gallery::Catalog.entries(kind: :flow).map(&:slug).select { |slug| FLOW_STATES.key?(slug) }
+    operation_slugs = Gallery::Catalog.entries(kind: :composition).map(&:slug).select { |slug| FLOW_STATES.key?(slug) }
     assert_equal FLOW_STATES.keys, operation_slugs
 
     FLOW_STATES.each do |slug, states|
-      entry = Gallery::Catalog.fetch!(kind: :flow, slug:)
+      entry = Gallery::Catalog.fetch!(kind: :composition, slug:)
       assert_equal states, entry.states
       assert_equal %w[container flex button], entry.expected_roots
 
       states.each do |state|
-        assert_equal "/gallery/flows/#{slug}/#{state}", Gallery::Catalog.path_for(
+        assert_equal "/gallery/compositions/#{slug}/#{state}", Gallery::Catalog.path_for(
           entry,
           routes: Rails.application.routes.url_helpers,
           state:
@@ -28,9 +28,9 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
       end
     end
 
-    get gallery_flow_path(slug: "team-management", state: "invented")
+    get gallery_composition_path(slug: "team-management", state: "invented")
     assert_response :not_found
-    get gallery_flow_path(slug: "api-credentials", state: "invented")
+    get gallery_composition_path(slug: "api-credentials", state: "invented")
     assert_response :not_found
   end
 
@@ -40,11 +40,11 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
         get_flow(slug, state)
 
         assert_select "div[data-gallery='page'][data-gallery-page='#{slug}'][data-gallery-state='#{state}']"
-        assert_select "[data-gallery='flow-states'] a[aria-current='page']", count: 1
+        assert_select "[data-gallery='composition-states'] a[aria-current='page']", count: 1
         container_id = slug == "team-management" ? "gallery-team-container" : "gallery-api-credentials-container"
         stack_id = slug == "team-management" ? "gallery-team-stack" : "gallery-api-credentials-stack"
         frame_id = slug == "team-management" ? "gallery-team-management-frame" : "gallery-api-credentials-frame"
-        assert_select "[data-gallery='flow-surface']" do
+        assert_select "[data-gallery='composition-surface']" do
           assert_select "##{container_id}[data-nk='container'][data-size='xl']" do
             assert_select "##{stack_id}[data-nk='flex'][data-dir='col'][data-gap='6'][data-align='stretch']" do
               assert_select "> turbo-frame##{frame_id}", count: 1
@@ -52,15 +52,15 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
           end
         end
         assert_select(
-          "[data-gallery='flow-surface'] [data-nk='card'][id], " \
-            "[data-gallery='flow-surface'] [data-nk='form-section'][id], " \
-            "[data-gallery='flow-surface'] [data-nk='data-section'][id], " \
-            "[data-gallery='flow-surface'] [data-nk='danger-zone'][id], " \
-            "[data-gallery='flow-surface'] turbo-frame > [data-nk='flex'][data-dir='col'][id]",
+          "[data-gallery='composition-surface'] [data-nk='card'][id], " \
+            "[data-gallery='composition-surface'] [data-nk='form-section'][id], " \
+            "[data-gallery='composition-surface'] [data-nk='data-section'][id], " \
+            "[data-gallery='composition-surface'] [data-nk='danger-zone'][id], " \
+            "[data-gallery='composition-surface'] turbo-frame > [data-nk='flex'][data-dir='col'][id]",
           minimum: 1
         )
-        assert_select "[data-gallery='flow-surface'] [data-nk='button']", minimum: 1
-        assert_select "div[data-gallery='page'] > [data-gallery='flow-header'] h1", count: 1
+        assert_select "[data-gallery='composition-surface'] [data-nk='button']", minimum: 1
+        assert_select "div[data-gallery='page'] > [data-gallery='composition-header'] h1", count: 1
         assert_select "[data-gallery='section'] > [data-gallery='section-header'] h2", count: 1
         assert_select "[data-gallery='example'] > [data-gallery='example-header'] h3", count: 1
         assert_select "[data-gallery='example-canvas'] [class]", count: 0
@@ -69,9 +69,9 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
 
         document = Nokogiri::HTML(response.body)
         document.css(
-          "[data-gallery='flow-surface'] input:not([type='hidden'])[id], " \
-            "[data-gallery='flow-surface'] select[id], " \
-            "[data-gallery='flow-surface'] textarea[id]"
+          "[data-gallery='composition-surface'] input:not([type='hidden'])[id], " \
+            "[data-gallery='composition-surface'] select[id], " \
+            "[data-gallery='composition-surface'] textarea[id]"
         ).each do |control|
           assert document.at_css("label[for='#{control['id']}']"), "missing label for #{control['id']}"
         end
@@ -114,13 +114,13 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-team-empty-invite[href$='/team-management/invite']"
 
     get_flow("team-management", "dense")
-    assert_select "[data-gallery-flow='team-management']"
+    assert_select "[data-gallery-composition='team-management']"
     assert_select "#gallery-team-members-table caption", text: "9 workspace members"
     assert_select "#gallery-team-members-table tbody tr", count: 9
     assert_select "#gallery-team-members-table", text: /hedy\.lamarr@example\.test/
 
     get_flow("team-management", "mobile")
-    assert_select "[data-gallery-flow='team-management'][data-gallery-mobile='true']"
+    assert_select "[data-gallery-composition='team-management'][data-gallery-mobile='true']"
     assert_select "#gallery-team-members-table tbody tr", count: 3
   end
 
@@ -200,7 +200,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-api-credentials-empty-create[href$='/api-credentials/create']"
 
     get_flow("api-credentials", "long")
-    assert_select "[data-gallery-flow='api-credentials']"
+    assert_select "[data-gallery-composition='api-credentials']"
     assert_select "#gallery-api-credentials-table tbody tr", count: 1
     assert_select "#gallery-api-credentials-table", text: /Finance reconciliation and revenue recognition export/
 
@@ -209,7 +209,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-api-credentials-table tbody tr", count: 6
 
     get_flow("api-credentials", "mobile")
-    assert_select "[data-gallery-flow='api-credentials'][data-gallery-mobile='true']"
+    assert_select "[data-gallery-composition='api-credentials'][data-gallery-mobile='true']"
     assert_select "#gallery-api-credentials-table tbody tr", count: 2
   end
 
@@ -267,7 +267,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
   private
 
   def get_flow(slug, state)
-    get gallery_flow_path(slug:, state:)
+    get gallery_composition_path(slug:, state:)
     assert_response :success
   end
 end

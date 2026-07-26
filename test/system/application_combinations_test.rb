@@ -27,7 +27,7 @@ class ApplicationCombinationsTest < ApplicationSystemTestCase
   test "complete applications keep their desktop layout and expose an accessible mobile drawer" do
     APPLICATIONS.each do |slug, contract|
       resize_viewport(width: 1200, height: 900)
-      path = gallery_flow_path(slug:)
+      path = gallery_composition_path(slug:)
       visit path
 
       layout = contract.fetch(:layout)
@@ -75,7 +75,7 @@ class ApplicationCombinationsTest < ApplicationSystemTestCase
 
   test "every complete application exposes the exact executable AppShell source" do
     APPLICATIONS.each do |slug, contract|
-      path = gallery_flow_path(slug:)
+      path = gallery_composition_path(slug:)
       visit path
 
       layout = contract.fetch(:layout)
@@ -102,7 +102,7 @@ class ApplicationCombinationsTest < ApplicationSystemTestCase
   test "application examples synchronize appearance and accept a native multipart drop" do
     visit gallery_root_path
     execute_script("localStorage.removeItem(arguments[0])", STORAGE_KEY)
-    hybrid_path = gallery_flow_path(slug: "application-hybrid")
+    hybrid_path = gallery_composition_path(slug: "application-hybrid")
     visit hybrid_path
 
     assert_selector "#gallery-hybrid-application-populated [data-nk='appearance-picker'][data-state='system']", count: 2
@@ -111,7 +111,7 @@ class ApplicationCombinationsTest < ApplicationSystemTestCase
     assert_selector "#gallery-hybrid-application-populated [data-nk='appearance-picker'][data-state='dark']", count: 2
     assert_no_severe_console_errors(context: hybrid_path)
 
-    sidebar_path = gallery_flow_path(slug: "application-sidebar")
+    sidebar_path = gallery_composition_path(slug: "application-sidebar")
     visit sidebar_path
     attach_file("gallery-sidebar-application-dropzone-input", file_fixture("profile.txt"))
 
@@ -225,7 +225,7 @@ class ApplicationCombinationsTest < ApplicationSystemTestCase
     geometry = evaluate_script(<<~JAVASCRIPT)
       (() => {
         const navigation = document.querySelector('[data-gallery="navigation"]');
-        const heading = document.querySelector('[data-gallery="flow-header"] h1');
+        const heading = document.querySelector('[data-gallery="composition-header"] h1');
 
         return {
           navigationHeight: navigation.clientHeight,

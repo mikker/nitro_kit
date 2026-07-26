@@ -75,12 +75,9 @@ module Gallery
         }
       ) do
         h2 { collection.title }
+        p(data: { gallery: "navigation-description" }) { collection.description }
 
-        if collection.kind == :component
-          navigation_entries(collection.entries)
-        else
-          collection.categories.each { |category| navigation_category(category) }
-        end
+        collection.categories.each { |category| navigation_category(category) }
       end
     end
 

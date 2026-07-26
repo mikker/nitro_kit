@@ -11,15 +11,15 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
   }.freeze
 
   test "catalog exposes stable deterministic routes for every auth and onboarding state" do
-    auth_slugs = Gallery::Catalog.entries(kind: :flow).map(&:slug).select { |slug| FLOW_STATES.key?(slug) }
+    auth_slugs = Gallery::Catalog.entries(kind: :composition).map(&:slug).select { |slug| FLOW_STATES.key?(slug) }
     assert_equal FLOW_STATES.keys, auth_slugs
 
     FLOW_STATES.each do |slug, states|
-      entry = Gallery::Catalog.fetch!(kind: :flow, slug:)
+      entry = Gallery::Catalog.fetch!(kind: :composition, slug:)
       assert_equal states, entry.states
 
       states.each do |state|
-        assert_equal "/gallery/flows/#{slug}/#{state}", Gallery::Catalog.path_for(
+        assert_equal "/gallery/compositions/#{slug}/#{state}", Gallery::Catalog.path_for(
           entry,
           routes: Rails.application.routes.url_helpers,
           state:
@@ -27,38 +27,38 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
       end
     end
 
-    get gallery_flow_path(slug: "sign-in", state: "invented")
+    get gallery_composition_path(slug: "sign-in", state: "invented")
     assert_response :not_found
   end
 
   test "every state is direct class-free Phlex with one current state link and labelled native controls" do
     FLOW_STATES.each do |slug, states|
       states.each do |state|
-        get gallery_flow_path(slug:, state:)
+        get gallery_composition_path(slug:, state:)
 
         assert_response :success
         assert_select "div[data-gallery='page'][data-gallery-page='#{slug}'][data-gallery-state='#{state}']"
-        assert_select "[data-gallery='flow-states'] a[aria-current='page']", count: 1
+        assert_select "[data-gallery='composition-states'] a[aria-current='page']", count: 1
         assert_select "[data-gallery='example'][data-gallery-mode='full-width'] [data-gallery='example-canvas']", count: 1
-        assert_select "main[data-nk='auth-shell'][data-gallery='flow-surface']" \
-          "[data-gallery-flow='#{slug}']", count: 1 do
+        assert_select "main[data-nk='auth-shell'][data-gallery='composition-surface']" \
+          "[data-gallery-composition='#{slug}']", count: 1 do
           assert_select "> [data-nk='container'][data-size='md'] > " \
             "[data-nk='flex'][data-dir='col'][data-gap='6'][data-align='stretch'] > turbo-frame", count: 1
           assert_select "turbo-frame > [data-nk='card'][id]", count: 1
         end
-        assert_select "[data-gallery='flow-surface'] [data-nk='card'][id]", minimum: 1
-        assert_select "div[data-gallery='page'] > [data-gallery='flow-header'] h1", count: 1
+        assert_select "[data-gallery='composition-surface'] [data-nk='card'][id]", minimum: 1
+        assert_select "div[data-gallery='page'] > [data-gallery='composition-header'] h1", count: 1
         assert_select "[data-gallery='section'] > [data-gallery='section-header'] h2", count: 1
         assert_select "[data-gallery='example'] > [data-gallery='example-header'] h3", count: 1
-        assert_select "[data-gallery='flow-surface'] h4[data-slot='card-title']", count: 1
+        assert_select "[data-gallery='composition-surface'] h4[data-slot='card-title']", count: 1
         assert_select "[data-gallery='example-canvas'] [class]", count: 0
         assert_select "[data-gallery='example-canvas'] [style]", count: 0
         assert_select "[data-gallery='example-canvas'] [data-nk-escape]", count: 0
 
         document = Nokogiri::HTML(response.body)
-        document.css("[data-gallery='flow-surface'] input:not([type='hidden'])[id], " \
-          "[data-gallery='flow-surface'] select[id], " \
-          "[data-gallery='flow-surface'] textarea[id]").each do |control|
+        document.css("[data-gallery='composition-surface'] input:not([type='hidden'])[id], " \
+          "[data-gallery='composition-surface'] select[id], " \
+          "[data-gallery='composition-surface'] textarea[id]").each do |control|
           assert document.at_css("label[for='#{control['id']}']"), "missing label for #{control['id']}"
         end
       end
@@ -82,7 +82,7 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-sign-in-continue[href='#workspace']", text: "Continue to workspace"
 
     get_flow("sign-in", "mobile")
-    assert_select "[data-gallery-flow='sign-in'][data-gallery-mobile='true'] input[type='email'][value*='+analytical-engines']"
+    assert_select "[data-gallery-composition='sign-in'][data-gallery-mobile='true'] input[type='email'][value*='+analytical-engines']"
   end
 
   test "password reset preserves hidden tokens new-password semantics and recoverable expiration" do
@@ -148,7 +148,7 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
     end
 
     get_flow("invitation-acceptance", "mobile")
-    assert_select "[data-gallery-flow='invitation-acceptance'][data-gallery-mobile='true']"
+    assert_select "[data-gallery-composition='invitation-acceptance'][data-gallery-mobile='true']"
   end
 
   test "account creation covers consent validation privacy loading and verification handoff" do
@@ -169,13 +169,13 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-account-creation-verify[href$='/email-verification/pending']"
 
     get_flow("account-creation", "mobile")
-    assert_select "[data-gallery-flow='account-creation'][data-gallery-mobile='true']"
+    assert_select "[data-gallery-composition='account-creation'][data-gallery-mobile='true']"
   end
 
   test "onboarding covers every step validation native choices loading completion and resume" do
     get_flow("onboarding", "workspace")
     assert_select "#gallery-onboarding-progress", text: "Step 1 of 4"
-    assert_select "[data-gallery='flow-progress'] li[aria-current='step']", text: /Name your workspace/
+    assert_select "[data-gallery='composition-progress'] li[aria-current='step']", text: /Name your workspace/
     assert_select "#gallery-onboarding-workspace-form > [data-nk='field-group']", count: 1
     assert_select "#gallery-onboarding-workspace-form select[name*='[team_size]']"
 
@@ -195,7 +195,7 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
     end
 
     get_flow("onboarding", "review")
-    assert_select "[data-gallery='flow-summary'] dt", count: 4
+    assert_select "[data-gallery='composition-summary'] dt", count: 4
     assert_select "#gallery-onboarding-review-form > [data-nk='field-group']", count: 1
     assert_select "#gallery-onboarding-review-form input[type='checkbox'][required][checked]"
 
@@ -212,13 +212,13 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-onboarding-resume-setup[href$='/onboarding/integrations']"
 
     get_flow("onboarding", "mobile")
-    assert_select "[data-gallery-flow='onboarding'][data-gallery-mobile='true'] textarea", text: /katherine@example\.test/
+    assert_select "[data-gallery-composition='onboarding'][data-gallery-mobile='true'] textarea", text: /katherine@example\.test/
   end
 
   private
 
   def get_flow(slug, state)
-    get gallery_flow_path(slug:, state:)
+    get gallery_composition_path(slug:, state:)
     assert_response :success
   end
 end

@@ -10,16 +10,16 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
   }.freeze
 
   test "catalog appends every operational flow with exact routes and common block roots" do
-    operational_slugs = Gallery::Catalog.entries(kind: :flow).map(&:slug).select { |slug| FLOW_STATES.key?(slug) }
+    operational_slugs = Gallery::Catalog.entries(kind: :composition).map(&:slug).select { |slug| FLOW_STATES.key?(slug) }
     assert_equal FLOW_STATES.keys, operational_slugs
 
     FLOW_STATES.each do |slug, states|
-      entry = Gallery::Catalog.fetch!(kind: :flow, slug:)
+      entry = Gallery::Catalog.fetch!(kind: :composition, slug:)
 
       assert_equal states, entry.states
       assert_equal %w[page-header container flex button-group button], entry.expected_roots
       states.each do |state|
-        assert_equal "/gallery/flows/#{slug}/#{state}", Gallery::Catalog.path_for(
+        assert_equal "/gallery/compositions/#{slug}/#{state}", Gallery::Catalog.path_for(
           entry,
           routes: Rails.application.routes.url_helpers,
           state:
@@ -34,18 +34,18 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
         get_flow(slug, state)
 
         assert_select "div[data-gallery='page'][data-gallery-page='#{slug}'][data-gallery-state='#{state}']"
-        assert_select "##{surface_id(slug)}[data-gallery='flow-surface'][data-gallery-flow='#{slug}']" \
-                      "[data-gallery-flow-state='#{state}']"
+        assert_select "##{surface_id(slug)}[data-gallery='composition-surface'][data-gallery-composition='#{slug}']" \
+                      "[data-gallery-composition-state='#{state}']"
         if slug == "activity-audit"
           assert_select "div[data-gallery='page'] > header nav [data-nk='button'][aria-current='page']", count: 1
         else
-          assert_select "[data-gallery='flow-states'] > a[aria-current='page']", count: 1
+          assert_select "[data-gallery='composition-states'] > a[aria-current='page']", count: 1
         end
         assert_select "[data-gallery='example'][data-gallery-mode='full-width']", count: 1
-        assert_select "[data-gallery='flow-surface'] [data-nk='container'] > [data-nk='flex'][data-dir='col']", count: 1
-        assert_select "[data-gallery='flow-surface'] [data-nk='page-header']", count: 1
-        assert_select "[data-gallery='flow-surface'] [data-nk='button-group']", minimum: 1
-        assert_select "[data-gallery='flow-surface'] [data-nk='button']", minimum: 1
+        assert_select "[data-gallery='composition-surface'] [data-nk='container'] > [data-nk='flex'][data-dir='col']", count: 1
+        assert_select "[data-gallery='composition-surface'] [data-nk='page-header']", count: 1
+        assert_select "[data-gallery='composition-surface'] [data-nk='button-group']", minimum: 1
+        assert_select "[data-gallery='composition-surface'] [data-nk='button']", minimum: 1
         assert_select "[data-gallery='example-canvas'] [class]", count: 0
         assert_select "[data-gallery='example-canvas'] [style]", count: 0
         assert_select "[data-gallery='example-canvas'] [data-nk-escape]", count: 0
@@ -185,7 +185,7 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
 
   test "changelog covers latest archive empty long and mobile release records" do
     get_flow("changelog", "latest")
-    assert_select "#gallery-changelog-latest-card", text: /2\.0\.0-beta\.3.*Typed application blocks/m
+    assert_select "#gallery-changelog-latest-card", text: /2\.0\.0-beta\.3.*Typed application sections/m
     assert_select "#gallery-changelog-latest-card li", count: 3
     assert_select "#gallery-changelog-table tbody tr", count: Gallery::OperationalData.changelog_entries.size
 
@@ -250,7 +250,7 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
   private
 
   def get_flow(slug, state, **query)
-    get gallery_flow_path(slug:, state:, **query)
+    get gallery_composition_path(slug:, state:, **query)
     assert_response :success
   end
 
@@ -261,9 +261,9 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
   def assert_labelled_controls
     document = Nokogiri::HTML(response.body)
     document.css(
-      "[data-gallery='flow-surface'] input:not([type='hidden'])[id], " \
-        "[data-gallery='flow-surface'] select[id], " \
-        "[data-gallery='flow-surface'] textarea[id]"
+      "[data-gallery='composition-surface'] input:not([type='hidden'])[id], " \
+        "[data-gallery='composition-surface'] select[id], " \
+        "[data-gallery='composition-surface'] textarea[id]"
     ).each do |control|
       assert document.at_css("label[for='#{control['id']}']"), "missing label for #{control['id']}"
     end

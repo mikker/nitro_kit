@@ -31,7 +31,7 @@ The installed component source is the final authority for constructor and compou
 
 ## Select the highest-level matching component
 
-Prefer a block that owns the whole region, then compose smaller components inside it.
+Prefer the component that owns the whole region, then compose smaller components inside it.
 
 | Product need                     | Begin with                                                |
 | -------------------------------- | --------------------------------------------------------- |

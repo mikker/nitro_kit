@@ -7,18 +7,18 @@ class GalleryAuthShellTest < ActionDispatch::IntegrationTest
   }.freeze
 
   test "catalog exposes the evidence-backed auth shell without speculative shells" do
-    entry = Gallery::Catalog.fetch!(kind: :block, slug: "auth-shell")
+    entry = Gallery::Catalog.fetch!(kind: :component, slug: "auth-shell")
 
-    assert_equal "Shells", Gallery::Catalog.category_for(entry).title
-    assert_equal "/gallery/blocks/auth-shell", Gallery::Catalog.path_for(entry, routes: Rails.application.routes.url_helpers)
-    block_slugs = Gallery::Catalog.entries(kind: :block).map(&:slug)
-    assert_includes block_slugs, "app-shell"
-    assert_empty block_slugs & %w[marketing-shell authentication-panel]
+    assert_equal "Layout", Gallery::Catalog.category_for(entry).title
+    assert_equal "/gallery/components/auth-shell", Gallery::Catalog.path_for(entry, routes: Rails.application.routes.url_helpers)
+    shell_slugs = Gallery::Catalog.entries(kind: :component).map(&:slug)
+    assert_includes shell_slugs, "app-shell"
+    assert_empty shell_slugs & %w[marketing-shell authentication-panel]
   end
 
   test "renders every auth shell composition in light and dark themes" do
     %w[light dark].each do |theme|
-      get gallery_block_path("auth-shell", theme:)
+      get gallery_component_path("auth-shell", theme:)
 
       assert_response :success
       assert_select "html[data-theme='#{theme}']"
@@ -31,7 +31,7 @@ class GalleryAuthShellTest < ActionDispatch::IntegrationTest
   end
 
   test "every example preserves the fixed container and stack composition" do
-    get gallery_block_path("auth-shell")
+    get gallery_component_path("auth-shell")
 
     assert_response :success
     assert_select "main[data-nk='auth-shell']", count: 7 do |shells|
@@ -52,7 +52,7 @@ class GalleryAuthShellTest < ActionDispatch::IntegrationTest
   end
 
   test "examples prove caller ownership across forms branding Turbo state and pressure" do
-    get gallery_block_path("auth-shell")
+    get gallery_component_path("auth-shell")
 
     assert_response :success
     assert_select "#gallery-auth-shell-credentials-card[data-nk='card']"
@@ -71,16 +71,16 @@ class GalleryAuthShellTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-auth-shell-validation-form [data-nk='field'][data-state='invalid']", minimum: 2
     assert_select "#gallery-auth-shell-success-alert[data-variant='success']"
     assert_select "#gallery-auth-shell-long-copy-card", text: /katherine\.johnson\+analytical-engines/
-    assert_select "#gallery-auth-shell-mobile[data-gallery='flow-surface'][data-gallery-mobile='true']"
+    assert_select "#gallery-auth-shell-mobile[data-gallery='composition-surface'][data-gallery-mobile='true']"
   end
 
   test "sign in and password recovery use the shell without surrendering Turbo lifecycle" do
     AUTH_FLOW_STATES.each do |slug, states|
       states.each do |state|
-        get gallery_flow_path(slug:, state:)
+        get gallery_composition_path(slug:, state:)
 
         assert_response :success
-        assert_select "main[data-nk='auth-shell'][data-gallery='flow-surface']", count: 1 do
+        assert_select "main[data-nk='auth-shell'][data-gallery='composition-surface']", count: 1 do
           assert_select "> [data-nk='container'][data-size='md'] > [data-nk='flex'][data-dir='col'][data-gap='6'][data-align='stretch'] > turbo-frame", count: 1
           assert_select "turbo-frame > [data-nk='card'][id]", count: 1
         end

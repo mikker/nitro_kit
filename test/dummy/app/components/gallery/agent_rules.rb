@@ -1,6 +1,6 @@
 module Gallery
   # The system rules every Nitro Kit component obeys, rendered identically on
-  # every component and block page. This is the only copy of the text, and the
+  # every component page. This is the only copy of the text, and the
   # reserved attribute lists are read from NitroKit::Component at render time so
   # they cannot drift from the implementation.
   class AgentRules < Primitive

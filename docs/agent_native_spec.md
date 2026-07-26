@@ -319,7 +319,7 @@ Every addition receives direct Ruby contract tests, invalid-vocabulary tests, ac
 
 `Dropzone` associates its native input, description, errors, and live status; exposes native progress semantics; supports keyboard selection and `direct_upload: false`; and keeps ordinary form submission usable without JavaScript. `ProgressiveImage` exposes exactly one accessible image while its placeholder is decorative; its fallback communicates an actual empty or error state without duplicating alt text. `AppShell` supplies a skip link and one identifiable main landmark, labels navigation, gives the narrow drawer modal/inert semantics, and preserves a logical focus order.
 
-The gallery includes, at minimum, sidebar, topbar, and hybrid application flows; appearance persistence and simulated system changes; every former Pro state; long and missing content; upload success, error, cancellation, and removal; progressive-image empty, loading, loaded, and failed states; and sortable-table gallery empty and populated results. Every example uses `Gallery::Example` Preview and Code tabs whose source is extracted from the executable Phlex block or concrete flow method. Combination pages deliberately mix shells, forms, tables, uploads, images, overlays, and all three appearances.
+The gallery includes, at minimum, sidebar, topbar, and hybrid application compositions; appearance persistence and simulated system changes; every former Pro state; long and missing content; upload success, error, cancellation, and removal; progressive-image empty, loading, loaded, and failed states; and sortable-table gallery empty and populated results. Every example uses `Gallery::Example` Preview and Code tabs whose source is extracted from the executable Phlex block or concrete composition method. Combination pages deliberately mix shells, forms, tables, uploads, images, overlays, and all three appearances.
 
 Public documentation includes `docs/customization.md` plus aligned README and Rails-integration sections. It catalogs supported tokens, stylesheet load order, global and scoped overrides, light/dark selectors, appearance bootstrap and picker setup, CSP nonce/hash configuration, installing wizard exports, shell composition, and complete copyable Rails examples.
 
@@ -371,13 +371,13 @@ Date inputs, Switch, and ordinary checked state deliberately use native inputs r
 
 ## Examples and verification
 
-The dummy Rails application is the canonical example gallery. An explicit `Gallery::Catalog` drives routes for component pages, block pages, and realistic application flows. That catalog is documentation infrastructure, not a packaged public registry.
+The dummy Rails application is the canonical example gallery. An explicit `Gallery::Catalog` drives routes for component pages and realistic application compositions. Components carry a subcategory (layout, navigation, forms, data, feedback, actions) that groups the sidebar; compositions are the executable whole-system tests. That catalog is documentation infrastructure, not a packaged public registry.
 
 Examples cover closed options, content pressure, native state, validation, empty/error/loading/destructive states, light and dark themes, narrow and wide layouts, and interaction between forms, navigation, tables, and overlays.
 
 Examples also cover system appearance, complete application shells, the customization wizard, former Pro capabilities, and dense cross-component combinations. Previewed Ruby and copied Ruby remain the same executable source.
 
-Every component and block page is self-contained for an agent that fetches only that page. After the examples it renders three reference sections outside every example canvas: the component's own row from `docs/component_contracts.md`, inline summaries of the `docs/patterns/*.md` conventions the catalog maps to that page, and the shared system rules. Each section is source-referenced and render-inlined — one copy in the source, one copy on every page. `Gallery::AgentRules` owns the rules text and reads `NitroKit::Component::RESERVED_DATA_ATTRIBUTES` and its neighbours at render time, `Gallery::Contracts` parses the shipped contract table, `Gallery::Patterns` reads each pattern document's leading `## Summary` section, and `Gallery::Catalog::PATTERNS` declares which patterns a page carries.
+Every component page is self-contained for an agent that fetches only that page. After the examples it renders three reference sections outside every example canvas: the component's own row from `docs/component_contracts.md`, inline summaries of the `docs/patterns/*.md` conventions the catalog maps to that page, and the shared system rules. Each section is source-referenced and render-inlined — one copy in the source, one copy on every page. `Gallery::AgentRules` owns the rules text and reads `NitroKit::Component::RESERVED_DATA_ATTRIBUTES` and its neighbours at render time, `Gallery::Contracts` parses the shipped contract table, `Gallery::Patterns` reads each pattern document's leading `## Summary` section, and `Gallery::Catalog::PATTERNS` declares which patterns a page carries.
 
 Primary verification remains:
 
@@ -405,7 +405,7 @@ These ideas require new evidence and a deliberate future API decision. Their app
 
 ## Design history
 
-The pivot was delivered in evidence-seeking stages: establish the kernel and representative vertical slice, migrate atoms, build atom-only product flows, record repeated friction, extract only proven layouts and blocks, expand the gallery, remove 1.x, then consolidate behavior, packaging, and documentation.
+The pivot was delivered in evidence-seeking stages: establish the kernel and representative vertical slice, migrate atoms, build atom-only product flows, record repeated friction, extract only proven layouts and page sections, expand the gallery, remove 1.x, then consolidate behavior, packaging, and documentation.
 
 The first evidence pass rejected more abstractions than it accepted. `Spacer`, `Split`, `Frame`, App/Marketing shells, AuthenticationPanel, and ProgressSteps stayed out because those flows did not establish a stable cross-domain responsibility. That pass initially extracted separate `VStack` and `HStack` components plus a fixed three-column Grid. The later responsive-layout consolidation superseded those APIs with unified `Flex` and responsive `Grid`; [`notes/block_candidates.md`](../notes/block_candidates.md) retains the original evidence as history. The application-layout mandate and the Sidebar and Top Navigation reference audit supplied enough repeated responsibility to approve `AppShell`; MarketingShell, AuthenticationPanel, and speculative layout primitives remain rejected.
 

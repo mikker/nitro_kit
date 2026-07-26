@@ -35,35 +35,35 @@ class ResponsiveThemeTest < ApplicationSystemTestCase
       probe: :table
     ),
     ReviewCase.new(
-      kind: :block,
+      kind: :component,
       slug: "settings-layout",
       state: nil,
       selector: "#gallery-settings-layout-workspace[data-nk='settings-layout']",
       probe: :settings_layout
     ),
     ReviewCase.new(
-      kind: :flow,
+      kind: :composition,
       slug: "api-webhooks",
       state: "dense",
       selector: "[data-nk='page-header']",
       probe: :surface
     ),
     ReviewCase.new(
-      kind: :flow,
+      kind: :composition,
       slug: "landing",
       state: "long",
       selector: "[data-nk='page-header']",
       probe: :surface
     ),
     ReviewCase.new(
-      kind: :flow,
+      kind: :composition,
       slug: "account-security",
       state: "mobile",
       selector: "[data-nk='auth-shell']",
       probe: :surface
     ),
     ReviewCase.new(
-      kind: :flow,
+      kind: :composition,
       slug: "checkout",
       state: "payment",
       selector: "[data-nk='form-section']",

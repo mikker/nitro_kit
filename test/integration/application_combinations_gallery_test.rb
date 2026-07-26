@@ -20,13 +20,13 @@ class ApplicationCombinationsGalleryTest < ActionDispatch::IntegrationTest
   }.freeze
 
   test "catalog exposes three complete application routes without synthetic state routes" do
-    entries = Gallery::Catalog.entries(kind: :flow).select { |entry| APPLICATIONS.key?(entry.slug) }
+    entries = Gallery::Catalog.entries(kind: :composition).select { |entry| APPLICATIONS.key?(entry.slug) }
 
     assert_equal APPLICATIONS.keys, entries.map(&:slug)
     entries.each do |entry|
       assert_empty entry.states
       assert_equal "Complete applications", Gallery::Catalog.category_for(entry).title
-      assert_equal "/gallery/flows/#{entry.slug}", Gallery::Catalog.path_for(
+      assert_equal "/gallery/compositions/#{entry.slug}", Gallery::Catalog.path_for(
         entry,
         routes: Rails.application.routes.url_helpers
       )
@@ -35,7 +35,7 @@ class ApplicationCombinationsGalleryTest < ActionDispatch::IntegrationTest
 
   test "each application page renders three themed executable shell examples with source parity" do
     APPLICATIONS.each do |slug, contract|
-      get gallery_flow_path(slug:)
+      get gallery_composition_path(slug:)
 
       assert_response :success
       assert_select "[data-gallery-page='#{slug}']"
@@ -67,7 +67,7 @@ class ApplicationCombinationsGalleryTest < ActionDispatch::IntegrationTest
   end
 
   test "sidebar applications combine data uploads recovery and appearance states" do
-    get gallery_flow_path(slug: "application-sidebar")
+    get gallery_composition_path(slug: "application-sidebar")
 
     assert_response :success
     assert_select "#gallery-sidebar-application-populated" do
@@ -89,7 +89,7 @@ class ApplicationCombinationsGalleryTest < ActionDispatch::IntegrationTest
   end
 
   test "topbar applications combine progressive media menus loading long data and overlays" do
-    get gallery_flow_path(slug: "application-topbar")
+    get gallery_composition_path(slug: "application-topbar")
 
     assert_response :success
     assert_select "#gallery-topbar-application-populated[data-theme='light']" do
@@ -109,7 +109,7 @@ class ApplicationCombinationsGalleryTest < ActionDispatch::IntegrationTest
   end
 
   test "hybrid applications combine synchronized appearance details forms missing data and policy failure" do
-    get gallery_flow_path(slug: "application-hybrid")
+    get gallery_composition_path(slug: "application-hybrid")
 
     assert_response :success
     assert_select "#gallery-hybrid-application-populated" do

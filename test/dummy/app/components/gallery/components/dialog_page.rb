@@ -13,7 +13,7 @@ module Gallery
 
       def component_template
         example_section(
-          "Confirmation flow",
+          "Confirmation sequence",
           slug: "dialog-confirmation",
           description: "The trigger opens a native dialog whose title and description are connected by ID."
         ) do

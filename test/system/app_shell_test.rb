@@ -252,7 +252,7 @@ class AppShellTest < ApplicationSystemTestCase
 
   def visit_shell_page
     resize_viewport(width: 1200, height: 900)
-    visit gallery_block_path("app-shell")
+    visit gallery_component_path("app-shell")
     assert_selector "#gallery-app-shell-sidebar[data-enhanced]"
     page.current_path
   end

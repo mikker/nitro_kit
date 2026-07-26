@@ -39,7 +39,7 @@ module Gallery
                 "routes, authorization, and decisions."
             end
             li do
-              "Build up. Components combine into blocks and whole application layouts. Keep " \
+              "Build up. Components combine into sections and whole application layouts. Keep " \
                 "it simple and go fast."
             end
           end

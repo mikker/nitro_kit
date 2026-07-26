@@ -109,7 +109,7 @@ module Gallery
       Proof.new(
         id: "orbital-research",
         organization: "Orbital Research",
-        result: "18 production flows verified",
+        result: "18 production journeys verified",
         detail: "Agents compose Rails screens from the same documented components engineers review."
       ),
       Proof.new(

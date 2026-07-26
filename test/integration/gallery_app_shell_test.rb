@@ -3,15 +3,15 @@ require "test_helper"
 class GalleryAppShellTest < ActionDispatch::IntegrationTest
   test "catalog publishes focused navigation and shell surfaces" do
     navigation = Gallery::Catalog.fetch!(kind: :component, slug: "app-navigation")
-    shell = Gallery::Catalog.fetch!(kind: :block, slug: "app-shell")
+    shell = Gallery::Catalog.fetch!(kind: :component, slug: "app-shell")
 
     assert_equal Gallery::Components::AppNavigationPage, navigation.page
-    assert_equal Gallery::Blocks::AppShellPage, shell.page
+    assert_equal Gallery::Components::AppShellPage, shell.page
     assert_equal "/gallery/components/app-navigation", Gallery::Catalog.path_for(
       navigation,
       routes: Rails.application.routes.url_helpers
     )
-    assert_equal "/gallery/blocks/app-shell", Gallery::Catalog.path_for(
+    assert_equal "/gallery/components/app-shell", Gallery::Catalog.path_for(
       shell,
       routes: Rails.application.routes.url_helpers
     )
@@ -44,7 +44,7 @@ class GalleryAppShellTest < ActionDispatch::IntegrationTest
   end
 
   test "shell page renders every layout one tree and the complete responsive anatomy" do
-    get gallery_block_path("app-shell")
+    get gallery_component_path("app-shell")
 
     assert_response :success
     assert_select "[data-gallery='example-canvas'] [data-nk='app-shell']", count: 5 do |shells|
@@ -78,13 +78,9 @@ class GalleryAppShellTest < ActionDispatch::IntegrationTest
   end
 
   test "focused pages render in both explicit themes" do
-    [
-      [ :component, "app-navigation" ],
-      [ :block, "app-shell" ]
-    ].each do |kind, slug|
+    %w[app-navigation app-shell].each do |slug|
       %w[light dark].each do |theme|
-        path = kind == :component ? gallery_component_path(slug, theme:) : gallery_block_path(slug, theme:)
-        get path
+        get gallery_component_path(slug, theme:)
 
         assert_response :success
         assert_select "html[data-theme='#{theme}']"

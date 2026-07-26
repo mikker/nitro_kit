@@ -4,30 +4,28 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
   test "catalog starts with home and exposes one nested navigation tree" do
     assert_equal "home", Gallery::Catalog.home.slug
     assert_equal Gallery::Home, Gallery::Catalog.home.page
-    assert_equal %i[component block flow], Gallery::Catalog.collections.map(&:kind)
-    assert_equal [ "all" ], Gallery::Catalog.collection!(:component).categories.map(&:slug)
-    assert_nil Gallery::Catalog.collection!(:component).categories.first.title
-    assert_equal %w[shells navigation sections], Gallery::Catalog.collection!(:block).categories.map(&:slug)
+    assert_equal %i[component composition], Gallery::Catalog.collections.map(&:kind)
+    assert_equal(
+      %w[layout navigation forms data feedback actions],
+      Gallery::Catalog.collection!(:component).categories.map(&:slug)
+    )
     assert_equal %w[
       access-and-onboarding workspace-and-organization billing-and-commerce data-and-operations
       product-and-support marketing complete-applications
-    ], Gallery::Catalog.collection!(:flow).categories.map(&:slug)
+    ], Gallery::Catalog.collection!(:composition).categories.map(&:slug)
     assert_equal(
-      %w[
-        accordion alert appearance-picker app-navigation avatar avatar-stack badge button button-group card checkbox checkbox-group
-        combobox container details-table dialog dropdown dropzone field field-group fieldset flex grid icon input label
-        pagination progressive-image radio-button radio-button-group rich-text-area select switch table tabs textarea
-        toast tooltip
-        typeset
-      ],
-      Gallery::Catalog.entries(kind: :component).map(&:slug)
-    )
-    assert_equal(
-      %w[
-        auth-shell app-shell settings-layout toolbar pagination-bar page-header stat-grid data-section form-section danger-zone
-        empty-state
-      ],
-      Gallery::Catalog.entries(kind: :block).map(&:slug)
+      {
+        "layout" => %w[accordion app-shell auth-shell card container flex grid page-header settings-layout typeset],
+        "navigation" => %w[app-navigation pagination pagination-bar tabs toolbar],
+        "forms" => %w[
+          checkbox checkbox-group combobox dropzone field field-group fieldset form-section input label radio-button
+          radio-button-group rich-text-area select switch textarea
+        ],
+        "data" => %w[avatar avatar-stack badge data-section details-table icon progressive-image stat-grid table],
+        "feedback" => %w[alert empty-state toast tooltip],
+        "actions" => %w[appearance-picker button button-group danger-zone dialog dropdown]
+      },
+      Gallery::Catalog.collection!(:component).categories.to_h { |category| [ category.slug, category.entries.map(&:slug) ] }
     )
     assert_equal(
       %w[
@@ -37,8 +35,20 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
         data-resource-settings api-webhooks integration-management uploads activity-audit changelog help-center system-status
         landing pricing features contact application-sidebar application-topbar application-hybrid
       ],
-      Gallery::Catalog.entries(kind: :flow).map(&:slug)
+      Gallery::Catalog.entries(kind: :composition).map(&:slug)
     )
+  end
+
+  test "every component declares exactly one known subcategory" do
+    known = Gallery::Catalog::SUBCATEGORIES.map(&:first)
+
+    Gallery::Catalog.entries(kind: :component).each do |component|
+      assert_includes known, component.subcategory, component.slug
+    end
+    assert_nil Gallery::Catalog.home.subcategory
+    Gallery::Catalog.entries(kind: :composition).each do |composition|
+      assert_nil composition.subcategory, composition.slug
+    end
   end
 
   test "collections partition every entry once and reject typo category names" do
@@ -46,11 +56,15 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
 
     assert_equal Gallery::Catalog.entries.drop(1), nested_entries
     assert_equal nested_entries.uniq, nested_entries
-    assert_equal "Sections", Gallery::Catalog.category!(kind: :block, slug: "sections").title
-    landing = Gallery::Catalog.fetch!(kind: :flow, slug: "landing")
+    assert_equal "Forms", Gallery::Catalog.category!(kind: :component, slug: "forms").title
+    assert_equal(
+      "Layout",
+      Gallery::Catalog.category_for(Gallery::Catalog.fetch!(kind: :component, slug: "page-header")).title
+    )
+    landing = Gallery::Catalog.fetch!(kind: :composition, slug: "landing")
     assert_equal "Marketing", Gallery::Catalog.category_for(landing).title
     assert_raises(Gallery::Catalog::CategoryNotFound) do
-      Gallery::Catalog.category!(kind: :flow, slug: "marketng")
+      Gallery::Catalog.category!(kind: :composition, slug: "marketng")
     end
     assert_raises(Gallery::Catalog::CollectionNotFound) do
       Gallery::Catalog.collection!(:section)
@@ -60,31 +74,23 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
   test "component entries declare their route contract explicitly" do
     Gallery::Catalog.entries(kind: :component).each do |component|
       assert component.page < Gallery::ComponentPage
+      assert_empty component.states
       assert_predicate component.expected_roots, :any?
       assert component.expected_roots.all? { |root| root.match?(/\A[a-z0-9-]+\z/) }
     end
   end
 
-  test "block entries declare their route contract explicitly" do
-    Gallery::Catalog.entries(kind: :block).each do |block|
-      assert block.page < Gallery::ComponentPage
-      assert_empty block.states
-      assert_predicate block.expected_roots, :any?
-      assert block.expected_roots.all? { |root| root.match?(/\A[a-z0-9-]+\z/) }
-    end
-  end
-
-  test "flow entries declare deterministic states or one complete application showcase" do
-    Gallery::Catalog.entries(kind: :flow).each do |flow|
-      assert flow.page < Gallery::Page
-      if flow.page < Gallery::Flows::ApplicationPage
-        assert_empty flow.states
+  test "composition entries declare deterministic states or one complete application showcase" do
+    Gallery::Catalog.entries(kind: :composition).each do |composition|
+      assert composition.page < Gallery::Page
+      if composition.page < Gallery::Compositions::ApplicationPage
+        assert_empty composition.states
       else
-        assert_predicate flow.states, :any?
+        assert_predicate composition.states, :any?
       end
-      assert_equal flow.states.uniq, flow.states
-      assert flow.states.all? { |state| state.match?(/\A[a-z0-9-]+\z/) }
-      assert_predicate flow.expected_roots, :any?
+      assert_equal composition.states.uniq, composition.states
+      assert composition.states.all? { |state| state.match?(/\A[a-z0-9-]+\z/) }
+      assert_predicate composition.expected_roots, :any?
     end
   end
 
@@ -93,15 +99,15 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
 
     assert_equal "/gallery", Gallery::Catalog.path_for(Gallery::Catalog.home, routes:)
     assert_equal "/gallery/components/button", Gallery::Catalog.path_for(entry(:component, "button"), routes:)
-    assert_equal "/gallery/blocks/page-header", Gallery::Catalog.path_for(entry(:block, "page-header"), routes:)
+    assert_equal "/gallery/components/page-header", Gallery::Catalog.path_for(entry(:component, "page-header"), routes:)
     assert_equal(
-      "/gallery/flows/dashboard/active",
-      Gallery::Catalog.path_for(entry(:flow, "dashboard", states: [ "active" ]), routes:)
+      "/gallery/compositions/dashboard/active",
+      Gallery::Catalog.path_for(entry(:composition, "dashboard", states: [ "active" ]), routes:)
     )
   end
 
-  test "catalog validates flow states" do
-    dashboard = entry(:flow, "dashboard", states: %w[new active degraded])
+  test "catalog validates composition states" do
+    dashboard = entry(:composition, "dashboard", states: %w[new active degraded])
 
     assert_equal "new", Gallery::Catalog.resolve_state!(dashboard, nil)
     assert_equal "active", Gallery::Catalog.resolve_state!(dashboard, "active")
@@ -110,8 +116,8 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
     end
   end
 
-  test "every component and block entry finds its shipped contract row" do
-    entries = Gallery::Catalog.entries(kind: :component) + Gallery::Catalog.entries(kind: :block)
+  test "every component entry finds its shipped contract row" do
+    entries = Gallery::Catalog.entries(kind: :component)
 
     missing = entries.reject do |candidate|
       Gallery::Contracts.rows.key?(Gallery::Contracts.component_name_for(candidate))

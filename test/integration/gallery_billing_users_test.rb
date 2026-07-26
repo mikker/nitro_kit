@@ -11,11 +11,11 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
 
   test "catalog exposes every billing and users route with stable state order" do
     FLOW_STATES.each do |slug, states|
-      entry = Gallery::Catalog.fetch!(kind: :flow, slug:)
+      entry = Gallery::Catalog.fetch!(kind: :composition, slug:)
       assert_equal states, entry.states
 
       states.each do |state|
-        assert_equal "/gallery/flows/#{slug}/#{state}", Gallery::Catalog.path_for(
+        assert_equal "/gallery/compositions/#{slug}/#{state}", Gallery::Catalog.path_for(
           entry,
           routes: Rails.application.routes.url_helpers,
           state:
@@ -30,8 +30,8 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
         get_flow(slug, state)
 
         assert_select "div[data-gallery='page'][data-gallery-page='#{slug}'][data-gallery-state='#{state}']"
-        assert_select "[data-gallery='flow-states'] a[aria-current='page']", count: 1
-        assert_select "[data-gallery='flow-surface']" do
+        assert_select "[data-gallery='composition-states'] a[aria-current='page']", count: 1
+        assert_select "[data-gallery='composition-surface']" do
           assert_select "#gallery-#{slug}-container[data-nk='container'][data-size='xl']" do
             assert_select "#gallery-#{slug}-stack[data-nk='flex'][data-dir='col'][data-gap='6'][data-align='stretch']" do
               assert_select "> turbo-frame#gallery-#{slug}-frame", count: 1
@@ -52,9 +52,9 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
 
         document = Nokogiri::HTML(response.body)
         controls = document.css(
-          "[data-gallery='flow-surface'] input:not([type='hidden'])[id], " \
-            "[data-gallery='flow-surface'] select[id], " \
-            "[data-gallery='flow-surface'] textarea[id]"
+          "[data-gallery='composition-surface'] input:not([type='hidden'])[id], " \
+            "[data-gallery='composition-surface'] select[id], " \
+            "[data-gallery='composition-surface'] textarea[id]"
         )
         controls.each do |control|
           assert document.at_css("label[for='#{control['id']}']"), "missing label for #{control['id']}"
@@ -135,7 +135,7 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
       assert_select "[data-slot='pagination-ellipsis-label']", text: "Pages 2 through 9 omitted"
     end
     assert_equal(
-      "/gallery/flows/billing/invoices?page=11",
+      "/gallery/compositions/billing/invoices?page=11",
       css_select("#gallery-billing-invoice-pagination-previous").first["href"]
     )
 
@@ -192,7 +192,7 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-billing-reactivate[href='#reactivate']", text: "Reactivate Team plan"
 
     get_flow("billing", "mobile")
-    assert_select "[data-gallery-flow='billing'][data-gallery-mobile='true']"
+    assert_select "[data-gallery-composition='billing'][data-gallery-mobile='true']"
     assert_select "#gallery-billing-mobile-card", text: /accounts-payable\+international-research-and-production@example\.test/
   end
 
@@ -209,9 +209,9 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-users-index-table table" do
       assert_select "caption", text: "All workspace users"
       assert_select "thead th[scope='col']", count: 6
-      assert_select "tbody tr", count: Gallery::Flows::UsersPage::USERS.size
-      assert_select "tbody th[scope='row']", count: Gallery::Flows::UsersPage::USERS.size
-      assert_select "[data-nk='avatar']", count: Gallery::Flows::UsersPage::USERS.size
+      assert_select "tbody tr", count: Gallery::Compositions::UsersPage::USERS.size
+      assert_select "tbody th[scope='row']", count: Gallery::Compositions::UsersPage::USERS.size
+      assert_select "[data-nk='avatar']", count: Gallery::Compositions::UsersPage::USERS.size
     end
     assert_select "#gallery-users-index-table-mem_annie-status[data-color='danger']", text: "Suspended"
     assert_select "#gallery-users-index-summary", text: "Showing 1–8 of 128 workspace users"
@@ -222,7 +222,7 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
       assert_select "[data-slot='pagination-ellipsis-label']", text: "Pages 4 through 15 omitted"
     end
     assert_equal(
-      "/gallery/flows/users/index?page=2",
+      "/gallery/compositions/users/index?page=2",
       css_select("#gallery-users-index-pagination-next").first["href"]
     )
     assert_select "#gallery-users-invite[href='#invite-user']"
@@ -256,11 +256,11 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
       assert_select "[data-slot='pagination-ellipsis-label']", text: "Pages 5 through 7 omitted"
     end
     assert_equal(
-      "/gallery/flows/users/search?page=2&query=a&status=active",
+      "/gallery/compositions/users/search?page=2&query=a&status=active",
       css_select("#gallery-users-search-pagination-previous").first["href"]
     )
     assert_equal(
-      "/gallery/flows/users/search?page=4&query=a&status=active",
+      "/gallery/compositions/users/search?page=4&query=a&status=active",
       css_select("#gallery-users-search-pagination-next").first["href"]
     )
 
@@ -298,7 +298,7 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-users-bulk-selection[data-nk='checkbox-group']" do
       assert_select "legend", text: "Users to update"
       assert_select "input[type='checkbox'][name='gallery_forms_bulk_user_action[member_ids][]']",
-        count: Gallery::Flows::UsersPage::USERS.size
+        count: Gallery::Compositions::UsersPage::USERS.size
       assert_select "input[type='checkbox'][value='mem_ada'][disabled]"
       assert_select "input[type='checkbox'][checked]", count: 2
     end
@@ -322,7 +322,7 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-users-bulk-complete-return[href$='/users/index']"
 
     get_flow("users", "mobile")
-    assert_select "[data-gallery-flow='users'][data-gallery-mobile='true']"
+    assert_select "[data-gallery-composition='users'][data-gallery-mobile='true']"
     assert_select "#gallery-users-mobile-card", text: /margaret\.hamilton\+apollo-guidance-software@example\.test/
     assert_select "#gallery-users-mobile-actions[role='group'][aria-label='Actions for Margaret Hamilton']"
   end
@@ -330,7 +330,7 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
   private
 
   def get_flow(slug, state)
-    get gallery_flow_path(slug:, state:)
+    get gallery_composition_path(slug:, state:)
     assert_response :success
   end
 end

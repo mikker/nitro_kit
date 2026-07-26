@@ -12,16 +12,16 @@ class ExpandedGalleryFlowsTest < ActionDispatch::IntegrationTest
   }.freeze
 
   test "catalog exposes exact additive routes for expanded organization team and resource flows" do
-    expanded_slugs = Gallery::Catalog.entries(kind: :flow).map(&:slug).select { |slug| FLOW_STATES.key?(slug) }
+    expanded_slugs = Gallery::Catalog.entries(kind: :composition).map(&:slug).select { |slug| FLOW_STATES.key?(slug) }
     assert_equal FLOW_STATES.keys, expanded_slugs
 
     FLOW_STATES.each do |slug, states|
-      entry = Gallery::Catalog.fetch!(kind: :flow, slug:)
+      entry = Gallery::Catalog.fetch!(kind: :composition, slug:)
 
       assert_equal states, entry.states
       assert_equal %w[page-header container flex button-group button], entry.expected_roots
       states.each do |state|
-        assert_equal "/gallery/flows/#{slug}/#{state}", Gallery::Catalog.path_for(
+        assert_equal "/gallery/compositions/#{slug}/#{state}", Gallery::Catalog.path_for(
           entry,
           routes: Rails.application.routes.url_helpers,
           state:
@@ -29,7 +29,7 @@ class ExpandedGalleryFlowsTest < ActionDispatch::IntegrationTest
       end
     end
 
-    get gallery_flow_path(slug: "data-resource-overview", state: "invented")
+    get gallery_composition_path(slug: "data-resource-overview", state: "invented")
     assert_response :not_found
   end
 
@@ -41,7 +41,7 @@ class ExpandedGalleryFlowsTest < ActionDispatch::IntegrationTest
 
           assert_select "html[data-theme='#{theme}']"
           assert_select "div[data-gallery='page'][data-gallery-page='#{slug}'][data-gallery-state='#{state}']"
-          assert_select "[data-gallery-flow='#{slug}'][data-gallery-flow-state='#{state}']" do
+          assert_select "[data-gallery-composition='#{slug}'][data-gallery-composition-state='#{state}']" do
             assert_select "[data-nk='container'][data-size='xl'] > [data-nk='flex'][data-dir='col'][data-gap='6']" do
               assert_select "> [data-nk='page-header']", count: 1
             end
@@ -249,7 +249,7 @@ class ExpandedGalleryFlowsTest < ActionDispatch::IntegrationTest
   private
 
   def get_flow(slug, state, theme: nil)
-    get gallery_flow_path(slug:, state:, theme:)
+    get gallery_composition_path(slug:, state:, theme:)
     assert_response :success
   end
 
@@ -270,9 +270,9 @@ class ExpandedGalleryFlowsTest < ActionDispatch::IntegrationTest
   def assert_labelled_controls
     document = Nokogiri::HTML(response.body)
     document.css(
-      "[data-gallery='flow-surface'] input:not([type='hidden'])[id], " \
-        "[data-gallery='flow-surface'] select[id], " \
-        "[data-gallery='flow-surface'] textarea[id]"
+      "[data-gallery='composition-surface'] input:not([type='hidden'])[id], " \
+        "[data-gallery='composition-surface'] select[id], " \
+        "[data-gallery='composition-surface'] textarea[id]"
     ).each do |control|
       assert document.at_css("label[for='#{control['id']}']"), "missing label for #{control['id']}"
     end

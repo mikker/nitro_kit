@@ -1,12 +1,10 @@
 require "test_helper"
 
-# Every component and block page must be self-contained for an agent that
-# fetches only that page: system rules, the component's own contract, and the
-# patterns it belongs to.
+# Every component page must be self-contained for an agent that fetches only
+# that page: system rules, the component's own contract, and the patterns it
+# belongs to.
 class GalleryReferenceTest < ActionDispatch::IntegrationTest
-  REFERENCE_ENTRIES = Gallery::Catalog.entries.select do |entry|
-    entry.kind == :component || entry.kind == :block
-  end
+  REFERENCE_ENTRIES = Gallery::Catalog.entries(kind: :component)
 
   REFERENCE_ENTRIES.each do |entry|
     test "#{entry.kind} #{entry.slug} carries the system rules, its contract, and its patterns" do
@@ -78,7 +76,7 @@ class GalleryReferenceTest < ActionDispatch::IntegrationTest
       assert_select "code", text: "span[data-nk=badge]"
     end
 
-    get gallery_block_path("danger-zone")
+    get gallery_component_path("danger-zone")
 
     assert_response :success
 
@@ -96,7 +94,7 @@ class GalleryReferenceTest < ActionDispatch::IntegrationTest
       assert_select "li", text: /a stable ID owns filters, sorting, results/
     end
 
-    get gallery_block_path("form-section")
+    get gallery_component_path("form-section")
 
     assert_response :success
 

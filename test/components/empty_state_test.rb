@@ -156,9 +156,9 @@ class EmptyStateTest < ActiveSupport::TestCase
   end
 
   test "is reachable through the gallery catalog" do
-    entry = Gallery::Catalog.fetch!(kind: :block, slug: "empty-state")
+    entry = Gallery::Catalog.fetch!(kind: :component, slug: "empty-state")
 
-    assert_equal Gallery::Blocks::EmptyStatePage, entry.page
+    assert_equal Gallery::Components::EmptyStatePage, entry.page
     assert_includes entry.expected_roots, "empty-state"
   end
 

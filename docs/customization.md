@@ -287,7 +287,7 @@ end
 
 Change only `layout:` to `:topbar` or `:hybrid`; the same `brand`, `navigation`, `topbar`, and `main` declarations remain valid. Nitro owns the responsive breakpoint, narrow drawer, focus management, sticky regions, and one reflowed navigation DOM tree. Do not clone navigation for mobile or add route registries to the shell.
 
-The gallery has complete executable examples for [sidebar](/gallery/flows/application-sidebar), [topbar](/gallery/flows/application-topbar), and [hybrid](/gallery/flows/application-hybrid) applications. Each route contains multiple populated, empty, loading, long-content, missing-content, or error combinations.
+The gallery has complete executable examples for [sidebar](/gallery/compositions/application-sidebar), [topbar](/gallery/compositions/application-topbar), and [hybrid](/gallery/compositions/application-hybrid) applications. Each route contains multiple populated, empty, loading, long-content, missing-content, or error combinations.
 
 ## Rails forms and Hotwire
 

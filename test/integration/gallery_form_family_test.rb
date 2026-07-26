@@ -9,7 +9,7 @@ class GalleryFormFamilyTest < ActionDispatch::IntegrationTest
     FORM_SLUGS.each do |slug|
       entry = Gallery::Catalog.fetch!(kind: :component, slug:)
 
-      assert_equal "all", Gallery::Catalog.category_for(entry).slug
+      assert_equal "forms", Gallery::Catalog.category_for(entry).slug
       assert_predicate entry.expected_roots, :any?
 
       get gallery_component_path(slug)

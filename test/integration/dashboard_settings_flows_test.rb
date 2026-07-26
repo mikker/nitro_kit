@@ -8,19 +8,19 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
   ].freeze
 
   test "catalog declares exact dashboard and settings state routes" do
-    dashboard = Gallery::Catalog.fetch!(kind: :flow, slug: "dashboard")
-    settings = Gallery::Catalog.fetch!(kind: :flow, slug: "settings")
+    dashboard = Gallery::Catalog.fetch!(kind: :composition, slug: "dashboard")
+    settings = Gallery::Catalog.fetch!(kind: :composition, slug: "settings")
 
     assert_equal DASHBOARD_STATES, dashboard.states
     assert_equal SETTINGS_STATES, settings.states
-    assert_equal Gallery::Flows::DashboardPage, dashboard.page
-    assert_equal Gallery::Flows::SettingsPage, settings.page
+    assert_equal Gallery::Compositions::DashboardPage, dashboard.page
+    assert_equal Gallery::Compositions::SettingsPage, settings.page
     assert_equal(
-      "/gallery/flows/dashboard/new",
+      "/gallery/compositions/dashboard/new",
       Gallery::Catalog.path_for(dashboard, routes: Rails.application.routes.url_helpers)
     )
     assert_equal(
-      "/gallery/flows/settings/profile",
+      "/gallery/compositions/settings/profile",
       Gallery::Catalog.path_for(settings, routes: Rails.application.routes.url_helpers)
     )
   end
@@ -29,7 +29,7 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
     DASHBOARD_STATES.each do |state|
       get_flow("dashboard", state)
 
-      assert_select "#gallery-dashboard-surface[data-gallery-flow-state='#{state}']"
+      assert_select "#gallery-dashboard-surface[data-gallery-composition-state='#{state}']"
       assert_select "nav[aria-label='Dashboard states'] a[aria-current='page']", text: state.humanize
       assert_select "#gallery-dashboard-surface > " \
                     "#gallery-dashboard-container[data-nk='container'][data-size='xl'] > " \
@@ -150,7 +150,7 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
     SETTINGS_STATES.each do |state|
       get_flow("settings", state)
 
-      assert_select "#gallery-settings-surface[data-gallery-flow-state='#{state}']"
+      assert_select "#gallery-settings-surface[data-gallery-composition-state='#{state}']"
       assert_select "nav[aria-label='Settings states'] a[aria-current='page']", text: state.humanize
       assert_select "#gallery-settings-layout nav[data-slot='settings-layout-navigation'][aria-label='Settings sections']" do
         assert_select "ul[data-slot='settings-layout-items'] > li[data-slot='settings-layout-item']", count: 5
@@ -311,7 +311,7 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
   private
 
   def get_flow(slug, state)
-    get gallery_flow_path(slug:, state:)
+    get gallery_composition_path(slug:, state:)
     assert_response :success
   end
 

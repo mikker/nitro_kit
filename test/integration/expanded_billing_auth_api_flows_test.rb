@@ -20,19 +20,19 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
   }.freeze
 
   test "catalog exposes the exact additive flow matrix and stable routes" do
-    entries = Gallery::Catalog.entries(kind: :flow).select { |entry| FLOW_STATES.key?(entry.slug) }
+    entries = Gallery::Catalog.entries(kind: :composition).select { |entry| FLOW_STATES.key?(entry.slug) }
 
     assert_equal FLOW_STATES.keys.sort, entries.map(&:slug).sort
 
     entries.each do |entry|
       assert_equal FLOW_STATES.fetch(entry.slug), entry.states
-      assert_equal "/gallery/flows/#{entry.slug}/#{entry.states.first}", Gallery::Catalog.path_for(
+      assert_equal "/gallery/compositions/#{entry.slug}/#{entry.states.first}", Gallery::Catalog.path_for(
         entry,
         routes: Rails.application.routes.url_helpers
       )
 
       entry.states.each do |state|
-        assert_equal "/gallery/flows/#{entry.slug}/#{state}", Gallery::Catalog.path_for(
+        assert_equal "/gallery/compositions/#{entry.slug}/#{state}", Gallery::Catalog.path_for(
           entry,
           routes: Rails.application.routes.url_helpers,
           state:
@@ -41,7 +41,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
     end
 
     FLOW_STATES.each_key do |slug|
-      get gallery_flow_path(slug:, state: "invented")
+      get gallery_composition_path(slug:, state: "invented")
       assert_response :not_found
     end
   end
@@ -52,8 +52,8 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
         get_flow(slug, state)
 
         assert_select "div[data-gallery='page'][data-gallery-page='#{slug}'][data-gallery-state='#{state}']"
-        assert_select "[data-gallery='flow-states'] a[aria-current='page']", count: 1, text: state.humanize
-        assert_select "#gallery-#{slug}-surface[data-gallery-flow='#{slug}'][data-gallery-flow-state='#{state}']"
+        assert_select "[data-gallery='composition-states'] a[aria-current='page']", count: 1, text: state.humanize
+        assert_select "#gallery-#{slug}-surface[data-gallery-composition='#{slug}'][data-gallery-composition-state='#{state}']"
         assert_select "#gallery-#{slug}-header[data-nk='page-header'] > h1[data-slot='page-header-title']"
         assert_select "#gallery-#{slug}-header [data-slot='page-header-actions'][data-nk='button-group'] [data-nk='button']", minimum: 1
         assert_select "[data-gallery='example-canvas'] [data-nk='container']", minimum: 1
@@ -64,9 +64,9 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
 
         document = Nokogiri::HTML(response.body)
         document.css(
-          "[data-gallery='flow-surface'] input:not([type='hidden'])[id], " \
-            "[data-gallery='flow-surface'] select[id], " \
-            "[data-gallery='flow-surface'] textarea[id]"
+          "[data-gallery='composition-surface'] input:not([type='hidden'])[id], " \
+            "[data-gallery='composition-surface'] select[id], " \
+            "[data-gallery='composition-surface'] textarea[id]"
         ).each do |control|
           assert document.at_css("label[for='#{control['id']}']"), "missing label for #{control['id']} in #{slug}/#{state}"
         end
@@ -284,7 +284,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
   private
 
   def get_flow(slug, state, theme: nil)
-    get gallery_flow_path(slug:, state:, theme:)
+    get gallery_composition_path(slug:, state:, theme:)
     assert_response :success
   end
 end
