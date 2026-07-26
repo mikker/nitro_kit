@@ -5,20 +5,22 @@ class CheckableControllerContractTest < ActiveSupport::TestCase
     "app/javascript/controllers/nk/checkable_controller.js"
   ).read
 
-  test "sets native indeterminate state and reflects native changes" do
+  test "applies the native indeterminate property and reflects it back" do
     assert_includes SOURCE, "this.controlTarget.indeterminate = this.indeterminateValue"
     assert_includes SOURCE, "change()"
-    assert_includes SOURCE, "this.element.dataset.state = state"
-    assert_includes SOURCE, 'control.setAttribute("aria-checked", "mixed")'
-    assert_includes SOURCE, 'control.removeAttribute("aria-checked")'
+    assert_includes SOURCE, "this.indeterminateValue = this.controlTarget.indeterminate"
+    assert_includes SOURCE, "controlTargetConnected()"
+    assert_includes SOURCE, "indeterminateValueChanged(indeterminate)"
     refute_includes SOURCE, "classList"
+    refute_includes SOURCE, "addEventListener"
   end
 
-  test "updates same-form radio peers and reconnects replaced controls" do
-    assert_includes SOURCE, "document.getElementsByName(control.name)"
-    assert_includes SOURCE, "candidate.form !== control.form"
-    assert_includes SOURCE, "controlTargetConnected(control)"
-    assert_includes SOURCE, "indeterminateValueChanged(indeterminate)"
-    refute_includes SOURCE, "addEventListener"
+  test "mirrors only the state HTML cannot express" do
+    assert_includes SOURCE, 'this.element.dataset.state = "indeterminate"'
+    assert_includes SOURCE, "delete this.element.dataset.state"
+    refute_includes SOURCE, "aria-checked"
+    refute_includes SOURCE, "synchronizeRadioGroup"
+    refute_includes SOURCE, "getElementsByName"
+    refute_includes SOURCE, '"checked"'
   end
 end

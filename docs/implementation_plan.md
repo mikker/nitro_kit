@@ -103,7 +103,7 @@ Migrate Accordion and Tabs alongside the Card and Table slice. Require determini
 
 ### Interaction
 
-Migrate Dropdown, Tooltip, Combobox, Datepicker, and Toast alongside Dialog. Require closed placement/state APIs, visible ARIA/data state, keyboard behavior, native controls where possible, and complete disconnect cleanup.
+Migrate Dropdown, Tooltip, Combobox, and Toast alongside Dialog. Require closed placement/state APIs, visible ARIA/data state, keyboard behavior, native controls where possible, and complete disconnect cleanup.
 
 Gate: every shipped atom has a classless direct-Phlex API, static CSS, focused tests, exhaustive examples, and no dependency on a legacy helper.
 

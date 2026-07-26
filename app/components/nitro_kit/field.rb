@@ -8,7 +8,9 @@ module NitroKit
       button color date datetime datetime_local email file hidden month number password range
       search string tel text time url week
     ].freeze
-    TYPES = (INPUT_TYPES + %i[select textarea rich_text checkbox radio radio_button radio_group switch]).freeze
+    TYPES = (
+      INPUT_TYPES + %i[select combobox textarea rich_text checkbox radio radio_button radio_group switch]
+    ).freeze
 
     def initialize(
       form = nil,
@@ -138,7 +140,8 @@ module NitroKit
       render_in_slot(
         Label.new(
           text,
-          for: id,
+          for: label_target_id,
+          id: label_element_id,
           html:,
           aria:,
           data:,
@@ -189,6 +192,8 @@ module NitroKit
         input_control(html:, aria:, data:)
       when :select
         select_control(html:, aria:, data:)
+      when :combobox
+        combobox_control(html:, aria:, data:)
       when :textarea
         textarea_control(html:, aria:, data:)
       when :rich_text
@@ -271,6 +276,38 @@ module NitroKit
         ),
         :control
       )
+    end
+
+    def combobox_control(html:, aria:, data:)
+      render_in_slot(
+        Combobox.new(
+          id:,
+          name:,
+          label: false,
+          options: normalized_options,
+          value: current_value.nil? ? nil : current_value.to_s.presence,
+          placeholder: @placeholder,
+          include_blank: @include_blank.nil? ? true : @include_blank,
+          required: @required,
+          disabled: @disabled,
+          autocomplete: @autocomplete || "off",
+          html: @control_html.merge(html),
+          data: @control_data.merge(data),
+          control_aria: combobox_control_aria(aria)
+        ),
+        :control
+      )
+    end
+
+    def combobox_control_aria(extra)
+      attributes = control_aria(extra)
+      return attributes if attributes.keys.any? { |key| %w[label labelledby].include?(key.to_s.delete("_-")) }
+      return attributes.merge(labelledby: label_element_id) if field_label && label_element_id
+
+      accessible_name = derived_label || name.to_s.humanize.presence
+      raise ArgumentError, "an unlabeled combobox requires a field name or control ARIA label" unless accessible_name
+
+      attributes.merge(label: accessible_name)
     end
 
     def textarea_control(html:, aria:, data:)
@@ -439,6 +476,14 @@ module NitroKit
 
     def description_id
       "#{id}-description" if id
+    end
+
+    def label_target_id
+      as == :combobox ? "#{id}-input" : id
+    end
+
+    def label_element_id
+      "#{id}-label" if as == :combobox && id
     end
 
     def default_field_id

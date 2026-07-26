@@ -2,10 +2,14 @@
 
 module NitroKit
   class Dialog < Component
-    Trigger = Data.define(:text, :variant, :size, :disabled, :html, :aria, :data, :css_class, :content)
-    Panel = Data.define(:title, :description, :nonmodal, :html, :aria, :data, :css_class, :content)
+    Trigger = ::Data.define(:text, :variant, :size, :disabled, :html, :aria, :data, :css_class, :content)
+    private_constant :Trigger
 
-    alias :html_dialog :dialog
+    Panel = ::Data.define(:title, :description, :nonmodal, :html, :aria, :data, :css_class, :content)
+    private_constant :Panel
+
+    CloseButton = ::Data.define(:label, :html, :aria, :data, :css_class)
+    private_constant :CloseButton
 
     def initialize(
       id:,
@@ -77,7 +81,7 @@ module NitroKit
       nil
     end
 
-    def dialog(
+    def panel(
       title:,
       description: nil,
       nonmodal: false,
@@ -118,21 +122,19 @@ module NitroKit
       desperately_need_a_class: nil
     )
       ensure_rendering_panel!
-      raise ArgumentError, "Dialog accepts at most one close button" if @close_button_rendered
+      raise ArgumentError, "Dialog accepts at most one close button" if @close_button
+      unless @dismissible
+        raise ArgumentError, "Dialog dismissible: false renders no close button"
+      end
 
-      @close_button_rendered = true
-      render_in_slot(
-        Button.new(
-          icon: :x,
-          variant: :ghost,
-          size: :sm,
-          html: with_command(html, "close"),
-          aria: aria.merge(label:),
-          data:,
-          desperately_need_a_class:
-        ),
-        :close
+      @close_button = CloseButton.new(
+        label:,
+        html:,
+        aria:,
+        data:,
+        css_class: desperately_need_a_class
       )
+      nil
     end
 
     private
@@ -143,6 +145,11 @@ module NitroKit
       @collecting = true
       yield(self)
       raise ArgumentError, "Dialog requires exactly one panel" unless @panel
+
+      if @panel.nonmodal && @trigger
+        raise ArgumentError,
+          "Dialog nonmodal: true cannot be combined with a trigger; the trigger opens the panel modally"
+      end
     ensure
       @collecting = false
     end
@@ -172,7 +179,9 @@ module NitroKit
         describedby: @panel.description.nil? ? nil : element_id(:description)
       }.compact
 
-      html_dialog(
+      content = capture_panel_content
+
+      dialog(
         **slot_attributes(
           :panel,
           attributes: {
@@ -191,19 +200,46 @@ module NitroKit
           desperately_need_a_class: @panel.css_class
         )
       ) do
+        render_close_button if @dismissible
         render_title
         render_description if @panel.description
-        render_panel_content
+        raw(safe(content))
       end
     end
 
-    def render_panel_content
-      @close_button_rendered = false
+    # The panel content is captured first so Nitro owns the rendered order:
+    # close button, title, description, then application content. A sticky
+    # close button must precede scrolling content in the DOM.
+    def capture_panel_content
+      return "" unless @panel.content
+
       @rendering_panel = true
-      render(@panel.content) if @panel.content
-      close_button unless @close_button_rendered || !@dismissible
+      capture { render(@panel.content) }
     ensure
       @rendering_panel = false
+    end
+
+    def render_close_button
+      declaration = @close_button || CloseButton.new(
+        label: "Close dialog",
+        html: {},
+        aria: {},
+        data: {},
+        css_class: nil
+      )
+
+      render_in_slot(
+        Button.new(
+          icon: :x,
+          variant: :ghost,
+          size: :sm,
+          html: with_command(declaration.html, "close"),
+          aria: declaration.aria.merge(label: declaration.label),
+          data: declaration.data,
+          desperately_need_a_class: declaration.css_class
+        ),
+        :close
+      )
     end
 
     def render_title

@@ -13,6 +13,7 @@ module NitroKit
       checked: false,
       disabled: false,
       required: false,
+      invalid: false,
       size: :md,
       html: {},
       aria: {},
@@ -30,7 +31,8 @@ module NitroKit
       @checked = validate_boolean!(:checked, checked)
       @disabled = validate_boolean!(:disabled, disabled)
       @required = validate_boolean!(:required, required)
-      @size = validate_choice!(:size, size.to_s.to_sym, SIZES)
+      @invalid = validate_boolean!(:invalid, invalid)
+      @size = validate_choice!(:size, size, SIZES)
       @control_html = control_html
       @control_aria = control_aria
       @control_data = control_data
@@ -43,12 +45,7 @@ module NitroKit
         component: :radio_button,
         size: @size,
         attributes: {
-          data: {
-            controller: "nk--checkable",
-            action: "change->nk--checkable#change",
-            state: @checked ? "checked" : "unchecked",
-            disabled: @disabled ? "true" : nil
-          }.compact
+          data: { disabled: @disabled ? "true" : nil }.compact
         },
         html:,
         aria:,
@@ -93,44 +90,10 @@ module NitroKit
           required: @required,
           html: @control_html,
           aria: control_aria,
-          data: @control_data.merge(nk__checkable_target: "control")
+          data: @control_data
         ),
         :control
       )
-    end
-
-    def control_aria
-      attributes = @control_aria.dup
-      key = attributes.keys.find do |candidate|
-        candidate.to_s.downcase.tr("_", "-").delete_prefix("aria-") == "describedby"
-      end
-      describedby = [ attributes.delete(key), description_id ].compact.join(" ").presence
-
-      attributes.merge(describedby:)
-    end
-
-    def description_id
-      "#{id}-description" if description
-    end
-
-    def require_accessible_name!
-      return if label || block_given? || accessible_name?
-
-      raise ArgumentError, "radio button requires a label, block, or accessible control name"
-    end
-
-    def accessible_name?
-      @control_aria.any? do |key, value|
-        name = key.to_s.downcase.tr("_", "-").delete_prefix("aria-")
-        %w[label labelledby].include?(name) && value.to_s.present?
-      end
-    end
-
-    def validate_optional_text!(name, text)
-      return if text.nil?
-      return text if text.is_a?(String) && !text.strip.empty?
-
-      raise ArgumentError, "#{name} must be a non-blank String or nil"
     end
   end
 end

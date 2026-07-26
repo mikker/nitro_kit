@@ -17,9 +17,9 @@
   }
 
   :where(
-      [data-nk="pagination-bar"]
-        > [data-nk="pagination"][data-slot="pagination-bar-pagination"]
-    ) {
+    [data-nk="pagination-bar"]
+      > [data-nk="pagination"][data-slot="pagination-bar-pagination"]
+  ) {
     margin-inline-start: auto;
   }
 }
@@ -32,9 +32,9 @@
     }
 
     :where(
-        [data-nk="pagination-bar"]
-          > [data-nk="pagination"][data-slot="pagination-bar-pagination"]
-      ) {
+      [data-nk="pagination-bar"]
+        > [data-nk="pagination"][data-slot="pagination-bar-pagination"]
+    ) {
       margin-inline-start: 0;
     }
   }

@@ -8,9 +8,9 @@
   }
 
   :where(
-      [data-nk="settings-layout"] > [data-slot="settings-layout-navigation"],
-      [data-nk="settings-layout"] > [data-slot="settings-layout-content"]
-    ) {
+    [data-nk="settings-layout"] > [data-slot="settings-layout-navigation"],
+    [data-nk="settings-layout"] > [data-slot="settings-layout-content"]
+  ) {
     min-width: 0;
   }
 
@@ -43,35 +43,34 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="settings-layout"]
-        [data-slot="settings-layout-item-link"][data-state="current"]
-    ) {
+    [data-nk="settings-layout"]
+      [data-slot="settings-layout-item-link"][data-state="current"]
+  ) {
     color: var(--nk-color-foreground);
     background: var(--nk-color-muted);
   }
 
   @media (hover: hover) {
     :where(
-        [data-nk="settings-layout"]
-          [data-slot="settings-layout-item-link"]:hover
-      ) {
+      [data-nk="settings-layout"] [data-slot="settings-layout-item-link"]:hover
+    ) {
       color: var(--nk-color-foreground);
       background: var(--nk-color-muted);
     }
   }
 
   :where(
-      [data-nk="settings-layout"]
-        [data-slot="settings-layout-item-link"]:focus-visible
-    ) {
+    [data-nk="settings-layout"]
+      [data-slot="settings-layout-item-link"]:focus-visible
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: calc(var(--nk-focus-offset) * -1);
   }
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-        [data-nk="settings-layout"] [data-slot="settings-layout-item-link"]
-      ) {
+      [data-nk="settings-layout"] [data-slot="settings-layout-item-link"]
+    ) {
       transition-duration: 0.01ms;
     }
   }

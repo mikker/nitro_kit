@@ -4,8 +4,14 @@ module NitroKit
   class Component < Phlex::HTML
     DeferredContent = Data.define(:text, :block)
     private_constant :DeferredContent
-    PUBLIC_RESERVED_DATA_ATTRIBUTES = %w[nk slot variant size state nk-escape].freeze
-    INTERNAL_RESERVED_DATA_ATTRIBUTES = %w[nk slot variant size nk-escape enhanced].freeze
+    # Data keys a component sets for itself through `attributes:`.
+    COMPONENT_OWNED_DATA_ATTRIBUTES = %w[
+      state disabled required orientation presentation placement layout field-type
+    ].freeze
+    # Every data key Nitro owns. Applications may not pass any of them through `data:`.
+    RESERVED_DATA_ATTRIBUTES = (
+      %w[nk slot variant size nk-escape enhanced] + COMPONENT_OWNED_DATA_ATTRIBUTES
+    ).freeze
     ADDITIVE_DATA_ATTRIBUTES = %w[action controller].freeze
     FORBIDDEN_ATTRIBUTES = %w[class style].freeze
 
@@ -146,16 +152,18 @@ module NitroKit
     def validate_public_data!(data)
       data.each_key do |key|
         normalized = normalized_data_attribute(key)
-        next unless PUBLIC_RESERVED_DATA_ATTRIBUTES.include?(normalized)
+        next unless RESERVED_DATA_ATTRIBUTES.include?(normalized)
 
         raise ArgumentError, "data-#{normalized} is reserved by Nitro Kit"
       end
     end
 
     def validate_internal_data!(data)
+      base_owned = RESERVED_DATA_ATTRIBUTES - COMPONENT_OWNED_DATA_ATTRIBUTES
+
       data.each_key do |key|
         normalized = normalized_data_attribute(key)
-        next unless INTERNAL_RESERVED_DATA_ATTRIBUTES.include?(normalized)
+        next unless base_owned.include?(normalized)
 
         raise ArgumentError, "Use the component or slot API for data-#{normalized}"
       end
@@ -237,6 +245,55 @@ module NitroKit
 
     def normalized_data_attribute(key)
       normalized_attribute(key).delete_prefix("data-")
+    end
+
+    def normalized_aria_attribute(key)
+      normalized_attribute(key).delete_prefix("aria-")
+    end
+
+    # Conventions shared by the labelled control components. They read the
+    # `@label`, `@description`, `@id`, `@control_aria`, and `@invalid` state
+    # those components already keep.
+
+    def description_id
+      "#{@id}-description" if @id && @description
+    end
+
+    def control_aria
+      attributes = @control_aria.dup
+      key = attributes.keys.find { |candidate| normalized_aria_attribute(candidate) == "describedby" }
+      attributes[:describedby] = [ attributes.delete(key), description_id ].compact.join(" ").presence
+      attributes[:invalid] = "true" if @invalid
+      attributes
+    end
+
+    def require_accessible_name!(&block)
+      labelled = !@label.nil? || !block.nil?
+
+      unless labelled || accessible_name?
+        raise ArgumentError, "#{component_words} requires a label, block, or accessible control name"
+      end
+
+      if @description && !labelled
+        raise ArgumentError, "#{component_words} description requires label text or block content"
+      end
+    end
+
+    def accessible_name?
+      @control_aria.any? do |key, value|
+        %w[label labelledby].include?(normalized_aria_attribute(key)) && value.to_s.present?
+      end
+    end
+
+    def component_words
+      @component_name.tr("-", " ")
+    end
+
+    def validate_optional_text!(name, text)
+      return if text.nil?
+      return text if text.is_a?(String) && !text.strip.empty?
+
+      raise ArgumentError, "#{name} must be a non-blank String or nil"
     end
 
     def normalize_aria_values(attributes)

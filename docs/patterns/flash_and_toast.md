@@ -29,7 +29,7 @@ redirect_to projects_path, status: :see_other, notice: "Project created"
 redirect_to billing_path, status: :see_other, alert: "Payment method was declined"
 ```
 
-`notice` maps to the default presentation, `alert` and `error` to error, and `success`, `warning`, and `info` to their matching variants. Dismissible toast items are Turbo-temporary so a cached page does not replay old feedback.
+`notice` maps to the default presentation, `alert` and `error` to error, and `success`, `warning`, and `info` to their matching variants. Every toast item is Turbo-temporary so a cached page does not replay old feedback, dismissible or not. The region itself survives, so `#{toast id}-list` stays addressable.
 
 Use `flash.now` only when rendering in the current request:
 

@@ -19,6 +19,8 @@ module NitroKit
       unchecked_value: "",
       include_hidden: true,
       disabled: false,
+      required: false,
+      size: :md,
       html: {},
       aria: {},
       data: {},
@@ -35,6 +37,8 @@ module NitroKit
       @unchecked_value = unchecked_value
       @include_hidden = validate_boolean!(:include_hidden, include_hidden)
       @disabled = validate_boolean!(:disabled, disabled)
+      @required = validate_boolean!(:required, required)
+      @size = validate_choice!(:size, size, Checkbox::SIZES)
 
       raise ArgumentError, "options cannot be empty" if @options.empty?
       validate_unique_choices!
@@ -44,9 +48,11 @@ module NitroKit
 
       super(
         component: :checkbox_group,
+        size: @size,
         attributes: {
           id: @id,
           disabled: @disabled,
+          aria: { required: @required ? "true" : nil }.compact,
           data: { orientation: @orientation, presentation: @presentation }
         }.compact,
         html:,
@@ -56,7 +62,7 @@ module NitroKit
       )
     end
 
-    attr_reader :legend, :options, :name, :value, :description, :id, :orientation, :presentation
+    attr_reader :legend, :options, :name, :value, :description, :id, :size, :orientation, :presentation
 
     def view_template
       fieldset(**root_attributes) do
@@ -91,6 +97,8 @@ module NitroKit
       )
     end
 
+    # The fieldset and its legend already scope the group description, so a
+    # choice never repeats it through aria-describedby.
     def render_choice(choice, index)
       render_in_slot(
         Checkbox.new(
@@ -102,7 +110,7 @@ module NitroKit
           include_hidden: false,
           checked: value.include?(choice.value.to_s),
           disabled: @disabled || choice.disabled,
-          control_aria: { describedby: description_id }.compact
+          size:
         ),
         :choice
       )
@@ -113,28 +121,20 @@ module NitroKit
     end
 
     def deterministic_id(name)
-      name.to_s.gsub(/[^a-zA-Z0-9_-]+/, "_").gsub(/\A_+|_+\z/, "").presence
+      derived = name.to_s.gsub(/[^a-zA-Z0-9_-]+/, "_").gsub(/\A_+|_+\z/, "")
+      return derived unless derived.empty?
+
+      raise ArgumentError, "name #{name.inspect} cannot derive an id; pass id:"
     end
 
     def choice_id(index)
       "#{id}-#{index}" if id
     end
 
-    def description_id
-      "#{id}-description" if id && description
-    end
-
     def validate_text!(name, text)
       return text if text.is_a?(String) && !text.strip.empty?
 
       raise ArgumentError, "#{name} must be a non-blank String"
-    end
-
-    def validate_optional_text!(name, text)
-      return if text.nil?
-      return text if text.is_a?(String) && !text.strip.empty?
-
-      raise ArgumentError, "#{name} must be a non-blank String or nil"
     end
 
     def validate_unique_choices!

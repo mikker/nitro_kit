@@ -53,7 +53,8 @@
 
   :where(
     [data-nk="button"] > [data-slot="button-icon-start"],
-    [data-nk="button"] > [data-slot="button-icon-end"]
+    [data-nk="button"] > [data-slot="button-icon-end"],
+    [data-nk="button"] > [data-slot="button-spinner"]
   ) {
     display: inline-flex;
     flex: none;
@@ -65,7 +66,10 @@
     text-overflow: ellipsis;
   }
 
-  :where([data-nk="button"]:has(> [data-slot="button-icon-start"])) {
+  :where(
+    [data-nk="button"]:has(> [data-slot="button-icon-start"]),
+    [data-nk="button"]:has(> [data-slot="button-spinner"])
+  ) {
     padding-inline-start: var(--_nk-button-icon-padding);
   }
 
@@ -196,5 +200,23 @@
     pointer-events: none;
     cursor: default;
     opacity: 0.75;
+  }
+
+  :where([data-nk="button"][aria-busy="true"] > [data-slot="button-spinner"]) {
+    animation: nk-button-spin 1s linear infinite;
+  }
+
+  @keyframes nk-button-spin {
+    to {
+      rotate: 360deg;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(
+      [data-nk="button"][aria-busy="true"] > [data-slot="button-spinner"]
+    ) {
+      animation: none;
+    }
   }
 }

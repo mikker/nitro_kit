@@ -53,6 +53,16 @@ class ButtonCssTest < ActiveSupport::TestCase
     refute_includes css, "transition:"
   end
 
+  test "spins the owned loading slot and respects reduced motion" do
+    css = button_css
+
+    assert_includes css, '[data-nk="button"] > [data-slot="button-spinner"]'
+    assert_includes css, "animation: nk-button-spin 1s linear infinite"
+    assert_includes css, "@keyframes nk-button-spin"
+    assert_includes css, "@media (prefers-reduced-motion: reduce)"
+    assert_includes css, "animation: none"
+  end
+
   private
 
   def button_css

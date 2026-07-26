@@ -22,19 +22,20 @@ class BadgeTest < ActiveSupport::TestCase
     end
   end
 
-  test "renders constructor and call-time block content" do
-    constructor_node = render_node(NitroKit::Badge.new { "From constructor" })
-    call_node = render_node(NitroKit::Badge.new) { "From call" }
+  test "renders text or one block, never both" do
+    assert_equal "From a block", render_node(NitroKit::Badge.new { "From a block" }).text
 
-    assert_equal "From constructor", constructor_node.text
-    assert_equal "From call", call_node.text
+    error = assert_raises(ArgumentError) do
+      NitroKit::Badge.new("Status").call { "From a block" }
+    end
+    assert_match(/not both/, error.message)
   end
 
-  test "requires label content and stringifies scalar labels" do
-    error = assert_raises(ArgumentError) { NitroKit::Badge.new.call }
+  test "validates blank label text at construction and stringifies scalar labels" do
+    error = assert_raises(ArgumentError) { NitroKit::Badge.new("") }
     assert_match(/label content is required/, error.message)
-    assert_raises(ArgumentError) { NitroKit::Badge.new("").call }
-    assert_raises(ArgumentError) { NitroKit::Badge.new("   ").call }
+    assert_raises(ArgumentError) { NitroKit::Badge.new("   ") }
+    assert_raises(ArgumentError) { NitroKit::Badge.new.call }
 
     assert_equal "42", render_node(NitroKit::Badge.new(42)).text
     assert_equal "ready", render_node(NitroKit::Badge.new(:ready)).text
@@ -65,14 +66,14 @@ class BadgeTest < ActiveSupport::TestCase
   end
 
   test "validates every closed option immediately" do
-    variant_error = assert_raises(ArgumentError) { NitroKit::Badge.new(variant: :quiet) }
-    size_error = assert_raises(ArgumentError) { NitroKit::Badge.new(size: :lg) }
-    color_error = assert_raises(ArgumentError) { NitroKit::Badge.new(color: :chartreuse) }
+    variant_error = assert_raises(ArgumentError) { NitroKit::Badge.new("Status", variant: :quiet) }
+    size_error = assert_raises(ArgumentError) { NitroKit::Badge.new("Status", size: :lg) }
+    color_error = assert_raises(ArgumentError) { NitroKit::Badge.new("Status", color: :chartreuse) }
 
     assert_match(/Unknown variant :quiet/, variant_error.message)
     assert_match(/Unknown size :lg/, size_error.message)
     assert_match(/Unknown color :chartreuse/, color_error.message)
-    assert_raises(ArgumentError) { NitroKit::Badge.new(class: "utility") }
+    assert_raises(ArgumentError) { NitroKit::Badge.new("Status", class: "utility") }
   end
 
   test "supports the class escape hatch" do

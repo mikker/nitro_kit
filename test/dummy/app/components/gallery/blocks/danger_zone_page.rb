@@ -48,7 +48,7 @@ module Gallery
               zone.confirmation do
                 render NitroKit::Dialog.new(id: "gallery-danger-zone-confirm-dialog") do |dialog|
                   dialog.trigger("Review deletion", variant: :destructive)
-                  dialog.dialog(
+                  dialog.panel(
                     title: "Delete Production Deploy credential?",
                     description: "Confirm only after every production client has rotated to another credential."
                   ) do

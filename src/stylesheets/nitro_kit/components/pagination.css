@@ -17,20 +17,20 @@
   }
 
   :where(
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-    ) {
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+  ) {
     display: flex;
     flex: none;
   }
 
   :where(
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-        > [data-slot="pagination-ellipsis-label"]
-    ) {
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+      > [data-slot="pagination-ellipsis-label"]
+  ) {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -46,19 +46,19 @@
 
 @layer nitro-kit.compound {
   :where(
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-        > [data-slot="pagination-page"],
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-        > [data-slot="pagination-current"],
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-        > [data-slot="pagination-ellipsis"]
-    ) {
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+      > [data-slot="pagination-page"],
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+      > [data-slot="pagination-current"],
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+      > [data-slot="pagination-ellipsis"]
+  ) {
     min-inline-size: var(--nk-control-height-md);
     min-block-size: var(--nk-control-height-md);
     padding-inline: calc(var(--nk-space) * 2);
@@ -66,24 +66,24 @@
   }
 
   :where(
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-        > [data-slot="pagination-page"]
-    ) {
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+      > [data-slot="pagination-page"]
+  ) {
     justify-content: center;
   }
 
   :where(
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-        > [data-slot="pagination-page"][aria-current="page"],
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-        > [data-slot="pagination-current"]
-    ) {
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+      > [data-slot="pagination-page"][aria-current="page"],
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+      > [data-slot="pagination-current"]
+  ) {
     color: var(--nk-color-foreground);
     cursor: default;
     background: var(--nk-color-muted);
@@ -92,11 +92,11 @@
   }
 
   :where(
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-        > [data-slot="pagination-current"]
-    ) {
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+      > [data-slot="pagination-current"]
+  ) {
     display: inline-grid;
     place-items: center;
     font-size: var(--nk-text-sm);
@@ -106,11 +106,11 @@
   }
 
   :where(
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-        > [data-slot="pagination-ellipsis"]
-    ) {
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+      > [data-slot="pagination-ellipsis"]
+  ) {
     display: inline-grid;
     place-items: center;
     color: var(--nk-color-muted-foreground);

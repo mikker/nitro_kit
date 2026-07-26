@@ -35,7 +35,8 @@ class FormerProComponentsGalleryTest < ActionDispatch::IntegrationTest
 
     assert_select "#gallery-progressive-image-empty[data-state='empty']:not([data-controller])"
     assert_select "#gallery-progressive-image-empty img", count: 0
-    assert_select "#gallery-progressive-image-empty [data-slot='progressive-image-fallback'][role='status']", text: "Image unavailable"
+    assert_select "#gallery-progressive-image-empty [data-slot='progressive-image-fallback']:not([role])", text: "Workspace cover"
+    assert_select "#gallery-progressive-image-error [data-slot='progressive-image-fallback'][role='status']", text: "Unavailable workspace cover"
 
     assert_select "#gallery-progressive-image-decorative [data-slot='progressive-image-placeholder'][alt=''][aria-hidden='true']"
     assert_select "#gallery-progressive-image-decorative [data-slot='progressive-image-image'][alt='']"

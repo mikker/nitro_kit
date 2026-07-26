@@ -40,15 +40,13 @@ module NitroKit
           description: attributes[:description]
         )
       when Array
-        raise ArgumentError, "choice arrays must contain a label and value" unless choice.length.between?(1, 5)
+        unless choice.length.between?(1, 2)
+          raise ArgumentError,
+            "choice arrays hold a label and an optional value; " \
+            "pass a Hash to declare disabled, id, or description"
+        end
 
-        new(
-          label: choice.fetch(0),
-          value: choice.fetch(1, choice.fetch(0)),
-          disabled: choice.fetch(2, false),
-          id: choice.fetch(3, nil),
-          description: choice.fetch(4, nil)
-        )
+        new(label: choice.fetch(0), value: choice.fetch(1, choice.fetch(0)))
       else
         new(label: choice, value: choice)
       end

@@ -16,27 +16,25 @@
   }
 
   :where(
-      [data-nk="radio-button"][data-size="lg"]
-        > [data-slot="radio-button-label"]
-    ) {
+    [data-nk="radio-button"][data-size="lg"] > [data-slot="radio-button-label"]
+  ) {
     grid-template-columns: 1.5rem minmax(0, 1fr);
   }
 
   :where(
-      [data-nk="radio-button"] [data-slot="radio-button-control"],
-      [data-nk="radio-button"] [data-slot="radio-button-indicator"]
-    ) {
+    [data-nk="radio-button"] [data-slot="radio-button-control"],
+    [data-nk="radio-button"] [data-slot="radio-button-indicator"]
+  ) {
     grid-area: 1 / 1;
     inline-size: 1.125rem;
     block-size: 1.125rem;
   }
 
   :where(
-      [data-nk="radio-button"][data-size="lg"]
-        [data-slot="radio-button-control"],
-      [data-nk="radio-button"][data-size="lg"]
-        [data-slot="radio-button-indicator"]
-    ) {
+    [data-nk="radio-button"][data-size="lg"] [data-slot="radio-button-control"],
+    [data-nk="radio-button"][data-size="lg"]
+      [data-slot="radio-button-indicator"]
+  ) {
     inline-size: 1.5rem;
     block-size: 1.5rem;
   }
@@ -86,26 +84,26 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="radio-button"]
-        [data-slot="radio-button-control"]:checked
-        + [data-slot="radio-button-indicator"]
-    ) {
+    [data-nk="radio-button"]
+      [data-slot="radio-button-control"]:checked
+      + [data-slot="radio-button-indicator"]
+  ) {
     border-color: var(--nk-color-primary);
   }
 
   :where(
-      [data-nk="radio-button"]
-        [data-slot="radio-button-control"]:checked
-        + [data-slot="radio-button-indicator"]
-    )::after {
+    [data-nk="radio-button"]
+      [data-slot="radio-button-control"]:checked
+      + [data-slot="radio-button-indicator"]
+  )::after {
     opacity: 1;
   }
 
   :where(
-      [data-nk="radio-button"]
-        [data-slot="radio-button-control"]:focus-visible
-        + [data-slot="radio-button-indicator"]
-    ) {
+    [data-nk="radio-button"]
+      [data-slot="radio-button-control"]:focus-visible
+      + [data-slot="radio-button-indicator"]
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -116,10 +114,10 @@
   }
 
   :where(
-      [data-nk="radio-button"]
-        [data-slot="radio-button-control"][aria-invalid="true"]
-        + [data-slot="radio-button-indicator"]
-    ) {
+    [data-nk="radio-button"]
+      [data-slot="radio-button-control"][aria-invalid="true"]
+      + [data-slot="radio-button-indicator"]
+  ) {
     border-color: var(--nk-color-danger);
   }
 }

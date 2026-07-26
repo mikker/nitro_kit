@@ -161,7 +161,7 @@ module NitroKit
         :next,
         text:,
         href:,
-        icon_right: icon,
+        icon_end: icon,
         disabled: disabled || missing_href?(href),
         default_label: "Next page",
         id:,
@@ -227,7 +227,7 @@ module NitroKit
       text:,
       href:,
       icon: nil,
-      icon_right: nil,
+      icon_end: nil,
       disabled:,
       default_label:,
       id:,
@@ -237,7 +237,7 @@ module NitroKit
       desperately_need_a_class:,
       &content
     )
-      validate_content!(text, content, icon || icon_right, name: "#{kind} label or icon")
+      validate_content!(text, content, icon || icon_end, name: "#{kind} label or icon")
       validate_aria!(aria, reserved: %w[disabled current])
       item_aria = accessible_item_aria(aria, text:, content:, default_label:)
 
@@ -245,7 +245,7 @@ module NitroKit
         text,
         href:,
         icon:,
-        icon_right:,
+        icon_end:,
         disabled:,
         id:,
         html:,
@@ -262,7 +262,7 @@ module NitroKit
       href:,
       disabled:,
       icon: nil,
-      icon_right: nil,
+      icon_end: nil,
       id:,
       html:,
       aria:,
@@ -275,7 +275,7 @@ module NitroKit
         variant: :ghost,
         size: :sm,
         icon:,
-        icon_right:,
+        icon_end:,
         id:,
         disabled:,
         html:,

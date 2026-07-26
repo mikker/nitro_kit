@@ -15,7 +15,7 @@ module Gallery
         example_section(
           "Submission states",
           slug: "checkbox-states",
-          description: "Checked, unchecked, and native indeterminate state stay synchronized as the control changes."
+          description: "Checked and unchecked state stay native. Only indeterminate needs an enhancer, because HTML cannot express it."
         ) do
           example("Boolean states", slug: "checkbox-boolean-states", layout: :matrix) do
             sample("Unchecked", slug: "unchecked") do
@@ -56,6 +56,39 @@ module Gallery
                 checked: true,
                 disabled: true,
                 html: { id: "gallery-checkbox-disabled" }
+              )
+            end
+            sample("Invalid", slug: "invalid") do
+              render NitroKit::Checkbox.new(
+                label: "Accept the processing agreement",
+                id: "gallery-checkbox-invalid-control",
+                name: "preferences[processing_agreement]",
+                required: true,
+                invalid: true,
+                html: { id: "gallery-checkbox-invalid" }
+              )
+            end
+          end
+
+          example("Sizes", slug: "checkbox-sizes", layout: :matrix) do
+            sample("Medium", slug: "medium") do
+              render NitroKit::Checkbox.new(
+                label: "Medium checkbox",
+                id: "gallery-checkbox-medium-control",
+                name: "preferences[medium]",
+                checked: true,
+                size: :md,
+                html: { id: "gallery-checkbox-medium" }
+              )
+            end
+            sample("Large", slug: "large") do
+              render NitroKit::Checkbox.new(
+                label: "Large checkbox",
+                id: "gallery-checkbox-large-control",
+                name: "preferences[large]",
+                checked: true,
+                size: :lg,
+                html: { id: "gallery-checkbox-large" }
               )
             end
           end

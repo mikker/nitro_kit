@@ -22,11 +22,10 @@
   }
 
   :where(
-      [data-nk="progressive-image"]
-        > [data-slot="progressive-image-placeholder"],
-      [data-nk="progressive-image"] > [data-slot="progressive-image-image"],
-      [data-nk="progressive-image"] > [data-slot="progressive-image-fallback"]
-    ) {
+    [data-nk="progressive-image"] > [data-slot="progressive-image-placeholder"],
+    [data-nk="progressive-image"] > [data-slot="progressive-image-image"],
+    [data-nk="progressive-image"] > [data-slot="progressive-image-fallback"]
+  ) {
     grid-area: 1 / 1;
     inline-size: 100%;
     block-size: 100%;
@@ -34,17 +33,15 @@
   }
 
   :where(
-      [data-nk="progressive-image"]
-        > [data-slot="progressive-image-placeholder"],
-      [data-nk="progressive-image"] > [data-slot="progressive-image-image"]
-    ) {
+    [data-nk="progressive-image"] > [data-slot="progressive-image-placeholder"],
+    [data-nk="progressive-image"] > [data-slot="progressive-image-image"]
+  ) {
     object-fit: cover;
   }
 
   :where(
-      [data-nk="progressive-image"]
-        > [data-slot="progressive-image-placeholder"]
-    ) {
+    [data-nk="progressive-image"] > [data-slot="progressive-image-placeholder"]
+  ) {
     z-index: 1;
     filter: blur(1rem);
     opacity: 0;
@@ -52,15 +49,15 @@
   }
 
   :where(
-      [data-nk="progressive-image"] > [data-slot="progressive-image-image"]
-    ) {
+    [data-nk="progressive-image"] > [data-slot="progressive-image-image"]
+  ) {
     z-index: 2;
     opacity: 1;
   }
 
   :where(
-      [data-nk="progressive-image"] > [data-slot="progressive-image-fallback"]
-    ) {
+    [data-nk="progressive-image"] > [data-slot="progressive-image-fallback"]
+  ) {
     display: grid;
     min-block-size: 10rem;
     padding: calc(var(--nk-space) * 6);
@@ -74,43 +71,43 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="progressive-image"][data-enhanced="true"]
-        > [data-slot="progressive-image-placeholder"],
-      [data-nk="progressive-image"][data-enhanced="true"]
-        > [data-slot="progressive-image-image"]
-    ) {
+    [data-nk="progressive-image"][data-enhanced="true"]
+      > [data-slot="progressive-image-placeholder"],
+    [data-nk="progressive-image"][data-enhanced="true"]
+      > [data-slot="progressive-image-image"]
+  ) {
     transition: opacity var(--nk-duration-slow) var(--nk-ease);
   }
 
   :where(
-      [data-nk="progressive-image"][data-enhanced="true"][data-state="loading"]
-        > [data-slot="progressive-image-placeholder"]
-    ) {
+    [data-nk="progressive-image"][data-enhanced="true"][data-state="loading"]
+      > [data-slot="progressive-image-placeholder"]
+  ) {
     opacity: 1;
   }
 
   :where(
-      [data-nk="progressive-image"][data-enhanced="true"][data-state="loading"]
-        > [data-slot="progressive-image-image"]
-    ) {
+    [data-nk="progressive-image"][data-enhanced="true"][data-state="loading"]
+      > [data-slot="progressive-image-image"]
+  ) {
     opacity: 0;
   }
 
   :where(
-      [data-nk="progressive-image"][data-enhanced="true"][data-state="loaded"]
-        > [data-slot="progressive-image-image"]
-    ) {
+    [data-nk="progressive-image"][data-enhanced="true"][data-state="loaded"]
+      > [data-slot="progressive-image-image"]
+  ) {
     opacity: 1;
   }
 
   :where(
-      [data-nk="progressive-image"][data-enhanced="true"][data-state="loaded"]
-        > [data-slot="progressive-image-placeholder"],
-      [data-nk="progressive-image"][data-enhanced="true"][data-state="error"]
-        > [data-slot="progressive-image-placeholder"],
-      [data-nk="progressive-image"][data-enhanced="true"][data-state="error"]
-        > [data-slot="progressive-image-image"]
-    ) {
+    [data-nk="progressive-image"][data-enhanced="true"][data-state="loaded"]
+      > [data-slot="progressive-image-placeholder"],
+    [data-nk="progressive-image"][data-enhanced="true"][data-state="error"]
+      > [data-slot="progressive-image-placeholder"],
+    [data-nk="progressive-image"][data-enhanced="true"][data-state="error"]
+      > [data-slot="progressive-image-image"]
+  ) {
     opacity: 0;
   }
 }
@@ -122,8 +119,8 @@
 
   @media (prefers-color-scheme: dark) {
     :where(
-        :root:not([data-theme="light"]) [data-nk="progressive-image"]
-      )::after {
+      :root:not([data-theme="light"]) [data-nk="progressive-image"]
+    )::after {
       outline-color: oklch(1 0 0 / 10%);
     }
   }
@@ -132,10 +129,10 @@
 @media (prefers-reduced-motion: reduce) {
   @layer nitro-kit.state {
     :where(
-        [data-nk="progressive-image"]
-          > [data-slot="progressive-image-placeholder"],
-        [data-nk="progressive-image"] > [data-slot="progressive-image-image"]
-      ) {
+      [data-nk="progressive-image"]
+        > [data-slot="progressive-image-placeholder"],
+      [data-nk="progressive-image"] > [data-slot="progressive-image-image"]
+    ) {
       transition-duration: 0s;
     }
   }

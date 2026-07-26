@@ -261,7 +261,8 @@ module Gallery
       IconExample.new(slug: "xs", name: :save, size: :xs, label: "Extra small save icon", stroke_width: 1.5),
       IconExample.new(slug: "sm", name: :save, size: :sm, label: "Small save icon", stroke_width: 1.5),
       IconExample.new(slug: "md", name: :save, size: :md, label: "Medium save icon", stroke_width: 1.5),
-      IconExample.new(slug: "lg", name: :save, size: :lg, label: "Large save icon", stroke_width: 1.5)
+      IconExample.new(slug: "lg", name: :save, size: :lg, label: "Large save icon", stroke_width: 1.5),
+      IconExample.new(slug: "xl", name: :save, size: :xl, label: "Extra large save icon", stroke_width: 1.5)
     ].freeze
 
     ALERT_VARIANTS = [
@@ -271,6 +272,20 @@ module Gallery
         description: "Your changes are visible to all members.",
         variant: :default,
         icon: :info
+      ),
+      AlertExample.new(
+        slug: "info",
+        title: "Release 2026.08 is scheduled",
+        description: "Maintenance starts Thursday at 02:00 UTC and lasts about ten minutes.",
+        variant: :info,
+        icon: :info
+      ),
+      AlertExample.new(
+        slug: "success",
+        title: "Invitation sent",
+        description: "Katherine Johnson can now join the workspace.",
+        variant: :success,
+        icon: :circle_check
       ),
       AlertExample.new(
         slug: "warning",
@@ -285,13 +300,6 @@ module Gallery
         description: "The production release stopped during database migration.",
         variant: :error,
         icon: :circle_x
-      ),
-      AlertExample.new(
-        slug: "success",
-        title: "Invitation sent",
-        description: "Katherine Johnson can now join the workspace.",
-        variant: :success,
-        icon: :circle_check
       )
     ].freeze
 

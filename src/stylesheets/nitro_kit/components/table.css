@@ -23,9 +23,9 @@
   }
 
   :where(
-      [data-nk="table"] [data-slot="table-header"],
-      [data-nk="table"] [data-slot="table-cell"]
-    ) {
+    [data-nk="table"] [data-slot="table-header"],
+    [data-nk="table"] [data-slot="table-cell"]
+  ) {
     min-block-size: var(--nk-control-height-md);
     padding: calc(var(--nk-space) * 2);
     text-align: start;
@@ -56,25 +56,25 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="table"]
-        [data-slot="table-header"]:is(
-          [aria-sort="ascending"],
-          [aria-sort="descending"]
-        )
-        [data-slot="table-sort"]
-    ) {
+    [data-nk="table"]
+      [data-slot="table-header"]:is(
+        [aria-sort="ascending"],
+        [aria-sort="descending"]
+      )
+      [data-slot="table-sort"]
+  ) {
     color: var(--nk-color-foreground);
     font-weight: var(--nk-font-weight-semibold);
   }
 
   :where(
-      [data-nk="table"]
-        [data-slot="table-header"]:is(
-          [aria-sort="ascending"],
-          [aria-sort="descending"]
-        )
-        [data-slot="table-sort-indicator"]
-    ) {
+    [data-nk="table"]
+      [data-slot="table-header"]:is(
+        [aria-sort="ascending"],
+        [aria-sort="descending"]
+      )
+      [data-slot="table-sort-indicator"]
+  ) {
     color: var(--nk-color-primary);
     opacity: 1;
   }
@@ -85,10 +85,10 @@
     }
 
     :where(
-        [data-nk="table"]
-          [data-slot="table-sort"]:hover
-          [data-slot="table-sort-indicator"]
-      ) {
+      [data-nk="table"]
+        [data-slot="table-sort"]:hover
+        [data-slot="table-sort-indicator"]
+    ) {
       opacity: 1;
     }
   }

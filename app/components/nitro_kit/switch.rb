@@ -2,7 +2,7 @@
 
 module NitroKit
   class Switch < Component
-    SIZES = %i[sm md].freeze
+    SIZES = %i[md lg].freeze
 
     def initialize(
       label: nil,
@@ -15,6 +15,7 @@ module NitroKit
       checked: false,
       disabled: false,
       required: false,
+      invalid: false,
       size: :md,
       html: {},
       aria: {},
@@ -34,7 +35,8 @@ module NitroKit
       @checked = validate_boolean!(:checked, checked)
       @disabled = validate_boolean!(:disabled, disabled)
       @required = validate_boolean!(:required, required)
-      @size = validate_choice!(:size, size.to_s.to_sym, SIZES)
+      @invalid = validate_boolean!(:invalid, invalid)
+      @size = validate_choice!(:size, size, SIZES)
       @control_html = control_html
       @control_aria = control_aria
       @control_data = control_data
@@ -50,12 +52,7 @@ module NitroKit
         component: :switch,
         size: @size,
         attributes: {
-          data: {
-            controller: "nk--checkable",
-            action: "change->nk--checkable#change",
-            state: @checked ? "checked" : "unchecked",
-            disabled: @disabled ? "true" : nil
-          }.compact
+          data: { disabled: @disabled ? "true" : nil }.compact
         },
         html:,
         aria:,
@@ -72,20 +69,29 @@ module NitroKit
       div(**root_attributes) do
         render_hidden_control
 
-        render_in_slot(Label.new(for: id), :label) do
+        if label.nil? && !block
           render_control
-          span(**slot_attributes(:track), aria: { hidden: "true" }) do
-            span(**slot_attributes(:handle))
+          render_track
+        else
+          render_in_slot(Label.new(for: id), :label) do
+            render_control
+            render_track
+            span(**slot_attributes(:content)) do
+              span(**slot_attributes(:label_text)) { text_or_block(label, &block) }
+              span(**slot_attributes(:description, attributes: { id: description_id })) { plain(description) } if description
+            end
           end
-
-          span(**slot_attributes(:label_text)) { text_or_block(label, &block) } if label || block
         end
-
-        span(**slot_attributes(:description, attributes: { id: description_id })) { plain(description) } if description
       end
     end
 
     private
+
+    def render_track
+      span(**slot_attributes(:track), aria: { hidden: "true" }) do
+        span(**slot_attributes(:handle))
+      end
+    end
 
     def render_hidden_control
       return unless @include_hidden && name
@@ -112,46 +118,13 @@ module NitroKit
           checked: @checked,
           disabled: @disabled,
           required: @required,
+          # role is owned by Switch; a control_html role: is replaced, not merged.
           html: @control_html.merge(role: "switch"),
           aria: control_aria,
-          data: @control_data.merge(nk__checkable_target: "control")
+          data: @control_data
         ),
         :control
       )
-    end
-
-    def control_aria
-      attributes = @control_aria.dup
-      key = attributes.keys.find do |candidate|
-        candidate.to_s.downcase.tr("_", "-").delete_prefix("aria-") == "describedby"
-      end
-      describedby = [ attributes.delete(key), description_id ].compact.join(" ").presence
-
-      attributes.merge(describedby:)
-    end
-
-    def description_id
-      "#{id}-description" if description
-    end
-
-    def require_accessible_name!
-      return if label || block_given? || accessible_name?
-
-      raise ArgumentError, "switch requires a label, block, or accessible control name"
-    end
-
-    def accessible_name?
-      @control_aria.any? do |key, value|
-        name = key.to_s.downcase.tr("_", "-").delete_prefix("aria-")
-        %w[label labelledby].include?(name) && value.to_s.present?
-      end
-    end
-
-    def validate_optional_text!(name, text)
-      return if text.nil?
-      return text if text.is_a?(String) && !text.strip.empty?
-
-      raise ArgumentError, "#{name} must be a non-blank String or nil"
     end
   end
 end

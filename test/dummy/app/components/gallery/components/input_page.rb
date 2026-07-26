@@ -73,6 +73,79 @@ module Gallery
         end
 
         example_section(
+          "Date controls",
+          slug: "input-dates",
+          description: "Date selection is an ordinary native input with server-verifiable constraints and normalized cross-browser alignment."
+        ) do
+          example("Date matrix", slug: "input-date-matrix", layout: :matrix) do
+            sample("Empty", slug: "empty") do
+              render_date("gallery-input-date-empty", aria: { label: "Start date" })
+            end
+            sample("Selected", slug: "selected") do
+              render_date(
+                "gallery-input-date-selected",
+                value: Date.new(2026, 7, 13),
+                aria: { label: "Start date" }
+              )
+            end
+            sample("Required range", slug: "required-range") do
+              render_date(
+                "gallery-input-date-required",
+                min: Date.new(2026, 7, 13),
+                max: Date.new(2026, 8, 13),
+                required: true,
+                aria: { label: "Deployment date" }
+              )
+            end
+            sample("Read only", slug: "readonly") do
+              render_date(
+                "gallery-input-date-readonly",
+                value: Date.new(2026, 7, 13),
+                readonly: true,
+                aria: { label: "Invoice date" }
+              )
+            end
+            sample("Disabled", slug: "disabled") do
+              render_date(
+                "gallery-input-date-disabled",
+                value: Date.new(2026, 7, 13),
+                disabled: true,
+                aria: { label: "Archived date" }
+              )
+            end
+          end
+
+          example("Schedule a release", slug: "input-date-release-form") do
+            render NitroKit::Card.new(id: "gallery-input-date-release-card") do |card|
+              card.title("Schedule production release", level: 3)
+              card.body do
+                form(id: "gallery-input-date-release-form", action: "/gallery/releases", method: "post") do
+                  render NitroKit::Field.new(
+                    nil,
+                    :release_date,
+                    as: :date,
+                    id: "gallery-input-date-release-date",
+                    name: "release[date]",
+                    label: "Release date",
+                    description: "Choose a weekday within the next thirty days.",
+                    value: Date.new(2026, 7, 20),
+                    min: Date.new(2026, 7, 13),
+                    max: Date.new(2026, 8, 12),
+                    required: true
+                  )
+                  render NitroKit::Button.new(
+                    "Schedule release",
+                    id: "gallery-input-date-schedule",
+                    type: :submit,
+                    variant: :primary
+                  )
+                end
+              end
+            end
+          end
+        end
+
+        example_section(
           "Validation and availability",
           slug: "input-states",
           description: "Required, invalid, read-only, and disabled state remains inspectable in native attributes."
@@ -117,6 +190,10 @@ module Gallery
             end
           end
         end
+      end
+
+      def render_date(id, **attributes)
+        render NitroKit::Input.new(type: :date, id:, name: "schedule[date]", **attributes)
       end
 
       def render_input(input)

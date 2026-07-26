@@ -15,28 +15,39 @@ module Gallery
         example_section(
           "Submission states",
           slug: "switch-states",
-          description: "Switches remain native checkboxes with hidden unchecked values and live checked-state reflection."
+          description: "Switches remain native checkboxes with hidden unchecked values; checked state is styled from :checked, not mirrored into data attributes."
         ) do
           example("State and size matrix", slug: "switch-state-matrix", layout: :matrix) do
-            sample("Small off", slug: "small-off") do
+            sample("Medium off", slug: "medium-off") do
               render NitroKit::Switch.new(
                 label: "Weekly digest",
                 description: "One summary every Monday morning.",
-                id: "gallery-switch-small-control",
+                id: "gallery-switch-medium-control",
                 name: "preferences[weekly_digest]",
-                size: :sm,
-                html: { id: "gallery-switch-small" }
+                size: :md,
+                html: { id: "gallery-switch-medium" }
               )
             end
-            sample("Medium on", slug: "medium-on") do
+            sample("Large on", slug: "large-on") do
               render NitroKit::Switch.new(
                 label: "Deployment alerts",
                 description: "Notify the operations channel after production deploys.",
-                id: "gallery-switch-medium-control",
+                id: "gallery-switch-large-control",
                 name: "preferences[deployment_alerts]",
                 checked: true,
-                size: :md,
-                html: { id: "gallery-switch-medium" }
+                size: :lg,
+                html: { id: "gallery-switch-large" }
+              )
+            end
+            sample("Invalid", slug: "invalid") do
+              render NitroKit::Switch.new(
+                label: "Accept the processing agreement",
+                description: "Required before data exports can run.",
+                id: "gallery-switch-invalid-control",
+                name: "preferences[processing_agreement]",
+                invalid: true,
+                required: true,
+                html: { id: "gallery-switch-invalid" }
               )
             end
             sample("Required", slug: "required") do

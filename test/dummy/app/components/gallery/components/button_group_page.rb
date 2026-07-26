@@ -79,7 +79,7 @@ module Gallery
               group.button(
                 "Archive",
                 id: "gallery-button-group-mixed-archive",
-                icon_right: :archive,
+                icon_end: :archive,
                 disabled: true
               )
               group.button(
@@ -89,6 +89,29 @@ module Gallery
                 aria: { label: "Delete selected audit records" }
               )
               group.button(id: "gallery-button-group-mixed-block") { "Block-provided action" }
+            end
+          end
+        end
+
+        example_section(
+          "Group defaults",
+          slug: "button-group-defaults",
+          description: "A group-level variant and size become the default every member inherits."
+        ) do
+          example("Inherited treatment", slug: "button-group-inherited-treatment", mode: :full_width) do
+            render NitroKit::ButtonGroup.new(
+              id: "gallery-button-group-defaults",
+              label: "Release actions",
+              variant: :primary,
+              size: :lg
+            ) do |group|
+              group.button("Promote release", id: "gallery-button-group-defaults-promote")
+              group.button("Compare builds", id: "gallery-button-group-defaults-compare")
+              group.button(
+                "Roll back",
+                id: "gallery-button-group-defaults-rollback",
+                variant: :destructive
+              )
             end
           end
         end

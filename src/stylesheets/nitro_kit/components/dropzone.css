@@ -17,12 +17,12 @@
   }
 
   :where(
-      [data-nk="dropzone"] [data-slot="dropzone-instruction"],
-      [data-nk="dropzone"] [data-slot="dropzone-description"],
-      [data-nk="dropzone"] [data-slot="dropzone-file-size"],
-      [data-nk="dropzone"] [data-slot="dropzone-file-status"],
-      [data-nk="dropzone"] > [data-slot="dropzone-status"]
-    ) {
+    [data-nk="dropzone"] [data-slot="dropzone-instruction"],
+    [data-nk="dropzone"] [data-slot="dropzone-description"],
+    [data-nk="dropzone"] [data-slot="dropzone-file-size"],
+    [data-nk="dropzone"] [data-slot="dropzone-file-status"],
+    [data-nk="dropzone"] > [data-slot="dropzone-status"]
+  ) {
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
   }
@@ -37,8 +37,8 @@
   }
 
   :where(
-      [data-nk="dropzone"] > [data-slot="dropzone-input"]
-    )::file-selector-button {
+    [data-nk="dropzone"] > [data-slot="dropzone-input"]
+  )::file-selector-button {
     min-block-size: calc(
       var(--nk-control-height-md) - (var(--nk-border-width) * 2)
     );
@@ -128,9 +128,9 @@
   }
 
   :where(
-      [data-nk="dropzone"] > [data-slot="dropzone-input"]:focus-visible,
-      [data-nk="dropzone"] [data-slot="dropzone-remove-control"]:focus-visible
-    ) {
+    [data-nk="dropzone"] > [data-slot="dropzone-input"]:focus-visible,
+    [data-nk="dropzone"] [data-slot="dropzone-remove-control"]:focus-visible
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }

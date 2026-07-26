@@ -2,21 +2,27 @@
 
 module NitroKit
   class Alert < Component
-    VARIANTS = %i[default warning error success].freeze
-    COLORS = NitroKit::Badge::COLORS
-    VARIANT_COLORS = {
+    VARIANTS = %i[default info success warning error].freeze
+
+    # The palette family each semantic variant borrows in `palette.css`.
+    # Alert owns this mapping; it is not the Badge color axis.
+    VARIANT_PALETTE = {
       default: :zinc,
+      info: :blue,
+      success: :green,
       warning: :amber,
-      error: :red,
-      success: :green
+      error: :red
     }.freeze
+
     LIVE_MODES = %i[off polite assertive].freeze
-    Region = Data.define(:text, :content, :html, :aria, :data, :css_class)
-    Child = Data.define(:component, :content)
+
+    Child = ::Data.define(:component, :content)
+    private_constant :Child
 
     def initialize(
       variant: :default,
-      color: nil,
+      title: nil,
+      description: nil,
       live: :off,
       id: nil,
       html: {},
@@ -25,15 +31,14 @@ module NitroKit
       desperately_need_a_class: nil
     )
       @variant = validate_choice!(:variant, variant, VARIANTS)
-      @color = validate_choice!(:color, color || VARIANT_COLORS.fetch(@variant), COLORS)
       @live = validate_choice!(:live, live, LIVE_MODES)
+      @title_content = content_from_keyword(:title, title)
+      @description_content = content_from_keyword(:description, description)
       @icon = nil
-      @title = nil
-      @description = nil
 
       super(
         component: :alert,
-        attributes: { id:, role: live_role, data: { color: @color } },
+        attributes: { id:, role: live_role },
         html:,
         aria:,
         data:,
@@ -44,81 +49,58 @@ module NitroKit
 
     attr_reader :variant
 
-    def view_template
-      yield self if block_given?
+    def view_template(&block)
+      collect_declarations(&block)
 
       div(**root_attributes) do
         render_in_slot(@icon.component, :icon, &@icon.content) if @icon
-        render_region(:title, @title) if @title
-        render_region(:description, @description) if @description
+        if @title_content
+          div(**slot_attributes(:title)) { render_deferred_content(@title_content) }
+        end
+        if @description_content
+          div(**slot_attributes(:description)) { render_deferred_content(@description_content) }
+        end
       end
     end
 
-    def icon(component, &block)
+    def icon(component, &content)
+      ensure_collecting!
+      unless component.is_a?(NitroKit::Icon)
+        raise ArgumentError, "Alert icon must be a NitroKit::Icon"
+      end
       raise ArgumentError, "Alert accepts at most one icon" if @icon
-      unless component.is_a?(NitroKit::Component)
-        raise ArgumentError, "Alert icon must be a NitroKit::Component"
-      end
 
-      @icon = Child.new(component:, content: block)
+      @icon = Child.new(component:, content:)
       nil
     end
 
-    def title(
-      text = nil,
-      html: {},
-      aria: {},
-      data: {},
-      desperately_need_a_class: nil,
-      &block
-    )
-      @title = declare_region(:title, @title, text, block, html, aria, data, desperately_need_a_class)
+    def title(text = nil, &block)
+      ensure_collecting!
+      @title_content = declare_content(:title, @title_content, text, &block)
       nil
     end
 
-    def description(
-      text = nil,
-      html: {},
-      aria: {},
-      data: {},
-      desperately_need_a_class: nil,
-      &block
-    )
-      @description = declare_region(
-        :description,
-        @description,
-        text,
-        block,
-        html,
-        aria,
-        data,
-        desperately_need_a_class
-      )
+    def description(text = nil, &block)
+      ensure_collecting!
+      @description_content = declare_content(:description, @description_content, text, &block)
       nil
     end
 
     private
 
-    def declare_region(name, current, text, content, html, aria, data, css_class)
-      raise ArgumentError, "Alert accepts at most one #{name}" if current
-      raise ArgumentError, "Alert #{name} accepts text or a block, not both" if !text.nil? && content
-      validate_content_text!("Alert #{name}", text) unless content
+    def collect_declarations
+      return unless block_given?
 
-      Region.new(text:, content:, html:, aria:, data:, css_class:)
+      @collecting = true
+      yield(self)
+    ensure
+      @collecting = false
     end
 
-    def render_region(name, region)
-      div(
-        **slot_attributes(
-          name,
-          html: region.html,
-          aria: region.aria,
-          data: region.data,
-          desperately_need_a_class: region.css_class
-        )
-      ) do
-        text_or_block(region.text, &region.content)
-      end
+    def ensure_collecting!
+      return if @collecting
+
+      raise ArgumentError, "Alert declarations must be inside the render block"
     end
 
     def live_role

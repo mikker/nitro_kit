@@ -17,7 +17,6 @@
   }
 
   :where([data-nk="dialog"] [data-slot="dialog-title"]) {
-    padding-inline-end: calc(var(--nk-space) * 10);
     font-size: var(--nk-text-lg);
     font-weight: var(--nk-font-weight-semibold);
     line-height: var(--nk-leading-tight);
@@ -32,10 +31,17 @@
     text-wrap: pretty;
   }
 
-  :where([data-nk="dialog"] [data-slot="dialog-close"]) {
-    position: absolute;
-    inset-block-start: calc(var(--nk-space) * 2);
-    inset-inline-end: calc(var(--nk-space) * 2);
+  /* The close control precedes the panel content and sticks to the top of the
+     scrolling panel so long content never scrolls it out of reach. */
+  :where(
+    [data-nk="dialog"] > [data-slot="dialog-panel"] > [data-slot="dialog-close"]
+  ) {
+    position: sticky;
+    z-index: 1;
+    float: inline-end;
+    inset-block-start: 0;
+    margin-block-end: calc(var(--nk-space) * -2);
+    margin-inline-start: calc(var(--nk-space) * 2);
   }
 }
 

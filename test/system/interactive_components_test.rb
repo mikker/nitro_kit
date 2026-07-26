@@ -225,8 +225,8 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
   end
 
   test "date input exposes native value range required readonly and disabled behavior" do
-    path = visit_component("datepicker")
-    required = find("#gallery-datepicker-required")
+    path = visit_component("input")
+    required = find("#gallery-input-date-required")
 
     set_native_value(required, "")
     assert evaluate_script("arguments[0].validity.valueMissing", required)
@@ -238,9 +238,9 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
     assert_equal "2026-07-20", required.value
     assert evaluate_script("arguments[0].checkValidity()", required)
 
-    assert_field "gallery-datepicker-selected", with: "2026-07-13", type: :date
-    assert_selector "#gallery-datepicker-readonly[readonly][value='2026-07-13']"
-    assert_selector "#gallery-datepicker-disabled[disabled][value='2026-07-13']", visible: :all
+    assert_field "gallery-input-date-selected", with: "2026-07-13", type: :date
+    assert_selector "#gallery-input-date-readonly[readonly][value='2026-07-13']"
+    assert_selector "#gallery-input-date-disabled[disabled][value='2026-07-13']", visible: :all
     assert_no_severe_console_errors(context: path)
   end
 

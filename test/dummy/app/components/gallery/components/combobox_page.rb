@@ -10,9 +10,16 @@ module Gallery
       ].freeze
 
       ENVIRONMENTS = [
-        [ "Development — local data", "development" ],
-        [ "Staging — shared verification", "staging" ],
-        [ "Production — customer traffic", "production" ]
+        { label: "Development", value: "development", description: "Local data only" },
+        { label: "Staging", value: "staging", description: "Shared verification" },
+        { label: "Production", value: "production", description: "Customer traffic" }
+      ].freeze
+
+      BILLING_COUNTRIES = [
+        { label: "Denmark", value: "DK", description: "EU reverse-charge VAT" },
+        { label: "Germany", value: "DE", description: "EU reverse-charge VAT" },
+        { label: "United Kingdom", value: "GB", description: "UK VAT registration required" },
+        { label: "United States", value: "US", description: "Sales tax by state" }
       ].freeze
 
       private
@@ -22,7 +29,7 @@ module Gallery
       end
 
       def api_note
-        "NitroKit::Combobox.new(id:, name:, label:, options:, value:)"
+        "NitroKit::Combobox.new(id:, name:, label:, options:, value:, include_blank:)"
       end
 
       def component_template
@@ -112,6 +119,36 @@ module Gallery
                   )
                 end
               end
+            end
+          end
+        end
+
+        example_section(
+          "Rails form builder",
+          slug: "combobox-builder",
+          description: "`form.field(:country, as: :combobox)` puts the searchable control inside an ordinary Field with its own label, description, and errors."
+        ) do
+          example("Billing country", slug: "combobox-billing-country") do
+            contact = Gallery::FormExamples.billing_contact
+
+            form_with(
+              model: contact,
+              scope: :billing_contact,
+              url: "#billing-country",
+              builder: NitroKit::FormBuilder,
+              id: "gallery-combobox-billing-form"
+            ) do |form|
+              form.field(
+                :country,
+                as: :combobox,
+                id: "gallery-combobox-billing-country",
+                label: "Billing country",
+                description: "Invoices apply this country's tax rules.",
+                options: BILLING_COUNTRIES,
+                placeholder: "Search countries",
+                required: true
+              )
+              form.submit("Save billing country", id: "gallery-combobox-billing-save")
             end
           end
         end

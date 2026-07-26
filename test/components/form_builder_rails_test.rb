@@ -125,6 +125,53 @@ class FormBuilderRailsTest < ActiveSupport::TestCase
     end
   end
 
+  class ComboboxProbe < Phlex::HTML
+    include Phlex::Rails::Helpers::FormWith
+
+    def view_template
+      registration = Registration.new(role: "designer")
+      registration.errors.add(:role, "is not available")
+
+      form_with(model: registration, url: "/registration", builder: NitroKit::FormBuilder) do |form|
+        form.field(
+          :role,
+          as: :combobox,
+          description: "Determines default permissions",
+          options: [
+            { label: "Developer", value: "developer", description: "Ships application code" },
+            [ "Designer", "designer" ]
+          ],
+          required: true
+        )
+      end
+    end
+  end
+
+  test "combobox fields keep Rails naming inside ordinary Field anatomy" do
+    form = render_form(ComboboxProbe.new)
+    field = form.at_css("[data-nk='field'][data-field-type='combobox']")
+    label = field.at_css("[data-slot='field-label']")
+    combobox = field.at_css("[data-slot='field-control'][data-nk='combobox']")
+    input = combobox.at_css("[data-slot='combobox-input']")
+    select = combobox.at_css("[data-slot='combobox-native'] select")
+
+    assert_equal "invalid", field["data-state"]
+    assert_equal "Role", label.text
+    assert_equal "registration_role-input", label["for"]
+    assert_equal "registration_role-label", input["aria-labelledby"]
+    assert_equal "registration_role-description registration_role-errors", input["aria-describedby"]
+    assert_equal "true", input["aria-invalid"]
+    assert_equal "Designer", input["value"]
+    assert_equal "registration[role]", select["name"]
+    assert_equal "registration_role-value", select["id"]
+    assert_equal "designer", select.at_css("option[selected]")["value"]
+    assert_equal 1, form.css("[name='registration[role]']").size
+    assert_equal(
+      "Ships application code",
+      combobox.at_css("[data-slot='combobox-option'][data-value='developer'] [data-slot='combobox-option-description']").text
+    )
+  end
+
   test "builder data and aria always decorate the control" do
     form = render_form(BoundaryProbe.new)
     wrapper = form.at_css("#email-wrapper")

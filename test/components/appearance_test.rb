@@ -86,8 +86,32 @@ class AppearanceTest < ActiveSupport::TestCase
     assert_equal "appearance", node["data-tracking-id"]
   end
 
+  test "picker renders a server-persisted preference without a client flash" do
+    segmented = render_node(NitroKit::AppearancePicker.new(id: "account", preference: :dark))
+    select = render_node(
+      NitroKit::AppearancePicker.new(id: "account-select", presentation: :select, preference: :light)
+    )
+    menu = render_node(
+      NitroKit::AppearancePicker.new(id: "account-menu", presentation: :dropdown, preference: :dark)
+    )
+
+    assert_equal "dark", segmented["data-state"]
+    assert_equal [ "dark" ], segmented.css("input[checked]").map { _1["value"] }
+    assert_equal [ "light" ], select.css("option[selected]").map { _1["value"] }
+    light_menu = render_node(
+      NitroKit::AppearancePicker.new(id: "account-menu-light", presentation: :dropdown, preference: :light)
+    )
+
+    assert_equal "dark", menu["data-state"]
+    refute_equal(
+      light_menu.at_css("[data-slot='button-icon-start']").to_html,
+      menu.at_css("[data-slot='button-icon-start']").to_html
+    )
+    assert_raises(ArgumentError) { NitroKit::AppearancePicker.new(id: "account", preference: :automatic) }
+  end
+
   test "picker validates its required identity and label" do
-    [ nil, "", "   ", "two words", :appearance ].each do |id|
+    [ nil, "", "   ", "two words", "-leading", :appearance ].each do |id|
       assert_raises(ArgumentError) { NitroKit::AppearancePicker.new(id:) }
     end
 
@@ -137,7 +161,9 @@ class AppearanceTest < ActiveSupport::TestCase
     assert_equal "div", node.name
     assert_equal "dropdown", node["data-presentation"]
     assert_equal "Appearance", trigger["aria-label"]
-    assert_equal %w[light dark], trigger.css("[data-slot='appearance-picker-trigger-icon']").map { _1["data-appearance"] }
+    assert_nil trigger.at_css("[data-slot='button-label']")
+    assert trigger.at_css("[data-slot='button-icon-start'] [data-nk='icon']")
+    assert_equal 3, items.css("[data-slot='dropdown-item-icon']").size
     assert_equal %w[Light Dark System], items.map { _1.text }
     assert_equal %w[light dark system], items.map { _1["data-appearance-preference"] }
     assert items.all? { _1.name == "button" }

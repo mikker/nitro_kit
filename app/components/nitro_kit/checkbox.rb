@@ -2,6 +2,8 @@
 
 module NitroKit
   class Checkbox < Component
+    SIZES = %i[md lg].freeze
+
     def initialize(
       label: nil,
       description: nil,
@@ -14,6 +16,8 @@ module NitroKit
       indeterminate: false,
       disabled: false,
       required: false,
+      invalid: false,
+      size: :md,
       html: {},
       aria: {},
       data: {},
@@ -33,6 +37,8 @@ module NitroKit
       @indeterminate = validate_boolean!(:indeterminate, indeterminate)
       @disabled = validate_boolean!(:disabled, disabled)
       @required = validate_boolean!(:required, required)
+      @invalid = validate_boolean!(:invalid, invalid)
+      @size = validate_choice!(:size, size, SIZES)
       @control_html = control_html
       @control_aria = control_aria
       @control_data = control_data
@@ -46,14 +52,9 @@ module NitroKit
 
       super(
         component: :checkbox,
+        size: @size,
         attributes: {
-          data: {
-            controller: "nk--checkable",
-            action: "change->nk--checkable#change",
-            state: @indeterminate ? "indeterminate" : (@checked ? "checked" : "unchecked"),
-            disabled: @disabled ? "true" : nil,
-            nk__checkable_indeterminate_value: @indeterminate.to_s
-          }.compact
+          data: indeterminate_data.merge(disabled: @disabled ? "true" : nil).compact
         },
         html:,
         aria:,
@@ -62,7 +63,7 @@ module NitroKit
       )
     end
 
-    attr_reader :label, :description, :id, :name, :value, :unchecked_value
+    attr_reader :label, :description, :id, :name, :value, :unchecked_value, :size
 
     def view_template(&block)
       require_accessible_name!(&block)
@@ -87,6 +88,19 @@ module NitroKit
     end
 
     private
+
+    # The native DOM property is the only checkbox state HTML cannot express, so
+    # it is also the only state the enhancer and the root attribute carry.
+    def indeterminate_data
+      return {} unless @indeterminate
+
+      {
+        controller: "nk--checkable",
+        action: "change->nk--checkable#change",
+        state: "indeterminate",
+        nk__checkable_indeterminate_value: "true"
+      }
+    end
 
     def render_hidden_control
       return unless @include_hidden && name
@@ -114,48 +128,17 @@ module NitroKit
           disabled: @disabled,
           required: @required,
           html: @control_html,
-          aria: checkbox_aria,
-          data: @control_data.merge(nk__checkable_target: "control")
+          aria: control_aria,
+          data: control_data
         ),
         :control
       )
     end
 
-    def checkbox_aria
-      attributes = @control_aria.dup
-      key = attributes.keys.find do |candidate|
-        candidate.to_s.downcase.tr("_", "-").delete_prefix("aria-") == "describedby"
-      end
-      describedby = [ attributes.delete(key), description_id ].compact.join(" ").presence
-      attributes = attributes.merge(describedby:)
+    def control_data
+      return @control_data unless @indeterminate
 
-      return attributes unless @indeterminate
-
-      attributes.merge(checked: "mixed")
-    end
-
-    def description_id
-      "#{id}-description" if description
-    end
-
-    def require_accessible_name!
-      return if label || block_given? || accessible_name?
-
-      raise ArgumentError, "checkbox requires a label, block, or accessible control name"
-    end
-
-    def accessible_name?
-      @control_aria.any? do |key, value|
-        name = key.to_s.downcase.tr("_", "-").delete_prefix("aria-")
-        %w[label labelledby].include?(name) && value.to_s.present?
-      end
-    end
-
-    def validate_optional_text!(name, text)
-      return if text.nil?
-      return text if text.is_a?(String) && !text.strip.empty?
-
-      raise ArgumentError, "#{name} must be a non-blank String or nil"
+      @control_data.merge(nk__checkable_target: "control")
     end
   end
 end

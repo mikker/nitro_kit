@@ -4,10 +4,6 @@ export default class extends Controller {
   static targets = ["item"];
   static values = { duration: Number };
 
-  connect() {
-    this.timers ||= new Map();
-  }
-
   disconnect() {
     this.teardown();
   }

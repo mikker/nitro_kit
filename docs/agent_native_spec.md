@@ -142,7 +142,7 @@ The authoritative initializer, root, closed-option, and cardinality inventory li
 The prerelease contains 36 atoms and components:
 
 - Actions, display, and navigation: Alert, AppNavigation, Avatar, AvatarStack, Badge, Button, ButtonGroup, Icon, Pagination.
-- Forms: AppearancePicker, Checkbox, CheckboxGroup, Datepicker, Dropzone, Field, FieldGroup, Fieldset, Input, Label, RadioButton, RadioButtonGroup, Select, Switch, Textarea.
+- Forms: AppearancePicker, Checkbox, CheckboxGroup, Dropzone, Field, FieldGroup, Fieldset, Input, Label, RadioButton, RadioButtonGroup, Select, Switch, Textarea.
 - Structured content and interaction: Accordion, Card, Combobox, DetailsTable, Dialog, Dropdown, ProgressiveImage, Table, Tabs, Toast, Tooltip.
 
 The non-visual `AppearanceBootstrap` installs the shared document appearance runtime.
@@ -349,7 +349,7 @@ Turbo Frames and Turbo Streams remain Rails helpers used directly from Phlex. In
 
 The engine ships CSS assets and Nitro-owned Stimulus controllers for enhancements that native HTML and CSS do not cover. When importmap is present it adds its pins automatically; the host still owns Stimulus and its normal controller loader. The engine boots without importmap: Accordion and Dialog remain complete, while enhanced interactions such as Dropdown keyboard navigation and Tooltip Escape dismissal require their pinned controllers. This prerelease does not define a JavaScript-package entrypoint for automatic bundler registration.
 
-Datepicker and Switch deliberately use native inputs rather than custom controllers. No third-party JavaScript runtime is vendored.
+Date inputs and Switch deliberately use native inputs rather than custom controllers. No third-party JavaScript runtime is vendored.
 
 ## Examples and verification
 

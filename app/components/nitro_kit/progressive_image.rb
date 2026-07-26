@@ -8,9 +8,12 @@ module NitroKit
     PIXELS = { sm: 320, md: 720, lg: 1_440 }.freeze
     PLACEHOLDER_PIXELS = 48
 
+    # TODO(i18n): move to the gem locale mechanism once it exists.
+    UNAVAILABLE_TEXT = "Image unavailable"
+
     def initialize(
       attachment:,
-      alt:,
+      alt: nil,
       size: :md,
       decorative: false,
       id: nil,
@@ -103,14 +106,20 @@ module NitroKit
           :fallback,
           attributes: {
             hidden: visible ? nil : true,
-            role: accessible ? "status" : nil
+            # Only an attached image can change state after render, so only
+            # that fallback is a live region.
+            role: (accessible && @attached) ? "status" : nil
           },
           aria: {
             hidden: accessible ? nil : true
           },
           data: @attached ? { nk__progressive_image_target: "fallback" } : {}
         )
-      ) { "Image unavailable" }
+      ) { fallback_text }
+    end
+
+    def fallback_text
+      alt.strip.empty? ? UNAVAILABLE_TEXT : alt
     end
 
     def variant_url(pixels)
@@ -160,12 +169,16 @@ module NitroKit
       unless value.nil? || value.is_a?(String)
         raise ArgumentError, "alt must be a String or nil"
       end
+      return "" if decorative
 
-      if @attached && !decorative && value.to_s.strip.empty?
+      if value.nil?
+        raise ArgumentError, "alt: is required unless decorative: true"
+      end
+      if @attached && value.strip.empty?
         raise ArgumentError, "attached non-decorative images require non-blank alt text"
       end
 
-      decorative ? "" : value.to_s
+      value
     end
   end
 end

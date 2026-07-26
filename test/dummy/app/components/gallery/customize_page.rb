@@ -320,7 +320,7 @@ module Gallery
     def render_preview_dialog
       render NitroKit::Dialog.new(id: "customizer-dialog") do |dialog|
         dialog.trigger("Open dialog", size: :sm)
-        dialog.dialog(
+        dialog.panel(
           title: "Create project",
           description: "Choose a clear name. You can change it later."
         ) do

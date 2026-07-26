@@ -8,7 +8,7 @@ module Gallery
       end
 
       def api_note
-        "NitroKit::Dialog.new(id:) { |dialog| dialog.trigger; dialog.dialog }"
+        "NitroKit::Dialog.new(id:) { |dialog| dialog.trigger; dialog.panel }"
       end
 
       def component_template
@@ -20,7 +20,7 @@ module Gallery
           example("Remove team member", slug: "dialog-remove-member") do
             render NitroKit::Dialog.new(id: "gallery-dialog-remove-member") do |dialog|
               dialog.trigger("Remove member", variant: :destructive)
-              dialog.dialog(
+              dialog.panel(
                 title: "Remove Katherine Johnson?",
                 description: "Katherine will immediately lose access to this workspace."
               ) do
@@ -38,7 +38,7 @@ module Gallery
           example("Nonmodal and unavailable", slug: "dialog-state-combinations", layout: :matrix) do
             sample("Open nonmodal panel", slug: "nonmodal") do
               render NitroKit::Dialog.new(id: "gallery-dialog-open") do |dialog|
-                dialog.dialog(
+                dialog.panel(
                   title: "Release notes",
                   description: "This server-rendered panel is deliberately nonmodal.",
                   nonmodal: true
@@ -47,12 +47,56 @@ module Gallery
                 end
               end
             end
+            sample("Required decision", slug: "required-decision") do
+              render NitroKit::Dialog.new(
+                id: "gallery-dialog-required",
+                dismissible: false
+              ) do |dialog|
+                dialog.trigger("Accept updated terms")
+                dialog.panel(
+                  title: "Accept the updated terms",
+                  description: "This workspace cannot be used until an owner accepts the new processing terms."
+                ) do
+                  render NitroKit::Button.new(
+                    "Accept terms",
+                    id: "gallery-dialog-required-accept",
+                    variant: :primary,
+                    html: { command: "close", commandfor: "gallery-dialog-required-panel" }
+                  )
+                end
+              end
+            end
             sample("Disabled trigger", slug: "disabled-trigger") do
               render NitroKit::Dialog.new(id: "gallery-dialog-disabled") do |dialog|
                 dialog.trigger("Unavailable action", disabled: true)
-                dialog.dialog(title: "Unavailable action") do
+                dialog.panel(title: "Unavailable action") do
                   dialog.close_button
                 end
+              end
+            end
+          end
+        end
+
+        example_section(
+          "Long content",
+          slug: "dialog-long-content",
+          description: "The panel scrolls while the close control stays pinned to the top of the panel."
+        ) do
+          example("Processing terms", slug: "dialog-long-terms") do
+            render NitroKit::Dialog.new(id: "gallery-dialog-long") do |dialog|
+              dialog.trigger("Read processing terms")
+              dialog.panel(
+                title: "Data processing terms",
+                description: "Review the complete terms before accepting them for this workspace."
+              ) do
+                12.times do |index|
+                  p do
+                    "Section #{index + 1}. The processor handles workspace content only on documented " \
+                      "instructions from the controller, keeps every sub-processor under equivalent " \
+                      "obligations, and reports a personal-data breach without undue delay."
+                  end
+                end
+                dialog.close_button(label: "Close terms")
               end
             end
           end
@@ -66,7 +110,7 @@ module Gallery
           example("Invite a teammate", slug: "dialog-invite-form") do
             render NitroKit::Dialog.new(id: "gallery-dialog-invite") do |dialog|
               dialog.trigger("Invite teammate", variant: :primary)
-              dialog.dialog(
+              dialog.panel(
                 title: "Invite a teammate",
                 description: "Choose an address and the role this person should receive."
               ) do

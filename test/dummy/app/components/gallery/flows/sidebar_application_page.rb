@@ -121,7 +121,7 @@ module Gallery
               render NitroKit::Toast.new(
                 duration: 600_000,
                 label: "Operations notifications",
-                html: { id: "gallery-sidebar-application-toast" }
+                id: "gallery-sidebar-application-toast"
               ) do |toast|
                 toast.item(
                   title: "Production checks finished",
@@ -256,7 +256,7 @@ module Gallery
 
               render NitroKit::Dialog.new(id: "gallery-sidebar-application-diagnostics") do |dialog|
                 dialog.trigger("Review diagnostics", variant: :primary)
-                dialog.dialog(
+                dialog.panel(
                   title: "Regional diagnostics",
                   description: "The service is reachable, but the replication checkpoint is 14 minutes behind."
                 ) do

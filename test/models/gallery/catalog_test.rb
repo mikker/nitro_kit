@@ -15,7 +15,7 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
     assert_equal(
       %w[
         accordion alert appearance-picker app-navigation avatar avatar-stack badge button button-group card checkbox checkbox-group
-        combobox container datepicker details-table dialog dropdown dropzone field field-group fieldset flex grid icon input label
+        combobox container details-table dialog dropdown dropzone field field-group fieldset flex grid icon input label
         pagination progressive-image radio-button radio-button-group select switch table tabs textarea toast tooltip
         typeset
       ],

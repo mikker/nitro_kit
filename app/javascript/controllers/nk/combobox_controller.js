@@ -4,6 +4,15 @@ import {
   positionOverlay,
 } from "controllers/nk/overlay_position";
 
+// TODO(i18n): route these announcements through the locale mechanism instead of
+// hardcoded English.
+const INVALID_SELECTION_MESSAGE = "Choose an option.";
+const NO_RESULTS_MESSAGE = "No options found.";
+const RESULTS_MESSAGE = (count) =>
+  `${count} ${count === 1 ? "option" : "options"} available.`;
+
+const OPTION_LABEL_SELECTOR = '[data-slot="combobox-option-label"]';
+
 export default class extends Controller {
   static targets = [
     "control",
@@ -138,7 +147,7 @@ export default class extends Controller {
       }
     });
 
-    this.valueTarget.value = exactMatch?.dataset.value ?? "";
+    this.setSubmittedValue(exactMatch?.dataset.value ?? "");
     this.syncSelection();
     this.setActive(null);
     this.syncValidity();
@@ -258,11 +267,17 @@ export default class extends Controller {
     if (!option || option.getAttribute("aria-disabled") === "true") return;
 
     this.inputTarget.value = this.optionLabel(option);
-    this.valueTarget.value = option.dataset.value;
+    this.setSubmittedValue(option.dataset.value);
     this.syncSelection();
     this.syncValidity();
     this.close();
     this.inputTarget.focus();
+  }
+
+  setSubmittedValue(value) {
+    if (this.valueTarget.value === value) return;
+
+    this.valueTarget.value = value;
     this.valueTarget.dispatchEvent(new Event("change", { bubbles: true }));
   }
 
@@ -280,7 +295,9 @@ export default class extends Controller {
     const invalid =
       (this.requiredValue && !hasSubmittedValue) ||
       (hasVisibleValue && !hasSubmittedValue);
-    this.inputTarget.setCustomValidity(invalid ? "Choose an option." : "");
+    this.inputTarget.setCustomValidity(
+      invalid ? INVALID_SELECTION_MESSAGE : "",
+    );
     this.inputTarget.setAttribute("aria-invalid", String(invalid));
   }
 
@@ -300,19 +317,16 @@ export default class extends Controller {
   }
 
   optionLabel(option) {
-    return option.textContent.trim();
+    const label = option.querySelector(OPTION_LABEL_SELECTOR) ?? option;
+
+    return label.textContent.trim();
   }
 
   announceResults() {
     const count = this.optionTargets.filter((option) => !option.hidden).length;
 
-    if (count === 0) {
-      this.statusTarget.textContent = "No options found.";
-    } else {
-      this.statusTarget.textContent = `${count} ${
-        count === 1 ? "option" : "options"
-      } available.`;
-    }
+    this.statusTarget.textContent =
+      count === 0 ? NO_RESULTS_MESSAGE : RESULTS_MESSAGE(count);
   }
 
   get visibleOptions() {

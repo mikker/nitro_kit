@@ -7,6 +7,8 @@ module NitroKit
     def initialize(
       buttons: [],
       label: nil,
+      variant: nil,
+      size: nil,
       id: nil,
       html: {},
       aria: {},
@@ -19,6 +21,8 @@ module NitroKit
       end
       raise ArgumentError, "aria must be a Hash" unless aria.is_a?(Hash)
 
+      @variant = variant && validate_choice!(:variant, variant, Button::VARIANTS)
+      @size = size && validate_choice!(:size, size, Button::SIZES)
       @entries = []
       buttons.each { |button| add(button) }
 
@@ -55,52 +59,18 @@ module NitroKit
       nil
     end
 
-    def button(
-      text = nil,
-      href: nil,
-      variant: :default,
-      size: :md,
-      icon: nil,
-      icon_right: nil,
-      id: nil,
-      type: :button,
-      name: nil,
-      value: nil,
-      form: nil,
-      target: nil,
-      rel: nil,
-      download: nil,
-      disabled: false,
-      html: {},
-      aria: {},
-      data: {},
-      desperately_need_a_class: nil,
-      &content
-    )
-      add(
-        Button.new(
-          text,
-          href:,
-          variant:,
-          size:,
-          icon:,
-          icon_right:,
-          id:,
-          type:,
-          name:,
-          value:,
-          form:,
-          target:,
-          rel:,
-          download:,
-          disabled:,
-          html:,
-          aria:,
-          data:,
-          desperately_need_a_class:
-        ),
-        &content
-      )
+    # Declares a member with Button's own signature. Arguments are forwarded
+    # verbatim so the group can never restate a stale copy of Button's
+    # keywords; unknown keywords raise from Button itself. Group-level
+    # variant: and size: fill in only where the member stays silent.
+    def button(*arguments, **options, &content)
+      add(Button.new(*arguments, **member_defaults.merge(options)), &content)
+    end
+
+    private
+
+    def member_defaults
+      { variant: @variant, size: @size }.compact
     end
   end
 end

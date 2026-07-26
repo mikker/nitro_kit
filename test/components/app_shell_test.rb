@@ -184,7 +184,8 @@ class AppShellTest < ActiveSupport::TestCase
     assert_raises(ArgumentError) { NitroKit::AppShell.new(id: "workspace", data: { state: "open" }) }
     assert_raises(ArgumentError) { NitroKit::AppShell.new(id: "workspace", data: { variant: "topbar" }) }
     assert_raises(ArgumentError) { NitroKit::AppShell.new(id: "workspace", data: { layout: "topbar" }) }
-    assert_includes NitroKit::Component::INTERNAL_RESERVED_DATA_ATTRIBUTES, "enhanced"
+    assert_includes NitroKit::Component::RESERVED_DATA_ATTRIBUTES, "enhanced"
+    refute_includes NitroKit::Component::COMPONENT_OWNED_DATA_ATTRIBUTES, "enhanced"
   end
 
   private

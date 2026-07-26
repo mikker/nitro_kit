@@ -271,7 +271,7 @@ module Gallery
         ) do |zone|
           zone.confirmation do
             render NitroKit::Dialog.new(id: "gallery-api-credential-revoke-dialog") do |dialog|
-              dialog.dialog(
+              dialog.panel(
                 title: "Revoke #{key.name}?",
                 description: "Requests using #{key.prefix} will fail immediately. This action cannot be undone.",
                 nonmodal: true

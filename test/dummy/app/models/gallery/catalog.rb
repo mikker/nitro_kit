@@ -93,7 +93,7 @@ module Gallery
         description: "Native input controls with explicit HTML semantics.",
         page: Gallery::Components::InputPage,
         states: [],
-        expected_roots: %w[input]
+        expected_roots: %w[input field card button]
       ),
       Entry.new(
         kind: :component,
@@ -256,15 +256,6 @@ module Gallery
         page: Gallery::Components::ComboboxPage,
         states: [],
         expected_roots: %w[combobox field input card button]
-      ),
-      Entry.new(
-        kind: :component,
-        slug: "datepicker",
-        title: "Datepicker",
-        description: "A native date control with explicit constraints and server-owned semantics.",
-        page: Gallery::Components::DatepickerPage,
-        states: [],
-        expected_roots: %w[datepicker field card button]
       ),
       Entry.new(
         kind: :component,

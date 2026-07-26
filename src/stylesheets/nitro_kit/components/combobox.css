@@ -4,6 +4,11 @@
     inline-size: 100%;
   }
 
+  :where([data-nk="combobox"] > [data-slot="combobox-label"]) {
+    display: block;
+    margin-block-end: calc(var(--nk-space) * 2);
+  }
+
   :where([data-nk="combobox"] > [data-slot="combobox-control"]) {
     position: relative;
     display: block;
@@ -55,8 +60,11 @@
 
   :where([data-nk="combobox"] [data-slot="combobox-option"]) {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: start;
+    justify-content: center;
     min-block-size: var(--nk-control-height-md);
+    padding-block: var(--nk-space);
     padding-inline: calc(var(--nk-space) * 3);
     font-size: var(--nk-text-sm);
     line-height: var(--nk-leading-normal);
@@ -66,29 +74,41 @@
       color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);
   }
+
+  :where([data-nk="combobox"] [data-slot="combobox-option-label"]) {
+    display: block;
+  }
+
+  :where([data-nk="combobox"] [data-slot="combobox-option-description"]) {
+    display: block;
+    margin-block-start: calc(var(--nk-space) * 0.5);
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-xs);
+    text-wrap: pretty;
+  }
 }
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="combobox"]
-        [data-slot="combobox-option"]:is(
-          [data-active="true"],
-          [aria-selected="true"]
-        )
-    ) {
+    [data-nk="combobox"]
+      [data-slot="combobox-option"]:is(
+        [data-active="true"],
+        [aria-selected="true"]
+      )
+  ) {
     background: var(--nk-color-muted);
   }
 
   :where(
-      [data-nk="combobox"] [data-slot="combobox-option"][aria-disabled="true"]
-    ) {
+    [data-nk="combobox"] [data-slot="combobox-option"][aria-disabled="true"]
+  ) {
     cursor: not-allowed;
     opacity: 0.6;
   }
 
   :where(
-      [data-nk="combobox"] > [data-slot="combobox-listbox"][data-state="open"]
-    ) {
+    [data-nk="combobox"] > [data-slot="combobox-listbox"][data-state="open"]
+  ) {
     animation: nk-combobox-enter var(--nk-duration-normal) var(--nk-ease);
   }
 

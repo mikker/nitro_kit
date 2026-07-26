@@ -49,6 +49,31 @@ module Gallery
         end
 
         example_section(
+          "Icon triggers and icon items",
+          slug: "dropdown-icons",
+          description: "The compact overflow menu is an icon-only Button trigger with icon-led items."
+        ) do
+          example("Overflow menu", slug: "dropdown-overflow-menu", layout: :matrix) do
+            sample("Icon-only trigger", slug: "icon-only-trigger") do
+              render NitroKit::Dropdown.new(id: "gallery-dropdown-overflow", placement: :bottom_end) do |menu|
+                menu.trigger(icon: :ellipsis, label: "Record actions", variant: :ghost)
+                menu.item("Rename record", icon: :pencil)
+                menu.item("Duplicate record", icon: :copy)
+                menu.separator
+                menu.item("Delete record", icon: :trash_2, variant: :destructive)
+              end
+            end
+            sample("Trailing trigger icon", slug: "trailing-trigger-icon") do
+              render NitroKit::Dropdown.new(id: "gallery-dropdown-sort") do |menu|
+                menu.trigger("Sort by", icon_end: :chevron_down)
+                menu.item("Newest first", icon: :arrow_down)
+                menu.item("Oldest first", icon: :arrow_up)
+              end
+            end
+          end
+        end
+
+        example_section(
           "Availability and pressure",
           slug: "dropdown-pressure",
           description: "A disabled trigger and long labels exercise non-interactive and constrained states."

@@ -34,7 +34,7 @@ generator after upgrading the gem, then run `bin/rails nitro_kit:doctor`.
 
 ## Stimulus and importmap
 
-Enhanced components use gem-owned Stimulus controllers, including `nk--app-shell`, `nk--appearance`, `nk--checkable`, `nk--combobox`, `nk--dropdown`, `nk--dropzone`, `nk--progressive-image`, `nk--tabs`, `nk--toast`, and `nk--tooltip`.
+Enhanced components use gem-owned Stimulus controllers, including `nk--app-shell`, `nk--appearance`, `nk--avatar`, `nk--checkable`, `nk--combobox`, `nk--dropdown`, `nk--dropzone`, `nk--progressive-image`, `nk--tabs`, `nk--toast`, and `nk--tooltip`.
 
 Accordion and Dialog are controller-free: native `details` grouping and declarative `command`/`commandfor` own their complete interaction. Dropdown uses native Popover as its source of truth and adds only menu keyboard focus; Tooltip uses CSS for hover/focus and JavaScript only for Escape dismissal. Nitro does not promise dialog light dismiss.
 
@@ -47,7 +47,7 @@ import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading";
 eagerLoadControllersFrom("controllers", application);
 ```
 
-Nitro Kit packages no third-party JavaScript. Accordion, Datepicker, Dialog, and Switch use native browser behavior and need no controllers.
+Nitro Kit packages no third-party JavaScript. Accordion, Dialog, date inputs, and Switch use native browser behavior and need no controllers.
 
 The engine deliberately boots when importmap is absent. In that configuration, Ruby and CSS remain available, but automatic JavaScript registration does not: a bundler-based application must expose and register the controller modules itself. This prerelease does not ship a JavaScript-package entrypoint.
 

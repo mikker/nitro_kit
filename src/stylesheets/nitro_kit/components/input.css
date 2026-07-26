@@ -1,7 +1,7 @@
 @layer nitro-kit.base {
   :where(
-      [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
-    ) {
+    [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
+  ) {
     display: block;
     inline-size: 100%;
     min-block-size: var(--nk-control-height-md);
@@ -20,6 +20,16 @@
     inline-size: 1.125rem;
     block-size: 1.125rem;
     accent-color: var(--nk-color-primary);
+  }
+
+  /* Safari lays its date editor out from the top, so the control needs an
+     explicit height and line box instead of the shared min-block-size. */
+  :where([data-nk="input"][type="date"]) {
+    block-size: var(--nk-control-height-md);
+    padding-block: 0;
+    line-height: calc(
+      var(--nk-control-height-md) - (var(--nk-border-width) * 2)
+    );
   }
 
   :where([data-nk="input"][type="file"]) {

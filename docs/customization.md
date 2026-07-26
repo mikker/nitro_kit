@@ -416,33 +416,33 @@ The following 84 variables are the complete public token set. Theme-independent 
 
 ### Semantic colors
 
-| Token                           | Role                                    |
-| ------------------------------- | --------------------------------------- |
+| Token                           | Role                                                                   |
+| ------------------------------- | ---------------------------------------------------------------------- |
 | `--nk-color-canvas`             | Page canvas and overscroll; light zinc uses a zinc-25-like near-white. |
-| `--nk-color-surface`            | Default component surface.              |
-| `--nk-color-surface-hover`      | Derived interactive surface hover.      |
-| `--nk-color-elevated`           | Raised or inset-neutral surface.        |
-| `--nk-color-foreground`         | Primary text and icon color.            |
-| `--nk-color-muted`              | Quiet fill.                             |
-| `--nk-color-muted-foreground`   | Secondary text and icon color.          |
-| `--nk-color-border`             | Borders and separators.                 |
-| `--nk-color-focus`              | Focus indicator.                        |
-| `--nk-color-primary`            | Primary action and selected-state fill. |
-| `--nk-color-primary-hover`      | Derived primary interaction hover.      |
-| `--nk-color-primary-foreground` | Content placed on primary fill.         |
-| `--nk-color-neutral`            | Neutral status fill or marker.          |
-| `--nk-color-neutral-content`    | Strong neutral status content.          |
-| `--nk-color-info`               | Informational status fill or marker.    |
-| `--nk-color-info-content`       | Informational status content.           |
-| `--nk-color-success`            | Successful status fill or marker.       |
-| `--nk-color-success-content`    | Successful status content.              |
-| `--nk-color-warning`            | Warning status fill or marker.          |
-| `--nk-color-warning-content`    | Warning status content.                 |
-| `--nk-color-danger`             | Destructive action and error fill.      |
-| `--nk-color-danger-hover`       | Derived destructive interaction hover.  |
-| `--nk-color-danger-foreground`  | Content placed on destructive fill.     |
-| `--nk-color-danger-content`     | Error and destructive status content.   |
-| `--nk-color-overlay`            | Modal and drawer backdrop.              |
+| `--nk-color-surface`            | Default component surface.                                             |
+| `--nk-color-surface-hover`      | Derived interactive surface hover.                                     |
+| `--nk-color-elevated`           | Raised or inset-neutral surface.                                       |
+| `--nk-color-foreground`         | Primary text and icon color.                                           |
+| `--nk-color-muted`              | Quiet fill.                                                            |
+| `--nk-color-muted-foreground`   | Secondary text and icon color.                                         |
+| `--nk-color-border`             | Borders and separators.                                                |
+| `--nk-color-focus`              | Focus indicator.                                                       |
+| `--nk-color-primary`            | Primary action and selected-state fill.                                |
+| `--nk-color-primary-hover`      | Derived primary interaction hover.                                     |
+| `--nk-color-primary-foreground` | Content placed on primary fill.                                        |
+| `--nk-color-neutral`            | Neutral status fill or marker.                                         |
+| `--nk-color-neutral-content`    | Strong neutral status content.                                         |
+| `--nk-color-info`               | Informational status fill or marker.                                   |
+| `--nk-color-info-content`       | Informational status content.                                          |
+| `--nk-color-success`            | Successful status fill or marker.                                      |
+| `--nk-color-success-content`    | Successful status content.                                             |
+| `--nk-color-warning`            | Warning status fill or marker.                                         |
+| `--nk-color-warning-content`    | Warning status content.                                                |
+| `--nk-color-danger`             | Destructive action and error fill.                                     |
+| `--nk-color-danger-hover`       | Derived destructive interaction hover.                                 |
+| `--nk-color-danger-foreground`  | Content placed on destructive fill.                                    |
+| `--nk-color-danger-content`     | Error and destructive status content.                                  |
+| `--nk-color-overlay`            | Modal and drawer backdrop.                                             |
 
 ### Default button colors
 

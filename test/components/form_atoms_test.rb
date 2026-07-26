@@ -71,7 +71,8 @@ class FormAtomsTest < ActiveSupport::TestCase
     assert_raises(ArgumentError) { NitroKit::Choice.coerce(label: "Admin", value: "admin", disabeld: true) }
     assert_raises(ArgumentError) { NitroKit::Choice.coerce(label: "", value: "admin") }
     assert_raises(ArgumentError) { NitroKit::Choice.coerce(label: "Admin", value: nil) }
-    assert_raises(ArgumentError) { NitroKit::Choice.coerce([ "Admin", "admin", "false" ]) }
+    assert_raises(ArgumentError) { NitroKit::Choice.coerce([ "Admin", "admin", false ]) }
+    assert_raises(ArgumentError) { NitroKit::Choice.coerce([ "Admin", "admin", false, "role-admin" ]) }
   end
 
   test "select uses typed options selected arrays and native multiple naming" do
@@ -201,6 +202,48 @@ class FormAtomsTest < ActiveSupport::TestCase
     assert_equal "Occasional product news.", checkbox.at_css("[data-slot='checkbox-description']").text
     assert_equal "pro-plan-description", radio.at_css("input[type='radio']")["aria-describedby"]
     assert_equal "For shipping products.", radio.at_css("[data-slot='radio-button-description']").text
+
+    %i[Checkbox RadioButton Switch].each do |component|
+      error = assert_raises(ArgumentError) do
+        NitroKit.const_get(component).new(id: "solo", description: "Extra", control_aria: { label: "Solo" }).call
+      end
+      assert_match(/description requires label text or block content/, error.message)
+    end
+  end
+
+  test "checkable controls mark invalid native inputs" do
+    checkbox = render_node(NitroKit::Checkbox.new(label: "Terms", invalid: true))
+    radio = render_node(NitroKit::RadioButton.new(label: "Large", invalid: true))
+    switch = render_node(NitroKit::Switch.new(label: "Digest", invalid: true))
+
+    assert_equal "true", checkbox.at_css("input[type='checkbox']")["aria-invalid"]
+    assert_equal "true", radio.at_css("input[type='radio']")["aria-invalid"]
+    assert_equal "true", switch.at_css("input[type='checkbox']")["aria-invalid"]
+    assert_nil render_node(NitroKit::Checkbox.new(label: "Terms")).at_css("input[type='checkbox']")["aria-invalid"]
+    assert_raises(ArgumentError) { NitroKit::Checkbox.new(label: "Terms", invalid: nil) }
+  end
+
+  test "the checkable family shares one size vocabulary" do
+    %i[Checkbox RadioButton Switch].each do |component|
+      klass = NitroKit.const_get(component)
+
+      assert_equal %i[md lg], klass::SIZES
+      assert_equal "lg", render_node(klass.new(label: "Large", size: :lg))["data-size"]
+      assert_raises(ArgumentError) { klass.new(label: "Large", size: "lg") }
+      assert_raises(ArgumentError) { klass.new(label: "Large", size: :sm) }
+    end
+
+    group = render_node(
+      NitroKit::CheckboxGroup.new(
+        legend: "Features",
+        name: "features",
+        options: [ [ "Fast", "fast" ] ],
+        size: :lg
+      )
+    )
+
+    assert_equal "lg", group["data-size"]
+    assert_equal "lg", group.at_css("[data-nk='checkbox']")["data-size"]
   end
 
   test "choice groups expose closed layout presentations" do
@@ -266,8 +309,15 @@ class FormAtomsTest < ActiveSupport::TestCase
     assert_equal "indeterminate", mixed["data-state"]
     assert_equal "nk--checkable", mixed["data-controller"]
     assert_equal "true", mixed["data-nk--checkable-indeterminate-value"]
-    assert_equal "mixed", mixed.at_css("input")["aria-checked"]
+    assert_nil mixed.at_css("input")["aria-checked"]
     assert_equal "control", mixed.at_css("input")["data-nk--checkable-target"]
+
+    ordinary = render_node(NitroKit::Checkbox.new(label: "Some", id: "some", include_hidden: false))
+
+    assert_nil ordinary["data-controller"]
+    assert_nil ordinary["data-action"]
+    assert_nil ordinary["data-state"]
+    assert_nil ordinary.at_css("input")["data-nk--checkable-target"]
     assert_raises(ArgumentError) { NitroKit::Checkbox.new(include_hidden: false).call }
     assert_raises(ArgumentError) { NitroKit::Checkbox.new(checked: 1) }
     assert_raises(ArgumentError) { NitroKit::Checkbox.new(include_hidden: true, unchecked_value: nil) }
@@ -348,8 +398,8 @@ class FormAtomsTest < ActiveSupport::TestCase
       )
     )
     assert_equal "true", standalone_radio.at_css("[data-slot='radio-button-indicator']")["aria-hidden"]
-    assert_equal "nk--checkable", standalone_radio["data-controller"]
-    assert_equal "control", standalone_radio.at_css("input")["data-nk--checkable-target"]
+    assert_nil standalone_radio["data-controller"]
+    assert_nil standalone_radio["data-state"]
     assert_raises(ArgumentError) { NitroKit::RadioButton.new.call }
 
     assert_raises(ArgumentError) { NitroKit::RadioButton.new(size: :xl) }
@@ -358,7 +408,14 @@ class FormAtomsTest < ActiveSupport::TestCase
       NitroKit::RadioButtonGroup.new(legend: "Size", name: "size", options: [ [ "Small", "sm" ] ], size: nil)
     end
     assert_raises(ArgumentError) do
-      NitroKit::RadioButtonGroup.new(legend: "Size", name: "size", options: [ [ "Small", "sm", false, "same" ], [ "Large", "lg", false, "same" ] ])
+      NitroKit::RadioButtonGroup.new(
+        legend: "Size",
+        name: "size",
+        options: [
+          { label: "Small", value: "sm", id: "same" },
+          { label: "Large", value: "lg", id: "same" }
+        ]
+      )
     end
   end
 
@@ -383,22 +440,82 @@ class FormAtomsTest < ActiveSupport::TestCase
     assert_nil control["aria-checked"]
     assert control.key?("checked")
     assert_nil node.at_css("button")
-    assert_equal "nk--checkable", node["data-controller"]
-    assert_equal "change->nk--checkable#change", node["data-action"]
+    assert_nil node["data-controller"]
+    assert_nil node["data-action"]
+    assert_nil node["data-state"]
     assert_equal "account-help digest-description", control["aria-describedby"]
     assert_equal "digest-description", node.at_css("[data-slot='switch-description']")["id"]
-    assert_nil node.at_css("label [data-slot='switch-description']")
+    assert node.at_css("label > [data-slot='switch-content'] > [data-slot='switch-description']")
     assert_equal "true", node.at_css("[data-slot='switch-track']")["aria-hidden"]
     assert node.at_css("[data-slot='switch-handle']")
     assert_empty node.css("[class], [style]")
 
-    assert_raises(ArgumentError) { NitroKit::Switch.new(size: :lg, label: "Digest") }
+    bare = render_node(NitroKit::Switch.new(control_aria: { label: "Digest" }))
+
+    assert_nil bare.at_css("label")
+    assert bare.at_css("[data-slot='switch-track'] > [data-slot='switch-handle']")
+
+    assert_raises(ArgumentError) { NitroKit::Switch.new(size: :sm, label: "Digest") }
     assert_raises(ArgumentError) { NitroKit::Switch.new(size: nil, label: "Digest") }
     assert_raises(ArgumentError) { NitroKit::Switch.new.call }
     assert_raises(ArgumentError) { NitroKit::Switch.new(id: "digest", description: "One summary").call }
     assert_raises(ArgumentError) { NitroKit::Switch.new(label: "Digest", description: "One summary") }
     assert_raises(ArgumentError) { NitroKit::Switch.new(label: "Digest", id: " ", description: "One summary") }
     assert render_node(NitroKit::Switch.new(control_aria: { label: "Digest" })).at_css("input[aria-label='Digest']")
+  end
+
+  test "choice groups scope their description and required state to the fieldset" do
+    checkbox = render_node(
+      NitroKit::CheckboxGroup.new(
+        legend: "Features",
+        description: "Pick any",
+        id: "features",
+        name: "features",
+        required: true,
+        options: [ [ "Fast", "fast" ], [ "Private", "private" ] ]
+      )
+    )
+    radio = render_node(
+      NitroKit::RadioButtonGroup.new(
+        legend: "Size",
+        description: "Pick one",
+        id: "size",
+        name: "size",
+        required: true,
+        options: [ [ "Small", "sm" ], [ "Large", "lg" ] ]
+      )
+    )
+
+    assert_equal "true", checkbox["aria-required"]
+    assert_equal "true", radio["aria-required"]
+    assert_empty checkbox.css("input[aria-describedby]")
+    assert_empty radio.css("input[aria-describedby]")
+    assert_equal "features-description", checkbox.at_css("[data-slot='checkbox-group-description']")["id"]
+    assert_equal "size-description", radio.at_css("[data-slot='radio-button-group-description']")["id"]
+    assert_nil radio["data-required"]
+    assert radio.css("input[required]").any?
+    assert_empty checkbox.css("input[type='checkbox'][required]")
+  end
+
+  test "choice groups require an id-safe name and an explicit selected value" do
+    unselected = render_node(
+      NitroKit::RadioButtonGroup.new(
+        legend: "Size",
+        name: "size",
+        value: nil,
+        options: [ [ "Unspecified", "" ], [ "Large", "lg" ] ]
+      )
+    )
+
+    assert_empty unselected.css("input[checked]")
+    assert_equal "", unselected.at_css("input")["value"]
+
+    [ NitroKit::CheckboxGroup, NitroKit::RadioButtonGroup ].each do |klass|
+      error = assert_raises(ArgumentError) do
+        klass.new(legend: "Size", name: "!!!", options: [ [ "Large", "lg" ] ])
+      end
+      assert_match(/cannot derive an id/, error.message)
+    end
   end
 
   test "field group and fieldset expose only qualified structural slots" do

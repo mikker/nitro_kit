@@ -8,7 +8,7 @@ module Gallery
       end
 
       def api_note
-        "NitroKit::AvatarStack.new(size:) { |stack| stack.avatar; stack.overflow }"
+        "NitroKit::AvatarStack.new(label:, size:, max:) { |stack| stack.avatar; stack.overflow }"
       end
 
       def component_template
@@ -49,6 +49,25 @@ module Gallery
         end
 
         example_section(
+          "Automatic overflow",
+          slug: "avatar-stack-max",
+          description: "A max: count keeps the visible avatars bounded and derives the +N indicator."
+        ) do
+          example("Bounded participants", slug: "avatar-stack-max-participants", layout: :row) do
+            render NitroKit::AvatarStack.new(
+              id: "gallery-avatar-stack-max",
+              size: :md,
+              max: 3,
+              label: "Workspace participants"
+            ) do |stack|
+              Gallery::Data.dense_members.first(6).each_with_index do |member, index|
+                stack.avatar(alt: member.name, id: "gallery-avatar-stack-max-#{index}")
+              end
+            end
+          end
+        end
+
+        example_section(
           "Mixed identities",
           slug: "avatar-stack-content",
           description: "Image, generated fallback, long custom fallback, and overflow compose in one labelled group."
@@ -57,7 +76,7 @@ module Gallery
             render NitroKit::AvatarStack.new(
               id: "gallery-avatar-stack-reviewers",
               size: :lg,
-              aria: { label: "Deployment reviewers" }
+              label: "Deployment reviewers"
             ) do |stack|
               stack.avatar(
                 src: "/icon.svg",
@@ -84,7 +103,7 @@ module Gallery
         render NitroKit::AvatarStack.new(
           id: "gallery-avatar-stack-size-#{stack.slug}",
           size: stack.size,
-          aria: { label: stack.label }
+          label: stack.label
         ) do |component|
           component.avatar(
             alt: "Ada Lovelace",
@@ -104,7 +123,7 @@ module Gallery
         render NitroKit::AvatarStack.new(
           id:,
           size: :md,
-          aria: { label: "Workspace participants" }
+          label: "Workspace participants"
         ) do |stack|
           stack.avatar(alt: "Ada Lovelace", fallback: "AL", id: "#{id}-ada")
           stack.overflow(count, label:)

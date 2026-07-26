@@ -48,6 +48,10 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
       GhostUse.new(
         pattern: /menu\.trigger\("Release actions", variant: :ghost\)/,
         reason: "menu trigger embedded in record-card chrome"
+      ),
+      GhostUse.new(
+        pattern: /menu\.trigger\(icon: :ellipsis, label: "Record actions", variant: :ghost\)/,
+        reason: "icon-only overflow menu trigger, the canonical low-emphasis record control"
       )
     ],
     "test/dummy/app/components/gallery/components/tooltip_page.rb" => [
@@ -105,7 +109,7 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
     end.reject { |_path, count| count.zero? }
 
     assert_equal RETAINED_GHOSTS.keys.sort, actual_by_file.keys.sort
-    assert_equal 16, actual_by_file.values.sum
+    assert_equal 17, actual_by_file.values.sum
 
     RETAINED_GHOSTS.each do |relative_path, uses|
       source = ROOT.join(relative_path).read

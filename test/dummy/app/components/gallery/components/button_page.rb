@@ -70,7 +70,7 @@ module Gallery
               render NitroKit::Button.new(
                 "Continue",
                 id: "gallery-button-trailing-icon",
-                icon_right: :arrow_right
+                icon_end: :arrow_right
               )
             end
             sample("Icon only", slug: "icon-only") do
@@ -86,7 +86,7 @@ module Gallery
                 "Read documentation",
                 id: "gallery-button-link",
                 href: "#button-documentation",
-                icon_right: :arrow_right
+                icon_end: :arrow_right
               )
             end
             sample("Block label", slug: "block-label") do
@@ -109,6 +109,21 @@ module Gallery
           slug: "button-states",
           description: "Disabled controls retain visible state while links lose navigation and expose ARIA disabled."
         ) do
+          example("Loading", slug: "button-loading", layout: :row) do
+            render NitroKit::Button.new(
+              "Deploying",
+              id: "gallery-button-loading",
+              variant: :primary,
+              icon: :rocket,
+              loading: true
+            )
+            render NitroKit::Button.new(
+              id: "gallery-button-loading-icon-only",
+              icon: :refresh_cw,
+              label: "Refreshing deployments",
+              loading: true
+            )
+          end
           example("Enabled and disabled", slug: "button-enabled-disabled", layout: :row) do
             render NitroKit::Button.new(
               "Submit invoice",

@@ -5,7 +5,6 @@ module NitroKit
     SIZES = %i[sm md lg].freeze
 
     def initialize(
-      positional_src = nil,
       src: nil,
       alt: "",
       fallback: nil,
@@ -18,13 +17,12 @@ module NitroKit
       data: {},
       desperately_need_a_class: nil
     )
-      raise ArgumentError, "Pass src either positionally or by keyword, not both" if positional_src && src
       raise ArgumentError, "alt must be a String" unless alt.is_a?(String)
       unless fallback.nil? || fallback.is_a?(String)
         raise ArgumentError, "fallback must be a String or nil"
       end
 
-      @src = positional_src || src
+      @src = src
       @alt = alt
       @fallback = fallback || initials_for(alt)
       @size = validate_choice!(:size, size, SIZES)
@@ -34,7 +32,8 @@ module NitroKit
         component: :avatar,
         attributes: {
           id:,
-          role: !src? && !alt.empty? ? "img" : nil
+          role: !src? && !alt.empty? ? "img" : nil,
+          data: { controller: src? ? "nk--avatar" : nil }.compact
         },
         html:,
         aria: root_aria,
@@ -57,6 +56,7 @@ module NitroKit
         span(
           **slot_attributes(
             :fallback,
+            attributes: src? ? { data: { nk__avatar_target: "fallback" } } : {},
             aria: { hidden: (src? || !alt.empty?) ? true : nil }
           )
         ) { fallback }
@@ -65,7 +65,13 @@ module NitroKit
           img(
             **slot_attributes(
               :image,
-              attributes: @image_attributes.merge(src:)
+              attributes: @image_attributes.merge(
+                src:,
+                data: {
+                  nk__avatar_target: "image",
+                  action: "error->nk--avatar#failed"
+                }
+              )
             )
           )
         end

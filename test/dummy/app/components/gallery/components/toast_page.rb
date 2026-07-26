@@ -8,20 +8,20 @@ module Gallery
       end
 
       def api_note
-        "NitroKit::Toast.new(duration:) { |toast| toast.item }"
+        "NitroKit::Toast.new(id:, duration:) { |toast| toast.item(id:) }"
       end
 
       def component_template
         example_section(
           "Variants",
           slug: "toast-variants",
-          description: "Every notification intent renders as explicit server-owned markup."
+          description: "Every notification intent renders as explicit server-owned markup. The list is addressable as <toast id>-list so Turbo Streams can append items."
         ) do
           example("Intent stack", slug: "toast-intent-stack", mode: :full_width) do
             render NitroKit::Toast.new(
               duration: 600_000,
               label: "Variant examples",
-              html: { id: "gallery-toast-variants" }
+              id: "gallery-toast-variants"
             ) do |toast|
               NitroKit::Toast::Item::VARIANTS.each do |variant|
                 toast.item(
@@ -44,15 +44,15 @@ module Gallery
               render NitroKit::Toast.new(
                 duration: 600_000,
                 label: "Title only notification",
-                html: { id: "gallery-toast-title-only" }
+                id: "gallery-toast-title-only"
               ) do |toast|
-                toast.item(title: "Workspace saved")
+                toast.item(title: "Workspace saved", id: "gallery-toast-workspace-saved")
               end
             end
             sample("Permanent", slug: "permanent") do
               render NitroKit::Toast.new(
                 label: "Permanent notification",
-                html: { id: "gallery-toast-permanent" }
+                id: "gallery-toast-permanent"
               ) do |toast|
                 toast.item(
                   description: "A workspace owner must acknowledge this billing change.",
@@ -65,7 +65,7 @@ module Gallery
               render NitroKit::Toast.new(
                 duration: 1_200,
                 label: "Timed notification",
-                html: { id: "gallery-toast-timed" }
+                id: "gallery-toast-timed"
               ) do |toast|
                 toast.item(title: "Focus keeps this notification visible")
               end
@@ -74,7 +74,7 @@ module Gallery
               render NitroKit::Toast.new(
                 duration: 600_000,
                 label: "Block notification",
-                html: { id: "gallery-toast-block" }
+                id: "gallery-toast-block"
               ) do |toast|
                 toast.item(title: "Deployment details", variant: :info) do
                   p { "Release 2026.07.13 is healthy in fra1 and iad1." }
@@ -91,7 +91,7 @@ module Gallery
               render NitroKit::Toast.new(
                 duration: 600_000,
                 label: "Long error notification",
-                html: { id: "gallery-toast-long" }
+                id: "gallery-toast-long"
               ) do |toast|
                 toast.item(
                   title: "The production deployment could not be promoted",
@@ -118,7 +118,7 @@ module Gallery
               },
               duration: 600_000,
               label: "Rails flash messages",
-              html: { id: "gallery-toast-flash" }
+              id: "gallery-toast-flash"
             )
           end
         end
@@ -150,7 +150,7 @@ module Gallery
             render NitroKit::Toast.new(
               duration: 600_000,
               label: "Integration result",
-              html: { id: "gallery-toast-integration-result" }
+              id: "gallery-toast-integration-result"
             ) do |toast|
               toast.item(
                 title: "Slack settings saved",

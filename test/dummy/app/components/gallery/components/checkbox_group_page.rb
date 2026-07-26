@@ -77,8 +77,24 @@ module Gallery
                 [ "Read deployment logs", "read_logs" ],
                 [ "Manage incidents and customer-visible status updates", "manage_incidents" ],
                 [ "Rotate production credentials", "rotate_credentials" ],
-                [ "Change billing details", "billing", true ],
+                { label: "Change billing details", value: "billing", disabled: true },
                 [ "Export the complete workspace audit log", "export_audit" ]
+              ]
+            )
+          end
+
+          example("Required large group", slug: "checkbox-group-required") do
+            render NitroKit::CheckboxGroup.new(
+              legend: "Compliance acknowledgements",
+              description: "Every reviewer must record at least one acknowledgement.",
+              id: "gallery-checkbox-group-required",
+              name: "review[acknowledgements]",
+              value: %w[retention],
+              required: true,
+              size: :lg,
+              options: [
+                [ "Retention policy reviewed", "retention" ],
+                [ "Access log reviewed", "access_log" ]
               ]
             )
           end

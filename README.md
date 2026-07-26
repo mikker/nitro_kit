@@ -78,7 +78,7 @@ eagerLoadControllersFrom("controllers", application);
 
 The host application must provide `@hotwired/stimulus` and `@hotwired/stimulus-loading`; Nitro Kit does not install those packages. It ships no third-party JavaScript runtime. Rails applications without importmap can render and style every component, but must expose and register Nitro's Stimulus controllers themselves. A JavaScript-package entrypoint is not part of this prerelease.
 
-Datepicker and Switch use native inputs and do not have controllers.
+Date inputs and Switch use native inputs and do not have controllers.
 
 ## Usage
 

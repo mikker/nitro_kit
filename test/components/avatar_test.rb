@@ -7,7 +7,7 @@ class AvatarTest < ActiveSupport::TestCase
     assert_predicate NitroKit::Avatar::SIZES, :frozen?
 
     NitroKit::Avatar::SIZES.each do |size|
-      node = render_node(NitroKit::Avatar.new(IMAGE_URL, alt: "Ada Lovelace", size:))
+      node = render_node(NitroKit::Avatar.new(src: IMAGE_URL, alt: "Ada Lovelace", size:))
       image = node.at_css("[data-slot='avatar-image']")
       fallback = node.at_css("[data-slot='avatar-fallback']")
 
@@ -31,6 +31,32 @@ class AvatarTest < ActiveSupport::TestCase
 
     assert_equal IMAGE_URL, node.at_css("img")["src"]
     assert_equal "NK", node.at_css("[data-slot='avatar-fallback']").text
+  end
+
+  test "reveals the initials fallback when the image fails to load" do
+    node = render_node(NitroKit::Avatar.new(src: IMAGE_URL, alt: "Ada Lovelace"))
+    image = node.at_css("[data-slot='avatar-image']")
+
+    assert_equal "nk--avatar", node["data-controller"]
+    assert_equal "image", image["data-nk--avatar-target"]
+    assert_equal "error->nk--avatar#failed", image["data-action"]
+    assert_equal "fallback", node.at_css("[data-slot='avatar-fallback']")["data-nk--avatar-target"]
+
+    controller = NitroKit::Engine.root.join(
+      "app/javascript/controllers/nk/avatar_controller.js"
+    )
+    assert controller.exist?
+    assert_includes controller.read, "failed()"
+
+    css = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/avatar.css").read
+    assert_includes css, %([data-nk="avatar"][data-state="error"])
+  end
+
+  test "leaves imageless avatars unenhanced" do
+    node = render_node(NitroKit::Avatar.new(alt: "Ada Lovelace"))
+
+    assert_nil node["data-controller"]
+    assert_nil node.at_css("[data-slot='avatar-fallback']")["data-nk--avatar-target"]
   end
 
   test "renders an accessible fallback when no image is available" do
@@ -71,7 +97,7 @@ class AvatarTest < ActiveSupport::TestCase
 
   test "validates closed and accessibility options" do
     assert_raises(ArgumentError) { NitroKit::Avatar.new(size: :xl) }
-    assert_raises(ArgumentError) { NitroKit::Avatar.new(IMAGE_URL, src: IMAGE_URL) }
+    assert_raises(ArgumentError) { NitroKit::Avatar.new(IMAGE_URL) }
     assert_raises(ArgumentError) { NitroKit::Avatar.new(alt: nil) }
     assert_raises(ArgumentError) { NitroKit::Avatar.new(fallback: 42) }
     assert_raises(ArgumentError) { NitroKit::Avatar.new(class: "utility") }

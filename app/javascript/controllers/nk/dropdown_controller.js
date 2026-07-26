@@ -25,6 +25,14 @@ export default class extends Controller {
     }
   }
 
+  rememberFocus(event) {
+    if (event.newState === "open") return;
+
+    this.hadFocus =
+      this.restoreOnClose !== false &&
+      this.contentTarget.contains(document.activeElement);
+  }
+
   focusOpened(event) {
     if (event.newState === "open") {
       this.startPositioning();
@@ -33,7 +41,15 @@ export default class extends Controller {
       this.stopPositioning?.();
       this.stopPositioning = null;
       this.focusLast = false;
+      this.restoreFocus();
     }
+  }
+
+  restoreFocus() {
+    if (!this.hadFocus) return;
+
+    this.hadFocus = false;
+    this.triggerTarget.focus();
   }
 
   startPositioning() {
@@ -54,10 +70,9 @@ export default class extends Controller {
       case "Escape":
         event.preventDefault();
         this.hide();
-        this.triggerTarget.focus();
         return;
       case "Tab":
-        this.hide();
+        this.hide({ restoreFocus: false });
         return;
     }
 
@@ -95,10 +110,12 @@ export default class extends Controller {
     }
   }
 
-  hide() {
+  hide({ restoreFocus = true } = {}) {
+    this.restoreOnClose = restoreFocus;
     if (this.contentTarget.matches(":popover-open")) {
       this.contentTarget.hidePopover();
     }
+    this.restoreOnClose = true;
   }
 
   get enabledItems() {

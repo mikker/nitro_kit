@@ -7,17 +7,17 @@
   }
 
   :where(
-      [data-nk="radio-button-group"] > [data-slot="radio-button-group-legend"]
-    ) {
+    [data-nk="radio-button-group"] > [data-slot="radio-button-group-legend"]
+  ) {
     padding: 0;
     font-size: var(--nk-text-sm);
     font-weight: var(--nk-font-weight-semibold);
   }
 
   :where(
-      [data-nk="radio-button-group"]
-        > [data-slot="radio-button-group-description"]
-    ) {
+    [data-nk="radio-button-group"]
+      > [data-slot="radio-button-group-description"]
+  ) {
     margin-block-start: var(--nk-space);
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
@@ -25,27 +25,27 @@
   }
 
   :where(
-      [data-nk="radio-button-group"] > [data-slot="radio-button-group-choices"]
-    ) {
+    [data-nk="radio-button-group"] > [data-slot="radio-button-group-choices"]
+  ) {
     display: grid;
     gap: var(--nk-space);
     margin-block-start: calc(var(--nk-space) * 2);
   }
 
   :where(
-      [data-nk="radio-button-group"][data-orientation="horizontal"]
-        > [data-slot="radio-button-group-choices"]
-    ) {
+    [data-nk="radio-button-group"][data-orientation="horizontal"]
+      > [data-slot="radio-button-group-choices"]
+  ) {
     display: flex;
     flex-wrap: wrap;
     gap: calc(var(--nk-space) * 4);
   }
 
   :where(
-      [data-nk="radio-button-group"][data-presentation="cards"]
-        > [data-slot="radio-button-group-choices"]
-        > [data-slot="radio-button-group-choice"]
-    ) {
+    [data-nk="radio-button-group"][data-presentation="cards"]
+      > [data-slot="radio-button-group-choices"]
+      > [data-slot="radio-button-group-choice"]
+  ) {
     inline-size: 100%;
     padding: calc(var(--nk-space) * 3);
     background: var(--nk-color-surface);
@@ -54,9 +54,9 @@
   }
 
   :where(
-      [data-nk="radio-button-group"][data-presentation="segmented"]
-        > [data-slot="radio-button-group-choices"]
-    ) {
+    [data-nk="radio-button-group"][data-presentation="segmented"]
+      > [data-slot="radio-button-group-choices"]
+  ) {
     display: inline-flex;
     gap: 0;
     padding: var(--nk-space);
@@ -65,26 +65,26 @@
   }
 
   :where(
-      [data-nk="radio-button-group"][data-presentation="segmented"]
-        > [data-slot="radio-button-group-choices"]
-        > [data-slot="radio-button-group-choice"]
-    ) {
+    [data-nk="radio-button-group"][data-presentation="segmented"]
+      > [data-slot="radio-button-group-choices"]
+      > [data-slot="radio-button-group-choice"]
+  ) {
     min-inline-size: 0;
     padding-inline: calc(var(--nk-space) * 3);
     border-radius: calc(var(--nk-radius-md) - var(--nk-space));
   }
 
   :where(
-      [data-nk="radio-button-group"][data-presentation="segmented"]
-        [data-slot="radio-button-indicator"]
-    ) {
+    [data-nk="radio-button-group"][data-presentation="segmented"]
+      [data-slot="radio-button-indicator"]
+  ) {
     display: none;
   }
 
   :where(
-      [data-nk="radio-button-group"][data-presentation="segmented"]
-        [data-slot="radio-button-label"]
-    ) {
+    [data-nk="radio-button-group"][data-presentation="segmented"]
+      [data-slot="radio-button-label"]
+  ) {
     display: flex;
     min-block-size: calc(var(--nk-control-height-md) - var(--nk-space) * 2);
   }
@@ -92,13 +92,13 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="radio-button-group"][data-presentation="cards"]
-        > [data-slot="radio-button-group-choices"]
-        > [data-slot="radio-button-group-choice"]:has(input:checked),
-      [data-nk="radio-button-group"][data-presentation="segmented"]
-        > [data-slot="radio-button-group-choices"]
-        > [data-slot="radio-button-group-choice"]:has(input:checked)
-    ) {
+    [data-nk="radio-button-group"][data-presentation="cards"]
+      > [data-slot="radio-button-group-choices"]
+      > [data-slot="radio-button-group-choice"]:has(input:checked),
+    [data-nk="radio-button-group"][data-presentation="segmented"]
+      > [data-slot="radio-button-group-choices"]
+      > [data-slot="radio-button-group-choice"]:has(input:checked)
+  ) {
     background: var(--nk-color-surface);
     border-color: var(--nk-color-primary);
     box-shadow: var(--nk-shadow-sm);

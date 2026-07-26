@@ -68,6 +68,7 @@ class ProgressiveImageTest < ActiveSupport::TestCase
     assert fallback.key?("hidden")
     assert_equal "status", fallback["role"]
     assert_nil fallback["aria-label"]
+    assert_equal "Ada at the controls", fallback.text
     assert_equal 1, node.css("img:not([alt=''])").size
     assert_empty node.css("[class], [style]")
   end
@@ -98,9 +99,32 @@ class ProgressiveImageTest < ActiveSupport::TestCase
 
     fallback = node.at_css("[data-slot='progressive-image-fallback']")
     refute fallback.key?("hidden")
-    assert_equal "status", fallback["role"]
+    assert_nil fallback["role"]
     assert_nil fallback["aria-label"]
-    assert_equal "Image unavailable", fallback.text
+    assert_equal "Workspace cover", fallback.text
+  end
+
+  test "names the unavailable state when no alt text exists" do
+    node = render_node(
+      NitroKit::ProgressiveImage.new(attachment: nil, alt: "", size: :sm)
+    )
+
+    assert_equal(
+      NitroKit::ProgressiveImage::UNAVAILABLE_TEXT,
+      node.at_css("[data-slot='progressive-image-fallback']").text
+    )
+  end
+
+  test "requires alt text unless the image is decorative" do
+    assert_match(/required unless decorative/, assert_raises(ArgumentError) do
+      NitroKit::ProgressiveImage.new(attachment: nil)
+    end.message)
+
+    node = render_node(NitroKit::ProgressiveImage.new(attachment: nil, decorative: true))
+    fallback = node.at_css("[data-slot='progressive-image-fallback']")
+
+    assert_equal "true", fallback["aria-hidden"]
+    assert_equal NitroKit::ProgressiveImage::UNAVAILABLE_TEXT, fallback.text
   end
 
   test "forces decorative images and fallback content out of the accessibility tree" do

@@ -10,7 +10,7 @@ class ProgressiveControlsTest < ApplicationSystemTestCase
     assert evaluate_script("document.querySelector(arguments[0]).indeterminate", control)
 
     execute_script("document.querySelector(arguments[0]).click()", control)
-    assert_selector "#{root}[data-state='checked']"
+    assert_selector "#{root}:not([data-state])"
     refute evaluate_script("document.querySelector(arguments[0]).indeterminate", control)
     assert_nil find(control, visible: :all)["aria-checked"]
 
@@ -25,15 +25,16 @@ class ProgressiveControlsTest < ApplicationSystemTestCase
 
     visit gallery_component_path("radio-button")
     execute_script("document.querySelector('#gallery-radio-button-organization-control').click()")
-    assert_selector "#gallery-radio-button-private[data-state='unchecked']"
-    assert_selector "#gallery-radio-button-organization[data-state='checked']"
+    assert_selector "#gallery-radio-button-private input:not(:checked)", visible: :all
+    assert_selector "#gallery-radio-button-organization input:checked", visible: :all
+    assert_selector "#gallery-radio-button-organization:not([data-controller])"
 
     visit gallery_component_path("switch")
-    switch = find("#gallery-switch-small-control", visible: :all)
+    switch = find("#gallery-switch-medium-control", visible: :all)
     assert_equal "Weekly digest", switch.native.accessible_name
-    assert_equal "gallery-switch-small-control-description", switch["aria-describedby"]
-    execute_script("document.querySelector('#gallery-switch-small-control').click()")
-    assert_selector "#gallery-switch-small[data-state='checked']"
+    assert_equal "gallery-switch-medium-control-description", switch["aria-describedby"]
+    execute_script("document.querySelector('#gallery-switch-medium-control').click()")
+    assert_selector "#gallery-switch-medium input:checked", visible: :all
     assert_no_severe_console_errors(context: path)
   end
 

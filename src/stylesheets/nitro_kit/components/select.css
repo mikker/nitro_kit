@@ -44,9 +44,9 @@
   }
 
   :where(
-      [data-nk="select"]:has(> [data-slot="select-control"][multiple])
-        > [data-slot="select-icon"]
-    ) {
+    [data-nk="select"]:has(> [data-slot="select-control"][multiple])
+      > [data-slot="select-icon"]
+  ) {
     display: none;
   }
 }
@@ -63,8 +63,8 @@
   }
 
   :where(
-      [data-nk="select"] > [data-slot="select-control"][aria-invalid="true"]
-    ) {
+    [data-nk="select"] > [data-slot="select-control"][aria-invalid="true"]
+  ) {
     border-color: var(--nk-color-danger);
   }
 }

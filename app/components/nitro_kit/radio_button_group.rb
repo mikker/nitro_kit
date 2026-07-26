@@ -34,7 +34,7 @@ module NitroKit
       @presentation = validate_choice!(:presentation, presentation, PRESENTATIONS)
       @disabled = validate_boolean!(:disabled, disabled)
       @required = validate_boolean!(:required, required)
-      @size = validate_choice!(:size, size.to_s.to_sym, RadioButton::SIZES)
+      @size = validate_choice!(:size, size, RadioButton::SIZES)
 
       raise ArgumentError, "options cannot be empty" if @options.empty?
       validate_unique_choices!
@@ -45,11 +45,8 @@ module NitroKit
         attributes: {
           id: @id,
           disabled: @disabled,
-          data: {
-            required: @required ? "true" : nil,
-            orientation: @orientation,
-            presentation: @presentation
-          }.compact
+          aria: { required: @required ? "true" : nil }.compact,
+          data: { orientation: @orientation, presentation: @presentation }
         }.compact,
         html:,
         aria:,
@@ -77,6 +74,8 @@ module NitroKit
 
     private
 
+    # The fieldset and its legend already scope the group description, so a
+    # choice never repeats it through aria-describedby.
     def render_choice(choice, index)
       render_in_slot(
         RadioButton.new(
@@ -85,39 +84,34 @@ module NitroKit
           id: choice.id || choice_id(index),
           name:,
           value: choice.value,
-          checked: value.to_s == choice.value.to_s,
+          checked: selected?(choice),
           disabled: @disabled || choice.disabled,
           required: @required,
-          size:,
-          control_aria: { describedby: description_id }.compact
+          size:
         ),
         :choice
       )
     end
 
+    def selected?(choice)
+      !value.nil? && value.to_s == choice.value.to_s
+    end
+
     def deterministic_id(name)
-      name.to_s.gsub(/[^a-zA-Z0-9_-]+/, "_").gsub(/\A_+|_+\z/, "").presence
+      derived = name.to_s.gsub(/[^a-zA-Z0-9_-]+/, "_").gsub(/\A_+|_+\z/, "")
+      return derived unless derived.empty?
+
+      raise ArgumentError, "name #{name.inspect} cannot derive an id; pass id:"
     end
 
     def choice_id(index)
       "#{id}-#{index}" if id
     end
 
-    def description_id
-      "#{id}-description" if id && description
-    end
-
     def validate_text!(name, text)
       return text if text.is_a?(String) && !text.strip.empty?
 
       raise ArgumentError, "#{name} must be a non-blank String"
-    end
-
-    def validate_optional_text!(name, text)
-      return if text.nil?
-      return text if text.is_a?(String) && !text.strip.empty?
-
-      raise ArgumentError, "#{name} must be a non-blank String or nil"
     end
 
     def validate_unique_choices!

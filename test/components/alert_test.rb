@@ -1,66 +1,73 @@
 require "test_helper"
 
 class AlertTest < ActiveSupport::TestCase
-  class ProbeIcon < NitroKit::Component
-    def initialize
-      super(component: :probe_icon)
-    end
-
-    def view_template
-      svg(**root_attributes)
-    end
-  end
-
   test "renders every variant as owned component data" do
     assert_predicate NitroKit::Alert::VARIANTS, :frozen?
+    assert_equal NitroKit::Toast::Item::VARIANTS, NitroKit::Alert::VARIANTS
 
     NitroKit::Alert::VARIANTS.each do |variant|
       node = render_node(NitroKit::Alert.new(variant:))
 
       assert_equal "alert", node["data-nk"]
       assert_equal variant.to_s, node["data-variant"]
-      assert_equal NitroKit::Alert::VARIANT_COLORS.fetch(variant).to_s, node["data-color"]
+      assert_nil node["data-color"]
       assert_nil node["role"]
       refute node.key?("class")
       refute node.key?("style")
     end
   end
 
-  test "accepts the Tailwind color palette" do
-    NitroKit::Alert::COLORS.each do |color|
-      node = render_node(NitroKit::Alert.new(color:))
+  test "drives its own palette without borrowing the Badge color axis" do
+    assert_predicate NitroKit::Alert::VARIANT_PALETTE, :frozen?
+    assert_equal NitroKit::Alert::VARIANTS, NitroKit::Alert::VARIANT_PALETTE.keys
+    refute NitroKit::Alert.const_defined?(:COLORS, false)
 
-      assert_equal color.to_s, node["data-color"]
+    css = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/palette.css").read
+    NitroKit::Alert::VARIANTS.each do |variant|
+      assert_includes css, %([data-nk="alert"][data-variant="#{variant}"])
+    end
+
+    alert_css = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/alert.css").read
+    assert_includes alert_css, %([data-nk="alert"][data-variant])
+    refute_includes alert_css, "data-color"
+  end
+
+  test "accepts constructor text and matching compound declarations" do
+    constructor = render_node(
+      NitroKit::Alert.new(title: "Scheduled maintenance", description: "Deploys pause tonight.")
+    )
+    compound = render_node(NitroKit::Alert.new) do |alert|
+      alert.title("Scheduled maintenance")
+      alert.description { "Deploys pause tonight." }
+    end
+
+    [ constructor, compound ].each do |node|
+      assert_equal "Scheduled maintenance", node.at_css("[data-slot='alert-title']").text
+      assert_equal "Deploys pause tonight.", node.at_css("[data-slot='alert-description']").text
     end
   end
 
-  test "renders qualified title and description slots" do
-    component = NitroKit::Alert.new
-    node = render_node(
-      component,
-      &proc do |alert|
-        alert.title("A balanced title", html: { id: "title" })
-        alert.description(aria: { live: "polite" }) { "A useful description" }
-      end
+  test "renders declared regions in owned order regardless of declaration order" do
+    node = render_node(NitroKit::Alert.new) do |alert|
+      alert.description("A useful description")
+      alert.title("A balanced title")
+      alert.icon(NitroKit::Icon.new(:info))
+    end
+
+    assert_equal(
+      %w[alert-icon alert-title alert-description],
+      node.element_children.map { |child| child["data-slot"] }
     )
-
-    title = node.at_css("[data-slot='alert-title']")
-    description = node.at_css("[data-slot='alert-description']")
-
-    assert_equal "title", title["id"]
-    assert_equal "A balanced title", title.text
-    assert_equal "polite", description["aria-live"]
-    assert_equal "A useful description", description.text
   end
 
-  test "renders a nested component in the qualified icon slot" do
+  test "renders a nested Icon in the qualified icon slot" do
     node = render_node(NitroKit::Alert.new) do |alert|
-      alert.icon(ProbeIcon.new)
+      alert.icon(NitroKit::Icon.new(:circle_check))
       alert.title("Heads up")
     end
     icon = node.at_css("[data-slot='alert-icon']")
 
-    assert_equal "probe-icon", icon["data-nk"]
+    assert_equal "icon", icon["data-nk"]
     assert_equal "svg", icon.name
   end
 
@@ -95,14 +102,18 @@ class AlertTest < ActiveSupport::TestCase
   test "validates options and supports the class escape hatch" do
     error = assert_raises(ArgumentError) { NitroKit::Alert.new(variant: :loud) }
     assert_match(/Unknown variant :loud/, error.message)
-    assert_raises(ArgumentError) { NitroKit::Alert.new(color: :chartreuse) }
+    assert_raises(ArgumentError) { NitroKit::Alert.new(color: :red) }
 
     assert_raises(ArgumentError) { NitroKit::Alert.new(class: "utility") }
     assert_raises(ArgumentError) { NitroKit::Alert.new(style: "display: none") }
     assert_raises(ArgumentError) { NitroKit::Alert.new(role: "status") }
     assert_raises(ArgumentError) { NitroKit::Alert.new(html: { role: "status" }) }
+    assert_raises(ArgumentError) { NitroKit::Alert.new(title: "") }
     assert_raises(ArgumentError) do
       NitroKit::Alert.new.call { |alert| alert.icon(Object.new) }
+    end
+    assert_raises(ArgumentError) do
+      NitroKit::Alert.new.call { |alert| alert.icon(NitroKit::Badge.new("Nope")) }
     end
     assert_raises(ArgumentError) { NitroKit::Alert.new(live: :loud) }
     assert_raises(ArgumentError) do
@@ -111,10 +122,24 @@ class AlertTest < ActiveSupport::TestCase
         alert.title("Second")
       end
     end
+    assert_raises(ArgumentError) do
+      NitroKit::Alert.new(title: "Constructor").call { |alert| alert.title("Compound") }
+    end
 
     node = render_node(NitroKit::Alert.new(desperately_need_a_class: "external-alert"))
     assert_equal "external-alert", node["class"]
     assert_equal "class", node["data-nk-escape"]
+  end
+
+  test "rejects declarations outside the render block" do
+    component = NitroKit::Alert.new
+
+    assert_match(
+      /inside the render block/,
+      assert_raises(ArgumentError) { component.title("Too early") }.message
+    )
+    assert_raises(ArgumentError) { component.description("Too early") }
+    assert_raises(ArgumentError) { component.icon(NitroKit::Icon.new(:info)) }
   end
 
   test "opts into live-region semantics deliberately" do

@@ -6,9 +6,9 @@
   }
 
   :where(
-      [data-nk="avatar-stack"] > [data-slot="avatar-stack-avatar"],
-      [data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]
-    ) {
+    [data-nk="avatar-stack"] > [data-slot="avatar-stack-avatar"],
+    [data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]
+  ) {
     flex: none;
     margin-inline-start: calc(var(--nk-space) * -3);
     background-color: var(--nk-color-surface);
@@ -16,9 +16,9 @@
   }
 
   :where(
-      [data-nk="avatar-stack"] > [data-slot="avatar-stack-avatar"]:first-child,
-      [data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]:first-child
-    ) {
+    [data-nk="avatar-stack"] > [data-slot="avatar-stack-avatar"]:first-child,
+    [data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]:first-child
+  ) {
     margin-inline-start: 0;
   }
 
@@ -33,27 +33,27 @@
   }
 
   :where(
-      [data-nk="avatar-stack"][data-size="sm"]
-        > [data-slot="avatar-stack-overflow"]
-    ) {
+    [data-nk="avatar-stack"][data-size="sm"]
+      > [data-slot="avatar-stack-overflow"]
+  ) {
     width: 2rem;
     height: 2rem;
     font-size: var(--nk-text-xs);
   }
 
   :where(
-      [data-nk="avatar-stack"][data-size="md"]
-        > [data-slot="avatar-stack-overflow"]
-    ) {
+    [data-nk="avatar-stack"][data-size="md"]
+      > [data-slot="avatar-stack-overflow"]
+  ) {
     width: 3rem;
     height: 3rem;
     font-size: var(--nk-text-sm);
   }
 
   :where(
-      [data-nk="avatar-stack"][data-size="lg"]
-        > [data-slot="avatar-stack-overflow"]
-    ) {
+    [data-nk="avatar-stack"][data-size="lg"]
+      > [data-slot="avatar-stack-overflow"]
+  ) {
     width: 4rem;
     height: 4rem;
     font-size: var(--nk-text-base);

@@ -43,7 +43,7 @@ class DropdownComponentTest < ActiveSupport::TestCase
     assert_equal "a", items[0].name
     assert_equal "/edit", items[0]["href"]
     assert_equal "button", items[1].name
-    assert_equal "destructive", items[1]["data-tone"]
+    assert_equal "destructive", items[1]["data-variant"]
     assert items[2].key?("disabled")
     assert items.all? { |item| item["tabindex"] == "-1" }
     assert_equal 1, content.css("[data-slot='dropdown-separator']").size
@@ -73,10 +73,19 @@ class DropdownComponentTest < ActiveSupport::TestCase
     end
   end
 
-  test "validates identity placement and required declarations" do
-    assert_raises(ArgumentError) { NitroKit::Dropdown.new }
+  test "generates an identity when none is supplied" do
+    node = render_dropdown(NitroKit::Dropdown.new) do |menu|
+      menu.trigger("Open")
+      menu.item("Profile", href: "/profile")
+    end
 
-    [ nil, "", "two words", :menu ].each do |id|
+    assert_match(/\Ank-dropdown-[0-9a-f]{8}\z/, node["id"])
+    assert_equal "#{node["id"]}-trigger", node.at_css("[data-slot='dropdown-trigger']")["id"]
+    assert_equal "#{node["id"]}-content", node.at_css("[data-slot='dropdown-content']")["id"]
+  end
+
+  test "validates identity placement and required declarations" do
+    [ "", "two words", "-leading", :menu ].each do |id|
       assert_match(/id must be/, assert_raises(ArgumentError) { NitroKit::Dropdown.new(id:) }.message)
     end
 
@@ -125,6 +134,12 @@ class DropdownComponentTest < ActiveSupport::TestCase
   test "rejects classes and reserved state while keeping the class escape visible" do
     assert_raises(ArgumentError) { NitroKit::Dropdown.new(id: "menu", html: { class: "utility" }) }
     assert_raises(ArgumentError) { NitroKit::Dropdown.new(id: "menu", data: { state: "open" }) }
+    assert_raises(ArgumentError) do
+      render_dropdown do |menu|
+        menu.trigger("Open")
+        menu.item("Item", data: { variant: "destructive" })
+      end
+    end
 
     node = render_dropdown(NitroKit::Dropdown.new(id: "menu", desperately_need_a_class: "hook")) do |menu|
       menu.trigger("Open")
@@ -142,6 +157,61 @@ class DropdownComponentTest < ActiveSupport::TestCase
     end
   end
 
+  test "renders an icon-only trigger with square Button geometry and icon items" do
+    node = render_dropdown(NitroKit::Dropdown.new(id: "record-menu")) do |menu|
+      menu.trigger(icon: :ellipsis, label: "Record actions", variant: :ghost)
+      menu.item("Rename", icon: :pencil)
+      menu.item("Delete", icon: :trash_2, variant: :destructive)
+    end
+    trigger = node.at_css("[data-slot='dropdown-trigger']")
+    items = node.css("[data-slot='dropdown-item']")
+
+    assert_equal "Record actions", trigger["aria-label"]
+    assert_equal "ghost", trigger["data-variant"]
+    assert_nil trigger.at_css("[data-slot='button-label']")
+    assert_equal "md", trigger.at_css("[data-slot='button-icon-start'] [data-nk='icon']")["data-size"]
+    assert_equal %w[sm sm], items.map { |item| item.at_css("[data-slot='dropdown-item-icon'] [data-nk='icon']")["data-size"] }
+    assert_equal %w[Rename Delete], items.map(&:text)
+    assert_equal "destructive", items[1]["data-variant"]
+  end
+
+  test "supports a trailing trigger icon and validates trigger treatment against Button" do
+    node = render_dropdown(NitroKit::Dropdown.new(id: "sort-menu")) do |menu|
+      menu.trigger("Sort", icon_end: :chevron_down, size: :sm)
+      menu.item("Newest")
+    end
+    trigger = node.at_css("[data-slot='dropdown-trigger']")
+
+    assert_equal "sm", trigger["data-size"]
+    assert trigger.at_css("[data-slot='button-icon-end'] [data-nk='icon']")
+
+    [ [ :variant, :loud ], [ :size, :huge ] ].each do |option, value|
+      error = assert_raises(ArgumentError) do
+        render_dropdown(NitroKit::Dropdown.new(id: "menu")) do |menu|
+          menu.trigger("Open", option => value)
+          menu.item("One")
+        end
+      end
+
+      assert_match(/Unknown Dropdown trigger #{option}/, error.message)
+    end
+  end
+
+  test "restores focus to the trigger whenever the popover closes with focus inside" do
+    source = NitroKit::Engine.root.join("app/javascript/controllers/nk/dropdown_controller.js").read
+    node = render_dropdown do |menu|
+      menu.trigger("Open")
+      menu.item("One")
+    end
+
+    assert_includes node.at_css("[data-slot='dropdown-content']")["data-action"],
+      "beforetoggle->nk--dropdown#rememberFocus"
+    assert_includes source, "rememberFocus(event)"
+    assert_includes source, "this.contentTarget.contains(document.activeElement)"
+    assert_includes source, "restoreFocus()"
+    assert_includes source, "this.hide({ restoreFocus: false })"
+  end
+
   test "positions the popover from controller-owned coordinates" do
     source = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/dropdown.css").read
 
@@ -150,6 +220,8 @@ class DropdownComponentTest < ActiveSupport::TestCase
     assert_includes source, "translate: none"
     refute_includes source, "anchor("
     assert_includes source, ":popover-open"
+    assert_includes source, '> [data-slot="dropdown-item-icon"]'
+    assert_includes source, '[data-slot="dropdown-item"][data-variant="destructive"]'
     refute_includes source, "[data-state=\"open\"]"
   end
 

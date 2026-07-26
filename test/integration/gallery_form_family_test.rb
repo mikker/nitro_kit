@@ -104,17 +104,21 @@ class GalleryFormFamilyTest < ActionDispatch::IntegrationTest
   test "checkbox page preserves values labels mixed state and builder validation" do
     get_component("checkbox")
 
-    assert_select "#gallery-checkbox-unchecked[data-state='unchecked']" do
+    assert_select "#gallery-checkbox-unchecked:not([data-state]):not([data-controller])" do
       assert_select "input[type='hidden'][name='preferences[email_summaries]'][value='disabled']"
       assert_select "#gallery-checkbox-unchecked-control[type='checkbox']" \
                     "[name='preferences[email_summaries]'][value='enabled']:not([checked])"
       assert_select "label[for='gallery-checkbox-unchecked-control']", text: "Email summaries"
     end
-    assert_select "#gallery-checkbox-checked[data-state='checked'] #gallery-checkbox-checked-control[checked][required]"
-    assert_select "#gallery-checkbox-indeterminate[data-state='indeterminate']" do
+    assert_select "#gallery-checkbox-checked:not([data-state]) #gallery-checkbox-checked-control[checked][required]"
+    assert_select "#gallery-checkbox-indeterminate[data-state='indeterminate'][data-controller='nk--checkable']" do
       assert_select "input[type='hidden']", count: 0
-      assert_select "#gallery-checkbox-indeterminate-control[aria-checked='mixed']"
+      assert_select "#gallery-checkbox-indeterminate-control:not([aria-checked])"
+      assert_select "#gallery-checkbox-indeterminate-control[data-nk--checkable-target='control']"
     end
+    assert_select "#gallery-checkbox-invalid-control[aria-invalid='true'][required]"
+    assert_select "#gallery-checkbox-medium[data-size='md']"
+    assert_select "#gallery-checkbox-large[data-size='lg']"
     assert_select "#gallery-checkbox-disabled[data-disabled='true']" do
       assert_select "input", count: 2
       assert_select "input[disabled]", count: 2
@@ -144,14 +148,17 @@ class GalleryFormFamilyTest < ActionDispatch::IntegrationTest
       assert_select "input[type='checkbox'][checked]", count: 2
       assert_select "#gallery-channel-operations[value='operations']"
       assert_select "#gallery-channel-pager[value='pager'][disabled]"
-      assert_select "input[type='checkbox'][aria-describedby='gallery-checkbox-group-notifications-description']",
-        count: 4
+      assert_select "input[type='checkbox'][aria-describedby]", count: 0
     end
     assert_select "#gallery-checkbox-group-one input[type='checkbox']", count: 1
     assert_select "#gallery-checkbox-group-none input[type='checkbox'][checked]", count: 0
     assert_select "#gallery-checkbox-group-many input[type='checkbox']", count: 6
     assert_select "#gallery-checkbox-group-many input[value='billing'][disabled]"
     assert_select "#gallery-checkbox-group-disabled[disabled] input[disabled]", count: 3
+    assert_select "#gallery-checkbox-group-required[aria-required='true'][data-size='lg']" do
+      assert_select "[data-nk='checkbox'][data-size='lg']", count: 2
+      assert_select "input[type='checkbox'][required]", count: 0
+    end
 
     assert_select "#gallery-checkbox-group-report-form" do
       assert_select "#gallery-checkbox-group-reports input[name='subscription[reports][]'][checked]", count: 2
@@ -163,7 +170,7 @@ class GalleryFormFamilyTest < ActionDispatch::IntegrationTest
     get_component("radio-button")
 
     assert_select "input[type='radio'][name='workspace[visibility]']", count: 3
-    assert_select "#gallery-radio-button-private[data-state='checked']" do
+    assert_select "#gallery-radio-button-private:not([data-state]):not([data-controller])" do
       assert_select "#gallery-radio-button-private-control[value='private'][checked][required]"
       assert_select "label[for='gallery-radio-button-private-control']", text: "Private to invited members"
     end
@@ -174,6 +181,7 @@ class GalleryFormFamilyTest < ActionDispatch::IntegrationTest
       assert_select "label", count: 0
       assert_select "input[aria-label='Select deployment 1842']"
     end
+    assert_select "#gallery-radio-button-invalid input[aria-invalid='true']"
     assert_select "#gallery-radio-button-long label", text: /extended regulated/
 
     assert_select "#gallery-radio-button-invitation-form" do
@@ -186,18 +194,22 @@ class GalleryFormFamilyTest < ActionDispatch::IntegrationTest
   test "radio group page preserves fieldset descriptions requirements selection and errors" do
     get_component("radio-button-group")
 
-    assert_select "#gallery-radio-button-group-role[data-nk='radio-button-group'][data-required='true']" do
+    assert_select "#gallery-radio-button-group-role[data-nk='radio-button-group'][aria-required='true']:not([data-required])" do
       assert_select "legend", text: "Default member role"
       assert_select "#gallery-radio-button-group-role-description"
       assert_select "input[type='radio'][name='workspace[default_role]'][required]", count: 3
       assert_select "#gallery-role-member[value='member'][checked]"
       assert_select "#gallery-role-viewer[value='viewer'][disabled]"
-      assert_select "input[aria-describedby='gallery-radio-button-group-role-description']", count: 3
+      assert_select "input[aria-describedby]", count: 0
     end
     assert_select "#gallery-radio-button-group-one input[type='radio']", count: 1
     assert_select "#gallery-radio-button-group-none input[checked]", count: 0
     assert_select "#gallery-radio-button-group-many[data-size='lg'] input[type='radio']", count: 4
     assert_select "#gallery-radio-button-group-disabled[disabled] input[disabled]", count: 2
+    assert_select "#gallery-radio-button-group-segmented[data-presentation='segmented'][data-orientation='horizontal']" do
+      assert_select "input[type='radio'][name='table[density]']", count: 3
+      assert_select "input[value='comfortable'][checked]"
+    end
 
     assert_select "#gallery-radio-button-group-invitation-form [data-nk='field'][data-state='invalid']" do
       assert_select "#gallery-radio-button-group-invitation-role[aria-invalid='true']" \
@@ -211,14 +223,16 @@ class GalleryFormFamilyTest < ActionDispatch::IntegrationTest
   test "switch page covers role values sizes labels state and builder errors" do
     get_component("switch")
 
-    assert_select "#gallery-switch-small[data-size='sm'][data-state='unchecked']" do
+    assert_select "#gallery-switch-medium[data-size='md']:not([data-state]):not([data-controller])" do
       assert_select "input[type='hidden'][name='preferences[weekly_digest]'][value='0']"
-      assert_select "#gallery-switch-small-control[type='checkbox'][role='switch'][value='1']:not([checked])"
+      assert_select "#gallery-switch-medium-control[type='checkbox'][role='switch'][value='1']:not([checked])"
+      assert_select "label > [data-slot='switch-content'] > [data-slot='switch-description']"
     end
-    assert_select "#gallery-switch-medium[data-size='md'][data-state='checked']" do
-      assert_select "#gallery-switch-medium-control[role='switch'][checked]"
+    assert_select "#gallery-switch-large[data-size='lg']" do
+      assert_select "#gallery-switch-large-control[role='switch'][checked]"
       assert_select "[data-slot='switch-track'] [data-slot='switch-handle']"
     end
+    assert_select "#gallery-switch-invalid-control[aria-invalid='true']"
     assert_select "#gallery-switch-required-control[required]"
     assert_select "#gallery-switch-disabled[data-disabled='true'] input[disabled]", count: 2
     assert_select "#gallery-switch-block label", text: /Activity reports.*workspace owners/

@@ -24,7 +24,7 @@ class ButtonGroupTest < ActiveSupport::TestCase
     long_label = "Export every selected record as a comma-separated value file"
     node = render_node(NitroKit::ButtonGroup.new(label: "Record actions")) do |group|
       group.button(long_label, href: "/exports", icon: "download")
-      group.button("Archive", icon_right: "archive", disabled: true)
+      group.button("Archive", icon_end: "archive", disabled: true)
       group.button(nil, icon: "trash-2", aria: { label: "Delete records" })
     end
     buttons = node.xpath("./*[@data-slot='button-group-button']")
@@ -36,6 +36,27 @@ class ButtonGroupTest < ActiveSupport::TestCase
     assert buttons[1].at_css("[data-slot='button-icon-end'] [data-nk='icon']")
     assert_equal "Delete records", buttons[2]["aria-label"]
     assert_nil buttons[2].at_css("[data-slot='button-label']")
+  end
+
+  test "members inherit the group variant and size unless they state their own" do
+    node = render_node(NitroKit::ButtonGroup.new(variant: :primary, size: :lg)) do |group|
+      group.button("Publish")
+      group.button("Discard", variant: :ghost)
+    end
+    buttons = node.xpath("./*[@data-slot='button-group-button']")
+
+    assert_equal %w[primary ghost], buttons.map { |button| button["data-variant"] }
+    assert_equal %w[lg lg], buttons.map { |button| button["data-size"] }
+    assert_raises(ArgumentError) { NitroKit::ButtonGroup.new(variant: :loud) }
+    assert_raises(ArgumentError) { NitroKit::ButtonGroup.new(size: :huge) }
+  end
+
+  test "forwards unknown member keywords to Button" do
+    error = assert_raises(ArgumentError) do
+      NitroKit::ButtonGroup.new.call { |group| group.button("Save", icon_right: :arrow_right) }
+    end
+
+    assert_match(/unknown keyword: :icon_right/, error.message)
   end
 
   test "preserves render-time content for constructed and accepted buttons" do

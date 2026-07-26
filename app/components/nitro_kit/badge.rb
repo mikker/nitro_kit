@@ -18,11 +18,13 @@ module NitroKit
       html: {},
       aria: {},
       data: {},
-      desperately_need_a_class: nil,
-      &block
+      desperately_need_a_class: nil
     )
+      if !text.nil? && text.to_s.strip.empty?
+        raise ArgumentError, "Badge label content is required"
+      end
+
       @text = text
-      @content = block
       @variant = validate_choice!(:variant, variant, VARIANTS)
       @size = validate_choice!(:size, size, SIZES)
       @color = validate_choice!(:color, color, COLORS)
@@ -45,18 +47,16 @@ module NitroKit
     attr_reader :text, :variant, :size, :color
 
     def view_template(&block)
-      content = block || @content
-      if !content && (text.nil? || text.to_s.strip.empty?)
+      if block && !text.nil?
+        raise ArgumentError, "Badge accepts label text or block content, not both"
+      end
+      if !block && text.nil?
         raise ArgumentError, "Badge label content is required"
       end
 
       span(**root_attributes) do
         span(**slot_attributes(:label)) do
-          if content
-            text_or_block(nil, &content)
-          else
-            plain(text.to_s)
-          end
+          block ? text_or_block(nil, &block) : plain(text.to_s)
         end
       end
     end

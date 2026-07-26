@@ -54,6 +54,16 @@ class ComponentTest < ActiveSupport::TestCase
     end
   end
 
+  class InternalDataProbe < NitroKit::Component
+    def initialize(key)
+      super(component: :internal_data_probe, attributes: { data: { key => "override" } })
+    end
+
+    def view_template
+      div(**root_attributes)
+    end
+  end
+
   class SlotProbe < NitroKit::Component
     def initialize(slot_html: {}, slot_aria: {}, slot_data: {}, slot_class: nil)
       @slot_html = slot_html
@@ -173,12 +183,34 @@ class ComponentTest < ActiveSupport::TestCase
       :state,
       "data-state",
       :nk_escape,
-      "data-nk-escape"
+      "data-nk-escape",
+      :enhanced,
+      :disabled,
+      :required,
+      :orientation,
+      :presentation,
+      :placement,
+      :layout,
+      :field_type,
+      "data-field-type"
     ]
 
     reserved_data_keys.each do |key|
       error = assert_raises(ArgumentError) { Probe.new(data: { key => "override" }) }
       assert_match(/is reserved by Nitro Kit/, error.message, "Expected #{key.inspect} to be reserved")
+    end
+  end
+
+  test "separates component-owned data from base-owned identity" do
+    owned = NitroKit::Component::COMPONENT_OWNED_DATA_ATTRIBUTES
+    reserved = NitroKit::Component::RESERVED_DATA_ATTRIBUTES
+
+    assert_equal owned, owned & reserved
+    assert_equal "closed", render_node(BehaviorProbe.new)["data-state"]
+
+    (reserved - owned).each do |key|
+      error = assert_raises(ArgumentError) { InternalDataProbe.new(key).call }
+      assert_match(/Use the component or slot API for data-#{key}/, error.message)
     end
   end
 

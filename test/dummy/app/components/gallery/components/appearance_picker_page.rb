@@ -35,6 +35,18 @@ module Gallery
               presentation: :dropdown
             )
           end
+
+          example("Server-persisted preference", slug: "appearance-picker-preference", layout: :matrix) do
+            NitroKit::AppearancePicker::PREFERENCES.each do |preference|
+              sample(preference.to_s.humanize, slug: preference.to_s) do
+                render NitroKit::AppearancePicker.new(
+                  id: "gallery-appearance-preference-#{preference}",
+                  label: "Saved appearance",
+                  preference:
+                )
+              end
+            end
+          end
         end
 
         example_section(

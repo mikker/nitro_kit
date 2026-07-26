@@ -28,8 +28,7 @@ class ProgressiveSelectionControllerContractTest < ActiveSupport::TestCase
     assert_includes source, "nativeTargetConnected(native)"
     assert_includes source, "valueTargetConnected(value)"
     assert_includes source, "controlTargetConnected(control)"
-    assert_includes source, 'this.statusTarget.textContent = "No options found."'
-    assert_includes source, 'count === 1 ? "option" : "options"'
-    assert_includes source, "} available.`"
+    assert_includes source, "announceResults()"
+    assert_includes source, "this.statusTarget.textContent"
   end
 end

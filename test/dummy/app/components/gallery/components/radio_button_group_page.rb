@@ -77,7 +77,24 @@ module Gallery
                 [ "Standard ninety-day retention", "standard" ],
                 [ "Extended one-year retention", "extended" ],
                 [ "Regulated seven-year retention with immutable audit exports", "regulated" ],
-                [ "Legacy indefinite retention", "legacy", true ]
+                { label: "Legacy indefinite retention", value: "legacy", disabled: true }
+              ]
+            )
+          end
+
+          example("Segmented presentation", slug: "radio-button-group-segmented") do
+            render NitroKit::RadioButtonGroup.new(
+              legend: "Table density",
+              description: "Segmented groups stay native radios and drop the indicator.",
+              id: "gallery-radio-button-group-segmented",
+              name: "table[density]",
+              value: "comfortable",
+              presentation: :segmented,
+              orientation: :horizontal,
+              options: [
+                [ "Compact", "compact" ],
+                [ "Comfortable", "comfortable" ],
+                [ "Spacious", "spacious" ]
               ]
             )
           end

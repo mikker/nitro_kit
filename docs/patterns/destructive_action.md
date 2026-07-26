@@ -27,7 +27,7 @@ module UI
         zone.confirmation do
           render NitroKit::Dialog.new(id: dom_id(project, :delete_dialog)) do |dialog|
             dialog.trigger("Review deletion", variant: :destructive)
-            dialog.dialog(
+            dialog.panel(
               title: "Delete #{project.name}?",
               description: "This action cannot be undone."
             ) do

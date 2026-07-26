@@ -54,7 +54,7 @@
 }
 
 @layer nitro-kit.variant {
-  :where([data-nk="alert"][data-color]) {
+  :where([data-nk="alert"][data-variant]) {
     --_nk-alert-background: color-mix(
       in oklab,
       var(--_nk-palette-tint) var(--_nk-alert-tint-strength),
@@ -68,13 +68,13 @@
     --_nk-alert-foreground: var(--_nk-palette-light);
   }
 
-  :where([data-theme="dark"] [data-nk="alert"][data-color]) {
+  :where([data-theme="dark"] [data-nk="alert"][data-variant]) {
     --_nk-alert-foreground: var(--_nk-palette-dark);
     --_nk-alert-tint-strength: 20%;
   }
 
   @media (prefers-color-scheme: dark) {
-    :where(:root:not([data-theme]) [data-nk="alert"][data-color]) {
+    :where(:root:not([data-theme]) [data-nk="alert"][data-variant]) {
       --_nk-alert-foreground: var(--_nk-palette-dark);
       --_nk-alert-tint-strength: 20%;
     }

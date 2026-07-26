@@ -46,11 +46,11 @@
   }
 
   :where(
-    [data-nk="switch"][data-size="sm"] [data-slot="switch-control"],
-    [data-nk="switch"][data-size="sm"] [data-slot="switch-track"]
+    [data-nk="switch"][data-size="lg"] [data-slot="switch-control"],
+    [data-nk="switch"][data-size="lg"] [data-slot="switch-track"]
   ) {
-    inline-size: 2rem;
-    block-size: 1.25rem;
+    inline-size: 3.25rem;
+    block-size: 2rem;
   }
 
   :where([data-nk="switch"] [data-slot="switch-handle"]) {
@@ -62,24 +62,26 @@
     transition: transform var(--nk-duration-normal) var(--nk-ease);
   }
 
-  :where([data-nk="switch"][data-size="sm"] [data-slot="switch-handle"]) {
-    inline-size: 0.75rem;
-    block-size: 0.75rem;
+  :where([data-nk="switch"][data-size="lg"] [data-slot="switch-handle"]) {
+    inline-size: 1.5rem;
+    block-size: 1.5rem;
   }
 
-  :where([data-nk="switch"] [data-slot="switch-label-text"]) {
+  :where([data-nk="switch"] [data-slot="switch-content"]) {
     grid-column: 2;
   }
 
+  :where([data-nk="switch"] [data-slot="switch-label-text"]) {
+    display: block;
+  }
+
   :where([data-nk="switch"] [data-slot="switch-description"]) {
-    padding-inline-start: calc(2.5rem + (var(--nk-space) * 3));
+    display: block;
+    margin-block-start: var(--nk-space);
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
     font-weight: var(--nk-font-weight-normal);
-  }
-
-  :where([data-nk="switch"][data-size="sm"] [data-slot="switch-description"]) {
-    padding-inline-start: calc(2rem + (var(--nk-space) * 3));
+    text-wrap: pretty;
   }
 }
 
@@ -103,12 +105,12 @@
   }
 
   :where(
-    [data-nk="switch"][data-size="sm"]
+    [data-nk="switch"][data-size="lg"]
       [data-slot="switch-control"]:checked
       + [data-slot="switch-track"]
       > [data-slot="switch-handle"]
   ) {
-    transform: translateX(0.75rem);
+    transform: translateX(1.25rem);
   }
 
   :where(

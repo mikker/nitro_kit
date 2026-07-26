@@ -91,7 +91,7 @@ module Gallery
           )
           render NitroKit::AvatarStack.new(
             id: "gallery-dashboard-members",
-            aria: { label: "Active workspace members" }
+            label: "Active workspace members"
           ) do |stack|
             Gallery::Data.members.first(2).each do |member|
               stack.avatar(

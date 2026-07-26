@@ -20,4 +20,7 @@
   :where([data-nk="icon"][data-size="lg"]) {
     --_nk-icon-size: 1.75rem;
   }
+  :where([data-nk="icon"][data-size="xl"]) {
+    --_nk-icon-size: 2.25rem;
+  }
 }

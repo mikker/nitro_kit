@@ -104,7 +104,7 @@ module Gallery
               render NitroKit::Toast.new(
                 duration: 600_000,
                 label: "Editorial notifications",
-                html: { id: "gallery-topbar-application-toast" }
+                id: "gallery-topbar-application-toast"
               ) do |toast|
                 toast.item(
                   title: "Caption draft saved",
@@ -200,7 +200,7 @@ module Gallery
           shell.topbar do
             render NitroKit::Dialog.new(id: "gallery-topbar-application-release-dialog") do |dialog|
               dialog.trigger("Release notes", size: :sm)
-              dialog.dialog(
+              dialog.panel(
                 title: "Publish the international reliability archive?",
                 description: "The archive includes reviewed field notes from research, production reliability, regulatory operations, and customer support."
               ) do

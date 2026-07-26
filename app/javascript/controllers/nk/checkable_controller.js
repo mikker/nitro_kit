@@ -1,22 +1,18 @@
 import { Controller } from "@hotwired/stimulus";
 
+// Indeterminate is the only checkbox state HTML cannot express. Checked,
+// unchecked, and radio selection stay native and are styled through :checked.
 export default class extends Controller {
   static targets = ["control"];
   static values = { indeterminate: Boolean };
 
   connect() {
-    this.controlTarget.indeterminate = this.indeterminateValue;
-    this.synchronize();
+    this.apply();
   }
 
   change() {
     this.indeterminateValue = this.controlTarget.indeterminate;
-
-    if (this.controlTarget.type === "radio") {
-      this.synchronizeRadioGroup();
-    } else {
-      this.synchronize();
-    }
+    this.synchronize();
   }
 
   indeterminateValueChanged(indeterminate) {
@@ -26,42 +22,20 @@ export default class extends Controller {
     this.synchronize();
   }
 
-  controlTargetConnected(control) {
-    control.indeterminate = this.indeterminateValue;
+  controlTargetConnected() {
+    this.apply();
+  }
+
+  apply() {
+    this.controlTarget.indeterminate = this.indeterminateValue;
     this.synchronize();
   }
 
-  synchronizeRadioGroup() {
-    const control = this.controlTarget;
-
-    if (!control.name) {
-      this.synchronize();
-      return;
-    }
-
-    document.getElementsByName(control.name).forEach((candidate) => {
-      if (candidate.type !== "radio" || candidate.form !== control.form) return;
-
-      const root = candidate.closest('[data-nk="radio-button"]');
-      if (root)
-        root.dataset.state = candidate.checked ? "checked" : "unchecked";
-    });
-  }
-
   synchronize() {
-    const control = this.controlTarget;
-    const state = control.indeterminate
-      ? "indeterminate"
-      : control.checked
-        ? "checked"
-        : "unchecked";
-
-    this.element.dataset.state = state;
-
-    if (control.indeterminate) {
-      control.setAttribute("aria-checked", "mixed");
+    if (this.controlTarget.indeterminate) {
+      this.element.dataset.state = "indeterminate";
     } else {
-      control.removeAttribute("aria-checked");
+      delete this.element.dataset.state;
     }
   }
 }

@@ -22,12 +22,15 @@ class InteractionControllerContractTest < ActiveSupport::TestCase
     refute_includes sources.fetch("dropdown"), "dataset.state"
     assert_includes sources.fetch("combobox"), "setCustomValidity"
     refute_includes sources.fetch("combobox"), 'removeAttribute("role")'
+    assert_includes sources.fetch("combobox"), "TODO(i18n)"
+    assert_includes sources.fetch("combobox"), "INVALID_SELECTION_MESSAGE"
+    assert_includes sources.fetch("combobox"), "setSubmittedValue(value)"
     refute CONTROLLER_ROOT.join("accordion_controller.js").exist?
     assert CONTROLLER_ROOT.join("dialog_controller.js").exist?
     positioning = CONTROLLER_ROOT.join("overlay_position.js").read
     assert_includes positioning, 'document.addEventListener("scroll", callback, true)'
     assert_includes positioning, 'document.removeEventListener("scroll", callback, true)'
-    refute NitroKit::Engine.root.join("app/javascript/controllers/nk/datepicker_controller.js").exist?
+    refute NitroKit::Engine.root.join("app/components/nitro_kit/datepicker.rb").exist?
   end
 
   test "stateful controllers expose reconnect cleanup for every retained resource" do

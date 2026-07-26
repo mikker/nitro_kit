@@ -341,7 +341,7 @@ module Gallery
         ) do |zone|
           zone.confirmation do
             render NitroKit::Dialog.new(id: "gallery-team-remove-dialog") do |dialog|
-              dialog.dialog(
+              dialog.panel(
                 title: "Remove Grace Hopper?",
                 description: "Grace will immediately lose access to every project in this workspace.",
                 nonmodal: true

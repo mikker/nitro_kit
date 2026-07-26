@@ -19,6 +19,7 @@ module NitroKit
       id:,
       label: "Appearance",
       presentation: :segmented,
+      preference: :system,
       html: {},
       aria: {},
       data: {},
@@ -27,6 +28,7 @@ module NitroKit
       @identifier = component_id(id)
       @label = validate_label!(label)
       @presentation = validate_choice!(:presentation, presentation, PRESENTATIONS)
+      @preference = validate_choice!(:preference, preference, PREFERENCES)
 
       super(
         component: :appearance_picker,
@@ -35,7 +37,7 @@ module NitroKit
           data: {
             controller: "nk--appearance",
             presentation: @presentation,
-            state: "system",
+            state: @preference,
             action: "change->nk--appearance#select nitro-kit:appearance-change@window->nk--appearance#synchronize"
           }
         },
@@ -46,7 +48,7 @@ module NitroKit
       )
     end
 
-    attr_reader :identifier
+    attr_reader :identifier, :preference
 
     def view_template
       return render_select if @presentation == :select
@@ -65,30 +67,22 @@ module NitroKit
     def render_dropdown
       div(**root_attributes) do
         render Dropdown.new(id: "#{identifier}-dropdown", placement: :bottom_end) do |menu|
-          menu.trigger(variant: :ghost, aria: { label: @label }) do
-            %i[light dark].each do |appearance|
-              span(
-                **slot_attributes(
-                  :trigger_icon,
-                  attributes: { data: { appearance: } }
-                )
-              ) { render Icon.new(ICONS.fetch(appearance)) }
-            end
-          end
+          menu.trigger(
+            variant: :ghost,
+            icon: ICONS.fetch(@preference),
+            label: @label
+          )
           menu.title(@label)
-          PREFERENCES.each do |preference|
+          PREFERENCES.each do |option|
             menu.item(
+              LABELS.fetch(option),
+              icon: ICONS.fetch(option),
               data: {
-                appearance_preference: preference,
+                appearance_preference: option,
                 nk__appearance_target: "input",
                 action: "click->nk--appearance#select"
               }
-            ) do
-              span(**slot_attributes(:option_icon)) do
-                render Icon.new(ICONS.fetch(preference), size: :sm)
-              end
-              span(**slot_attributes(:label)) { plain(LABELS.fetch(preference)) }
-            end
+            )
           end
         end
       end
@@ -106,9 +100,9 @@ module NitroKit
             }
           )
         ) do
-          PREFERENCES.each do |preference|
-            option(value: preference, selected: preference == :system) do
-              plain(LABELS.fetch(preference))
+          PREFERENCES.each do |value|
+            option(value:, selected: value == @preference) do
+              plain(LABELS.fetch(value))
             end
           end
         end
@@ -130,7 +124,7 @@ module NitroKit
               type: "radio",
               name: "#{identifier}-preference",
               value: preference,
-              checked: preference == :system,
+              checked: preference == @preference,
               data: { nk__appearance_target: "input" }
             }
           )
@@ -143,10 +137,14 @@ module NitroKit
       "#{identifier}-#{preference}"
     end
 
+    # Private copy of the AppShell identifier contract. Extract a shared
+    # validator into Component once its owner lands.
     def component_id(value)
-      return value if value.is_a?(String) && value.present? && !value.match?(/\s/)
+      return value if value.is_a?(String) && value.match?(/\A[A-Za-z0-9][A-Za-z0-9_-]*\z/)
 
-      raise ArgumentError, "AppearancePicker id must be a non-blank String without whitespace"
+      raise ArgumentError,
+        "AppearancePicker id must be a String starting with a letter or digit and containing " \
+        "only letters, digits, hyphens, and underscores"
     end
 
     def validate_label!(value)

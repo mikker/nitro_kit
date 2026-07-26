@@ -6,11 +6,37 @@ module NitroKit
     ITEM_VARIANTS = %i[default destructive].freeze
     ITEM_TYPES = %i[button submit reset].freeze
 
-    Trigger = ::Data.define(:text, :variant, :size, :disabled, :html, :aria, :data, :css_class, :content)
-    Entry = ::Data.define(:kind, :text, :href, :variant, :type, :disabled, :html, :aria, :data, :css_class, :content)
+    Trigger = ::Data.define(
+      :text,
+      :variant,
+      :size,
+      :icon,
+      :icon_end,
+      :label,
+      :disabled,
+      :html,
+      :aria,
+      :data,
+      :css_class,
+      :content
+    )
+    Entry = ::Data.define(
+      :kind,
+      :text,
+      :href,
+      :icon,
+      :variant,
+      :type,
+      :disabled,
+      :html,
+      :aria,
+      :data,
+      :css_class,
+      :content
+    )
 
     def initialize(
-      id:,
+      id: nil,
       placement: :bottom_start,
       html: {},
       aria: {},
@@ -52,6 +78,9 @@ module NitroKit
       text = nil,
       variant: :default,
       size: :md,
+      icon: nil,
+      icon_end: nil,
+      label: nil,
       disabled: false,
       html: {},
       aria: {},
@@ -61,12 +90,17 @@ module NitroKit
     )
       ensure_collecting!
       raise ArgumentError, "Dropdown accepts exactly one trigger" if @trigger
-      raise ArgumentError, "Dropdown trigger requires text or a block" if text.nil? && !content
+      if text.nil? && !content && icon.nil? && icon_end.nil?
+        raise ArgumentError, "Dropdown trigger requires text, a block, or an icon"
+      end
 
       @trigger = Trigger.new(
         text:,
-        variant:,
-        size:,
+        variant: validate_trigger_choice!(:variant, variant, Button::VARIANTS),
+        size: validate_trigger_choice!(:size, size, Button::SIZES),
+        icon:,
+        icon_end:,
+        label:,
         disabled: validate_boolean!(:disabled, disabled),
         html:,
         aria:,
@@ -94,6 +128,7 @@ module NitroKit
     def item(
       text = nil,
       href: nil,
+      icon: nil,
       variant: :default,
       type: :button,
       disabled: false,
@@ -116,6 +151,7 @@ module NitroKit
         kind: :item,
         text:,
         href:,
+        icon:,
         variant:,
         type:,
         disabled:,
@@ -156,6 +192,9 @@ module NitroKit
         @trigger.text,
         variant: @trigger.variant,
         size: @trigger.size,
+        icon: @trigger.icon,
+        icon_end: @trigger.icon_end,
+        label: @trigger.label,
         disabled: @trigger.disabled,
         id: trigger_id,
         html: @trigger.html.merge(popovertarget: @trigger.disabled ? nil : content_id),
@@ -187,7 +226,8 @@ module NitroKit
             data: {
               placement: placement_value,
               nk__dropdown_target: "content",
-              action: "toggle->nk--dropdown#focusOpened keydown->nk--dropdown#navigate"
+              action: "beforetoggle->nk--dropdown#rememberFocus " \
+                "toggle->nk--dropdown#focusOpened keydown->nk--dropdown#navigate"
             }
           }
         )
@@ -241,7 +281,6 @@ module NitroKit
         attributes: native_attributes.merge(
           role: "menuitem",
           data: {
-            tone: entry.variant,
             nk__dropdown_target: "item",
             action: entry.disabled ? nil : "click->nk--dropdown#select"
           }
@@ -251,7 +290,22 @@ module NitroKit
         desperately_need_a_class: entry.css_class
       )
 
-      public_send(entry.href ? :a : :button, **attributes) { render_content_value(entry) }
+      attributes = attributes.merge(data: owned_slot_variant(attributes, entry.variant))
+
+      public_send(entry.href ? :a : :button, **attributes) do
+        if entry.icon
+          span(**slot_attributes(:item_icon)) { render(Icon.new(entry.icon, size: :sm)) }
+        end
+        render_content_value(entry)
+      end
+    end
+
+    # Items are plain elements rather than nested components, so they cannot
+    # reach the base component's owned `variant:` channel the way Toast::Item
+    # does. Nitro still owns this value: caller `data:` keys are rejected as
+    # reserved before they ever reach here.
+    def owned_slot_variant(attributes, variant)
+      { variant: }.merge(attributes.fetch(:data, {}))
     end
 
     def render_separator(entry)
@@ -276,6 +330,7 @@ module NitroKit
         kind: nil,
         text: nil,
         href: nil,
+        icon: nil,
         variant: nil,
         type: nil,
         disabled: false,
@@ -320,10 +375,26 @@ module NitroKit
       raise ArgumentError, "Dropdown declarations must be inside the render block"
     end
 
-    def component_id(value)
-      return value if value.is_a?(String) && value.present? && !value.match?(/\s/)
+    def validate_trigger_choice!(name, value, choices)
+      return value if choices.include?(value)
 
-      raise ArgumentError, "Dropdown id must be a non-blank String without whitespace"
+      raise ArgumentError,
+        "Unknown Dropdown trigger #{name} #{value.inspect}; expected one of: #{choices.map(&:inspect).join(", ")}"
+    end
+
+    # Private copy of the AppShell identifier contract. Extract a shared
+    # validator into Component once its owner lands.
+    def component_id(value)
+      return generated_id if value.nil?
+      return value if value.is_a?(String) && value.match?(/\A[A-Za-z0-9][A-Za-z0-9_-]*\z/)
+
+      raise ArgumentError,
+        "Dropdown id must be nil or a String starting with a letter or digit and containing " \
+        "only letters, digits, hyphens, and underscores"
+    end
+
+    def generated_id
+      "nk-dropdown-#{SecureRandom.hex(4)}"
     end
   end
 end

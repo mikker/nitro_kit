@@ -32,6 +32,17 @@ class InputFieldTest < ActiveSupport::TestCase
     assert_raises(ArgumentError) { NitroKit::Input.new(checked: 1) }
   end
 
+  test "normalizes Safari's internal date field alignment on the shared input control" do
+    css = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/input.css").read
+    date_rule = css[/:where\(\[data-nk="input"\]\[type="date"\]\) \{[^}]+\}/m]
+
+    refute NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/datepicker.css").exist?
+    assert date_rule, "input.css must own the date alignment rule"
+    assert_includes date_rule, "block-size: var(--nk-control-height-md)"
+    assert_includes date_rule, "padding-block: 0"
+    assert_includes date_rule, "line-height: calc("
+  end
+
   test "normalizes datetime-local values and never gives file inputs a value" do
     datetime = render_node(
       NitroKit::Field.new(nil, :starts_at, as: :datetime_local, value: Time.utc(2026, 7, 13, 10, 30))
@@ -139,8 +150,52 @@ class InputFieldTest < ActiveSupport::TestCase
       NitroKit::Field.new(nil, :size, as: :radio_group, label: false, options: [ [ "Small", "sm" ] ])
     end
 
-    unknown = assert_raises(ArgumentError) { NitroKit::Field.new(nil, :query, as: :combobox) }
+    unknown = assert_raises(ArgumentError) { NitroKit::Field.new(nil, :query, as: :calendar) }
     assert_match(/Unknown as/, unknown.message)
+  end
+
+  test "combobox fields wire the field label description and invalid state to the input" do
+    node = render_node(
+      NitroKit::Field.new(
+        nil,
+        :country,
+        as: :combobox,
+        label: "Country",
+        description: "Used for tax rules",
+        errors: [ "Country is not included in the list" ],
+        options: [ [ "Denmark", "dk" ], [ "Sweden", "se" ] ],
+        value: "dk",
+        placeholder: "Search countries",
+        required: true
+      )
+    )
+    label = node.at_css("[data-slot='field-label']")
+    control = node.at_css("[data-slot='field-control']")
+    input = control.at_css("[data-slot='combobox-input']")
+    select = control.at_css("[data-slot='combobox-native'] select")
+
+    assert_equal "combobox", node["data-field-type"]
+    assert_equal "combobox", control["data-nk"]
+    assert_equal "country-label", label["id"]
+    assert_equal "country-input", label["for"]
+    assert_nil control.at_css("[data-slot='combobox-label']")
+    assert_equal "country-label", input["aria-labelledby"]
+    assert_equal "country-description country-errors", input["aria-describedby"]
+    assert_equal "true", input["aria-invalid"]
+    assert_equal "Search countries", input["placeholder"]
+    assert_equal "Denmark", input["value"]
+    assert_equal "country", select["name"]
+    assert_equal "dk", select.at_css("option[selected]")["value"]
+    assert_equal 1, node.css("[name='country']").size
+  end
+
+  test "an unlabelled combobox field names the input from the field name" do
+    node = render_node(
+      NitroKit::Field.new(nil, :country, as: :combobox, label: false, options: [ [ "Denmark", "dk" ] ])
+    )
+
+    assert_nil node.at_css("[data-slot='field-label']")
+    assert_equal "Country", node.at_css("[data-slot='combobox-input']")["aria-label"]
   end
 
   test "rich text fields carry the field validation and description wiring" do
@@ -175,7 +230,7 @@ class InputFieldTest < ActiveSupport::TestCase
     assert_equal "billing_email", control["name"]
     assert_equal "billing_email", node.at_css("label")["for"]
     assert_equal "billing_email-description", control["aria-describedby"]
-    assert_raises(ArgumentError) { NitroKit::Field.new(nil, :query, as: :combobox) }
+    assert_raises(ArgumentError) { NitroKit::Field.new(nil, :query, as: :calendar) }
     assert_raises(ArgumentError) { NitroKit::Field.new(nil, :query, required: "false") }
     assert_raises(ArgumentError) { NitroKit::Field.new(nil, :query, include_hidden: nil) }
   end

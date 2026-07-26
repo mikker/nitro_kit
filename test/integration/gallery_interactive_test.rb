@@ -15,7 +15,7 @@ class GalleryInteractiveTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-dropdown-account-content[aria-labelledby='gallery-dropdown-account-trigger']" do
       assert_select "[data-slot='dropdown-title']", count: 2
       assert_select "a[data-slot='dropdown-item'][href='/gallery/settings']"
-      assert_select "button[data-slot='dropdown-item'][data-tone='destructive']", text: "Delete workspace"
+      assert_select "button[data-slot='dropdown-item'][data-variant='destructive']", text: "Delete workspace"
       assert_select "[data-slot='dropdown-separator'][role='separator']", count: 1
     end
     assert_select "#gallery-dropdown-disabled-trigger[disabled]:not([popovertarget])"
@@ -29,7 +29,7 @@ class GalleryInteractiveTest < ActionDispatch::IntegrationTest
       assert_select "#gallery-dropdown-deployment-status[data-nk='badge'][data-color='success']"
       assert_select "#gallery-dropdown-deployment[data-nk='dropdown']" do
         assert_select "a[href='/gallery/deployments/2026-07-13']"
-        assert_select "button[data-tone='destructive']", text: "Roll back release"
+        assert_select "button[data-variant='destructive']", text: "Roll back release"
       end
     end
     assert_clean_canvases
@@ -113,27 +113,27 @@ class GalleryInteractiveTest < ActionDispatch::IntegrationTest
     assert_clean_canvases
   end
 
-  test "datepicker page retains native values constraints and availability" do
-    get_component("datepicker")
+  test "input page retains native date values constraints and availability" do
+    get_component("input")
 
-    assert_select "#gallery-datepicker-empty[type='date'][name='schedule[date]']"
-    assert_select "#gallery-datepicker-selected[type='date'][value='2026-07-13']"
-    assert_select "#gallery-datepicker-required[min='2026-07-13'][max='2026-08-13'][required]"
-    assert_select "#gallery-datepicker-readonly[value='2026-07-13'][readonly]"
-    assert_select "#gallery-datepicker-disabled[value='2026-07-13'][disabled]"
+    assert_select "#gallery-input-date-empty[data-nk='input'][type='date'][name='schedule[date]']"
+    assert_select "#gallery-input-date-selected[type='date'][value='2026-07-13']"
+    assert_select "#gallery-input-date-required[min='2026-07-13'][max='2026-08-13'][required]"
+    assert_select "#gallery-input-date-readonly[value='2026-07-13'][readonly]"
+    assert_select "#gallery-input-date-disabled[value='2026-07-13'][disabled]"
   end
 
-  test "datepicker page composes explicit field anatomy and scheduling action" do
-    get_component("datepicker")
+  test "input page composes date field anatomy and scheduling action" do
+    get_component("input")
 
-    assert_select "#gallery-datepicker-release-card[data-nk='card']" do
-      assert_select "#gallery-datepicker-release-form[method='post']" do
-        assert_select "[data-nk='field'][data-required]" do
-          assert_select "label[for='gallery-datepicker-release-date']", text: "Release date"
-          assert_select "#gallery-datepicker-release-date-description", text: /next thirty days/
-          assert_select "#gallery-datepicker-release-date[data-nk='datepicker'][name='release[date]'][required]"
+    assert_select "#gallery-input-date-release-card[data-nk='card']" do
+      assert_select "#gallery-input-date-release-form[method='post']" do
+        assert_select "[data-nk='field'][data-field-type='date'][data-required]" do
+          assert_select "label[for='gallery-input-date-release-date']", text: "Release date"
+          assert_select "#gallery-input-date-release-date-description", text: /next thirty days/
+          assert_select "#gallery-input-date-release-date[data-nk='input'][type='date'][name='release[date]'][required]"
         end
-        assert_select "#gallery-datepicker-schedule[type='submit'][data-variant='primary']"
+        assert_select "#gallery-input-date-schedule[type='submit'][data-variant='primary']"
       end
     end
     assert_clean_canvases

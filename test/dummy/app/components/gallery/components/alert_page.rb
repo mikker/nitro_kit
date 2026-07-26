@@ -8,7 +8,7 @@ module Gallery
       end
 
       def api_note
-        "NitroKit::Alert.new(variant:) { |alert| alert.title; alert.description }"
+        "NitroKit::Alert.new(variant:, title:, description:) { |alert| alert.title; alert.description }"
       end
 
       def component_template
@@ -52,6 +52,14 @@ module Gallery
                 alert.icon(NitroKit::Icon.new(:circle_check, id: "gallery-alert-icon-title-icon"))
                 alert.title("All systems operational")
               end
+            end
+            sample("Constructor text", slug: "constructor-text") do
+              render NitroKit::Alert.new(
+                id: "gallery-alert-constructor-text",
+                variant: :info,
+                title: "Scheduled maintenance",
+                description: "Deploys pause Thursday between 02:00 and 02:10 UTC."
+              )
             end
             sample("Nested status", slug: "nested-status") do
               render NitroKit::Alert.new(id: "gallery-alert-nested-status") do |alert|
@@ -116,7 +124,7 @@ module Gallery
                 render NitroKit::AvatarStack.new(
                   id: "gallery-alert-notification-reviewers",
                   size: :sm,
-                  aria: { label: "Release reviewers" }
+                  label: "Release reviewers"
                 ) do |stack|
                   stack.avatar(alt: "Ada Lovelace", fallback: "AL", id: "gallery-alert-reviewer-ada")
                   stack.avatar(alt: "Grace Hopper", fallback: "GH", id: "gallery-alert-reviewer-grace")

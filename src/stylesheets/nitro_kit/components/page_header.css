@@ -42,9 +42,9 @@
     }
 
     :where(
-        [data-nk="page-header"]:has(> [data-slot="page-header-actions"])
-          > :not([data-slot="page-header-actions"])
-      ) {
+      [data-nk="page-header"]:has(> [data-slot="page-header-actions"])
+        > :not([data-slot="page-header-actions"])
+    ) {
       grid-column: 1;
     }
 

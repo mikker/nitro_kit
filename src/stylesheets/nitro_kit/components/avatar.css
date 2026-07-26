@@ -25,9 +25,9 @@
   }
 
   :where(
-      [data-nk="avatar"] > [data-slot="avatar-fallback"],
-      [data-nk="avatar"] > [data-slot="avatar-image"]
-    ) {
+    [data-nk="avatar"] > [data-slot="avatar-fallback"],
+    [data-nk="avatar"] > [data-slot="avatar-image"]
+  ) {
     grid-area: 1 / 1;
     width: 100%;
     height: 100%;
@@ -44,6 +44,14 @@
   :where([data-nk="avatar"] > [data-slot="avatar-image"]) {
     z-index: 1;
     object-fit: cover;
+  }
+}
+
+@layer nitro-kit.state {
+  /* A failed image is removed so the initials underneath stay visible
+     instead of a broken-image glyph covering them. */
+  :where([data-nk="avatar"][data-state="error"] > [data-slot="avatar-image"]) {
+    display: none;
   }
 }
 

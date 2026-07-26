@@ -15,7 +15,7 @@ module Gallery
         example_section(
           "Native selection",
           slug: "radio-button-selection",
-          description: "Radio buttons share a native name while every root reflects the group’s live checked state."
+          description: "Radio buttons share a native name and the browser owns selection; nothing mirrors checked state into markup."
         ) do
           example("Workspace visibility", slug: "radio-button-visibility") do
             render NitroKit::RadioButton.new(
@@ -81,6 +81,17 @@ module Gallery
                 value: "deployment-1842",
                 control_aria: { label: "Select deployment 1842" },
                 html: { id: "gallery-radio-button-standalone" }
+              )
+            end
+            sample("Invalid", slug: "invalid") do
+              render NitroKit::RadioButton.new(
+                label: "Unsupported region",
+                id: "gallery-radio-button-invalid-control",
+                name: "deployment[region]",
+                value: "unsupported",
+                checked: true,
+                invalid: true,
+                html: { id: "gallery-radio-button-invalid" }
               )
             end
             sample("Long label", slug: "long") do

@@ -2,16 +2,21 @@
 
 module NitroKit
   class Toast < Component
+    DEFAULT_ID = "nk-toast"
+
     ItemDeclaration = ::Data.define(:component, :content)
+    private_constant :ItemDeclaration
 
     class Item < Component
       VARIANTS = %i[default info success warning error].freeze
+      ASSERTIVE_VARIANTS = %i[error].freeze
 
       def initialize(
         title: nil,
         description: nil,
         variant: :default,
         dismissible: true,
+        id: nil,
         html: {},
         aria: {},
         data: {},
@@ -25,9 +30,11 @@ module NitroKit
         super(
           component: :toast_item,
           attributes: {
+            id:,
+            role: ASSERTIVE_VARIANTS.include?(@variant) ? "alert" : "status",
             data: {
               state: "open",
-              turbo_temporary: dismissible ? true : nil,
+              turbo_temporary: true,
               nk__toast_target: "item",
               nk__toast_permanent: dismissible ? nil : "true",
               action: [
@@ -99,13 +106,31 @@ module NitroKit
         "notice" => :default
       }.freeze
 
-      def initialize(flash:, **attributes)
+      def initialize(
+        flash:,
+        duration: 5_000,
+        label: "Notifications",
+        id: DEFAULT_ID,
+        html: {},
+        aria: {},
+        data: {},
+        desperately_need_a_class: nil
+      )
         unless flash.respond_to?(:each)
           raise ArgumentError, "Toast::FlashMessages flash must be enumerable"
         end
 
         @flash = flash
-        super(**attributes)
+
+        super(
+          duration:,
+          label:,
+          id:,
+          html:,
+          aria:,
+          data:,
+          desperately_need_a_class:
+        )
       end
 
       attr_reader :flash
@@ -125,6 +150,7 @@ module NitroKit
     def initialize(
       duration: 5_000,
       label: "Notifications",
+      id: DEFAULT_ID,
       html: {},
       aria: {},
       data: {},
@@ -136,13 +162,18 @@ module NitroKit
       unless label.is_a?(String) && label.present?
         raise ArgumentError, "Toast label must be a non-blank String"
       end
+      unless id.is_a?(String) && id.present? && !id.match?(/\s/)
+        raise ArgumentError, "Toast id: must be a non-blank String without whitespace"
+      end
 
       @duration = duration
+      @id = id
       @items = []
 
       super(
         component: :toast,
         attributes: {
+          id:,
           role: "region",
           data: {
             controller: "nk--toast",
@@ -157,13 +188,17 @@ module NitroKit
       )
     end
 
-    attr_reader :duration
+    attr_reader :duration, :id
+
+    def list_id
+      "#{id}-list"
+    end
 
     def view_template(&block)
       collect_items(&block)
 
       section(**root_attributes) do
-        ol(**slot_attributes(:list)) do
+        ol(**slot_attributes(:list, attributes: { id: list_id })) do
           @items.each do |entry|
             render_in_slot(entry.component, :item, &entry.content)
           end
@@ -176,6 +211,7 @@ module NitroKit
       description: nil,
       variant: :default,
       dismissible: true,
+      id: nil,
       html: {},
       aria: {},
       data: {},
@@ -188,6 +224,7 @@ module NitroKit
         description:,
         variant:,
         dismissible:,
+        id:,
         html:,
         aria:,
         data:,

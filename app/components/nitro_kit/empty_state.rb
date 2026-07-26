@@ -2,7 +2,9 @@
 
 module NitroKit
   class EmptyState < Component
-    Child = Data.define(:component, :content)
+    Child = ::Data.define(:component, :content)
+    private_constant :Child
+
     TITLE_LEVELS = (2..6).freeze
 
     def initialize(

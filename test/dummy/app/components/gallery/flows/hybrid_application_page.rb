@@ -148,7 +148,7 @@ module Gallery
               render NitroKit::Toast.new(
                 duration: 600_000,
                 label: "Account notifications",
-                html: { id: "gallery-hybrid-application-toast" }
+                id: "gallery-hybrid-application-toast"
               ) do |toast|
                 toast.item(
                   title: "Profile saved",
@@ -240,7 +240,7 @@ module Gallery
           shell.topbar do
             render NitroKit::Dialog.new(id: "gallery-hybrid-application-policy-dialog") do |dialog|
               dialog.trigger("Review policy", size: :sm)
-              dialog.dialog(
+              dialog.panel(
                 title: "Workspace access policy",
                 description: "Only workspace owners may grant production access or change an administrator role."
               ) do
@@ -316,7 +316,7 @@ module Gallery
               render NitroKit::Toast.new(
                 duration: 600_000,
                 label: "Access request notifications",
-                html: { id: "gallery-hybrid-application-error-toast" }
+                id: "gallery-hybrid-application-error-toast"
               ) do |toast|
                 toast.item(
                   title: "Access request was not sent",
