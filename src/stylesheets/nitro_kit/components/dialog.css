@@ -16,6 +16,12 @@
     background: var(--nk-color-overlay);
   }
 
+  /* A non-modal open panel is server-rendered inline content; the browser
+     default of position: absolute would lift it over surrounding layout. */
+  :where([data-nk="dialog"] > [data-slot="dialog-panel"][open]:not(:modal)) {
+    position: static;
+  }
+
   :where([data-nk="dialog"] [data-slot="dialog-title"]) {
     font-size: var(--nk-text-lg);
     font-weight: var(--nk-font-weight-semibold);
