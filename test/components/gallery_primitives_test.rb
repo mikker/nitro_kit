@@ -76,8 +76,9 @@ class GalleryPrimitivesTest < ActiveSupport::TestCase
     assert_equal "Variants", fragment.at_css("h2").text
     assert_equal "Variant matrix", fragment.at_css("h3").text
     assert_equal 1, fragment.css("h1").count
-    assert_equal 1, fragment.css("h2").count
-    assert_equal 2, fragment.css("h3").count
+    assert_equal [ "Variants" ],
+      (fragment.css("h2").map(&:text) - fragment.css("[data-gallery='reference-sections'] h2").map(&:text))
+    assert_equal 2, fragment.css("h3").count - fragment.css("[data-gallery='reference-sections'] h3").count
 
     tabs = matrix.at_css("[data-gallery='example-tabs'][data-nk='tabs']")
     assert_equal "Variant matrix example", tabs.at_css("[role='tablist']")["aria-label"]

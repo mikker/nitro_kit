@@ -2,6 +2,17 @@
 
 Wrap one complete resource region in a stable Turbo Frame. Show, edit, validation failure, success, and Cancel all return that same frame ID.
 
+## Summary
+
+- One complete resource region lives in a stable Turbo Frame; show, edit,
+  invalid, success, and Cancel all return that same frame ID.
+- Invalid updates render the editing frame with 422; success redirects with 303
+  and Turbo extracts the matching read-only frame.
+- The show response must contain the same `turbo_frame_tag(dom_id(record))` as
+  the edit response.
+- Use a Turbo Stream only when the update also changes another region, such as
+  a page title or a summary count.
+
 ```ruby
 module UI
   class ProjectPanel < Phlex::HTML

@@ -2,6 +2,20 @@
 
 Use one GET-driven Turbo Frame for filters, sorting, results, and pagination. The URL is the state: the query object reads parameters, the server renders the complete region, and browser history remains useful.
 
+## Summary
+
+- One GET-driven Turbo Frame with a stable ID owns filters, sorting, results,
+  and pagination; the URL is the state.
+- The frame carries `data-turbo-action="advance"` so pagination is a history
+  step, while filter, reset, and sort links use `turbo_action: "replace"`.
+- An application query object owns parameter allowlists, default ordering, and
+  page bounds. `NitroKit::Table` renders sortable headers but owns no query
+  policy, and Ransack is never a Nitro dependency.
+- Every response contains the same frame, including empty results. Links that
+  leave the collection use `data: { turbo_frame: "_top" }`.
+- No Stimulus controller is required. An optional autosubmit controller submits
+  the same GET form without becoming the source of truth.
+
 ## Contract
 
 - The frame has one stable ID.

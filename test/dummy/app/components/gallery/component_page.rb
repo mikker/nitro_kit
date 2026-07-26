@@ -14,6 +14,18 @@ module Gallery
       end
 
       component_template
+      reference_sections
+    end
+
+    # Examples are the payload; the reference sections make a single fetched
+    # page self-contained for an agent. They render outside every example
+    # canvas on purpose.
+    def reference_sections
+      div(data: { gallery: "reference-sections" }) do
+        render ComponentContract.new(Gallery::Contracts.for_entry(entry))
+        render PatternNotes.new(Gallery::Catalog.patterns_for(entry))
+        render AgentRules.new
+      end
     end
 
     def component_template

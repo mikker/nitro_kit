@@ -377,6 +377,8 @@ Examples cover closed options, content pressure, native state, validation, empty
 
 Examples also cover system appearance, complete application shells, the customization wizard, former Pro capabilities, and dense cross-component combinations. Previewed Ruby and copied Ruby remain the same executable source.
 
+Every component and block page is self-contained for an agent that fetches only that page. After the examples it renders three reference sections outside every example canvas: the component's own row from `docs/component_contracts.md`, inline summaries of the `docs/patterns/*.md` conventions the catalog maps to that page, and the shared system rules. Each section is source-referenced and render-inlined — one copy in the source, one copy on every page. `Gallery::AgentRules` owns the rules text and reads `NitroKit::Component::RESERVED_DATA_ATTRIBUTES` and its neighbours at render time, `Gallery::Contracts` parses the shipped contract table, `Gallery::Patterns` reads each pattern document's leading `## Summary` section, and `Gallery::Catalog::PATTERNS` declares which patterns a page carries.
+
 Primary verification remains:
 
 - Direct-Phlex render and contract tests.

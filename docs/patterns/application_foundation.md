@@ -5,6 +5,20 @@ it will need after the second person joins. The first-user case should be the
 smallest instance of the team model, not a separate personal mode that must be
 replaced later.
 
+## Summary
+
+- Model `User`, `Team`, and `Membership` from the first signup; role belongs to
+  `Membership`, and every team-owned record loads through `Current.team`.
+- One hybrid `AppShell` frames the authenticated product: `AppNavigation` owns
+  brand and destinations, the shell `Toolbar` owns route titles and persistent
+  basic actions.
+- One wrapper immediately inside `shell.main` owns responsive page padding for
+  every route; the shell owns viewport height and scrolling.
+- Infrequent account destinations go after `navigation.spacer`; settings
+  compose with `SettingsLayout` and plain `FormSection` regions.
+- Centralize cross-cutting feedback in one flash-driven toast region rendered
+  by the layout.
+
 ## Use memberships from the first user
 
 Use `User`, `Team`, and `Membership` even when signup creates exactly one of

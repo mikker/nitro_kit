@@ -2,6 +2,21 @@
 
 Use one model-backed component for both the initial form and validation errors. Rails owns field names and errors; Nitro owns form presentation; the response status tells Turbo whether to replace or follow a redirect.
 
+## Summary
+
+- One model-backed Phlex component renders both the initial form and its
+  validation errors.
+- Rails owns field names and errors, Nitro owns form presentation, and the
+  response status tells Turbo what to do: 422 re-renders the invalid object,
+  303 redirects on success.
+- In an application shell, render exactly one primary submit in the route
+  toolbar and associate it through the native `form:` attribute; do not also
+  call `form.submit` in the body.
+- A genuinely standalone form keeps its submit inside the same `form.group` as
+  its visible fields.
+- Wrap the form in a Turbo Frame only when it is embedded in a larger screen
+  and needs an independent lifecycle.
+
 ## Phlex form
 
 ```ruby

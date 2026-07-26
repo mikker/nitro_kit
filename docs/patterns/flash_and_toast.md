@@ -2,6 +2,18 @@
 
 Rails flash is the server-side feedback contract. Render it once in the application layout with Nitro's toast adapter so redirects, Turbo visits, and full-page fallbacks all use the same path.
 
+## Summary
+
+- Render `NitroKit::Toast::FlashMessages` once in the application layout; Rails
+  flash stays the single server-side feedback contract.
+- `notice` maps to the default presentation, `alert` and `error` to error, and
+  `success`, `warning`, and `info` to their matching variants.
+- Every toast item is Turbo-temporary so a cached page never replays old
+  feedback, while the region itself survives and stays addressable.
+- Use `flash.now` when rendering the current request; a Turbo Stream that does
+  not redirect updates the same stable notification region.
+- Do not introduce a client-side notification store for server outcomes.
+
 ```ruby
 class UI::ApplicationLayout < Phlex::HTML
   include Phlex::Rails::Layout

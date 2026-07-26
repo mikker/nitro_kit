@@ -847,6 +847,44 @@ module Gallery
       )
     ].freeze
 
+    # Which `docs/patterns/*.md` conventions a component or block page inlines.
+    # Declared once as data so no page grows its own conditional.
+    PATTERNS = {
+      [ :component, "alert" ] => %w[flash_and_toast],
+      [ :component, "app-navigation" ] => %w[application_foundation],
+      [ :component, "card" ] => %w[inline_edit],
+      [ :component, "checkbox" ] => %w[resource_form],
+      [ :component, "checkbox-group" ] => %w[resource_form],
+      [ :component, "combobox" ] => %w[resource_form],
+      [ :component, "details-table" ] => %w[inline_edit crud_resource],
+      [ :component, "dialog" ] => %w[destructive_action],
+      [ :component, "dropzone" ] => %w[resource_form],
+      [ :component, "field" ] => %w[resource_form],
+      [ :component, "field-group" ] => %w[resource_form],
+      [ :component, "fieldset" ] => %w[resource_form],
+      [ :component, "input" ] => %w[resource_form],
+      [ :component, "label" ] => %w[resource_form],
+      [ :component, "pagination" ] => %w[queryable_collection],
+      [ :component, "radio-button" ] => %w[resource_form],
+      [ :component, "radio-button-group" ] => %w[resource_form],
+      [ :component, "rich-text-area" ] => %w[resource_form],
+      [ :component, "select" ] => %w[resource_form],
+      [ :component, "switch" ] => %w[resource_form],
+      [ :component, "table" ] => %w[queryable_collection],
+      [ :component, "textarea" ] => %w[resource_form],
+      [ :component, "toast" ] => %w[flash_and_toast],
+      [ :block, "app-shell" ] => %w[application_foundation crud_resource],
+      [ :block, "auth-shell" ] => %w[application_foundation],
+      [ :block, "danger-zone" ] => %w[destructive_action],
+      [ :block, "data-section" ] => %w[queryable_collection crud_resource],
+      [ :block, "empty-state" ] => %w[crud_resource],
+      [ :block, "form-section" ] => %w[resource_form crud_resource],
+      [ :block, "page-header" ] => %w[crud_resource],
+      [ :block, "pagination-bar" ] => %w[queryable_collection],
+      [ :block, "settings-layout" ] => %w[application_foundation],
+      [ :block, "toolbar" ] => %w[queryable_collection crud_resource]
+    }.freeze
+
     entry_index = ENTRIES.to_h { |entry| [ [ entry.kind, entry.slug ], entry ] }
     pick_entries = lambda do |kind, *slugs|
       slugs.map { |slug| entry_index.fetch([ kind, slug ]) }.freeze
@@ -1036,6 +1074,10 @@ module Gallery
       return resolved_state if entry.states.include?(resolved_state)
 
       raise StateNotFound, "Unknown state #{state.inspect} for #{entry.slug.inspect}"
+    end
+
+    def patterns_for(entry)
+      PATTERNS.fetch([ entry.kind, entry.slug ], []).map { |slug| Gallery::Patterns.fetch!(slug) }
     end
 
     def path_for(entry, routes:, state: nil)

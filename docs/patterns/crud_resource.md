@@ -5,6 +5,21 @@ Before writing the views, name the resource, tenant boundary, actor, lifecycle,
 visibility rules, and states. Implement index, form, detail, destructive action,
 and their tests together.
 
+## Summary
+
+- Build index, form, detail, destructive action, and their tests as one
+  surface; name the resource, tenant boundary, actor, lifecycle, and states
+  before writing views.
+- `AppShell(layout: :hybrid)` frames the admin area, and a `Toolbar` in
+  `shell.topbar` carries the route's single `h1` plus its basic actions.
+- Spend hierarchy once: one route, one `h1`, an `h2` only for a genuinely
+  separate region, and no resource name repeated across toolbar, `PageHeader`,
+  `DataSection`, Card, and caption.
+- Child routes add one compact icon Back link before the title instead of a
+  trailing Cancel action.
+- One responsive padding rule on the main wrapper owns the page gutter;
+  `Container` constrains measure and never owns padding.
+
 ## Use the hybrid application frame
 
 An authenticated admin area defaults to `AppShell(layout: :hybrid)`. Nitro Kit

@@ -322,6 +322,95 @@
     text-wrap: pretty;
   }
 
+  :where([data-gallery="reference-sections"]) {
+    display: grid;
+    gap: 2.5rem;
+    max-width: 60rem;
+    margin-block-start: 3rem;
+    padding-block-start: 2.5rem;
+    border-block-start: 1px solid
+      color-mix(in srgb, currentColor 20%, transparent);
+  }
+
+  :where([data-gallery="reference"]) {
+    display: grid;
+    gap: 1rem;
+    scroll-margin-block-start: 2rem;
+  }
+
+  :where([data-gallery="reference-header"]) {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  :where([data-gallery="reference-header"] > *) {
+    margin: 0;
+  }
+
+  :where([data-gallery="reference-header"] h2) {
+    font-size: 1.2rem;
+    line-height: 1.25;
+  }
+
+  :where([data-gallery="reference-header"] p) {
+    color: color-mix(in srgb, currentColor 68%, transparent);
+    line-height: 1.55;
+    text-wrap: pretty;
+  }
+
+  :where([data-gallery="reference-source"]) {
+    font-size: 0.8rem;
+  }
+
+  :where(
+    [data-gallery="reference"] ul,
+    [data-gallery="reference"] ol
+  ) {
+    display: grid;
+    gap: 0.6rem;
+    margin-block: 0;
+    padding-inline-start: 1.25rem;
+    line-height: 1.6;
+  }
+
+  :where([data-gallery="reference-fields"]) {
+    display: grid;
+    gap: 0.9rem;
+    margin-block: 0;
+    line-height: 1.6;
+  }
+
+  :where([data-gallery="reference-fields"] dt) {
+    font-weight: 650;
+  }
+
+  :where([data-gallery="reference-fields"] dd) {
+    min-width: 0;
+    margin: 0;
+    color: color-mix(in srgb, currentColor 82%, transparent);
+  }
+
+  :where([data-gallery="reference-pattern"]) {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  :where([data-gallery="reference-pattern"] + [data-gallery="reference-pattern"]) {
+    margin-block-start: 1.25rem;
+  }
+
+  :where([data-gallery="reference-pattern"] h3) {
+    margin: 0;
+    font-size: 1rem;
+  }
+
+  :where([data-gallery="reference"] code) {
+    overflow-wrap: anywhere;
+    font-family:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.9em;
+  }
+
   :where([data-gallery="notes"]) {
     display: grid;
     gap: 0.3rem;

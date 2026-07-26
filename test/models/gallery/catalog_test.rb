@@ -110,6 +110,49 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
     end
   end
 
+  test "every component and block entry finds its shipped contract row" do
+    entries = Gallery::Catalog.entries(kind: :component) + Gallery::Catalog.entries(kind: :block)
+
+    missing = entries.reject do |candidate|
+      Gallery::Contracts.rows.key?(Gallery::Contracts.component_name_for(candidate))
+    end
+
+    assert_empty missing.map(&:slug)
+    entries.each do |candidate|
+      row = Gallery::Contracts.for_entry(candidate)
+
+      assert_equal Gallery::Contracts.component_name_for(candidate), row.component
+      assert_predicate row.fields, :any?
+    end
+    assert_raises(Gallery::Contracts::ContractNotFound) { Gallery::Contracts.fetch!("Nonexistent") }
+  end
+
+  test "declared page patterns resolve to summarized pattern documents" do
+    assert_equal(
+      Gallery::Catalog::PATTERNS.keys.uniq,
+      Gallery::Catalog::PATTERNS.keys,
+      "duplicate pattern declarations"
+    )
+
+    Gallery::Catalog::PATTERNS.each_key do |kind, slug|
+      entry = Gallery::Catalog.fetch!(kind:, slug:)
+      patterns = Gallery::Catalog.patterns_for(entry)
+
+      assert_predicate patterns, :any?
+      patterns.each do |pattern|
+        assert_predicate pattern.title, :present?
+        assert_includes 3..6, pattern.points.size, "#{pattern.slug} summary"
+      end
+    end
+
+    assert_empty Gallery::Catalog.patterns_for(Gallery::Catalog.fetch!(kind: :component, slug: "button"))
+    assert_equal(
+      Gallery::Patterns.slugs.sort,
+      Gallery::Catalog::PATTERNS.values.flatten.uniq.sort,
+      "every pattern document should be reachable from at least one page"
+    )
+  end
+
   test "catalog rejects unknown entries" do
     assert_raises(Gallery::Catalog::EntryNotFound) do
       Gallery::Catalog.fetch!(kind: :component, slug: "missing")

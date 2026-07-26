@@ -2,6 +2,19 @@
 
 Use a native Nitro Dialog when the user needs to review impact or type confirmation. The dialog only owns accessible disclosure and focus behavior; a real Rails form owns the destructive request.
 
+## Summary
+
+- Use a native Nitro `Dialog` only when the user must review impact or type a
+  confirmation; a real Rails form owns the destructive request.
+- Place the reviewed deletion on the resource's edit page, not on the
+  operational show page.
+- The delete form targets `_top` so a successful redirect navigates the page
+  instead of resolving inside the surrounding frame.
+- Authorize and load the record on the server. The confirmation UI is not a
+  security boundary.
+- When the consequence fits in one sentence, use Turbo's native `turbo_confirm`
+  instead. Never stack both confirmation surfaces.
+
 ## Reviewed deletion
 
 Place this composition on the resource's edit page. A show page is the

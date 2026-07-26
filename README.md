@@ -251,6 +251,15 @@ applications. Every example pairs Preview and Code tabs; the highlighted,
 copyable Ruby is extracted from the executable body of its Phlex block or
 concrete flow method so examples cannot silently drift from their source.
 
+Every component and block page is also self-contained for a coding agent that
+fetches only that page. Below the examples it renders that component's row from
+[the component contracts](docs/component_contracts.md), inline summaries of the
+[patterns](docs/patterns/) that apply to it, and the shared system rules —
+composition-only API, explicit keywords and closed vocabularies, the
+`html:`/`aria:`/`data:` boundary, the reserved data attributes read live from
+`NitroKit::Component`, the `desperately_need_a_class:` escape, and the variant
+identity axis. There is exactly one copy of each in the source.
+
 ## Coding agents
 
 The [agent guide](docs/agent_guide.md) routes an agent from a product task to the installed component contract and the matching Hotwire recipe. Add its short `AGENTS.md` block to a consuming application so every agent discovers the version-matched docs through `bundle show nitro_kit`.
