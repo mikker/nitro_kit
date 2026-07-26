@@ -42,7 +42,7 @@ module Gallery
           example("Full-width region", slug: "card-full-width-region") do
             render NitroKit::Card.new(id: "gallery-card-activity") do |card|
               card.title("Weekly activity", level: 3)
-              card.full_width do
+              card.full do
                 card.body("Chart placeholder · 1,284 events")
               end
               card.footer("Updated July 13, 2026 at 08:42 UTC")
@@ -110,7 +110,7 @@ module Gallery
             end
             sample("Full-width only", slug: "full-only") do
               render NitroKit::Card.new(id: "gallery-card-full-only") do |card|
-                card.full_width { "A full-width region can be the only declared slot." }
+                card.full { "A full-width region can be the only declared slot." }
               end
             end
           end

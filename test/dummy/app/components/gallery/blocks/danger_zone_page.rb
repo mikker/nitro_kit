@@ -64,6 +64,25 @@ module Gallery
             end
           end
 
+          example(
+            "Settings footer without an escape",
+            slug: "danger-zone-no-escape",
+            mode: :full_width,
+            description: "At the bottom of a settings page there is nothing to escape to, so the escape action is omitted."
+          ) do
+            render NitroKit::DangerZone.new(
+              title: "Delete this project",
+              description: "Deleting removes every task, comment, and attachment in this project.",
+              id: "gallery-danger-zone-no-escape"
+            ) do |zone|
+              zone.confirmation do
+                form(action: "#delete-project", method: :post, id: "gallery-danger-zone-no-escape-form") do
+                  render NitroKit::Button.new("Delete project", type: :submit, variant: :destructive)
+                end
+              end
+            end
+          end
+
           example("Long nested impact", slug: "danger-zone-long", mode: :full_width) do
             render NitroKit::Container.new(size: :lg, id: "gallery-danger-zone-long-container") do
               render NitroKit::DangerZone.new(
@@ -88,7 +107,7 @@ module Gallery
       end
 
       def api_note
-        "Supply the required title and description through constructor text or matching compound methods. confirmation requires exactly one caller block. escape requires exactly one non-destructive NitroKit::Button."
+        "Supply the required title and description through constructor text or matching compound methods. confirmation requires exactly one caller block. escape is optional and accepts at most one non-destructive NitroKit::Button."
       end
     end
   end

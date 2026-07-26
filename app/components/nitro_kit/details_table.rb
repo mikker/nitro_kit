@@ -5,10 +5,17 @@ module NitroKit
     include Phlex::Rails::Helpers::Routes
 
     UNSET = Object.new.freeze
+    private_constant :UNSET
+    DEFAULT_EMPTY_TEXT = "Not provided"
+    DEFAULT_BOOLEAN_LABELS = { true => "Yes", false => "No" }.freeze
     Field = Data.define(:attribute, :label, :value, :content)
 
     def initialize(
       record,
+      caption: nil,
+      label: nil,
+      empty_text: DEFAULT_EMPTY_TEXT,
+      boolean_labels: DEFAULT_BOOLEAN_LABELS,
       route_base: nil,
       id: nil,
       html: {},
@@ -18,8 +25,13 @@ module NitroKit
     )
       @record = record
       @route_base = route_base
+      @caption = caption.nil? ? nil : validate_text!("caption", caption)
+      @empty_text = validate_text!("empty_text", empty_text)
+      @boolean_labels = validate_boolean_labels!(boolean_labels)
       @fields = []
-      @table = Table.new
+      @table = Table.new(
+        table_aria: label.nil? ? {} : { label: validate_text!("label", label) }
+      )
 
       super(
         component: :details_table,
@@ -39,6 +51,7 @@ module NitroKit
 
       div(**root_attributes) do
         render_in_slot(@table, :table) do
+          @table.caption(@caption) if @caption
           @table.tbody do
             @fields.each { |field| render_field(field) }
           end
@@ -55,7 +68,10 @@ module NitroKit
 
     def field(attribute, label: nil, value: UNSET, &content)
       attribute = validate_attribute!(attribute)
-      label = label.nil? ? attribute.to_s.humanize : validate_label!(label)
+      if @fields.any? { |field| field.attribute.to_s == attribute.to_s }
+        raise ArgumentError, "DetailsTable field keys must be unique: #{attribute.inspect}"
+      end
+      label = label.nil? ? attribute.to_s.humanize : validate_text!("field label", label)
       resolved_value = value.equal?(UNSET) ? resolve_attribute(attribute) : value
 
       @fields << Field.new(attribute:, label:, value: resolved_value, content:)
@@ -80,9 +96,9 @@ module NitroKit
     def render_value(value)
       case value
       when nil
-        em(**slot_attributes(:empty)) { "Not provided" }
+        em(**slot_attributes(:empty)) { plain(@empty_text) }
       when true, false
-        span(**slot_attributes(:boolean)) { value ? "Yes" : "No" }
+        span(**slot_attributes(:boolean)) { plain(@boolean_labels.fetch(value)) }
       when Date, Time, ActiveSupport::TimeWithZone
         time(**slot_attributes(:time, attributes: { datetime: value.iso8601 })) do
           plain(I18n.localize(value, format: :long).to_s)
@@ -190,10 +206,19 @@ module NitroKit
       raise ArgumentError, "DetailsTable field attribute must be a Symbol or non-blank String"
     end
 
-    def validate_label!(label)
-      return label if label.is_a?(String) && !label.strip.empty?
+    def validate_text!(name, value)
+      return value if value.is_a?(String) && !value.strip.empty?
 
-      raise ArgumentError, "DetailsTable field label must be a non-blank String"
+      raise ArgumentError, "DetailsTable #{name} must be a non-blank String"
+    end
+
+    def validate_boolean_labels!(labels)
+      unless labels.is_a?(Hash) && labels.keys.sort_by(&:to_s) == [ false, true ]
+        raise ArgumentError, "DetailsTable boolean_labels must be a Hash with true and false keys"
+      end
+
+      labels.each { |key, value| validate_text!("boolean_labels[#{key}]", value) }
+      labels
     end
   end
 end

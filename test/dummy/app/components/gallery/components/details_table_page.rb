@@ -56,7 +56,7 @@ module Gallery
           example("Nil and overrides", slug: "details-table-nil-and-overrides", mode: :full_width) do
             render NitroKit::DetailsTable.new(PROFILE, id: "gallery-details-table-values") do |details|
               details.field(:nickname)
-              details.field(:nickname, label: "Public nickname", value: nil) do |value|
+              details.field(:website, label: "Public website", value: nil) do |value|
                 value.nil? ? "Intentionally not published" : value
               end
               details.field(:score, label: "Quality score", value: "98.6 / 100")
@@ -97,7 +97,7 @@ module Gallery
           example("Workspace record card", slug: "details-table-record-card", mode: :full_width) do
             render NitroKit::Card.new(id: "gallery-details-table-card") do |card|
               card.title("Workspace owner", level: 3)
-              card.full_width do
+              card.full do
                 render NitroKit::ProgressiveImage.new(
                   attachment: demo_attachment,
                   alt: "Abstract indigo workspace illustration",

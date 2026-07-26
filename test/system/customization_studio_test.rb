@@ -30,7 +30,7 @@ class CustomizationStudioTest < ApplicationSystemTestCase
     )
 
     assert_equal preset.query_string, URI.parse(page.current_url).query
-    assert_selector "[data-gallery='theme-preview'] [data-gallery-customizer-shell][data-variant='hybrid']"
+    assert_selector "[data-gallery='theme-preview'] [data-gallery-customizer-shell][data-layout='hybrid']"
     assert_equal preset.css, target_text("cssOutput")
     assert_equal preset.app_shell_ruby, target_text("rubyOutput")
     assert_includes target_text("previewStyle"), "--nk-radius-xl: 1rem;"
@@ -51,7 +51,7 @@ class CustomizationStudioTest < ApplicationSystemTestCase
     defaults = Gallery::ThemePreset.new
     assert_equal defaults.query_string, URI.parse(page.current_url).query
     assert_selector "[data-gallery='theme-preview'][data-preview-appearance='system']"
-    assert_selector "[data-gallery-customizer-shell][data-variant='sidebar']"
+    assert_selector "[data-gallery-customizer-shell][data-layout='sidebar']"
     assert_text "Version 1 defaults restored."
     assert_equal original_appearance, document_appearance
     assert_no_severe_console_errors
@@ -97,7 +97,7 @@ class CustomizationStudioTest < ApplicationSystemTestCase
     restore_url("?v=1&accent=amber&neutral=gray&radius=sm&density=compact&font=mono&shell=topbar")
     assert_checked_field "customizer-accent-amber", visible: :all
     assert_checked_field "customizer-shell-topbar", visible: :all
-    assert_selector "[data-gallery-customizer-shell][data-variant='topbar']"
+    assert_selector "[data-gallery-customizer-shell][data-layout='topbar']"
     assert_includes target_text("rubyOutput"), "layout: :topbar"
 
     restore_url("?v=99&accent=rose&shell=hybrid")

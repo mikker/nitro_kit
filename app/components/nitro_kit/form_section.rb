@@ -17,10 +17,11 @@ module NitroKit
       @description_content = content_from_keyword(:description, description)
       @status = nil
       @form = nil
+      @title_id = "#{id || "nk-form-section-#{SecureRandom.hex(4)}"}-title"
 
       super(
         component: :form_section,
-        attributes: { id: }.compact,
+        attributes: { id:, aria: { labelledby: @title_id } }.compact,
         html:,
         aria:,
         data:,
@@ -35,7 +36,9 @@ module NitroKit
 
       section(**root_attributes) do
         header(**slot_attributes(:header)) do
-          h2(**slot_attributes(:title)) { render_deferred_content(@title_content) }
+          h2(**slot_attributes(:title, attributes: { id: @title_id })) do
+            render_deferred_content(@title_content)
+          end
           if @description_content
             p(**slot_attributes(:description)) { render_deferred_content(@description_content) }
           end

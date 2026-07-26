@@ -41,6 +41,8 @@ class GalleryContentBlocksTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-page-header-complete > [data-slot='page-header-actions'][data-nk='button-group']"
     assert_select "#gallery-page-header-long", text: /International Research, Production, and Reliability Engineering/
     assert_select "#gallery-page-header-container > #gallery-page-header-nested[data-nk='page-header']"
+    assert_select "#gallery-page-header-compound > h2[data-slot='page-header-title'] strong", text: "Analytical Engines"
+    assert_select "#gallery-page-header-compound > [data-slot='page-header-description'] time", count: 1
   end
 
   test "stat grid gallery covers one partial complete dense long and nested records" do
@@ -81,11 +83,12 @@ class GalleryContentBlocksTest < ActionDispatch::IntegrationTest
   test "danger zone gallery keeps confirmation composition and safe escape distinct" do
     get_block("danger-zone")
 
-    assert_select "[data-nk='danger-zone']", count: 4 do |zones|
+    assert_select "[data-nk='danger-zone']", count: 5 do |zones|
       assert zones.all? { |zone| zone.at_css("[data-slot='danger-zone-confirmation']") }
-      assert zones.all? { |zone| zone.at_css("[data-slot='danger-zone-escape'][data-nk='button']") }
+      assert zones.all? { |zone| zone.at_css("[data-slot='danger-zone-description']") }
       assert zones.none? { |zone| zone.at_css("[data-slot='danger-zone-escape'][data-variant='destructive']") }
     end
+    assert_select "#gallery-danger-zone-no-escape [data-slot='danger-zone-escape']", count: 0
     assert_select "#gallery-danger-zone-disabled [data-slot='danger-zone-confirmation'] [data-variant='destructive'][disabled]"
     assert_select "#gallery-danger-zone-dialog [data-slot='danger-zone-confirmation'] [data-nk='dialog']"
     assert_select "#gallery-danger-zone-long-container > #gallery-danger-zone-long"

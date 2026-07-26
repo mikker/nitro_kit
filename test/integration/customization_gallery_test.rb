@@ -16,7 +16,7 @@ class CustomizationGalleryTest < ActionDispatch::IntegrationTest
     assert_select "[data-gallery='page'][data-gallery-page='customize'][data-controller='gallery--customizer']"
     assert_select "h1", text: "Customize Nitro Kit"
     assert_select "[data-gallery='theme-preview'][data-theme='light'][data-preview-appearance='system']"
-    assert_select "[data-gallery='theme-preview'] [data-nk='app-shell'][data-variant='sidebar']"
+    assert_select "[data-gallery='theme-preview'] [data-nk='app-shell'][data-layout='sidebar']"
   end
 
   test "renders every labelled closed control with swatches and an isolated appearance choice" do
@@ -60,7 +60,7 @@ class CustomizationGalleryTest < ActionDispatch::IntegrationTest
     preset.query_parameters.except("v").each do |attribute, value|
       assert_select "input[name='#{attribute}'][value='#{value}'][checked]"
     end
-    assert_select "[data-gallery='theme-preview'] [data-nk='app-shell'][data-variant='hybrid']"
+    assert_select "[data-gallery='theme-preview'] [data-nk='app-shell'][data-layout='hybrid']"
     document = Nokogiri::HTML(response.body)
     assert_equal preset.preview_css, document.at_css("style[data-gallery--customizer-target='previewStyle']").text
     assert_equal preset.css, document.at_css("code[data-gallery--customizer-target='cssOutput']").text
@@ -68,7 +68,7 @@ class CustomizationGalleryTest < ActionDispatch::IntegrationTest
 
     %w[
       app-navigation alert badge button card checkbox details-table dialog dropzone
-      field progressive-image sortable-table stat-grid
+      field progressive-image table stat-grid
     ].each do |component|
       assert_select "[data-gallery='theme-preview'] [data-nk='#{component}']", minimum: 1
     end

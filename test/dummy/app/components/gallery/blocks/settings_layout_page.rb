@@ -1,6 +1,8 @@
 module Gallery
   module Blocks
     class SettingsLayoutPage < ComponentPage
+      DESTINATIONS = %i[profile security activity appearance].freeze
+
       private
 
       def source_note
@@ -8,19 +10,25 @@ module Gallery
       end
 
       def api_note
-        "NitroKit::SettingsLayout.new { |layout| layout.navigation(label:) { ... }; layout.content { ... } }"
+        "NitroKit::SettingsLayout.new { |layout| layout.navigation(label:) { layout.item(text, href:, current:) }; layout.content { ... } }"
       end
 
       def component_template
         example_section(
           "Required regions",
           slug: "settings-layout-regions",
-          description: "One labelled native navigation and one neutral content region form the complete contract."
+          description: "One labelled navigation list of typed destinations and one neutral content region form the complete contract."
         ) do
           example("Workspace settings", slug: "settings-layout-workspace", mode: :full_width) do
             render NitroKit::SettingsLayout.new(id: "gallery-settings-layout-workspace") do |layout|
               layout.navigation(label: "Workspace settings") do
-                render_navigation("workspace", current: :profile)
+                DESTINATIONS.each do |destination|
+                  layout.item(
+                    destination.to_s.humanize,
+                    href: "##{destination}",
+                    current: destination == :profile
+                  )
+                end
               end
               layout.content do
                 render NitroKit::Card.new(id: "gallery-settings-layout-profile-card") do |card|
@@ -51,19 +59,13 @@ module Gallery
         example_section(
           "Content cardinality",
           slug: "settings-layout-cardinality",
-          description: "The regions remain explicit with empty, single-surface, and dense caller-owned content."
+          description: "The regions remain explicit with one destination, a single surface, and dense caller-owned content."
         ) do
-          example("Empty, one, and many", slug: "settings-layout-cardinality-states", mode: :full_width) do
-            sample("Empty content", slug: "empty") do
-              render NitroKit::SettingsLayout.new(id: "gallery-settings-layout-empty") do |layout|
-                layout.navigation(label: "Empty settings")
-                layout.content
-              end
-            end
-            sample("One surface", slug: "one") do
+          example("One and many", slug: "settings-layout-cardinality-states", mode: :full_width) do
+            sample("One destination", slug: "one") do
               render NitroKit::SettingsLayout.new(id: "gallery-settings-layout-one") do |layout|
                 layout.navigation(label: "Account settings") do
-                  render NitroKit::Button.new("Profile", href: "#profile")
+                  layout.item("Profile", href: "#profile", current: true)
                 end
                 layout.content do
                   render NitroKit::Alert.new(id: "gallery-settings-layout-one-alert") do |alert|
@@ -76,7 +78,13 @@ module Gallery
             sample("Dense content", slug: "many") do
               render NitroKit::SettingsLayout.new(id: "gallery-settings-layout-many") do |layout|
                 layout.navigation(label: "Operations settings") do
-                  render_navigation("dense", current: :security)
+                  DESTINATIONS.each do |destination|
+                    layout.item(
+                      destination.to_s.humanize,
+                      href: "##{destination}",
+                      current: destination == :security
+                    )
+                  end
                 end
                 layout.content do
                   render NitroKit::Flex.new(dir: :col, gap: 2, align: :stretch) do
@@ -105,16 +113,9 @@ module Gallery
           ) do
             render NitroKit::SettingsLayout.new(id: "gallery-settings-layout-long") do |layout|
               layout.navigation(label: "Analytical Engines — International Research and Production settings") do
-                render NitroKit::ButtonGroup.new(label: "Long settings destinations") do |group|
-                  group.button(
-                    "Public organization identity and verified domains",
-                    href: "#identity",
-                    variant: :primary,
-                    aria: { current: "page" }
-                  )
-                  group.button("Credential rotation and browser session policy", href: "#security")
-                  group.button("Deployment notification delivery preferences", href: "#notifications")
-                end
+                layout.item("Public organization identity and verified domains", href: "#identity", current: true)
+                layout.item("Credential rotation and browser session policy", href: "#security")
+                layout.item("Deployment notification delivery preferences", href: "#notifications")
               end
               layout.content do
                 render NitroKit::Card.new(id: "gallery-settings-layout-long-card") do |card|
@@ -137,7 +138,13 @@ module Gallery
           example("Audit settings", slug: "settings-layout-audit", mode: :full_width) do
             render NitroKit::SettingsLayout.new(id: "gallery-settings-layout-audit") do |layout|
               layout.navigation(label: "Audit settings") do
-                render_navigation("audit", current: :activity)
+                DESTINATIONS.each do |destination|
+                  layout.item(
+                    destination.to_s.humanize,
+                    href: "##{destination}",
+                    current: destination == :activity
+                  )
+                end
               end
               layout.content do
                 render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
@@ -163,22 +170,6 @@ module Gallery
                 end
               end
             end
-          end
-        end
-      end
-
-      def render_navigation(prefix, current:)
-        render NitroKit::ButtonGroup.new(
-          id: "gallery-settings-layout-#{prefix}-navigation",
-          label: "Settings destinations"
-        ) do |group|
-          %i[profile security activity appearance].each do |destination|
-            group.button(
-              destination.to_s.humanize,
-              href: "##{destination}",
-              variant: destination == current ? :primary : :default,
-              aria: { current: destination == current ? "page" : nil }
-            )
           end
         end
       end

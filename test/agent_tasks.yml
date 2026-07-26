@@ -9,7 +9,7 @@
     - docs/component_contracts.md
     - docs/patterns/queryable_collection.md
   expectations:
-    - NitroKit::SortableTable
+    - NitroKit::Table
     - NitroKit::FormBuilder
     - turbo_frame_tag
     - GET parameters own query state

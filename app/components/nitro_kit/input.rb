@@ -6,6 +6,10 @@ module NitroKit
       button checkbox color date datetime-local email file hidden month number password radio
       range search tel text time url week
     ].freeze
+    OWNED_ATTRIBUTES = %i[
+      type id name value placeholder disabled readonly required autocomplete min max step
+      minlength maxlength multiple accept pattern inputmode checked
+    ].freeze
 
     def initialize(
       type: :text,
@@ -20,6 +24,8 @@ module NitroKit
       min: nil,
       max: nil,
       step: nil,
+      minlength: nil,
+      maxlength: nil,
       multiple: false,
       accept: nil,
       pattern: nil,
@@ -37,31 +43,39 @@ module NitroKit
       required = validate_boolean!(:required, required)
       multiple = validate_boolean!(:multiple, multiple)
       checked = validate_boolean!(:checked, checked, allow_nil: true)
-
-      native_attributes = {
-        type: @type,
-        id:,
-        name:,
-        value: @type == :file ? nil : value,
-        placeholder:,
-        disabled:,
-        readonly:,
-        required:,
-        autocomplete:,
-        min:,
-        max:,
-        step:,
-        multiple:,
-        accept:,
-        pattern:,
-        inputmode:,
-        checked:
-      }.compact
-      native_attributes[:value] = nil if @type == :file
+      minlength = validate_non_negative_integer!(:minlength, minlength)
+      maxlength = validate_non_negative_integer!(:maxlength, maxlength)
+      if minlength && maxlength && minlength > maxlength
+        raise ArgumentError, "minlength cannot exceed maxlength"
+      end
+      if @type == :file && !value.nil?
+        raise ArgumentError, "file inputs never carry a value; omit value:"
+      end
+      reject_owned_attributes!(html)
 
       super(
         component: :input,
-        attributes: native_attributes,
+        attributes: {
+          type: @type,
+          id:,
+          name:,
+          value:,
+          placeholder:,
+          disabled:,
+          readonly:,
+          required:,
+          autocomplete:,
+          min:,
+          max:,
+          step:,
+          minlength:,
+          maxlength:,
+          multiple:,
+          accept:,
+          pattern:,
+          inputmode:,
+          checked:
+        }.compact,
         html:,
         aria:,
         data:,
@@ -73,6 +87,27 @@ module NitroKit
 
     def view_template
       input(**root_attributes)
+    end
+
+    private
+
+    def reject_owned_attributes!(html)
+      return unless html.is_a?(Hash)
+
+      html.each_key do |key|
+        normalized = key.to_s.downcase.tr("_", "-")
+        owned = OWNED_ATTRIBUTES.find { |name| name.to_s.tr("_", "-") == normalized }
+        next unless owned
+
+        raise ArgumentError, "#{normalized} is owned by Input; pass #{owned}: as a keyword"
+      end
+    end
+
+    def validate_non_negative_integer!(name, value)
+      return if value.nil?
+      return value if value.is_a?(Integer) && value >= 0
+
+      raise ArgumentError, "#{name} must be a non-negative Integer"
     end
   end
 end

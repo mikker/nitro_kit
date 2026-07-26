@@ -33,15 +33,14 @@ module NitroKit
       require_content!("DangerZone", :title, @title_content)
       require_content!("DangerZone", :description, @description_content)
       raise ArgumentError, "DangerZone requires exactly one confirmation" unless @confirmation
-      raise ArgumentError, "DangerZone requires exactly one safe escape action" unless @escape
 
       section(**root_attributes) do
         header(**slot_attributes(:header)) do
           h2(**slot_attributes(:title)) { render_deferred_content(@title_content) }
-          p(**slot_attributes(:impact)) { render_deferred_content(@description_content) }
+          p(**slot_attributes(:description)) { render_deferred_content(@description_content) }
         end
         div(**slot_attributes(:confirmation), &@confirmation)
-        render_in_slot(@escape.component, :escape, &@escape.content)
+        render_in_slot(@escape.component, :escape, &@escape.content) if @escape
       end
     end
 
@@ -70,7 +69,7 @@ module NitroKit
       if component.variant == :destructive
         raise ArgumentError, "DangerZone escape cannot use the destructive Button variant"
       end
-      raise ArgumentError, "DangerZone accepts exactly one safe escape action" if @escape
+      raise ArgumentError, "DangerZone accepts at most one safe escape action" if @escape
 
       @escape = Child.new(component:, content:)
       nil

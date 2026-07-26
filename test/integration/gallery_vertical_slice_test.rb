@@ -71,7 +71,7 @@ class GalleryVerticalSliceTest < ActionDispatch::IntegrationTest
     get_component("field")
 
     %w[string textarea select checkbox switch radio-group].each do |type|
-      assert_select "[data-nk='field'][data-type='#{type}']", minimum: 1
+      assert_select "[data-nk='field'][data-field-type='#{type}']", minimum: 1
     end
 
     assert_select "#gallery-field-required-wrapper[data-required] input[required]"

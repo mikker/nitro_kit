@@ -3,11 +3,21 @@
 module NitroKit
   class Table < Component
     ALIGNMENTS = %i[left center right].freeze
+    DEFAULT_ALIGNMENT = :left
     SCOPES = %i[col row].freeze
+    DIRECTIONS = %i[asc desc].freeze
+    SORT_ICONS = { asc: "arrow-up", desc: "arrow-down", none: "chevrons-up-down" }.freeze
     Section = Data.define(:content, :html, :aria, :data, :css_class)
     Caption = Data.define(:text, :content, :html, :aria, :data, :css_class)
 
+    # Table renders in two phases. `caption`, `thead`, and `tbody` only collect
+    # declarations, so the component owns caption → head → body order regardless
+    # of caller order. `tr`, `th`, and `td` run inside a collected block and
+    # render immediately, which is why their validation raises before the cell
+    # it describes is emitted rather than after the table is complete.
     def initialize(
+      sort: nil,
+      direction: nil,
       id: nil,
       html: {},
       aria: {},
@@ -17,9 +27,15 @@ module NitroKit
       table_data: {},
       desperately_need_a_class: nil
     )
+      @sort = sort.nil? ? nil : normalize_sort_key(sort, name: "sort")
+      @direction = direction.nil? ? nil : validate_choice!(:direction, direction.to_sym, DIRECTIONS)
+      unless @sort.nil? == @direction.nil?
+        raise ArgumentError, "Table sort: and direction: must both be set or both be nil"
+      end
+
       super(
         component: :table,
-        attributes: { id: }.compact,
+        attributes: { id:, data: { sort: @sort, direction: @direction }.compact }.compact,
         html:,
         aria:,
         data:,
@@ -35,7 +51,10 @@ module NitroKit
       @caption = nil
       @head = nil
       @bodies = []
+      @sort_keys = []
     end
+
+    attr_reader :sort, :direction
 
     def view_template
       @collecting_sections = true
@@ -110,6 +129,9 @@ module NitroKit
       text = nil,
       align: :left,
       scope: :col,
+      sort: nil,
+      href: nil,
+      sort_data: {},
       html: {},
       aria: {},
       data: {},
@@ -118,18 +140,31 @@ module NitroKit
     )
       ensure_rendering_row!(:th)
       raise ArgumentError, "Table th accepts text or a block, not both" if !text.nil? && block
+      raise ArgumentError, "Table th href: requires sort:" if sort.nil? && !href.nil?
       alignment = validate_choice!(:align, align, ALIGNMENTS)
       scope = validate_choice!(:scope, scope, SCOPES)
+      key = sort.nil? ? nil : declare_sort_header!(sort, href:)
+
       html_th(
         **slot_attributes(
           :header,
-          attributes: { scope:, data: { align: alignment } },
+          attributes: {
+            scope:,
+            aria: key ? { sort: aria_sort(key) } : {},
+            data: { align: alignment_value(alignment), sort_key: key }.compact
+          },
           html:,
           aria:,
           data:,
           desperately_need_a_class:
         )
-      ) { text_or_block(text, &block) }
+      ) do
+        if key
+          render_sort_link(key, text, href:, data: sort_data, &block)
+        else
+          text_or_block(text, &block)
+        end
+      end
     end
 
     def td(
@@ -147,7 +182,7 @@ module NitroKit
       html_td(
         **slot_attributes(
           :cell,
-          attributes: { data: { align: alignment } },
+          attributes: { data: { align: alignment_value(alignment) }.compact },
           html:,
           aria:,
           data:,
@@ -157,6 +192,48 @@ module NitroKit
     end
 
     private
+
+    def alignment_value(alignment)
+      alignment unless alignment == DEFAULT_ALIGNMENT
+    end
+
+    def render_sort_link(key, text, href:, data:, &block)
+      a(**slot_attributes(:sort, attributes: { href: }, data:)) do
+        span(**slot_attributes(:sort_label)) do
+          block ? text_or_block(nil, &block) : plain(text || key.humanize)
+        end
+        render_in_slot(
+          Icon.new(SORT_ICONS.fetch(active_sort?(key) ? direction : :none), size: :xs),
+          :sort_indicator
+        )
+      end
+    end
+
+    def active_sort?(key) = sort == key
+
+    def aria_sort(key)
+      return "none" unless active_sort?(key)
+
+      direction == :asc ? "ascending" : "descending"
+    end
+
+    def declare_sort_header!(key, href:)
+      key = normalize_sort_key(key, name: "th sort")
+      unless href.is_a?(String) && !href.strip.empty?
+        raise ArgumentError, "Table th sort: requires a non-blank String href:"
+      end
+      raise ArgumentError, "Table sort keys must be unique: #{key.inspect}" if @sort_keys.include?(key)
+
+      @sort_keys << key
+      key
+    end
+
+    def normalize_sort_key(value, name:)
+      normalized = value.to_s.strip if value.is_a?(Symbol) || value.is_a?(String)
+      return normalized if normalized.present?
+
+      raise ArgumentError, "Table #{name} must be a Symbol or non-blank String"
+    end
 
     def render_caption
       html_caption(

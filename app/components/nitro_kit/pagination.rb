@@ -1,36 +1,15 @@
 # frozen_string_literal: true
 
-begin
-  require "pagy/toolbox/helpers/support/series"
-rescue LoadError
-end
-
 module NitroKit
   class Pagination < Component
-    Item = Data.define(:kind, :button, :content, :current, :label)
-    class CurrentPage < Component
-      def initialize(text, id:, html:, aria:, data:, desperately_need_a_class:)
-        @text = text
-        super(
-          component: :button,
-          attributes: { id: },
-          html:,
-          aria:,
-          data:,
-          variant: :ghost,
-          size: :sm,
-          desperately_need_a_class:
-        )
-      end
-
-      def view_template(&block)
-        span(**root_attributes) do
-          span(**slot_attributes(:label)) { block ? yield : plain(@text.to_s) }
-        end
-      end
-    end
+    Item = Data.define(:kind, :button, :current_page, :content, :current, :label)
+    CurrentPage = Data.define(:text, :attributes)
     private_constant :CurrentPage
     ITEM_KINDS = %i[previous page ellipsis next].freeze
+    DEFAULT_PREVIOUS_TEXT = "Previous"
+    DEFAULT_NEXT_TEXT = "Next"
+    UNSET = Object.new.freeze
+    private_constant :UNSET
 
     def initialize(
       label: "Pagination",
@@ -76,7 +55,7 @@ module NitroKit
     end
 
     def prev(
-      text = "Previous",
+      text = UNSET,
       href: nil,
       icon: "arrow-left",
       disabled: false,
@@ -87,7 +66,7 @@ module NitroKit
       desperately_need_a_class: nil,
       &content
     )
-      text = nil if content && text == "Previous"
+      text = default_text(text, DEFAULT_PREVIOUS_TEXT, content)
       validate_boolean!(:disabled, disabled)
       append_navigation_item(
         :previous,
@@ -127,17 +106,23 @@ module NitroKit
       validate_aria!(aria, reserved: %w[current disabled])
 
       item_aria = current ? aria.merge(current: "page") : aria
-      button = if current && missing_href?(href)
-        CurrentPage.new(
-          text,
-          id:,
-          html:,
-          aria: item_aria,
-          data:,
-          desperately_need_a_class:
+      button = nil
+      current_page = nil
+
+      if current && missing_href?(href)
+        current_page = CurrentPage.new(
+          text:,
+          attributes: slot_attributes(
+            :current,
+            attributes: { id: }.compact,
+            html:,
+            aria: item_aria,
+            data:,
+            desperately_need_a_class:
+          )
         )
       else
-        pagination_button(
+        button = pagination_button(
           text,
           href:,
           disabled: false,
@@ -149,17 +134,17 @@ module NitroKit
         )
       end
 
-      append(Item.new(kind: :page, button:, content:, current:, label: nil))
+      append(Item.new(kind: :page, button:, current_page:, content:, current:, label: nil))
     end
 
     def ellipsis(label: "More pages")
       validate_label!(label, name: "ellipsis label")
 
-      append(Item.new(kind: :ellipsis, button: nil, content: nil, current: false, label:))
+      append(Item.new(kind: :ellipsis, button: nil, current_page: nil, content: nil, current: false, label:))
     end
 
     def next(
-      text = "Next",
+      text = UNSET,
       href: nil,
       icon: "arrow-right",
       disabled: false,
@@ -170,7 +155,7 @@ module NitroKit
       desperately_need_a_class: nil,
       &content
     )
-      text = nil if content && text == "Next"
+      text = default_text(text, DEFAULT_NEXT_TEXT, content)
       validate_boolean!(:disabled, disabled)
       append_navigation_item(
         :next,
@@ -191,11 +176,10 @@ module NitroKit
     private
 
     def append_pagy_items
-      previous = pagy_previous
-      prev(href: pagy_page_url(previous)) if previous
-      prev(disabled: true) unless previous
+      previous = @pagy.previous
+      prev(href: previous && pagy_page_url(previous))
 
-      @pagy.__send__(:series).each do |item|
+      pagy_series.each do |item|
         case item
         when Integer
           page(item, href: pagy_page_url(item))
@@ -209,22 +193,18 @@ module NitroKit
       end
 
       following = @pagy.next
-      self.next(href: pagy_page_url(following)) if following
-      self.next(disabled: true) unless following
+      self.next(href: following && pagy_page_url(following))
     end
 
-    def pagy_previous
-      return @pagy.previous if @pagy.respond_to?(:previous)
-
-      @pagy.prev
+    # Pagy's `series` is protected; `data_hash` is its public accessor for it.
+    def pagy_series
+      @pagy.data_hash(data_keys: [ :series ]).fetch(:series)
     end
 
     def pagy_page_url(page)
       return @page_url.call(page) if @page_url
-      return @pagy.page_url(page) if @pagy.respond_to?(:page_url)
 
-      raise ArgumentError,
-        "Pagination requires page_url: for this Pagy version"
+      @pagy.page_url(page)
     end
 
     def validate_pagy!(pagy, page_url:)
@@ -233,9 +213,9 @@ module NitroKit
       end
       return unless pagy
 
-      required = %i[next]
-      required << :previous unless pagy.respond_to?(:prev)
-      missing = required.reject { |method| pagy.respond_to?(method, true) }
+      required = %i[previous next data_hash]
+      required << :page_url unless page_url
+      missing = required.reject { |method| pagy.respond_to?(method) }
       return if missing.empty?
 
       raise ArgumentError,
@@ -274,7 +254,7 @@ module NitroKit
         desperately_need_a_class:
       )
 
-      append(Item.new(kind:, button:, content:, current: false, label: nil))
+      append(Item.new(kind:, button:, current_page: nil, content:, current: false, label: nil))
     end
 
     def pagination_button(
@@ -335,14 +315,24 @@ module NitroKit
       ) do
         if item.kind == :ellipsis
           render_ellipsis(item)
+        elsif item.current_page
+          render_current_page(item)
         else
           render_in_slot(item.button, item.kind, &item.content)
         end
       end
     end
 
+    def render_current_page(item)
+      span(**item.current_page.attributes) do
+        span(**slot_attributes(:current_label)) do
+          item.content ? render(item.content) : plain(item.current_page.text.to_s)
+        end
+      end
+    end
+
     def render_ellipsis(item)
-      span(**slot_attributes(:ellipsis), aria: { hidden: "true" }) { "…" }
+      span(**slot_attributes(:ellipsis, aria: { hidden: true })) { "…" }
       span(**slot_attributes(:ellipsis_label)) { plain(item.label) }
     end
 
@@ -372,10 +362,12 @@ module NitroKit
       raise ArgumentError, "Pagination #{name} must be a non-blank String"
     end
 
-    def validate_boolean!(name, value)
-      return if value == true || value == false
+    # An omitted label falls back to the default text, unless a content block
+    # supplies its own label.
+    def default_text(text, default, content)
+      return text unless text.equal?(UNSET)
 
-      raise ArgumentError, "Pagination #{name} must be true or false"
+      content ? nil : default
     end
 
     def validate_aria!(aria, reserved:)

@@ -1,11 +1,11 @@
 require "test_helper"
 
 class GalleryRansackSortTest < ActiveSupport::TestCase
-  test "adapts current Ransack state to SortableTable values" do
+  test "adapts current Ransack state to Table sort values" do
     search = Gallery::CatalogItem.ransack(s: "owner desc")
     adapter = Gallery::RansackSort.new(
       search,
-      path: "/gallery/components/sortable-table",
+      path: "/gallery/components/table",
       filters: { "status_eq" => "active" }
     )
 
@@ -18,7 +18,7 @@ class GalleryRansackSortTest < ActiveSupport::TestCase
     search = Gallery::CatalogItem.ransack(s: "name asc")
     adapter = Gallery::RansackSort.new(
       search,
-      path: "/gallery/components/sortable-table",
+      path: "/gallery/components/table",
       filters: { name_or_owner_cont: "atlas", status_eq: "active" }
     )
 
@@ -47,7 +47,7 @@ class GalleryRansackSortTest < ActiveSupport::TestCase
   test "starts a new sort when the Ransack search is unsorted" do
     adapter = Gallery::RansackSort.new(
       Gallery::CatalogItem.ransack,
-      path: "/gallery/components/sortable-table",
+      path: "/gallery/components/table",
       filters: { status_eq: "trial" }
     )
 

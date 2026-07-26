@@ -5,7 +5,15 @@ module Gallery
 
       def render_state
         render NitroKit::SettingsLayout.new(id: "gallery-data-resource-settings-layout") do |layout|
-          layout.navigation(label: "Data resource settings sections") { render_settings_navigation }
+          layout.navigation(label: "Data resource settings sections") do
+            %w[general access danger].each do |section|
+              layout.item(
+                section.humanize,
+                href: flow_path(state: section),
+                current: settings_section == section
+              )
+            end
+          end
           layout.content do
             case settings_section
             when "general"
@@ -15,22 +23,6 @@ module Gallery
             when "danger"
               render_danger_settings
             end
-          end
-        end
-      end
-
-      def render_settings_navigation
-        render NitroKit::ButtonGroup.new(
-          id: "gallery-data-resource-settings-navigation",
-          label: "Data resource settings sections"
-        ) do |group|
-          %w[general access danger].each do |section|
-            group.button(
-              section.humanize,
-              href: flow_path(state: section),
-              variant: settings_section == section ? :primary : :default,
-              aria: { current: settings_section == section ? "page" : nil }
-            )
           end
         end
       end

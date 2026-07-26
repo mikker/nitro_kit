@@ -12,20 +12,20 @@ bundle show nitro_kit
 
 Read this guide from that directory, then consult only the reference needed for the task:
 
-| Task                                        | Read next                               |
-| ------------------------------------------- | --------------------------------------- |
-| Rails models, routes, CRUD, and tests       | `docs/rails_conventions.md`             |
-| Authentication, teams, shell, and settings | `docs/patterns/application_foundation.md` |
-| Build a complete product resource          | `docs/patterns/crud_resource.md`        |
-| Choose or compose UI                        | `docs/component_contracts.md`           |
-| Rails assets, forms, and application shells | `docs/rails_integration.md`             |
-| Turbo, Frames, Streams, morphs, or Stimulus | `docs/hotwire.md`                       |
-| Theme tokens and application composition    | `docs/customization.md`                 |
-| Query, sort, filter, or paginate            | `docs/patterns/queryable_collection.md` |
-| Create, update, and show validation         | `docs/patterns/resource_form.md`        |
-| Delete, revoke, archive, or confirm         | `docs/patterns/destructive_action.md`   |
-| Flash messages and notifications            | `docs/patterns/flash_and_toast.md`      |
-| Edit and cancel inside a page               | `docs/patterns/inline_edit.md`          |
+| Task                                        | Read next                                 |
+| ------------------------------------------- | ----------------------------------------- |
+| Rails models, routes, CRUD, and tests       | `docs/rails_conventions.md`               |
+| Authentication, teams, shell, and settings  | `docs/patterns/application_foundation.md` |
+| Build a complete product resource           | `docs/patterns/crud_resource.md`          |
+| Choose or compose UI                        | `docs/component_contracts.md`             |
+| Rails assets, forms, and application shells | `docs/rails_integration.md`               |
+| Turbo, Frames, Streams, morphs, or Stimulus | `docs/hotwire.md`                         |
+| Theme tokens and application composition    | `docs/customization.md`                   |
+| Query, sort, filter, or paginate            | `docs/patterns/queryable_collection.md`   |
+| Create, update, and show validation         | `docs/patterns/resource_form.md`          |
+| Delete, revoke, archive, or confirm         | `docs/patterns/destructive_action.md`     |
+| Flash messages and notifications            | `docs/patterns/flash_and_toast.md`        |
+| Edit and cancel inside a page               | `docs/patterns/inline_edit.md`            |
 
 The installed component source is the final authority for constructor and compound-method details. This guide describes Nitro Kit 2.x. Do not use an API remembered from Nitro Kit 1.x or another installed version.
 
@@ -42,7 +42,7 @@ Prefer a block that owns the whole region, then compose smaller components insid
 | App page title and basic actions | `AppShell`, then `Toolbar`                                |
 | Content-led page introduction    | `PageHeader`                                              |
 | Data region                      | `DataSection`, then `Table` or `EmptyState`               |
-| Queryable tabular data           | `SortableTable`, `Toolbar`, `PaginationBar`               |
+| Queryable tabular data           | `Table`, `Toolbar`, `PaginationBar`                       |
 | Model-backed form                | `FormSection`, Rails `form_with`, `NitroKit::FormBuilder` |
 | Destructive settings             | `DangerZone`, optionally `Dialog`                         |
 | Transient server feedback        | `Toast::FlashMessages`                                    |

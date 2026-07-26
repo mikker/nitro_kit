@@ -143,10 +143,11 @@ class GalleryStructuredTest < ActionDispatch::IntegrationTest
     get_component("table")
 
     assert_select "#gallery-table-alignment" do
-      NitroKit::Table::ALIGNMENTS.each do |alignment|
+      (NitroKit::Table::ALIGNMENTS - [ NitroKit::Table::DEFAULT_ALIGNMENT ]).each do |alignment|
         assert_select "thead [data-align='#{alignment}']", count: 1
         assert_select "tbody [data-align='#{alignment}']", count: 2
       end
+      assert_select "[data-align='left']", count: 0
     end
 
     assert_select "#gallery-table-credentials" do

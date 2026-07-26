@@ -25,21 +25,84 @@ module NitroKit
     }.freeze
     CONTROL_OPTIONS = %i[
       id name value placeholder disabled readonly required autocomplete checked
-      multiple accept min max step pattern inputmode
+      multiple accept min max step minlength maxlength rows cols wrap pattern inputmode
     ].freeze
+    UNSUPPORTED_HELPERS = {
+      label: "form.field(:attribute, label: \"...\")",
+      collection_select: "form.field(:attribute, as: :select, options: ...)",
+      grouped_collection_select: "form.field(:attribute, as: :select, option_tags: ...)",
+      collection_radio_buttons: "form.field(:attribute, as: :radio_group, options: ...)",
+      collection_check_boxes: "NitroKit::CheckboxGroup through form.field(:attribute, as: :checkbox)",
+      date_select: "form.field(:attribute, as: :date)",
+      time_zone_select: "form.field(:attribute, as: :select, options: ...)"
+    }.freeze
+
+    UNSUPPORTED_HELPERS.each do |method_name, replacement|
+      define_method(method_name) do |*_arguments, **_options, &_block|
+        raise ArgumentError,
+          "NitroKit::FormBuilder does not implement #{method_name}; use #{replacement}"
+      end
+    end
 
     def fieldset(**attributes, &block)
       @template.render(NitroKit::Fieldset.new(**attributes), &block)
     end
 
-    def field(field_name, label: nil, errors: nil, **attributes, &block)
-      label = field_name.to_s.humanize if label.nil?
+    def field(
+      field_name,
+      as: :string,
+      label: nil,
+      errors: nil,
+      html: {},
+      aria: {},
+      data: {},
+      control_html: {},
+      control_aria: {},
+      control_data: {},
+      wrapper_html: {},
+      wrapper_aria: {},
+      wrapper_data: {},
+      **attributes,
+      &block
+    )
+      as = validate_as!(as)
+      label = default_label_for(field_name) if label.nil?
       errors ||= errors_for(field_name)
-      return rich_text_field(field_name, label:, errors:, **attributes) if attributes[:as].to_s.tr("-", "_") == "rich_text"
-      self.multipart = true if attributes[:as].to_s.tr("-", "_") == "file"
+      control_html = merge_control_boundary(:html, control_html, html)
+      control_aria = merge_control_boundary(:aria, control_aria, aria)
+      control_data = merge_control_boundary(:data, control_data, data)
+
+      if as == :rich_text
+        return rich_text_field(
+          field_name,
+          label:,
+          errors:,
+          control_html:,
+          control_aria:,
+          control_data:,
+          html: wrapper_html,
+          aria: wrapper_aria,
+          data: wrapper_data,
+          **attributes
+        )
+      end
+      self.multipart = true if as == :file
 
       @template.render(
-        NitroKit::Field.new(self, field_name, label:, errors:, **attributes),
+        NitroKit::Field.new(
+          self,
+          field_name,
+          as:,
+          label:,
+          errors:,
+          html: wrapper_html,
+          aria: wrapper_aria,
+          data: wrapper_data,
+          control_html:,
+          control_aria:,
+          control_data:,
+          **attributes
+        ),
         &block
       )
     end
@@ -103,7 +166,6 @@ module NitroKit
     def hidden_field(field_name, options = {}, **attributes)
       options = options.merge(attributes).symbolize_keys
       value = options.key?(:value) ? options.delete(:value) : value_for(field_name)
-      @emitted_hidden_id = true if field_name.to_sym == :id
 
       @template.render(
         Input.new(
@@ -159,19 +221,28 @@ module NitroKit
     alias :checkbox :check_box
 
     def submit(value = nil, options = {}, **attributes, &block)
+      options = options.symbolize_keys.merge(attributes)
       value = "Save changes" if value.nil? && !block
-      @template.render(Button.new(value, variant: :primary, type: :submit, **options, **attributes), &block)
+      options[:name] = "commit" unless options.key?(:name)
+      options[:value] = value if value && options[:name] == "commit" && !options.key?(:value)
+
+      @template.render(Button.new(value, variant: :primary, type: :submit, **options), &block)
     end
 
     def button(value = nil, options = {}, **attributes, &block)
+      options = options.symbolize_keys.merge(attributes)
       value = "Save changes" if value.nil? && !block
-      @template.render(Button.new(value, **options, **attributes), &block)
+      options[:type] = :submit unless options.key?(:type)
+
+      @template.render(Button.new(value, **options), &block)
     end
 
     def select(field_name, choices = nil, options = {}, html_options = {}, &block)
+      options = options.symbolize_keys
       option_tags = @template.capture(&block) if block
       option_tags ||= choices if choices.is_a?(ActiveSupport::SafeBuffer)
       prompt = options[:prompt] == true ? I18n.t("helpers.select.prompt", default: "Please select") : options[:prompt]
+      selected = options.key?(:selected) ? { value: options[:selected] } : {}
 
       field(
         field_name,
@@ -180,8 +251,8 @@ module NitroKit
         option_tags:,
         include_blank: options[:include_blank],
         prompt:,
-        value: options.fetch(:selected, NitroKit::Field::UNSET),
         label: false,
+        **selected,
         **normalize_control_options(html_options)
       )
     end
@@ -192,9 +263,7 @@ module NitroKit
       editor_options = {
         id: field_id(field_name),
         placeholder: attributes[:placeholder],
-        required: attributes[:required],
-        data: attributes[:control_data],
-        aria: attributes[:control_aria]
+        required: attributes[:required]
       }.compact.merge(control_html)
       editor = rich_text_area(field_name, editor_options)
 
@@ -216,7 +285,34 @@ module NitroKit
       has_name = aria.any? do |key, value|
         %w[label labelledby].include?(key.to_s.tr("_", "-")) && value.to_s.present?
       end
-      has_name ? aria : aria.merge(label: field_name.to_s.humanize)
+      has_name ? aria : aria.merge(label: default_label_for(field_name))
+    end
+
+    def default_label_for(field_name)
+      if object && object.class.respond_to?(:human_attribute_name)
+        object.class.human_attribute_name(field_name)
+      else
+        field_name.to_s.humanize
+      end
+    end
+
+    def validate_as!(as)
+      normalized = as.to_s.tr("-", "_").to_sym
+      return normalized if NitroKit::Field::TYPES.include?(normalized)
+
+      raise ArgumentError,
+        "Unknown as: #{as.inspect}; expected one of: #{NitroKit::Field::TYPES.map(&:inspect).join(", ")}"
+    end
+
+    def merge_control_boundary(name, control, shorthand)
+      control = (control || {}).symbolize_keys
+      shorthand = (shorthand || {}).symbolize_keys
+      duplicates = control.keys & shorthand.keys
+      if duplicates.any?
+        raise ArgumentError, "#{duplicates.first} was given through both #{name}: and control_#{name}:"
+      end
+
+      control.merge(shorthand)
     end
 
     def errors_for(field_name)
@@ -228,12 +324,12 @@ module NitroKit
     def normalize_control_options(options)
       options = options.symbolize_keys
       normalized = options.extract!(*CONTROL_OPTIONS)
-      control_html = options.delete(:control_html) || {}
-      control_data = options.delete(:control_data) || options.delete(:data) || {}
-      control_aria = options.delete(:control_aria) || options.delete(:aria) || {}
+      control_html = merge_control_boundary(:html, options.delete(:control_html), options.delete(:html))
+      control_data = merge_control_boundary(:data, options.delete(:control_data), options.delete(:data))
+      control_aria = merge_control_boundary(:aria, options.delete(:control_aria), options.delete(:aria))
 
       normalized.merge(
-        control_html: options.merge(control_html),
+        control_html: merge_control_boundary(:html, control_html, options),
         control_data:,
         control_aria:
       )

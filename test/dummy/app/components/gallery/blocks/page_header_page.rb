@@ -41,6 +41,28 @@ module Gallery
             end
           end
 
+          example(
+            "Rich compound content",
+            slug: "page-header-compound",
+            description: "Eyebrow, title, and description accept deferred blocks; level: keeps a nested header out of the page h1."
+          ) do
+            render NitroKit::PageHeader.new(level: 2, id: "gallery-page-header-compound") do |header|
+              header.eyebrow("Billing")
+              header.title do
+                plain "Invoices for "
+                strong { "Analytical Engines" }
+              end
+              header.description do
+                plain "Every invoice issued since "
+                time(datetime: "2026-01-01") { "January 2026" }
+                plain " remains downloadable."
+              end
+              header.actions NitroKit::ButtonGroup.new(label: "Invoice actions") do |actions|
+                actions.button("Download all", href: "#download-invoices")
+              end
+            end
+          end
+
           example("Nested in a narrow container", slug: "page-header-nested") do
             render NitroKit::Container.new(size: :sm, id: "gallery-page-header-container") do
               render NitroKit::PageHeader.new(
@@ -62,7 +84,7 @@ module Gallery
       end
 
       def api_note
-        "Supply title, eyebrow, and description through constructor text or matching compound methods; title is required. actions accepts at most one NitroKit::ButtonGroup."
+        "Supply title, eyebrow, and description through constructor text or matching compound methods; title is required. level: picks the heading level 1..6 and actions accepts at most one NitroKit::ButtonGroup."
       end
     end
   end

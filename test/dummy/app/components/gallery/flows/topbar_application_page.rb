@@ -75,7 +75,7 @@ module Gallery
               render NitroKit::Grid.new(cols: "1 sm:2 lg:3", id: "gallery-topbar-application-media-grid") do
                 MEDIA_ITEMS.each_with_index do |(title, detail, status), index|
                   render NitroKit::Card.new(id: "gallery-topbar-application-media-#{index + 1}") do |card|
-                    card.full_width do
+                    card.full do
                       render NitroKit::ProgressiveImage.new(
                         attachment: demo_attachment,
                         alt: "Abstract workspace cover for #{title}",
@@ -156,7 +156,7 @@ module Gallery
               render NitroKit::Grid.new(cols: "1 sm:2 lg:3", id: "gallery-topbar-application-loading-grid") do
                 3.times do |index|
                   render NitroKit::Card.new(id: "gallery-topbar-application-loading-card-#{index + 1}") do |card|
-                    card.full_width do
+                    card.full do
                       render NitroKit::ProgressiveImage.new(
                         attachment: demo_attachment,
                         alt: "Loading media preview #{index + 1}",
@@ -217,18 +217,18 @@ module Gallery
                 id: "gallery-topbar-application-long-header"
               )
 
-              render NitroKit::SortableTable.new(
-                current: :updated,
+              render NitroKit::Table.new(
+                sort: :updated,
                 direction: :desc,
                 id: "gallery-topbar-application-long-table"
               ) do |table|
                 table.caption("Reviewed release records")
                 table.thead do
                   table.tr do
-                    table.sortable_th(:record, href: "?sort=record-asc")
-                    table.sortable_th(:owner, href: "?sort=owner-asc")
-                    table.sortable_th(:status, href: "?sort=status-asc")
-                    table.sortable_th(:updated, href: "?sort=updated-asc", align: :right)
+                    table.th(sort: :record, href: "?sort=record-asc")
+                    table.th(sort: :owner, href: "?sort=owner-asc")
+                    table.th(sort: :status, href: "?sort=status-asc")
+                    table.th(sort: :updated, href: "?sort=updated-asc", align: :right)
                   end
                 end
                 table.tbody do

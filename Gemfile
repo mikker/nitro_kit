@@ -18,6 +18,7 @@ gem "rubocop-rails-omakase", require: false
 
 group :development, :test do
   gem "prism", "~> 1.0"
+  gem "pagy", "~> 43.6"
 end
 
 group :test do

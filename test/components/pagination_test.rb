@@ -1,86 +1,59 @@
 require "test_helper"
 
+require "pagy"
+
 class PaginationComponentTest < ActiveSupport::TestCase
-  test "builds conventional navigation from a modern Pagy object" do
-    pagy = Class.new do
-      attr_reader :previous, :next
+  def pagy(page:, count: 120, limit: 10, params: {})
+    Pagy::Method # loads Pagy::Request
+    Pagy::Offset.new(
+      count:,
+      page:,
+      limit:,
+      request: Pagy::Request.new(request: { path: "/projects", params: })
+    )
+  end
 
-      def initialize
-        @previous = 4
-        @next = 6
-      end
-
-      def page_url(page) = "/projects?page=#{page}"
-
-      protected
-
-      def series = [ 1, :gap, 4, "5", 6, :gap, 12 ]
-    end.new
-
-    node = render_node(NitroKit::Pagination.new(pagy:))
+  test "builds conventional navigation from a real Pagy object" do
+    node = render_node(NitroKit::Pagination.new(pagy: pagy(page: 5, params: { "q" => "ada" })))
     items = node.css("[data-slot='pagination-item']")
 
     assert_equal %w[previous page ellipsis page page page ellipsis page next],
       items.map { |item| item["data-kind"] }
-    assert_equal "/projects?page=4",
+    assert_equal "/projects?q=ada&page=4",
       node.at_css("[data-slot='pagination-previous']")["href"]
     assert_equal "5", node.at_css("[aria-current='page']").text
-    assert_equal "/projects?page=6",
+    assert_equal "/projects?q=ada&page=12",
+      node.css("[data-slot='pagination-page']").last["href"]
+    assert_equal "/projects?q=ada&page=6",
       node.at_css("[data-slot='pagination-next']")["href"]
   end
 
-  test "supports older Pagy objects through an explicit page URL callable" do
-    pagy = Class.new do
-      attr_reader :prev, :next
+  test "disables Pagy boundaries at the first and last page" do
+    first = render_node(NitroKit::Pagination.new(pagy: pagy(page: 1)))
+    last = render_node(NitroKit::Pagination.new(pagy: pagy(page: 12)))
 
-      def initialize
-        @prev = nil
-        @next = 2
-      end
+    assert_equal "true", first.at_css("[data-slot='pagination-previous']")["aria-disabled"]
+    assert_equal "/projects?page=2", first.at_css("[data-slot='pagination-next']")["href"]
+    assert_equal "/projects?page=11", last.at_css("[data-slot='pagination-previous']")["href"]
+    assert_equal "true", last.at_css("[data-slot='pagination-next']")["aria-disabled"]
+  end
 
-      protected
-
-      def series = [ "1", 2, :gap, 8 ]
-    end.new
+  test "lets an explicit page URL callable own Pagy destinations" do
     page_url = ->(page) { "/legacy?page=#{page}" }
 
-    node = render_node(NitroKit::Pagination.new(pagy:, page_url:))
+    node = render_node(NitroKit::Pagination.new(pagy: pagy(page: 2, count: 20), page_url:))
 
-    assert_equal "true",
-      node.at_css("[data-slot='pagination-previous']")["aria-disabled"]
-    assert_equal "/legacy?page=2",
-      node.at_css("[data-slot='pagination-next']")["href"]
+    assert_equal "/legacy?page=1", node.at_css("[data-slot='pagination-previous']")["href"]
+    assert_equal "true", node.at_css("[data-slot='pagination-next']")["aria-disabled"]
   end
 
-  test "keeps the Pagy dependency optional and validates its boundary" do
-    pagy = Object.new
-
-    assert_raises(ArgumentError) { NitroKit::Pagination.new(pagy:) }
+  test "validates the Pagy boundary" do
+    assert_raises(ArgumentError) { NitroKit::Pagination.new(pagy: Object.new) }
     assert_raises(ArgumentError) do
       NitroKit::Pagination.new(pagy: nil, page_url: "/pages")
     end
     assert_raises(ArgumentError) do
-      valid_pagy = Class.new do
-        attr_reader :previous, :next
-
-        protected
-
-        def series = [ 1 ]
-      end.new
-
-      NitroKit::Pagination.new(pagy: valid_pagy).call
-    end
-    valid_pagy = Class.new do
-      attr_reader :previous, :next
-
-      protected
-
-      def series = [ "1" ]
-    end.new
-    assert_raises(ArgumentError) do
-      NitroKit::Pagination.new(pagy: valid_pagy).call do |pagination|
-        pagination.page(1, current: true)
-      end
+      NitroKit::Pagination.new(pagy: pagy(page: 1)).call { |pagination| pagination.page(1, current: true) }
     end
   end
 
@@ -127,10 +100,12 @@ class PaginationComponentTest < ActiveSupport::TestCase
       pagination.page(1, current: true)
     end
 
-    current = current_node.at_css("span[data-slot='pagination-page'][aria-current='page']")
+    current = current_node.at_css("span[data-slot='pagination-current'][aria-current='page']")
     assert current
+    assert_nil current["data-nk"]
     assert_nil current["aria-disabled"]
     assert_nil current["tabindex"]
+    assert_equal "1", current.at_css("[data-slot='pagination-current-label']").text
     assert_raises(ArgumentError) do
       NitroKit::Pagination.new.call { |pagination| pagination.page(2) }
     end

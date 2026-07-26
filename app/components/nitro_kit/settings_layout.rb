@@ -2,11 +2,15 @@
 
 module NitroKit
   class SettingsLayout < Component
-    Region = Data.define(:label, :content, :html, :aria, :data, :css_class)
+    Item = ::Data.define(:text, :href, :current)
 
     def initialize(id: nil, html: {}, aria: {}, data: {}, desperately_need_a_class: nil)
-      @navigation_region = nil
-      @content_region = nil
+      @label = nil
+      @items = []
+      @content = nil
+      @phase = nil
+      @navigation_declared = false
+      @current_item = false
 
       super(
         component: :settings_layout,
@@ -18,9 +22,8 @@ module NitroKit
       )
     end
 
-    def view_template
-      yield self if block_given?
-      validate_regions!
+    def view_template(&declarations)
+      collect_regions(&declarations)
 
       div(**root_attributes) do
         render_navigation
@@ -28,75 +31,108 @@ module NitroKit
       end
     end
 
-    def navigation(
-      label:,
-      html: {},
-      aria: {},
-      data: {},
-      desperately_need_a_class: nil,
-      &block
-    )
-      raise ArgumentError, "SettingsLayout accepts exactly one navigation region" if @navigation_region
-      unless label.is_a?(String) && !label.strip.empty?
-        raise ArgumentError, "SettingsLayout navigation label must be a non-blank String"
-      end
+    def navigation(label:, &declarations)
+      ensure_phase!(:structure, :navigation)
+      raise ArgumentError, "SettingsLayout accepts exactly one navigation region" if @navigation_declared
+      raise ArgumentError, "SettingsLayout navigation requires a block" unless declarations
 
-      @navigation_region = Region.new(
-        label:,
-        content: block,
-        html:,
-        aria:,
-        data:,
-        css_class: desperately_need_a_class
-      )
+      @label = validate_text!(:label, label)
+      @navigation_declared = true
+      collect_items(&declarations)
       nil
     end
 
-    def content(html: {}, aria: {}, data: {}, desperately_need_a_class: nil, &block)
-      raise ArgumentError, "SettingsLayout accepts exactly one content region" if @content_region
-      @content_region = Region.new(
-        label: nil,
-        content: block,
-        html:,
-        aria:,
-        data:,
-        css_class: desperately_need_a_class
-      )
+    def item(text, href:, current: false)
+      ensure_phase!(:navigation, :item)
+      text = validate_text!(:text, text)
+      href = validate_text!(:href, href)
+      current = validate_boolean!(:current, current)
+
+      if current && @current_item
+        raise ArgumentError, "SettingsLayout accepts at most one current item"
+      end
+
+      @current_item = true if current
+      @items << Item.new(text:, href:, current:)
+      nil
+    end
+
+    def content(&block)
+      ensure_phase!(:structure, :content)
+      raise ArgumentError, "SettingsLayout accepts exactly one content region" if @content
+      raise ArgumentError, "SettingsLayout content requires a block" unless block
+
+      @content = block
       nil
     end
 
     private
 
+    def collect_regions
+      raise ArgumentError, "SettingsLayout requires a declaration block" unless block_given?
+
+      @phase = :structure
+      output = capture(self) { |layout| yield layout }
+      reject_rendered_output!(:structure, output)
+      raise ArgumentError, "SettingsLayout requires one navigation region" unless @navigation_declared
+      raise ArgumentError, "SettingsLayout requires one content region" unless @content
+    ensure
+      @phase = nil
+    end
+
+    def collect_items(&declarations)
+      @phase = :navigation
+      output = capture(self, &declarations)
+      reject_rendered_output!(:navigation, output)
+      raise ArgumentError, "SettingsLayout navigation requires at least one item" if @items.empty?
+    ensure
+      @phase = :structure
+    end
+
     def render_navigation
-      region = @navigation_region
-      nav(
-        **slot_attributes(
-          :navigation,
-          attributes: { aria: { label: region.label } },
-          html: region.html,
-          aria: region.aria,
-          data: region.data,
-          desperately_need_a_class: region.css_class
-        )
-      ) { render(region.content) if region.content }
+      nav(**slot_attributes(:navigation, attributes: { aria: { label: @label } })) do
+        ul(**slot_attributes(:items)) do
+          @items.each { |item| render_item(item) }
+        end
+      end
+    end
+
+    def render_item(item)
+      li(**slot_attributes(:item)) do
+        a(
+          **slot_attributes(
+            :item_link,
+            attributes: {
+              href: item.href,
+              aria: { current: item.current ? "page" : nil },
+              data: { state: item.current ? "current" : "default" }
+            }
+          )
+        ) { plain(item.text) }
+      end
     end
 
     def render_content
-      region = @content_region
-      div(
-        **slot_attributes(
-          :content,
-          html: region.html,
-          aria: region.aria,
-          data: region.data,
-          desperately_need_a_class: region.css_class
-        )
-      ) { render(region.content) if region.content }
+      div(**slot_attributes(:content)) { render(@content) }
     end
 
-    def validate_regions!
-      raise ArgumentError, "SettingsLayout requires one navigation region" unless @navigation_region
-      raise ArgumentError, "SettingsLayout requires one content region" unless @content_region
+    def ensure_phase!(expected, declaration)
+      return if @phase == expected
+
+      location = expected == :structure ? "the render block" : "the navigation block"
+      raise ArgumentError, "SettingsLayout #{declaration} must be declared directly inside #{location}"
+    end
+
+    def reject_rendered_output!(location, output)
+      return if output.empty?
+
+      raise ArgumentError, "SettingsLayout #{location} accepts declarations, not rendered content"
+    end
+
+    def validate_text!(name, value)
+      return value if value.is_a?(String) && !value.strip.empty?
+
+      raise ArgumentError, "SettingsLayout #{name} must be a non-blank String"
     end
   end
 end

@@ -13,9 +13,69 @@
     ) {
     min-width: 0;
   }
+
+  :where([data-nk="settings-layout"] [data-slot="settings-layout-items"]) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nk-space);
+    min-width: 0;
+  }
+
+  :where([data-nk="settings-layout"] [data-slot="settings-layout-item"]) {
+    min-width: 0;
+  }
+
+  :where([data-nk="settings-layout"] [data-slot="settings-layout-item-link"]) {
+    display: block;
+    min-block-size: var(--nk-control-height-md);
+    padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-sm);
+    font-weight: var(--nk-font-weight-medium);
+    line-height: var(--nk-control-height-md);
+    text-decoration: none;
+    border-radius: var(--nk-radius-md);
+    transition:
+      color var(--nk-duration-normal) var(--nk-ease),
+      background-color var(--nk-duration-normal) var(--nk-ease);
+  }
 }
 
 @layer nitro-kit.state {
+  :where(
+      [data-nk="settings-layout"]
+        [data-slot="settings-layout-item-link"][data-state="current"]
+    ) {
+    color: var(--nk-color-foreground);
+    background: var(--nk-color-muted);
+  }
+
+  @media (hover: hover) {
+    :where(
+        [data-nk="settings-layout"]
+          [data-slot="settings-layout-item-link"]:hover
+      ) {
+      color: var(--nk-color-foreground);
+      background: var(--nk-color-muted);
+    }
+  }
+
+  :where(
+      [data-nk="settings-layout"]
+        [data-slot="settings-layout-item-link"]:focus-visible
+    ) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: calc(var(--nk-focus-offset) * -1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(
+        [data-nk="settings-layout"] [data-slot="settings-layout-item-link"]
+      ) {
+      transition-duration: 0.01ms;
+    }
+  }
+
   @media (max-width: 48rem) {
     :where([data-nk="settings-layout"]) {
       grid-template-columns: minmax(0, 1fr);

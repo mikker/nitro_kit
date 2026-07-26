@@ -84,7 +84,7 @@ class AgentGuidanceTest < ActiveSupport::TestCase
     assert_includes destructive_action, "NitroKit::Dialog"
     assert_includes destructive_action, "data: { turbo_confirm:"
     assert_includes destructive_action, "native browser confirmation"
-    assert_includes queryable_collection, "NitroKit::SortableTable"
+    assert_includes queryable_collection, "NitroKit::Table"
     assert_includes queryable_collection, "turbo_frame_tag"
     assert_includes flash_and_toast, "NitroKit::Toast::FlashMessages"
   end

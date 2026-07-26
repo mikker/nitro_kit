@@ -137,6 +137,47 @@ module Gallery
           end
 
           example(
+            "Item attributes and badge colors",
+            slug: "app-navigation-item-attributes",
+            mode: :full_width,
+            description: "Items carry ordinary link attributes through html:, aria:, and data:, and each badge picks its own color."
+          ) do
+            render NitroKit::AppNavigation.new(
+              id: "gallery-app-navigation-item-attributes",
+              label: "Item attributes"
+            ) do |navigation|
+              navigation.body do
+                navigation.item(
+                  "Incidents",
+                  href: "#item-attributes-incidents",
+                  icon: :siren,
+                  badge: 3,
+                  badge_color: :danger,
+                  current: true,
+                  data: { turbo_frame: "gallery-content" }
+                )
+                navigation.item(
+                  "Deployments",
+                  href: "#item-attributes-deployments",
+                  icon: :rocket,
+                  badge: "Live",
+                  badge_color: :success
+                )
+                navigation.item(
+                  "Status page",
+                  href: "https://status.example.com",
+                  icon: :external_link,
+                  html: { target: "_blank", rel: "noopener noreferrer" },
+                  aria: { describedby: "gallery-app-navigation-external-note" }
+                )
+              end
+              navigation.footer do
+                p(id: "gallery-app-navigation-external-note") { "External destinations open in a new tab." }
+              end
+            end
+          end
+
+          example(
             "Destination inventory",
             slug: "app-navigation-inventory",
             mode: :full_width,

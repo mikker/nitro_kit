@@ -2,8 +2,10 @@
 
 module NitroKit
   class Fieldset < Component
+    alias :html_legend :legend
+
     def initialize(
-      legend:,
+      legend: nil,
       description: nil,
       disabled: false,
       name: nil,
@@ -12,8 +14,8 @@ module NitroKit
       data: {},
       desperately_need_a_class: nil
     )
-      @legend = validate_text!(:legend, legend)
-      @description = validate_optional_text!(:description, description)
+      @legend_content = content_from_keyword(:legend, legend)
+      @description_content = content_from_keyword(:description, description)
       disabled = validate_boolean!(:disabled, disabled)
 
       super(
@@ -26,35 +28,29 @@ module NitroKit
       )
     end
 
-    alias :html_legend :legend
-
-    attr_reader :legend, :description
-
     def view_template(&block)
-      raise ArgumentError, "fieldset requires a block" unless block
+      raise ArgumentError, "Fieldset requires a block" unless block
+
+      fields = capture(self) { |fieldset| yield fieldset }
+      require_content!("Fieldset", :legend, @legend_content)
 
       fieldset(**root_attributes) do
-        html_legend(**slot_attributes(:legend)) { plain(legend) }
-        if description
-          p(**slot_attributes(:description)) { plain(description.to_s) }
+        html_legend(**slot_attributes(:legend)) { render_deferred_content(@legend_content) }
+        if @description_content
+          p(**slot_attributes(:description)) { render_deferred_content(@description_content) }
         end
-        div(**slot_attributes(:fields), &block)
+        div(**slot_attributes(:fields)) { raw(safe(fields)) }
       end
     end
 
-    private
-
-    def validate_text!(name, text)
-      return text if text.is_a?(String) && !text.strip.empty?
-
-      raise ArgumentError, "#{name} must be a non-blank String"
+    def legend(text = nil, &block)
+      @legend_content = declare_content(:legend, @legend_content, text, &block)
+      nil
     end
 
-    def validate_optional_text!(name, text)
-      return if text.nil?
-      return text if text.is_a?(String) && !text.strip.empty?
-
-      raise ArgumentError, "#{name} must be a non-blank String or nil"
+    def description(text = nil, &block)
+      @description_content = declare_content(:description, @description_content, text, &block)
+      nil
     end
   end
 end

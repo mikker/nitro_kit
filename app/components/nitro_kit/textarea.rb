@@ -3,6 +3,10 @@
 module NitroKit
   class Textarea < Component
     WRAPS = %i[soft hard off].freeze
+    OWNED_ATTRIBUTES = %i[
+      id name value placeholder disabled readonly required autocomplete rows cols minlength
+      maxlength wrap
+    ].freeze
 
     def initialize(
       id: nil,
@@ -35,26 +39,24 @@ module NitroKit
         raise ArgumentError, "minlength cannot exceed maxlength"
       end
       wrap = validate_choice!(:wrap, wrap.to_s.to_sym, WRAPS) unless wrap.nil?
-
-      native_attributes = {
-        id:,
-        name:,
-        placeholder:,
-        disabled:,
-        readonly:,
-        required:,
-        autocomplete:,
-        rows:,
-        cols:,
-        minlength:,
-        maxlength:,
-        wrap:
-      }.compact
-      native_attributes.merge!(rows:, cols:, minlength:, maxlength:, wrap:)
+      reject_owned_attributes!(html)
 
       super(
         component: :textarea,
-        attributes: native_attributes,
+        attributes: {
+          id:,
+          name:,
+          placeholder:,
+          disabled:,
+          readonly:,
+          required:,
+          autocomplete:,
+          rows:,
+          cols:,
+          minlength:,
+          maxlength:,
+          wrap:
+        }.compact,
         html:,
         aria:,
         data:,
@@ -69,6 +71,18 @@ module NitroKit
     end
 
     private
+
+    def reject_owned_attributes!(html)
+      return unless html.is_a?(Hash)
+
+      html.each_key do |key|
+        normalized = key.to_s.downcase.tr("_", "-")
+        owned = OWNED_ATTRIBUTES.find { |name| name.to_s.tr("_", "-") == normalized }
+        next unless owned
+
+        raise ArgumentError, "#{normalized} is owned by Textarea; pass #{owned}: as a keyword"
+      end
+    end
 
     def validate_positive_integer!(name, value)
       return if value.nil?

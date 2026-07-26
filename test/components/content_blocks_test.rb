@@ -119,40 +119,17 @@ class ContentBlocksTest < ActiveSupport::TestCase
     end
   end
 
-  test "stat grid renders ordered keyed semantic records through the responsive grid" do
-    node = render_node(NitroKit::StatGrid.new(id: "workspace-stats")) do |stats|
-      stats.stat(key: :active_projects, label: "Active projects", value: "12", detail: "Across 4 teams")
-      stats.stat(key: "members", label: "Members", value: "87")
-      stats.stat(key: :uptime, label: "Uptime", value: "99.99%", detail: "Past 30 days")
-    end
+  test "page header titles follow the caller heading level" do
+    default_level = render_node(NitroKit::PageHeader.new(title: "Audit log"))
+    nested = render_node(NitroKit::PageHeader.new(title: "Audit log", level: 3, id: "nested-header"))
 
-    grid = node.element_children.find do |child|
-      child["data-nk"] == "grid" &&
-        child["data-slot"] == "stat-grid-grid" &&
-        child["data-cols"] == "1 sm:2 lg:3"
-    end
-    assert grid
-    assert_equal %w[active-projects members uptime], grid.element_children.map { |child| child["data-key"] }
-    assert_equal %w[dl dl dl], grid.element_children.map(&:name)
-    assert_equal %w[Active\ projects Members Uptime], grid.css("[data-slot='stat-grid-label']").map(&:text)
-    assert_equal %w[12 87 99.99%], grid.css("[data-slot='stat-grid-value']").map(&:text)
-    assert_equal 2, grid.css("[data-slot='stat-grid-detail']").count
-    assert_empty node.css("[class], [style], [data-nk-escape]")
-  end
+    assert_equal 1, NitroKit::PageHeader.new(title: "Audit log").level
+    assert_equal "h1", default_level.at_css("[data-slot='page-header-title']").name
+    assert_equal "h3", nested.at_css("[data-slot='page-header-title']").name
+    assert_equal (1..6), NitroKit::PageHeader::TITLE_LEVELS
 
-  test "stat grid requires records unique normalized keys and non-blank copy" do
-    assert_raises(ArgumentError) { render_node(NitroKit::StatGrid.new) }
-    assert_raises(ArgumentError) do
-      render_node(NitroKit::StatGrid.new) do |stats|
-        stats.stat(key: :active_users, label: "Users", value: "10")
-        stats.stat(key: "active-users", label: "Members", value: "11")
-      end
-    end
-    assert_raises(ArgumentError) do
-      NitroKit::StatGrid.new.call { |stats| stats.stat(key: :users, label: "", value: "10") }
-    end
-    assert_raises(ArgumentError) do
-      NitroKit::StatGrid.new.call { |stats| stats.stat(key: :users, label: "Users", value: 10) }
+    [ 0, 7, :three, "3", nil ].each do |level|
+      assert_raises(ArgumentError) { NitroKit::PageHeader.new(title: "Audit log", level:) }
     end
   end
 
@@ -194,7 +171,7 @@ class ContentBlocksTest < ActiveSupport::TestCase
     assert_equal "public", form_section.at_css("[data-slot='form-section-description'] em").text
 
     danger_zone = root.at_css("#deferred-danger-zone")
-    assert_equal "project", danger_zone.at_css("[data-slot='danger-zone-impact'] strong").text
+    assert_equal "project", danger_zone.at_css("[data-slot='danger-zone-description'] strong").text
 
     empty_state = root.at_css("#deferred-empty-state")
     assert_equal "records", empty_state.at_css("[data-slot='empty-state-title'] em").text
@@ -288,6 +265,23 @@ class ContentBlocksTest < ActiveSupport::TestCase
     assert_empty node.css("[class], [style], [data-nk-escape]")
   end
 
+  test "data section accepts the table family and a single Button action" do
+    record = Data.define(:name).new(name: "Ada Lovelace")
+    node = render_node(NitroKit::DataSection.new(title: "Profile")) do |section|
+      section.actions(NitroKit::Button.new("Edit", href: "/profile/edit"))
+      section.table(NitroKit::DetailsTable.new(record, id: "profile-details")) do |details|
+        details.field(:name)
+      end
+    end
+
+    assert_equal "button", node.at_css("[data-slot='data-section-actions']")["data-nk"]
+    assert_equal "details-table", node.at_css("[data-slot='data-section-table']")["data-nk"]
+    assert_equal "Ada Lovelace", node.at_css("[data-slot='table-cell']").text
+    assert_raises(ArgumentError) do
+      render_node(NitroKit::DataSection.new(title: "Wrong")) { |section| section.actions(NitroKit::Alert.new) }
+    end
+  end
+
   test "data section renders an empty state alternative and rejects ambiguous content" do
     node = render_node(NitroKit::DataSection.new(title: "Projects")) do |section|
       section.empty_state(NitroKit::EmptyState.new(title: "No projects", level: 3, id: "no-projects")) do |empty|
@@ -319,6 +313,8 @@ class ContentBlocksTest < ActiveSupport::TestCase
 
     assert_equal "form-section", node["data-nk"]
     assert_equal "Profile", node.at_css("h2[data-slot='form-section-title']").text
+    assert_equal "profile-section-title", node.at_css("h2[data-slot='form-section-title']")["id"]
+    assert_equal "profile-section-title", node["aria-labelledby"]
     assert_equal "alert", node.at_css("[data-slot='form-section-status']")["data-nk"]
     assert_equal 1, node.css("[data-slot='form-section-form'] > form#profile-form").count
     assert_equal "field-group", node.at_css("#profile-form [data-nk='field-group']")["data-nk"]
@@ -363,15 +359,18 @@ class ContentBlocksTest < ActiveSupport::TestCase
     assert_empty node.css("[class], [style], [data-nk-escape]")
   end
 
-  test "danger zone requires one confirmation and one non-destructive Button escape" do
+  test "danger zone requires one confirmation and an optional non-destructive Button escape" do
     assert_raises(ArgumentError) do
       render_node(NitroKit::DangerZone.new(title: "Delete", description: "Permanent"))
     end
-    assert_raises(ArgumentError) do
-      render_node(NitroKit::DangerZone.new(title: "Delete", description: "Permanent")) do |zone|
-        zone.confirmation { "Confirm" }
-      end
+
+    without_escape = render_node(NitroKit::DangerZone.new(title: "Delete", description: "Permanent")) do |zone|
+      zone.confirmation { "Confirm" }
     end
+
+    assert_equal %w[danger-zone-header danger-zone-confirmation],
+      without_escape.element_children.map { |child| child["data-slot"] }
+    assert_empty without_escape.css("[data-slot='danger-zone-escape']")
     assert_raises(ArgumentError) do
       render_node(NitroKit::DangerZone.new(title: "Delete", description: "Permanent")) do |zone|
         zone.confirmation { "Confirm" }
@@ -384,6 +383,13 @@ class ContentBlocksTest < ActiveSupport::TestCase
         zone.escape NitroKit::Button.new("Wrong", variant: :destructive)
       end
     end
+    assert_match(/at most one safe escape action/, assert_raises(ArgumentError) do
+      render_node(NitroKit::DangerZone.new(title: "Delete", description: "Permanent")) do |zone|
+        zone.confirmation { "Confirm" }
+        zone.escape NitroKit::Button.new("Keep")
+        zone.escape NitroKit::Button.new("Also keep")
+      end
+    end.message)
   end
 
   test "every block preserves shared attributes and the deliberate class escape" do
@@ -458,7 +464,6 @@ class ContentBlocksTest < ActiveSupport::TestCase
       lambda do |**attrs|
         render_node(NitroKit::DangerZone.new(title: "Danger", description: "Permanent", **attrs)) do |zone|
           zone.confirmation { "Confirm" }
-          zone.escape NitroKit::Button.new("Leave")
         end
       end,
       ->(**attrs) { render_node(NitroKit::EmptyState.new(title: "Empty", **attrs)) }

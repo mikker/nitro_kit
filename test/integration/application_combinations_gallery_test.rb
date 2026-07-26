@@ -40,7 +40,7 @@ class ApplicationCombinationsGalleryTest < ActionDispatch::IntegrationTest
       assert_response :success
       assert_select "[data-gallery-page='#{slug}']"
       assert_select "[data-gallery='example']", count: 3
-      assert_select "[data-gallery-application='#{contract.fetch(:layout)}'][data-variant='#{contract.fetch(:layout)}']",
+      assert_select "[data-gallery-application='#{contract.fetch(:layout)}'][data-layout='#{contract.fetch(:layout)}']",
         count: 3
 
       contract.fetch(:states).each do |state|
@@ -73,7 +73,7 @@ class ApplicationCombinationsGalleryTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-sidebar-application-populated" do
       assert_select "[data-nk='appearance-picker']", count: 1
       assert_select "[data-nk='stat-grid'] [data-slot='stat-grid-stat']", count: 3
-      assert_select "[data-nk='sortable-table'] tbody tr", count: 3
+      assert_select "[data-nk='table'][data-sort] tbody tr", count: 3
       assert_select "[data-nk='toast'] [data-slot='toast-item'][data-variant='success']", count: 1
     end
     assert_select "#gallery-sidebar-application-empty[data-theme='light']" do
@@ -102,7 +102,7 @@ class ApplicationCombinationsGalleryTest < ActionDispatch::IntegrationTest
       assert_select "[data-nk='button'][disabled]", minimum: 4
     end
     assert_select "#gallery-topbar-application-long[data-theme='dark']" do
-      assert_select "[data-nk='sortable-table'] tbody tr", count: 3
+      assert_select "[data-nk='table'][data-sort] tbody tr", count: 3
       assert_select "[data-nk='dialog']", count: 1
       assert_select "[data-slot='page-header-title']", text: /International analytical engine reliability/
     end

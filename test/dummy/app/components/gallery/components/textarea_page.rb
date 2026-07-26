@@ -104,7 +104,7 @@ module Gallery
               description: "Keep the biography under 280 characters.",
               errors: invalid_profile.errors.full_messages_for(:bio),
               required: true,
-              control_html: { maxlength: 280 }
+              maxlength: 280
             )
           end
         end
@@ -130,7 +130,7 @@ module Gallery
                 id: "gallery-textarea-profile-bio",
                 description: "A short biography shown to workspace members.",
                 required: true,
-                control_html: { maxlength: 280 }
+                maxlength: 280
               )
               form.submit("Save biography", id: "gallery-textarea-profile-save")
             end

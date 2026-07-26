@@ -72,7 +72,8 @@ module Gallery
                     label: "How can we help?",
                     required: true,
                     disabled:,
-                    control_html: { minlength: 20, maxlength: 2_000 }
+                    minlength: 20,
+                    maxlength: 2_000
                   )
                 end
               end

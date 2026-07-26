@@ -31,8 +31,8 @@
   }
 
   :where(
-    [data-nk="app-shell"] > [data-slot="app-shell-skip-link"]:focus-visible
-  ) {
+      [data-nk="app-shell"] > [data-slot="app-shell-skip-link"]:focus-visible
+    ) {
     transform: translateY(0);
   }
 
@@ -58,9 +58,9 @@
   }
 
   :where(
-    [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"],
-    [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]
-  ) {
+      [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"],
+      [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]
+    ) {
     display: none;
     align-items: center;
     justify-content: center;
@@ -96,13 +96,13 @@
   }
 
   :where(
-    [data-nk="app-shell"]
-      > [data-slot="app-shell-sidebar"]
-      > [data-slot="app-shell-navigation"],
-    [data-nk="app-shell"]
-      > [data-slot="app-shell-dialog"]
-      > [data-slot="app-shell-navigation"]
-  ) {
+      [data-nk="app-shell"]
+        > [data-slot="app-shell-sidebar"]
+        > [data-slot="app-shell-navigation"],
+      [data-nk="app-shell"]
+        > [data-slot="app-shell-dialog"]
+        > [data-slot="app-shell-navigation"]
+    ) {
     display: flex;
     flex: 1 1 auto;
     min-inline-size: 0;
@@ -127,17 +127,15 @@
   }
 
   :where(
-    [data-nk="app-shell"]
-      [data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])
-  ) {
+      [data-nk="app-shell"]
+        [data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])
+    ) {
     justify-content: stretch;
   }
 
   :where(
-    [data-nk="app-shell"]
-      [data-slot="app-shell-topbar"]
-      > [data-nk="toolbar"]
-  ) {
+      [data-nk="app-shell"] [data-slot="app-shell-topbar"] > [data-nk="toolbar"]
+    ) {
     flex: 1 1 auto;
   }
 
@@ -165,48 +163,50 @@
 
 @layer nitro-kit.variant {
   :where(
-    [data-nk="app-shell"][data-variant="sidebar"] [data-slot="app-shell-topbar"]
-  ) {
+      [data-nk="app-shell"][data-layout="sidebar"]
+        [data-slot="app-shell-topbar"]
+    ) {
     display: none;
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="sidebar"] > [data-slot="app-shell-main"]
-  ) {
+      [data-nk="app-shell"][data-layout="sidebar"]
+        > [data-slot="app-shell-main"]
+    ) {
     grid-row: 1 / 3;
   }
 
   :where(
-    [data-nk="app-shell"]:is(
-        [data-variant="sidebar"],
-        [data-variant="hybrid"]
-      ):not(
-        :has(> [data-slot="app-shell-header"] > [data-slot="app-shell-brand"])
-      )
-      > [data-slot="app-shell-sidebar"]
-  ) {
+      [data-nk="app-shell"]:is(
+          [data-layout="sidebar"],
+          [data-layout="hybrid"]
+        ):not(
+          :has(> [data-slot="app-shell-header"] > [data-slot="app-shell-brand"])
+        )
+        > [data-slot="app-shell-sidebar"]
+    ) {
     inset-block-start: 0;
     grid-row: 1 / 3;
     block-size: 100vh;
     block-size: 100dvh;
   }
 
-  :where([data-nk="app-shell"][data-variant="topbar"]) {
+  :where([data-nk="app-shell"][data-layout="topbar"]) {
     grid-template-columns: max-content minmax(0, 1fr) max-content;
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"]
-      > [data-slot="app-shell-sidebar"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"]
+        > [data-slot="app-shell-sidebar"]
+    ) {
     display: contents;
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"]
-      > [data-slot="app-shell-sidebar"]
-      > [data-slot="app-shell-navigation"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"]
+        > [data-slot="app-shell-sidebar"]
+        > [data-slot="app-shell-navigation"]
+    ) {
     position: sticky;
     inset-block-start: 0;
     z-index: 20;
@@ -218,38 +218,38 @@
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"] [data-slot="app-shell-brand"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"] [data-slot="app-shell-brand"]
+    ) {
     grid-column: 1;
     background: var(--nk-app-shell-background);
     border-inline-end: 0;
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"] [data-slot="app-shell-topbar"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"] [data-slot="app-shell-topbar"]
+    ) {
     grid-column: 3;
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"] > [data-slot="app-shell-main"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"] > [data-slot="app-shell-main"]
+    ) {
     grid-row: 2;
     grid-column: 1 / -1;
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"] [data-nk="app-navigation"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"] [data-nk="app-navigation"]
+    ) {
     flex-direction: row;
     align-items: stretch;
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"]
-      [data-nk="app-navigation"]
-      > [data-slot="app-navigation-body"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"]
+        [data-nk="app-navigation"]
+        > [data-slot="app-navigation-body"]
+    ) {
     flex-direction: row;
     align-items: center;
     padding-block: calc(var(--nk-space) * 2);
@@ -257,19 +257,19 @@
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"]
-      [data-nk="app-navigation"]
-      [data-slot="app-navigation-section"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"]
+        [data-nk="app-navigation"]
+        [data-slot="app-navigation-section"]
+    ) {
     flex-direction: row;
     align-items: center;
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"]
-      [data-nk="app-navigation"]
-      [data-slot="app-navigation-section-label"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"]
+        [data-nk="app-navigation"]
+        [data-slot="app-navigation-section-label"]
+    ) {
     position: absolute;
     inline-size: 1px;
     block-size: 1px;
@@ -282,20 +282,20 @@
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"]
-      [data-nk="app-navigation"]
-      [data-slot="app-navigation-divider"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"]
+        [data-nk="app-navigation"]
+        [data-slot="app-navigation-divider"]
+    ) {
     inline-size: var(--nk-border-width);
     block-size: calc(var(--nk-control-height-md) - (var(--nk-space) * 2));
     margin: calc(var(--nk-space) * 2);
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"]
-      [data-nk="app-navigation"]
-      [data-slot="app-navigation-spacer"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"]
+        [data-nk="app-navigation"]
+        [data-slot="app-navigation-spacer"]
+    ) {
     flex-basis: calc(var(--nk-space) * 4);
     min-inline-size: calc(var(--nk-space) * 4);
     min-block-size: 0;
@@ -305,24 +305,25 @@
 @layer nitro-kit.state {
   @media (hover: hover) {
     :where(
-      [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"]:hover,
-      [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]:hover
-    ) {
+        [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"]:hover,
+        [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]:hover
+      ) {
       background: var(--nk-app-shell-sidebar-accent);
     }
   }
 
   :where(
-    [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"]:active,
-    [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]:active
-  ) {
+      [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"]:active,
+      [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]:active
+    ) {
     scale: 0.96;
   }
 
   :where(
-    [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"]:focus-visible,
-    [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]:focus-visible
-  ) {
+      [data-nk="app-shell"]
+        [data-slot="app-shell-mobile-trigger"]:focus-visible,
+      [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]:focus-visible
+    ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -350,9 +351,9 @@
     }
 
     :where(
-      [data-nk="app-shell"] [data-slot="app-shell-brand"],
-      [data-nk="app-shell"] [data-slot="app-shell-topbar"]
-    ) {
+        [data-nk="app-shell"] [data-slot="app-shell-brand"],
+        [data-nk="app-shell"] [data-slot="app-shell-topbar"]
+      ) {
       position: static;
       display: flex;
       min-block-size: auto;
@@ -372,16 +373,16 @@
     }
 
     :where(
-      [data-nk="app-shell"]
-        [data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])
-    ) {
+        [data-nk="app-shell"]
+          [data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])
+      ) {
       flex: 1 1 auto;
     }
 
     :where(
-      [data-nk="app-shell"][data-enhanced]
-        [data-slot="app-shell-mobile-trigger"]
-    ) {
+        [data-nk="app-shell"][data-enhanced]
+          [data-slot="app-shell-mobile-trigger"]
+      ) {
       display: inline-flex;
       flex: 0 0 auto;
       order: -1;
@@ -401,25 +402,25 @@
     }
 
     :where(
-      [data-nk="app-shell"]
-        > [data-slot="app-shell-sidebar"]
-        > [data-slot="app-shell-navigation"]
-    ) {
+        [data-nk="app-shell"]
+          > [data-slot="app-shell-sidebar"]
+          > [data-slot="app-shell-navigation"]
+      ) {
       min-block-size: auto;
     }
 
     :where(
-      [data-nk="app-shell"][data-variant="topbar"] [data-nk="app-navigation"]
-    ) {
+        [data-nk="app-shell"][data-layout="topbar"] [data-nk="app-navigation"]
+      ) {
       flex-direction: column;
       align-items: stretch;
     }
 
     :where(
-      [data-nk="app-shell"][data-variant="topbar"]
-        [data-nk="app-navigation"]
-        > [data-slot="app-navigation-body"]
-    ) {
+        [data-nk="app-shell"][data-layout="topbar"]
+          [data-nk="app-navigation"]
+          > [data-slot="app-navigation-body"]
+      ) {
       flex-direction: column;
       align-items: stretch;
       padding: calc(var(--nk-space) * 3);
@@ -427,19 +428,19 @@
     }
 
     :where(
-      [data-nk="app-shell"][data-variant="topbar"]
-        [data-nk="app-navigation"]
-        [data-slot="app-navigation-section"]
-    ) {
+        [data-nk="app-shell"][data-layout="topbar"]
+          [data-nk="app-navigation"]
+          [data-slot="app-navigation-section"]
+      ) {
       flex-direction: column;
       align-items: stretch;
     }
 
     :where(
-      [data-nk="app-shell"][data-variant="topbar"]
-        [data-nk="app-navigation"]
-        [data-slot="app-navigation-section-label"]
-    ) {
+        [data-nk="app-shell"][data-layout="topbar"]
+          [data-nk="app-navigation"]
+          [data-slot="app-navigation-section-label"]
+      ) {
       position: static;
       inline-size: auto;
       block-size: auto;
@@ -452,15 +453,15 @@
     }
 
     :where(
-      [data-nk="app-shell"][data-enhanced] > [data-slot="app-shell-sidebar"]
-    ) {
+        [data-nk="app-shell"][data-enhanced] > [data-slot="app-shell-sidebar"]
+      ) {
       display: none;
     }
 
     :where(
-      [data-nk="app-shell"][data-enhanced]
-        > [data-slot="app-shell-dialog"][open]
-    ) {
+        [data-nk="app-shell"][data-enhanced]
+          > [data-slot="app-shell-dialog"][open]
+      ) {
       --_nk-app-shell-dialog-enter-x: -100%;
 
       position: fixed;
@@ -485,18 +486,18 @@
     }
 
     :where(
-      [dir="rtl"]
-        [data-nk="app-shell"][data-enhanced]
-        > [data-slot="app-shell-dialog"][open]
-    ) {
+        [dir="rtl"]
+          [data-nk="app-shell"][data-enhanced]
+          > [data-slot="app-shell-dialog"][open]
+      ) {
       --_nk-app-shell-dialog-enter-x: 100%;
     }
 
     :where(
-      [data-nk="app-shell"][data-enhanced]
-        > [data-slot="app-shell-dialog"][open]
-        [data-slot="app-shell-mobile-close"]
-    ) {
+        [data-nk="app-shell"][data-enhanced]
+          > [data-slot="app-shell-dialog"][open]
+          [data-slot="app-shell-mobile-close"]
+      ) {
       display: inline-flex;
       flex: 0 0 auto;
       align-self: flex-end;
@@ -521,11 +522,11 @@
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-      [data-nk="app-shell"] > [data-slot="app-shell-skip-link"],
-      [data-nk="app-shell"] > [data-slot="app-shell-dialog"],
-      [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"],
-      [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]
-    ) {
+        [data-nk="app-shell"] > [data-slot="app-shell-skip-link"],
+        [data-nk="app-shell"] > [data-slot="app-shell-dialog"],
+        [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"],
+        [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]
+      ) {
       animation-duration: 0.01ms;
       transition-duration: 0.01ms;
     }

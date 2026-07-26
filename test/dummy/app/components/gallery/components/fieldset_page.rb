@@ -45,6 +45,28 @@ module Gallery
             end
           end
 
+          example("Compound legend and description", slug: "fieldset-compound-content") do
+            render NitroKit::Fieldset.new(html: { id: "gallery-fieldset-compound" }) do |fieldset|
+              fieldset.legend("Deployment targets")
+              fieldset.description do
+                plain "Production changes require "
+                strong { "two" }
+                plain " approvals."
+              end
+              render NitroKit::Field.new(
+                nil,
+                :approvers,
+                as: :number,
+                id: "gallery-fieldset-compound-approvers",
+                name: "deployment[approvers]",
+                value: 2,
+                label: "Required approvers",
+                min: 1,
+                max: 5
+              )
+            end
+          end
+
           example("Long policy section", slug: "fieldset-long-policy") do
             render NitroKit::Fieldset.new(
               legend: "Production credential rotation and revocation policy for deployment targets",

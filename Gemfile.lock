@@ -163,6 +163,10 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.4-x86_64-linux-gnu)
       racc (~> 1.4)
+    pagy (43.6.1)
+      json
+      uri
+      yaml
     parallel (1.27.0)
     parser (3.3.10.1)
       ast (~> 2.4.1)
@@ -310,6 +314,7 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
+    yaml (0.4.0)
     zeitwerk (2.8.2)
 
 PLATFORMS
@@ -322,6 +327,7 @@ DEPENDENCIES
   importmap-rails
   minitest (< 6)
   nitro_kit!
+  pagy (~> 43.6)
   prism (~> 1.0)
   propshaft
   puma

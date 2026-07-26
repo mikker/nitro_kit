@@ -88,18 +88,18 @@ module Gallery
                 stats.stat(key: :incidents, label: "Open incidents", value: "2", detail: "Both assigned")
               end
 
-              render NitroKit::SortableTable.new(
-                current: :started,
+              render NitroKit::Table.new(
+                sort: :started,
                 direction: :desc,
                 id: "gallery-sidebar-application-incidents"
               ) do |table|
                 table.caption("Active production incidents")
                 table.thead do
                   table.tr do
-                    table.sortable_th(:service, href: "?sort=service-asc")
-                    table.sortable_th(:region, href: "?sort=region-asc")
-                    table.sortable_th(:status, href: "?sort=status-asc")
-                    table.sortable_th(:started, href: "?sort=started-asc", align: :right)
+                    table.th(sort: :service, href: "?sort=service-asc")
+                    table.th(sort: :region, href: "?sort=region-asc")
+                    table.th(sort: :status, href: "?sort=status-asc")
+                    table.th(sort: :started, href: "?sort=started-asc", align: :right)
                   end
                 end
                 table.tbody do

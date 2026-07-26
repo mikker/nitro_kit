@@ -12,7 +12,8 @@ class AppShellTest < ActiveSupport::TestCase
 
       assert_equal "div", node.name
       assert_equal "app-shell", node["data-nk"]
-      assert_equal layout.to_s, node["data-variant"]
+      assert_equal layout.to_s, node["data-layout"]
+      assert_nil node["data-variant"]
       assert_equal "closed", node["data-state"]
       assert_equal "nk--app-shell", node["data-controller"]
       assert_equal "turbo:before-visit@document->nk--app-shell#closeForNavigation", node["data-action"]
@@ -129,6 +130,8 @@ class AppShellTest < ActiveSupport::TestCase
   test "validates identity and layout as a closed vocabulary" do
     assert_predicate NitroKit::AppShell::LAYOUTS, :frozen?
     assert_equal %i[sidebar topbar hybrid], NitroKit::AppShell::LAYOUTS
+    assert_predicate NitroKit::AppShell::REGIONS, :frozen?
+    assert_equal %i[brand navigation topbar main], NitroKit::AppShell::REGIONS
     assert_raises(ArgumentError) { NitroKit::AppShell.new }
 
     [ nil, "", "  ", "two words", "workspace#main", "workspace%20main", :workspace ].each do |id|
@@ -180,6 +183,8 @@ class AppShellTest < ActiveSupport::TestCase
     assert_raises(ArgumentError) { NitroKit::AppShell.new(id: "workspace", html: { class: "utility" }) }
     assert_raises(ArgumentError) { NitroKit::AppShell.new(id: "workspace", data: { state: "open" }) }
     assert_raises(ArgumentError) { NitroKit::AppShell.new(id: "workspace", data: { variant: "topbar" }) }
+    assert_raises(ArgumentError) { NitroKit::AppShell.new(id: "workspace", data: { layout: "topbar" }) }
+    assert_includes NitroKit::Component::INTERNAL_RESERVED_DATA_ATTRIBUTES, "enhanced"
   end
 
   private

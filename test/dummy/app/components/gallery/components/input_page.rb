@@ -89,6 +89,16 @@ module Gallery
               )
               p(id: "gallery-input-invalid-error") { "Enter a valid email address" }
             end
+            sample("Length limited", slug: "length") do
+              render NitroKit::Input.new(
+                id: "gallery-input-length",
+                name: "workspace[slug]",
+                value: "mothership",
+                minlength: 3,
+                maxlength: 24,
+                aria: { label: "Workspace slug" }
+              )
+            end
             sample("Read only", slug: "readonly") do
               render NitroKit::Input.new(
                 id: "gallery-input-readonly",

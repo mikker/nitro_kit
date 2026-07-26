@@ -5,6 +5,9 @@ module NitroKit
     alias_method :html_main, :main
 
     LAYOUTS = %i[sidebar topbar hybrid].freeze
+    REGIONS = %i[brand navigation topbar main].freeze
+    REQUIRED_REGIONS = %i[navigation main].freeze
+    private_constant :REQUIRED_REGIONS
 
     def initialize(
       id:,
@@ -20,10 +23,12 @@ module NitroKit
     )
       @identifier = component_id(id)
       @layout = validate_choice!(:layout, layout, LAYOUTS)
-      @skip_link_label = label(:skip_link_label, skip_link_label)
-      @open_navigation_label = label(:open_navigation_label, open_navigation_label)
-      @close_navigation_label = label(:close_navigation_label, close_navigation_label)
-      @navigation_dialog_label = label(:navigation_dialog_label, navigation_dialog_label)
+      @skip_link_label = validate_label!(:skip_link_label, skip_link_label)
+      @open_navigation_label = validate_label!(:open_navigation_label, open_navigation_label)
+      @close_navigation_label = validate_label!(:close_navigation_label, close_navigation_label)
+      @navigation_dialog_label = validate_label!(:navigation_dialog_label, navigation_dialog_label)
+      @regions = REGIONS.to_h { |name| [ name, nil ] }
+      @collecting = false
 
       super(
         component: :app_shell,
@@ -31,6 +36,7 @@ module NitroKit
           id: @identifier,
           data: {
             controller: "nk--app-shell",
+            layout: @layout,
             state: "closed",
             action: "turbo:before-visit@document->nk--app-shell#closeForNavigation",
             nk__app_shell_open_label_value: @open_navigation_label,
@@ -40,7 +46,6 @@ module NitroKit
         html:,
         aria:,
         data:,
-        variant: @layout,
         desperately_need_a_class:
       )
     end
@@ -60,19 +65,19 @@ module NitroKit
     end
 
     def brand(&content)
-      add_region(:brand, required: false, content:)
+      add_region(:brand, content:)
     end
 
     def navigation(&content)
-      add_region(:navigation, required: true, content:)
+      add_region(:navigation, content:)
     end
 
     def topbar(&content)
-      add_region(:topbar, required: false, content:)
+      add_region(:topbar, content:)
     end
 
     def main(&content)
-      add_region(:main, required: true, content:)
+      add_region(:main, content:)
     end
 
     private
@@ -85,24 +90,31 @@ module NitroKit
       unless output.empty?
         raise ArgumentError, "AppShell render block accepts region declarations, not rendered content"
       end
-      raise ArgumentError, "AppShell requires exactly one navigation region" unless @navigation
-      raise ArgumentError, "AppShell requires exactly one main region" unless @main
+      REQUIRED_REGIONS.each do |region|
+        next if @regions.fetch(region)
+
+        raise ArgumentError, "AppShell requires exactly one #{region} region"
+      end
     ensure
       @collecting = false
     end
 
-    def add_region(name, required:, content:)
+    def add_region(name, content:)
       unless @collecting
         raise ArgumentError, "AppShell #{name} must be declared directly inside the render block"
       end
-      if instance_variable_get("@#{name}")
-        limit = required ? "exactly one" : "at most one"
+      if @regions.fetch(name)
+        limit = REQUIRED_REGIONS.include?(name) ? "exactly one" : "at most one"
         raise ArgumentError, "AppShell accepts #{limit} #{name} region"
       end
       raise ArgumentError, "AppShell #{name} requires a block" unless content
 
-      instance_variable_set("@#{name}", content)
+      @regions[name] = content
       nil
+    end
+
+    def region(name)
+      @regions.fetch(name)
     end
 
     def render_skip_link
@@ -111,9 +123,9 @@ module NitroKit
 
     def render_header
       header(**slot_attributes(:header)) do
-        div(**slot_attributes(:brand)) { render(@brand) } if @brand
+        div(**slot_attributes(:brand)) { render(region(:brand)) } if region(:brand)
         render_mobile_trigger
-        div(**slot_attributes(:topbar)) { render(@topbar) } if @topbar
+        div(**slot_attributes(:topbar)) { render(region(:topbar)) } if region(:topbar)
       end
     end
 
@@ -151,7 +163,7 @@ module NitroKit
             :navigation,
             attributes: { data: { nk__app_shell_target: "navigation" } }
           )
-        ) { render(@navigation) }
+        ) { render(region(:navigation)) }
       end
     end
 
@@ -188,7 +200,7 @@ module NitroKit
     end
 
     def render_main
-      html_main(**slot_attributes(:main, attributes: { id: main_id, tabindex: -1 })) { render(@main) }
+      html_main(**slot_attributes(:main, attributes: { id: main_id, tabindex: -1 })) { render(region(:main)) }
     end
 
     def drawer_id
@@ -205,7 +217,7 @@ module NitroKit
       raise ArgumentError, "AppShell id must be a fragment-safe String using letters, numbers, underscores, or hyphens"
     end
 
-    def label(name, value)
+    def validate_label!(name, value)
       return value if value.is_a?(String) && !value.strip.empty?
 
       raise ArgumentError, "AppShell #{name} must be a non-blank String"

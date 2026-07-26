@@ -279,13 +279,13 @@ module Gallery
     end
 
     def render_project_table
-      render NitroKit::SortableTable.new(current: :project, direction: :asc) do |table|
+      render NitroKit::Table.new(sort: :project, direction: :asc) do |table|
         table.caption("Projects ordered by name")
         table.thead do
           table.tr do
-            table.sortable_th(:project, href: "#customizer-sort-project")
-            table.sortable_th(:status, href: "#customizer-sort-status")
-            table.sortable_th(:members, href: "#customizer-sort-members", align: :right)
+            table.th(sort: :project, href: "#customizer-sort-project")
+            table.th(sort: :status, href: "#customizer-sort-status")
+            table.th(sort: :members, href: "#customizer-sort-members", align: :right)
           end
         end
         table.tbody do
@@ -355,7 +355,7 @@ module Gallery
     def render_details_card
       render NitroKit::Card.new do |card|
         card.title("Workspace record", level: 3)
-        card.full_width do
+        card.full do
           render NitroKit::ProgressiveImage.new(
             attachment: nil,
             alt: "",

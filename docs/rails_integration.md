@@ -192,7 +192,7 @@ end
 
 Captured select blocks stay inside the native `<select>`. Explicit `selected:` values, including arrays for multiple selects, override the model value. `prompt: true` uses Rails' translated “Please select” prompt.
 
-`hidden_field` intentionally renders a standalone hidden Nitro input rather than a visible Field wrapper. `class` and `style` remain rejected. When calling `form.field` directly, use its `control_html:`, `control_aria:`, and `control_data:` boundaries for uncommon control attributes; `html:`, `aria:`, and `data:` describe the Field root.
+`hidden_field` intentionally renders a standalone hidden Nitro input rather than a visible Field wrapper. `class` and `style` remain rejected. Every builder method uses one boundary: `html:`, `aria:`, and `data:` decorate the control, `control_html:`, `control_aria:`, and `control_data:` are their explicit long forms, and giving the same key through both raises. Decorate the Field wrapper with `wrapper_html:`, `wrapper_aria:`, and `wrapper_data:`.
 
 ### Rich text with Lexxy
 
@@ -216,6 +216,12 @@ The complete builder surface includes:
 - `select`, `radio_button`, `check_box`/`checkbox`, and `hidden_field`.
 - `submit` and `button`.
 - Rails-shaped color, date, datetime, email, file, month, number, password, phone/telephone, range, rich text, search, text, textarea, time, URL, and week fields.
+
+`submit` renders a primary submit Button named `commit`, and `button` defaults
+to `type: :submit`. The Rails helpers Nitro does not style — `label`,
+`collection_select`, `grouped_collection_select`, `collection_radio_buttons`,
+`collection_check_boxes`, `date_select`, and `time_zone_select` — raise and name
+their `form.field(as:)` equivalent instead of leaking unstyled markup.
 
 ### File drops and direct uploads
 

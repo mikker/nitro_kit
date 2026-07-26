@@ -29,6 +29,8 @@ module NitroKit
       end
     end
 
+    alias :html_summary :summary
+
     def summary(text = nil, html: {}, aria: {}, data: {}, desperately_need_a_class: nil, &block)
       raise ArgumentError, "PaginationBar accepts at most one summary" if @summary
       raise ArgumentError, "PaginationBar summary accepts text or a block, not both" if !text.nil? && block
@@ -64,11 +66,19 @@ module NitroKit
         **slot_attributes(
           :summary,
           html: @summary.html,
-          aria: @summary.aria,
+          aria: summary_aria,
           data: @summary.data,
           desperately_need_a_class: @summary.css_class
         )
       ) { text_or_block(@summary.text, &@summary.content) }
+    end
+
+    # Turbo Frame page changes replace the summary in place, so it announces
+    # politely unless the caller declares its own live region behavior.
+    def summary_aria
+      return @summary.aria if @summary.aria.keys.any? { |key| key.to_s.tr("_", "-") == "live" }
+
+      @summary.aria.merge(live: "polite")
     end
 
     def validate_regions!

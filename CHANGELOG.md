@@ -23,10 +23,11 @@ Nitro Kit 2.0 is a complete, intentionally incompatible rewrite around gem-owned
 - Self-describing, classless `data-nk` roots and component-qualified `data-slot` contracts.
 - Static zero-specificity CSS, light and dark theme tokens with a no-JavaScript system fallback, and a separate Tailwind CSS v4 adapter.
 - Responsive Flex and Grid layouts with fixed mobile-first breakpoints, closed values, classless data contracts, and no Tailwind runtime; plus the constrained-width Container.
+- Sortable `Table` headers with caller-owned URLs, native `aria-sort`, and an optional Ransack gallery recipe.
 - Eleven blocks and shells: AuthShell, AppShell, SettingsLayout, Toolbar, PaginationBar, PageHeader, StatGrid, DataSection, FormSection, DangerZone, and EmptyState.
-- AppNavigation, AppearancePicker, DetailsTable, Dropzone, ProgressiveImage, and SortableTable components, plus the non-visual AppearanceBootstrap runtime.
+- AppNavigation, AppearancePicker, DetailsTable, Dropzone, and ProgressiveImage components, plus the non-visual AppearanceBootstrap runtime.
 - Typed Choice values and direct-Phlex Rails FormBuilder integration with Active Model errors, native and direct uploads, and Turbo Frame/Stream examples.
-- Direct optional Pagy integration through `Pagination(pagy:)`, with an explicit URL callable for older and custom Pagy-compatible objects.
+- Direct optional Pagy integration through `Pagination(pagy:)`, with an explicit URL callable for caller-owned destinations.
 - Optional Lexxy and Action Text integration through `form.field(..., as: :rich_text)`, preserving editor-native inputs, attachments, options, and behavior inside Nitro's Field contract.
 - Gem-owned importmap pins and Stimulus behavior for Accordion, AppShell, AppearancePicker, Combobox, Dialog, Dropdown, Dropzone, ProgressiveImage, Tabs, Toast, and Tooltip.
 - A catalog-driven Phlex gallery covering components, blocks, broad application flows, complete application shells, responsive states, and light, dark, and system appearance.

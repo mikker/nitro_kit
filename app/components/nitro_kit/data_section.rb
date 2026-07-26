@@ -31,7 +31,7 @@ module NitroKit
     def view_template
       yield self if block_given?
       require_content!("DataSection", :title, @title_content)
-      raise ArgumentError, "DataSection requires exactly one Table or EmptyState" unless @content
+      raise ArgumentError, "DataSection requires exactly one table or EmptyState" unless @content
 
       section(**root_attributes) do
         header(**slot_attributes(:header)) do
@@ -57,9 +57,11 @@ module NitroKit
       nil
     end
 
+    alias :html_table :table
+
     def actions(component, &content)
-      unless component.is_a?(NitroKit::ButtonGroup)
-        raise ArgumentError, "DataSection actions must be a NitroKit::ButtonGroup"
+      unless component.is_a?(NitroKit::ButtonGroup) || component.is_a?(NitroKit::Button)
+        raise ArgumentError, "DataSection actions must be a NitroKit::ButtonGroup or NitroKit::Button"
       end
       raise ArgumentError, "DataSection accepts at most one actions group" if @actions
 
@@ -68,31 +70,37 @@ module NitroKit
     end
 
     def table(component, &content)
-      assign_content(component, NitroKit::Table, "Table", &content)
+      unless table_component?(component)
+        raise ArgumentError, "DataSection table must be a NitroKit::Table or NitroKit::DetailsTable"
+      end
+
+      assign_content(component, &content)
     end
 
     def empty_state(component, &content)
-      if component.is_a?(NitroKit::EmptyState) && component.level != 3
-        raise ArgumentError, "DataSection EmptyState must use level: 3"
+      unless component.is_a?(NitroKit::EmptyState)
+        raise ArgumentError, "DataSection empty_state must be a NitroKit::EmptyState"
       end
+      raise ArgumentError, "DataSection EmptyState must use level: 3" if component.level != 3
 
-      assign_content(component, NitroKit::EmptyState, "EmptyState", &content)
+      assign_content(component, &content)
     end
 
     private
 
-    def assign_content(component, type, name, &content)
-      unless component.is_a?(type)
-        raise ArgumentError, "DataSection #{name.underscore} must be a NitroKit::#{name}"
-      end
-      raise ArgumentError, "DataSection accepts exactly one Table or EmptyState" if @content
+    def table_component?(component)
+      component.is_a?(NitroKit::Table) || component.is_a?(NitroKit::DetailsTable)
+    end
+
+    def assign_content(component, &content)
+      raise ArgumentError, "DataSection accepts exactly one table or EmptyState" if @content
 
       @content = Child.new(component:, content:)
       nil
     end
 
     def content_slot
-      @content.component.is_a?(NitroKit::Table) ? :table : :empty_state
+      table_component?(@content.component) ? :table : :empty_state
     end
   end
 end

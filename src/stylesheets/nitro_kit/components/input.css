@@ -1,7 +1,7 @@
 @layer nitro-kit.base {
   :where(
-    [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
-  ) {
+      [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
+    ) {
     display: block;
     inline-size: 100%;
     min-block-size: var(--nk-control-height-md);
@@ -52,6 +52,11 @@
   :where([data-nk="input"]:focus-visible) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
+  }
+
+  :where([data-nk="input"][readonly]:not(:disabled)) {
+    color: var(--nk-color-muted-foreground);
+    background: var(--nk-color-muted);
   }
 
   :where([data-nk="input"]:disabled) {

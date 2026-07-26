@@ -43,6 +43,15 @@ module Gallery
             end
           end
 
+          example("Caller-owned columns", slug: "stat-grid-columns", mode: :full_width) do
+            render NitroKit::StatGrid.new(cols: "2 md:4", gap: 3, id: "gallery-stat-grid-columns") do |stats|
+              stats.stat(key: :queued, label: "Queued jobs", value: 1_284)
+              stats.stat(key: :running, label: "Running", value: 12)
+              stats.stat(key: :failed, label: "Failed", value: 0, detail: "Past hour")
+              stats.stat(key: :workers, label: "Workers", value: 6)
+            end
+          end
+
           example("Long values nested in content", slug: "stat-grid-long", mode: :full_width) do
             render NitroKit::Container.new(size: :lg, id: "gallery-stat-grid-long-container") do
               render NitroKit::StatGrid.new(id: "gallery-stat-grid-long") do |stats|
@@ -56,11 +65,11 @@ module Gallery
       end
 
       def source_note
-        "StatGrid composes Grid with one column by default, two from sm, and three from lg. It does not own trends, charts, colors, or policy."
+        "StatGrid composes Grid with one column by default, two from sm, and three from lg. cols: and gap: accept the Grid vocabulary. It does not own trends, charts, colors, or policy."
       end
 
       def api_note
-        "stat(key:, label:, value:, detail:) requires unique normalized keys and non-blank strings. At least one stat is required."
+        "StatGrid.new(cols: \"1 sm:2 lg:3\", gap: 4) { |stats| stats.stat(key:, label:, value:, detail:) } requires unique normalized keys and non-blank copy; values render to_s. At least one stat is required."
       end
     end
   end

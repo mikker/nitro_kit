@@ -590,7 +590,10 @@
     scrollbar-gutter: stable;
   }
 
-  :where([data-nk="app-navigation"] [data-slot="app-navigation-section"]) {
+  :where(
+      [data-nk="app-navigation"] [data-slot="app-navigation-section"],
+      [data-nk="app-navigation"] [data-slot="app-navigation-section-list"]
+    ) {
     display: flex;
     flex: 0 0 auto;
     flex-direction: column;
@@ -601,6 +604,7 @@
   :where(
       [data-nk="app-navigation"] [data-slot="app-navigation-section-label"]
     ) {
+    display: block;
     margin: calc(var(--nk-space) * 4) calc(var(--nk-space) * 2) var(--nk-space);
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-xs);
@@ -609,6 +613,11 @@
   }
 
   :where([data-nk="app-navigation"] [data-slot="app-navigation-item"]) {
+    flex: 0 0 auto;
+    min-inline-size: 0;
+  }
+
+  :where([data-nk="app-navigation"] [data-slot="app-navigation-item-link"]) {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     gap: calc(var(--nk-space) * 2);
@@ -646,6 +655,7 @@
 
   :where([data-nk="app-navigation"] [data-slot="app-navigation-divider"]) {
     flex: 0 0 auto;
+    display: block;
     block-size: var(--nk-border-width);
     margin: calc(var(--nk-space) * 2);
     background: var(--nk-app-shell-border);
@@ -661,28 +671,31 @@
 @layer nitro-kit.state {
   :where(
       [data-nk="app-navigation"]
-        [data-slot="app-navigation-item"][data-state="current"]
+        [data-slot="app-navigation-item-link"][data-state="current"]
     ) {
     color: var(--nk-app-shell-sidebar-accent-foreground);
     background: var(--nk-app-shell-sidebar-accent);
   }
 
   @media (hover: hover) {
-    :where([data-nk="app-navigation"] [data-slot="app-navigation-item"]:hover) {
+    :where(
+        [data-nk="app-navigation"] [data-slot="app-navigation-item-link"]:hover
+      ) {
       color: var(--nk-app-shell-sidebar-accent-foreground);
       background: var(--nk-app-shell-sidebar-accent);
     }
   }
 
   :where(
-      [data-nk="app-navigation"] [data-slot="app-navigation-item"]:focus-visible
+      [data-nk="app-navigation"]
+        [data-slot="app-navigation-item-link"]:focus-visible
     ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: calc(var(--nk-focus-offset) * -1);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    :where([data-nk="app-navigation"] [data-slot="app-navigation-item"]) {
+    :where([data-nk="app-navigation"] [data-slot="app-navigation-item-link"]) {
       transition-duration: 0.01ms;
     }
   }
@@ -722,8 +735,8 @@
   }
 
   :where(
-    [data-nk="app-shell"] > [data-slot="app-shell-skip-link"]:focus-visible
-  ) {
+      [data-nk="app-shell"] > [data-slot="app-shell-skip-link"]:focus-visible
+    ) {
     transform: translateY(0);
   }
 
@@ -749,9 +762,9 @@
   }
 
   :where(
-    [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"],
-    [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]
-  ) {
+      [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"],
+      [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]
+    ) {
     display: none;
     align-items: center;
     justify-content: center;
@@ -787,13 +800,13 @@
   }
 
   :where(
-    [data-nk="app-shell"]
-      > [data-slot="app-shell-sidebar"]
-      > [data-slot="app-shell-navigation"],
-    [data-nk="app-shell"]
-      > [data-slot="app-shell-dialog"]
-      > [data-slot="app-shell-navigation"]
-  ) {
+      [data-nk="app-shell"]
+        > [data-slot="app-shell-sidebar"]
+        > [data-slot="app-shell-navigation"],
+      [data-nk="app-shell"]
+        > [data-slot="app-shell-dialog"]
+        > [data-slot="app-shell-navigation"]
+    ) {
     display: flex;
     flex: 1 1 auto;
     min-inline-size: 0;
@@ -818,17 +831,15 @@
   }
 
   :where(
-    [data-nk="app-shell"]
-      [data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])
-  ) {
+      [data-nk="app-shell"]
+        [data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])
+    ) {
     justify-content: stretch;
   }
 
   :where(
-    [data-nk="app-shell"]
-      [data-slot="app-shell-topbar"]
-      > [data-nk="toolbar"]
-  ) {
+      [data-nk="app-shell"] [data-slot="app-shell-topbar"] > [data-nk="toolbar"]
+    ) {
     flex: 1 1 auto;
   }
 
@@ -856,48 +867,50 @@
 
 @layer nitro-kit.variant {
   :where(
-    [data-nk="app-shell"][data-variant="sidebar"] [data-slot="app-shell-topbar"]
-  ) {
+      [data-nk="app-shell"][data-layout="sidebar"]
+        [data-slot="app-shell-topbar"]
+    ) {
     display: none;
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="sidebar"] > [data-slot="app-shell-main"]
-  ) {
+      [data-nk="app-shell"][data-layout="sidebar"]
+        > [data-slot="app-shell-main"]
+    ) {
     grid-row: 1 / 3;
   }
 
   :where(
-    [data-nk="app-shell"]:is(
-        [data-variant="sidebar"],
-        [data-variant="hybrid"]
-      ):not(
-        :has(> [data-slot="app-shell-header"] > [data-slot="app-shell-brand"])
-      )
-      > [data-slot="app-shell-sidebar"]
-  ) {
+      [data-nk="app-shell"]:is(
+          [data-layout="sidebar"],
+          [data-layout="hybrid"]
+        ):not(
+          :has(> [data-slot="app-shell-header"] > [data-slot="app-shell-brand"])
+        )
+        > [data-slot="app-shell-sidebar"]
+    ) {
     inset-block-start: 0;
     grid-row: 1 / 3;
     block-size: 100vh;
     block-size: 100dvh;
   }
 
-  :where([data-nk="app-shell"][data-variant="topbar"]) {
+  :where([data-nk="app-shell"][data-layout="topbar"]) {
     grid-template-columns: max-content minmax(0, 1fr) max-content;
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"]
-      > [data-slot="app-shell-sidebar"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"]
+        > [data-slot="app-shell-sidebar"]
+    ) {
     display: contents;
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"]
-      > [data-slot="app-shell-sidebar"]
-      > [data-slot="app-shell-navigation"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"]
+        > [data-slot="app-shell-sidebar"]
+        > [data-slot="app-shell-navigation"]
+    ) {
     position: sticky;
     inset-block-start: 0;
     z-index: 20;
@@ -909,38 +922,38 @@
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"] [data-slot="app-shell-brand"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"] [data-slot="app-shell-brand"]
+    ) {
     grid-column: 1;
     background: var(--nk-app-shell-background);
     border-inline-end: 0;
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"] [data-slot="app-shell-topbar"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"] [data-slot="app-shell-topbar"]
+    ) {
     grid-column: 3;
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"] > [data-slot="app-shell-main"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"] > [data-slot="app-shell-main"]
+    ) {
     grid-row: 2;
     grid-column: 1 / -1;
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"] [data-nk="app-navigation"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"] [data-nk="app-navigation"]
+    ) {
     flex-direction: row;
     align-items: stretch;
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"]
-      [data-nk="app-navigation"]
-      > [data-slot="app-navigation-body"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"]
+        [data-nk="app-navigation"]
+        > [data-slot="app-navigation-body"]
+    ) {
     flex-direction: row;
     align-items: center;
     padding-block: calc(var(--nk-space) * 2);
@@ -948,19 +961,19 @@
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"]
-      [data-nk="app-navigation"]
-      [data-slot="app-navigation-section"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"]
+        [data-nk="app-navigation"]
+        [data-slot="app-navigation-section"]
+    ) {
     flex-direction: row;
     align-items: center;
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"]
-      [data-nk="app-navigation"]
-      [data-slot="app-navigation-section-label"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"]
+        [data-nk="app-navigation"]
+        [data-slot="app-navigation-section-label"]
+    ) {
     position: absolute;
     inline-size: 1px;
     block-size: 1px;
@@ -973,20 +986,20 @@
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"]
-      [data-nk="app-navigation"]
-      [data-slot="app-navigation-divider"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"]
+        [data-nk="app-navigation"]
+        [data-slot="app-navigation-divider"]
+    ) {
     inline-size: var(--nk-border-width);
     block-size: calc(var(--nk-control-height-md) - (var(--nk-space) * 2));
     margin: calc(var(--nk-space) * 2);
   }
 
   :where(
-    [data-nk="app-shell"][data-variant="topbar"]
-      [data-nk="app-navigation"]
-      [data-slot="app-navigation-spacer"]
-  ) {
+      [data-nk="app-shell"][data-layout="topbar"]
+        [data-nk="app-navigation"]
+        [data-slot="app-navigation-spacer"]
+    ) {
     flex-basis: calc(var(--nk-space) * 4);
     min-inline-size: calc(var(--nk-space) * 4);
     min-block-size: 0;
@@ -996,24 +1009,25 @@
 @layer nitro-kit.state {
   @media (hover: hover) {
     :where(
-      [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"]:hover,
-      [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]:hover
-    ) {
+        [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"]:hover,
+        [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]:hover
+      ) {
       background: var(--nk-app-shell-sidebar-accent);
     }
   }
 
   :where(
-    [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"]:active,
-    [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]:active
-  ) {
+      [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"]:active,
+      [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]:active
+    ) {
     scale: 0.96;
   }
 
   :where(
-    [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"]:focus-visible,
-    [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]:focus-visible
-  ) {
+      [data-nk="app-shell"]
+        [data-slot="app-shell-mobile-trigger"]:focus-visible,
+      [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]:focus-visible
+    ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -1041,9 +1055,9 @@
     }
 
     :where(
-      [data-nk="app-shell"] [data-slot="app-shell-brand"],
-      [data-nk="app-shell"] [data-slot="app-shell-topbar"]
-    ) {
+        [data-nk="app-shell"] [data-slot="app-shell-brand"],
+        [data-nk="app-shell"] [data-slot="app-shell-topbar"]
+      ) {
       position: static;
       display: flex;
       min-block-size: auto;
@@ -1063,16 +1077,16 @@
     }
 
     :where(
-      [data-nk="app-shell"]
-        [data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])
-    ) {
+        [data-nk="app-shell"]
+          [data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])
+      ) {
       flex: 1 1 auto;
     }
 
     :where(
-      [data-nk="app-shell"][data-enhanced]
-        [data-slot="app-shell-mobile-trigger"]
-    ) {
+        [data-nk="app-shell"][data-enhanced]
+          [data-slot="app-shell-mobile-trigger"]
+      ) {
       display: inline-flex;
       flex: 0 0 auto;
       order: -1;
@@ -1092,25 +1106,25 @@
     }
 
     :where(
-      [data-nk="app-shell"]
-        > [data-slot="app-shell-sidebar"]
-        > [data-slot="app-shell-navigation"]
-    ) {
+        [data-nk="app-shell"]
+          > [data-slot="app-shell-sidebar"]
+          > [data-slot="app-shell-navigation"]
+      ) {
       min-block-size: auto;
     }
 
     :where(
-      [data-nk="app-shell"][data-variant="topbar"] [data-nk="app-navigation"]
-    ) {
+        [data-nk="app-shell"][data-layout="topbar"] [data-nk="app-navigation"]
+      ) {
       flex-direction: column;
       align-items: stretch;
     }
 
     :where(
-      [data-nk="app-shell"][data-variant="topbar"]
-        [data-nk="app-navigation"]
-        > [data-slot="app-navigation-body"]
-    ) {
+        [data-nk="app-shell"][data-layout="topbar"]
+          [data-nk="app-navigation"]
+          > [data-slot="app-navigation-body"]
+      ) {
       flex-direction: column;
       align-items: stretch;
       padding: calc(var(--nk-space) * 3);
@@ -1118,19 +1132,19 @@
     }
 
     :where(
-      [data-nk="app-shell"][data-variant="topbar"]
-        [data-nk="app-navigation"]
-        [data-slot="app-navigation-section"]
-    ) {
+        [data-nk="app-shell"][data-layout="topbar"]
+          [data-nk="app-navigation"]
+          [data-slot="app-navigation-section"]
+      ) {
       flex-direction: column;
       align-items: stretch;
     }
 
     :where(
-      [data-nk="app-shell"][data-variant="topbar"]
-        [data-nk="app-navigation"]
-        [data-slot="app-navigation-section-label"]
-    ) {
+        [data-nk="app-shell"][data-layout="topbar"]
+          [data-nk="app-navigation"]
+          [data-slot="app-navigation-section-label"]
+      ) {
       position: static;
       inline-size: auto;
       block-size: auto;
@@ -1143,15 +1157,15 @@
     }
 
     :where(
-      [data-nk="app-shell"][data-enhanced] > [data-slot="app-shell-sidebar"]
-    ) {
+        [data-nk="app-shell"][data-enhanced] > [data-slot="app-shell-sidebar"]
+      ) {
       display: none;
     }
 
     :where(
-      [data-nk="app-shell"][data-enhanced]
-        > [data-slot="app-shell-dialog"][open]
-    ) {
+        [data-nk="app-shell"][data-enhanced]
+          > [data-slot="app-shell-dialog"][open]
+      ) {
       --_nk-app-shell-dialog-enter-x: -100%;
 
       position: fixed;
@@ -1176,18 +1190,18 @@
     }
 
     :where(
-      [dir="rtl"]
-        [data-nk="app-shell"][data-enhanced]
-        > [data-slot="app-shell-dialog"][open]
-    ) {
+        [dir="rtl"]
+          [data-nk="app-shell"][data-enhanced]
+          > [data-slot="app-shell-dialog"][open]
+      ) {
       --_nk-app-shell-dialog-enter-x: 100%;
     }
 
     :where(
-      [data-nk="app-shell"][data-enhanced]
-        > [data-slot="app-shell-dialog"][open]
-        [data-slot="app-shell-mobile-close"]
-    ) {
+        [data-nk="app-shell"][data-enhanced]
+          > [data-slot="app-shell-dialog"][open]
+          [data-slot="app-shell-mobile-close"]
+      ) {
       display: inline-flex;
       flex: 0 0 auto;
       align-self: flex-end;
@@ -1212,11 +1226,11 @@
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-      [data-nk="app-shell"] > [data-slot="app-shell-skip-link"],
-      [data-nk="app-shell"] > [data-slot="app-shell-dialog"],
-      [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"],
-      [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]
-    ) {
+        [data-nk="app-shell"] > [data-slot="app-shell-skip-link"],
+        [data-nk="app-shell"] > [data-slot="app-shell-dialog"],
+        [data-nk="app-shell"] [data-slot="app-shell-mobile-trigger"],
+        [data-nk="app-shell"] [data-slot="app-shell-mobile-close"]
+      ) {
       animation-duration: 0.01ms;
       transition-duration: 0.01ms;
     }
@@ -2291,7 +2305,7 @@
     text-wrap: balance;
   }
 
-  :where([data-nk="danger-zone"] [data-slot="danger-zone-impact"]) {
+  :where([data-nk="danger-zone"] [data-slot="danger-zone-description"]) {
     max-width: var(--nk-content-lg);
     font-size: var(--nk-text-sm);
     line-height: var(--nk-leading-relaxed);
@@ -3850,8 +3864,8 @@
 /* Source: src/stylesheets/nitro_kit/components/input.css */
 @layer nitro-kit.base {
   :where(
-    [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
-  ) {
+      [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
+    ) {
     display: block;
     inline-size: 100%;
     min-block-size: var(--nk-control-height-md);
@@ -3902,6 +3916,11 @@
   :where([data-nk="input"]:focus-visible) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
+  }
+
+  :where([data-nk="input"][readonly]:not(:disabled)) {
+    color: var(--nk-color-muted-foreground);
+    background: var(--nk-color-muted);
   }
 
   :where([data-nk="input"]:disabled) {
@@ -4483,6 +4502,10 @@
       [data-nk="pagination"]
         > [data-slot="pagination-list"]
         > [data-slot="pagination-item"]
+        > [data-slot="pagination-current"],
+      [data-nk="pagination"]
+        > [data-slot="pagination-list"]
+        > [data-slot="pagination-item"]
         > [data-slot="pagination-ellipsis"]
     ) {
     min-inline-size: var(--nk-control-height-md);
@@ -4504,13 +4527,31 @@
       [data-nk="pagination"]
         > [data-slot="pagination-list"]
         > [data-slot="pagination-item"]
-        > [data-slot="pagination-page"][aria-current="page"]
+        > [data-slot="pagination-page"][aria-current="page"],
+      [data-nk="pagination"]
+        > [data-slot="pagination-list"]
+        > [data-slot="pagination-item"]
+        > [data-slot="pagination-current"]
     ) {
     color: var(--nk-color-foreground);
     cursor: default;
     background: var(--nk-color-muted);
     border-color: var(--nk-color-border);
     opacity: 1;
+  }
+
+  :where(
+      [data-nk="pagination"]
+        > [data-slot="pagination-list"]
+        > [data-slot="pagination-item"]
+        > [data-slot="pagination-current"]
+    ) {
+    display: inline-grid;
+    place-items: center;
+    font-size: var(--nk-text-sm);
+    font-weight: var(--nk-font-weight-medium);
+    border: var(--nk-border-width) solid var(--nk-color-border);
+    border-radius: var(--nk-radius-md);
   }
 
   :where(
@@ -5161,62 +5202,73 @@
     ) {
     min-width: 0;
   }
+
+  :where([data-nk="settings-layout"] [data-slot="settings-layout-items"]) {
+    display: flex;
+    flex-direction: column;
+    gap: var(--nk-space);
+    min-width: 0;
+  }
+
+  :where([data-nk="settings-layout"] [data-slot="settings-layout-item"]) {
+    min-width: 0;
+  }
+
+  :where([data-nk="settings-layout"] [data-slot="settings-layout-item-link"]) {
+    display: block;
+    min-block-size: var(--nk-control-height-md);
+    padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-sm);
+    font-weight: var(--nk-font-weight-medium);
+    line-height: var(--nk-control-height-md);
+    text-decoration: none;
+    border-radius: var(--nk-radius-md);
+    transition:
+      color var(--nk-duration-normal) var(--nk-ease),
+      background-color var(--nk-duration-normal) var(--nk-ease);
+  }
 }
 
 @layer nitro-kit.state {
+  :where(
+      [data-nk="settings-layout"]
+        [data-slot="settings-layout-item-link"][data-state="current"]
+    ) {
+    color: var(--nk-color-foreground);
+    background: var(--nk-color-muted);
+  }
+
+  @media (hover: hover) {
+    :where(
+        [data-nk="settings-layout"]
+          [data-slot="settings-layout-item-link"]:hover
+      ) {
+      color: var(--nk-color-foreground);
+      background: var(--nk-color-muted);
+    }
+  }
+
+  :where(
+      [data-nk="settings-layout"]
+        [data-slot="settings-layout-item-link"]:focus-visible
+    ) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: calc(var(--nk-focus-offset) * -1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(
+        [data-nk="settings-layout"] [data-slot="settings-layout-item-link"]
+      ) {
+      transition-duration: 0.01ms;
+    }
+  }
+
   @media (max-width: 48rem) {
     :where([data-nk="settings-layout"]) {
       grid-template-columns: minmax(0, 1fr);
     }
-  }
-}
-
-/* Source: src/stylesheets/nitro_kit/components/sortable_table.css */
-@layer nitro-kit.base {
-  :where([data-nk="sortable-table"]) {
-    inline-size: 100%;
-  }
-
-  :where([data-nk="sortable-table"] [data-slot="sortable-table-link"]) {
-    display: inline-flex;
-    align-items: center;
-    min-block-size: var(--nk-control-height-md);
-    gap: calc(var(--nk-space) * 1.5);
-    margin-block: calc(var(--nk-space) * -2);
-    padding-block: calc(var(--nk-space) * 2);
-    color: inherit;
-    text-decoration: none;
-  }
-
-  :where([data-nk="sortable-table"] [data-slot="sortable-table-indicator"]) {
-    inline-size: 1em;
-    color: var(--nk-color-primary);
-    font-variant-numeric: tabular-nums;
-    text-align: center;
-  }
-}
-
-@layer nitro-kit.state {
-  :where(
-      [data-nk="sortable-table"]
-        [data-slot="table-header"][aria-sort]
-        [data-slot="sortable-table-link"]
-    ) {
-    color: var(--nk-color-foreground);
-    font-weight: var(--nk-font-weight-semibold);
-  }
-
-  @media (hover: hover) {
-    :where([data-nk="sortable-table"] [data-slot="sortable-table-link"]:hover) {
-      color: var(--nk-color-foreground);
-    }
-  }
-
-  :where(
-      [data-nk="sortable-table"] [data-slot="sortable-table-link"]:focus-visible
-    ) {
-    outline: var(--nk-focus-width) solid var(--nk-color-focus);
-    outline-offset: var(--nk-focus-offset);
   }
 }
 
@@ -5229,6 +5281,15 @@
   :where(
       [data-nk="stat-grid"]
         > [data-slot="stat-grid-grid"]
+        > [data-slot="stat-grid-list"]
+    ) {
+    display: contents;
+  }
+
+  :where(
+      [data-nk="stat-grid"]
+        > [data-slot="stat-grid-grid"]
+        > [data-slot="stat-grid-list"]
         > [data-slot="stat-grid-stat"]
     ) {
     display: grid;
@@ -5443,6 +5504,7 @@
     ) {
     min-block-size: var(--nk-control-height-md);
     padding: calc(var(--nk-space) * 2);
+    text-align: start;
     vertical-align: middle;
   }
 
@@ -5450,12 +5512,70 @@
     color: var(--nk-color-muted-foreground);
     font-weight: var(--nk-font-weight-medium);
   }
+
+  :where([data-nk="table"] [data-slot="table-sort"]) {
+    display: inline-flex;
+    align-items: center;
+    min-block-size: var(--nk-control-height-md);
+    gap: calc(var(--nk-space) * 1.5);
+    margin-block: calc(var(--nk-space) * -2);
+    padding-block: calc(var(--nk-space) * 2);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  :where([data-nk="table"] [data-slot="table-sort-indicator"]) {
+    color: var(--nk-color-muted-foreground);
+    opacity: 0.5;
+  }
+}
+
+@layer nitro-kit.state {
+  :where(
+      [data-nk="table"]
+        [data-slot="table-header"]:is(
+          [aria-sort="ascending"],
+          [aria-sort="descending"]
+        )
+        [data-slot="table-sort"]
+    ) {
+    color: var(--nk-color-foreground);
+    font-weight: var(--nk-font-weight-semibold);
+  }
+
+  :where(
+      [data-nk="table"]
+        [data-slot="table-header"]:is(
+          [aria-sort="ascending"],
+          [aria-sort="descending"]
+        )
+        [data-slot="table-sort-indicator"]
+    ) {
+    color: var(--nk-color-primary);
+    opacity: 1;
+  }
+
+  @media (hover: hover) {
+    :where([data-nk="table"] [data-slot="table-sort"]:hover) {
+      color: var(--nk-color-foreground);
+    }
+
+    :where(
+        [data-nk="table"]
+          [data-slot="table-sort"]:hover
+          [data-slot="table-sort-indicator"]
+      ) {
+      opacity: 1;
+    }
+  }
+
+  :where([data-nk="table"] [data-slot="table-sort"]:focus-visible) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: var(--nk-focus-offset);
+  }
 }
 
 @layer nitro-kit.compound {
-  :where([data-nk="table"] [data-align="left"]) {
-    text-align: left;
-  }
   :where([data-nk="table"] [data-align="center"]) {
     text-align: center;
   }
@@ -5629,6 +5749,11 @@
   :where([data-nk="textarea"]:focus-visible) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
+  }
+
+  :where([data-nk="textarea"][readonly]:not(:disabled)) {
+    color: var(--nk-color-muted-foreground);
+    background: var(--nk-color-muted);
   }
 
   :where([data-nk="textarea"]:disabled) {

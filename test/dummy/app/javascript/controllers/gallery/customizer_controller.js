@@ -111,7 +111,7 @@ export default class extends Controller {
     this.previewStyleTarget.textContent = this.previewCssFor(preset)
     this.cssOutputTarget.textContent = css
     this.rubyOutputTarget.textContent = this.schemaValue.shellExamples[preset.shell]
-    this.shellTarget.dataset.variant = preset.shell
+    this.shellTarget.dataset.layout = preset.shell
     this.previewTarget.dataset.preset = this.queryFor(preset)
     this.applyPreviewAppearance()
   }

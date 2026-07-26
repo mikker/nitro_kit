@@ -6,7 +6,7 @@ class NavigationBlocksTest < ActiveSupport::TestCase
   test "compound blocks render their owned regions in semantic order" do
     settings = render_node(NitroKit::SettingsLayout.new) do |layout|
       layout.content { "Content" }
-      layout.navigation(label: "Settings") { "Navigation" }
+      layout.navigation(label: "Settings") { layout.item("Profile", href: "/settings/profile") }
     end
     assert_equal %w[settings-layout-navigation settings-layout-content], settings.element_children.map { |node| node["data-slot"] }
 
@@ -27,7 +27,8 @@ class NavigationBlocksTest < ActiveSupport::TestCase
     def view_template
       render NitroKit::SettingsLayout.new(id: "settings") do |layout|
         layout.navigation(label: "Account settings") do
-          render NitroKit::Button.new("Profile", href: "/settings/profile")
+          layout.item("Profile", href: "/settings/profile", current: true)
+          layout.item("Security", href: "/settings/security")
         end
         layout.content do
           render NitroKit::Card.new { |card| card.body("Profile form") }
@@ -52,50 +53,126 @@ class NavigationBlocksTest < ActiveSupport::TestCase
     end
   end
 
-  test "settings layout renders one semantic navigation and one neutral content region" do
+  test "settings layout renders one semantic navigation list and one neutral content region" do
     node = composition_probe.at_css("#settings")
     navigation = node.at_xpath("./*[@data-slot='settings-layout-navigation']")
     content = node.at_xpath("./*[@data-slot='settings-layout-content']")
+    items = navigation.at_css("[data-slot='settings-layout-items']")
+    profile, security = items.css("[data-slot='settings-layout-item-link']")
 
     assert_equal "div", node.name
     assert_equal "settings-layout", node["data-nk"]
     assert_equal "nav", navigation.name
     assert_equal "Account settings", navigation["aria-label"]
+    assert_equal "ul", items.name
+    assert_equal %w[li li], items.element_children.map(&:name)
+    assert_equal %w[settings-layout-item settings-layout-item],
+      items.element_children.map { |child| child["data-slot"] }
+    assert_equal "a", profile.name
+    assert_equal "/settings/profile", profile["href"]
+    assert_equal "page", profile["aria-current"]
+    assert_equal "current", profile["data-state"]
+    assert_equal "Profile", profile.text
+    assert_nil security["aria-current"]
+    assert_equal "default", security["data-state"]
     assert_equal "div", content.name
     assert_nil content["role"]
-    assert_equal "button", navigation.element_children.first["data-nk"]
     assert_equal "card", content.element_children.first["data-nk"]
     assert_empty node.css("[class], [style], [data-nk-escape]")
   end
 
-  test "settings layout requires each region exactly once and a useful navigation label" do
-    assert_raises(ArgumentError) { NitroKit::SettingsLayout.new.call }
-    assert_raises(ArgumentError) do
-      NitroKit::SettingsLayout.new.call { |layout| layout.navigation(label: "Settings") }
-    end
-    assert_raises(ArgumentError) do
-      NitroKit::SettingsLayout.new.call { |layout| layout.content }
-    end
-    assert_raises(ArgumentError) do
-      NitroKit::SettingsLayout.new.call do |layout|
-        layout.navigation(label: "Settings")
-        layout.navigation(label: "Duplicate")
+  test "settings layout requires each region exactly once with items a label and blocks" do
+    assert_match(/declaration block/, assert_raises(ArgumentError) { NitroKit::SettingsLayout.new.call }.message)
+    assert_match(/one content region/, assert_raises(ArgumentError) do
+      settings_layout { |layout| layout.navigation(label: "Settings") { layout.item("One", href: "/one") } }
+    end.message)
+    assert_match(/one navigation region/, assert_raises(ArgumentError) do
+      settings_layout { |layout| layout.content { "Content" } }
+    end.message)
+    assert_match(/navigation requires a block/, assert_raises(ArgumentError) do
+      settings_layout { |layout| layout.navigation(label: "Settings") }
+    end.message)
+    assert_match(/content requires a block/, assert_raises(ArgumentError) do
+      settings_layout do |layout|
+        layout.navigation(label: "Settings") { layout.item("One", href: "/one") }
         layout.content
       end
-    end
-    assert_raises(ArgumentError) do
-      NitroKit::SettingsLayout.new.call do |layout|
-        layout.navigation(label: "Settings")
-        layout.content
-        layout.content
+    end.message)
+    assert_match(/at least one item/, assert_raises(ArgumentError) do
+      settings_layout { |layout| layout.navigation(label: "Settings") { } }
+    end.message)
+    assert_match(/exactly one navigation region/, assert_raises(ArgumentError) do
+      settings_layout do |layout|
+        layout.navigation(label: "Settings") { layout.item("One", href: "/one") }
+        layout.navigation(label: "Duplicate") { layout.item("Two", href: "/two") }
       end
-    end
+    end.message)
+    assert_match(/exactly one content region/, assert_raises(ArgumentError) do
+      settings_layout do |layout|
+        layout.navigation(label: "Settings") { layout.item("One", href: "/one") }
+        layout.content { "First" }
+        layout.content { "Second" }
+      end
+    end.message)
 
     [ nil, :settings, "", "  " ].each do |label|
       assert_raises(ArgumentError) do
-        NitroKit::SettingsLayout.new.call { |layout| layout.navigation(label:) }
+        settings_layout { |layout| layout.navigation(label:) { layout.item("One", href: "/one") } }
       end
     end
+  end
+
+  test "settings layout validates its item vocabulary and rejects out-of-phase declarations" do
+    invalid_items = [
+      ->(layout) { layout.item(nil, href: "/one") },
+      ->(layout) { layout.item("One", href: " ") },
+      ->(layout) { layout.item("One", href: "/one", current: :yes) }
+    ]
+    invalid_items.each do |declaration|
+      assert_raises(ArgumentError) do
+        settings_layout { |layout| layout.navigation(label: "Settings") { declaration.call(layout) } }
+      end
+    end
+
+    assert_match(/at most one current item/, assert_raises(ArgumentError) do
+      settings_layout do |layout|
+        layout.navigation(label: "Settings") do
+          layout.item("One", href: "/one", current: true)
+          layout.item("Two", href: "/two", current: true)
+        end
+      end
+    end.message)
+
+    layout = NitroKit::SettingsLayout.new
+    assert_match(/directly inside the render block/, assert_raises(ArgumentError) do
+      layout.navigation(label: "Settings") { }
+    end.message)
+    assert_match(/directly inside the render block/, assert_raises(ArgumentError) { layout.content { "Content" } }.message)
+    assert_match(/directly inside the navigation block/, assert_raises(ArgumentError) do
+      layout.item("One", href: "/one")
+    end.message)
+    assert_match(/directly inside the navigation block/, assert_raises(ArgumentError) do
+      settings_layout do |component|
+        component.navigation(label: "Settings") { component.item("One", href: "/one") }
+        component.content { component.item("Nested", href: "/nested") }
+      end
+    end.message)
+    assert_match(/structure accepts declarations/, assert_raises(ArgumentError) do
+      settings_layout do |component|
+        component.navigation(label: "Settings") { component.item("One", href: "/one") }
+        component.content { "Content" }
+        "Unexpected"
+      end
+    end.message)
+    assert_match(/navigation accepts declarations/, assert_raises(ArgumentError) do
+      settings_layout do |component|
+        component.navigation(label: "Settings") do
+          component.item("One", href: "/one")
+          "Unexpected"
+        end
+        component.content { "Content" }
+      end
+    end.message)
   end
 
   test "toolbar covers leading trailing and split compositions without widget semantics" do
@@ -145,8 +222,22 @@ class NavigationBlocksTest < ActiveSupport::TestCase
     assert_equal "nav", pagination.name
     assert_equal "pagination", pagination["data-nk"]
     assert_equal "Member pages", pagination["aria-label"]
-    assert_equal "page", pagination.at_css("[data-slot='pagination-page'][aria-current]")["aria-current"]
+    assert_equal "page", pagination.at_css("[data-slot='pagination-current'][aria-current]")["aria-current"]
     assert_empty node.css("[class], [style], [data-nk-escape]")
+  end
+
+  test "pagination bar announces summary changes politely by default" do
+    node = render_node(NitroKit::PaginationBar.new) do |bar|
+      bar.summary("Showing 1–25 of 121 members")
+      bar.pagination(NitroKit::Pagination.new) { |pagination| pagination.page(1, current: true) }
+    end
+    assertive = render_node(NitroKit::PaginationBar.new) do |bar|
+      bar.summary("Showing 1–25 of 121 members", aria: { live: "assertive" })
+      bar.pagination(NitroKit::Pagination.new) { |pagination| pagination.page(1, current: true) }
+    end
+
+    assert_equal "polite", node.at_css("[data-slot='pagination-bar-summary']")["aria-live"]
+    assert_equal "assertive", assertive.at_css("[data-slot='pagination-bar-summary']")["aria-live"]
   end
 
   test "pagination bar allows an omitted summary but rejects missing wrong and duplicate Pagination" do
@@ -192,17 +283,8 @@ class NavigationBlocksTest < ActiveSupport::TestCase
         desperately_need_a_class: "external-settings"
       )
     ) do |layout|
-      layout.navigation(
-        label: "Settings",
-        html: { id: "navigation-attrs" },
-        data: { source: "account" },
-        desperately_need_a_class: "external-navigation"
-      )
-      layout.content(
-        html: { id: "content-attrs" },
-        aria: { live: "polite" },
-        desperately_need_a_class: "external-content"
-      )
+      layout.navigation(label: "Settings") { layout.item("Profile", href: "/profile") }
+      layout.content { "Content" }
     end
     toolbar = render_node(
       NitroKit::Toolbar.new(
@@ -239,10 +321,7 @@ class NavigationBlocksTest < ActiveSupport::TestCase
     assert_equal "ready", settings["data-application-state"]
     assert_equal "external-settings", settings["class"]
     assert_equal "class", settings["data-nk-escape"]
-    assert_equal "account", settings.at_css("#navigation-attrs")["data-source"]
-    assert_equal "class", settings.at_css("#navigation-attrs")["data-nk-escape"]
-    assert_equal "polite", settings.at_css("#content-attrs")["aria-live"]
-    assert_equal "class", settings.at_css("#content-attrs")["data-nk-escape"]
+    assert_empty settings.css("[data-nk-escape]")
     assert_equal "ready", toolbar["data-application-state"]
     assert_equal "class", toolbar["data-nk-escape"]
     assert_equal "class", toolbar.at_css("#leading-attrs")["data-nk-escape"]
@@ -277,8 +356,7 @@ class NavigationBlocksTest < ActiveSupport::TestCase
     assert_includes css, %([data-nk="pagination"][data-slot="pagination-bar-pagination"])
     refute_includes css, "transition: all"
     block_css.each_value do |source|
-      refute_match(/^\s*:where\(\[data-slot=/, source)
-      refute_match(/^\s*\[data-slot=/, source)
+      refute_match(/(?:\:where\(\s*|,\s*)\[data-slot=/m, source)
     end
   end
 
@@ -314,6 +392,10 @@ class NavigationBlocksTest < ActiveSupport::TestCase
 
   def render_node(component, &block)
     Nokogiri::HTML.fragment(component.call(&block)).first_element_child
+  end
+
+  def settings_layout(&block)
+    render_node(NitroKit::SettingsLayout.new, &block)
   end
 
   def composition_probe

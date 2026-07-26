@@ -82,7 +82,7 @@ class ExpandedGalleryFlowsTest < ActionDispatch::IntegrationTest
   test "organization settings use real values validation policy and stable regions" do
     get_flow("organization-settings", "general")
     assert_select "#gallery-organization-settings-layout[data-nk='settings-layout']"
-    assert_select "#gallery-organization-settings-navigation [aria-current='page']", text: "General"
+    assert_select "#gallery-organization-settings-layout [data-slot='settings-layout-item-link'][aria-current='page']", text: "General"
     assert_select "#organization_name[value='Analytical Engines — Research and Production'][required]"
     assert_select "#organization_slug[value='analytical-engines'][required]"
     assert_select "#organization_security_notifications[role='switch'][checked]"

@@ -51,6 +51,25 @@ module Gallery
             end
           end
 
+          example("Record details and a single action", slug: "data-section-details", mode: :full_width) do
+            render NitroKit::DataSection.new(
+              title: "Workspace profile",
+              description: "A DetailsTable satisfies the same content boundary as a Table.",
+              id: "gallery-data-section-details"
+            ) do |section|
+              section.actions NitroKit::Button.new("Edit profile", href: "#edit")
+              section.table(
+                NitroKit::DetailsTable.new(
+                  Gallery::Data.members.first,
+                  label: "Workspace profile",
+                  id: "gallery-data-section-details-table"
+                )
+              ) do |details|
+                details.fields(:name, :role, :status)
+              end
+            end
+          end
+
           example("Dense long table", slug: "data-section-dense", mode: :full_width, density: :compact) do
             render NitroKit::Container.new(size: :xl, id: "gallery-data-section-dense-container") do
               render NitroKit::DataSection.new(
@@ -103,7 +122,7 @@ module Gallery
       end
 
       def api_note
-        "Supply the required title and optional description through constructor text or matching compound methods. Provide exactly one table(Table) or empty_state(EmptyState level: 3). actions accepts at most one ButtonGroup."
+        "Supply the required title and optional description through constructor text or matching compound methods. Provide exactly one table(Table or DetailsTable) or empty_state(EmptyState level: 3). actions accepts at most one Button or ButtonGroup."
       end
     end
   end

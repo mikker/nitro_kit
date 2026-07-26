@@ -23,10 +23,13 @@ module NitroKit
       desperately_need_a_class: nil
     )
       @options = Array(options).map { |choice| Choice.coerce(choice) }.freeze
-      @option_tags = option_tags
+      @option_tags = validate_option_tags!(option_tags)
       @value = value
       @include_blank = validate_blank_option!(include_blank)
       @prompt = validate_optional_text!(:prompt, prompt)
+      if @include_blank && @prompt
+        raise ArgumentError, "include_blank: and prompt: are mutually exclusive"
+      end
       @disabled = validate_boolean!(:disabled, disabled)
       @required = validate_boolean!(:required, required)
       @multiple = validate_boolean!(:multiple, multiple)
@@ -37,10 +40,7 @@ module NitroKit
       @control_aria = control_aria
       @control_data = control_data
 
-      if option_tags && !option_tags.is_a?(ActiveSupport::SafeBuffer)
-        raise ArgumentError, "option_tags must be an ActiveSupport::SafeBuffer"
-      end
-      if option_tags && @options.any?
+      if @option_tags && @options.any?
         raise ArgumentError, "options and option_tags are mutually exclusive"
       end
 
@@ -68,24 +68,30 @@ module NitroKit
           end
         end
 
-        svg(
-          **slot_attributes(
-            :icon,
-            attributes: {
-              viewbox: "0 0 20 20",
-              fill: "none",
-              stroke: "currentColor",
-              stroke_width: 1.5,
-              aria: { hidden: true }
-            }
-          )
-        ) do |icon|
-          icon.path(d: "m6.5 8 3.5 3.5L13.5 8", stroke_linecap: "round", stroke_linejoin: "round")
-        end unless @multiple
+        render_toggle_icon
       end
     end
 
     private
+
+    def render_toggle_icon
+      return if @multiple
+
+      svg(
+        **slot_attributes(
+          :icon,
+          attributes: {
+            viewbox: "0 0 20 20",
+            fill: "none",
+            stroke: "currentColor",
+            stroke_width: 1.5,
+            aria: { hidden: true }
+          }
+        )
+      ) do |icon|
+        icon.path(d: "m6.5 8 3.5 3.5L13.5 8", stroke_linecap: "round", stroke_linejoin: "round")
+      end
+    end
 
     def control_attributes
       slot_attributes(
@@ -130,6 +136,13 @@ module NitroKit
       return name unless @multiple && name && !name.end_with?("[]")
 
       "#{name}[]"
+    end
+
+    def validate_option_tags!(option_tags)
+      return if option_tags.nil?
+      return option_tags if option_tags.is_a?(ActiveSupport::SafeBuffer)
+
+      raise ArgumentError, "option_tags must be an ActiveSupport::SafeBuffer"
     end
 
     def validate_blank_option!(value)

@@ -2,9 +2,12 @@
 
 module NitroKit
   class StatGrid < Component
+    DEFAULT_COLUMNS = "1 sm:2 lg:3"
     Stat = Data.define(:key, :label, :value, :detail)
 
     def initialize(
+      cols: DEFAULT_COLUMNS,
+      gap: 4,
       id: nil,
       html: {},
       aria: {},
@@ -12,6 +15,7 @@ module NitroKit
       desperately_need_a_class: nil
     )
       @stats = []
+      @grid = Grid.new(cols:, gap:)
 
       super(
         component: :stat_grid,
@@ -28,8 +32,10 @@ module NitroKit
       raise ArgumentError, "StatGrid requires at least one stat" if @stats.empty?
 
       div(**root_attributes) do
-        render_in_slot(Grid.new(cols: "1 sm:2 lg:3"), :grid) do
-          @stats.each { |stat| render_stat(stat) }
+        render_in_slot(@grid, :grid) do
+          html_dl(**slot_attributes(:list)) do
+            @stats.each { |stat| render_stat(stat) }
+          end
         end
       end
     end
@@ -40,33 +46,30 @@ module NitroKit
 
       @stats << Stat.new(
         key:,
-        label: validate_text!(:label, label),
-        value: validate_text!(:value, value),
-        detail: validate_optional_text!(:detail, detail)
+        label: present_text!(:label, label),
+        value: present_text!(:value, value),
+        detail: detail.nil? ? nil : present_text!(:detail, detail)
       )
       nil
     end
 
+    alias :html_dl :dl
+
     private
 
     def render_stat(stat)
-      dl(**slot_attributes(:stat, attributes: { data: { key: stat.key } })) do
+      div(**slot_attributes(:stat, attributes: { data: { key: stat.key } })) do
         dt(**slot_attributes(:label)) { plain(stat.label) }
         dd(**slot_attributes(:value)) { plain(stat.value) }
         dd(**slot_attributes(:detail)) { plain(stat.detail) } if stat.detail
       end
     end
 
-    def validate_text!(name, value)
-      return value if value.is_a?(String) && !value.strip.empty?
+    def present_text!(name, value)
+      text = value.to_s
+      raise ArgumentError, "StatGrid #{name} must not be blank" if text.strip.empty?
 
-      raise ArgumentError, "#{name} must be a non-blank String"
-    end
-
-    def validate_optional_text!(name, value)
-      return if value.nil?
-
-      validate_text!(name, value)
+      text
     end
   end
 end

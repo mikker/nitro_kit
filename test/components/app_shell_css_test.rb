@@ -19,8 +19,9 @@ class AppShellCssTest < ActiveSupport::TestCase
       assert_includes tokens, "--nk-app-shell-#{token}:"
     end
     %w[sidebar topbar].each do |layout|
-      assert_includes shell, %(data-variant="#{layout}")
+      assert_includes shell, %(data-layout="#{layout}")
     end
+    refute_includes shell, "data-variant"
     assert_includes shell, "min-block-size: 100dvh"
     assert_includes shell, "display: contents"
     assert_includes shell, '> [data-slot="app-shell-header"] > [data-slot="app-shell-brand"]'

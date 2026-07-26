@@ -84,14 +84,9 @@ class InputFieldTest < ActiveSupport::TestCase
     assert_equal "", select.at_css("option")["value"]
   end
 
-  test "validates textarea constraints passed through the control boundary" do
+  test "validates textarea constraints passed as field keywords" do
     field = render_node(
-      NitroKit::Field.new(
-        nil,
-        :bio,
-        as: :textarea,
-        control_html: { rows: 4, minlength: 20, maxlength: 280, wrap: :hard }
-      )
+      NitroKit::Field.new(nil, :bio, as: :textarea, rows: 4, minlength: 20, maxlength: 280, wrap: :hard)
     )
     textarea = field.at_css("textarea")
 
@@ -100,9 +95,72 @@ class InputFieldTest < ActiveSupport::TestCase
     assert_equal "280", textarea["maxlength"]
     assert_equal "hard", textarea["wrap"]
 
-    assert_raises(ArgumentError) do
-      NitroKit::Field.new(nil, :bio, as: :textarea, control_html: { rows: 0 }).call
+    assert_raises(ArgumentError) { NitroKit::Field.new(nil, :bio, as: :textarea, rows: 0).call }
+    assert_raises(ArgumentError) { NitroKit::Field.new(nil, :bio, as: :string, rows: 4) }
+    owned = assert_raises(ArgumentError) do
+      NitroKit::Field.new(nil, :bio, as: :textarea, control_html: { rows: 4 }).call
     end
+    assert_equal "rows is owned by Textarea; pass rows: as a keyword", owned.message
+  end
+
+  test "input owns its native attributes and rejects them through html" do
+    node = render_node(NitroKit::Input.new(id: "bio", minlength: 2, maxlength: 40))
+
+    assert_equal "2", node["minlength"]
+    assert_equal "40", node["maxlength"]
+    assert_raises(ArgumentError) { NitroKit::Input.new(minlength: 4, maxlength: 2) }
+    assert_raises(ArgumentError) { NitroKit::Input.new(maxlength: -1) }
+
+    owned = assert_raises(ArgumentError) { NitroKit::Input.new(html: { maxlength: 40 }) }
+    assert_equal "maxlength is owned by Input; pass maxlength: as a keyword", owned.message
+
+    file = assert_raises(ArgumentError) { NitroKit::Input.new(type: :file, value: "secret.txt") }
+    assert_equal "file inputs never carry a value; omit value:", file.message
+  end
+
+  test "field errors announce through an alert region" do
+    node = render_node(NitroKit::Field.new(nil, :email, errors: [ "Email is invalid" ]))
+    errors = node.at_css("[data-slot='field-error']")
+
+    assert_equal "alert", errors["role"]
+    assert_nil errors["aria-live"]
+    assert_equal "email-errors", errors["id"]
+  end
+
+  test "field identifies its control type without colliding with application data" do
+    node = render_node(NitroKit::Field.new(nil, :bio, as: :textarea, data: { type: "biography" }))
+
+    assert_equal "textarea", node["data-field-type"]
+    assert_equal "biography", node["data-type"]
+  end
+
+  test "field refuses an unnamed radio group and names its error after the as keyword" do
+    assert_raises(ArgumentError) do
+      NitroKit::Field.new(nil, :size, as: :radio_group, label: false, options: [ [ "Small", "sm" ] ])
+    end
+
+    unknown = assert_raises(ArgumentError) { NitroKit::Field.new(nil, :query, as: :combobox) }
+    assert_match(/Unknown as/, unknown.message)
+  end
+
+  test "rich text fields carry the field validation and description wiring" do
+    node = render_node(
+      NitroKit::Field.new(
+        nil,
+        :notes,
+        as: :rich_text,
+        description: "Add useful context",
+        errors: [ "Notes is required" ],
+        rich_text_content: "<lexxy-editor></lexxy-editor>".html_safe,
+        control_data: { tracking_id: "notes" }
+      )
+    )
+    control = node.at_css("[data-slot='field-control']")
+
+    assert_equal "rich-text-area", control["data-nk"]
+    assert_equal "true", control["aria-invalid"]
+    assert_equal "notes-description notes-errors", control["aria-describedby"]
+    assert_equal "notes", control["data-tracking-id"]
   end
 
   test "derives direct field identity and validates its closed semantics" do

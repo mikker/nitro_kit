@@ -203,13 +203,13 @@ module Gallery
                     prompt: "Choose a category",
                     required: true
                   )
-                  form.field(:subject, label: "Subject", required: true, control_html: { maxlength: 120 })
+                  form.field(:subject, label: "Subject", required: true, maxlength: 120)
                   form.field(
                     :message,
                     as: :textarea,
                     label: "How can we help?",
                     required: true,
-                    control_html: { minlength: 20, maxlength: 2_000 }
+                    minlength: 20, maxlength: 2_000
                   )
                 end
               end

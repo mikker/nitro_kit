@@ -207,19 +207,10 @@ module Gallery
         kind: :component,
         slug: "table",
         title: "Table",
-        description: "Semantic tabular data with typed alignment and scope.",
+        description: "Semantic tabular data with typed alignment, scope, and caller-owned sort links.",
         page: Gallery::Components::TablePage,
         states: [],
-        expected_roots: %w[table badge button-group button]
-      ),
-      Entry.new(
-        kind: :component,
-        slug: "sortable-table",
-        title: "Sortable table",
-        description: "Dependency-free sortable headers with caller-owned URLs and an optional Ransack recipe.",
-        page: Gallery::Components::SortableTablePage,
-        states: [],
-        expected_roots: %w[sortable-table table field-group field input select toolbar checkbox button badge flex pagination-bar pagination]
+        expected_roots: %w[table field-group field input select toolbar button badge button-group flex pagination-bar pagination]
       ),
       Entry.new(
         kind: :component,
@@ -417,7 +408,7 @@ module Gallery
         description: "A labelled settings navigation beside one neutral content region with a Nitro-owned narrow stack.",
         page: Gallery::Blocks::SettingsLayoutPage,
         states: [],
-        expected_roots: %w[settings-layout button-group button card field input toolbar pagination-bar pagination flex]
+        expected_roots: %w[settings-layout button card field input toolbar pagination-bar pagination flex]
       ),
       Entry.new(
         kind: :block,
@@ -826,7 +817,7 @@ module Gallery
         page: Gallery::Flows::SidebarApplicationPage,
         states: [],
         expected_roots: %w[
-          app-shell app-navigation page-header appearance-picker stat-grid sortable-table toast data-section empty-state
+          app-shell app-navigation page-header appearance-picker stat-grid toast data-section empty-state
           dropzone form-section alert details-table dialog container flex button
         ]
       ),
@@ -838,7 +829,7 @@ module Gallery
         page: Gallery::Flows::TopbarApplicationPage,
         states: [],
         expected_roots: %w[
-          app-shell app-navigation page-header grid card progressive-image dropdown toast alert sortable-table dialog
+          app-shell app-navigation page-header grid card progressive-image dropdown toast alert dialog
           container flex button
         ]
       ),

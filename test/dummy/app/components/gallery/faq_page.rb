@@ -122,7 +122,7 @@ module Gallery
         end
         p do
           plain "The line matters in practice. AppShell gives you responsive chrome, but you decide "
-          plain "the navigation. SortableTable renders headers and "
+          plain "the navigation. Table renders sortable headers and "
           code { "aria-sort" }
           plain ", but you supply the URLs and sort policy. Nitro Kit doesn't want your product decisions."
         end

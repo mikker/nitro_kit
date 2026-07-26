@@ -1,16 +1,16 @@
 require "application_system_test_case"
 
-class SortableTableSystemTest < ApplicationSystemTestCase
+class TableSortSystemTest < ApplicationSystemTestCase
   setup do
     Gallery::CatalogItem.delete_all
     Gallery::CatalogItem.seed_examples!
   end
 
   test "Ransack recipe filters sorts paginates and recovers from empty results in its Turbo frame" do
-    path = gallery_component_path("sortable-table")
+    path = gallery_component_path("table")
     visit path
 
-    within("#gallery-sortable-table-results") do
+    within("#gallery-table-results") do
       assert_selector "[data-gallery-catalog-row]", count: 5
       assert_selector "th[data-sort-key='name'][aria-sort='ascending']"
 
@@ -28,11 +28,11 @@ class SortableTableSystemTest < ApplicationSystemTestCase
       fill_in "Search workspaces", with: "no-such-workspace"
       select "All statuses", from: "Status"
       click_button "Apply filters"
-      assert_selector "td[colspan='6']", text: "No workspaces match these filters"
+      assert_selector "td[colspan='5']", text: "No workspaces match these filters"
 
       click_link "Reset"
       assert_selector "[data-gallery-catalog-row]", count: 5
-      within("#gallery-sortable-table-pagination") { click_link("2") }
+      within("#gallery-table-pagination") { click_link("2") }
       assert_selector "[aria-current='page']", text: "2"
       assert_text "Showing 6–10 of 15 workspaces"
     end

@@ -3,6 +3,7 @@
 module NitroKit
   class Field < Component
     UNSET = Object.new.freeze
+    private_constant :UNSET
     INPUT_TYPES = %i[
       button color date datetime datetime_local email file hidden month number password range
       search string tel text time url week
@@ -35,6 +36,11 @@ module NitroKit
       min: nil,
       max: nil,
       step: nil,
+      minlength: nil,
+      maxlength: nil,
+      rows: nil,
+      cols: nil,
+      wrap: nil,
       pattern: nil,
       inputmode: nil,
       checked_value: "1",
@@ -51,12 +57,12 @@ module NitroKit
     )
       @form = form
       @field_name = field_name&.to_s
-      @as = validate_choice!(:type, as.to_s.tr("-", "_").to_sym, TYPES)
+      @as = validate_choice!(:as, as.to_s.tr("-", "_").to_sym, TYPES)
       @multiple = validate_boolean!(:multiple, multiple)
       @id = id || form&.field_id(field_name) || default_field_id
       @name = name || form&.field_name(field_name, multiple: @multiple) || default_field_name
       @explicit_value = value
-      @field_label = label.nil? ? @field_name&.humanize : label
+      @field_label = label.nil? ? derived_label : label
       @field_description = description
       @field_error_messages = Array(errors).compact
       @options = options
@@ -74,6 +80,11 @@ module NitroKit
       @min = min
       @max = max
       @step = step
+      @minlength = minlength
+      @maxlength = maxlength
+      @rows = rows
+      @cols = cols
+      @wrap = wrap
       @pattern = pattern
       @inputmode = inputmode
       @checked_value = checked_value
@@ -87,12 +98,18 @@ module NitroKit
       if @options.is_a?(ActiveSupport::SafeBuffer)
         raise ArgumentError, "pass captured option markup through option_tags:"
       end
+      if @as != :textarea && !(@rows.nil? && @cols.nil? && @wrap.nil?)
+        raise ArgumentError, "rows:, cols:, and wrap: require as: :textarea"
+      end
+      if @as == :radio_group && @field_label == false
+        raise ArgumentError, "as: :radio_group requires a legend; pass label: with the group name"
+      end
 
       super(
         component: :field,
         attributes: {
           data: {
-            type: @as.to_s.tr("_", "-"),
+            field_type: @as.to_s.tr("_", "-"),
             state: @field_error_messages.any? ? "invalid" : nil,
             required: @required ? "true" : nil,
             disabled: @disabled ? "true" : nil
@@ -155,9 +172,9 @@ module NitroKit
       ul(
         **slot_attributes(
           :error,
-          attributes: { id: errors_id }.compact,
+          attributes: { id: errors_id, role: "alert" }.compact,
           html:,
-          aria: { live: "polite" }.merge(aria),
+          aria:,
           data:,
           desperately_need_a_class:
         )
@@ -175,7 +192,7 @@ module NitroKit
       when :textarea
         textarea_control(html:, aria:, data:)
       when :rich_text
-        rich_text_control
+        rich_text_control(html:, aria:, data:)
       when :checkbox
         checkbox_control(html:, aria:, data:)
       when :switch
@@ -222,6 +239,8 @@ module NitroKit
           min: @min,
           max: @max,
           step: @step,
+          minlength: @minlength,
+          maxlength: @maxlength,
           pattern: @pattern,
           inputmode: @inputmode,
           html: @control_html.merge(html),
@@ -255,12 +274,6 @@ module NitroKit
     end
 
     def textarea_control(html:, aria:, data:)
-      control_html = @control_html.merge(html)
-      textarea_attributes = extract_control_attributes!(
-        control_html,
-        %i[rows cols minlength maxlength wrap]
-      )
-
       render_in_slot(
         Textarea.new(
           id:,
@@ -271,8 +284,12 @@ module NitroKit
           readonly: @readonly,
           required: @required,
           autocomplete: @autocomplete,
-          **textarea_attributes,
-          html: control_html,
+          rows: @rows,
+          cols: @cols,
+          minlength: @minlength,
+          maxlength: @maxlength,
+          wrap: @wrap,
+          html: @control_html.merge(html),
           aria: control_aria(aria),
           data: @control_data.merge(data)
         ),
@@ -280,8 +297,16 @@ module NitroKit
       )
     end
 
-    def rich_text_control
-      render_in_slot(RichTextArea.new(@rich_text_content), :control)
+    def rich_text_control(html:, aria:, data:)
+      render_in_slot(
+        RichTextArea.new(
+          @rich_text_content,
+          html: @control_html.merge(html),
+          aria: control_aria(aria),
+          data: @control_data.merge(data)
+        ),
+        :control
+      )
     end
 
     def checkbox_control(html:, aria:, data:)
@@ -349,7 +374,7 @@ module NitroKit
     def radio_group_control(html:, aria:, data:)
       render_in_slot(
         RadioButtonGroup.new(
-          legend: field_label || @field_name&.humanize || "Options",
+          legend: field_label || derived_label || "Options",
           options: normalized_options,
           name:,
           value: current_value,
@@ -386,7 +411,7 @@ module NitroKit
       return attributes unless field_label == false
       return attributes if attributes.keys.any? { |key| %w[label labelledby].include?(key.to_s.delete("_-")) }
 
-      accessible_name = @field_name&.humanize || name.to_s.humanize.presence
+      accessible_name = derived_label || name.to_s.humanize.presence
       raise ArgumentError, "an unlabeled switch requires a field name or control ARIA label" unless accessible_name
 
       attributes.merge(label: accessible_name)
@@ -397,17 +422,15 @@ module NitroKit
       attributes.delete(key) if key
     end
 
-    def extract_control_attributes!(attributes, names)
-      names.to_h do |name|
-        matching_keys = attributes.keys.select do |key|
-          key.to_s.delete("_-") == name.to_s.delete("_-")
-        end
-        if matching_keys.many?
-          raise ArgumentError, "Duplicate HTML attribute #{name}"
-        end
+    def derived_label
+      return unless @field_name
 
-        [ name, matching_keys.one? ? attributes.delete(matching_keys.first) : nil ]
-      end.compact
+      object = form&.object
+      if object && object.class.respond_to?(:human_attribute_name)
+        object.class.human_attribute_name(@field_name)
+      else
+        @field_name.humanize
+      end
     end
 
     def normalized_options

@@ -8,7 +8,17 @@ module Gallery
       end
 
       def api_note
-        "NitroKit::Pagination.new(label:) { |pagination| pagination.page; pagination.ellipsis }"
+        "NitroKit::Pagination.new(label:, pagy: nil) { |pagination| pagination.page; pagination.ellipsis }"
+      end
+
+      def gallery_pagy(page)
+        Pagy::Method # loads Pagy::Request
+        Pagy::Offset.new(
+          count: 287,
+          page:,
+          limit: 25,
+          request: Pagy::Request.new(request: { path: "/gallery/records", params: { "status" => "active" } })
+        )
       end
 
       def component_template
@@ -21,6 +31,24 @@ module Gallery
             Gallery::Data.pagination_boundaries.each do |pagination|
               sample(pagination.label, slug: pagination.slug) do
                 render_boundary(pagination)
+              end
+            end
+          end
+        end
+
+        example_section(
+          "Pagy",
+          slug: "pagination-pagy",
+          description: "A real Pagy object supplies previous, series, gap, current, and next items through its public API. The application still owns the query and the route."
+        ) do
+          example("First, middle, and last Pagy pages", slug: "pagination-pagy-pages", layout: :matrix, mode: :full_width) do
+            [ [ "First page", 1 ], [ "Middle page", 6 ], [ "Last page", 12 ] ].each do |label, page|
+              sample(label, slug: "pagination-pagy-#{page}") do
+                render NitroKit::Pagination.new(
+                  pagy: gallery_pagy(page),
+                  id: "gallery-pagination-pagy-#{page}",
+                  label: "#{label} of workspace records"
+                )
               end
             end
           end

@@ -152,16 +152,16 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
 
       assert_select "#gallery-settings-surface[data-gallery-flow-state='#{state}']"
       assert_select "nav[aria-label='Settings states'] a[aria-current='page']", text: state.humanize
-      assert_select "#gallery-settings-navigation[data-nk='button-group'][aria-label='Settings sections']" do
-        assert_select "[data-nk='button']", count: 5
-        assert_select "[data-nk='button'][aria-current='page']", count: 1
+      assert_select "#gallery-settings-layout nav[data-slot='settings-layout-navigation'][aria-label='Settings sections']" do
+        assert_select "ul[data-slot='settings-layout-items'] > li[data-slot='settings-layout-item']", count: 5
+        assert_select "a[data-slot='settings-layout-item-link'][aria-current='page']", count: 1
       end
       assert_select "#gallery-settings-surface > " \
                     "#gallery-settings-container[data-nk='container'][data-size='xl'] > " \
                     "#gallery-settings-stack[data-nk='flex'][data-dir='col'][data-gap='6'][data-align='stretch'] > " \
                     "#gallery-settings-layout[data-nk='settings-layout']",
         count: 1
-      assert_select "#gallery-settings-content > [data-nk]", minimum: 1
+      assert_select "#gallery-settings-layout > [data-slot='settings-layout-content'] > [data-nk]", minimum: 1
       assert_leak_free_canvas
     end
   end

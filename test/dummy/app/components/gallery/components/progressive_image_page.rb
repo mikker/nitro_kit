@@ -133,7 +133,7 @@ module Gallery
         ) do
           example("Workspace overview", slug: "progressive-image-workspace-card", mode: :full_width) do
             render NitroKit::Card.new(id: "gallery-progressive-image-card") do |card|
-              card.full_width do
+              card.full do
                 render NitroKit::ProgressiveImage.new(
                   attachment: image_attachment,
                   alt: "Abstract indigo workspace illustration",

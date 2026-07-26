@@ -12,7 +12,7 @@ Use one GET-driven Turbo Frame for filters, sorting, results, and pagination. Th
   narrow screens. Do not turn two fields and two actions into a full-page form.
 - Sort and pagination links preserve the active query parameters. Sort links
   replace the current history entry; pagination inherits the frame's `advance`.
-- `NitroKit::SortableTable` renders the table contract but does not own query policy.
+- `NitroKit::Table` renders the sortable table contract but does not own query policy.
 - The HTML response always contains the same frame, including empty results.
 - No Stimulus controller is required for submit-based filters. An optional autosubmit controller may submit the same GET form without becoming the source of truth.
 
@@ -88,29 +88,29 @@ module UI
       end
 
       def render_results
-        render NitroKit::SortableTable.new(
-          current: query.current_sort,
+        render NitroKit::Table.new(
+          sort: query.current_sort,
           direction: query.direction
         ) do |table|
           table.caption("Projects")
           table.thead do
             table.tr do
-              table.sortable_th(
-                :name,
+              table.th(
+                sort: :name,
                 href: query.sort_url(:name),
-                data: { turbo_action: "replace" }
+                sort_data: { turbo_action: "replace" }
               )
-              table.sortable_th(
-                :status,
+              table.th(
+                sort: :status,
                 href: query.sort_url(:status),
-                data: { turbo_action: "replace" }
+                sort_data: { turbo_action: "replace" }
               )
-              table.sortable_th(
-                :updated_at,
+              table.th(
                 "Updated",
+                sort: :updated_at,
                 href: query.sort_url(:updated_at),
                 align: :right,
-                data: { turbo_action: "replace" }
+                sort_data: { turbo_action: "replace" }
               )
               table.th("Actions", align: :right)
             end

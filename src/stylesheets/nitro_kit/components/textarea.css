@@ -23,6 +23,11 @@
     outline-offset: var(--nk-focus-offset);
   }
 
+  :where([data-nk="textarea"][readonly]:not(:disabled)) {
+    color: var(--nk-color-muted-foreground);
+    background: var(--nk-color-muted);
+  }
+
   :where([data-nk="textarea"]:disabled) {
     cursor: not-allowed;
     opacity: 0.6;

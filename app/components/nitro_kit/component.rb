@@ -5,7 +5,7 @@ module NitroKit
     DeferredContent = Data.define(:text, :block)
     private_constant :DeferredContent
     PUBLIC_RESERVED_DATA_ATTRIBUTES = %w[nk slot variant size state nk-escape].freeze
-    INTERNAL_RESERVED_DATA_ATTRIBUTES = %w[nk slot variant size nk-escape].freeze
+    INTERNAL_RESERVED_DATA_ATTRIBUTES = %w[nk slot variant size nk-escape enhanced].freeze
     ADDITIVE_DATA_ATTRIBUTES = %w[action controller].freeze
     FORBIDDEN_ATTRIBUTES = %w[class style].freeze
 

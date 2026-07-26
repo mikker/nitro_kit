@@ -29,7 +29,7 @@
     text-wrap: balance;
   }
 
-  :where([data-nk="danger-zone"] [data-slot="danger-zone-impact"]) {
+  :where([data-nk="danger-zone"] [data-slot="danger-zone-description"]) {
     max-width: var(--nk-content-lg);
     font-size: var(--nk-text-sm);
     line-height: var(--nk-leading-relaxed);

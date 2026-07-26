@@ -92,17 +92,10 @@ module Gallery
 
               render NitroKit::SettingsLayout.new(id: "gallery-hybrid-application-settings") do |layout|
                 layout.navigation(label: "Account settings") do
-                  render NitroKit::Flex.new(dir: :col, gap: 1, align: :stretch) do
-                    render NitroKit::Button.new(
-                      "Profile",
-                      href: "#profile",
-                      variant: :primary,
-                      aria: { current: "page" }
-                    )
-                    render NitroKit::Button.new("Security", href: "#security")
-                    render NitroKit::Button.new("Notifications", href: "#notifications")
-                    render NitroKit::Button.new("Appearance", href: "#appearance")
-                  end
+                  layout.item("Profile", href: "#profile", current: true)
+                  layout.item("Security", href: "#security")
+                  layout.item("Notifications", href: "#notifications")
+                  layout.item("Appearance", href: "#appearance")
                 end
                 layout.content do
                   render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch) do
@@ -306,7 +299,7 @@ module Gallery
                           as: :textarea,
                           label: "Operational justification",
                           value: "Need access",
-                          control_html: { rows: 4 },
+                          rows: 4,
                           errors: [ "must explain the production task" ]
                         )
                       end

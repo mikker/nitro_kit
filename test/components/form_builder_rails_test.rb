@@ -105,6 +105,98 @@ class FormBuilderRailsTest < ActiveSupport::TestCase
     end
   end
 
+  class BoundaryProbe < Phlex::HTML
+    include Phlex::Rails::Helpers::FormWith
+
+    def view_template
+      form_with(model: Registration.new, url: "/registration", builder: NitroKit::FormBuilder) do |form|
+        form.field(
+          :email,
+          as: :email,
+          data: { tracking_id: "email" },
+          aria: { keyshortcuts: "e" },
+          wrapper_data: { section: "identity" },
+          wrapper_html: { id: "email-wrapper" }
+        )
+        form.text_field(:role, data: { tracking_id: "role" })
+        form.button("Continue")
+        form.submit("Register")
+      end
+    end
+  end
+
+  test "builder data and aria always decorate the control" do
+    form = render_form(BoundaryProbe.new)
+    wrapper = form.at_css("#email-wrapper")
+    email = wrapper.at_css("input[type='email']")
+    role = form.at_css("input[type='text']")
+
+    assert_equal "identity", wrapper["data-section"]
+    assert_nil wrapper["data-tracking-id"]
+    assert_equal "email", email["data-tracking-id"]
+    assert_equal "e", email["aria-keyshortcuts"]
+    assert_equal "role", role["data-tracking-id"]
+  end
+
+  test "builder buttons and submits keep Rails submission semantics" do
+    form = render_form(BoundaryProbe.new)
+    buttons = form.css("[data-nk='button']")
+
+    assert_equal %w[submit submit], buttons.map { |button| button["type"] }
+    assert_equal "commit", buttons.last["name"]
+    assert_equal "Register", buttons.last["value"]
+  end
+
+  test "builder rejects ambiguous and unsupported form helpers" do
+    builder = NitroKit::FormBuilder.new(:registration, Registration.new, ApplicationController.new.view_context, {})
+
+    duplicate = assert_raises(ArgumentError) do
+      builder.field(:email, data: { tracking_id: "one" }, control_data: { tracking_id: "two" })
+    end
+    assert_match(/tracking_id was given through both data: and control_data:/, duplicate.message)
+
+    unknown = assert_raises(ArgumentError) { builder.field(:email, as: :combo_box) }
+    assert_match(/Unknown as: :combo_box/, unknown.message)
+
+    unsupported = assert_raises(ArgumentError) { builder.collection_select(:role, [], :id, :name) }
+    assert_match(/does not implement collection_select/, unsupported.message)
+    assert_raises(ArgumentError) { builder.label(:role) }
+    assert_raises(ArgumentError) { builder.date_select(:created_at) }
+    assert_raises(ArgumentError) { builder.time_zone_select(:zone) }
+    assert_raises(ArgumentError) { builder.collection_check_boxes(:roles, [], :id, :name) }
+    assert_raises(ArgumentError) { builder.collection_radio_buttons(:role, [], :id, :name) }
+    assert_raises(ArgumentError) { builder.grouped_collection_select(:role, [], :a, :b, :c, :d) }
+  end
+
+  class TranslatedRegistration < Registration
+    def self.human_attribute_name(attribute, options = {})
+      attribute.to_s == "email" ? "Email address" : super
+    end
+  end
+
+  class TranslatedLabelProbe < Phlex::HTML
+    include Phlex::Rails::Helpers::FormWith
+
+    def view_template
+      form_with(
+        model: TranslatedRegistration.new,
+        scope: :registration,
+        url: "/registration",
+        builder: NitroKit::FormBuilder
+      ) do |form|
+        form.field(:email, as: :email)
+        form.field(:role, as: :radio_group, options: [ [ "Developer", "developer" ] ])
+      end
+    end
+  end
+
+  test "builder labels come from Rails human attribute names" do
+    form = render_form(TranslatedLabelProbe.new)
+
+    assert_equal "Email address", form.at_css("[data-slot='field-label']").text
+    assert_equal "Role", form.at_css("legend").text
+  end
+
   test "captures select blocks inside the native select control" do
     form = render_form(SelectBlockProbe.new(Registration.new(role: "designer")))
     select = form.at_css("[data-nk='select'][data-slot='field-control'] select")
@@ -169,7 +261,7 @@ class FormBuilderRailsTest < ActiveSupport::TestCase
     form = render_form(RichTextProbe.new)
     field = form.at_css("[data-nk='field']")
 
-    assert_equal "rich-text", field["data-type"]
+    assert_equal "rich-text", field["data-field-type"]
     assert_equal "Notes", field.at_css("[data-slot='field-label']").text
     assert_equal "Add useful context", field.at_css("[data-slot='field-description']").text
     assert form.at_css("[data-nk='rich-text-area']")

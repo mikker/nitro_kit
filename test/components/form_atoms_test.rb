@@ -54,9 +54,10 @@ class FormAtomsTest < ActiveSupport::TestCase
     assert_raises(ArgumentError) { NitroKit::Textarea.new(wrap: :sometimes) }
     assert_raises(ArgumentError) { NitroKit::Textarea.new(wrap: false) }
     assert_raises(ArgumentError) { NitroKit::Textarea.new(wrap: 1) }
-    assert_raises(ArgumentError) do
-      NitroKit::Textarea.new(html: { rows: 0, wrap: "sideways", maxlength: -1 })
-    end
+    owned = assert_raises(ArgumentError) { NitroKit::Textarea.new(html: { rows: 4 }) }
+    assert_equal "rows is owned by Textarea; pass rows: as a keyword", owned.message
+    assert_raises(ArgumentError) { NitroKit::Textarea.new(html: { value: "bypass" }) }
+    assert_equal "4", render_node(NitroKit::Textarea.new(html: { title: "Bio" }, rows: 4))["rows"]
     assert_raises(ArgumentError) { NitroKit::Textarea.new(disabled: nil) }
   end
 
@@ -120,6 +121,24 @@ class FormAtomsTest < ActiveSupport::TestCase
     refute unselected.at_css("option[value='']").key?("disabled")
     assert_raises(ArgumentError) { NitroKit::Select.new(include_blank: 1) }
     assert_raises(ArgumentError) { NitroKit::Select.new(prompt: " ") }
+    both = assert_raises(ArgumentError) do
+      NitroKit::Select.new(options: [ [ "Admin", "admin" ] ], include_blank: true, prompt: "Choose")
+    end
+    assert_equal "include_blank: and prompt: are mutually exclusive", both.message
+  end
+
+  test "select separates its inner control identity from its root" do
+    node = render_node(
+      NitroKit::Select.new(
+        options: [ [ "Admin", "admin" ] ],
+        id: "role-control",
+        html: { id: "role-wrapper" }
+      )
+    )
+
+    assert_equal "role-wrapper", node["id"]
+    assert_equal "role-control", node.at_css("select")["id"]
+    assert node.at_css("[data-slot='select-icon']")
   end
 
   test "select accepts only trusted captured option markup" do
@@ -397,6 +416,29 @@ class FormAtomsTest < ActiveSupport::TestCase
     assert_empty fieldset.css("[class], [style]")
     assert_raises(ArgumentError) { NitroKit::FieldGroup.new.call }
     assert_raises(ArgumentError) { NitroKit::Fieldset.new(legend: " ") }
+    assert_raises(ArgumentError) { NitroKit::Fieldset.new.call { "Fields" } }
+  end
+
+  class DeferredFieldsetProbe < Phlex::HTML
+    def view_template
+      render NitroKit::Fieldset.new do |fieldset|
+        fieldset.description { plain "Public "; strong { "details" } }
+        fieldset.legend("Profile")
+        plain "Fields"
+      end
+    end
+  end
+
+  test "fieldset accepts compound legend and description declarations" do
+    node = Nokogiri::HTML.fragment(DeferredFieldsetProbe.new.call).first_element_child
+
+    assert_equal %w[legend p div], node.element_children.map(&:name)
+    assert_equal "Profile", node.at_css("[data-slot='fieldset-legend']").text
+    assert_equal "Public details", node.at_css("[data-slot='fieldset-description']").text
+    assert_equal "Fields", node.at_css("[data-slot='fieldset-fields']").text
+    assert_raises(ArgumentError) do
+      NitroKit::Fieldset.new(legend: "Profile").call { |fieldset| fieldset.legend("Again") }
+    end
   end
 
   test "field composes each compound control instead of reimplementing it" do

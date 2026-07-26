@@ -41,12 +41,12 @@ class GalleryNavigationBlocksTest < ActionDispatch::IntegrationTest
         assert_predicate layout.xpath("./*[@data-slot='settings-layout-navigation']").first["aria-label"], :present?
       end
     end
-    assert_select "#gallery-settings-layout-empty > [data-slot='settings-layout-navigation']:empty"
-    assert_select "#gallery-settings-layout-empty > [data-slot='settings-layout-content']:empty"
-    assert_select "#gallery-settings-layout-workspace-navigation" do
-      assert_select "[data-nk='button'][data-variant='primary'][aria-current='page']", count: 1
-      assert_select "[data-nk='button'][data-variant='default']", count: 3
-      assert_select "[data-nk='button'][data-variant='ghost']", count: 0
+    assert_select "#gallery-settings-layout-one [data-slot='settings-layout-item']", count: 1
+    assert_select "#gallery-settings-layout-workspace > nav[data-slot='settings-layout-navigation']" do
+      assert_select "ul[data-slot='settings-layout-items'] > li[data-slot='settings-layout-item']", count: 4
+      assert_select "a[data-slot='settings-layout-item-link'][aria-current='page'][data-state='current']", count: 1
+      assert_select "a[data-slot='settings-layout-item-link'][data-state='default']", count: 3
+      assert_select "[data-nk='button']", count: 0
     end
     assert_select "#gallery-settings-layout-many [data-nk='card']", count: 6
     assert_select "#gallery-settings-layout-long > nav[aria-label*='International Research and Production settings']"
@@ -111,7 +111,7 @@ class GalleryNavigationBlocksTest < ActionDispatch::IntegrationTest
         assert_select "> nav[data-slot='settings-layout-navigation'][aria-label='Settings sections']", count: 1
         assert_select "> [data-slot='settings-layout-content']", count: 1
       end
-      assert_select "#gallery-settings-content [data-nk='toolbar']", minimum: 1
+      assert_select "#gallery-settings-layout [data-slot='settings-layout-content'] [data-nk='toolbar']", minimum: 1
     end
 
     get gallery_flow_path(slug: "settings", state: "integrations-empty")
@@ -121,7 +121,7 @@ class GalleryNavigationBlocksTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-settings-integrations-empty-section[data-nk='data-section'] > " \
                   "#gallery-settings-integrations-empty[data-nk='empty-state']",
       count: 1
-    assert_select "#gallery-settings-content [data-nk='toolbar']", count: 0
+    assert_select "#gallery-settings-layout [data-slot='settings-layout-content'] [data-nk='toolbar']", count: 0
   end
 
   test "real user and invoice collections use PaginationBar without moving route math into it" do

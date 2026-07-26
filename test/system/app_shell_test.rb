@@ -49,7 +49,7 @@ class AppShellTest < ApplicationSystemTestCase
     trigger = "#{root} [data-slot='app-shell-mobile-trigger']"
     close = "#{root} [data-slot='app-shell-mobile-close']"
 
-    first_item = first("#{root} [data-slot='app-navigation-item']")
+    first_item = first("#{root} [data-slot='app-navigation-item-link']")
     execute_script("arguments[0].focus()", first_item)
     assert_equal first_item.native, active_element
 

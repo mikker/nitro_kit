@@ -41,7 +41,10 @@
     scrollbar-gutter: stable;
   }
 
-  :where([data-nk="app-navigation"] [data-slot="app-navigation-section"]) {
+  :where(
+      [data-nk="app-navigation"] [data-slot="app-navigation-section"],
+      [data-nk="app-navigation"] [data-slot="app-navigation-section-list"]
+    ) {
     display: flex;
     flex: 0 0 auto;
     flex-direction: column;
@@ -52,6 +55,7 @@
   :where(
       [data-nk="app-navigation"] [data-slot="app-navigation-section-label"]
     ) {
+    display: block;
     margin: calc(var(--nk-space) * 4) calc(var(--nk-space) * 2) var(--nk-space);
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-xs);
@@ -60,6 +64,11 @@
   }
 
   :where([data-nk="app-navigation"] [data-slot="app-navigation-item"]) {
+    flex: 0 0 auto;
+    min-inline-size: 0;
+  }
+
+  :where([data-nk="app-navigation"] [data-slot="app-navigation-item-link"]) {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     gap: calc(var(--nk-space) * 2);
@@ -97,6 +106,7 @@
 
   :where([data-nk="app-navigation"] [data-slot="app-navigation-divider"]) {
     flex: 0 0 auto;
+    display: block;
     block-size: var(--nk-border-width);
     margin: calc(var(--nk-space) * 2);
     background: var(--nk-app-shell-border);
@@ -112,28 +122,31 @@
 @layer nitro-kit.state {
   :where(
       [data-nk="app-navigation"]
-        [data-slot="app-navigation-item"][data-state="current"]
+        [data-slot="app-navigation-item-link"][data-state="current"]
     ) {
     color: var(--nk-app-shell-sidebar-accent-foreground);
     background: var(--nk-app-shell-sidebar-accent);
   }
 
   @media (hover: hover) {
-    :where([data-nk="app-navigation"] [data-slot="app-navigation-item"]:hover) {
+    :where(
+        [data-nk="app-navigation"] [data-slot="app-navigation-item-link"]:hover
+      ) {
       color: var(--nk-app-shell-sidebar-accent-foreground);
       background: var(--nk-app-shell-sidebar-accent);
     }
   }
 
   :where(
-      [data-nk="app-navigation"] [data-slot="app-navigation-item"]:focus-visible
+      [data-nk="app-navigation"]
+        [data-slot="app-navigation-item-link"]:focus-visible
     ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: calc(var(--nk-focus-offset) * -1);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    :where([data-nk="app-navigation"] [data-slot="app-navigation-item"]) {
+    :where([data-nk="app-navigation"] [data-slot="app-navigation-item-link"]) {
       transition-duration: 0.01ms;
     }
   }

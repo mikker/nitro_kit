@@ -4,9 +4,8 @@ module NitroKit
   class AppNavigation < Component
     alias_method :html_header, :header
     alias_method :html_footer, :footer
-    alias_method :html_section, :section
 
-    Item = ::Data.define(:text, :href, :icon, :badge, :current)
+    Item = ::Data.define(:text, :href, :icon, :badge, :current, :html, :aria, :data, :css_class)
     Section = ::Data.define(:label, :entries)
     Entry = ::Data.define(:kind)
 
@@ -20,6 +19,14 @@ module NitroKit
     )
       @label = validate_text!(:label, label)
       @entries = []
+      @entry_target = nil
+      @phase = nil
+      @header = nil
+      @body = nil
+      @footer = nil
+      @spacer = false
+      @current_item = false
+      @item_count = 0
 
       super(
         component: :app_navigation,
@@ -95,12 +102,23 @@ module NitroKit
       end
     end
 
-    def item(text, href:, icon: nil, badge: nil, current: false)
+    def item(
+      text,
+      href:,
+      icon: nil,
+      badge: nil,
+      badge_color: :neutral,
+      current: false,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil
+    )
       ensure_entry_phase!(:item)
       text = validate_text!(:text, text)
       href = validate_text!(:href, href)
-      icon = validate_icon_name!(icon)
-      badge = validate_badge!(badge)
+      icon = item_icon(icon)
+      badge = item_badge(badge, badge_color)
       current = validate_boolean!(:current, current)
 
       if current && @current_item
@@ -108,7 +126,17 @@ module NitroKit
       end
 
       @current_item = true if current
-      @entry_target << Item.new(text:, href:, icon:, badge:, current:)
+      @entry_target << Item.new(
+        text:,
+        href:,
+        icon:,
+        badge:,
+        current:,
+        html:,
+        aria:,
+        data:,
+        css_class: desperately_need_a_class
+      )
       @item_count += 1
       nil
     end
@@ -158,7 +186,7 @@ module NitroKit
     end
 
     def render_body
-      div(**slot_attributes(:body)) do
+      ul(**slot_attributes(:body)) do
         @entries.each { |entry| render_entry(entry) }
       end
     end
@@ -176,35 +204,47 @@ module NitroKit
     end
 
     def render_section(entry)
-      html_section(**slot_attributes(:section)) do
-        h2(**slot_attributes(:section_label)) { plain(entry.label) } if entry.label
-        entry.entries.each { |child| render_entry(child) }
+      li(**slot_attributes(:section)) do
+        span(**slot_attributes(:section_label)) { plain(entry.label) } if entry.label
+        ul(**slot_attributes(:section_list, attributes: section_list_attributes(entry))) do
+          entry.entries.each { |child| render_entry(child) }
+        end
       end
     end
 
+    def section_list_attributes(entry)
+      entry.label ? { aria: { label: entry.label } } : {}
+    end
+
     def render_item(entry)
-      a(
-        **slot_attributes(
-          :item,
-          attributes: {
-            href: entry.href,
-            aria: { current: entry.current ? "page" : nil },
-            data: { state: entry.current ? "current" : "default" }
-          }
-        )
-      ) do
-        render_in_slot(Icon.new(entry.icon, size: :sm), :item_icon) if entry.icon
-        span(**slot_attributes(:item_label)) { plain(entry.text) }
-        render_in_slot(Badge.new(entry.badge, size: :sm, color: :neutral), :item_badge) if entry.badge
+      li(**slot_attributes(:item)) do
+        a(
+          **slot_attributes(
+            :item_link,
+            attributes: {
+              href: entry.href,
+              aria: { current: entry.current ? "page" : nil },
+              data: { state: entry.current ? "current" : "default" }
+            },
+            html: entry.html,
+            aria: entry.aria,
+            data: entry.data,
+            desperately_need_a_class: entry.css_class
+          )
+        ) do
+          render_in_slot(entry.icon, :item_icon) if entry.icon
+          span(**slot_attributes(:item_label)) { plain(entry.text) }
+          render_in_slot(entry.badge, :item_badge) if entry.badge
+        end
       end
     end
 
     def render_divider
-      hr(**slot_attributes(:divider))
+      li(**slot_attributes(:divider, attributes: { role: "separator" }))
     end
 
     def render_spacer
-      div(**slot_attributes(:spacer, aria: { hidden: true }))
+      li(**slot_attributes(:spacer, aria: { hidden: true }))
     end
 
     def ensure_phase!(expected, declaration)
@@ -238,22 +278,27 @@ module NitroKit
       validate_text!(name, value)
     end
 
-    def validate_icon_name!(value)
+    def item_icon(value)
       return if value.nil?
-      return value if (value.is_a?(String) || value.is_a?(Symbol)) && !value.to_s.strip.empty?
-
-      raise ArgumentError, "icon must be a non-blank String or Symbol"
-    end
-
-    def validate_badge!(value)
-      return if value.nil?
-
-      if value.is_a?(String)
-        return value unless value.strip.empty?
-
-        raise ArgumentError, "badge must be a non-blank String or Numeric"
+      unless (value.is_a?(String) || value.is_a?(Symbol)) && !value.to_s.strip.empty?
+        raise ArgumentError, "icon must be a non-blank String or Symbol"
       end
 
+      Icon.new(value, size: :sm)
+    end
+
+    def item_badge(value, color)
+      if value.nil?
+        return if color == :neutral
+
+        raise ArgumentError, "badge_color requires a badge"
+      end
+
+      Badge.new(validate_badge_text!(value), size: :sm, color:)
+    end
+
+    def validate_badge_text!(value)
+      return value if value.is_a?(String) && !value.strip.empty?
       return value.to_s if value.is_a?(Numeric)
 
       raise ArgumentError, "badge must be a non-blank String or Numeric"

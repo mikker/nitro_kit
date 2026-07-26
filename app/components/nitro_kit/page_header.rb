@@ -3,11 +3,13 @@
 module NitroKit
   class PageHeader < Component
     Child = Data.define(:component, :content)
+    TITLE_LEVELS = (1..6).freeze
 
     def initialize(
       title: nil,
       eyebrow: nil,
       description: nil,
+      level: 1,
       id: nil,
       html: {},
       aria: {},
@@ -17,6 +19,7 @@ module NitroKit
       @title_content = content_from_keyword(:title, title)
       @eyebrow_content = content_from_keyword(:eyebrow, eyebrow)
       @description_content = content_from_keyword(:description, description)
+      @level = validate_choice!(:level, level, TITLE_LEVELS)
       @actions = nil
 
       super(
@@ -29,13 +32,15 @@ module NitroKit
       )
     end
 
+    attr_reader :level
+
     def view_template
       yield self if block_given?
       require_content!("PageHeader", :title, @title_content)
 
       header(**root_attributes) do
         p(**slot_attributes(:eyebrow)) { render_deferred_content(@eyebrow_content) } if @eyebrow_content
-        h1(**slot_attributes(:title)) { render_deferred_content(@title_content) }
+        public_send(:"h#{level}", **slot_attributes(:title)) { render_deferred_content(@title_content) }
         if @description_content
           p(**slot_attributes(:description)) { render_deferred_content(@description_content) }
         end

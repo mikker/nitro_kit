@@ -79,7 +79,7 @@ module Gallery
                     label: "Import note",
                     description: "Optional context for workspace audit history.",
                     disabled:,
-                    control_html: { maxlength: 240 }
+                    maxlength: 240
                   )
                   form.field(
                     :overwrite,

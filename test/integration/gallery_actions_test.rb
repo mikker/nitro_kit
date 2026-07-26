@@ -64,6 +64,21 @@ class GalleryActionsTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "pagination page builds navigation from real Pagy objects" do
+    get_component("pagination")
+
+    assert_select "#gallery-pagination-pagy-1" do
+      assert_select "[data-slot='pagination-previous'][aria-disabled='true']:not([href])"
+      assert_select "[data-slot='pagination-current'][aria-current='page']", text: "1"
+      assert_select "[data-slot='pagination-next'][href='/gallery/records?status=active&page=2']"
+    end
+    assert_select "#gallery-pagination-pagy-6 [data-slot='pagination-item'][data-kind='ellipsis']", count: 2
+    assert_select "#gallery-pagination-pagy-12" do
+      assert_select "[data-slot='pagination-previous'][href='/gallery/records?status=active&page=11']"
+      assert_select "[data-slot='pagination-next'][aria-disabled='true']:not([href])"
+    end
+  end
+
   test "pagination page covers compact long ellipsis label and pressure modes" do
     get_component("pagination")
 

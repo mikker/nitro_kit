@@ -62,7 +62,7 @@ class DetailsTableTest < ActiveSupport::TestCase
   test "distinguishes omitted values from explicit nil and lets blocks own output" do
     node = render_node(NitroKit::DetailsTable.new(@profile)) do |details|
       details.field(:name, label: "Display name") { |value| value.upcase }
-      details.field(:name, label: "Override", value: nil) do |value|
+      details.field(:score, label: "Override", value: nil) do |value|
         value.nil? ? "Intentionally empty" : "Unexpected"
       end
     end
@@ -127,6 +127,54 @@ class DetailsTableTest < ActiveSupport::TestCase
     assert image
     assert_equal "workspace.jpg", image.at_css("[data-slot='progressive-image-image']")["alt"]
     assert_equal "/workspace-320x320.jpg", image.at_css("[data-slot='progressive-image-image']")["src"]
+  end
+
+  test "names the table with a caption or an ARIA label" do
+    captioned = render_node(NitroKit::DetailsTable.new(@profile, caption: "Profile")) do |details|
+      details.field(:name)
+    end
+    labelled = render_node(NitroKit::DetailsTable.new(@profile, label: "Profile facts")) do |details|
+      details.field(:name)
+    end
+
+    assert_equal "Profile", captioned.at_css("[data-slot='table-caption']").text
+    assert_equal "Profile facts", labelled.at_css("[data-slot='table-element']")["aria-label"]
+    assert_raises(ArgumentError) { NitroKit::DetailsTable.new(@profile, caption: " ") }
+    assert_raises(ArgumentError) { NitroKit::DetailsTable.new(@profile, label: " ") }
+  end
+
+  test "puts empty and boolean copy behind keywords" do
+    node = render_node(
+      NitroKit::DetailsTable.new(
+        @profile,
+        empty_text: "Ikke oplyst",
+        boolean_labels: { true => "Ja", false => "Nej" }
+      )
+    ) { |details| details.fields(:nickname, :active) }
+
+    assert_equal "Ikke oplyst", node.at_css("[data-slot='details-table-empty']").text
+    assert_equal "Ja", node.at_css("[data-slot='details-table-boolean']").text.strip
+    assert_raises(ArgumentError) { NitroKit::DetailsTable.new(@profile, empty_text: " ") }
+    assert_raises(ArgumentError) { NitroKit::DetailsTable.new(@profile, boolean_labels: { true => "Ja" }) }
+    assert_raises(ArgumentError) do
+      NitroKit::DetailsTable.new(@profile, boolean_labels: { true => "Ja", false => "" })
+    end
+  end
+
+  test "rejects duplicate field keys" do
+    assert_raises(ArgumentError) do
+      NitroKit::DetailsTable.new(@profile).call do |details|
+        details.field(:name)
+        details.field("name", label: "Again")
+      end
+    end
+    assert_raises(ArgumentError) do
+      NitroKit::DetailsTable.new(@profile).call { |details| details.fields(:name, :name) }
+    end
+  end
+
+  test "keeps UNSET private" do
+    assert_raises(NameError) { NitroKit::DetailsTable::UNSET }
   end
 
   test "validates cardinality fields labels and missing attributes" do

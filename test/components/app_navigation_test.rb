@@ -24,11 +24,103 @@ class AppNavigationTest < ActiveSupport::TestCase
       node.element_children.map { |child| child["data-slot"] }
 
     body = node.at_css("[data-slot='app-navigation-body']")
+    assert_equal "ul", body.name
     assert_equal %w[app-navigation-item app-navigation-divider app-navigation-section app-navigation-spacer app-navigation-item],
       body.element_children.map { |child| child["data-slot"] }
+    assert_equal %w[li li li li li], body.element_children.map(&:name)
     assert_equal "Manage", body.at_css("[data-slot='app-navigation-section-label']").text
     assert_equal 4, body.css("[data-slot='app-navigation-item']").size
     assert_empty node.css("[class], [style], [data-nk-escape]")
+  end
+
+  test "wraps every entry in list semantics and names each section list" do
+    node = render_navigation do |navigation|
+      navigation.body do
+        navigation.item("Dashboard", href: "/dashboard", current: true)
+        navigation.section(label: "Manage") do
+          navigation.item("Projects", href: "/projects")
+          navigation.divider
+        end
+      end
+    end
+
+    body = node.at_css("[data-slot='app-navigation-body']")
+    section = body.at_css("[data-slot='app-navigation-section']")
+    section_list = section.at_css("[data-slot='app-navigation-section-list']")
+    label = section.at_css("[data-slot='app-navigation-section-label']")
+    dashboard = body.at_css("[data-slot='app-navigation-item'] > [data-slot='app-navigation-item-link']")
+
+    assert_equal "li", section.name
+    assert_equal "span", label.name
+    assert_equal "ul", section_list.name
+    assert_equal "Manage", section_list["aria-label"]
+    assert_equal %w[app-navigation-item app-navigation-divider],
+      section_list.element_children.map { |child| child["data-slot"] }
+    assert_equal "separator", section_list.at_css("[data-slot='app-navigation-divider']")["role"]
+    assert_equal "a", dashboard.name
+    assert_equal "page", dashboard["aria-current"]
+    assert_equal "current", dashboard["data-state"]
+    assert_empty node.css("h1, h2, h3, h4, h5, h6")
+    assert_equal "true", body.at_css("[data-slot='app-navigation-spacer']")["aria-hidden"] if body.at_css("[data-slot='app-navigation-spacer']")
+  end
+
+  test "items accept bounded native attributes and the explicit class escape" do
+    node = render_navigation do |navigation|
+      navigation.body do
+        navigation.item(
+          "Docs",
+          href: "https://example.com/docs",
+          html: { rel: "noopener", target: "_blank" },
+          aria: { describedby: "docs-help" },
+          data: { turbo_frame: "content" },
+          desperately_need_a_class: "external-item"
+        )
+      end
+    end
+
+    link = node.at_css("[data-slot='app-navigation-item-link']")
+
+    assert_equal "noopener", link["rel"]
+    assert_equal "_blank", link["target"]
+    assert_equal "docs-help", link["aria-describedby"]
+    assert_equal "content", link["data-turbo-frame"]
+    assert_equal "external-item", link["class"]
+    assert_equal "class", link["data-nk-escape"]
+
+    [
+      ->(navigation) { navigation.item("One", href: "/one", html: { class: "utility" }) },
+      ->(navigation) { navigation.item("One", href: "/one", data: { state: "current" }) },
+      ->(navigation) { navigation.item("One", href: "/one", aria: { current: "page" }) }
+    ].each do |declaration|
+      assert_raises(ArgumentError) do
+        render_navigation { |navigation| navigation.body { declaration.call(navigation) } }
+      end
+    end
+  end
+
+  test "items expose the badge color vocabulary" do
+    node = render_navigation do |navigation|
+      navigation.body do
+        navigation.item("Incidents", href: "/incidents", badge: 3, badge_color: :danger)
+        navigation.item("Inbox", href: "/inbox", badge: "9")
+      end
+    end
+
+    danger, neutral = node.css("[data-slot='app-navigation-item-badge']")
+
+    assert_equal "danger", danger["data-color"]
+    assert_equal "neutral", neutral["data-color"]
+
+    assert_match(/Unknown color/, assert_raises(ArgumentError) do
+      render_navigation do |navigation|
+        navigation.body { navigation.item("One", href: "/one", badge: "1", badge_color: :chartreuse) }
+      end
+    end.message)
+    assert_match(/badge_color requires a badge/, assert_raises(ArgumentError) do
+      render_navigation do |navigation|
+        navigation.body { navigation.item("One", href: "/one", badge_color: :danger) }
+      end
+    end.message)
   end
 
   test "renders concise icon and badge options as typed decorative components" do
@@ -39,7 +131,7 @@ class AppNavigationTest < ActiveSupport::TestCase
       end
     end
 
-    current, inbox = node.css("[data-slot='app-navigation-item']")
+    current, inbox = node.css("[data-slot='app-navigation-item-link']")
     icon = current.at_css("[data-slot='app-navigation-item-icon']")
     badge = inbox.at_css("[data-slot='app-navigation-item-badge']")
 
@@ -146,11 +238,16 @@ class AppNavigationTest < ActiveSupport::TestCase
       end
     end
 
+    later_declarations = []
     assert_match(/Unknown icon/, assert_raises(ArgumentError) do
       render_navigation do |navigation|
-        navigation.body { navigation.item("One", href: "/one", icon: :definitely_not_an_icon) }
+        navigation.body do
+          navigation.item("One", href: "/one", icon: :definitely_not_an_icon)
+          later_declarations << :unreachable
+        end
       end
     end.message)
+    assert_empty later_declarations
   end
 
   test "rejects declarations in the wrong phase and arbitrary declaration output" do

@@ -37,29 +37,20 @@ module Gallery
               render NitroKit::Container.new(size: :xl, id: "gallery-settings-container") do
                 render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch, id: "gallery-settings-stack") do
                   render NitroKit::SettingsLayout.new(id: "gallery-settings-layout") do |layout|
-                    layout.navigation(label: "Settings sections") { render_settings_navigation }
-                    layout.content(html: { id: "gallery-settings-content" }) { render_state }
+                    layout.navigation(label: "Settings sections") do
+                      settings_sections.each do |slug, label|
+                        layout.item(
+                          label,
+                          href: entry_path(entry, state: slug),
+                          current: setting_section == slug
+                        )
+                      end
+                    end
+                    layout.content { render_state }
                   end
                 end
               end
             end
-          end
-        end
-      end
-
-      def render_settings_navigation
-        render NitroKit::ButtonGroup.new(
-          id: "gallery-settings-navigation",
-          label: "Settings sections"
-        ) do |group|
-          settings_sections.each do |slug, label|
-            group.button(
-              label,
-              id: "gallery-settings-navigation-#{slug}",
-              href: entry_path(entry, state: slug),
-              variant: setting_section == slug ? :primary : :default,
-              aria: { current: setting_section == slug ? "page" : nil }
-            )
           end
         end
       end
@@ -126,7 +117,7 @@ module Gallery
                     :bio,
                     as: :textarea,
                     description: "A short introduction of at most 280 characters.",
-                    control_html: { maxlength: 280 }
+                    maxlength: 280
                   )
                 end
               end
