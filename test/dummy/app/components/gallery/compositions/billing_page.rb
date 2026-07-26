@@ -156,63 +156,65 @@ module Gallery
               id: "gallery-billing-payment-form",
               data: { turbo_frame: "gallery-billing-frame" }
             ) do |form|
-              form.field(
-                :cardholder_name,
-                label: "Name on card",
-                autocomplete: "cc-name",
-                required: true,
-                disabled:
-              )
-              form.field(
-                :card_number,
-                label: "Card number",
-                description: "Enter 16 digits without spaces.",
-                autocomplete: "cc-number",
-                inputmode: "numeric",
-                pattern: "[0-9]{16}",
-                required: true,
-                disabled:
-              )
-              form.field(
-                :expiry,
-                label: "Expiry",
-                description: "Use MM/YY.",
-                autocomplete: "cc-exp",
-                inputmode: "numeric",
-                pattern: "(?:0[1-9]|1[0-2])/[0-9]{2}",
-                required: true,
-                disabled:
-              )
-              form.field(
-                :billing_email,
-                as: :email,
-                label: "Receipt email",
-                autocomplete: "email",
-                required: true,
-                disabled:
-              )
-              form.field(
-                :postal_code,
-                label: "Billing postal code",
-                autocomplete: "postal-code",
-                required: true,
-                disabled:
-              )
-              render NitroKit::Toolbar.new(id: "gallery-billing-payment-actions") do |toolbar|
-                toolbar.leading do
-                  render NitroKit::Button.new(
-                    "Back to plans",
-                    id: "gallery-billing-payment-back",
-                    href: entry_path(entry, state: "plans")
-                  )
-                end
-                toolbar.trailing do
-                  form.submit(
-                    disabled ? "Saving payment method…" : "Save payment method",
-                    id: "gallery-billing-payment-submit",
-                    disabled:,
-                    data: { turbo_submits_with: "Saving payment method…" }
-                  )
+              form.group do
+                form.field(
+                  :cardholder_name,
+                  label: "Name on card",
+                  autocomplete: "cc-name",
+                  required: true,
+                  disabled:
+                )
+                form.field(
+                  :card_number,
+                  label: "Card number",
+                  description: "Enter 16 digits without spaces.",
+                  autocomplete: "cc-number",
+                  inputmode: "numeric",
+                  pattern: "[0-9]{16}",
+                  required: true,
+                  disabled:
+                )
+                form.field(
+                  :expiry,
+                  label: "Expiry",
+                  description: "Use MM/YY.",
+                  autocomplete: "cc-exp",
+                  inputmode: "numeric",
+                  pattern: "(?:0[1-9]|1[0-2])/[0-9]{2}",
+                  required: true,
+                  disabled:
+                )
+                form.field(
+                  :billing_email,
+                  as: :email,
+                  label: "Receipt email",
+                  autocomplete: "email",
+                  required: true,
+                  disabled:
+                )
+                form.field(
+                  :postal_code,
+                  label: "Billing postal code",
+                  autocomplete: "postal-code",
+                  required: true,
+                  disabled:
+                )
+                render NitroKit::Toolbar.new(id: "gallery-billing-payment-actions") do |toolbar|
+                  toolbar.leading do
+                    render NitroKit::Button.new(
+                      "Back to plans",
+                      id: "gallery-billing-payment-back",
+                      href: entry_path(entry, state: "plans")
+                    )
+                  end
+                  toolbar.trailing do
+                    form.submit(
+                      disabled ? "Saving payment method…" : "Save payment method",
+                      id: "gallery-billing-payment-submit",
+                      disabled:,
+                      data: { turbo_submits_with: "Saving payment method…" }
+                    )
+                  end
                 end
               end
             end
@@ -476,36 +478,38 @@ module Gallery
                 id: "gallery-billing-cancellation-form",
                 data: { turbo_frame: "gallery-billing-frame" }
               ) do |form|
-                form.field(
-                  :reason,
-                  as: :radio_group,
-                  label: "Why are you cancelling?",
-                  description: "Choose the closest reason. This does not change the cancellation date.",
-                  options: CANCELLATION_REASONS,
-                  required: true,
-                  disabled:
-                )
-                form.field(
-                  :feedback,
-                  as: :textarea,
-                  label: "Additional feedback",
-                  description: "Optional, up to 500 characters.",
-                  disabled:
-                )
-                form.field(
-                  :confirmed,
-                  as: :checkbox,
-                  label: "I understand paid features end on August 1, 2026",
-                  required: true,
-                  disabled:
-                )
-                form.submit(
-                  disabled ? "Cancelling plan…" : "Cancel Team plan",
-                  id: "gallery-billing-cancellation-submit",
-                  variant: :destructive,
-                  disabled:,
-                  data: { turbo_submits_with: "Cancelling plan…" }
-                )
+                form.group do
+                  form.field(
+                    :reason,
+                    as: :radio_group,
+                    label: "Why are you cancelling?",
+                    description: "Choose the closest reason. This does not change the cancellation date.",
+                    options: CANCELLATION_REASONS,
+                    required: true,
+                    disabled:
+                  )
+                  form.field(
+                    :feedback,
+                    as: :textarea,
+                    label: "Additional feedback",
+                    description: "Optional, up to 500 characters.",
+                    disabled:
+                  )
+                  form.field(
+                    :confirmed,
+                    as: :checkbox,
+                    label: "I understand paid features end on August 1, 2026",
+                    required: true,
+                    disabled:
+                  )
+                  form.submit(
+                    disabled ? "Cancelling plan…" : "Cancel Team plan",
+                    id: "gallery-billing-cancellation-submit",
+                    variant: :destructive,
+                    disabled:,
+                    data: { turbo_submits_with: "Cancelling plan…" }
+                  )
+                end
               end
             end
           end

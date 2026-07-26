@@ -190,36 +190,38 @@ module Gallery
               id: "gallery-api-credential-form",
               data: { turbo_frame: "gallery-api-credentials-frame" }
             ) do |form|
-              form.field(
-                :name,
-                label: "Credential name",
-                description: "Use the application or automation name.",
-                autocomplete: "off",
-                required: true,
-                disabled:
-              )
-              form.field(
-                :access,
-                as: :select,
-                label: "Access level",
-                options: [ [ "Read only", "read_only" ], [ "Read and write", "read_write" ] ],
-                required: true,
-                disabled:
-              )
-              form.field(
-                :expires_in_days,
-                as: :select,
-                label: "Expires after",
-                options: [ [ "30 days", 30 ], [ "90 days", 90 ], [ "180 days", 180 ], [ "365 days", 365 ] ],
-                required: true,
-                disabled:
-              )
-              form.submit(
-                disabled ? "Creating credential…" : "Create credential",
-                id: "gallery-api-credential-submit",
-                disabled:,
-                data: { turbo_submits_with: "Creating credential…" }
-              )
+              form.group do
+                form.field(
+                  :name,
+                  label: "Credential name",
+                  description: "Use the application or automation name.",
+                  autocomplete: "off",
+                  required: true,
+                  disabled:
+                )
+                form.field(
+                  :access,
+                  as: :select,
+                  label: "Access level",
+                  options: [ [ "Read only", "read_only" ], [ "Read and write", "read_write" ] ],
+                  required: true,
+                  disabled:
+                )
+                form.field(
+                  :expires_in_days,
+                  as: :select,
+                  label: "Expires after",
+                  options: [ [ "30 days", 30 ], [ "90 days", 90 ], [ "180 days", 180 ], [ "365 days", 365 ] ],
+                  required: true,
+                  disabled:
+                )
+                form.submit(
+                  disabled ? "Creating credential…" : "Create credential",
+                  id: "gallery-api-credential-submit",
+                  disabled:,
+                  data: { turbo_submits_with: "Creating credential…" }
+                )
+              end
             end
           end
         end
@@ -283,20 +285,22 @@ module Gallery
                   id: "gallery-api-credential-revoke-form",
                   data: { turbo_frame: "gallery-api-credentials-frame" }
                 ) do |form|
-                  form.hidden_field(:key_id)
-                  form.field(
-                    :acknowledged,
-                    as: :checkbox,
-                    label: "I understand that requests using this credential will fail immediately",
-                    required: true
-                  )
-                  form.submit(
-                    "Revoke credential",
-                    id: "gallery-api-credential-revoke-submit",
-                    variant: :destructive,
-                    data: { turbo_submits_with: "Revoking credential…" }
-                  )
-                  dialog.close_button(label: "Keep credential")
+                  form.group do
+                    form.hidden_field(:key_id)
+                    form.field(
+                      :acknowledged,
+                      as: :checkbox,
+                      label: "I understand that requests using this credential will fail immediately",
+                      required: true
+                    )
+                    form.submit(
+                      "Revoke credential",
+                      id: "gallery-api-credential-revoke-submit",
+                      variant: :destructive,
+                      data: { turbo_submits_with: "Revoking credential…" }
+                    )
+                    dialog.close_button(label: "Keep credential")
+                  end
                 end
               end
             end

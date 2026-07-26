@@ -171,29 +171,31 @@ module Gallery
               builder: NitroKit::FormBuilder,
               id: "gallery-data-resource-settings-danger-form"
             ) do |form|
-              render NitroKit::Input.new(
-                type: :hidden,
-                name: "archive_resource[action]",
-                value: action.action
-              )
-              render NitroKit::Input.new(
-                type: :hidden,
-                name: "archive_resource[resource_ids][]",
-                value: selected_resource.id
-              )
-              form.field(
-                :confirmed,
-                as: :checkbox,
-                label: "I understand imports will stop for this resource",
-                required: true
-              )
-              form.submit(
-                "Archive resource",
-                id: "gallery-data-resource-settings-danger-submit",
-                variant: :destructive,
-                disabled: !policy.delete_resource?(selected_resource),
-                data: { turbo_submits_with: "Archiving resource…" }
-              )
+              form.group do
+                render NitroKit::Input.new(
+                  type: :hidden,
+                  name: "archive_resource[action]",
+                  value: action.action
+                )
+                render NitroKit::Input.new(
+                  type: :hidden,
+                  name: "archive_resource[resource_ids][]",
+                  value: selected_resource.id
+                )
+                form.field(
+                  :confirmed,
+                  as: :checkbox,
+                  label: "I understand imports will stop for this resource",
+                  required: true
+                )
+                form.submit(
+                  "Archive resource",
+                  id: "gallery-data-resource-settings-danger-submit",
+                  variant: :destructive,
+                  disabled: !policy.delete_resource?(selected_resource),
+                  data: { turbo_submits_with: "Archiving resource…" }
+                )
+              end
             end
           end
           zone.escape(

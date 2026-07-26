@@ -176,30 +176,32 @@ module Gallery
               card.title("Profile", level: 3)
               card.body do
                 form(id: "gallery-card-profile-form", action: "#profile", method: "post") do
-                  render NitroKit::Field.new(
-                    nil,
-                    :name,
-                    id: "gallery-card-profile-name",
-                    name: "profile[name]",
-                    value: "Ada Lovelace",
-                    label: "Name",
-                    autocomplete: "name",
-                    required: true,
-                    html: { id: "gallery-card-profile-name-field" }
-                  )
-                  render NitroKit::Field.new(
-                    nil,
-                    :email,
-                    as: :email,
-                    id: "gallery-card-profile-email",
-                    name: "profile[email]",
-                    value: "ada@example.test",
-                    label: "Email",
-                    description: "Used for security notices and account recovery.",
-                    autocomplete: "email",
-                    required: true,
-                    html: { id: "gallery-card-profile-email-field" }
-                  )
+                  render NitroKit::FieldGroup.new do
+                    render NitroKit::Field.new(
+                      nil,
+                      :name,
+                      id: "gallery-card-profile-name",
+                      name: "profile[name]",
+                      value: "Ada Lovelace",
+                      label: "Name",
+                      autocomplete: "name",
+                      required: true,
+                      html: { id: "gallery-card-profile-name-field" }
+                    )
+                    render NitroKit::Field.new(
+                      nil,
+                      :email,
+                      as: :email,
+                      id: "gallery-card-profile-email",
+                      name: "profile[email]",
+                      value: "ada@example.test",
+                      label: "Email",
+                      description: "Used for security notices and account recovery.",
+                      autocomplete: "email",
+                      required: true,
+                      html: { id: "gallery-card-profile-email-field" }
+                    )
+                  end
                 end
               end
               card.footer do

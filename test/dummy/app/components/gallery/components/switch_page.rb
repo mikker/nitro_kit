@@ -128,15 +128,17 @@ module Gallery
               builder: NitroKit::FormBuilder,
               id: "gallery-switch-registration-form"
             ) do |form|
-              form.field(
-                :terms,
-                as: :switch,
-                id: "gallery-switch-registration-terms",
-                label: "Accept workspace terms",
-                description: "Required before registration is complete.",
-                required: true
-              )
-              form.submit("Continue", id: "gallery-switch-registration-save")
+              form.group do
+                form.field(
+                  :terms,
+                  as: :switch,
+                  id: "gallery-switch-registration-terms",
+                  label: "Accept workspace terms",
+                  description: "Required before registration is complete.",
+                  required: true
+                )
+                form.submit("Continue", id: "gallery-switch-registration-save")
+              end
             end
           end
         end

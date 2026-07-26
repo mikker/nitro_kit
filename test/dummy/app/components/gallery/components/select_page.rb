@@ -128,17 +128,19 @@ module Gallery
               builder: NitroKit::FormBuilder,
               id: "gallery-select-profile-form"
             ) do |form|
-              form.field(
-                :time_zone,
-                as: :select,
-                id: "gallery-select-profile-time-zone",
-                label: "Time zone",
-                description: "Dates in reports use this display time zone.",
-                prompt: "Choose a time zone",
-                options: Gallery::Forms::Profile::TIME_ZONES,
-                required: true
-              )
-              form.submit("Save time zone", id: "gallery-select-profile-save")
+              form.group do
+                form.field(
+                  :time_zone,
+                  as: :select,
+                  id: "gallery-select-profile-time-zone",
+                  label: "Time zone",
+                  description: "Dates in reports use this display time zone.",
+                  prompt: "Choose a time zone",
+                  options: Gallery::Forms::Profile::TIME_ZONES,
+                  required: true
+                )
+                form.submit("Save time zone", id: "gallery-select-profile-save")
+              end
             end
           end
         end

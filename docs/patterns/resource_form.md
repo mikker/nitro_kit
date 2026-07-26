@@ -14,6 +14,10 @@ Use one model-backed component for both the initial form and validation errors. 
   call `form.submit` in the body.
 - A genuinely standalone form keeps its submit inside the same `form.group` as
   its visible fields.
+- Parents own rhythm: stacked fields always sit inside `FieldGroup`
+  (`form.group` on the builder, or `render NitroKit::FieldGroup.new`). Fields
+  rendered as bare siblings of the `form` element stack with no gap — that is
+  an authoring mistake, not a layout the field can correct itself.
 - Wrap the form in a Turbo Frame only when it is embedded in a larger screen
   and needs an independent lifecycle.
 

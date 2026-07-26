@@ -152,40 +152,42 @@ module Gallery
           end
           section.form do
             form_with(url: "#webhook", scope: :webhook, builder: NitroKit::FormBuilder, id: "gallery-api-webhooks-form") do |form|
-              form.field(
-                :name,
-                label: "Endpoint name",
-                value: invalid ? "" : "Production events",
-                errors: invalid ? [ "cannot be blank" ] : nil,
-                required: true,
-                disabled:
-              )
-              form.field(
-                :url,
-                as: :url,
-                label: "HTTPS endpoint URL",
-                value: invalid ? "http://localhost" : "https://api.example.test/hooks/nitro",
-                errors: invalid ? [ "must use HTTPS" ] : nil,
-                autocomplete: "url",
-                required: true,
-                disabled:
-              )
-              render NitroKit::CheckboxGroup.new(
-                legend: "Delivered events",
-                name: "webhook[events]",
-                id: "gallery-api-webhooks-events",
-                options: [ [ "Deployment created", "deployment.created" ], [ "Incident updated", "incident.updated" ], [ "Member invited", "member.invited" ], [ "Invoice paid", "invoice.paid" ] ],
-                value: invalid ? [] : [ "deployment.created", "incident.updated" ],
-                description: invalid ? "Choose at least one delivered event." : "Choose only events this endpoint is prepared to process.",
-                disabled:,
-                aria: { invalid: invalid ? "true" : nil }
-              )
-              form.submit(
-                disabled ? "Creating endpoint…" : "Create endpoint",
-                id: "gallery-api-webhooks-submit",
-                disabled:,
-                data: { turbo_submits_with: "Creating endpoint…" }
-              )
+              form.group do
+                form.field(
+                  :name,
+                  label: "Endpoint name",
+                  value: invalid ? "" : "Production events",
+                  errors: invalid ? [ "cannot be blank" ] : nil,
+                  required: true,
+                  disabled:
+                )
+                form.field(
+                  :url,
+                  as: :url,
+                  label: "HTTPS endpoint URL",
+                  value: invalid ? "http://localhost" : "https://api.example.test/hooks/nitro",
+                  errors: invalid ? [ "must use HTTPS" ] : nil,
+                  autocomplete: "url",
+                  required: true,
+                  disabled:
+                )
+                render NitroKit::CheckboxGroup.new(
+                  legend: "Delivered events",
+                  name: "webhook[events]",
+                  id: "gallery-api-webhooks-events",
+                  options: [ [ "Deployment created", "deployment.created" ], [ "Incident updated", "incident.updated" ], [ "Member invited", "member.invited" ], [ "Invoice paid", "invoice.paid" ] ],
+                  value: invalid ? [] : [ "deployment.created", "incident.updated" ],
+                  description: invalid ? "Choose at least one delivered event." : "Choose only events this endpoint is prepared to process.",
+                  disabled:,
+                  aria: { invalid: invalid ? "true" : nil }
+                )
+                form.submit(
+                  disabled ? "Creating endpoint…" : "Create endpoint",
+                  id: "gallery-api-webhooks-submit",
+                  disabled:,
+                  data: { turbo_submits_with: "Creating endpoint…" }
+                )
+              end
             end
           end
         end

@@ -94,29 +94,31 @@ module Gallery
               card.title("Promote release", level: 3)
               card.body do
                 form(id: "gallery-combobox-deployment-form", action: "/gallery/deployments", method: "post") do
-                  render NitroKit::Field.new(
-                    nil,
-                    :release,
-                    id: "gallery-combobox-release",
-                    name: "deployment[release]",
-                    label: "Release",
-                    value: "2026.07.13",
-                    readonly: true
-                  )
-                  render NitroKit::Combobox.new(
-                    id: "gallery-combobox-environment",
-                    name: "deployment[environment]",
-                    label: "Target environment",
-                    options: ENVIRONMENTS,
-                    value: "production",
-                    required: true
-                  )
-                  render NitroKit::Button.new(
-                    "Promote release",
-                    id: "gallery-combobox-submit",
-                    type: :submit,
-                    variant: :primary
-                  )
+                  render NitroKit::FieldGroup.new do
+                    render NitroKit::Field.new(
+                      nil,
+                      :release,
+                      id: "gallery-combobox-release",
+                      name: "deployment[release]",
+                      label: "Release",
+                      value: "2026.07.13",
+                      readonly: true
+                    )
+                    render NitroKit::Combobox.new(
+                      id: "gallery-combobox-environment",
+                      name: "deployment[environment]",
+                      label: "Target environment",
+                      options: ENVIRONMENTS,
+                      value: "production",
+                      required: true
+                    )
+                    render NitroKit::Button.new(
+                      "Promote release",
+                      id: "gallery-combobox-submit",
+                      type: :submit,
+                      variant: :primary
+                    )
+                  end
                 end
               end
             end
@@ -138,17 +140,19 @@ module Gallery
               builder: NitroKit::FormBuilder,
               id: "gallery-combobox-billing-form"
             ) do |form|
-              form.field(
-                :country,
-                as: :combobox,
-                id: "gallery-combobox-billing-country",
-                label: "Billing country",
-                description: "Invoices apply this country's tax rules.",
-                options: BILLING_COUNTRIES,
-                placeholder: "Search countries",
-                required: true
-              )
-              form.submit("Save billing country", id: "gallery-combobox-billing-save")
+              form.group do
+                form.field(
+                  :country,
+                  as: :combobox,
+                  id: "gallery-combobox-billing-country",
+                  label: "Billing country",
+                  description: "Invoices apply this country's tax rules.",
+                  options: BILLING_COUNTRIES,
+                  placeholder: "Search countries",
+                  required: true
+                )
+                form.submit("Save billing country", id: "gallery-combobox-billing-save")
+              end
             end
           end
         end

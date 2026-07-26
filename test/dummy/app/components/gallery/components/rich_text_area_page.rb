@@ -28,15 +28,17 @@ module Gallery
               builder: NitroKit::FormBuilder,
               id: "gallery-rich-text-form"
             ) do |form|
-              form.field(:name, label: "Project name")
-              form.field(
-                :brief,
-                as: :rich_text,
-                label: "Project brief",
-                description: "Shared with everyone who can see the project.",
-                required: true
-              )
-              form.submit("Save brief", id: "gallery-rich-text-save")
+              form.group do
+                form.field(:name, label: "Project name")
+                form.field(
+                  :brief,
+                  as: :rich_text,
+                  label: "Project brief",
+                  description: "Shared with everyone who can see the project.",
+                  required: true
+                )
+                form.submit("Save brief", id: "gallery-rich-text-save")
+              end
             end
           end
 

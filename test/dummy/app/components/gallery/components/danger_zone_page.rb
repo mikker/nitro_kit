@@ -53,8 +53,10 @@ module Gallery
                     description: "Confirm only after every production client has rotated to another credential."
                   ) do
                     form(action: "#delete-credential", method: :post, id: "gallery-danger-zone-dialog-form") do
-                      render NitroKit::Field.new(nil, :confirmation, label: "Type Production Deploy", required: true)
-                      render NitroKit::Button.new("Delete credential", type: :submit, variant: :destructive)
+                      render NitroKit::FieldGroup.new do
+                        render NitroKit::Field.new(nil, :confirmation, label: "Type Production Deploy", required: true)
+                        render NitroKit::Button.new("Delete credential", type: :submit, variant: :destructive)
+                      end
                     end
                     dialog.close_button(label: "Cancel deletion")
                   end

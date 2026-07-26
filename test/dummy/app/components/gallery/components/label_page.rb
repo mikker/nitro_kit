@@ -108,14 +108,16 @@ module Gallery
               builder: NitroKit::FormBuilder,
               id: "gallery-label-profile-form"
             ) do |form|
-              form.field(:name, id: "gallery-label-profile-name", required: true)
-              form.field(
-                :email,
-                as: :email,
-                id: "gallery-label-profile-email",
-                label: "Account email",
-                description: "Used for recovery and security notices."
-              )
+              form.group do
+                form.field(:name, id: "gallery-label-profile-name", required: true)
+                form.field(
+                  :email,
+                  as: :email,
+                  id: "gallery-label-profile-email",
+                  label: "Account email",
+                  description: "Used for recovery and security notices."
+                )
+              end
             end
           end
         end

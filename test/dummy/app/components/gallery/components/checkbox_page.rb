@@ -148,17 +148,19 @@ module Gallery
               builder: NitroKit::FormBuilder,
               id: "gallery-checkbox-registration-form"
             ) do |form|
-              form.field(
-                :terms,
-                as: :checkbox,
-                id: "gallery-checkbox-registration-terms",
-                label: "I accept the workspace terms",
-                description: "Required before the invitation can be accepted.",
-                checked_value: "yes",
-                unchecked_value: "no",
-                required: true
-              )
-              form.submit("Accept invitation", id: "gallery-checkbox-registration-save")
+              form.group do
+                form.field(
+                  :terms,
+                  as: :checkbox,
+                  id: "gallery-checkbox-registration-terms",
+                  label: "I accept the workspace terms",
+                  description: "Required before the invitation can be accepted.",
+                  checked_value: "yes",
+                  unchecked_value: "no",
+                  required: true
+                )
+                form.submit("Accept invitation", id: "gallery-checkbox-registration-save")
+              end
             end
           end
         end

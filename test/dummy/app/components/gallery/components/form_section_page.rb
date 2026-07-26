@@ -29,9 +29,11 @@ module Gallery
               end
               section.form do
                 form_with(url: "#profile", scope: :profile, builder: NitroKit::FormBuilder, id: "gallery-form-section-validation-form") do |form|
-                  form.field(:name, label: "Display name", value: "", errors: [ "cannot be blank" ], required: true)
-                  form.field(:email, as: :email, label: "Email", value: "not-an-email", errors: [ "is invalid" ], required: true)
-                  form.submit("Save profile")
+                  form.group do
+                    form.field(:name, label: "Display name", value: "", errors: [ "cannot be blank" ], required: true)
+                    form.field(:email, as: :email, label: "Email", value: "not-an-email", errors: [ "is invalid" ], required: true)
+                    form.submit("Save profile")
+                  end
                 end
               end
             end
@@ -49,9 +51,11 @@ module Gallery
               end
               section.form do
                 form_with(url: "#notifications", scope: :notifications, builder: NitroKit::FormBuilder, id: "gallery-form-section-success-form") do |form|
-                  form.field(:incidents, as: :switch, label: "Incident alerts", checked: true)
-                  form.field(:summaries, as: :switch, label: "Weekly summaries", checked: true)
-                  form.submit("Save notifications")
+                  form.group do
+                    form.field(:incidents, as: :switch, label: "Incident alerts", checked: true)
+                    form.field(:summaries, as: :switch, label: "Weekly summaries", checked: true)
+                    form.submit("Save notifications")
+                  end
                 end
               end
             end
@@ -80,10 +84,12 @@ module Gallery
         render NitroKit::FormSection.new(title:, description:, id:) do |section|
           section.form do
             form_with(url: "##{id}", scope: :workspace, builder: NitroKit::FormBuilder, id: "#{id}-form") do |form|
-              fields.each do |name, label|
-                form.field(name, id: "#{id}-#{name}", label:, required: true)
+              form.group do
+                fields.each do |name, label|
+                  form.field(name, id: "#{id}-#{name}", label:, required: true)
+                end
+                form.submit("Save changes")
               end
-              form.submit("Save changes")
             end
           end
         end

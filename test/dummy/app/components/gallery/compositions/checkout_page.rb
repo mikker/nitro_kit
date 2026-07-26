@@ -98,24 +98,26 @@ module Gallery
               builder: NitroKit::FormBuilder,
               id: "gallery-checkout-payment-form"
             ) do |form|
-              form.field(:cardholder_name, label: "Cardholder name", autocomplete: "cc-name", required: true, disabled:)
-              form.field(
-                :card_number,
-                label: "Card number",
-                autocomplete: "cc-number",
-                inputmode: "numeric",
-                required: true,
-                disabled:
-              )
-              form.field(:expiry, label: "Expiry", autocomplete: "cc-exp", required: true, disabled:)
-              form.field(:billing_email, as: :email, label: "Receipt email", autocomplete: "email", required: true, disabled:)
-              form.field(:postal_code, label: "Billing postal code", autocomplete: "postal-code", required: true, disabled:)
-              form.submit(
-                disabled ? "Authorizing payment…" : "Pay $49.00",
-                id: "gallery-checkout-payment-submit",
-                disabled:,
-                data: { turbo_submits_with: "Authorizing payment…" }
-              )
+              form.group do
+                form.field(:cardholder_name, label: "Cardholder name", autocomplete: "cc-name", required: true, disabled:)
+                form.field(
+                  :card_number,
+                  label: "Card number",
+                  autocomplete: "cc-number",
+                  inputmode: "numeric",
+                  required: true,
+                  disabled:
+                )
+                form.field(:expiry, label: "Expiry", autocomplete: "cc-exp", required: true, disabled:)
+                form.field(:billing_email, as: :email, label: "Receipt email", autocomplete: "email", required: true, disabled:)
+                form.field(:postal_code, label: "Billing postal code", autocomplete: "postal-code", required: true, disabled:)
+                form.submit(
+                  disabled ? "Authorizing payment…" : "Pay $49.00",
+                  id: "gallery-checkout-payment-submit",
+                  disabled:,
+                  data: { turbo_submits_with: "Authorizing payment…" }
+                )
+              end
             end
           end
         end
@@ -162,9 +164,11 @@ module Gallery
           end
           section.form do
             form_with(url: "#checkout-retry", scope: :retry, builder: NitroKit::FormBuilder, id: "gallery-checkout-retry-form") do |form|
-              form.field(:card_number, label: "Replacement card number", autocomplete: "cc-number", required: true)
-              form.field(:postal_code, label: "Billing postal code", autocomplete: "postal-code", required: true)
-              form.submit("Retry $49.00 payment", id: "gallery-checkout-retry-submit")
+              form.group do
+                form.field(:card_number, label: "Replacement card number", autocomplete: "cc-number", required: true)
+                form.field(:postal_code, label: "Billing postal code", autocomplete: "postal-code", required: true)
+                form.submit("Retry $49.00 payment", id: "gallery-checkout-retry-submit")
+              end
             end
           end
         end

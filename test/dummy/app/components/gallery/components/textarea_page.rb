@@ -124,15 +124,17 @@ module Gallery
               builder: NitroKit::FormBuilder,
               id: "gallery-textarea-profile-form"
             ) do |form|
-              form.field(
-                :bio,
-                as: :textarea,
-                id: "gallery-textarea-profile-bio",
-                description: "A short biography shown to workspace members.",
-                required: true,
-                maxlength: 280
-              )
-              form.submit("Save biography", id: "gallery-textarea-profile-save")
+              form.group do
+                form.field(
+                  :bio,
+                  as: :textarea,
+                  id: "gallery-textarea-profile-bio",
+                  description: "A short biography shown to workspace members.",
+                  required: true,
+                  maxlength: 280
+                )
+                form.submit("Save biography", id: "gallery-textarea-profile-save")
+              end
             end
           end
         end

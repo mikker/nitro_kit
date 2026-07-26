@@ -330,37 +330,39 @@ module Gallery
               id: "gallery-users-bulk-form",
               data: { turbo_frame: "gallery-users-frame" }
             ) do |form|
-              render NitroKit::CheckboxGroup.new(
-                id: "gallery-users-bulk-selection",
-                legend: "Users to update",
-                description: "Workspace owners cannot be suspended or removed.",
-                name: "gallery_forms_bulk_user_action[member_ids][]",
-                options: USERS.map do |user|
-                  NitroKit::Choice.new(
-                    label: "#{user.name} — #{user.email}",
-                    value: user.id,
-                    disabled: user.role == :owner
-                  )
-                end,
-                value: bulk_action.member_ids
-              )
-              form.field(
-                :action,
-                as: :select,
-                label: "Action",
-                options: [
-                  [ "Resend invitation", "remind" ],
-                  [ "Suspend access", "suspend" ],
-                  [ "Remove from workspace", "remove" ]
-                ],
-                prompt: "Choose an action",
-                required: true
-              )
-              form.submit(
-                "Review 2 selected users",
-                id: "gallery-users-bulk-review",
-                data: { turbo_submits_with: "Preparing review…" }
-              )
+              form.group do
+                render NitroKit::CheckboxGroup.new(
+                  id: "gallery-users-bulk-selection",
+                  legend: "Users to update",
+                  description: "Workspace owners cannot be suspended or removed.",
+                  name: "gallery_forms_bulk_user_action[member_ids][]",
+                  options: USERS.map do |user|
+                    NitroKit::Choice.new(
+                      label: "#{user.name} — #{user.email}",
+                      value: user.id,
+                      disabled: user.role == :owner
+                    )
+                  end,
+                  value: bulk_action.member_ids
+                )
+                form.field(
+                  :action,
+                  as: :select,
+                  label: "Action",
+                  options: [
+                    [ "Resend invitation", "remind" ],
+                    [ "Suspend access", "suspend" ],
+                    [ "Remove from workspace", "remove" ]
+                  ],
+                  prompt: "Choose an action",
+                  required: true
+                )
+                form.submit(
+                  "Review 2 selected users",
+                  id: "gallery-users-bulk-review",
+                  data: { turbo_submits_with: "Preparing review…" }
+                )
+              end
             end
             render NitroKit::Button.new(
               "Cancel bulk action",
@@ -399,30 +401,32 @@ module Gallery
               id: "gallery-users-bulk-confirmation-form",
               data: { turbo_frame: "gallery-users-frame" }
             ) do |form|
-              render NitroKit::Input.new(
-                type: :hidden,
-                name: "gallery_forms_bulk_user_action[action]",
-                value: bulk_action.action
-              )
-              bulk_action.member_ids.each do |member_id|
+              form.group do
                 render NitroKit::Input.new(
                   type: :hidden,
-                  name: "gallery_forms_bulk_user_action[member_ids][]",
-                  value: member_id
+                  name: "gallery_forms_bulk_user_action[action]",
+                  value: bulk_action.action
+                )
+                bulk_action.member_ids.each do |member_id|
+                  render NitroKit::Input.new(
+                    type: :hidden,
+                    name: "gallery_forms_bulk_user_action[member_ids][]",
+                    value: member_id
+                  )
+                end
+                form.field(
+                  :confirmed,
+                  as: :checkbox,
+                  label: "I understand this ends active sessions for the selected users",
+                  required: true
+                )
+                form.submit(
+                  "Suspend 2 users",
+                  id: "gallery-users-bulk-confirm",
+                  variant: :destructive,
+                  data: { turbo_submits_with: "Suspending users…" }
                 )
               end
-              form.field(
-                :confirmed,
-                as: :checkbox,
-                label: "I understand this ends active sessions for the selected users",
-                required: true
-              )
-              form.submit(
-                "Suspend 2 users",
-                id: "gallery-users-bulk-confirm",
-                variant: :destructive,
-                data: { turbo_submits_with: "Suspending users…" }
-              )
             end
           end
           zone.escape NitroKit::Button.new(
@@ -514,32 +518,34 @@ module Gallery
           id: "gallery-users-search-form",
           data: { turbo_frame: "gallery-users-frame" }
         ) do |form|
-          form.field(
-            :query,
-            as: :search,
-            label: "Name or email",
-            placeholder: "Search users",
-            autocomplete: "off",
-            disabled:
-          )
-          form.field(
-            :status,
-            as: :select,
-            label: "Status",
-            options: [
-              [ "All statuses", "all" ],
-              [ "Active", "active" ],
-              [ "Invited", "invited" ],
-              [ "Suspended", "suspended" ]
-            ],
-            disabled:
-          )
-          form.submit(
-            disabled ? "Searching…" : "Search users",
-            id: "gallery-users-search-submit",
-            disabled:,
-            data: { turbo_submits_with: "Searching…" }
-          )
+          form.group do
+            form.field(
+              :query,
+              as: :search,
+              label: "Name or email",
+              placeholder: "Search users",
+              autocomplete: "off",
+              disabled:
+            )
+            form.field(
+              :status,
+              as: :select,
+              label: "Status",
+              options: [
+                [ "All statuses", "all" ],
+                [ "Active", "active" ],
+                [ "Invited", "invited" ],
+                [ "Suspended", "suspended" ]
+              ],
+              disabled:
+            )
+            form.submit(
+              disabled ? "Searching…" : "Search users",
+              id: "gallery-users-search-submit",
+              disabled:,
+              data: { turbo_submits_with: "Searching…" }
+            )
+          end
         end
       end
 

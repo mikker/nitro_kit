@@ -121,25 +121,27 @@ module Gallery
               builder: NitroKit::FormBuilder,
               id: "gallery-radio-button-invitation-form"
             ) do |form|
-              form.radio_button(
-                :role,
-                "admin",
-                id: "gallery-radio-button-builder-admin",
-                aria: { label: "Administrator" }
-              )
-              form.radio_button(
-                :role,
-                "member",
-                id: "gallery-radio-button-builder-member",
-                aria: { label: "Member" }
-              )
-              form.radio_button(
-                :role,
-                "viewer",
-                id: "gallery-radio-button-builder-viewer",
-                aria: { label: "Viewer" },
-                disabled: true
-              )
+              form.group do
+                form.radio_button(
+                  :role,
+                  "admin",
+                  id: "gallery-radio-button-builder-admin",
+                  aria: { label: "Administrator" }
+                )
+                form.radio_button(
+                  :role,
+                  "member",
+                  id: "gallery-radio-button-builder-member",
+                  aria: { label: "Member" }
+                )
+                form.radio_button(
+                  :role,
+                  "viewer",
+                  id: "gallery-radio-button-builder-viewer",
+                  aria: { label: "Viewer" },
+                  disabled: true
+                )
+              end
             end
           end
         end

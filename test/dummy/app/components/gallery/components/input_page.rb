@@ -120,25 +120,27 @@ module Gallery
               card.title("Schedule production release", level: 3)
               card.body do
                 form(id: "gallery-input-date-release-form", action: "/gallery/releases", method: "post") do
-                  render NitroKit::Field.new(
-                    nil,
-                    :release_date,
-                    as: :date,
-                    id: "gallery-input-date-release-date",
-                    name: "release[date]",
-                    label: "Release date",
-                    description: "Choose a weekday within the next thirty days.",
-                    value: Date.new(2026, 7, 20),
-                    min: Date.new(2026, 7, 13),
-                    max: Date.new(2026, 8, 12),
-                    required: true
-                  )
-                  render NitroKit::Button.new(
-                    "Schedule release",
-                    id: "gallery-input-date-schedule",
-                    type: :submit,
-                    variant: :primary
-                  )
+                  render NitroKit::FieldGroup.new do
+                    render NitroKit::Field.new(
+                      nil,
+                      :release_date,
+                      as: :date,
+                      id: "gallery-input-date-release-date",
+                      name: "release[date]",
+                      label: "Release date",
+                      description: "Choose a weekday within the next thirty days.",
+                      value: Date.new(2026, 7, 20),
+                      min: Date.new(2026, 7, 13),
+                      max: Date.new(2026, 8, 12),
+                      required: true
+                    )
+                    render NitroKit::Button.new(
+                      "Schedule release",
+                      id: "gallery-input-date-schedule",
+                      type: :submit,
+                      variant: :primary
+                    )
+                  end
                 end
               end
             end

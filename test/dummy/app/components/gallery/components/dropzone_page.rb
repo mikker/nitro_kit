@@ -83,25 +83,27 @@ module Gallery
               id: "gallery-dropzone-shared-form",
               data: { turbo: false }
             ) do |form|
-              form.dropzone(
-                :primary_file,
-                id: "gallery-dropzone-shared-primary",
-                label: "Upload primary evidence",
-                accept: "text/plain"
-              )
-              form.dropzone(
-                :secondary_file,
-                id: "gallery-dropzone-shared-secondary",
-                label: "Upload secondary evidence",
-                accept: "text/plain"
-              )
-              form.submit("Save both uploads", id: "gallery-dropzone-shared-submit")
-              form.button(
-                "Unavailable action",
-                id: "gallery-dropzone-shared-disabled-submit",
-                type: :submit,
-                disabled: true
-              )
+              form.group do
+                form.dropzone(
+                  :primary_file,
+                  id: "gallery-dropzone-shared-primary",
+                  label: "Upload primary evidence",
+                  accept: "text/plain"
+                )
+                form.dropzone(
+                  :secondary_file,
+                  id: "gallery-dropzone-shared-secondary",
+                  label: "Upload secondary evidence",
+                  accept: "text/plain"
+                )
+                form.submit("Save both uploads", id: "gallery-dropzone-shared-submit")
+                form.button(
+                  "Unavailable action",
+                  id: "gallery-dropzone-shared-disabled-submit",
+                  type: :submit,
+                  disabled: true
+                )
+              end
             end
           end
         end

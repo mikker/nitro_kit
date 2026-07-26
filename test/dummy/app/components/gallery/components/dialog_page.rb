@@ -115,35 +115,37 @@ module Gallery
                 description: "Choose an address and the role this person should receive."
               ) do
                 form(id: "gallery-dialog-invite-form", action: "#invite", method: "post") do
-                  render NitroKit::Field.new(
-                    nil,
-                    :email,
-                    as: :email,
-                    id: "gallery-dialog-invite-email",
-                    name: "invitation[email]",
-                    value: "katherine@example.test",
-                    label: "Email",
-                    autocomplete: "email",
-                    required: true,
-                    html: { id: "gallery-dialog-invite-email-field" }
-                  )
-                  render NitroKit::Field.new(
-                    nil,
-                    :role,
-                    as: :select,
-                    id: "gallery-dialog-invite-role",
-                    name: "invitation[role]",
-                    value: "member",
-                    label: "Role",
-                    options: Gallery::Forms::TeamInvitation::ROLES,
-                    html: { id: "gallery-dialog-invite-role-field" }
-                  )
-                  render NitroKit::Button.new(
-                    "Send invitation",
-                    id: "gallery-dialog-invite-submit",
-                    type: :submit,
-                    variant: :primary
-                  )
+                  render NitroKit::FieldGroup.new do
+                    render NitroKit::Field.new(
+                      nil,
+                      :email,
+                      as: :email,
+                      id: "gallery-dialog-invite-email",
+                      name: "invitation[email]",
+                      value: "katherine@example.test",
+                      label: "Email",
+                      autocomplete: "email",
+                      required: true,
+                      html: { id: "gallery-dialog-invite-email-field" }
+                    )
+                    render NitroKit::Field.new(
+                      nil,
+                      :role,
+                      as: :select,
+                      id: "gallery-dialog-invite-role",
+                      name: "invitation[role]",
+                      value: "member",
+                      label: "Role",
+                      options: Gallery::Forms::TeamInvitation::ROLES,
+                      html: { id: "gallery-dialog-invite-role-field" }
+                    )
+                    render NitroKit::Button.new(
+                      "Send invitation",
+                      id: "gallery-dialog-invite-submit",
+                      type: :submit,
+                      variant: :primary
+                    )
+                  end
                   dialog.close_button(label: "Cancel invitation")
                 end
               end

@@ -94,6 +94,12 @@ Successful non-GET HTML submissions redirect with `303 See Other`. Invalid form 
 - Select `NitroKit::FormBuilder` explicitly from Rails `form_with`.
 - Put a standalone form's visible fields, submit control, and related links
   inside `form.group`; hidden fields may remain before the group.
+- Parents own rhythm. Wrap stacked fields in `FieldGroup` — as
+  `render NitroKit::FieldGroup.new { ... }`, or `form.group` inside a
+  `form_with` block. Two Fields, or a Field and its submit Button, rendered as
+  bare siblings of a `form` or a plain `div` have no gap between them at all.
+  Use `Flex` or `Grid` instead only when the arrangement is deliberately
+  inline or multi-column.
 - Use component options, compound declarations, layouts, and documented `--nk-*` theme properties.
 - Keep an HTML fallback for every Turbo form flow.
 - Test semantic output and stable owned attributes.

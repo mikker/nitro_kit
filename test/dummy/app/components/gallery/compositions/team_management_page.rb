@@ -166,24 +166,26 @@ module Gallery
           method: :get,
           data: { turbo_frame: "gallery-team-management-frame" }
         ) do
-          render NitroKit::Field.new(
-            nil,
-            :query,
-            as: :search,
-            id: "gallery-team-search-query",
-            name: "team[query]",
-            value: "Grace",
-            label: "Search members",
-            placeholder: "Name or email",
-            autocomplete: "off"
-          )
-          render NitroKit::Button.new(
-            "Search",
-            id: "gallery-team-search-submit",
-            type: :submit,
-            variant: :primary,
-            data: { turbo_submits_with: "Searching…" }
-          )
+          render NitroKit::FieldGroup.new do
+            render NitroKit::Field.new(
+              nil,
+              :query,
+              as: :search,
+              id: "gallery-team-search-query",
+              name: "team[query]",
+              value: "Grace",
+              label: "Search members",
+              placeholder: "Name or email",
+              autocomplete: "off"
+            )
+            render NitroKit::Button.new(
+              "Search",
+              id: "gallery-team-search-submit",
+              type: :submit,
+              variant: :primary,
+              data: { turbo_submits_with: "Searching…" }
+            )
+          end
         end
         render NitroKit::DataSection.new(
           title: "Search results",
@@ -258,35 +260,37 @@ module Gallery
               id: "gallery-team-invitation-form",
               data: { turbo_frame: "gallery-team-management-frame" }
             ) do |form|
-              form.field(
-                :email,
-                as: :email,
-                label: "Email address",
-                autocomplete: "email",
-                required: true,
-                disabled:
-              )
-              form.field(
-                :role,
-                as: :select,
-                label: "Workspace role",
-                options: [ [ "Administrator", "admin" ], [ "Member", "member" ], [ "Viewer", "viewer" ] ],
-                required: true,
-                disabled:
-              )
-              form.field(
-                :message,
-                as: :textarea,
-                label: "Invitation message",
-                description: "Optional. Keep the message below 240 characters.",
-                disabled:
-              )
-              form.submit(
-                disabled ? "Sending invitation…" : "Send invitation",
-                id: "gallery-team-invitation-submit",
-                disabled:,
-                data: { turbo_submits_with: "Sending invitation…" }
-              )
+              form.group do
+                form.field(
+                  :email,
+                  as: :email,
+                  label: "Email address",
+                  autocomplete: "email",
+                  required: true,
+                  disabled:
+                )
+                form.field(
+                  :role,
+                  as: :select,
+                  label: "Workspace role",
+                  options: [ [ "Administrator", "admin" ], [ "Member", "member" ], [ "Viewer", "viewer" ] ],
+                  required: true,
+                  disabled:
+                )
+                form.field(
+                  :message,
+                  as: :textarea,
+                  label: "Invitation message",
+                  description: "Optional. Keep the message below 240 characters.",
+                  disabled:
+                )
+                form.submit(
+                  disabled ? "Sending invitation…" : "Send invitation",
+                  id: "gallery-team-invitation-submit",
+                  disabled:,
+                  data: { turbo_submits_with: "Sending invitation…" }
+                )
+              end
             end
           end
         end
@@ -312,20 +316,22 @@ module Gallery
               id: "gallery-team-role-form",
               data: { turbo_frame: "gallery-team-management-frame" }
             ) do |form|
-              form.hidden_field(:action)
-              form.hidden_field(:member_id)
-              form.field(
-                :role,
-                as: :select,
-                label: "New role",
-                options: [ [ "Administrator", "admin" ], [ "Member", "member" ], [ "Viewer", "viewer" ] ],
-                required: true
-              )
-              form.submit(
-                "Update role",
-                id: "gallery-team-role-submit",
-                data: { turbo_submits_with: "Updating role…" }
-              )
+              form.group do
+                form.hidden_field(:action)
+                form.hidden_field(:member_id)
+                form.field(
+                  :role,
+                  as: :select,
+                  label: "New role",
+                  options: [ [ "Administrator", "admin" ], [ "Member", "member" ], [ "Viewer", "viewer" ] ],
+                  required: true
+                )
+                form.submit(
+                  "Update role",
+                  id: "gallery-team-role-submit",
+                  data: { turbo_submits_with: "Updating role…" }
+                )
+              end
             end
           end
         end
@@ -353,22 +359,24 @@ module Gallery
                   id: "gallery-team-remove-form",
                   data: { turbo_frame: "gallery-team-management-frame" }
                 ) do |form|
-                  form.hidden_field(:action)
-                  form.hidden_field(:member_id)
-                  form.field(
-                    :confirmation,
-                    as: :email,
-                    label: "Type grace@example.test to confirm",
-                    autocomplete: "off",
-                    required: true
-                  )
-                  form.submit(
-                    "Remove member",
-                    id: "gallery-team-remove-submit",
-                    variant: :destructive,
-                    data: { turbo_submits_with: "Removing member…" }
-                  )
-                  dialog.close_button(label: "Keep team member")
+                  form.group do
+                    form.hidden_field(:action)
+                    form.hidden_field(:member_id)
+                    form.field(
+                      :confirmation,
+                      as: :email,
+                      label: "Type grace@example.test to confirm",
+                      autocomplete: "off",
+                      required: true
+                    )
+                    form.submit(
+                      "Remove member",
+                      id: "gallery-team-remove-submit",
+                      variant: :destructive,
+                      data: { turbo_submits_with: "Removing member…" }
+                    )
+                    dialog.close_button(label: "Keep team member")
+                  end
                 end
               end
             end

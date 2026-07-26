@@ -127,16 +127,18 @@ module Gallery
               builder: NitroKit::FormBuilder,
               id: "gallery-radio-button-group-invitation-form"
             ) do |form|
-              form.field(
-                :role,
-                as: :radio_group,
-                id: "gallery-radio-button-group-invitation-role",
-                label: "Invitation role",
-                description: "Choose the least privileged role that supports the member's work.",
-                options: [ [ "Administrator", "admin" ], [ "Member", "member" ], [ "Viewer", "viewer" ] ],
-                required: true
-              )
-              form.submit("Send invitation", id: "gallery-radio-button-group-invitation-save")
+              form.group do
+                form.field(
+                  :role,
+                  as: :radio_group,
+                  id: "gallery-radio-button-group-invitation-role",
+                  label: "Invitation role",
+                  description: "Choose the least privileged role that supports the member's work.",
+                  options: [ [ "Administrator", "admin" ], [ "Member", "member" ], [ "Viewer", "viewer" ] ],
+                  required: true
+                )
+                form.submit("Send invitation", id: "gallery-radio-button-group-invitation-save")
+              end
             end
           end
         end

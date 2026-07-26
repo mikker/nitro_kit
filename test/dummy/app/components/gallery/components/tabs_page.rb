@@ -114,24 +114,26 @@ module Gallery
           card.title("Workspace profile", level: 3)
           card.body do
             form(id: "gallery-tabs-profile-form", action: "#workspace-profile", method: "post") do
-              render NitroKit::Field.new(
-                nil,
-                :name,
-                id: "gallery-tabs-profile-name",
-                name: "workspace[name]",
-                value: "Mothership",
-                label: "Workspace name",
-                required: true
-              )
-              render NitroKit::Field.new(
-                nil,
-                :time_zone,
-                id: "gallery-tabs-profile-time-zone",
-                name: "workspace[time_zone]",
-                value: "Europe/Copenhagen",
-                label: "Time zone",
-                description: "Used for reports and scheduled notifications."
-              )
+              render NitroKit::FieldGroup.new do
+                render NitroKit::Field.new(
+                  nil,
+                  :name,
+                  id: "gallery-tabs-profile-name",
+                  name: "workspace[name]",
+                  value: "Mothership",
+                  label: "Workspace name",
+                  required: true
+                )
+                render NitroKit::Field.new(
+                  nil,
+                  :time_zone,
+                  id: "gallery-tabs-profile-time-zone",
+                  name: "workspace[time_zone]",
+                  value: "Europe/Copenhagen",
+                  label: "Time zone",
+                  description: "Used for reports and scheduled notifications."
+                )
+              end
             end
           end
           card.footer do
