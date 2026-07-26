@@ -208,7 +208,7 @@ Override semantic colors as coordinated foreground pairs for light, dark, and no
 
 Nitro's appearance runtime owns a persistent light, dark, or live system preference. Render `NitroKit::AppearanceBootstrap` in `head` before stylesheet links, and place `NitroKit::AppearancePicker` wherever people choose it. Without JavaScript, the token layer still follows `prefers-color-scheme`. Explicit `data-theme="light"` and `data-theme="dark"` contracts override that fallback.
 
-Public tokens cover semantic colors, the raised default-button treatment, typography, spacing, radii, borders, focus geometry, shadows, motion, control heights, content widths, and application-shell chrome. The default Button has component-specific color tokens so changing it does not recolor data-entry surfaces. Variables beginning with `--_nk-` are private component mechanics. The [customization guide](docs/customization.md) is the complete supported-token reference and includes load order, global and scoped light/dark/system recipes, the gallery wizard, shell composition, and the optional Tailwind adapter. [Rails and Hotwire integration](docs/rails_integration.md#appearance-and-content-security-policy) documents bootstrap placement, persistence, and nonce- and hash-based CSP setup.
+Public tokens cover semantic colors, the raised default-button treatment, typography, spacing, radii, borders, focus geometry, shadows, motion, control heights, content widths, and application-shell chrome. The default Button has component-specific color tokens so changing it does not recolor data-entry surfaces. Variables beginning with `--_nk-` are private component mechanics. The [customization guide](docs/customization.md) is the complete supported-token reference and includes load order, global and scoped light/dark/system recipes, the theme customizer, shell composition, and the optional Tailwind adapter. [Rails and Hotwire integration](docs/rails_integration.md#appearance-and-content-security-policy) documents bootstrap placement, persistence, and nonce- and hash-based CSP setup.
 
 ## Composition and extension
 
@@ -242,8 +242,9 @@ The repository's dummy application is the canonical gallery, deployed at
 [gallery.nitrokit.dev](https://gallery.nitrokit.dev). It exercises the
 component and block catalog across realistic Rails SaaS flows, narrow and wide
 layouts, light, dark, and system themes, and success, empty, error, loading,
-and destructive states. The gallery also includes a
-[customization wizard](https://gallery.nitrokit.dev/gallery/customize) and
+and destructive states. It is the test bed and the agent reference; guides,
+tutorials, and the theme customizer live on [nitrokit.dev](https://nitrokit.dev).
+The gallery also includes
 complete [sidebar](https://gallery.nitrokit.dev/gallery/compositions/application-sidebar),
 [topbar](https://gallery.nitrokit.dev/gallery/compositions/application-topbar), and
 [hybrid](https://gallery.nitrokit.dev/gallery/compositions/application-hybrid)
@@ -261,6 +262,15 @@ composition-only API, explicit keywords and closed vocabularies, the
 identity axis. There is exactly one copy of each in the source.
 
 ## Coding agents
+
+The gallery's top-level pages are split by audience: an
+[introduction](https://gallery.nitrokit.dev/gallery), an
+[agent guide](https://gallery.nitrokit.dev/gallery/agent-guide), and a
+[human guide](https://gallery.nitrokit.dev/gallery/guide). The agent guide is the
+machine entry point — the composition model, why the API refuses `class:` and
+catch-all options, and the same system rules every component page carries — and
+it is also served as plain text at
+[gallery.nitrokit.dev/llms.txt](https://gallery.nitrokit.dev/llms.txt).
 
 The [agent guide](docs/agent_guide.md) routes an agent from a product task to the installed component contract and the matching Hotwire recipe. Add its short `AGENTS.md` block to a consuming application so every agent discovers the version-matched docs through `bundle show nitro_kit`.
 

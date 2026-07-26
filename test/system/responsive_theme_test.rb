@@ -136,7 +136,7 @@ class ResponsiveThemeTest < ApplicationSystemTestCase
     def assert_review_probe(review_case, viewport:)
       case review_case.probe
       when :home
-        assert_selector "[data-gallery='introduction'] li", count: 4
+        assert_selector "[data-gallery='introduction'] li", count: 8
       when :dialog
         assert_dialog_containment
       when :table

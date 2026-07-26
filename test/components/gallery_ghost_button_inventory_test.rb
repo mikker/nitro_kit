@@ -8,7 +8,6 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
     *ROOT.glob("test/dummy/app/components/gallery/components/**/*.rb"),
     *ROOT.glob("test/dummy/app/components/gallery/components/**/*.rb"),
     *ROOT.glob("test/dummy/app/components/gallery/compositions/**/*.rb"),
-    ROOT.join("test/dummy/app/components/gallery/customize_page.rb"),
     ROOT.join("test/dummy/app/components/gallery/code_sample.rb")
   ].freeze
   RETAINED_GHOSTS = {
@@ -81,24 +80,6 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
         pattern: /menu\.trigger\("Media actions", variant: :ghost, size: :sm\)/,
         reason: "compact record menu trigger embedded in an application card"
       )
-    ],
-    "test/dummy/app/components/gallery/customize_page.rb" => [
-      GhostUse.new(
-        pattern: /group\.button\("Search", type: :button, variant: :ghost, size: :sm, icon: :search\)/,
-        reason: "topbar utility embedded in preview-shell chrome"
-      ),
-      GhostUse.new(
-        pattern: /group\.button\("Account", type: :button, variant: :ghost, size: :sm, icon: :circle_user_round\)/,
-        reason: "account utility embedded in preview-shell chrome"
-      ),
-      GhostUse.new(
-        pattern: /Button\.new\("Help", href: "#customizer-help", variant: :ghost, size: :sm, icon: :circle_help\)/,
-        reason: "help utility embedded in preview navigation chrome"
-      ),
-      GhostUse.new(
-        pattern: /variant: :ghost,.*?copy_kind: kind/m,
-        reason: "copy control embedded in an export-panel toolbar"
-      )
     ]
   }.freeze
 
@@ -109,7 +90,7 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
     end.reject { |_path, count| count.zero? }
 
     assert_equal RETAINED_GHOSTS.keys.sort, actual_by_file.keys.sort
-    assert_equal 17, actual_by_file.values.sum
+    assert_equal 13, actual_by_file.values.sum
 
     RETAINED_GHOSTS.each do |relative_path, uses|
       source = ROOT.join(relative_path).read

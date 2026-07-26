@@ -301,17 +301,11 @@ The audited former-Pro catalog maps completely to the new architecture:
 | Currency Field                                           | Deliberately omitted: it was an unpublished stub with an unused `cents` option and no settled locale, precision, or submitted-value semantics |
 | Download helpers, installers, and whole-layout templates | Removed; they contradict gem ownership and direct Phlex composition                                                                           |
 
-### Customization and the wizard
+### Customization
 
 The customization contract remains documented public custom properties. Applications override public `--nk-*` variables in their own CSS, scoped globally or beneath an application-owned theme root. They do not replace Nitro markup, edit generated distribution CSS, or depend on private `--_nk-*` variables.
 
-The gallery ships an interactive customization wizard at `/gallery/customize`. Its immutable `Gallery::ThemePreset` value object has `VERSION = 1` and these closed choices: `accent` is `blue indigo violet rose amber emerald neutral` (default `blue`); `neutral` is `slate gray zinc neutral stone` (default `zinc`); `radius` is `none sm md lg` (default `md`); `density` is `compact comfortable` (default `comfortable`); `font` is `system humanist serif mono` (default `system`); and `shell` is `sidebar topbar hybrid` (default `sidebar`). It maps each choice deterministically to documented tokens and preview composition. Unknown versions or choices produce a visible validation error and fall back to defaults rather than evaluating arbitrary input.
-
-Shareable URLs use the readable parameters `v`, `accent`, `neutral`, `radius`, `density`, `font`, and `shell`. Edits call `history.replaceState`; `popstate` restores controls and preview. A separate preview-appearance control selects light, dark, or live system resolution without changing the visitor's saved appearance and is not serialized into the preset. Reset restores the versioned defaults. Copy CSS emits `:root, [data-theme="light"]`, then the no-JavaScript system-dark scope `@media (prefers-color-scheme: dark) { :root:not([data-theme]) { … } }`, then explicit `[data-theme="dark"]`, with public declarations in stable lexical order and no unchanged or private tokens. Because `shell` is structural rather than a token, the wizard also generates a copyable `AppShell` Ruby composition for the selected layout.
-
-The preview includes atoms, forms, overlays, tables, the application shell, and accepted former Pro components so token changes are evaluated as a system. Controls remain labelled and keyboard-operable; swatches include text; the preview precedes a compact horizontally scrollable control strip on narrow screens; and copy success or failure is announced through a polite live region.
-
-The wizard and `Gallery::ThemePreset` are gallery documentation infrastructure, not packaged gem APIs, a public registry, a general token schema, a marketplace, an arbitrary CSS editor, or a component generator. They never write project files and never emit helpers, copied components, Tailwind configuration, or private tokens.
+The interactive theme customizer is documentation-site software, not gallery or gem software. The gallery proves the theming contract itself: the documented token set in `docs/customization.md`, the set declared in `src/stylesheets/nitro_kit/tokens.css`, and the set served by the bundled stylesheet are asserted to be the same set; component CSS is asserted to consume only declared public tokens; and scoped `--nk-*` overrides on an application-owned wrapper are proven to reach Nitro descendants through inheritance.
 
 ### Addition verification contract
 
@@ -321,7 +315,7 @@ Every addition receives direct Ruby contract tests, invalid-vocabulary tests, ac
 
 The gallery includes, at minimum, sidebar, topbar, and hybrid application compositions; appearance persistence and simulated system changes; every former Pro state; long and missing content; upload success, error, cancellation, and removal; progressive-image empty, loading, loaded, and failed states; and sortable-table gallery empty and populated results. Every example uses `Gallery::Example` Preview and Code tabs whose source is extracted from the executable Phlex block or concrete composition method. Combination pages deliberately mix shells, forms, tables, uploads, images, overlays, and all three appearances.
 
-Public documentation includes `docs/customization.md` plus aligned README and Rails-integration sections. It catalogs supported tokens, stylesheet load order, global and scoped overrides, light/dark selectors, appearance bootstrap and picker setup, CSP nonce/hash configuration, installing wizard exports, shell composition, and complete copyable Rails examples.
+Public documentation includes `docs/customization.md` plus aligned README and Rails-integration sections. It catalogs supported tokens, stylesheet load order, global and scoped overrides, light/dark selectors, appearance bootstrap and picker setup, CSP nonce/hash configuration, shell composition, and complete copyable Rails examples.
 
 `docs/agent_guide.md` is the packaged routing layer for coding agents. It points to version-matched Rails conventions, component contracts, Hotwire guidance, and recipes for queryable collections, resource forms, destructive actions, flash/toast feedback, and inline editing. The packaged plugin contains consumer Rails, UI, and Hotwire skills that resolve the installed gem before reading these docs. The setup generator installs the same thin routers into supported project-local skill directories and maintains a bounded `AGENTS.md` block. It does not duplicate the component registry or add an MCP server.
 
@@ -375,7 +369,9 @@ The dummy Rails application is the canonical example gallery. An explicit `Galle
 
 Examples cover closed options, content pressure, native state, validation, empty/error/loading/destructive states, light and dark themes, narrow and wide layouts, and interaction between forms, navigation, tables, and overlays.
 
-Examples also cover system appearance, complete application shells, the customization wizard, former Pro capabilities, and dense cross-component combinations. Previewed Ruby and copied Ruby remain the same executable source.
+Examples also cover system appearance, complete application shells, former Pro capabilities, and dense cross-component combinations. Previewed Ruby and copied Ruby remain the same executable source.
+
+The gallery's three top-level pages are audience-oriented. Introduction states what the gallery is and who each surface serves. The agent guide at `/gallery/agent-guide` is the machine entry point: the composition model, how every component page is self-contained, why the system refuses `class:` and catch-all options, and the same `Gallery::AgentRules` rules every component page renders. The human guide at `/gallery/guide` explains how to read a component page, what the compositions are, and theming basics, and points to nitrokit.dev for guides, the theme customizer, and Pro. `/llms.txt` serves the agent guide as `text/plain`, rendered by `Gallery::LlmsText` from `Gallery::AgentGuide`, `Gallery::AgentRules`, and `Gallery::Catalog` — never a second copy of the text.
 
 Every component page is self-contained for an agent that fetches only that page. After the examples it renders three reference sections outside every example canvas: the component's own row from `docs/component_contracts.md`, inline summaries of the `docs/patterns/*.md` conventions the catalog maps to that page, and the shared system rules. Each section is source-referenced and render-inlined — one copy in the source, one copy on every page. `Gallery::AgentRules` owns the rules text and reads `NitroKit::Component::RESERVED_DATA_ATTRIBUTES` and its neighbours at render time, `Gallery::Contracts` parses the shipped contract table, `Gallery::Patterns` reads each pattern document's leading `## Summary` section, and `Gallery::Catalog::PATTERNS` declares which patterns a page carries.
 
@@ -420,6 +416,6 @@ The 2.0 architecture is release-ready when:
 - The accepted layout and block vocabulary covers the canonical flows without escape markers.
 - Light, dark, and system appearance remain correct across reloads, Turbo navigation, and system changes.
 - AppShell and accepted former Pro capabilities satisfy their Ruby, DOM, accessibility, dependency, and teardown contracts.
-- The customization wizard previews and exports only documented public tokens.
+- The documented public token set is the only theming contract, and it is verified end to end.
 - CSS, package, Ruby, Rails, and browser verification pass.
 - Public documentation matches shipped APIs and clearly states the 1.x break.

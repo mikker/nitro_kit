@@ -24,7 +24,7 @@ module Gallery
             default: appearance_default,
             nonce: content_security_policy_nonce
           )
-          stylesheet_link_tag("nitro_kit", "gallery", "customize", data: { turbo_track: "reload" })
+          stylesheet_link_tag("nitro_kit", "gallery", data: { turbo_track: "reload" })
           javascript_importmap_tags
         end
 
@@ -49,8 +49,8 @@ module Gallery
         nav(aria: { label: "Gallery" }, data: { gallery: "navigation" }) do
           ul(data: { gallery: "navigation-primary" }) do
             li { navigation_link("Introduction", gallery_root_path) }
-            li { navigation_link("FAQ", gallery_faq_path) }
-            li { navigation_link("Customize", gallery_customize_path) }
+            li { navigation_link("Agent guide", gallery_agent_guide_path) }
+            li { navigation_link("Human guide", gallery_guide_path) }
           end
 
           Gallery::Catalog.collections.each do |collection|

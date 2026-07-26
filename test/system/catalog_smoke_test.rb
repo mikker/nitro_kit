@@ -37,7 +37,8 @@ class CatalogSmokeTest < ApplicationSystemTestCase
 
       if visit.entry.kind == :home
         assert_selector "[data-gallery='introduction']"
-        assert_selector "[data-gallery='introduction'] li", count: 4
+        assert_selector "[data-gallery='introduction'] section", count: 3
+        assert_selector "[data-gallery='introduction'] li", count: 8
       else
         assert_catalog_roots(visit.entry)
       end

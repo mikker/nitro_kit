@@ -15,13 +15,15 @@ Rails.application.routes.draw do
   namespace :gallery do
     root(to: "home#show")
 
-    get("faq" => "faqs#show", as: :faq)
-    get("customize" => "customizations#show", as: :customize)
+    get("agent-guide" => "agent_guides#show", as: :agent_guide)
+    get("guide" => "guides#show", as: :guide)
     get("previews/:kind/:slug/:example" => "previews#show", as: :preview)
     resources(:components, only: :show, param: :slug)
     resources(:upload_submissions, only: :create)
     get("compositions/:slug(/:state)" => "compositions#show", :as => :composition)
   end
+
+  get("llms.txt" => "gallery/llms#show", as: :llms_txt, format: false)
 
   root(to: "gallery/home#show")
 end

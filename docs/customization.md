@@ -184,24 +184,12 @@ Treat related tokens as a system:
 
 Check foreground pairs and focus indicators for contrast in both appearances. The semantic names describe use, not a fixed hue: `danger` can be a project-appropriate destructive color, but it should remain recognizably destructive everywhere it appears.
 
-## Customization wizard
+## Theme customizer
 
-Run the repository gallery and open [`/gallery/customize`](/gallery/customize). The wizard offers these closed choices:
+The interactive theme customizer lives on the documentation site at
+[nitrokit.dev/customize](https://nitrokit.dev/customize). Pick an accent, neutral, radius, density, font, and application shell, watch a complete workspace update, then copy deterministic CSS containing only changed public tokens plus a copyable `AppShell` composition for the selected layout.
 
-- Accent: `blue` (default), `indigo`, `violet`, `rose`, `amber`, `emerald`, or `neutral`.
-- Neutral: `slate`, `gray`, `zinc` (default), `neutral`, or `stone`.
-- Radius: `none`, `sm`, `md` (default), or `lg`.
-- Density: `compact` or `comfortable` (default).
-- Font: `system` (default), `humanist`, `serif`, or `mono`.
-- Shell: `sidebar` (default), `topbar`, or `hybrid`.
-
-Its shareable query string is readable and versioned in the fixed order `v`, `accent`, `neutral`, `radius`, `density`, `font`, and `shell`, for example:
-
-```text
-/gallery/customize?v=1&accent=violet&neutral=slate&radius=lg&density=comfortable&font=humanist&shell=hybrid
-```
-
-“Copy CSS” emits only changed public tokens, with deterministic light, system-fallback, and dark selectors. Paste it into an application-owned stylesheet such as `app/assets/stylesheets/nitro_theme.css`, then load that stylesheet after Nitro Kit and any compiled Tailwind CSS:
+Paste the CSS into an application-owned stylesheet such as `app/assets/stylesheets/nitro_theme.css`, then load that stylesheet after Nitro Kit and any compiled Tailwind CSS:
 
 ```erb
 <%= stylesheet_link_tag \
@@ -211,7 +199,7 @@ Its shareable query string is readable and versioned in the fixed order `v`, `ac
   "data-turbo-track": "reload" %>
 ```
 
-The wizard copies text to the clipboard. It does not download files, write into an application, or generate a component implementation. Its separate Ruby output is an `AppShell` composition for the selected layout. Preview appearance is intentionally temporary: it is neither serialized into the preset URL nor written to the visitor's Nitro appearance preference.
+The customizer copies text to the clipboard. It does not download files, write into an application, or generate a component implementation.
 
 ## Application composition
 

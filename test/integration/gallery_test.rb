@@ -11,10 +11,10 @@ class GalleryTest < ActionDispatch::IntegrationTest
     assert_select "[data-gallery='sidebar']"
     assert_select "[data-gallery='main'] div[data-gallery='page'][data-gallery-page='home']"
     assert_select "h1", text: "Nitro Kit"
-    assert_select "[data-gallery='introduction'] section", count: 2
+    assert_select "[data-gallery='introduction'] section", count: 3
+    assert_select "[data-gallery='introduction'] h2", text: "What this is"
+    assert_select "[data-gallery='introduction'] h2", text: "Who each surface serves"
     assert_select "[data-gallery='introduction'] h2", text: "The idea"
-    assert_select "[data-gallery='introduction'] h2", text: "The rules"
-    assert_select "[data-gallery='introduction'] li", count: 4
   end
 
   test "gallery renders components grouped by subcategory and nested composition categories" do

@@ -21,12 +21,4 @@ class DecorativeAriaTest < ApplicationSystemTestCase
       assert_equal "", ellipsis.native.accessible_name
     end
   end
-
-  test "customizer font radios are named only by their option" do
-    visit gallery_customize_path
-
-    Gallery::ThemePreset::CHOICES.fetch(:font).each do |font|
-      assert_equal font.to_s.humanize, find("#customizer-font-#{font}", visible: :all).native.accessible_name
-    end
-  end
 end

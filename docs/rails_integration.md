@@ -23,7 +23,7 @@ Load the static stylesheet before application styles through the Rails asset pip
 
 Nitro Kit does not require Tailwind. A Tailwind CSS v4 application loads `nitro_kit-tailwind-v4`, Nitro Kit, compiled Tailwind, and application styles in that order. The adapter establishes cascade order and maps Nitro theme tokens to common Tailwind theme variables.
 
-Keep application token overrides after Nitro Kit. The [customization guide](customization.md) documents the exact load order, every supported token, scoped and appearance-specific overrides, the gallery wizard, and the optional Tailwind adapter.
+Keep application token overrides after Nitro Kit. The [customization guide](customization.md) documents the exact load order, every supported token, scoped and appearance-specific overrides, the theme customizer, and the optional Tailwind adapter.
 
 Raised default Buttons have their own public background, hover, foreground, and border tokens. Override `--nk-button-default-*` rather than changing `--nk-color-surface` when form controls, cards, dialogs, and menus should retain their existing surfaces.
 
