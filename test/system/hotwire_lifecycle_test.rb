@@ -7,16 +7,16 @@ class HotwireLifecycleTest < ApplicationSystemTestCase
     assert_stimulus_controller("#gallery-tabs-settings", "nk--tabs")
     click_tabs_general
 
-    within("[data-gallery='sidebar']") { click_link("Dialog") }
+    click_gallery_navigation_link("Dialog")
 
     assert_current_path gallery_component_path("dialog")
-    assert_selector "#gallery-dialog-remove-member:not([data-controller])"
+    assert_stimulus_controller("#gallery-dialog-remove-member", "nk--dialog")
     find("#gallery-dialog-remove-member [data-slot='dialog-trigger']").click
     assert_selector "#gallery-dialog-remove-member [data-slot='dialog-panel'][open]"
     find("body").send_keys(:escape)
     assert_no_selector "#gallery-dialog-remove-member [data-slot='dialog-panel'][open]"
 
-    within("[data-gallery='sidebar']") { click_link("Tabs") }
+    click_gallery_navigation_link("Tabs")
 
     assert_current_path gallery_component_path("tabs")
     assert_selector "#gallery-tabs-settings", count: 1

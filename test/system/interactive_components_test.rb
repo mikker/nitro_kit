@@ -84,7 +84,7 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
     content = "#{root}-content"
     settings = "#{content} a[href='/gallery/settings']"
     duplicate = "#{content} button[data-slot='dropdown-item']"
-    delete = "#{content} button[data-tone='destructive']"
+    delete = "#{content} button[data-variant='destructive']"
 
     find(trigger).send_keys(:arrow_down)
 
@@ -194,7 +194,7 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
 
   test "switch keeps native keyboard checked submission required and disabled semantics" do
     path = visit_component("switch")
-    control = "#gallery-switch-small-control"
+    control = "#gallery-switch-medium-control"
 
     assert_selector "#{control}:not(:checked)", visible: :all
     assert_equal "0", find("input[type='hidden'][name='preferences[weekly_digest]']", visible: :all).value
@@ -206,7 +206,7 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
     assert_selector "#{control}:checked", visible: :all
     assert_equal "1", find(control, visible: :all).value
 
-    find("label[for='gallery-switch-small-control']", text: "Weekly digest").click
+    find("label[for='gallery-switch-medium-control']", text: "Weekly digest").click
 
     assert_selector "#{control}:not(:checked)", visible: :all
 
@@ -249,16 +249,18 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
     root = "#gallery-toast-integration-result"
     item = "#{root} [data-nk='toast-item']"
     timed_item = "#gallery-toast-timed [data-nk='toast-item']"
-
-    assert_selector "#gallery-toast-permanent [data-nk='toast-item']"
-    assert_no_selector "#gallery-toast-permanent [data-slot='toast-item-dismiss']"
-
     timed_dismiss = "#{timed_item} [data-slot='toast-item-dismiss']"
+
+    # The timed sample starts counting down as soon as its controller connects,
+    # so focus has to be the first interaction on the page.
     execute_script("arguments[0].focus()", find(timed_dismiss))
 
     assert_focused timed_dismiss
     sleep 1.4
     assert_selector "#{timed_item}[data-state='open']"
+
+    assert_selector "#gallery-toast-permanent [data-nk='toast-item']"
+    assert_no_selector "#gallery-toast-permanent [data-slot='toast-item-dismiss']"
 
     execute_script("arguments[0].focus()", find("[data-gallery='brand'] a"))
     assert_no_selector timed_item, wait: 2.5

@@ -243,8 +243,8 @@ class DropzoneSystemTest < ApplicationSystemTestCase
     assert_selector "#gallery-dropzone-multipart-status", text: "No files selected."
     assert_equal 0, evaluate_script("document.querySelector('#gallery-dropzone-multipart-input').files.length")
 
-    within("[data-gallery='sidebar']") { click_link("Button") }
-    within("[data-gallery='sidebar']") { click_link("Dropzone") }
+    click_gallery_navigation_link("Button")
+    click_gallery_navigation_link("Dropzone")
 
     assert_selector "#gallery-dropzone-multipart[data-state='idle']"
     assert_selector "#gallery-dropzone-multipart [data-slot='dropzone-preview-list'][hidden]", visible: :all

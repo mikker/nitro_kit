@@ -445,7 +445,10 @@ class FormAtomsTest < ActiveSupport::TestCase
     assert_nil node["data-state"]
     assert_equal "account-help digest-description", control["aria-describedby"]
     assert_equal "digest-description", node.at_css("[data-slot='switch-description']")["id"]
-    assert node.at_css("label > [data-slot='switch-content'] > [data-slot='switch-description']")
+    assert node.at_css("label > [data-slot='switch-label-text']")
+    # The description is a sibling of the label so it stays out of the
+    # control's accessible name and is only announced through describedby.
+    assert node.at_css("> [data-slot='switch-description']")
     assert_equal "true", node.at_css("[data-slot='switch-track']")["aria-hidden"]
     assert node.at_css("[data-slot='switch-handle']")
     assert_empty node.css("[class], [style]")

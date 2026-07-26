@@ -67,21 +67,25 @@
     block-size: 1.5rem;
   }
 
-  :where([data-nk="switch"] [data-slot="switch-content"]) {
+  :where([data-nk="switch"] [data-slot="switch-label-text"]) {
+    display: block;
     grid-column: 2;
   }
 
-  :where([data-nk="switch"] [data-slot="switch-label-text"]) {
-    display: block;
-  }
-
-  :where([data-nk="switch"] [data-slot="switch-description"]) {
+  :where([data-nk="switch"] > [data-slot="switch-description"]) {
     display: block;
     margin-block-start: var(--nk-space);
+    padding-inline-start: calc(2.5rem + (var(--nk-space) * 3));
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
     font-weight: var(--nk-font-weight-normal);
     text-wrap: pretty;
+  }
+
+  :where(
+    [data-nk="switch"][data-size="lg"] > [data-slot="switch-description"]
+  ) {
+    padding-inline-start: calc(3.25rem + (var(--nk-space) * 3));
   }
 }
 

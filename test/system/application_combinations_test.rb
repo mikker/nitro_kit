@@ -37,7 +37,7 @@ class ApplicationCombinationsTest < ApplicationSystemTestCase
       dialog = "#{root} > [data-slot='app-shell-dialog']"
       trigger = "#{root} [data-slot='app-shell-mobile-trigger']"
 
-      assert_selector "#{root}[data-enhanced][data-variant='#{layout}']"
+      assert_selector "#{root}[data-enhanced][data-layout='#{layout}']"
       assert_selector "#{sidebar} > [data-slot='app-shell-navigation'] [data-nk='app-navigation']", count: 1
       assert_desktop_layout(root, layout:)
       assert_document_fits_viewport
@@ -106,7 +106,7 @@ class ApplicationCombinationsTest < ApplicationSystemTestCase
     visit hybrid_path
 
     assert_selector "#gallery-hybrid-application-populated [data-nk='appearance-picker'][data-state='system']", count: 2
-    find("#gallery-hybrid-application-navigation-appearance-dark").click
+    find("label[for='gallery-hybrid-application-navigation-appearance-dark']").click
     assert_selector "html[data-theme-preference='dark'][data-theme='dark']"
     assert_selector "#gallery-hybrid-application-populated [data-nk='appearance-picker'][data-state='dark']", count: 2
     assert_no_severe_console_errors(context: hybrid_path)

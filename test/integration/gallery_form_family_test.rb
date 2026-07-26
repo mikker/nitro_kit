@@ -226,7 +226,8 @@ class GalleryFormFamilyTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-switch-medium[data-size='md']:not([data-state]):not([data-controller])" do
       assert_select "input[type='hidden'][name='preferences[weekly_digest]'][value='0']"
       assert_select "#gallery-switch-medium-control[type='checkbox'][role='switch'][value='1']:not([checked])"
-      assert_select "label > [data-slot='switch-content'] > [data-slot='switch-description']"
+      assert_select "label > [data-slot='switch-label-text']"
+      assert_select "[data-nk='switch'] > [data-slot='switch-description']"
     end
     assert_select "#gallery-switch-large[data-size='lg']" do
       assert_select "#gallery-switch-large-control[role='switch'][checked]"

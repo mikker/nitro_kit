@@ -80,9 +80,9 @@ class ProgressiveControlsTest < ApplicationSystemTestCase
     find(input).set("No matching environment")
     assert_selector "#{root} [data-slot='combobox-status']", text: "No options found.", visible: :all
 
-    find(input).set("Staging — shared verification")
+    find(input).set("Staging")
     assert_selector "#{root} [data-slot='combobox-status']", text: "1 option available.", visible: :all
-    find("#{root} [data-slot='combobox-option']", text: "Staging — shared verification").click
+    find("#{root} [data-slot='combobox-option']", text: "Staging").click
 
     assert_equal "staging", find(select, visible: :all).value
     assert_equal [ "staging" ], evaluate_script(<<~JAVASCRIPT)
@@ -114,7 +114,7 @@ class ProgressiveControlsTest < ApplicationSystemTestCase
     image = find("#{root} [data-slot='progressive-image-image']", visible: :all)
     assert_equal "Unavailable workspace cover", image["alt"]
     assert_nil image["aria-hidden"]
-    assert_selector "#{root} [data-slot='progressive-image-fallback']", text: "Image unavailable"
+    assert_selector "#{root} [data-slot='progressive-image-fallback']", text: "Unavailable workspace cover"
     assert_no_severe_console_errors(context: path)
   end
 end

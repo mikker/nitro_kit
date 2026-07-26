@@ -16,6 +16,9 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
 
   setup do
     browser.execute_cdp("Emulation.clearDeviceMetricsOverride")
+    # Headless Chrome otherwise reports document.hasFocus() == false for a
+    # backgrounded target and silently drops focus/focusin events.
+    browser.execute_cdp("Emulation.setFocusEmulationEnabled", enabled: true)
     resize_viewport(width: 1440, height: 1200)
   end
 

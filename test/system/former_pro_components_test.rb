@@ -11,14 +11,14 @@ class FormerProComponentsTest < ApplicationSystemTestCase
     assert_selector "#gallery-progressive-image-loaded img:not([alt=''])", count: 1
 
     assert_selector "#gallery-progressive-image-empty[data-state='empty']:not([data-controller])"
-    assert_selector "#gallery-progressive-image-empty [data-slot='progressive-image-fallback']", text: "Image unavailable"
+    assert_selector "#gallery-progressive-image-empty [data-slot='progressive-image-fallback']", text: "Workspace cover"
 
     execute_script(
       "arguments[0].scrollIntoView({ block: 'center' })",
       find("#gallery-progressive-image-error")
     )
     assert_selector "#gallery-progressive-image-error[data-state='error'][aria-busy='false']"
-    assert_selector "#gallery-progressive-image-error [data-slot='progressive-image-fallback']:not([hidden])", text: "Image unavailable"
+    assert_selector "#gallery-progressive-image-error [data-slot='progressive-image-fallback']:not([hidden])", text: "Unavailable workspace cover"
     assert_selector "#gallery-progressive-image-error [data-slot='progressive-image-image']:not([aria-hidden])", visible: :all
 
     controller = evaluate_script(<<~JAVASCRIPT)
