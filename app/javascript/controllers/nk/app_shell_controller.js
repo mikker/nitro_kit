@@ -9,7 +9,6 @@ export default class extends Controller {
   connect() {
     this.onViewportChange = this.syncViewport.bind(this);
     this.viewport = window.matchMedia(narrowViewport);
-    this.element.dataset.enhanced = "";
     this.viewport.addEventListener("change", this.onViewportChange);
     this.syncViewport();
   }
@@ -87,6 +86,11 @@ export default class extends Controller {
   }
 
   syncViewport() {
+    // A Turbo morph restores the server-rendered attributes without
+    // reconnecting the controller, so the enhancement marker is re-asserted
+    // every time the shell reconciles rather than only on connect.
+    this.element.dataset.enhanced = "";
+
     if (
       !this.hasDialogTarget ||
       !this.hasNavigationTarget ||

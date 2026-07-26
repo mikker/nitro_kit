@@ -5108,6 +5108,14 @@
     --lexxy-color-ink-lightest: var(--nk-color-muted);
     --lexxy-radius: var(--nk-radius-md);
     display: block;
+    inline-size: 100%;
+  }
+
+  /* The editor upgrades asynchronously, so the region reserves a multiline
+     control height instead of collapsing to zero. */
+  :where([data-nk="rich-text-area"]) > [data-slot="rich-text-area-editor"] {
+    display: block;
+    min-block-size: calc(var(--nk-space) * 24);
   }
 }
 

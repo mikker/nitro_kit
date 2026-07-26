@@ -65,11 +65,12 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   class SlotProbe < NitroKit::Component
-    def initialize(slot_html: {}, slot_aria: {}, slot_data: {}, slot_class: nil)
+    def initialize(slot_html: {}, slot_aria: {}, slot_data: {}, slot_class: nil, slot_variant: nil)
       @slot_html = slot_html
       @slot_aria = slot_aria
       @slot_data = slot_data
       @slot_class = slot_class
+      @slot_variant = slot_variant
 
       super(component: :slot_probe)
     end
@@ -82,6 +83,7 @@ class ComponentTest < ActiveSupport::TestCase
             html: @slot_html,
             aria: @slot_aria,
             data: @slot_data,
+            variant: @slot_variant,
             desperately_need_a_class: @slot_class
           )
         ) { "Label" }
@@ -291,6 +293,20 @@ class ComponentTest < ActiveSupport::TestCase
     error = assert_raises(ArgumentError) { SlotProbe.new(slot_data: { slot: "other" }).call }
 
     assert_match(/data-slot is reserved/, error.message)
+    assert_match(/data-variant is reserved/, assert_raises(ArgumentError) do
+      SlotProbe.new(slot_data: { variant: "destructive" }).call
+    end.message)
+  end
+
+  test "emits an owned variant on a slot without a nested component" do
+    node = render_node(SlotProbe.new(slot_variant: :destructive, slot_data: { condition: "ready" }))
+    label = node.at_css("[data-slot='slot-probe-label']")
+
+    assert_equal "destructive", label["data-variant"]
+    assert_equal "ready", label["data-condition"]
+    assert_nil node.at_css("[data-slot='slot-probe-content']")["data-variant"]
+    assert_raises(ArgumentError) { SlotProbe.new(slot_variant: "  ").call }
+    assert_raises(ArgumentError) { SlotProbe.new(slot_variant: "Not Valid").call }
   end
 
   test "validates closed choices immediately" do

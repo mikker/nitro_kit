@@ -46,10 +46,10 @@ class DetailsTableTest < ActiveSupport::TestCase
     assert_equal "details-table", node["data-nk"]
     assert node.at_css("[data-nk='table'][data-slot='details-table-table']")
     assert_equal 7, node.css("[data-slot='table-row']").size
-    assert_equal "Not provided", node.at_css("[data-slot='details-table-empty']").text
+    assert_equal I18n.t("nitro_kit.details_table.empty"), node.at_css("[data-slot='details-table-empty']").text
     assert_equal "42", node.at_css("[data-slot='details-table-number']").text
     assert_equal "2026-07-13", node.at_css("[data-slot='details-table-time']")["datetime"]
-    assert_equal "Yes", node.at_css("[data-slot='details-table-boolean']").text.strip
+    assert_equal I18n.t("nitro_kit.details_table.boolean_true"), node.at_css("[data-slot='details-table-boolean']").text.strip
     assert_equal "Owner, Reviewer", node.at_css("[data-slot='details-table-list']").text
 
     link = node.at_css("[data-slot='details-table-link']")

@@ -22,8 +22,12 @@ class InteractionControllerContractTest < ActiveSupport::TestCase
     refute_includes sources.fetch("dropdown"), "dataset.state"
     assert_includes sources.fetch("combobox"), "setCustomValidity"
     refute_includes sources.fetch("combobox"), 'removeAttribute("role")'
-    assert_includes sources.fetch("combobox"), "TODO(i18n)"
+    refute_includes sources.fetch("combobox"), "TODO(i18n)"
     assert_includes sources.fetch("combobox"), "INVALID_SELECTION_MESSAGE"
+    assert_includes sources.fetch("combobox"), "this.invalidSelectionValue ||"
+    assert_includes sources.fetch("combobox"), "this.noResultsValue ||"
+    assert_includes sources.fetch("combobox"), "this.resultsOneValue ||"
+    assert_includes sources.fetch("combobox"), "this.resultsOtherValue ||"
     assert_includes sources.fetch("combobox"), "setSubmittedValue(value)"
     refute CONTROLLER_ROOT.join("accordion_controller.js").exist?
     assert CONTROLLER_ROOT.join("dialog_controller.js").exist?

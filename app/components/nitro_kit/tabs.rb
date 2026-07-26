@@ -9,7 +9,7 @@ module NitroKit
     def initialize(
       default: nil,
       id:,
-      label: "Tabs",
+      label: I18n.t("nitro_kit.tabs.label"),
       orientation: :horizontal,
       activation: :automatic,
       html: {},

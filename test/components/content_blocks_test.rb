@@ -71,11 +71,6 @@ class ContentBlocksTest < ActiveSupport::TestCase
           zone.confirmation { plain "Confirmation" }
           zone.escape NitroKit::Button.new("Keep workspace")
         end
-
-        render NitroKit::EmptyState.new(level: 4, id: "deferred-empty-state") do |empty|
-          empty.description { plain "Try a "; strong { "broader" }; plain " query." }
-          empty.title { plain "No "; em { "records" } }
-        end
       end
     end
   end
@@ -133,29 +128,6 @@ class ContentBlocksTest < ActiveSupport::TestCase
     end
   end
 
-  test "empty state renders zero one and two action cardinalities" do
-    minimal = render_node(NitroKit::EmptyState.new(title: "Nothing here"))
-    assert_equal [ "h2" ], minimal.element_children.map(&:name)
-
-    complete = render_node(
-      NitroKit::EmptyState.new(
-        title: "No teammates yet",
-        description: "Invite collaborators when you are ready.",
-        level: 4,
-        id: "empty-team"
-      )
-    ) do |empty|
-      empty.icon NitroKit::Icon.new(:users)
-      empty.action NitroKit::Button.new("Invite teammate", href: "/invite", variant: :primary)
-      empty.action NitroKit::Button.new("Read access guide", href: "/guide")
-    end
-
-    assert_equal "icon", complete.at_css("[data-slot='empty-state-icon']")["data-nk"]
-    assert complete.at_css("h4[data-slot='empty-state-title']")
-    assert_equal 2, complete.css("[data-slot='empty-state-actions'] > [data-slot='empty-state-action'][data-nk='button']").count
-    assert_empty complete.css("[class], [style], [data-nk-escape]")
-  end
-
   test "fixed-order blocks accept deferred text and rich Phlex content" do
     root = Nokogiri::HTML.fragment(DeferredContentProbe.new.call).first_element_child
 
@@ -172,32 +144,24 @@ class ContentBlocksTest < ActiveSupport::TestCase
 
     danger_zone = root.at_css("#deferred-danger-zone")
     assert_equal "project", danger_zone.at_css("[data-slot='danger-zone-description'] strong").text
-
-    empty_state = root.at_css("#deferred-empty-state")
-    assert_equal "records", empty_state.at_css("[data-slot='empty-state-title'] em").text
-    assert_equal "broader", empty_state.at_css("[data-slot='empty-state-description'] strong").text
   end
 
   test "deferred content rejects missing mixed and repeated declarations" do
-    assert_raises(ArgumentError) { render_node(NitroKit::EmptyState.new) }
+    assert_raises(ArgumentError) { render_node(NitroKit::PageHeader.new) }
     assert_raises(ArgumentError) do
-      render_node(NitroKit::EmptyState.new(title: "Keyword title")) do |empty|
-        empty.title("Nested title")
+      render_node(NitroKit::PageHeader.new(title: "Keyword title")) { |header| header.title("Nested title") }
+    end
+    assert_raises(ArgumentError) do
+      render_node(NitroKit::DataSection.new) do |section|
+        section.title("First")
+        section.title("Second")
       end
     end
     assert_raises(ArgumentError) do
-      render_node(NitroKit::EmptyState.new) do |empty|
-        empty.title("First")
-        empty.title("Second")
-      end
+      render_node(NitroKit::DataSection.new) { |section| section.title("Text") { "Block" } }
     end
     assert_raises(ArgumentError) do
-      render_node(NitroKit::EmptyState.new) do |empty|
-        empty.title("Text") { "Block" }
-      end
-    end
-    assert_raises(ArgumentError) do
-      render_node(NitroKit::EmptyState.new) { |empty| empty.title("") }
+      render_node(NitroKit::FormSection.new) { |section| section.title("") }
     end
     assert_raises(ArgumentError) do
       render_node(NitroKit::DangerZone.new) do |zone|
@@ -205,35 +169,6 @@ class ContentBlocksTest < ActiveSupport::TestCase
         zone.confirmation { "Confirm" }
         zone.escape NitroKit::Button.new("Leave")
       end
-    end
-  end
-
-  test "empty state enforces typed unique bounded children" do
-    assert_raises(ArgumentError) do
-      render_node(NitroKit::EmptyState.new(title: "Empty")) { |empty| empty.icon NitroKit::Button.new("No") }
-    end
-    assert_raises(ArgumentError) do
-      render_node(NitroKit::EmptyState.new(title: "Empty")) do |empty|
-        empty.icon NitroKit::Icon.new(:users)
-        empty.icon NitroKit::Icon.new(:circle_user)
-      end
-    end
-    assert_raises(ArgumentError) do
-      render_node(NitroKit::EmptyState.new(title: "Empty")) do |empty|
-        3.times { |index| empty.action NitroKit::Button.new("Action #{index}") }
-      end
-    end
-
-    repeated = NitroKit::Button.new("Repeated")
-    assert_raises(ArgumentError) do
-      render_node(NitroKit::EmptyState.new(title: "Empty")) do |empty|
-        empty.action repeated
-        empty.action repeated
-      end
-    end
-
-    [ 1, 7, :three, "3" ].each do |level|
-      assert_raises(ArgumentError) { NitroKit::EmptyState.new(title: "Empty", level:) }
     end
   end
 
@@ -465,8 +400,7 @@ class ContentBlocksTest < ActiveSupport::TestCase
         render_node(NitroKit::DangerZone.new(title: "Danger", description: "Permanent", **attrs)) do |zone|
           zone.confirmation { "Confirm" }
         end
-      end,
-      ->(**attrs) { render_node(NitroKit::EmptyState.new(title: "Empty", **attrs)) }
+      end
     ]
   end
 

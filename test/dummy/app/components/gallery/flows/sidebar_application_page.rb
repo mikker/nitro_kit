@@ -193,7 +193,7 @@ module Gallery
                     form.dropzone(
                       :files,
                       id: "gallery-sidebar-application-dropzone",
-                      title: "Add project files",
+                      label: "Add project files",
                       description: "Up to three CSV, JSON, or text files.",
                       direct_upload: false,
                       multiple: true,

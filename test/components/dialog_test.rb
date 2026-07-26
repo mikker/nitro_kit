@@ -50,7 +50,7 @@ class DialogTest < ActiveSupport::TestCase
     assert_equal "close", close["command"]
     assert_equal "delete-account-panel", close["commandfor"]
     assert_equal "click->analytics#track", close["data-action"]
-    assert_equal "Close dialog", close["aria-label"]
+    assert_equal I18n.t("nitro_kit.dialog.close"), close["aria-label"]
     assert_equal "ghost", close["data-variant"]
     assert_equal "sm", close["data-size"]
     assert_empty node.css("[class], [style]")

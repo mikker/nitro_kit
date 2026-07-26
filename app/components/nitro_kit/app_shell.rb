@@ -12,10 +12,10 @@ module NitroKit
     def initialize(
       id:,
       layout: :sidebar,
-      skip_link_label: "Skip to content",
-      open_navigation_label: "Open navigation",
-      close_navigation_label: "Close navigation",
-      navigation_dialog_label: "Application navigation",
+      skip_link_label: I18n.t("nitro_kit.app_shell.skip_link"),
+      open_navigation_label: I18n.t("nitro_kit.app_shell.open_navigation"),
+      close_navigation_label: I18n.t("nitro_kit.app_shell.close_navigation"),
+      navigation_dialog_label: I18n.t("nitro_kit.app_shell.navigation_dialog"),
       html: {},
       aria: {},
       data: {},
@@ -38,7 +38,8 @@ module NitroKit
             controller: "nk--app-shell",
             layout: @layout,
             state: "closed",
-            action: "turbo:before-visit@document->nk--app-shell#closeForNavigation",
+            action: "turbo:before-visit@document->nk--app-shell#closeForNavigation " \
+              "turbo:morph@document->nk--app-shell#syncViewport",
             nk__app_shell_open_label_value: @open_navigation_label,
             nk__app_shell_close_label_value: @close_navigation_label
           }

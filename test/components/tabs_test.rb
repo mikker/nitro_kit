@@ -19,7 +19,7 @@ class TabsComponentTest < ActiveSupport::TestCase
     assert_equal "billing-details", node["data-nk--tabs-active-value"]
 
     assert_equal "tablist", list["role"]
-    assert_equal "Tabs", list["aria-label"]
+    assert_equal I18n.t("nitro_kit.tabs.label"), list["aria-label"]
     assert_equal "horizontal", list["aria-orientation"]
     assert_equal "general", tab_nodes.first["data-key"]
     assert_equal "settings-general-tab", tab_nodes.first["id"]

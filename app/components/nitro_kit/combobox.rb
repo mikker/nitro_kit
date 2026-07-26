@@ -54,7 +54,11 @@ module NitroKit
             state: "closed",
             action: "click@window->nk--combobox#closeFromOutside",
             nk__combobox_open_value: "false",
-            nk__combobox_required_value: @required
+            nk__combobox_required_value: @required,
+            nk__combobox_invalid_selection_value: I18n.t("nitro_kit.combobox.invalid_selection"),
+            nk__combobox_no_results_value: I18n.t("nitro_kit.combobox.no_results"),
+            nk__combobox_results_one_value: I18n.t("nitro_kit.combobox.results.one"),
+            nk__combobox_results_other_value: I18n.t("nitro_kit.combobox.results.other")
           }
         },
         html:,

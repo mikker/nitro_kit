@@ -124,6 +124,15 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
+        slug: "rich-text-area",
+        title: "Rich text area",
+        description: "Action Text editors wrapped in the Nitro contract, composed through Field(as: :rich_text).",
+        page: Gallery::Components::RichTextAreaPage,
+        states: [],
+        expected_roots: %w[rich-text-area field input label button]
+      ),
+      Entry.new(
+        kind: :component,
         slug: "select",
         title: "Select",
         description: "Native selection controls with typed choices, prompts, blanks, and multiple values.",

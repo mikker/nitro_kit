@@ -2,10 +2,42 @@
 
 module NitroKit
   class Dropzone < Component
+    # Strings the Stimulus controller needs at runtime. Nitro translates them
+    # here and hands them to the controller as Stimulus values so no user-facing
+    # English lives in JavaScript.
+    CONTROLLER_MESSAGE_KEYS = %w[
+      progress_for
+      remove_file
+      uploading
+      uploading_percent
+      uploaded
+      upload_failed
+      ready
+      status.empty
+      status.selected.one
+      status.selected.other
+      status.uploading.one
+      status.uploading.other
+      status.attention.one
+      status.attention.other
+      status.uploaded.one
+      status.uploaded.other
+      status.ready.one
+      status.ready.other
+      errors.upload_failed
+      errors.upload_failed_detail
+      errors.uploads_in_progress
+      errors.failed_files
+      errors.too_large
+      errors.not_accepted
+      errors.max_files.one
+      errors.max_files.other
+    ].freeze
+
     def initialize(
       id:,
       name:,
-      title: "Upload files",
+      label: I18n.t("nitro_kit.dropzone.label"),
       description: nil,
       direct_upload: true,
       multiple: false,
@@ -21,7 +53,7 @@ module NitroKit
     )
       @identifier = component_id(id)
       @name = form_name(name)
-      @title = required_text(:title, title)
+      @label = required_text(:label, label)
       @description = optional_text(:description, description)
       @direct_upload = validate_boolean!(:direct_upload, direct_upload)
       @multiple = validate_boolean!(:multiple, multiple)
@@ -48,7 +80,7 @@ module NitroKit
             nk__dropzone_max_files_value: @max_files,
             nk__dropzone_max_bytes_value: @max_bytes,
             nk__dropzone_accept_value: @accept
-          }.compact
+          }.compact.merge(@disabled ? {} : controller_message_values)
         },
         html:,
         aria:,
@@ -57,7 +89,10 @@ module NitroKit
       )
     end
 
-    attr_reader :identifier, :name, :title, :description, :max_files, :max_bytes
+    # `label:` shadows the Phlex element, which the message region still needs.
+    alias :html_label :label
+
+    attr_reader :identifier, :name, :label, :description, :max_files, :max_bytes
 
     def view_template
       div(**root_attributes) do
@@ -72,15 +107,18 @@ module NitroKit
 
     private
 
+    # The `label` element owns the accessible name through `for`, so the input
+    # carries no competing `aria-labelledby` and its description is not
+    # announced twice.
     def render_message
-      label(
+      html_label(
         **slot_attributes(
           :message,
           attributes: { for: input_id }
         )
       ) do
-        strong(**slot_attributes(:title, attributes: { id: title_id })) { plain(title) }
-        span(**slot_attributes(:instruction)) { "Drop files here or choose them from your device." }
+        strong(**slot_attributes(:title, attributes: { id: title_id })) { plain(@label) }
+        span(**slot_attributes(:instruction)) { plain(I18n.t("nitro_kit.dropzone.prompt")) }
 
         if description
           span(**slot_attributes(:description, attributes: { id: description_id })) { plain(description) }
@@ -101,7 +139,6 @@ module NitroKit
             disabled: @disabled,
             required: @required,
             aria: {
-              labelledby: title_id,
               describedby: describedby,
               errormessage: error_id
             },
@@ -126,7 +163,13 @@ module NitroKit
             data: { nk__dropzone_target: "status" }
           }
         )
-      ) { @disabled ? "File upload is disabled." : "No files selected." }
+      ) do
+        plain(
+          @disabled ?
+            I18n.t("nitro_kit.dropzone.status.disabled") :
+            I18n.t("nitro_kit.dropzone.status.empty")
+        )
+      end
     end
 
     def render_error
@@ -149,7 +192,7 @@ module NitroKit
           :preview_list,
           attributes: {
             hidden: true,
-            aria: { label: "Selected files" },
+            aria: { label: I18n.t("nitro_kit.dropzone.preview_list") },
             data: { nk__dropzone_target: "previewList" }
           }
         )
@@ -177,11 +220,11 @@ module NitroKit
               attributes: {
                 max: 100,
                 value: 0,
-                aria: { label: "Upload progress" }
+                aria: { label: I18n.t("nitro_kit.dropzone.progress") }
               }
             )
           )
-          span(**slot_attributes(:file_status)) { "Queued" }
+          span(**slot_attributes(:file_status)) { plain(I18n.t("nitro_kit.dropzone.queued")) }
           button(
             **slot_attributes(
               :remove_control,
@@ -190,8 +233,17 @@ module NitroKit
                 data: { action: "click->nk--dropzone#remove" }
               }
             )
-          ) { "Remove" }
+          ) { plain(I18n.t("nitro_kit.dropzone.remove")) }
         end
+      end
+    end
+
+    def controller_message_values
+      CONTROLLER_MESSAGE_KEYS.to_h do |key|
+        [
+          :"nk__dropzone_#{key.tr('.', '_')}_value",
+          I18n.t("nitro_kit.dropzone.#{key}")
+        ]
       end
     end
 
@@ -207,7 +259,7 @@ module NitroKit
     end
 
     def describedby
-      [ description_id, status_id, error_id ].compact.join(" ")
+      [ status_id, error_id ].join(" ")
     end
 
     def input_id = "#{identifier}-input"

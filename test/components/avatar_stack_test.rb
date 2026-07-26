@@ -19,7 +19,7 @@ class AvatarStackTest < ActiveSupport::TestCase
     assert avatars.all? { |avatar| avatar["data-nk"] == "avatar" }
     assert avatars.all? { |avatar| avatar["data-size"] == "sm" }
     assert_equal "+4", overflow.text
-    assert_equal "4 more avatars", overflow["aria-label"]
+    assert_equal I18n.t("nitro_kit.avatar_stack.overflow", count: 4), overflow["aria-label"]
     assert_empty node.css("[class], [style]")
   end
 
@@ -41,7 +41,7 @@ class AvatarStackTest < ActiveSupport::TestCase
 
     assert_equal 2, node.css("[data-slot='avatar-stack-avatar']").count
     assert_equal "+3", node.at_css("[data-slot='avatar-stack-overflow']").text
-    assert_equal "3 more avatars", node.at_css("[data-slot='avatar-stack-overflow']")["aria-label"]
+    assert_equal I18n.t("nitro_kit.avatar_stack.overflow", count: 3), node.at_css("[data-slot='avatar-stack-overflow']")["aria-label"]
   end
 
   test "omits the overflow indicator when max is not exceeded" do

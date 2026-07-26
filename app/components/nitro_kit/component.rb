@@ -52,6 +52,7 @@ module NitroKit
       html: {},
       aria: {},
       data: {},
+      variant: nil,
       desperately_need_a_class: nil
     )
       raise ArgumentError, "Slots require a component identity" unless @component_name
@@ -61,7 +62,10 @@ module NitroKit
         html:,
         aria:,
         data:,
-        owned_data: { slot: qualified_slot(slot) },
+        owned_data: {
+          slot: qualified_slot(slot),
+          variant: variant && normalize_identity(variant, name: "variant")
+        }.compact,
         desperately_need_a_class:
       )
     end

@@ -115,7 +115,7 @@ module NitroKit
     end
 
     def close_button(
-      label: "Close dialog",
+      label: I18n.t("nitro_kit.dialog.close"),
       html: {},
       aria: {},
       data: {},
@@ -221,7 +221,7 @@ module NitroKit
 
     def render_close_button
       declaration = @close_button || CloseButton.new(
-        label: "Close dialog",
+        label: I18n.t("nitro_kit.dialog.close"),
         html: {},
         aria: {},
         data: {},

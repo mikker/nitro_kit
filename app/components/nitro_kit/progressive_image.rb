@@ -8,9 +8,6 @@ module NitroKit
     PIXELS = { sm: 320, md: 720, lg: 1_440 }.freeze
     PLACEHOLDER_PIXELS = 48
 
-    # TODO(i18n): move to the gem locale mechanism once it exists.
-    UNAVAILABLE_TEXT = "Image unavailable"
-
     def initialize(
       attachment:,
       alt: nil,
@@ -119,7 +116,7 @@ module NitroKit
     end
 
     def fallback_text
-      alt.strip.empty? ? UNAVAILABLE_TEXT : alt
+      alt.strip.empty? ? I18n.t("nitro_kit.progressive_image.unavailable") : alt
     end
 
     def variant_url(pixels)

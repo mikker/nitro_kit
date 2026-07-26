@@ -175,6 +175,49 @@ class AppShellTest < ApplicationSystemTestCase
     assert_no_severe_console_errors(context: path)
   end
 
+  test "a Turbo refresh morph keeps exactly one live navigation tree in the open drawer" do
+    path = visit_shell_page
+    resize_viewport(width: 700, height: 900)
+    root = "#gallery-app-shell-sidebar"
+    sidebar = "#{root} [data-slot='app-shell-sidebar']"
+    dialog = "#{root} [data-slot='app-shell-dialog']"
+    trigger = "#{root} [data-slot='app-shell-mobile-trigger']"
+
+    find(trigger).click
+    assert_selector "#{root}[data-state='open']"
+    assert_selector "#{dialog}[open] > [data-slot='app-shell-navigation']"
+
+    install_morph_counter
+    refresh_with_turbo_stream
+    wait_until(message: "Turbo did not morph the page") do
+      evaluate_script("window.__nitroMorphCount") == 1
+    end
+
+    # The morph reinstates the server-rendered closed shell. The single live
+    # navigation tree must survive that reconciliation exactly once, back in
+    # the sidebar, without drawer semantics or a duplicated tree.
+    assert_selector "#{root}[data-state='closed']"
+    assert_selector "#{root}[data-enhanced]"
+    assert_selector "#{root} [data-nk='app-navigation']", count: 1, visible: :all
+    assert_selector "#{sidebar} > [data-slot='app-shell-navigation']", count: 1, visible: :all
+    assert_no_selector "#{dialog} [data-slot='app-shell-navigation']", visible: :all
+    assert_selector "#{dialog}:not([open])", visible: :all
+    assert_selector "#{trigger}[aria-expanded='false']"
+    assert_no_selector "#{sidebar} > [data-slot='app-shell-navigation'][inert]", visible: :all
+    assert_no_selector "#{sidebar} > [data-slot='app-shell-navigation'][aria-hidden]", visible: :all
+    assert_shell_controller_connected(root)
+
+    # The reconciled shell still opens, moves, and closes the same tree.
+    find(trigger).click
+    assert_selector "#{root}[data-state='open']"
+    assert_selector "#{dialog}[open] > [data-slot='app-shell-navigation']", count: 1
+    assert_selector "#{root} [data-nk='app-navigation']", count: 1, visible: :all
+    active_element.send_keys(:escape)
+    assert_selector "#{root}[data-state='closed']"
+    assert_selector "#{sidebar} > [data-slot='app-shell-navigation']", count: 1, visible: :all
+    assert_no_severe_console_errors(context: path)
+  end
+
   test "disconnect restores the visible no JavaScript narrow navigation" do
     path = visit_shell_page
     resize_viewport(width: 700, height: 900)
@@ -217,6 +260,29 @@ class AppShellTest < ApplicationSystemTestCase
   def assert_shell_tree(root)
     assert_selector "#{root} [data-nk='app-navigation']", count: 1
     assert_selector "#{root} > [data-slot='app-shell-sidebar'] > [data-slot='app-shell-navigation']", count: 1
+  end
+
+  def install_morph_counter
+    execute_script <<~JAVASCRIPT
+      window.__nitroMorphCount = 0;
+      document.addEventListener("turbo:morph", () => window.__nitroMorphCount += 1, { once: true });
+    JAVASCRIPT
+  end
+
+  def refresh_with_turbo_stream
+    execute_script <<~JAVASCRIPT
+      Turbo.renderStreamMessage('<turbo-stream action="refresh"></turbo-stream>');
+    JAVASCRIPT
+  end
+
+  def assert_shell_controller_connected(selector)
+    connected = evaluate_script(<<~JAVASCRIPT, selector)
+      window.Stimulus.getControllerForElementAndIdentifier(
+        document.querySelector(arguments[0]),
+        "nk--app-shell"
+      ) !== null
+    JAVASCRIPT
+    assert connected, "Expected nk--app-shell to stay connected at #{selector}"
   end
 
   def wait_for_animations(selector)

@@ -158,7 +158,7 @@ module NitroKit
           :overflow,
           html: declaration.html,
           aria: declaration.aria.merge(
-            label: declaration.label || "#{declaration.count} more avatars"
+            label: declaration.label || I18n.t("nitro_kit.avatar_stack.overflow", count: declaration.count)
           ),
           data: declaration.data,
           desperately_need_a_class: declaration.css_class

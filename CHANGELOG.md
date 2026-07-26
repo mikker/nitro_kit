@@ -6,17 +6,44 @@ Nitro Kit 2.0 is a complete, intentionally incompatible rewrite around gem-owned
 
 ### Breaking changes
 
+#### Packaging and API surface
+
 - Replace generated editable component copies with versioned `NitroKit::*` classes loaded from the gem.
 - Remove all `nk_*` ERB helpers, generated variant helpers, `from_template`, and template-buffer bridges.
 - Remove copied-component generators, schema/variant metadata, and legacy installation paths.
 - Add a setup-only generator, project-local Rails/Hotwire/UI skills, integration
   diagnostics, and an agent initialization prompt for Nitro Kit 2.
 - Remove Tailwind Merge, consumer Tailwind requirements, old Tailwind assets, and internal component class strings.
-- Replace permissive component attributes with explicit options and `html:`, `aria:`, and `data:` boundaries.
-- Reject `class` and `style`; add the observable `desperately_need_a_class:` integration escape.
 - Use Rails `form_with(..., builder: NitroKit::FormBuilder)` instead of `nk_form_with` or `nk_form_for`.
 - Remove vendored Floating UI and combobox navigation runtimes and the obsolete Datepicker and Switch controllers.
+
+#### Attribute boundary
+
+- Replace permissive component attributes with explicit options and `html:`, `aria:`, and `data:` boundaries.
+- Reject `class` and `style`; add the observable `desperately_need_a_class:` integration escape.
+- Reserve a named set of data keys instead of an ad hoc list. `Component::COMPONENT_OWNED_DATA_ATTRIBUTES` is `state`, `disabled`, `required`, `orientation`, `presentation`, `placement`, `layout`, and `field-type`; `Component::RESERVED_DATA_ATTRIBUTES` adds `nk`, `slot`, `variant`, `size`, `nk-escape`, and `enhanced`. Passing any of them through `data:` now raises. `data-controller` and `data-action` remain additive.
+- Settle the variant axis: `variant:` and `size:` on a root are the component's identity axes and are emitted only by the base component. A slot may carry its own owned `data-variant` when it has variant identity of its own, as `Toast::Item` and Dropdown items do; caller `data: { variant: }` stays reserved either way.
+
+#### Removed components and options
+
 - Remove `VStack` and `HStack` in favor of one explicit, responsive `Flex` component.
+- Remove the Datepicker component entirely. `Input`'s `type: :date` is the only date control, and `Field`/`FormBuilder` reach it through `as: :date`.
+- Remove the separate sortable-table component. Sorting lives on `Table` through `Table.new(sort:, direction:)` and `th(sort:, href:, sort_data:)`; `NitroKit::RansackTable` is not a core contract.
+- Remove `Combobox::Option` in favor of the shared, validated `NitroKit::Choice` value.
+- Remove `Alert`'s second palette axis. `Alert` now has one semantic `variant:` axis of `default info success warning error`, matching `Toast::Item`, with the tint driven by the Alert-owned `VARIANT_PALETTE`. There is no `color:` option; the `color:` palette belongs to `Badge` alone.
+
+#### Renamed and reshaped options
+
+- Rename Button's trailing-icon keyword to `icon_end:`, matching the `button-icon-end` slot. `icon_right:` is gone. `Dropdown#trigger` and `Tooltip#trigger` forward the same `icon:`/`icon_end:` pair.
+- Add `icon:` to `Dropdown#item` alongside its owned `data-variant` for `default` and `destructive` items.
+- Replace Dialog's ad hoc content declarations with exactly one required `panel(title:, description: nil, nonmodal: false)`. Nitro renders close button, title, description, then application content, so a sticky close control survives long panels. `dismissible: false` renders no close button and declaring one raises.
+- Rename `Dropzone`'s visible prompt keyword from `title:` to `label:`, and move its remaining user-facing strings into the `nitro_kit.dropzone.*` locale scope.
+- Require `label:` on `AvatarStack` to name the group, add `max:` to bound visible avatars and derive the `+N` indicator, and reject `aria: { label: }` and combining `max:` with an explicit `overflow`.
+- Give `AppShell` a `layout:` axis rather than a variant. The root is now `div[data-nk="app-shell"][data-layout]`, and the narrow drawer is a real modal `dialog` so the browser owns focus containment, inertness, and Escape.
+- Make `AppNavigation`'s body a real `ul`, with every entry an `li` and items rendering `li > a[data-slot="app-navigation-item-link"]` that carry their own attribute bags. `SettingsLayout` navigation uses the same `nav > ul > li > a` shape.
+- Reshape `Toast`. The list is `ol[data-slot="toast-list"]` whose id is the toast id plus `-list`, so a Turbo Stream can append `Toast::Item` directly to `nk-toast-list`. Items carry `role="status"`, or `role="alert"` for the error variant, and every item is `data-turbo-temporary` while the region and list survive. `dismissible: false` items are never auto-dismissed.
+- Scope checkable behavior to the one state HTML cannot express. `Checkbox` mounts `nk--checkable` only for `indeterminate: true`; ordinary checked state, `Switch`, and `RadioButton` mount no controller and mirror no `data-state`. A `Checkbox` description now requires a non-blank String `id:`.
+- Require `id:`, `name:`, `label:`, and `options:` on `Combobox`, validate the value against the declared options, and accept `label: false` only with `control_aria: { label: }` or `{ labelledby: }`. `Field` gains `as: :combobox`, `as: :rich_text`, and `as: :radio_group`, and rejects `label: false` for radio groups.
 
 ### Added
 
@@ -29,7 +56,9 @@ Nitro Kit 2.0 is a complete, intentionally incompatible rewrite around gem-owned
 - Typed Choice values and direct-Phlex Rails FormBuilder integration with Active Model errors, native and direct uploads, and Turbo Frame/Stream examples.
 - Direct optional Pagy integration through `Pagination(pagy:)`, with an explicit URL callable for caller-owned destinations.
 - Optional Lexxy and Action Text integration through `form.field(..., as: :rich_text)`, preserving editor-native inputs, attachments, options, and behavior inside Nitro's Field contract.
-- Gem-owned importmap pins and Stimulus behavior for Accordion, AppShell, AppearancePicker, Combobox, Dialog, Dropdown, Dropzone, ProgressiveImage, Tabs, Toast, and Tooltip.
+- Gem-owned importmap pins and Stimulus behavior for AppShell, AppearancePicker, Avatar, Checkbox (`nk--checkable`), Combobox, Dialog, Dropdown, Dropzone, ProgressiveImage, Tabs, Toast, and Tooltip. Accordion needs no JavaScript at all.
+- `Typeset` for semantic rich content and `RichTextArea` for the host application's rich-text editor output.
+- A `nitro_kit.*` locale scope so component copy is translatable; Dropzone additionally hands its runtime strings to `nk--dropzone` as Stimulus values so no user-facing English lives in JavaScript.
 - A catalog-driven Phlex gallery covering components, blocks, broad application flows, complete application shells, responsive states, and light, dark, and system appearance.
 - A public customization guide and gallery wizard for documented tokens, deterministic CSS exports, and copyable AppShell composition.
 

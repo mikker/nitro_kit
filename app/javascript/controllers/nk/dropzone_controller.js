@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 import DirectUploadSession from "controllers/nk/dropzone/direct_upload";
 import {
   formatBytes,
+  interpolate,
   rejectionMessage,
   validateFiles,
 } from "controllers/nk/dropzone/file_rules";
@@ -9,6 +10,40 @@ import {
   acquireFormSubmitLock,
   releaseFormSubmitLock,
 } from "controllers/nk/dropzone/form_submit_lock";
+
+// The Dropzone component translates every user-facing string and passes it in
+// as a Stimulus value. These are the shipped English fallbacks for markup that
+// predates a value or was assembled without the component.
+const MESSAGES = {
+  progressFor: "Upload progress for %{name}",
+  removeFile: "Remove %{name}",
+  uploading: "Uploading",
+  uploadingPercent: "Uploading %{percent}%",
+  uploaded: "Uploaded",
+  uploadFailed: "Upload failed",
+  ready: "Ready to submit",
+  statusEmpty: "No files selected.",
+  statusSelectedOne: "%{count} file selected.",
+  statusSelectedOther: "%{count} files selected.",
+  statusUploadingOne: "Uploading %{count} file.",
+  statusUploadingOther: "Uploading %{count} files.",
+  statusAttentionOne: "%{count} file needs attention.",
+  statusAttentionOther: "%{count} files need attention.",
+  statusUploadedOne: "%{count} file uploaded.",
+  statusUploadedOther: "%{count} files uploaded.",
+  statusReadyOne: "%{count} file ready to submit.",
+  statusReadyOther: "%{count} files ready to submit.",
+  errorsUploadFailed: "%{name} could not be uploaded.",
+  errorsUploadFailedDetail: "%{name} could not be uploaded: %{error}",
+  errorsUploadsInProgress:
+    "Wait for uploads to finish before submitting the form.",
+  errorsFailedFiles:
+    "Remove failed files or choose them again before submitting the form.",
+  errorsTooLarge: "%{name} is larger than %{size}.",
+  errorsNotAccepted: "%{name} is not an accepted file type.",
+  errorsMaxFilesOne: "Choose no more than %{count} file.",
+  errorsMaxFilesOther: "Choose no more than %{count} files.",
+};
 
 export default class extends Controller {
   static targets = [
@@ -23,7 +58,28 @@ export default class extends Controller {
     maxFiles: Number,
     maxBytes: Number,
     accept: String,
+    ...Object.fromEntries(Object.keys(MESSAGES).map((key) => [key, String])),
   };
+
+  message(key, replacements) {
+    return interpolate(this[`${key}Value`] || MESSAGES[key], replacements);
+  }
+
+  pluralMessage(key, count, replacements = {}) {
+    return this.message(`${key}${count === 1 ? "One" : "Other"}`, {
+      count,
+      ...replacements,
+    });
+  }
+
+  get fileRuleMessages() {
+    return {
+      tooLarge: this.message("errorsTooLarge"),
+      notAccepted: this.message("errorsNotAccepted"),
+      maxFilesOne: this.message("errorsMaxFilesOne"),
+      maxFilesOther: this.message("errorsMaxFilesOther"),
+    };
+  }
 
   connect() {
     this.entries = [];
@@ -91,7 +147,11 @@ export default class extends Controller {
     const failed = this.entries.find(
       (candidate) => candidate.state === "error",
     );
-    if (failed) this.showError(`${failed.file.name} could not be uploaded.`);
+    if (failed) {
+      this.showError(
+        this.message("errorsUploadFailed", { name: failed.file.name }),
+      );
+    }
 
     this.reflectState();
     this.announceSelection();
@@ -103,7 +163,7 @@ export default class extends Controller {
 
     if (this.uploadingEntries.length > 0) {
       event.preventDefault();
-      this.showError("Wait for uploads to finish before submitting the form.");
+      this.showError(this.message("errorsUploadsInProgress"));
       return;
     }
 
@@ -112,9 +172,7 @@ export default class extends Controller {
       this.entries.some((entry) => entry.state !== "success")
     ) {
       event.preventDefault();
-      this.showError(
-        "Remove failed files or choose them again before submitting the form.",
-      );
+      this.showError(this.message("errorsFailedFiles"));
       return;
     }
 
@@ -162,8 +220,8 @@ export default class extends Controller {
     if (status) {
       status.textContent =
         selectedCount === 0
-          ? "No files selected."
-          : `${selectedCount} ${selectedCount === 1 ? "file" : "files"} selected.`;
+          ? this.message("statusEmpty")
+          : this.pluralMessage("statusSelected", selectedCount);
     }
     if (error) {
       error.textContent = "";
@@ -188,6 +246,7 @@ export default class extends Controller {
       maxFiles: this.maxFilesValue,
       maxBytes: this.hasMaxBytesValue ? this.maxBytesValue : null,
       accept: this.hasAcceptValue ? this.acceptValue : null,
+      messages: this.fileRuleMessages,
     });
     validation.accepted.forEach((file) => this.addFile(file));
     this.syncNativeFiles();
@@ -196,7 +255,7 @@ export default class extends Controller {
       this.entries.forEach((entry) => this.startUpload(entry));
     } else {
       this.entries.forEach((entry) =>
-        this.updateEntry(entry, "success", 0, "Ready to submit"),
+        this.updateEntry(entry, "success", 0, this.message("ready")),
       );
     }
 
@@ -222,9 +281,15 @@ export default class extends Controller {
     const remove = element.querySelector(
       "[data-slot='dropzone-remove-control']",
     );
-    remove.setAttribute("aria-label", `Remove ${file.name}`);
+    remove.setAttribute(
+      "aria-label",
+      this.message("removeFile", { name: file.name }),
+    );
     const progress = element.querySelector("[data-slot='dropzone-progress']");
-    progress.setAttribute("aria-label", `Upload progress for ${file.name}`);
+    progress.setAttribute(
+      "aria-label",
+      this.message("progressFor", { name: file.name }),
+    );
     progress.hidden = !this.directUploadValue;
 
     const preview = element.querySelector(
@@ -244,7 +309,7 @@ export default class extends Controller {
 
   startUpload(entry) {
     entry.state = "uploading";
-    this.updateEntry(entry, "uploading", 0, "Uploading");
+    this.updateEntry(entry, "uploading", 0, this.message("uploading"));
     this.reflectState();
     this.disableSubmitControls();
 
@@ -264,11 +329,16 @@ export default class extends Controller {
     if (entry.cancelled) return;
 
     if (error) {
-      this.updateEntry(entry, "error", 0, "Upload failed");
-      this.showError(`${entry.file.name} could not be uploaded: ${error}`);
+      this.updateEntry(entry, "error", 0, this.message("uploadFailed"));
+      this.showError(
+        this.message("errorsUploadFailedDetail", {
+          name: entry.file.name,
+          error,
+        }),
+      );
     } else {
       entry.hiddenInput = this.createSignedIdInput(attributes.signed_id);
-      this.updateEntry(entry, "success", 100, "Uploaded");
+      this.updateEntry(entry, "success", 100, this.message("uploaded"));
     }
 
     this.reflectState();
@@ -284,7 +354,7 @@ export default class extends Controller {
       entry,
       "uploading",
       percentage,
-      `Uploading ${percentage}%`,
+      this.message("uploadingPercent", { percent: percentage }),
     );
   }
 
@@ -344,26 +414,27 @@ export default class extends Controller {
   announceSelection() {
     const count = this.entries.length;
     if (count === 0) {
-      this.statusTarget.textContent = "No files selected.";
+      this.statusTarget.textContent = this.message("statusEmpty");
     } else if (this.uploadingEntries.length > 0) {
-      this.statusTarget.textContent = `Uploading ${count} ${
-        count === 1 ? "file" : "files"
-      }.`;
+      this.statusTarget.textContent = this.pluralMessage(
+        "statusUploading",
+        count,
+      );
     } else if (this.entries.some((entry) => entry.state === "error")) {
-      this.statusTarget.textContent = `${count} ${
-        count === 1 ? "file needs" : "files need"
-      } attention.`;
+      this.statusTarget.textContent = this.pluralMessage(
+        "statusAttention",
+        count,
+      );
     } else if (
       this.directUploadValue &&
       this.entries.every((entry) => entry.state === "success")
     ) {
-      this.statusTarget.textContent = `${count} ${
-        count === 1 ? "file" : "files"
-      } uploaded.`;
+      this.statusTarget.textContent = this.pluralMessage(
+        "statusUploaded",
+        count,
+      );
     } else {
-      this.statusTarget.textContent = `${count} ${
-        count === 1 ? "file" : "files"
-      } ready to submit.`;
+      this.statusTarget.textContent = this.pluralMessage("statusReady", count);
     }
   }
 

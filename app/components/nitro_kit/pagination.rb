@@ -6,13 +6,11 @@ module NitroKit
     CurrentPage = Data.define(:text, :attributes)
     private_constant :CurrentPage
     ITEM_KINDS = %i[previous page ellipsis next].freeze
-    DEFAULT_PREVIOUS_TEXT = "Previous"
-    DEFAULT_NEXT_TEXT = "Next"
     UNSET = Object.new.freeze
     private_constant :UNSET
 
     def initialize(
-      label: "Pagination",
+      label: I18n.t("nitro_kit.pagination.label"),
       pagy: nil,
       page_url: nil,
       id: nil,
@@ -66,7 +64,7 @@ module NitroKit
       desperately_need_a_class: nil,
       &content
     )
-      text = default_text(text, DEFAULT_PREVIOUS_TEXT, content)
+      text = default_text(text, I18n.t("nitro_kit.pagination.previous"), content)
       validate_boolean!(:disabled, disabled)
       append_navigation_item(
         :previous,
@@ -74,7 +72,7 @@ module NitroKit
         href:,
         icon:,
         disabled: disabled || missing_href?(href),
-        default_label: "Previous page",
+        default_label: I18n.t("nitro_kit.pagination.previous_page"),
         id:,
         html:,
         aria:,
@@ -137,7 +135,7 @@ module NitroKit
       append(Item.new(kind: :page, button:, current_page:, content:, current:, label: nil))
     end
 
-    def ellipsis(label: "More pages")
+    def ellipsis(label: I18n.t("nitro_kit.pagination.ellipsis"))
       validate_label!(label, name: "ellipsis label")
 
       append(Item.new(kind: :ellipsis, button: nil, current_page: nil, content: nil, current: false, label:))
@@ -155,7 +153,7 @@ module NitroKit
       desperately_need_a_class: nil,
       &content
     )
-      text = default_text(text, DEFAULT_NEXT_TEXT, content)
+      text = default_text(text, I18n.t("nitro_kit.pagination.next"), content)
       validate_boolean!(:disabled, disabled)
       append_navigation_item(
         :next,
@@ -163,7 +161,7 @@ module NitroKit
         href:,
         icon_end: icon,
         disabled: disabled || missing_href?(href),
-        default_label: "Next page",
+        default_label: I18n.t("nitro_kit.pagination.next_page"),
         id:,
         html:,
         aria:,

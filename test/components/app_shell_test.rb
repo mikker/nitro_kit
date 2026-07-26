@@ -16,7 +16,8 @@ class AppShellTest < ActiveSupport::TestCase
       assert_nil node["data-variant"]
       assert_equal "closed", node["data-state"]
       assert_equal "nk--app-shell", node["data-controller"]
-      assert_equal "turbo:before-visit@document->nk--app-shell#closeForNavigation", node["data-action"]
+      assert_includes node["data-action"], "turbo:before-visit@document->nk--app-shell#closeForNavigation"
+      assert_includes node["data-action"], "turbo:morph@document->nk--app-shell#syncViewport"
       assert_equal %w[
         app-shell-skip-link
         app-shell-header
@@ -50,18 +51,18 @@ class AppShellTest < ActiveSupport::TestCase
     assert_equal "workspace-navigation-drawer", dialog["id"]
     assert_equal "workspace-navigation-drawer", trigger["aria-controls"]
     assert_equal "false", trigger["aria-expanded"]
-    assert_equal "Open navigation", trigger["aria-label"]
+    assert_equal I18n.t("nitro_kit.app_shell.open_navigation"), trigger["aria-label"]
     assert_equal "trigger", trigger["data-nk--app-shell-target"]
     assert_equal "div", sidebar.name
     assert_equal "sidebar", sidebar["data-nk--app-shell-target"]
     assert_equal "navigation", sidebar.at_css("[data-slot='app-shell-navigation']")["data-nk--app-shell-target"]
     assert_equal "dialog", dialog.name
     assert_equal "dialog", dialog["data-nk--app-shell-target"]
-    assert_equal "Application navigation", dialog["aria-label"]
+    assert_equal I18n.t("nitro_kit.app_shell.navigation_dialog"), dialog["aria-label"]
     assert_nil dialog["open"]
     assert_nil node["data-enhanced"]
     assert_equal "button", close.name
-    assert_equal "Close navigation", close["aria-label"]
+    assert_equal I18n.t("nitro_kit.app_shell.close_navigation"), close["aria-label"]
     assert_equal "click->nk--app-shell#close", close["data-action"]
     assert_equal "workspace-main", main["id"]
     assert_equal "main", main.name

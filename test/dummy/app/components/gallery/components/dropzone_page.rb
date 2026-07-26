@@ -32,7 +32,7 @@ module Gallery
               form.dropzone(
                 :files,
                 id: "gallery-dropzone-direct",
-                title: "Upload supporting evidence",
+                label: "Upload supporting evidence",
                 description: "Up to two text or PNG files, each no larger than 2 MB.",
                 multiple: true,
                 accept: "text/plain,image/png",
@@ -59,7 +59,7 @@ module Gallery
               form.dropzone(
                 :files,
                 id: "gallery-dropzone-multipart",
-                title: "Add source files",
+                label: "Add source files",
                 description: "Choose up to three text or PNG files.",
                 direct_upload: false,
                 multiple: true,
@@ -86,13 +86,13 @@ module Gallery
               form.dropzone(
                 :primary_file,
                 id: "gallery-dropzone-shared-primary",
-                title: "Upload primary evidence",
+                label: "Upload primary evidence",
                 accept: "text/plain"
               )
               form.dropzone(
                 :secondary_file,
                 id: "gallery-dropzone-shared-secondary",
-                title: "Upload secondary evidence",
+                label: "Upload secondary evidence",
                 accept: "text/plain"
               )
               form.submit("Save both uploads", id: "gallery-dropzone-shared-submit")
@@ -116,7 +116,7 @@ module Gallery
               render NitroKit::Dropzone.new(
                 id: "gallery-dropzone-required",
                 name: "evidence[file]",
-                title: "Choose one PDF",
+                label: "Choose one PDF",
                 description: "The browser keeps this requirement without JavaScript.",
                 direct_upload: false,
                 accept: "application/pdf",
@@ -129,7 +129,7 @@ module Gallery
               render NitroKit::Dropzone.new(
                 id: "gallery-dropzone-disabled",
                 name: "archive[file]",
-                title: "Archived upload",
+                label: "Archived upload",
                 description: "Uploads are unavailable while this record is archived.",
                 disabled: true
               )

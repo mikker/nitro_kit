@@ -114,7 +114,7 @@ module NitroKit
     def dropzone(
       field_name,
       id: nil,
-      title: "Upload files",
+      label: I18n.t("nitro_kit.dropzone.label"),
       description: nil,
       direct_upload: true,
       multiple: false,
@@ -134,7 +134,7 @@ module NitroKit
         Dropzone.new(
           id: id || field_id(field_name),
           name: self.field_name(field_name, multiple:),
-          title:,
+          label:,
           description:,
           direct_upload:,
           multiple:,
@@ -222,7 +222,7 @@ module NitroKit
 
     def submit(value = nil, options = {}, **attributes, &block)
       options = options.symbolize_keys.merge(attributes)
-      value = "Save changes" if value.nil? && !block
+      value = I18n.t("nitro_kit.form.submit") if value.nil? && !block
       options[:name] = "commit" unless options.key?(:name)
       options[:value] = value if value && options[:name] == "commit" && !options.key?(:value)
 
@@ -231,7 +231,7 @@ module NitroKit
 
     def button(value = nil, options = {}, **attributes, &block)
       options = options.symbolize_keys.merge(attributes)
-      value = "Save changes" if value.nil? && !block
+      value = I18n.t("nitro_kit.form.submit") if value.nil? && !block
       options[:type] = :submit unless options.key?(:type)
 
       @template.render(Button.new(value, **options), &block)

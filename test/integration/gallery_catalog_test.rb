@@ -28,9 +28,9 @@ class GalleryCatalogTest < ActionDispatch::IntegrationTest
           assert_select "[data-gallery='example-canvas'] [data-nk='#{root}']", minimum: 1
         end
 
-        assert_select "[data-gallery='example-canvas'] [class]", count: 0
-        assert_select "[data-gallery='example-canvas'] [style]", count: 0
-        assert_select "[data-gallery='example-canvas'] [data-nk-escape]", count: 0
+        assert_empty nitro_owned("[data-gallery='example-canvas'] [class]")
+        assert_empty nitro_owned("[data-gallery='example-canvas'] [style]")
+        assert_empty nitro_owned("[data-gallery='example-canvas'] [data-nk-escape]")
 
         assert_select "[data-gallery='example']", minimum: 1 do |examples|
           examples.each do |example|
@@ -56,6 +56,16 @@ class GalleryCatalogTest < ActionDispatch::IntegrationTest
   end
 
   private
+
+  # Nitro never emits classes or styles, but application content slots such as
+  # the rich-text editor region carry the host editor's own markup.
+  APPLICATION_OWNED_SLOTS = "[data-slot='rich-text-area-editor']"
+
+  def nitro_owned(selector)
+    document.css(selector).reject do |node|
+      node.ancestors(APPLICATION_OWNED_SLOTS).any?
+    end.map { |node| node.name }
+  end
 
   def assert_unique_ids
     ids = document.css("[id]").map { |node| node["id"] }

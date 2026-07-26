@@ -4,11 +4,6 @@ module NitroKit
   class AppearancePicker < Component
     PRESENTATIONS = %i[segmented radios select dropdown].freeze
     PREFERENCES = %i[light dark system].freeze
-    LABELS = {
-      light: "Light",
-      dark: "Dark",
-      system: "System"
-    }.freeze
     ICONS = {
       light: :sun,
       dark: :moon,
@@ -17,7 +12,7 @@ module NitroKit
 
     def initialize(
       id:,
-      label: "Appearance",
+      label: I18n.t("nitro_kit.appearance_picker.label"),
       presentation: :segmented,
       preference: :system,
       html: {},
@@ -64,18 +59,23 @@ module NitroKit
 
     private
 
+    def preference_label(preference)
+      I18n.t("nitro_kit.appearance_picker.preferences.#{preference}")
+    end
+
     def render_dropdown
       div(**root_attributes) do
         render Dropdown.new(id: "#{identifier}-dropdown", placement: :bottom_end) do |menu|
           menu.trigger(
             variant: :ghost,
             icon: ICONS.fetch(@preference),
-            label: @label
+            label: @label,
+            data: { nk__appearance_target: "trigger" }
           )
           menu.title(@label)
           PREFERENCES.each do |option|
             menu.item(
-              LABELS.fetch(option),
+              preference_label(option),
               icon: ICONS.fetch(option),
               data: {
                 appearance_preference: option,
@@ -102,7 +102,7 @@ module NitroKit
         ) do
           PREFERENCES.each do |value|
             option(value:, selected: value == @preference) do
-              plain(LABELS.fetch(value))
+              plain(preference_label(value))
             end
           end
         end
@@ -129,7 +129,7 @@ module NitroKit
             }
           )
         )
-        span(**slot_attributes(:label)) { plain(LABELS.fetch(preference)) }
+        span(**slot_attributes(:label)) { plain(preference_label(preference)) }
       end
     end
 

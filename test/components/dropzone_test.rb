@@ -32,7 +32,7 @@ class DropzoneTest < ActiveSupport::TestCase
     node = render_dropzone(
       id: "evidence-upload",
       name: "evidence[file]",
-      title: "Upload evidence",
+      label: "Upload evidence",
       description: "Text files up to 1 MB.",
       accept: "text/plain",
       max_bytes: 1_048_576,
@@ -58,8 +58,8 @@ class DropzoneTest < ActiveSupport::TestCase
     assert_equal "text/plain", input["accept"]
     assert input.key?("required")
     assert_equal "/rails/active_storage/direct_uploads", input["data-direct-upload-url"]
-    assert_equal "evidence-upload-title", input["aria-labelledby"]
-    assert_equal "evidence-upload-description evidence-upload-status evidence-upload-error", input["aria-describedby"]
+    assert_nil input["aria-labelledby"]
+    assert_equal "evidence-upload-status evidence-upload-error", input["aria-describedby"]
     assert_equal "evidence-upload-error", input["aria-errormessage"]
 
     assert_equal "status", node.at_css("[data-slot='dropzone-status']")["role"]
@@ -69,6 +69,42 @@ class DropzoneTest < ActiveSupport::TestCase
     assert node.at_css("template [data-slot='dropzone-progress']")
     assert_equal "button", node.at_css("template [data-slot='dropzone-remove-control']").name
     assert_empty node.css("[class], [style], [data-nk-escape]")
+  end
+
+  test "translates its own copy and hands the controller every runtime string" do
+    node = render_dropzone(id: "evidence-upload", name: "evidence[file]")
+
+    assert_equal I18n.t("nitro_kit.dropzone.label"), node.at_css("#evidence-upload-title").text
+    assert_equal(
+      I18n.t("nitro_kit.dropzone.prompt"),
+      node.at_css("[data-slot='dropzone-instruction']").text
+    )
+    assert_equal(
+      I18n.t("nitro_kit.dropzone.status.empty"),
+      node.at_css("[data-slot='dropzone-status']").text
+    )
+    assert_equal(
+      I18n.t("nitro_kit.dropzone.preview_list"),
+      node.at_css("[data-slot='dropzone-preview-list']")["aria-label"]
+    )
+    assert_equal(
+      I18n.t("nitro_kit.dropzone.progress"),
+      node.at_css("template [data-slot='dropzone-progress']")["aria-label"]
+    )
+    assert_equal(
+      I18n.t("nitro_kit.dropzone.queued"),
+      node.at_css("template [data-slot='dropzone-file-status']").text
+    )
+    assert_equal(
+      I18n.t("nitro_kit.dropzone.remove"),
+      node.at_css("template [data-slot='dropzone-remove-control']").text
+    )
+
+    NitroKit::Dropzone::CONTROLLER_MESSAGE_KEYS.each do |key|
+      attribute = "data-nk--dropzone-#{key.tr('._', '--')}-value"
+
+      assert_equal I18n.t("nitro_kit.dropzone.#{key}"), node[attribute], attribute
+    end
   end
 
   test "renders ordinary multiple submission and disabled states without JavaScript requirements" do
@@ -92,14 +128,18 @@ class DropzoneTest < ActiveSupport::TestCase
     assert_nil disabled["data-controller"]
     assert_nil disabled["data-action"]
     assert disabled.at_css("input[type='file']").key?("disabled")
-    assert_equal "File upload is disabled.", disabled.at_css("[data-slot='dropzone-status']").text
+    assert_equal(
+      I18n.t("nitro_kit.dropzone.status.disabled"),
+      disabled.at_css("[data-slot='dropzone-status']").text
+    )
+    assert_nil disabled["data-nk--dropzone-status-empty-value"]
   end
 
   test "validates every public option and single-file consistency" do
     invalid_options = {
       id: [ nil, "", "two words", :upload ],
       name: [ nil, "", :files ],
-      title: [ nil, "", :upload ],
+      label: [ nil, "", :upload ],
       description: [ "", :description ],
       accept: [ "", :text ],
       direct_upload: [ nil, :yes ],

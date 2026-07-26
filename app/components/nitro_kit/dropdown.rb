@@ -287,10 +287,9 @@ module NitroKit
         ),
         html: entry.html,
         data: entry.data,
+        variant: entry.variant,
         desperately_need_a_class: entry.css_class
       )
-
-      attributes = attributes.merge(data: owned_slot_variant(attributes, entry.variant))
 
       public_send(entry.href ? :a : :button, **attributes) do
         if entry.icon
@@ -298,14 +297,6 @@ module NitroKit
         end
         render_content_value(entry)
       end
-    end
-
-    # Items are plain elements rather than nested components, so they cannot
-    # reach the base component's owned `variant:` channel the way Toast::Item
-    # does. Nitro still owns this value: caller `data:` keys are rejected as
-    # reserved before they ever reach here.
-    def owned_slot_variant(attributes, variant)
-      { variant: }.merge(attributes.fetch(:data, {}))
     end
 
     def render_separator(entry)

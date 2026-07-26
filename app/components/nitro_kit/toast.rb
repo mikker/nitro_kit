@@ -81,7 +81,7 @@ module NitroKit
             icon: :x,
             variant: :ghost,
             size: :sm,
-            aria: { label: "Dismiss notification" },
+            aria: { label: I18n.t("nitro_kit.toast.dismiss") },
             data: { action: "click->nk--toast#dismiss" }
           ),
           :dismiss
@@ -109,7 +109,7 @@ module NitroKit
       def initialize(
         flash:,
         duration: 5_000,
-        label: "Notifications",
+        label: I18n.t("nitro_kit.toast.label"),
         id: DEFAULT_ID,
         html: {},
         aria: {},
@@ -149,7 +149,7 @@ module NitroKit
 
     def initialize(
       duration: 5_000,
-      label: "Notifications",
+      label: I18n.t("nitro_kit.toast.label"),
       id: DEFAULT_ID,
       html: {},
       aria: {},

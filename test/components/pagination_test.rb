@@ -74,7 +74,7 @@ class PaginationComponentTest < ActiveSupport::TestCase
 
     assert_equal "nav", node.name
     assert_equal "pagination", node["data-nk"]
-    assert_equal "Pagination", node["aria-label"]
+    assert_equal I18n.t("nitro_kit.pagination.label"), node["aria-label"]
     assert_equal "ol", list.name
     assert_equal %w[previous page page ellipsis page next], items.map { |item| item["data-kind"] }
     assert_equal [ "ghost" ], node.css("[data-nk='button']").map { |button| button["data-variant"] }.uniq
@@ -128,8 +128,8 @@ class PaginationComponentTest < ActiveSupport::TestCase
       assert link.at_css("[data-nk='icon']")
       assert_nil link.at_css("[data-slot='button-label']")
     end
-    assert_equal "Previous page", previous["aria-label"]
-    assert_equal "Next page", following["aria-label"]
+    assert_equal I18n.t("nitro_kit.pagination.previous_page"), previous["aria-label"]
+    assert_equal I18n.t("nitro_kit.pagination.next_page"), following["aria-label"]
   end
 
   test "supports long labels blocks and controls without icons" do

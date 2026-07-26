@@ -101,6 +101,19 @@ Reject `class` and `style`, including nested in `html:`. Reject every spelling o
 
 Nitro-owned data cannot be replaced through the public boundary. Collisions raise, except user Stimulus `controller` and `action` values, which compose deterministically with Nitro-owned values.
 
+`Component::COMPONENT_OWNED_DATA_ATTRIBUTES` lists the keys a component writes for itself through `attributes:` — `state`, `disabled`, `required`, `orientation`, `presentation`, `placement`, `layout`, and `field-type`. `Component::RESERVED_DATA_ATTRIBUTES` adds `nk`, `slot`, `variant`, `size`, `nk-escape`, and `enhanced`. Everything in the combined list is rejected from `data:`; the component-owned subset is the part a component may still set internally.
+
+### Variant is an identity axis, not a style hook
+
+A component root's `variant:` and `size:` are its identity axes, and only the base component emits them. Pass them through `super(variant:, size:)`; never write `data-variant` or `data-size` by hand on a root.
+
+A slot may carry its own owned `data-variant` when the slot has variant identity of its own rather than merely inheriting the root's. Two precedents settle the shape:
+
+- `Toast::Item` is a nested component. Its variant reaches `data-variant` through the ordinary root channel, and the parent attaches it to the `toast-item` slot.
+- Dropdown `item` is a plain element, so it uses the base component's `slot_attributes(:item, variant:)` channel, which normalizes and owns the value exactly as a root does.
+
+Use `slot_attributes(..., variant:)`; do not hand-merge a `variant` key into a slot's data bag. Both remain Nitro-owned: caller `data: { variant: }` is reserved and raises before it can reach a root or a slot. Do not introduce a slot `data-variant` that only restates the root's variant, and do not accept a public `variant:` on a slot that has no closed vocabulary of its own.
+
 ## Validation
 
 Validate every closed vocabulary at construction time:
@@ -160,6 +173,46 @@ end
 Constructor text and the matching compound method are two forms of the same region. Accept either one, reject both or repeated declarations, and let required regions be satisfied by either form. Constructor values and compound-method text remain non-blank strings; a compound-method block may render arbitrary Phlex content. Collect these declarations before rendering so the component's owned DOM order does not depend on caller order.
 
 Do not add an untyped structural bypass. If a legitimate application-content boundary is missing, add the smallest named compound method supported by real composition evidence.
+
+## Internationalization
+
+Nitro owns no hardcoded user-facing English. Every string a person can read or
+hear — visible copy, ARIA names, live-region announcements, validation
+messages — comes from `config/locales/en.yml`, which the engine loads
+automatically and which is the single authoritative source of the shipped
+copy.
+
+Components call `I18n.t` with a fully qualified key and no `:default`:
+
+```ruby
+I18n.t("nitro_kit.dropzone.prompt")
+```
+
+Do not duplicate copy into a `default:` argument or a Ruby constant; the
+locale file would drift from it. Keys live under one `nitro_kit:` namespace and
+are grouped by component (`nitro_kit.<component>.<key>`), with nested `status:`
+and `errors:` groups where a component has many. Counted strings use ordinary
+`one`/`other` pluralization and `%{...}` interpolation.
+
+Translated text that is a public option stays a public option. Resolve the
+default in the keyword itself so an application override still wins:
+
+```ruby
+def initialize(label: I18n.t("nitro_kit.pagination.label"))
+```
+
+Stimulus controllers never contain user-facing English as behavior. The Ruby
+component translates each string the controller needs and emits it through the
+Stimulus values API:
+
+```html
+<div data-nk--dropzone-queued-value="Queued">
+```
+
+The controller reads the value and keeps the shipped English literal only as an
+inert fallback for markup assembled without the component. Runtime
+interpolation uses the same `%{name}` placeholders the locale file declares, so
+a translator sees one grammar in both languages.
 
 ## Class escape
 
@@ -314,6 +367,7 @@ Native HTML and CSS own behavior when they already provide the required semantic
 
 - Use `details`/`summary` for disclosure, declarative `command`/`commandfor` for dialogs, native Popover for dropdown visibility, and CSS hover/focus for tooltips.
 - Do not mirror browser-owned open state into `data-state`, `aria-expanded`, or hidden attributes. Use targets and values only for state Nitro genuinely owns.
+- The exception is state HTML cannot express as an attribute at all. A checkbox's `indeterminate` is a DOM property with no markup form, so `Checkbox` mounts `nk--checkable` only when `indeterminate: true`, and that controller's whole scope is applying the property and owning the matching `data-state="indeterminate"`. Ordinary checked state stays native, with no controller and no mirrored `data-state`. Do not widen a controller past the one state the browser cannot express.
 - Keep native state selectors such as `[open]` and `:popover-open` authoritative in CSS.
 - Clean up every external listener, timer, observer, and other resource in `disconnect`.
 - Avoid duplicate initialization through Turbo morphs.

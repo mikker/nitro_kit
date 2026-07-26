@@ -378,7 +378,7 @@ module Gallery
           render NitroKit::Dropzone.new(
             id: "customizer-dropzone",
             name: "preview[evidence][]",
-            title: "Upload release evidence",
+            label: "Upload release evidence",
             description: "PDF or image · up to two files",
             direct_upload: false,
             multiple: true,

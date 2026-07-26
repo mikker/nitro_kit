@@ -1,5 +1,11 @@
 require "test_helper"
 
+# The wizard's observable behavior — preview, export, URL state, clipboard, and
+# appearance isolation — is covered by test/system/customization_studio_test.rb
+# and test/integration/customization_gallery_test.rb. This contract only guards
+# the boundaries a reader cannot see from the outside: the controller reacts
+# from server-owned schema, never builds markup or evaluates source, keeps
+# document appearance and storage untouched, and releases what it retains.
 class CustomizerControllerContractTest < ActiveSupport::TestCase
   CONTROLLER = NitroKit::Engine.root.join(
     "test/dummy/app/javascript/controllers/gallery/customizer_controller.js"
@@ -8,30 +14,19 @@ class CustomizerControllerContractTest < ActiveSupport::TestCase
   test "reacts from server-owned schema without constructing markup" do
     source = CONTROLLER.read
 
-    assert_includes source, "static values = { schema: Object }"
-    assert_includes source, "this.schemaValue.choices"
-    assert_includes source, "this.schemaValue.tokenMaps"
-    assert_includes source, "this.schemaValue.baselines"
-    assert_includes source, "this.schemaValue.shellExamples[preset.shell]"
-    assert_includes source, "this.previewStyleTarget.textContent"
-    assert_includes source, "this.cssOutputTarget.textContent"
-    assert_includes source, "this.rubyOutputTarget.textContent"
+    assert_includes source, "schema: Object"
+    assert_includes source, "this.schemaValue"
     refute_includes source, "innerHTML"
     refute_includes source, "insertAdjacentHTML"
     refute_includes source, "createElement"
     refute_includes source, "eval("
   end
 
-  test "keeps readable URL edits and restoration explicit" do
+  test "keeps readable URL state without opaque encoding or history entries" do
     source = CONTROLLER.read
 
-    assert_includes source, "new URL(window.location.href).searchParams"
-    assert_includes source, 'parameters.getAll("v")'
-    assert_includes source, "this.schemaValue.parameterOrder"
-    assert_includes source, "window.history.replaceState(window.history.state"
-    assert_includes source, '[ ...this.schemaValue.parameterOrder, "appearance" ]'
-    assert_includes source, "restore()"
-    assert_includes source, "this.applyPreset(parsed.preset)"
+    assert_includes source, "searchParams"
+    assert_includes source, "replaceState"
     refute_includes source, "pushState"
     refute_includes source, "btoa"
     refute_includes source, "atob"
@@ -40,12 +35,10 @@ class CustomizerControllerContractTest < ActiveSupport::TestCase
   test "isolates preview appearance and cleans retained resources" do
     source = CONTROLLER.read
 
-    assert_includes source, "window.matchMedia(DARK_MEDIA_QUERY)"
+    assert_includes source, "matchMedia"
     assert_includes source, 'addEventListener("change", this.onSystemAppearanceChange)'
     assert_includes source, 'removeEventListener("change", this.onSystemAppearanceChange)'
-    assert_includes source, "this.previewTarget.dataset.theme = resolved"
-    assert_includes source, "this.previewTarget.dataset.previewAppearance = appearance"
-    assert_includes source, "window.clearTimeout(this.copyTimer)"
+    assert_includes source, "clearTimeout"
     refute_includes source, "localStorage"
     refute_includes source, "sessionStorage"
     refute_includes source, "document.documentElement"
@@ -56,24 +49,16 @@ class CustomizerControllerContractTest < ActiveSupport::TestCase
   test "guards asynchronous clipboard announcements by connection and revision" do
     source = CONTROLLER.read
 
-    assert_includes source, "const attempt = ++this.copyAttempt"
-    assert_includes source, "this.copyAttempt += 1"
-    assert_includes source, "attempt !== this.copyAttempt"
-    assert_includes source, "navigator.clipboard?.writeText"
-    assert_includes source, "await navigator.clipboard.writeText(source)"
-    assert_includes source, "this.statusTarget.textContent = message"
-    assert_includes source, "if (!this.connected || attempt !== this.copyAttempt) return"
+    assert_includes source, "this.copyAttempt"
+    assert_includes source, "this.connected"
+    assert_includes source, "navigator.clipboard"
   end
 
-  test "generates ordered light system and explicit dark CSS from public maps" do
+  test "exports only documented public tokens" do
     source = CONTROLLER.read
 
-    assert_includes source, "this.cssBlock(':root, [data-theme=\"light\"]', lightTokens)"
-    assert_includes source, "this.systemCssBlock(darkTokens)"
-    assert_includes source, "this.cssBlock('[data-theme=\"dark\"]', darkTokens)"
-    assert_includes source, "lightChanges.has(name)"
-    assert_includes source, "Object.entries(object).sort"
-    assert_includes source, "left < right"
+    assert_includes source, '[data-theme="dark"]'
+    assert_includes source, '[data-theme="light"]'
     refute_includes source, "--_nk-"
   end
 end

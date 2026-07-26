@@ -6,16 +6,14 @@ module NitroKit
 
     UNSET = Object.new.freeze
     private_constant :UNSET
-    DEFAULT_EMPTY_TEXT = "Not provided"
-    DEFAULT_BOOLEAN_LABELS = { true => "Yes", false => "No" }.freeze
     Field = Data.define(:attribute, :label, :value, :content)
 
     def initialize(
       record,
       caption: nil,
       label: nil,
-      empty_text: DEFAULT_EMPTY_TEXT,
-      boolean_labels: DEFAULT_BOOLEAN_LABELS,
+      empty_text: nil,
+      boolean_labels: nil,
       route_base: nil,
       id: nil,
       html: {},
@@ -26,8 +24,8 @@ module NitroKit
       @record = record
       @route_base = route_base
       @caption = caption.nil? ? nil : validate_text!("caption", caption)
-      @empty_text = validate_text!("empty_text", empty_text)
-      @boolean_labels = validate_boolean_labels!(boolean_labels)
+      @empty_text = validate_text!("empty_text", empty_text || I18n.t("nitro_kit.details_table.empty"))
+      @boolean_labels = validate_boolean_labels!(boolean_labels || default_boolean_labels)
       @fields = []
       @table = Table.new(
         table_aria: label.nil? ? {} : { label: validate_text!("label", label) }
@@ -210,6 +208,13 @@ module NitroKit
       return value if value.is_a?(String) && !value.strip.empty?
 
       raise ArgumentError, "DetailsTable #{name} must be a non-blank String"
+    end
+
+    def default_boolean_labels
+      {
+        true => I18n.t("nitro_kit.details_table.boolean_true"),
+        false => I18n.t("nitro_kit.details_table.boolean_false")
+      }
     end
 
     def validate_boolean_labels!(labels)

@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ButtonIconTest < ActiveSupport::TestCase
+class ButtonTest < ActiveSupport::TestCase
   LabelObject = Data.define(:value) do
     def to_s = value
   end
@@ -47,6 +47,29 @@ class ButtonIconTest < ActiveSupport::TestCase
     assert_equal "-1", disabled["tabindex"]
   end
 
+  test "keeps link-only and button-only native options apart" do
+    link = render_node(
+      NitroKit::Button.new("Handbook", href: "/handbook", target: "_blank", rel: "noopener", download: "handbook.pdf")
+    )
+    submit = render_node(
+      NitroKit::Button.new("Save", type: :submit, name: "commit", value: "save", form: "profile-form")
+    )
+
+    assert_equal "_blank", link["target"]
+    assert_equal "noopener", link["rel"]
+    assert_equal "handbook.pdf", link["download"]
+    assert_equal "commit", submit["name"]
+    assert_equal "save", submit["value"]
+    assert_equal "profile-form", submit["form"]
+
+    assert_match(/do not accept name, value, or form/, assert_raises(ArgumentError) do
+      NitroKit::Button.new("Link", href: "/", name: "action")
+    end.message)
+    assert_match(/do not accept target, rel, or download/, assert_raises(ArgumentError) do
+      NitroKit::Button.new("Button", target: "_blank")
+    end.message)
+  end
+
   test "does not allow disabled link semantics to be overridden" do
     aria_error = assert_raises(ArgumentError) do
       NitroKit::Button.new("Read", href: "/docs", disabled: true, aria: { disabled: false })
@@ -72,11 +95,13 @@ class ButtonIconTest < ActiveSupport::TestCase
     assert_equal "close-help", referenced["aria-labelledby"]
     assert_nil aria_labelled.at_css("[data-slot='button-label']")
     assert_raises(ArgumentError) { NitroKit::Button.new(icon: :x, label: " ") }
+    assert_raises(ArgumentError) { NitroKit::Button.new(icon: :x, label: :close) }
     assert_raises(ArgumentError) { NitroKit::Button.new(icon: :x, label: "Close", aria: { label: "Close" }) }
   end
 
   test "loading buttons are busy disabled and own a spinner slot" do
     node = render_node(NitroKit::Button.new("Save", icon: :save, loading: true))
+    link = render_node(NitroKit::Button.new("Read", href: "/docs", loading: true))
 
     assert_equal "true", node["aria-busy"]
     assert node.key?("disabled")
@@ -84,12 +109,21 @@ class ButtonIconTest < ActiveSupport::TestCase
     assert_equal "true", node.at_css("[data-slot='button-spinner']")["aria-hidden"]
     assert_nil node.at_css("[data-slot='button-icon-start']")
     assert_equal "Save", node.at_css("[data-slot='button-label']").text
+    assert_predicate NitroKit::Button.new("Save", loading: true), :loading?
+    refute_predicate NitroKit::Button.new("Save"), :loading?
+
+    assert_equal "true", link["aria-busy"]
+    assert_equal "true", link["aria-disabled"]
+    assert_nil link["href"]
+
     assert_raises(ArgumentError) { NitroKit::Button.new("Save", loading: "yes") }
+    assert_raises(ArgumentError) { NitroKit::Button.new("Save", loading: nil) }
   end
 
   test "rejects type on link Buttons and keeps the native default otherwise" do
     assert_equal "button", render_node(NitroKit::Button.new("Save"))["type"]
     assert_equal "submit", render_node(NitroKit::Button.new("Save", type: :submit))["type"]
+    assert_equal "reset", render_node(NitroKit::Button.new("Clear", type: "reset"))["type"]
 
     error = assert_raises(ArgumentError) { NitroKit::Button.new("Read", href: "/docs", type: :button) }
     assert_match(/do not accept type/, error.message)
@@ -111,44 +145,62 @@ class ButtonIconTest < ActiveSupport::TestCase
     assert_raises(ArgumentError) { NitroKit::Button.new("Save", disabled: "false") }
     assert_raises(ArgumentError) { NitroKit::Button.new("Save", class: "utility") }
     assert_raises(ArgumentError) { NitroKit::Button.new("").call }
+    assert_raises(ArgumentError) { NitroKit::Button.new("   ").call }
     assert_raises(ArgumentError) { NitroKit::Button.new("Text").call { "Block" } }
+    assert_raises(ArgumentError) { NitroKit::Button.new.call }
     assert_raises(ArgumentError) { NitroKit::Button.new("Link", href: "") }
-    assert_raises(ArgumentError) { NitroKit::Button.new("Link", href: "/", name: "action") }
-    assert_raises(ArgumentError) { NitroKit::Button.new("Button", target: "_blank") }
+    assert_raises(ArgumentError) { NitroKit::Button.new("Link", href: :docs) }
   end
 
-  test "renders decorative and meaningful icons and raises on ARIA collisions" do
-    decorative = render_node(NitroKit::Icon.new(:save))
-    meaningful = render_node(NitroKit::Icon.new(:save, label: "Saved", aria: { describedby: "help" }))
-
-    assert_equal "true", decorative["aria-hidden"]
-    assert_equal "Saved", meaningful["aria-label"]
-    assert_equal "false", meaningful["aria-hidden"]
-    assert_equal "img", meaningful["role"]
-    assert_equal "help", meaningful["aria-describedby"]
-    assert_empty meaningful.css("[class], [style]")
-    assert_raises(ArgumentError) { NitroKit::Icon.new(:save, label: " ") }
-
-    hidden_collision = assert_raises(ArgumentError) { NitroKit::Icon.new(:save, aria: { hidden: false }) }
-    label_collision = assert_raises(ArgumentError) do
-      NitroKit::Icon.new(:save, label: "Saved", aria: { label: "Wrong" })
-    end
-
-    assert_match(/Duplicate ARIA attribute hidden/, hidden_collision.message)
-    assert_match(/Duplicate ARIA attribute label/, label_collision.message)
-  end
-
-  test "validates icon sizes and stroke width" do
-    assert_equal NitroKit::Button::SIZES, NitroKit::Icon::SIZES
-    assert_equal "xl", render_node(NitroKit::Icon.new(:save, size: :xl))["data-size"]
-    assert_equal "2", render_node(NitroKit::Icon.new(:save, stroke_width: 2))["stroke-width"]
-
-    [ "1.5", nil, 0, 12 ].each do |stroke_width|
-      assert_match(
-        /stroke_width/,
-        assert_raises(ArgumentError) { NitroKit::Icon.new(:save, stroke_width:) }.message
+  test "composes application attributes and rejects reserved Nitro data" do
+    node = render_node(
+      NitroKit::Button.new(
+        "Save",
+        id: "save-profile",
+        html: { title: "Save the profile" },
+        aria: { describedby: "save-help" },
+        data: {
+          controller: "analytics",
+          action: "click->analytics#track",
+          tracking_id: "save"
+        }
       )
+    )
+
+    assert_equal "save-profile", node["id"]
+    assert_equal "Save the profile", node["title"]
+    assert_equal "save-help", node["aria-describedby"]
+    assert_equal "analytics", node["data-controller"]
+    assert_equal "click->analytics#track", node["data-action"]
+    assert_equal "save", node["data-tracking-id"]
+
+    %i[nk slot variant size state].each do |reserved|
+      assert_match(/reserved by Nitro Kit/, assert_raises(ArgumentError) do
+        NitroKit::Button.new("Save", data: { reserved => "replacement" })
+      end.message)
     end
+    assert_raises(ArgumentError) { NitroKit::Button.new("Save", data: { "data-nk" => "replacement" }) }
+    assert_raises(ArgumentError) { NitroKit::Button.new("Save", data: { nk_escape: "class" }) }
+    assert_raises(ArgumentError) { NitroKit::Button.new("Save", html: { class: "utility" }) }
+    assert_raises(ArgumentError) { NitroKit::Button.new("Save", html: { style: "display: none" }) }
+    assert_raises(ArgumentError) { NitroKit::Button.new("Save", html: { data: { nk: "no" } }) }
+  end
+
+  test "emits the deliberate class escape and rejects blank values" do
+    node = render_node(NitroKit::Button.new("Save", desperately_need_a_class: "external-button-hook"))
+
+    assert_equal "external-button-hook", node["class"]
+    assert_equal "class", node["data-nk-escape"]
+    assert_raises(ArgumentError) { NitroKit::Button.new("Save", desperately_need_a_class: "") }
+    assert_raises(ArgumentError) { NitroKit::Button.new("Save", desperately_need_a_class: "  ") }
+    assert_raises(ArgumentError) { NitroKit::Button.new("Save", desperately_need_a_class: :hook) }
+  end
+
+  test "is reachable through the gallery catalog" do
+    entry = Gallery::Catalog.fetch!(kind: :component, slug: "button")
+
+    assert_equal Gallery::Components::ButtonPage, entry.page
+    assert_includes entry.expected_roots, "button"
   end
 
   private

@@ -12,7 +12,7 @@ class ToastTest < ActiveSupport::TestCase
     assert_equal "toast", node["data-nk"]
     assert_equal "nk-toast", node["id"]
     assert_equal "region", node["role"]
-    assert_equal "Notifications", node["aria-label"]
+    assert_equal I18n.t("nitro_kit.toast.label"), node["aria-label"]
     assert_equal "polite", node["aria-live"]
     assert_equal "nk--toast", node["data-controller"]
     assert_includes node["data-action"], "turbo:before-cache@document->nk--toast#teardown"
@@ -31,7 +31,7 @@ class ToastTest < ActiveSupport::TestCase
     assert_equal "p", items.first.at_css("[data-slot='toast-item-title']").name
     assert_equal "Your changes are live", items.first.at_css("[data-slot='toast-item-description']").text
     dismiss = items.first.at_css("[data-slot='toast-item-dismiss']")
-    assert_equal "Dismiss notification", dismiss["aria-label"]
+    assert_equal I18n.t("nitro_kit.toast.dismiss"), dismiss["aria-label"]
     assert_equal "ghost", dismiss["data-variant"]
     assert_equal "sm", dismiss["data-size"]
     assert_nil items.first["data-nk--toast-permanent"]

@@ -28,6 +28,19 @@ module Gallery
             )
           end
 
+          example("Stacked radios", slug: "appearance-picker-radios") do
+            render NitroKit::AppearancePicker.new(
+              id: "gallery-appearance-radios",
+              presentation: :radios
+            )
+          end
+
+          example("Compact select", slug: "appearance-picker-select") do
+            render NitroKit::AppearancePicker.new(
+              id: "gallery-appearance-select",
+              presentation: :select
+            )
+          end
 
           example("Navigation dropdown", slug: "appearance-picker-dropdown") do
             render NitroKit::AppearancePicker.new(

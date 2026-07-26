@@ -44,7 +44,7 @@ class AppearanceTest < ActiveSupport::TestCase
     assert_equal "fieldset", node.name
     assert_equal "appearance-picker", node["data-nk"]
     assert_equal "account-appearance", node["id"]
-    assert_equal "Appearance", node.at_css("legend").text
+    assert_equal I18n.t("nitro_kit.appearance_picker.label"), node.at_css("legend").text
     assert_equal %w[light dark system], controls.map { |control| control["value"] }
     assert_equal [ "account-appearance-preference" ], controls.map { |control| control["name"] }.uniq
     assert_equal [ "system" ], controls.select { |control| control.key?("checked") }.map { |control| control["value"] }
@@ -160,7 +160,7 @@ class AppearanceTest < ActiveSupport::TestCase
 
     assert_equal "div", node.name
     assert_equal "dropdown", node["data-presentation"]
-    assert_equal "Appearance", trigger["aria-label"]
+    assert_equal I18n.t("nitro_kit.appearance_picker.label"), trigger["aria-label"]
     assert_nil trigger.at_css("[data-slot='button-label']")
     assert trigger.at_css("[data-slot='button-icon-start'] [data-nk='icon']")
     assert_equal 3, items.css("[data-slot='dropdown-item-icon']").size
@@ -169,6 +169,37 @@ class AppearanceTest < ActiveSupport::TestCase
     assert items.all? { _1.name == "button" }
     assert items.all? { _1["data-nk--appearance-target"] == "input" }
     assert items.all? { _1["data-action"].include?("click->nk--appearance#select") }
+  end
+
+  test "picker wires the dropdown trigger glyph for client-side preference changes" do
+    node = render_node(
+      NitroKit::AppearancePicker.new(id: "navigation-appearance", presentation: :dropdown)
+    )
+    trigger = node.at_css("[data-nk='dropdown'] > [data-nk='button']")
+    items = node.css("[data-slot='dropdown-item']")
+
+    assert_equal "trigger", trigger["data-nk--appearance-target"]
+    assert trigger.at_css("[data-slot='button-icon-start'] [data-nk='icon']")
+    assert items.all? { |item| item.at_css("[data-slot='dropdown-item-icon'] [data-nk='icon']") }
+
+    source = NitroKit::Engine.root.join("app/javascript/controllers/nk/appearance_controller.js").read
+
+    assert_includes source, '"trigger"'
+    assert_includes source, "hasTriggerTarget"
+    assert_includes source, "replaceChildren"
+    refute_includes source, "<svg"
+    refute_includes source, "innerHTML"
+  end
+
+  test "gallery covers every picker presentation" do
+    page = NitroKit::Engine.root.join(
+      "test/dummy/app/components/gallery/components/appearance_picker_page.rb"
+    ).read
+
+    NitroKit::AppearancePicker::PRESENTATIONS.each do |presentation|
+      assert_includes page, "presentation: :#{presentation}" unless presentation == :segmented
+    end
+    assert_includes page, "AppearancePicker.new(id: \"gallery-appearance-default\")"
   end
 
   test "picker preserves the shared class and reserved attribute boundaries" do

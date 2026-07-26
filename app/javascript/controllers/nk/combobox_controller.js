@@ -4,12 +4,12 @@ import {
   positionOverlay,
 } from "controllers/nk/overlay_position";
 
-// TODO(i18n): route these announcements through the locale mechanism instead of
-// hardcoded English.
+// The Combobox component translates these and passes them in as Stimulus
+// values. They remain here as the shipped English fallbacks.
 const INVALID_SELECTION_MESSAGE = "Choose an option.";
 const NO_RESULTS_MESSAGE = "No options found.";
-const RESULTS_MESSAGE = (count) =>
-  `${count} ${count === 1 ? "option" : "options"} available.`;
+const RESULTS_ONE_MESSAGE = "%{count} option available.";
+const RESULTS_OTHER_MESSAGE = "%{count} options available.";
 
 const OPTION_LABEL_SELECTOR = '[data-slot="combobox-option-label"]';
 
@@ -23,7 +23,31 @@ export default class extends Controller {
     "option",
     "status",
   ];
-  static values = { open: Boolean, required: Boolean };
+  static values = {
+    open: Boolean,
+    required: Boolean,
+    invalidSelection: String,
+    noResults: String,
+    resultsOne: String,
+    resultsOther: String,
+  };
+
+  get invalidSelectionMessage() {
+    return this.invalidSelectionValue || INVALID_SELECTION_MESSAGE;
+  }
+
+  get noResultsMessage() {
+    return this.noResultsValue || NO_RESULTS_MESSAGE;
+  }
+
+  resultsMessage(count) {
+    const template =
+      count === 1
+        ? this.resultsOneValue || RESULTS_ONE_MESSAGE
+        : this.resultsOtherValue || RESULTS_OTHER_MESSAGE;
+
+    return template.replace("%{count}", String(count));
+  }
 
   connect() {
     this.activeOption = null;
@@ -296,7 +320,7 @@ export default class extends Controller {
       (this.requiredValue && !hasSubmittedValue) ||
       (hasVisibleValue && !hasSubmittedValue);
     this.inputTarget.setCustomValidity(
-      invalid ? INVALID_SELECTION_MESSAGE : "",
+      invalid ? this.invalidSelectionMessage : "",
     );
     this.inputTarget.setAttribute("aria-invalid", String(invalid));
   }
@@ -326,7 +350,7 @@ export default class extends Controller {
     const count = this.optionTargets.filter((option) => !option.hidden).length;
 
     this.statusTarget.textContent =
-      count === 0 ? NO_RESULTS_MESSAGE : RESULTS_MESSAGE(count);
+      count === 0 ? this.noResultsMessage : this.resultsMessage(count);
   }
 
   get visibleOptions() {

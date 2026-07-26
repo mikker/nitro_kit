@@ -26,6 +26,17 @@ class ComboboxTest < ActiveSupport::TestCase
     assert_equal "nk--combobox", node["data-controller"]
     assert_includes node["data-action"], "click@window->nk--combobox#closeFromOutside"
 
+    assert_equal(
+      I18n.t("nitro_kit.combobox.invalid_selection"),
+      node["data-nk--combobox-invalid-selection-value"]
+    )
+    assert_equal I18n.t("nitro_kit.combobox.no_results"), node["data-nk--combobox-no-results-value"]
+    assert_equal I18n.t("nitro_kit.combobox.results.one"), node["data-nk--combobox-results-one-value"]
+    assert_equal(
+      I18n.t("nitro_kit.combobox.results.other"),
+      node["data-nk--combobox-results-other-value"]
+    )
+
     assert_equal "country-label", label["id"]
     assert_equal "country-input", label["for"]
     assert_equal "Country", label.text

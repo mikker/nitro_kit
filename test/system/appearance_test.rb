@@ -74,23 +74,24 @@ class AppearanceSystemTest < ApplicationSystemTestCase
     assert_no_severe_console_errors
   end
 
-  test "dropdown presentation changes preference and reflects the resolved theme icon" do
+  test "dropdown presentation changes preference and swaps the trigger glyph" do
     visit_without_saved_preference(gallery_component_path("appearance-picker"))
 
+    assert_equal glyph_for("system"), trigger_glyph
+
     find("#gallery-appearance-dropdown-dropdown-trigger").click
-    within("#gallery-appearance-dropdown-dropdown-content") { click_button("Dark") }
+    within("#gallery-appearance-dropdown-dropdown-content") do
+      find("[data-appearance-preference='dark']").click
+    end
 
     assert_document_appearance(preference: "dark", theme: "dark")
-    assert_equal "none", evaluate_script(<<~JAVASCRIPT)
-      getComputedStyle(document.querySelector(
-        "#gallery-appearance-dropdown [data-appearance='light']"
-      )).display
-    JAVASCRIPT
-    refute_equal "none", evaluate_script(<<~JAVASCRIPT)
-      getComputedStyle(document.querySelector(
-        "#gallery-appearance-dropdown [data-appearance='dark']"
-      )).display
-    JAVASCRIPT
+    assert_equal glyph_for("dark"), trigger_glyph
+    refute_equal glyph_for("light"), trigger_glyph
+
+    request_appearance("light")
+
+    assert_document_appearance(preference: "light", theme: "light")
+    assert_equal glyph_for("light"), trigger_glyph
     assert_no_severe_console_errors
   end
 
@@ -192,18 +193,45 @@ class AppearanceSystemTest < ApplicationSystemTestCase
     JAVASCRIPT
   end
 
+  def trigger_glyph
+    evaluate_script(<<~JAVASCRIPT)
+      document.querySelector(
+        "#gallery-appearance-dropdown [data-nk--appearance-target='trigger'] [data-nk='icon']"
+      ).innerHTML.trim()
+    JAVASCRIPT
+  end
+
+  def glyph_for(preference)
+    evaluate_script(<<~JAVASCRIPT, preference)
+      document.querySelector(
+        `#gallery-appearance-dropdown [data-appearance-preference="${arguments[0]}"] [data-nk="icon"]`
+      ).innerHTML.trim()
+    JAVASCRIPT
+  end
+
   def assert_document_appearance(preference:, theme:)
     assert_selector "html[data-theme-preference='#{preference}'][data-theme='#{theme}']"
   end
 
   def assert_synchronized_pickers(preference, count:)
     assert_selector "[data-nk='appearance-picker'][data-state='#{preference}']", count: count
-    native_picker_count = all("[data-nk='appearance-picker']:not([data-presentation='dropdown'])").size
+    radio_picker_count = all(
+      "[data-nk='appearance-picker']:has(input[type='radio'])",
+      visible: :all
+    ).size
     assert_selector(
       "[data-nk='appearance-picker'] input[value='#{preference}']:checked",
-      count: native_picker_count,
+      count: radio_picker_count,
       visible: :all
     )
+    assert_selector(
+      "[data-nk='appearance-picker'] select[data-nk--appearance-target='input']",
+      visible: :all,
+      minimum: 0
+    )
+    all("[data-nk='appearance-picker'] select[data-nk--appearance-target='input']", visible: :all).each do |select|
+      assert_equal preference, select.value
+    end
   end
 
   def resolved_system_theme

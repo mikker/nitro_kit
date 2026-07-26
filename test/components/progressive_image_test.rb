@@ -110,7 +110,7 @@ class ProgressiveImageTest < ActiveSupport::TestCase
     )
 
     assert_equal(
-      NitroKit::ProgressiveImage::UNAVAILABLE_TEXT,
+      I18n.t("nitro_kit.progressive_image.unavailable"),
       node.at_css("[data-slot='progressive-image-fallback']").text
     )
   end
@@ -124,7 +124,7 @@ class ProgressiveImageTest < ActiveSupport::TestCase
     fallback = node.at_css("[data-slot='progressive-image-fallback']")
 
     assert_equal "true", fallback["aria-hidden"]
-    assert_equal NitroKit::ProgressiveImage::UNAVAILABLE_TEXT, fallback.text
+    assert_equal I18n.t("nitro_kit.progressive_image.unavailable"), fallback.text
   end
 
   test "forces decorative images and fallback content out of the accessibility tree" do

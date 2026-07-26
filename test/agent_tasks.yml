@@ -61,3 +61,20 @@
     - one stable Turbo Frame
     - "status: :unprocessable_entity"
     - Cancel returns the read-only frame
+
+- name: signed_in_dashboard_screen
+  prompt: Build a signed-in dashboard screen with an AppShell sidebar layout, an AppNavigation tree with sections and a current item, a PageHeader, a StatGrid, and an AppearancePicker in the topbar.
+  skills:
+    - nitro-kit-rails
+    - nitro-kit-ui
+  references:
+    - docs/agent_guide.md
+    - docs/component_contracts.md
+    - docs/patterns/application_foundation.md
+  expectations:
+    - "NitroKit::AppShell.new(layout: :sidebar)"
+    - NitroKit::AppNavigation
+    - NitroKit::PageHeader
+    - NitroKit::StatGrid
+    - NitroKit::AppearancePicker
+    - one navigation tree and one main region

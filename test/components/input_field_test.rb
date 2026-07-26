@@ -250,7 +250,7 @@ class InputFieldTest < ActiveSupport::TestCase
     assert_equal "user[status]", control["name"]
     assert_equal "active", control["value"]
     assert_equal "Status", form.at_css("[data-slot='field-label']").text
-    assert_equal "Save changes", submit.text
+    assert_equal I18n.t("nitro_kit.form.submit"), submit.text
     assert_equal "primary", submit["data-variant"]
     assert_equal "yes", checkbox["value"]
     assert_equal "no", hidden["value"]

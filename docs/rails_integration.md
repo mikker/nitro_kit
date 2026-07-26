@@ -230,7 +230,7 @@ their `form.field(as:)` equivalent instead of leaking unstyled markup.
 ```ruby
 form.dropzone(
   :attachments,
-  title: "Upload evidence",
+  label: "Upload evidence",
   description: "Up to three PDF files, each no larger than 5 MB.",
   multiple: true,
   accept: "application/pdf",

@@ -1,0 +1,87 @@
+en:
+  nitro_kit:
+    app_shell:
+      skip_link: "Skip to content"
+      open_navigation: "Open navigation"
+      close_navigation: "Close navigation"
+      navigation_dialog: "Application navigation"
+    appearance_picker:
+      label: "Appearance"
+      preferences:
+        light: "Light"
+        dark: "Dark"
+        system: "System"
+    avatar_stack:
+      overflow: "%{count} more avatars"
+    combobox:
+      invalid_selection: "Choose an option."
+      no_results: "No options found."
+      results:
+        one: "%{count} option available."
+        other: "%{count} options available."
+    details_table:
+      empty: "Not provided"
+      boolean_true: "Yes"
+      boolean_false: "No"
+    dialog:
+      close: "Close dialog"
+    dropzone:
+      label: "Upload files"
+      prompt: "Drop files here or choose them from your device."
+      preview_list: "Selected files"
+      progress: "Upload progress"
+      progress_for: "Upload progress for %{name}"
+      remove: "Remove"
+      remove_file: "Remove %{name}"
+      queued: "Queued"
+      uploading: "Uploading"
+      uploading_percent: "Uploading %{percent}%"
+      uploaded: "Uploaded"
+      upload_failed: "Upload failed"
+      ready: "Ready to submit"
+      status:
+        disabled: "File upload is disabled."
+        empty: "No files selected."
+        selected:
+          one: "%{count} file selected."
+          other: "%{count} files selected."
+        uploading:
+          one: "Uploading %{count} file."
+          other: "Uploading %{count} files."
+        attention:
+          one: "%{count} file needs attention."
+          other: "%{count} files need attention."
+        uploaded:
+          one: "%{count} file uploaded."
+          other: "%{count} files uploaded."
+        ready:
+          one: "%{count} file ready to submit."
+          other: "%{count} files ready to submit."
+      errors:
+        upload_failed: "%{name} could not be uploaded."
+        upload_failed_detail: "%{name} could not be uploaded: %{error}"
+        uploads_in_progress: "Wait for uploads to finish before submitting the form."
+        failed_files: "Remove failed files or choose them again before submitting the form."
+        too_large: "%{name} is larger than %{size}."
+        not_accepted: "%{name} is not an accepted file type."
+        max_files:
+          one: "Choose no more than %{count} file."
+          other: "Choose no more than %{count} files."
+    field:
+      options_legend: "Options"
+    form:
+      submit: "Save changes"
+    pagination:
+      label: "Pagination"
+      previous: "Previous"
+      next: "Next"
+      previous_page: "Previous page"
+      next_page: "Next page"
+      ellipsis: "More pages"
+    progressive_image:
+      unavailable: "Image unavailable"
+    tabs:
+      label: "Tabs"
+    toast:
+      label: "Notifications"
+      dismiss: "Dismiss notification"

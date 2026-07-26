@@ -92,7 +92,7 @@ class AgentGuidanceTest < ActiveSupport::TestCase
   test "agent task corpus points only to shipped references and skills" do
     tasks = YAML.safe_load_file(ROOT.join("test/agent_tasks.yml"))
 
-    assert_equal 4, tasks.size
+    assert_equal 5, tasks.size
     tasks.each do |task|
       assert task.fetch("prompt").present?
       assert task.fetch("expectations").many?

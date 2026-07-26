@@ -411,7 +411,7 @@ module NitroKit
     def radio_group_control(html:, aria:, data:)
       render_in_slot(
         RadioButtonGroup.new(
-          legend: field_label || derived_label || "Options",
+          legend: field_label || derived_label || I18n.t("nitro_kit.field.options_legend"),
           options: normalized_options,
           name:,
           value: current_value,

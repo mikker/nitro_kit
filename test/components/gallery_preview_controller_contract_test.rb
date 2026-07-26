@@ -1,20 +1,15 @@
 require "test_helper"
 
 class GalleryPreviewControllerContractTest < ActiveSupport::TestCase
+  # Resize behavior itself is covered by test/system/gallery_responsive_preview_test.rb.
+  # This contract only guards the resources the controller may retain.
   test "controller owns only ephemeral viewport state and cleans observers and pointer capture" do
     source = File.read(Rails.root.join("app/javascript/controllers/gallery/preview_controller.js"))
 
-    assert_includes source, "new ResizeObserver"
-    assert_includes source, "new previewWindow.ResizeObserver"
-    assert_includes source, "this.trackObserver?.disconnect()"
-    assert_includes source, "this.documentObserver?.disconnect()"
-    assert_includes source, "this.handleTarget.setPointerCapture(event.pointerId)"
-    assert_includes source, "this.handleTarget.releasePointerCapture(this.pointerId)"
-    assert_includes source, "ArrowLeft"
-    assert_includes source, "ArrowRight"
-    assert_includes source, "Home"
-    assert_includes source, "End"
-    assert_includes source, 'this.element.style.setProperty("--gallery-preview-width"'
+    assert_includes source, "ResizeObserver"
+    assert_includes source, "disconnect()"
+    assert_includes source, "setPointerCapture"
+    assert_includes source, "releasePointerCapture"
     refute_includes source, "localStorage"
     refute_includes source, "document.addEventListener"
     refute_includes source, "window.addEventListener"
