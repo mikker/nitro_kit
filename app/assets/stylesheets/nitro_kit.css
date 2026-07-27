@@ -1489,6 +1489,12 @@
 }
 
 @layer nitro-kit.size {
+  :where([data-nk="avatar"][data-size="xs"]) {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: calc(var(--nk-text-xs) * 0.875);
+  }
+
   :where([data-nk="avatar"][data-size="sm"]) {
     width: 2rem;
     height: 2rem;
@@ -1551,6 +1557,15 @@
     line-height: 1;
     color: var(--nk-color-muted-foreground);
     border-radius: var(--nk-radius-full);
+  }
+
+  :where(
+    [data-nk="avatar-stack"][data-size="xs"]
+      > [data-slot="avatar-stack-overflow"]
+  ) {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: calc(var(--nk-text-xs) * 0.875);
   }
 
   :where(
@@ -1643,6 +1658,11 @@
 }
 
 @layer nitro-kit.size {
+  :where([data-nk="badge"][data-size="xs"]) {
+    padding: 0 calc(var(--nk-space) * 1.25);
+    font-size: var(--nk-text-xs);
+  }
+
   :where([data-nk="badge"][data-size="sm"]) {
     padding: calc(var(--nk-space) * 0.5) calc(var(--nk-space) * 1.5);
     font-size: var(--nk-text-xs);
@@ -1930,6 +1950,14 @@
     [data-nk="button-group"] > [data-slot="button-group-button"]:focus-visible
   ) {
     z-index: 1;
+  }
+}
+
+/* Source: src/stylesheets/nitro_kit/components/button_to.css */
+@layer nitro-kit.base {
+  /* A Rails mutation form should not add a layout box around its Button. */
+  :where([data-nk="button-to"]) {
+    display: contents;
   }
 }
 
@@ -2390,6 +2418,110 @@
   }
 }
 
+/* Source: src/stylesheets/nitro_kit/components/control_group.css */
+@layer nitro-kit.compound {
+  :where([data-nk="control-group"]) {
+    display: flex;
+    align-items: stretch;
+    min-inline-size: 0;
+  }
+
+  :where(
+    [data-nk="control-group"]
+      > :is(
+        [data-nk="input"],
+        [data-nk="button"],
+        span[data-slot="control-group-addon"]
+      )
+  ) {
+    border-radius: 0;
+  }
+
+  :where([data-nk="control-group"] > [data-nk="select"] > select) {
+    height: 100%;
+    border-radius: 0;
+  }
+
+  :where(
+    [data-nk="control-group"]
+      > :is(
+        [data-nk="input"],
+        [data-nk="button"],
+        span[data-slot="control-group-addon"]
+      ):first-child
+  ) {
+    border-start-start-radius: var(--nk-radius-md);
+    border-end-start-radius: var(--nk-radius-md);
+  }
+
+  :where(
+    [data-nk="control-group"]
+      > :is(
+        [data-nk="input"],
+        [data-nk="button"],
+        span[data-slot="control-group-addon"]
+      ):last-child
+  ) {
+    border-start-end-radius: var(--nk-radius-md);
+    border-end-end-radius: var(--nk-radius-md);
+  }
+
+  :where(
+    [data-nk="control-group"]
+      > :is(
+          [data-nk="input"],
+          [data-nk="select"],
+          [data-nk="button"],
+          span[data-slot="control-group-addon"]
+        )
+      + :is(
+        [data-nk="input"],
+        [data-nk="select"],
+        [data-nk="button"],
+        span[data-slot="control-group-addon"]
+      )
+  ) {
+    margin-inline-start: calc(var(--nk-border-width) * -1);
+  }
+
+  :where(
+    [data-nk="control-group"] > :is([data-nk="input"], [data-nk="select"])
+  ) {
+    min-inline-size: 0;
+    flex: 1 1 auto;
+  }
+
+  :where([data-nk="control-group"] > [data-nk="button"]) {
+    flex: none;
+  }
+
+  :where([data-nk="control-group"] > [data-slot="control-group-addon"]) {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    padding-inline: calc(var(--nk-space) * 3);
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-sm);
+    white-space: nowrap;
+    background: var(--nk-color-muted);
+    border: var(--nk-border-width) solid var(--nk-color-border);
+  }
+
+  :where(
+    [data-nk="control-group"] > [data-nk="select"]:first-child > select
+  ) {
+    border-start-start-radius: var(--nk-radius-md);
+    border-end-start-radius: var(--nk-radius-md);
+  }
+
+  :where(
+    [data-nk="control-group"] > [data-nk="select"]:last-child > select
+  ) {
+    border-start-end-radius: var(--nk-radius-md);
+    border-end-end-radius: var(--nk-radius-md);
+  }
+}
+
 /* Source: src/stylesheets/nitro_kit/components/danger_zone.css */
 @layer nitro-kit.base {
   :where([data-nk="danger-zone"]) {
@@ -2545,6 +2677,11 @@
 
 /* Source: src/stylesheets/nitro_kit/components/dialog.css */
 @layer nitro-kit.base {
+  /* Dialog's structural root must not become an extra flex or grid item. */
+  :where([data-nk="dialog"]) {
+    display: contents;
+  }
+
   :where([data-nk="dialog"] > [data-slot="dialog-panel"]) {
     inline-size: min(calc(100% - (var(--nk-space) * 8)), var(--nk-content-md));
     max-block-size: calc(100dvh - (var(--nk-space) * 8));
@@ -5491,6 +5628,108 @@
   @media (max-width: 48rem) {
     :where([data-nk="settings-layout"]) {
       grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}
+
+/* Source: src/stylesheets/nitro_kit/components/sheet.css */
+@layer nitro-kit.base {
+  :where([data-nk="sheet"]) {
+    display: contents;
+  }
+
+  :where([data-nk="sheet"] > [data-slot="sheet-panel"]) {
+    position: fixed;
+    inset-block: 0;
+    max-block-size: none;
+    height: 100dvh;
+    margin-block: 0;
+    padding: calc(var(--nk-space) * 6);
+    overflow: auto;
+    color: var(--nk-color-foreground);
+    background: var(--nk-color-surface);
+    border: 0;
+    box-shadow: var(--nk-shadow-lg);
+  }
+
+  :where([data-nk="sheet"][data-side="left"] > [data-slot="sheet-panel"]) {
+    margin-inline: 0 auto;
+    border-inline-end: var(--nk-border-width) solid var(--nk-color-border);
+  }
+
+  :where([data-nk="sheet"][data-side="right"] > [data-slot="sheet-panel"]) {
+    margin-inline: auto 0;
+    border-inline-start: var(--nk-border-width) solid var(--nk-color-border);
+  }
+
+  :where([data-nk="sheet"][data-size="sm"] > [data-slot="sheet-panel"]) {
+    width: min(calc(100% - (var(--nk-space) * 8)), 20rem);
+  }
+
+  :where([data-nk="sheet"][data-size="md"] > [data-slot="sheet-panel"]) {
+    width: min(calc(100% - (var(--nk-space) * 8)), 28rem);
+  }
+
+  :where([data-nk="sheet"][data-size="lg"] > [data-slot="sheet-panel"]) {
+    width: min(calc(100% - (var(--nk-space) * 8)), 40rem);
+  }
+
+  :where([data-nk="sheet"] > [data-slot="sheet-panel"])::backdrop {
+    background: var(--nk-color-overlay);
+  }
+
+  :where([data-nk="sheet"] [data-slot="sheet-close"]) {
+    position: sticky;
+    z-index: 1;
+    float: inline-end;
+    inset-block-start: 0;
+  }
+
+  :where([data-nk="sheet"] [data-slot="sheet-title"]) {
+    padding-inline-end: calc(var(--nk-space) * 10);
+    font-size: var(--nk-text-lg);
+    font-weight: var(--nk-font-weight-semibold);
+    line-height: var(--nk-leading-tight);
+  }
+
+  :where([data-nk="sheet"] [data-slot="sheet-description"]) {
+    margin-block-start: calc(var(--nk-space) * 2);
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-sm);
+  }
+
+  :where([data-nk="sheet"] [data-slot="sheet-body"]) {
+    margin-block-start: calc(var(--nk-space) * 6);
+  }
+}
+
+@layer nitro-kit.state {
+  :where([data-nk="sheet"] > [data-slot="sheet-panel"][open]) {
+    animation: nk-sheet-enter var(--nk-duration-slow) var(--nk-ease);
+  }
+
+  :where([data-nk="sheet"][data-side="left"] > [data-slot="sheet-panel"][open]) {
+    --_nk-sheet-from: -1rem;
+  }
+
+  :where([data-nk="sheet"][data-side="right"] > [data-slot="sheet-panel"][open]) {
+    --_nk-sheet-from: 1rem;
+  }
+
+  @keyframes nk-sheet-enter {
+    from {
+      opacity: 0;
+      transform: translateX(var(--_nk-sheet-from));
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where([data-nk="sheet"] > [data-slot="sheet-panel"]) {
+      animation-duration: 0.01ms;
     }
   }
 }

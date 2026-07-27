@@ -3,7 +3,7 @@
 module NitroKit
   class Badge < Component
     VARIANTS = %i[default outline].freeze
-    SIZES = %i[sm md].freeze
+    SIZES = %i[xs sm md].freeze
     COLORS = %i[
       zinc red orange amber yellow lime green emerald teal cyan sky blue indigo
       violet purple fuchsia pink rose neutral info success warning danger

@@ -1,6 +1,25 @@
 require "test_helper"
 
 class TooltipComponentTest < ActiveSupport::TestCase
+  class CustomTriggerTooltip < Phlex::HTML
+    def view_template
+      render NitroKit::Tooltip.new(id: "delete-help", content: "Deletes this record permanently") do |tooltip|
+        tooltip.trigger(as: :custom) do |attributes|
+          render NitroKit::ButtonTo.new(
+            nil,
+            href: "/records/1",
+            method: :delete,
+            icon: :trash,
+            label: "Delete record",
+            button_html: attributes.html,
+            button_aria: attributes.aria,
+            button_data: attributes.data
+          )
+        end
+      end
+    end
+  end
+
   test "puts the tooltip relationship on the actual focusable trigger" do
     node = render_tooltip do |tooltip|
       tooltip.trigger("Explain", data: { action: "click->analytics#track" })
@@ -52,6 +71,41 @@ class TooltipComponentTest < ActiveSupport::TestCase
     refute_includes trigger.text, "NitroKit::Button"
   end
 
+  test "supports linked Button triggers" do
+    node = render_tooltip do |tooltip|
+      tooltip.trigger("Documentation", href: "/docs", target: "_blank", rel: "noopener")
+    end
+    trigger = node.at_css("[data-slot='tooltip-trigger']")
+
+    assert_equal "a", trigger.name
+    assert_equal "/docs", trigger["href"]
+    assert_equal "_blank", trigger["target"]
+    assert_equal "help-content", trigger["aria-describedby"]
+  end
+
+  test "yields owned attributes to a custom focusable trigger" do
+    html = ApplicationController.renderer.render(CustomTriggerTooltip.new)
+    node = Nokogiri::HTML.fragment(html).first_element_child
+    trigger = node.at_css("button")
+
+    assert_equal "delete-help-trigger", trigger["id"]
+    assert_equal "delete-help-content", trigger["aria-describedby"]
+    assert_includes trigger["data-action"], "keydown.esc->nk--tooltip#dismiss"
+    assert_equal "Delete record", trigger["aria-label"]
+    assert_equal "tooltip-trigger", trigger.ancestors.find { |ancestor| ancestor["data-slot"] }["data-slot"]
+  end
+
+  test "supports an explicit focusable HTML trigger without pretending it is a Button" do
+    node = render_tooltip do |tooltip|
+      tooltip.trigger("Build status", as: :div)
+    end
+    trigger = node.at_css("[data-slot='tooltip-trigger']")
+
+    assert_equal "div", trigger.name
+    assert_equal "0", trigger["tabindex"]
+    assert_equal "help-content", trigger["aria-describedby"]
+  end
+
   test "appends its content to existing trigger descriptions" do
     node = render_tooltip do |tooltip|
       tooltip.trigger("Explain", aria: { describedby: "account-help status-help" })
@@ -89,6 +143,16 @@ class TooltipComponentTest < ActiveSupport::TestCase
     assert_raises(ArgumentError) do
       NitroKit::Tooltip.new(id: "tip", content: "Context").call do |tooltip|
         tooltip.trigger("Open", disabled: true)
+      end
+    end
+    assert_raises(ArgumentError) do
+      NitroKit::Tooltip.new(id: "tip", content: "Context").call do |tooltip|
+        tooltip.trigger("Open", as: NitroKit::Card)
+      end
+    end
+    assert_raises(ArgumentError) do
+      NitroKit::Tooltip.new(id: "tip", content: "Context").call do |tooltip|
+        tooltip.trigger(as: :custom) { "No attributes" }
       end
     end
   end

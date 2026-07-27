@@ -1,0 +1,6 @@
+@layer nitro-kit.base {
+  /* A Rails mutation form should not add a layout box around its Button. */
+  :where([data-nk="button-to"]) {
+    display: contents;
+  }
+}

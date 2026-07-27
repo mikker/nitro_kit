@@ -305,6 +305,14 @@ module Gallery
 
     AVATAR_SIZES = [
       AvatarExample.new(
+        slug: "xs",
+        label: "Extra small",
+        src: nil,
+        alt: "Margaret Hamilton",
+        fallback: "MH",
+        size: :xs
+      ),
+      AvatarExample.new(
         slug: "sm",
         label: "Small",
         src: nil,
@@ -331,6 +339,7 @@ module Gallery
     ].freeze
 
     AVATAR_STACK_SIZES = [
+      AvatarStackExample.new(slug: "xs", label: "Extra small stack", size: :xs, overflow: 1),
       AvatarStackExample.new(slug: "sm", label: "Small stack", size: :sm, overflow: 2),
       AvatarStackExample.new(slug: "md", label: "Medium stack", size: :md, overflow: 5),
       AvatarStackExample.new(slug: "lg", label: "Large stack", size: :lg, overflow: 12)
@@ -352,6 +361,7 @@ module Gallery
     ].freeze
 
     BADGE_SIZES = [
+      BadgeExample.new(slug: "xs", label: "Extra small", variant: :default, size: :xs, color: :neutral),
       BadgeExample.new(slug: "sm", label: "Small", variant: :default, size: :sm, color: :neutral),
       BadgeExample.new(slug: "md", label: "Medium", variant: :default, size: :md, color: :neutral)
     ].freeze

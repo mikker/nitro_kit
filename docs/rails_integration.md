@@ -223,6 +223,41 @@ to `type: :submit`. The Rails helpers Nitro does not style — `label`,
 `collection_check_boxes`, `date_select`, and `time_zone_select` — raise and name
 their `form.field(as:)` equivalent instead of leaking unstyled markup.
 
+### Mutation buttons and joined controls
+
+Navigation uses `Button.new(..., href:)`. A non-GET action uses `ButtonTo`,
+which renders one Rails method form and one submit Button:
+
+```ruby
+render NitroKit::ButtonTo.new(
+  "Revoke token",
+  href: token_path(token),
+  method: :delete,
+  variant: :destructive,
+  data: { turbo_confirm: "Revoke this token?" }
+)
+```
+
+Root `html:`, `aria:`, and `data:` address the form. `button_html:`,
+`button_aria:`, and `button_data:` address the nested focusable Button when a
+composition such as Tooltip must attach attributes there. The form is
+layout-transparent, so ButtonTo participates in Flex, Grid, and action rows as
+its Button.
+
+Use `ControlGroup` when adjacent native controls intentionally share borders:
+
+```ruby
+render NitroKit::ControlGroup.new(label: "Copy webhook URL") do
+  render NitroKit::Input.new(value: webhook_url, readonly: true)
+  render NitroKit::Button.new("Copy", type: :button, icon: :copy)
+end
+```
+
+Direct Input, Select, and Button children keep their own values and behavior.
+`group.addon("https://")` adds a textual prefix, suffix, or unit. Do not use a
+ControlGroup merely to reduce ordinary form spacing; FieldGroup owns vertical
+form rhythm.
+
 ### File drops and direct uploads
 
 `form.dropzone` derives the native input ID and Rails parameter name, marks the form as multipart, and accepts the same explicit upload contract as `NitroKit::Dropzone`:

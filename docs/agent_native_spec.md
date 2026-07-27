@@ -143,9 +143,9 @@ The authoritative initializer, root, closed-option, and cardinality inventory li
 
 The prerelease contains 36 atoms and components:
 
-- Actions, display, and navigation: Alert, AppNavigation, Avatar, AvatarStack, Badge, Button, ButtonGroup, Icon, Pagination.
-- Forms: AppearancePicker, Checkbox, CheckboxGroup, Dropzone, Field, FieldGroup, Fieldset, Input, Label, RadioButton, RadioButtonGroup, RichTextArea, Select, Switch, Textarea.
-- Structured content and interaction: Accordion, Card, Combobox, DetailsTable, Dialog, Dropdown, ProgressiveImage, Table, Tabs, Toast, Tooltip, Typeset.
+- Actions, display, and navigation: Alert, AppNavigation, Avatar, AvatarStack, Badge, Button, ButtonTo, ButtonGroup, Icon, Pagination.
+- Forms: AppearancePicker, Checkbox, CheckboxGroup, ControlGroup, Dropzone, Field, FieldGroup, Fieldset, Input, Label, RadioButton, RadioButtonGroup, RichTextArea, Select, Switch, Textarea.
+- Structured content and interaction: Accordion, Card, Combobox, DetailsTable, Dialog, Dropdown, ProgressiveImage, Sheet, Table, Tabs, Toast, Tooltip, Typeset.
 
 The non-visual `AppearanceBootstrap` installs the shared document appearance runtime, and `NitroKit::Choice` is the typed option value shared by the choice controls.
 
@@ -158,7 +158,7 @@ Nitro uses current evergreen HTML primitives as the source of truth before addin
 - Accordion items are native `details`/`summary` disclosures. Single mode uses one shared `name`; it has no controller or disabled-item abstraction.
 - Dialog declarations produce exactly one native panel through the required `panel(title:, description: nil, nonmodal: false)` declaration, and Nitro renders close button, title, description, then application content inside it. `command="show-modal"` and `command="close"` controls target the panel through `commandfor`; `nonmodal: true` is the only server-rendered open mode and cannot be combined with a trigger. `nk--dialog` adds only backdrop light dismissal and, for `dismissible: false`, Escape suppression.
 - Dropdown visibility and invoker state belong to `popover="auto"`. `trigger` forwards `icon:`, `icon_end:`, and `label:` to Button, and `item` accepts its own `icon:`. Its small controller supplies menu focus, arrow/Home/End navigation, and focus restoration to the trigger when the popover closes with focus still inside it. CSS anchor positioning follows the trigger when supported and otherwise centers the menu safely in the viewport.
-- Tooltip visibility belongs to CSS hover and focus selectors, including a hoverable bridge across the visual gap. Its controller only implements Escape dismissal and reset.
+- Tooltip visibility belongs to CSS hover and focus selectors, including a hoverable bridge across the visual gap. Button triggers cover ordinary buttons and links; `as: :custom` forwards owned HTML, ARIA, and data to an existing focusable mutation or compound trigger. Its controller only implements Escape dismissal and reset.
 
 These components do not synchronize browser state into redundant `data-state` or explicit ARIA attributes. JavaScript fills semantic interaction gaps without replacing native ownership.
 
@@ -293,7 +293,7 @@ The audited former-Pro catalog maps completely to the new architecture:
 
 | Former surface                                           | 2.0 disposition                                                                                                                               |
 | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| Sidebar and Top Navigation layouts                       | Rebuilt as `AppShell` layouts and gallery application compositions                                                                            |
+| Sidebar and Top Navigation layouts                       | Rebuilt as `AppShell` for whole-application navigation and `Sheet` for contextual narrow panels                                                |
 | Details Table                                            | Rebuilt as `DetailsTable`                                                                                                                     |
 | Dropzone                                                 | Rebuilt as native `Dropzone`; Dropzone.js is removed                                                                                          |
 | Progressive Image                                        | Rebuilt as `ProgressiveImage`                                                                                                                 |

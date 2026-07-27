@@ -18,12 +18,12 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
         "layout" => %w[accordion app-shell auth-shell card container flex grid page-header settings-layout typeset],
         "navigation" => %w[app-navigation pagination pagination-bar tabs toolbar],
         "forms" => %w[
-          checkbox checkbox-group combobox dropzone field field-group fieldset form-section input label radio-button
-          radio-button-group rich-text-area select switch textarea
+          checkbox checkbox-group combobox control-group dropzone field field-group fieldset form-section input label
+          radio-button radio-button-group rich-text-area select switch textarea
         ],
         "data" => %w[avatar avatar-stack badge data-section details-table icon progressive-image stat-grid table],
         "feedback" => %w[alert empty-state toast tooltip],
-        "actions" => %w[appearance-picker button button-group danger-zone dialog dropdown]
+        "actions" => %w[appearance-picker button button-group button-to danger-zone dialog dropdown sheet]
       },
       Gallery::Catalog.collection!(:component).categories.to_h { |category| [ category.slug, category.entries.map(&:slug) ] }
     )

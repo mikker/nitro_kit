@@ -16,6 +16,12 @@ Use the documentation shipped with the application's installed gem as the source
 5. Read the relevant sections of `NITRO_KIT_ROOT/docs/component_contracts.md`. Read `customization.md` only for themes, tokens, or application composition.
 6. Inspect the installed component source when constructor or compound-slot details remain unclear. Never guess a component API from memory.
 
+For a Nitro Kit 1.x migration, read
+`NITRO_KIT_ROOT/docs/migration_1_to_2.md` before editing. Inventory product
+flows and behavior first. If the Nitro Kit MCP catalog is available, search it
+by workflow rather than old component name, then select high-level
+compositions before replacing atoms.
+
 If the gem is not installed, say that the skill requires Nitro Kit and follow the application's requested installation scope. Do not substitute APIs from an older Nitro Kit release.
 
 ## Build the interface

@@ -6,7 +6,7 @@ module NitroKit
     private_constant :DeferredContent
     # Data keys a component sets for itself through `attributes:`.
     COMPONENT_OWNED_DATA_ATTRIBUTES = %w[
-      state disabled required orientation presentation placement layout field-type
+      state disabled required orientation presentation placement layout side field-type
     ].freeze
     # Every data key Nitro owns. Applications may not pass any of them through `data:`.
     RESERVED_DATA_ATTRIBUTES = (

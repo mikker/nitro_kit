@@ -48,6 +48,16 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
+        subcategory: :actions,
+        slug: "button-to",
+        title: "Button to",
+        description: "A Rails method form with one typed submit Button and layout-transparent form root.",
+        page: Gallery::Components::ButtonToPage,
+        states: [],
+        expected_roots: %w[button-to button]
+      ),
+      Entry.new(
+        kind: :component,
         subcategory: :data,
         slug: "icon",
         title: "Icon",
@@ -219,6 +229,16 @@ module Gallery
       Entry.new(
         kind: :component,
         subcategory: :forms,
+        slug: "control-group",
+        title: "Control group",
+        description: "Joined native controls and textual addons for copy fields, URL builders, and compact submissions.",
+        page: Gallery::Components::ControlGroupPage,
+        states: [],
+        expected_roots: %w[control-group input select button]
+      ),
+      Entry.new(
+        kind: :component,
+        subcategory: :forms,
         slug: "fieldset",
         title: "Fieldset",
         description: "A semantic form section with legend, guidance, grouped fields, and disabled state.",
@@ -269,6 +289,16 @@ module Gallery
       Entry.new(
         kind: :component,
         subcategory: :actions,
+        slug: "sheet",
+        title: "Sheet",
+        description: "A native modal side panel for narrow navigation and contextual details.",
+        page: Gallery::Components::SheetPage,
+        states: [],
+        expected_roots: %w[sheet button app-navigation details-table table]
+      ),
+      Entry.new(
+        kind: :component,
+        subcategory: :actions,
         slug: "dropdown",
         title: "Dropdown",
         description: "Native popover menus with typed triggers, entries, placement, and keyboard state.",
@@ -281,7 +311,7 @@ module Gallery
         subcategory: :feedback,
         slug: "tooltip",
         title: "Tooltip",
-        description: "Contextual descriptions attached to an owned, focusable Button trigger.",
+        description: "Contextual descriptions for Buttons, links, mutation forms, and compound focusable triggers.",
         page: Gallery::Components::TooltipPage,
         states: [],
         expected_roots: %w[tooltip card badge button]

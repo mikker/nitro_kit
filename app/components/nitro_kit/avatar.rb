@@ -2,7 +2,7 @@
 
 module NitroKit
   class Avatar < Component
-    SIZES = %i[sm md lg].freeze
+    SIZES = %i[xs sm md lg].freeze
 
     def initialize(
       src: nil,

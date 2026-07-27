@@ -21,6 +21,7 @@ Read this guide from that directory, then consult only the reference needed for 
 | Rails assets, forms, and application shells | `docs/rails_integration.md`               |
 | Turbo, Frames, Streams, morphs, or Stimulus | `docs/hotwire.md`                         |
 | Theme tokens and application composition    | `docs/customization.md`                   |
+| Upgrade an existing Nitro Kit 1.x app        | `docs/migration_1_to_2.md`                |
 | Query, sort, filter, or paginate            | `docs/patterns/queryable_collection.md`   |
 | Create, update, and show validation         | `docs/patterns/resource_form.md`          |
 | Delete, revoke, archive, or confirm         | `docs/patterns/destructive_action.md`     |
@@ -58,6 +59,12 @@ native links for settings destinations. Do not stop after rendering a screen
 that only looks structurally similar.
 
 ## Preserve controls during migration
+
+Before changing a 1.x application, read `docs/migration_1_to_2.md`. Inventory
+user-facing flows and behavior before mapping helpers. When the Nitro Kit MCP
+catalog is available, search by product workflow rather than old component
+name, then prefer the highest-level matching composition before replacing
+atoms.
 
 In an existing application, replace a form control only when the installed
 Nitro Kit catalog provides a genuine semantic and behavioral equivalent.

@@ -98,6 +98,63 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Trigger composition",
+          slug: "tooltip-trigger-composition",
+          description: "Links use the Button path directly; mutation forms and compound triggers receive Tooltip-owned attributes explicitly."
+        ) do
+          example("Existing actions", slug: "tooltip-existing-actions", layout: :matrix) do
+            sample("Link", slug: "link") do
+              render NitroKit::Tooltip.new(
+                id: "gallery-tooltip-link",
+                content: "Read the deployment runbook in a new tab."
+              ) do |tooltip|
+                tooltip.trigger("Deployment runbook", href: "#runbook", icon_end: :external_link)
+              end
+            end
+
+            sample("Rails mutation", slug: "button-to") do
+              render NitroKit::Tooltip.new(
+                id: "gallery-tooltip-button-to",
+                content: "Revoking the token immediately rejects new requests."
+              ) do |tooltip|
+                tooltip.trigger(as: :custom) do |attributes|
+                  render NitroKit::ButtonTo.new(
+                    "Revoke token",
+                    href: "#revoke-token",
+                    method: :delete,
+                    variant: :destructive,
+                    button_html: attributes.html,
+                    button_aria: attributes.aria,
+                    button_data: attributes.data
+                  )
+                end
+              end
+            end
+
+            sample("Dialog trigger", slug: "dialog") do
+              render NitroKit::Tooltip.new(
+                id: "gallery-tooltip-dialog",
+                content: "Review release details before publishing."
+              ) do |tooltip|
+                tooltip.trigger(as: :custom) do |attributes|
+                  render NitroKit::Dialog.new(id: "gallery-tooltip-release-dialog") do |dialog|
+                    dialog.trigger(
+                      "Review release",
+                      html: attributes.html,
+                      aria: attributes.aria,
+                      data: attributes.data
+                    )
+                    dialog.panel(title: "Publish release 2.0?") do
+                      dialog.close_button(label: "Keep as draft")
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
       end
 
       def render_tip(id, content, placement: :top)

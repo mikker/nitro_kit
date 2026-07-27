@@ -56,6 +56,12 @@
 }
 
 @layer nitro-kit.size {
+  :where([data-nk="avatar"][data-size="xs"]) {
+    width: 1.5rem;
+    height: 1.5rem;
+    font-size: calc(var(--nk-text-xs) * 0.875);
+  }
+
   :where([data-nk="avatar"][data-size="sm"]) {
     width: 2rem;
     height: 2rem;

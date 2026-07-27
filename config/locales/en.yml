@@ -80,6 +80,8 @@ en:
       ellipsis: "More pages"
     progressive_image:
       unavailable: "Image unavailable"
+    sheet:
+      close: "Close panel"
     tabs:
       label: "Tabs"
     toast:

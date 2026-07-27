@@ -1,4 +1,9 @@
 @layer nitro-kit.base {
+  /* Dialog's structural root must not become an extra flex or grid item. */
+  :where([data-nk="dialog"]) {
+    display: contents;
+  }
+
   :where([data-nk="dialog"] > [data-slot="dialog-panel"]) {
     inline-size: min(calc(100% - (var(--nk-space) * 8)), var(--nk-content-md));
     max-block-size: calc(100dvh - (var(--nk-space) * 8));
