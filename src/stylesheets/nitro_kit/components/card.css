@@ -6,7 +6,6 @@
     flex-direction: column;
     align-items: stretch;
     gap: calc(var(--nk-space) * 4);
-    overflow: hidden;
     padding: var(--_nk-card-padding);
     color: var(--nk-color-foreground);
     background: var(--nk-color-surface);
@@ -38,12 +37,30 @@
 }
 
 @layer nitro-kit.compound {
+  /* Only the region that bleeds to the edge clips, never the card itself, so
+     an edge-to-edge image cannot break the card's corners while tooltips,
+     dropdowns, and other overlays inside a card stay free to escape its box. */
   :where([data-nk="card"] > [data-slot="card-full"]) {
+    overflow: hidden;
     margin-inline: calc(var(--_nk-card-padding) * -1);
   }
 
   :where([data-nk="card"] > [data-slot="card-full"]:first-child) {
     margin-block-start: calc(var(--_nk-card-padding) * -1);
+    border-start-start-radius: calc(
+      var(--nk-radius-lg) - var(--nk-border-width)
+    );
+    border-start-end-radius: calc(var(--nk-radius-lg) - var(--nk-border-width));
+  }
+
+  /* Full-width media fills the card edge to edge, so the card owns the corner
+     radius and the media drops its own. */
+  :where(
+    [data-nk="card"]
+      > [data-slot="card-full"]
+      :is(img, [data-nk="progressive-image"])
+  ) {
+    border-radius: 0;
   }
 
   :where([data-nk="card"] > [data-slot="card-divider"]) {

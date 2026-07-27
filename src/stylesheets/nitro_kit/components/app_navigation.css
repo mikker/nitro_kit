@@ -1,5 +1,7 @@
 @layer nitro-kit.base {
   :where([data-nk="app-navigation"]) {
+    --_nk-app-navigation-inset: calc(var(--nk-space) * 3);
+
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
@@ -35,7 +37,7 @@
     flex-direction: column;
     gap: var(--nk-space);
     min-block-size: 0;
-    padding: calc(var(--nk-space) * 3);
+    padding: var(--_nk-app-navigation-inset);
     overflow: auto;
     overscroll-behavior: contain;
     scrollbar-gutter: stable;
@@ -69,8 +71,7 @@
   }
 
   :where([data-nk="app-navigation"] [data-slot="app-navigation-item-link"]) {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    display: flex;
     gap: calc(var(--nk-space) * 2);
     align-items: center;
     min-block-size: var(--nk-control-height-md);
@@ -86,6 +87,7 @@
   }
 
   :where([data-nk="app-navigation"] [data-slot="app-navigation-item-label"]) {
+    flex: 1 1 auto;
     min-inline-size: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -100,7 +102,7 @@
   }
 
   :where([data-nk="app-navigation"] [data-slot="app-navigation-item-badge"]) {
-    justify-self: end;
+    margin-inline-start: auto;
     font-variant-numeric: tabular-nums;
   }
 
@@ -108,7 +110,8 @@
     flex: 0 0 auto;
     display: block;
     block-size: var(--nk-border-width);
-    margin: calc(var(--nk-space) * 2);
+    margin-block: calc(var(--nk-space) * 2);
+    margin-inline: calc(var(--_nk-app-navigation-inset) * -1);
     background: var(--nk-app-shell-border);
     border: 0;
   }

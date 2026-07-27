@@ -54,8 +54,10 @@ class GalleryFormRhythmTest < ActionDispatch::IntegrationTest
     parent.element_children.select { |node| field?(node) || submit_button?(node) }
   end
 
+  # A Dropzone is a field in every way that matters here: it is a labelled
+  # control that owns no placement of its own.
   def field?(node)
-    node["data-nk"] == "field"
+    node["data-nk"] == "field" || node["data-nk"] == "dropzone"
   end
 
   def submit_button?(node)

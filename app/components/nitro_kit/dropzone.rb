@@ -34,11 +34,17 @@ module NitroKit
       errors.max_files.other
     ].freeze
 
+    # `:input` keeps the native file input visible beside the drop target.
+    # `:minimal` leaves the drop target as the only visible affordance; the
+    # input stays in the accessibility tree and keeps its own focus ring.
+    PRESENTATIONS = %i[input minimal].freeze
+
     def initialize(
       id:,
       name:,
       label: I18n.t("nitro_kit.dropzone.label"),
       description: nil,
+      presentation: :input,
       direct_upload: true,
       multiple: false,
       accept: nil,
@@ -55,6 +61,7 @@ module NitroKit
       @name = form_name(name)
       @label = required_text(:label, label)
       @description = optional_text(:description, description)
+      @presentation = validate_choice!(:presentation, presentation, PRESENTATIONS)
       @direct_upload = validate_boolean!(:direct_upload, direct_upload)
       @multiple = validate_boolean!(:multiple, multiple)
       @accept = optional_text(:accept, accept)
@@ -73,6 +80,7 @@ module NitroKit
           id: @identifier,
           aria: { disabled: @disabled ? true : nil },
           data: {
+            presentation: @presentation,
             controller: @disabled ? nil : "nk--dropzone",
             state: @disabled ? "disabled" : "idle",
             action: @disabled ? nil : dropzone_actions,
@@ -92,7 +100,7 @@ module NitroKit
     # `label:` shadows the Phlex element, which the message region still needs.
     alias :html_label :label
 
-    attr_reader :identifier, :name, :label, :description, :max_files, :max_bytes
+    attr_reader :identifier, :name, :label, :description, :presentation, :max_files, :max_bytes
 
     def view_template
       div(**root_attributes) do

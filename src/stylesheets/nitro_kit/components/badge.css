@@ -21,7 +21,9 @@
   }
 
   :where([data-nk="badge"] > [data-slot="badge-label"]) {
+    min-width: 0;
     overflow: hidden;
+    white-space: nowrap;
     text-overflow: ellipsis;
   }
 }
@@ -42,6 +44,17 @@
       --_nk-badge-color: var(--_nk-palette-dark);
       --_nk-badge-tint-strength: 40%;
     }
+  }
+}
+
+@layer nitro-kit.compound {
+  /* An Icon is block-level on its own, which would push the rest of the label
+     onto a second line. Inside a badge it joins the text line and never
+     shrinks, so a badge with an icon stays on one line like any other. */
+  :where([data-nk="badge"] [data-nk="icon"]) {
+    display: inline-block;
+    flex: none;
+    vertical-align: -0.125em;
   }
 }
 

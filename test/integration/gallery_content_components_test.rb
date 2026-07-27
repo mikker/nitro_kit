@@ -114,6 +114,17 @@ class GalleryContentComponentsTest < ActionDispatch::IntegrationTest
     assert_select "#example-empty-state-long-code [data-gallery='code-source']", text: /empty\.title/
   end
 
+  test "empty state gallery documents the borderless variant and when to prefer it" do
+    get_block("empty-state")
+
+    assert_select "#gallery-empty-state-variant-default[data-variant='default']"
+    assert_select "#gallery-empty-state-variant-borderless[data-variant='borderless']"
+    assert_select "#section-empty-state-presentation-description", text: /Dropzone/
+    assert_select "#gallery-empty-state-card[data-nk='card']" do
+      assert_select "#gallery-empty-state-in-card[data-variant='borderless'] > h4[data-slot='empty-state-title']"
+    end
+  end
+
   private
 
   def get_block(slug)

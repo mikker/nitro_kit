@@ -81,12 +81,31 @@
     display: none;
   }
 
+  /* A segment has no indicator, so the label must not keep the column the
+     indicator would have occupied: the hidden native radio covers the whole
+     segment instead of sitting inside it, which leaves the label optically
+     centred between the segment's own paddings and makes the entire segment
+     clickable. */
   :where(
     [data-nk="radio-button-group"][data-presentation="segmented"]
       [data-slot="radio-button-label"]
   ) {
+    position: relative;
     display: flex;
+    gap: 0;
+    align-items: center;
+    justify-content: center;
     min-block-size: calc(var(--nk-control-height-md) - var(--nk-space) * 2);
+  }
+
+  :where(
+    [data-nk="radio-button-group"][data-presentation="segmented"]
+      [data-slot="radio-button-control"]
+  ) {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
   }
 }
 
@@ -102,5 +121,16 @@
     background: var(--nk-color-surface);
     border-color: var(--nk-color-primary);
     box-shadow: var(--nk-shadow-sm);
+  }
+
+  /* The segmented indicator is hidden, so the focus ring belongs to the native
+     radio that now covers the segment. */
+  :where(
+    [data-nk="radio-button-group"][data-presentation="segmented"]
+      [data-slot="radio-button-control"]:focus-visible
+  ) {
+    border-radius: calc(var(--nk-radius-md) - var(--nk-space));
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: calc(var(--nk-focus-offset) * -1);
   }
 }

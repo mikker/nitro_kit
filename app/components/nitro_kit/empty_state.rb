@@ -6,10 +6,12 @@ module NitroKit
     private_constant :Child
 
     TITLE_LEVELS = (2..6).freeze
+    VARIANTS = %i[default borderless].freeze
 
     def initialize(
       title: nil,
       description: nil,
+      variant: :default,
       level: 2,
       id: nil,
       html: {},
@@ -20,6 +22,7 @@ module NitroKit
       @title_content = content_from_keyword(:title, title)
       @description_content = content_from_keyword(:description, description)
       @level = validate_choice!(:level, level, TITLE_LEVELS)
+      @variant = validate_choice!(:variant, variant, VARIANTS)
       @icon = nil
       @actions = []
 
@@ -29,11 +32,12 @@ module NitroKit
         html:,
         aria:,
         data:,
+        variant:,
         desperately_need_a_class:
       )
     end
 
-    attr_reader :level
+    attr_reader :level, :variant
 
     def view_template
       yield self if block_given?

@@ -549,6 +549,8 @@
 /* Source: src/stylesheets/nitro_kit/components/app_navigation.css */
 @layer nitro-kit.base {
   :where([data-nk="app-navigation"]) {
+    --_nk-app-navigation-inset: calc(var(--nk-space) * 3);
+
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
@@ -584,7 +586,7 @@
     flex-direction: column;
     gap: var(--nk-space);
     min-block-size: 0;
-    padding: calc(var(--nk-space) * 3);
+    padding: var(--_nk-app-navigation-inset);
     overflow: auto;
     overscroll-behavior: contain;
     scrollbar-gutter: stable;
@@ -618,8 +620,7 @@
   }
 
   :where([data-nk="app-navigation"] [data-slot="app-navigation-item-link"]) {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
+    display: flex;
     gap: calc(var(--nk-space) * 2);
     align-items: center;
     min-block-size: var(--nk-control-height-md);
@@ -635,6 +636,7 @@
   }
 
   :where([data-nk="app-navigation"] [data-slot="app-navigation-item-label"]) {
+    flex: 1 1 auto;
     min-inline-size: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -649,7 +651,7 @@
   }
 
   :where([data-nk="app-navigation"] [data-slot="app-navigation-item-badge"]) {
-    justify-self: end;
+    margin-inline-start: auto;
     font-variant-numeric: tabular-nums;
   }
 
@@ -657,7 +659,8 @@
     flex: 0 0 auto;
     display: block;
     block-size: var(--nk-border-width);
-    margin: calc(var(--nk-space) * 2);
+    margin-block: calc(var(--nk-space) * 2);
+    margin-inline: calc(var(--_nk-app-navigation-inset) * -1);
     background: var(--nk-app-shell-border);
     border: 0;
   }
@@ -1449,13 +1452,22 @@
     vertical-align: middle;
   }
 
+  /* Stacked items overlap the ring of the item behind them, so a translucent
+     fill would let that ring show through. Each item paints its own fill as a
+     background image over an opaque surface underlay. */
   :where(
     [data-nk="avatar-stack"] > [data-slot="avatar-stack-avatar"],
     [data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]
   ) {
+    --_nk-avatar-stack-fill: var(--nk-color-muted);
+
     flex: none;
     margin-inline-start: calc(var(--nk-space) * -3);
     background-color: var(--nk-color-surface);
+    background-image: linear-gradient(
+      var(--_nk-avatar-stack-fill),
+      var(--_nk-avatar-stack-fill)
+    );
     box-shadow: 0 0 0 calc(var(--nk-border-width) * 2) var(--nk-color-surface);
   }
 
@@ -1467,12 +1479,13 @@
   }
 
   :where([data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]) {
+    --_nk-avatar-stack-fill: var(--nk-color-elevated);
+
     display: inline-grid;
     place-items: center;
     font-weight: var(--nk-font-weight-semibold);
     line-height: 1;
     color: var(--nk-color-muted-foreground);
-    background-color: var(--nk-color-elevated);
     border-radius: var(--nk-radius-full);
   }
 
@@ -1528,7 +1541,9 @@
   }
 
   :where([data-nk="badge"] > [data-slot="badge-label"]) {
+    min-width: 0;
     overflow: hidden;
+    white-space: nowrap;
     text-overflow: ellipsis;
   }
 }
@@ -1549,6 +1564,17 @@
       --_nk-badge-color: var(--_nk-palette-dark);
       --_nk-badge-tint-strength: 40%;
     }
+  }
+}
+
+@layer nitro-kit.compound {
+  /* An Icon is block-level on its own, which would push the rest of the label
+     onto a second line. Inside a badge it joins the text line and never
+     shrinks, so a badge with an icon stays on one line like any other. */
+  :where([data-nk="badge"] [data-nk="icon"]) {
+    display: inline-block;
+    flex: none;
+    vertical-align: -0.125em;
   }
 }
 
@@ -1852,7 +1878,6 @@
     flex-direction: column;
     align-items: stretch;
     gap: calc(var(--nk-space) * 4);
-    overflow: hidden;
     padding: var(--_nk-card-padding);
     color: var(--nk-color-foreground);
     background: var(--nk-color-surface);
@@ -1884,12 +1909,30 @@
 }
 
 @layer nitro-kit.compound {
+  /* Only the region that bleeds to the edge clips, never the card itself, so
+     an edge-to-edge image cannot break the card's corners while tooltips,
+     dropdowns, and other overlays inside a card stay free to escape its box. */
   :where([data-nk="card"] > [data-slot="card-full"]) {
+    overflow: hidden;
     margin-inline: calc(var(--_nk-card-padding) * -1);
   }
 
   :where([data-nk="card"] > [data-slot="card-full"]:first-child) {
     margin-block-start: calc(var(--_nk-card-padding) * -1);
+    border-start-start-radius: calc(
+      var(--nk-radius-lg) - var(--nk-border-width)
+    );
+    border-start-end-radius: calc(var(--nk-radius-lg) - var(--nk-border-width));
+  }
+
+  /* Full-width media fills the card edge to edge, so the card owns the corner
+     radius and the media drops its own. */
+  :where(
+    [data-nk="card"]
+      > [data-slot="card-full"]
+      :is(img, [data-nk="progressive-image"])
+  ) {
+    border-radius: 0;
   }
 
   :where([data-nk="card"] > [data-slot="card-divider"]) {
@@ -2045,9 +2088,15 @@
     opacity: 0.6;
   }
 
+  /* A server-rendered error describes the value that was submitted. Once the
+     user has interacted with the control and it satisfies its own constraints,
+     that error is stale, so the danger border stands down and the native
+     checked treatment takes over again. `:user-valid` never matches before the
+     user touches the control, so an untouched invalid checkbox keeps its
+     border. */
   :where(
     [data-nk="checkbox"]
-      [data-slot="checkbox-control"][aria-invalid="true"]
+      [data-slot="checkbox-control"][aria-invalid="true"]:not(:user-valid)
       + [data-slot="checkbox-indicator"]
   ) {
     border-color: var(--nk-color-danger);
@@ -2715,6 +2764,26 @@
     border-inline-end: var(--nk-border-width) solid var(--nk-color-border);
   }
 
+  /* The minimal presentation keeps the native input operable and in the
+     accessibility tree while the drop target is the only visible affordance.
+     The label already points at the input, so clicking anywhere in the message
+     still opens the file picker. */
+  :where([data-nk="dropzone"][data-presentation="minimal"]) {
+    position: relative;
+  }
+
+  :where(
+    [data-nk="dropzone"][data-presentation="minimal"]
+      > [data-slot="dropzone-input"]
+  ) {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    white-space: nowrap;
+    clip-path: inset(50%);
+  }
+
   :where([data-nk="dropzone"] > [data-slot="dropzone-preview-list"]) {
     display: grid;
     gap: calc(var(--nk-space) * 2);
@@ -2799,6 +2868,17 @@
     outline-offset: var(--nk-focus-offset);
   }
 
+  /* The clipped input cannot carry a visible ring, so the drop target it
+     labels wears the focus treatment on its behalf. */
+  :where(
+    [data-nk="dropzone"][data-presentation="minimal"]:has(
+        > [data-slot="dropzone-input"]:focus-visible
+      )
+  ) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: var(--nk-focus-offset);
+  }
+
   :where([data-nk="dropzone"] [data-slot="dropzone-remove-control"]:hover) {
     background: var(--nk-color-surface-hover);
   }
@@ -2864,6 +2944,15 @@
     flex-wrap: wrap;
     gap: calc(var(--nk-space) * 2);
     margin-block-start: calc(var(--nk-space) * 2);
+  }
+}
+
+@layer nitro-kit.variant {
+  /* The dashed default reads as a drop target. The borderless variant drops
+     that frame for regions a Card, DataSection, or table already encloses. */
+  :where([data-nk="empty-state"][data-variant="borderless"]) {
+    background: none;
+    border-color: transparent;
   }
 }
 
@@ -4399,11 +4488,9 @@
 
   :where([data-nk="page-header"] > [data-slot="page-header-eyebrow"]) {
     color: var(--nk-color-muted-foreground);
-    font-size: var(--nk-text-xs);
-    font-weight: var(--nk-font-weight-semibold);
-    letter-spacing: 0.08em;
+    font-size: var(--nk-text-sm);
+    font-weight: var(--nk-font-weight-normal);
     line-height: var(--nk-leading-tight);
-    text-transform: uppercase;
   }
 
   :where([data-nk="page-header"] > [data-slot="page-header-title"]) {
@@ -4433,6 +4520,12 @@
       grid-template-columns: minmax(0, 1fr) auto;
     }
 
+    /* Every text slot owns the first column, so the eyebrow, title, and
+       description each keep a row of their own. Sparse auto-placement then
+       lands the actions in the last of those rows. No row span is declared:
+       a span resolves against explicit rows this grid does not have, which is
+       what used to seat the actions beside the eyebrow and push the title down
+       onto a line of its own. */
     :where(
       [data-nk="page-header"]:has(> [data-slot="page-header-actions"])
         > :not([data-slot="page-header-actions"])
@@ -4442,7 +4535,7 @@
 
     :where([data-nk="page-header"] > [data-slot="page-header-actions"]) {
       grid-column: 2;
-      grid-row: 1 / -1;
+      justify-self: end;
       align-self: end;
       margin-block-start: 0;
     }
@@ -4985,9 +5078,13 @@
     opacity: 0.6;
   }
 
+  /* The server error describes the submitted value. Once the user picks a
+     value that satisfies the control's own constraints the error is stale, so
+     the danger border stands down. `:user-valid` never matches before the user
+     touches the control, so an untouched invalid radio keeps its border. */
   :where(
     [data-nk="radio-button"]
-      [data-slot="radio-button-control"][aria-invalid="true"]
+      [data-slot="radio-button-control"][aria-invalid="true"]:not(:user-valid)
       + [data-slot="radio-button-indicator"]
   ) {
     border-color: var(--nk-color-danger);
@@ -5078,12 +5175,31 @@
     display: none;
   }
 
+  /* A segment has no indicator, so the label must not keep the column the
+     indicator would have occupied: the hidden native radio covers the whole
+     segment instead of sitting inside it, which leaves the label optically
+     centred between the segment's own paddings and makes the entire segment
+     clickable. */
   :where(
     [data-nk="radio-button-group"][data-presentation="segmented"]
       [data-slot="radio-button-label"]
   ) {
+    position: relative;
     display: flex;
+    gap: 0;
+    align-items: center;
+    justify-content: center;
     min-block-size: calc(var(--nk-control-height-md) - var(--nk-space) * 2);
+  }
+
+  :where(
+    [data-nk="radio-button-group"][data-presentation="segmented"]
+      [data-slot="radio-button-control"]
+  ) {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
   }
 }
 
@@ -5099,6 +5215,17 @@
     background: var(--nk-color-surface);
     border-color: var(--nk-color-primary);
     box-shadow: var(--nk-shadow-sm);
+  }
+
+  /* The segmented indicator is hidden, so the focus ring belongs to the native
+     radio that now covers the segment. */
+  :where(
+    [data-nk="radio-button-group"][data-presentation="segmented"]
+      [data-slot="radio-button-control"]:focus-visible
+  ) {
+    border-radius: calc(var(--nk-radius-md) - var(--nk-space));
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: calc(var(--nk-focus-offset) * -1);
   }
 }
 
@@ -5225,29 +5352,51 @@
     min-width: 0;
   }
 
+  /* The indicator border is always present so the current item never shifts
+     its label, and the row keeps the compact height of a small control. */
   :where([data-nk="settings-layout"] [data-slot="settings-layout-item-link"]) {
-    display: block;
-    min-block-size: var(--nk-control-height-md);
-    padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
+    display: flex;
+    gap: calc(var(--nk-space) * 2);
+    align-items: center;
+    min-block-size: var(--nk-control-height-sm);
+    padding: var(--nk-space) calc(var(--nk-space) * 2);
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
     font-weight: var(--nk-font-weight-medium);
-    line-height: var(--nk-control-height-md);
+    line-height: var(--nk-leading-tight);
     text-decoration: none;
+    border-inline-start: var(--nk-focus-width) solid transparent;
     border-radius: var(--nk-radius-md);
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
+      border-color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);
+  }
+
+  :where([data-nk="settings-layout"] [data-slot="settings-layout-item-icon"]) {
+    flex: none;
+    color: var(--nk-color-muted-foreground);
   }
 }
 
 @layer nitro-kit.state {
+  /* The current destination reads through emphasis and a leading indicator
+     rather than a filled block, which would outweigh the content beside it. */
   :where(
     [data-nk="settings-layout"]
       [data-slot="settings-layout-item-link"][data-state="current"]
   ) {
     color: var(--nk-color-foreground);
-    background: var(--nk-color-muted);
+    font-weight: var(--nk-font-weight-semibold);
+    border-inline-start-color: var(--nk-color-primary);
+  }
+
+  :where(
+    [data-nk="settings-layout"]
+      [data-slot="settings-layout-item-link"][data-state="current"]
+      [data-slot="settings-layout-item-icon"]
+  ) {
+    color: var(--nk-color-foreground);
   }
 
   @media (hover: hover) {
@@ -5255,7 +5404,7 @@
       [data-nk="settings-layout"] [data-slot="settings-layout-item-link"]:hover
     ) {
       color: var(--nk-color-foreground);
-      background: var(--nk-color-muted);
+      background: color-mix(in oklab, var(--nk-color-muted) 60%, transparent);
     }
   }
 

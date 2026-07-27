@@ -61,6 +61,65 @@ module Gallery
         end
 
         example_section(
+          "Presentation and orientation",
+          slug: "checkbox-group-presentation",
+          description: "`presentation:` and `orientation:` change how the same fieldset lays its choices out; " \
+            "the markup, names, and hidden sentinel stay identical."
+        ) do
+          example(
+            "Card presentation",
+            slug: "checkbox-group-cards",
+            description: "Cards suit choices that carry their own explanation, and the selected card is outlined."
+          ) do
+            render NitroKit::CheckboxGroup.new(
+              legend: "Deployment protections",
+              description: "Protections apply to every production deploy in this workspace.",
+              id: "gallery-checkbox-group-cards",
+              name: "workspace[protections]",
+              value: %w[review status_checks],
+              presentation: :cards,
+              options: [
+                {
+                  label: "Require a reviewer",
+                  value: "review",
+                  description: "One approving review from outside the authoring team."
+                },
+                {
+                  label: "Require passing status checks",
+                  value: "status_checks",
+                  description: "The deploy waits for the full test suite and the security scan."
+                },
+                {
+                  label: "Require a deploy window",
+                  value: "window",
+                  description: "Production deploys are refused outside 08:00–18:00 UTC on weekdays."
+                }
+              ]
+            )
+          end
+
+          example(
+            "Horizontal orientation",
+            slug: "checkbox-group-horizontal",
+            description: "Short, self-evident choices read well on one line and wrap when the parent narrows."
+          ) do
+            render NitroKit::CheckboxGroup.new(
+              legend: "Include in the export",
+              id: "gallery-checkbox-group-horizontal",
+              name: "export[sections]",
+              value: %w[members deployments],
+              orientation: :horizontal,
+              options: [
+                [ "Members", "members" ],
+                [ "Deployments", "deployments" ],
+                [ "Invoices", "invoices" ],
+                [ "Audit log", "audit_log" ]
+              ]
+            )
+          end
+        end
+
+        example_section(
           "Availability and pressure",
           slug: "checkbox-group-states",
           description: "Disabled groups, disabled individual choices, many choices, and long copy retain fieldset semantics."
@@ -119,24 +178,58 @@ module Gallery
         ) do
           example("Report subscription", slug: "checkbox-group-report-form") do
             form(id: "gallery-checkbox-group-report-form", action: "#report-subscription", method: "post") do
-              render NitroKit::CheckboxGroup.new(
-                legend: "Reports to receive",
-                description: "Select any number of recurring workspace reports.",
-                id: "gallery-checkbox-group-reports",
-                name: "subscription[reports]",
-                value: %w[deployments billing],
-                options: [
-                  [ "Deployment activity", "deployments" ],
-                  [ "Member access changes", "access" ],
-                  [ "Billing summary", "billing" ]
-                ]
-              )
-              render NitroKit::Button.new(
-                "Save subscriptions",
-                id: "gallery-checkbox-group-report-save",
-                type: :submit,
-                variant: :primary
-              )
+              render NitroKit::FieldGroup.new(html: { id: "gallery-checkbox-group-report-fields" }) do
+                render NitroKit::CheckboxGroup.new(
+                  legend: "Reports to receive",
+                  description: "Select any number of recurring workspace reports.",
+                  id: "gallery-checkbox-group-reports",
+                  name: "subscription[reports]",
+                  value: %w[deployments billing],
+                  options: [
+                    [ "Deployment activity", "deployments" ],
+                    [ "Member access changes", "access" ],
+                    [ "Billing summary", "billing" ]
+                  ]
+                )
+                render NitroKit::Button.new(
+                  "Save subscriptions",
+                  id: "gallery-checkbox-group-report-save",
+                  type: :submit,
+                  variant: :primary
+                )
+              end
+            end
+          end
+
+          example(
+            "Two groups in one fieldset",
+            slug: "checkbox-group-fieldset",
+            description: "A Fieldset owns the heading and the rhythm between related groups; " \
+              "each group keeps its own legend and its own Rails array name."
+          ) do
+            form(id: "gallery-checkbox-group-alerts-form", action: "#alert-routing", method: "post") do
+              render NitroKit::Fieldset.new(
+                legend: "Alert routing",
+                description: "Choose where each class of alert is delivered.",
+                html: { id: "gallery-checkbox-group-alerts-fieldset" }
+              ) do
+                render NitroKit::CheckboxGroup.new(
+                  legend: "Incident alerts",
+                  id: "gallery-checkbox-group-incident-alerts",
+                  name: "routing[incident]",
+                  value: %w[pagerduty email],
+                  orientation: :horizontal,
+                  options: [ [ "PagerDuty", "pagerduty" ], [ "Email", "email" ], [ "Chat", "chat" ] ]
+                )
+                render NitroKit::CheckboxGroup.new(
+                  legend: "Billing alerts",
+                  id: "gallery-checkbox-group-billing-alerts",
+                  name: "routing[billing]",
+                  value: %w[email],
+                  orientation: :horizontal,
+                  options: [ [ "Email", "email" ], [ "Chat", "chat" ] ]
+                )
+              end
             end
           end
         end

@@ -1,7 +1,12 @@
 module Gallery
   module Components
     class SettingsLayoutPage < ComponentPage
-      DESTINATIONS = %i[profile security activity appearance].freeze
+      DESTINATIONS = {
+        profile: :user_round,
+        security: :shield_check,
+        activity: :activity,
+        appearance: :palette
+      }.freeze
 
       private
 
@@ -10,7 +15,7 @@ module Gallery
       end
 
       def api_note
-        "NitroKit::SettingsLayout.new { |layout| layout.navigation(label:) { layout.item(text, href:, current:) }; layout.content { ... } }"
+        "NitroKit::SettingsLayout.new { |layout| layout.navigation(label:) { layout.item(text, href:, icon:, current:) }; layout.content { ... } }"
       end
 
       def component_template
@@ -22,10 +27,11 @@ module Gallery
           example("Workspace settings", slug: "settings-layout-workspace", mode: :full_width) do
             render NitroKit::SettingsLayout.new(id: "gallery-settings-layout-workspace") do |layout|
               layout.navigation(label: "Workspace settings") do
-                DESTINATIONS.each do |destination|
+                DESTINATIONS.each do |destination, icon|
                   layout.item(
                     destination.to_s.humanize,
                     href: "##{destination}",
+                    icon:,
                     current: destination == :profile
                   )
                 end
@@ -65,7 +71,7 @@ module Gallery
             sample("One destination", slug: "one") do
               render NitroKit::SettingsLayout.new(id: "gallery-settings-layout-one") do |layout|
                 layout.navigation(label: "Account settings") do
-                  layout.item("Profile", href: "#profile", current: true)
+                  layout.item("Profile", href: "#profile", icon: :user_round, current: true)
                 end
                 layout.content do
                   render NitroKit::Alert.new(id: "gallery-settings-layout-one-alert") do |alert|
@@ -78,10 +84,11 @@ module Gallery
             sample("Dense content", slug: "many") do
               render NitroKit::SettingsLayout.new(id: "gallery-settings-layout-many") do |layout|
                 layout.navigation(label: "Operations settings") do
-                  DESTINATIONS.each do |destination|
+                  DESTINATIONS.each do |destination, icon|
                     layout.item(
                       destination.to_s.humanize,
                       href: "##{destination}",
+                      icon:,
                       current: destination == :security
                     )
                   end
@@ -113,9 +120,14 @@ module Gallery
           ) do
             render NitroKit::SettingsLayout.new(id: "gallery-settings-layout-long") do |layout|
               layout.navigation(label: "Analytical Engines — International Research and Production settings") do
-                layout.item("Public organization identity and verified domains", href: "#identity", current: true)
-                layout.item("Credential rotation and browser session policy", href: "#security")
-                layout.item("Deployment notification delivery preferences", href: "#notifications")
+                layout.item(
+                  "Public organization identity and verified domains",
+                  href: "#identity",
+                  icon: :building_2,
+                  current: true
+                )
+                layout.item("Credential rotation and browser session policy", href: "#security", icon: :key_round)
+                layout.item("Deployment notification delivery preferences", href: "#notifications", icon: :bell)
               end
               layout.content do
                 render NitroKit::Card.new(id: "gallery-settings-layout-long-card") do |card|
@@ -138,10 +150,11 @@ module Gallery
           example("Audit settings", slug: "settings-layout-audit", mode: :full_width) do
             render NitroKit::SettingsLayout.new(id: "gallery-settings-layout-audit") do |layout|
               layout.navigation(label: "Audit settings") do
-                DESTINATIONS.each do |destination|
+                DESTINATIONS.each do |destination, icon|
                   layout.item(
                     destination.to_s.humanize,
                     href: "##{destination}",
+                    icon:,
                     current: destination == :activity
                   )
                 end

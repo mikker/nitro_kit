@@ -147,7 +147,8 @@ class DropzoneTest < ActiveSupport::TestCase
       disabled: [ nil, :yes ],
       required: [ nil, :yes ],
       max_files: [ nil, 0, -1, 1.5 ],
-      max_bytes: [ 0, -1, 1.5 ]
+      max_bytes: [ 0, -1, 1.5 ],
+      presentation: [ nil, :hidden, "minimal" ]
     }
 
     invalid_options.each do |option, values|
@@ -205,12 +206,32 @@ class DropzoneTest < ActiveSupport::TestCase
     assert_empty form.css("[class], [style]")
   end
 
+  # The minimal presentation is a purely visual choice: the native input keeps
+  # its name, its label, and its place in the tab order, and only the drop
+  # target is visible.
+  test "the minimal presentation hides the input visually and keeps it operable" do
+    node = render_dropzone(id: "avatar", name: "avatar[file]", presentation: :minimal, direct_upload: false)
+    input = node.at_css("input[type='file']")
+
+    assert_equal "minimal", node["data-presentation"]
+    assert_equal "avatar-input", input["id"]
+    assert_equal "avatar[file]", input["name"]
+    assert_nil input["hidden"]
+    assert_nil input["tabindex"]
+    assert_equal "avatar-input", node.at_css("label[data-slot='dropzone-message']")["for"]
+
+    assert_equal "input", render_dropzone["data-presentation"]
+  end
+
   test "ships owner-scoped static CSS" do
     source = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/dropzone.css").read
     css = NitroKit::CssBundle.compile
+    minimal_input = ':where( [data-nk="dropzone"][data-presentation="minimal"] > [data-slot="dropzone-input"] )'
 
     assert_includes css, "Source: src/stylesheets/nitro_kit/components/dropzone.css"
     assert_includes source, ':where([data-nk="dropzone"])'
+    assert_includes source.gsub(/\s+/, " "), minimal_input
+    assert_match(/#{Regexp.escape(minimal_input)} \{ position: absolute;/, css.gsub(/\s+/, " "))
     assert_includes source, '[data-slot="dropzone-input"]:focus-visible'
     refute_match(/(?:\:where\(\s*|,\s*)\[data-slot=/m, source)
     refute_includes source, "transition: all"

@@ -42,3 +42,12 @@
     margin-block-start: calc(var(--nk-space) * 2);
   }
 }
+
+@layer nitro-kit.variant {
+  /* The dashed default reads as a drop target. The borderless variant drops
+     that frame for regions a Card, DataSection, or table already encloses. */
+  :where([data-nk="empty-state"][data-variant="borderless"]) {
+    background: none;
+    border-color: transparent;
+  }
+}

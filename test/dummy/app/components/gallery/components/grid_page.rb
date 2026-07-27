@@ -67,7 +67,9 @@ module Gallery
           slug: "grid-scalar-columns",
           description: "A scalar keeps one column count at every viewport; the closed range is one through twelve."
         ) do
-          example("Representative counts", slug: "grid-column-counts", layout: :matrix, mode: :full_width, scroll: true) do
+          # Six counts side by side leaves the wider grids a few characters
+          # each, so every count takes its own row.
+          example("Representative counts", slug: "grid-column-counts", layout: :stack, mode: :full_width, scroll: true) do
             [ 1, 2, 3, 4, 6, 12 ].each do |cols|
               sample("#{cols} #{'column'.pluralize(cols)}", slug: "cols-#{cols}") do
                 render NitroKit::Grid.new(cols:, gap: 1, id: "gallery-grid-cols-#{cols}") do
@@ -89,7 +91,7 @@ module Gallery
           slug: "grid-combinations",
           description: "Columns and spacing can change at different breakpoints without exposing arbitrary CSS values."
         ) do
-          example("Two useful collection shapes", slug: "grid-collection-shapes", layout: :matrix, mode: :full_width) do
+          example("Two useful collection shapes", slug: "grid-collection-shapes", layout: :stack, mode: :full_width) do
             sample("Catalog", slug: "catalog") do
               render NitroKit::Grid.new(
                 cols: "1 md:2 xl:4",
@@ -127,7 +129,7 @@ module Gallery
           slug: "grid-pressure",
           description: "Empty, partial, dense, and uneven collections retain the declared responsive contract."
         ) do
-          example("Empty, one, and many", slug: "grid-cardinality", layout: :matrix, mode: :full_width) do
+          example("Empty, one, and many", slug: "grid-cardinality", layout: :stack, mode: :full_width) do
             sample("Empty", slug: "empty") do
               render NitroKit::Grid.new(cols: "1 md:3", gap: 4, id: "gallery-grid-empty")
             end

@@ -54,6 +54,23 @@ class EmptyStateTest < ActiveSupport::TestCase
     end
   end
 
+  test "renders every variant and validates the closed vocabulary" do
+    assert_equal %i[default borderless], NitroKit::EmptyState::VARIANTS
+    assert_equal :default, NitroKit::EmptyState.new(title: "Empty").variant
+
+    NitroKit::EmptyState::VARIANTS.each do |variant|
+      node = render_node(NitroKit::EmptyState.new(title: "Empty", variant:))
+
+      assert_equal variant.to_s, node["data-variant"]
+    end
+
+    [ :ghost, "borderless", nil, 1 ].each do |variant|
+      error = assert_raises(ArgumentError) { NitroKit::EmptyState.new(title: "Empty", variant:) }
+
+      assert_match(/variant/, error.message)
+    end
+  end
+
   test "accepts deferred text and rich Phlex content" do
     node = Nokogiri::HTML.fragment(DeferredContentProbe.new.call).first_element_child
 

@@ -190,18 +190,20 @@ module Gallery
                     builder: NitroKit::FormBuilder,
                     id: "gallery-sidebar-application-import-form"
                   ) do |form|
-                    form.dropzone(
-                      :files,
-                      id: "gallery-sidebar-application-dropzone",
-                      label: "Add project files",
-                      description: "Up to three CSV, JSON, or text files.",
-                      direct_upload: false,
-                      multiple: true,
-                      accept: ".csv,.json,text/plain",
-                      max_files: 3,
-                      max_bytes: 2 * 1024 * 1024
-                    )
-                    form.submit("Import files", id: "gallery-sidebar-application-import-submit")
+                    form.group do
+                      form.dropzone(
+                        :files,
+                        id: "gallery-sidebar-application-dropzone",
+                        label: "Add project files",
+                        description: "Up to three CSV, JSON, or text files.",
+                        direct_upload: false,
+                        multiple: true,
+                        accept: ".csv,.json,text/plain",
+                        max_files: 3,
+                        max_bytes: 2 * 1024 * 1024
+                      )
+                      form.submit("Import files", id: "gallery-sidebar-application-import-submit")
+                    end
                   end
                 end
               end

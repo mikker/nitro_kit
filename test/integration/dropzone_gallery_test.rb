@@ -8,8 +8,8 @@ class DropzoneGalleryTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "[data-gallery-page='dropzone']"
-    assert_select "[data-gallery='example']", count: 4
-    assert_select "[data-gallery='code-source']", count: 4
+    assert_select "[data-gallery='example']", count: 5
+    assert_select "[data-gallery='code-source']", count: 5
     assert_select "[data-gallery='code-source']", text: /form\.dropzone/
 
     assert_select "#gallery-dropzone-direct-form[method='post'][enctype='multipart/form-data']" do
@@ -34,6 +34,11 @@ class DropzoneGalleryTest < ActionDispatch::IntegrationTest
       assert_select "#gallery-dropzone-shared-secondary input[type='file'][name='upload[secondary_file]']"
       assert_select "#gallery-dropzone-shared-submit[type='submit']:not([disabled])"
       assert_select "#gallery-dropzone-shared-disabled-submit[type='submit'][disabled]"
+    end
+
+    assert_select "#gallery-dropzone-minimal[data-presentation='minimal']" do
+      assert_select "input[type='file'][name='avatar[file]']:not([hidden])"
+      assert_select "label[data-slot='dropzone-message'][for='gallery-dropzone-minimal-input']"
     end
 
     assert_select "#gallery-dropzone-required-input[required][accept='application/pdf']"

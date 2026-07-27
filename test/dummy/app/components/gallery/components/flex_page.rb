@@ -125,7 +125,9 @@ module Gallery
             end
           end
 
-          example("Every alignment", slug: "flex-every-alignment", layout: :matrix, mode: :full_width) do
+          # Cross-axis alignment only reads when a sample owns a full row; a
+          # matrix squeezes the two cards until the difference disappears.
+          example("Every alignment", slug: "flex-every-alignment", layout: :stack, mode: :full_width) do
             %w[start center end stretch baseline].each do |alignment|
               sample(alignment.humanize, slug: alignment) do
                 render NitroKit::Flex.new(
@@ -171,7 +173,7 @@ module Gallery
             end
           end
 
-          example("Every wrap mode", slug: "flex-every-wrap", layout: :matrix, mode: :full_width) do
+          example("Every wrap mode", slug: "flex-every-wrap", layout: :stack, mode: :full_width) do
             %w[nowrap wrap wrap-reverse].each do |wrap|
               sample(wrap.humanize, slug: wrap) do
                 render NitroKit::Container.new(size: :sm) do

@@ -51,6 +51,26 @@
     border-inline-end: var(--nk-border-width) solid var(--nk-color-border);
   }
 
+  /* The minimal presentation keeps the native input operable and in the
+     accessibility tree while the drop target is the only visible affordance.
+     The label already points at the input, so clicking anywhere in the message
+     still opens the file picker. */
+  :where([data-nk="dropzone"][data-presentation="minimal"]) {
+    position: relative;
+  }
+
+  :where(
+    [data-nk="dropzone"][data-presentation="minimal"]
+      > [data-slot="dropzone-input"]
+  ) {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    white-space: nowrap;
+    clip-path: inset(50%);
+  }
+
   :where([data-nk="dropzone"] > [data-slot="dropzone-preview-list"]) {
     display: grid;
     gap: calc(var(--nk-space) * 2);
@@ -130,6 +150,17 @@
   :where(
     [data-nk="dropzone"] > [data-slot="dropzone-input"]:focus-visible,
     [data-nk="dropzone"] [data-slot="dropzone-remove-control"]:focus-visible
+  ) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: var(--nk-focus-offset);
+  }
+
+  /* The clipped input cannot carry a visible ring, so the drop target it
+     labels wears the focus treatment on its behalf. */
+  :where(
+    [data-nk="dropzone"][data-presentation="minimal"]:has(
+        > [data-slot="dropzone-input"]:focus-visible
+      )
   ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);

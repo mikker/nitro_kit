@@ -5,13 +5,22 @@
     vertical-align: middle;
   }
 
+  /* Stacked items overlap the ring of the item behind them, so a translucent
+     fill would let that ring show through. Each item paints its own fill as a
+     background image over an opaque surface underlay. */
   :where(
     [data-nk="avatar-stack"] > [data-slot="avatar-stack-avatar"],
     [data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]
   ) {
+    --_nk-avatar-stack-fill: var(--nk-color-muted);
+
     flex: none;
     margin-inline-start: calc(var(--nk-space) * -3);
     background-color: var(--nk-color-surface);
+    background-image: linear-gradient(
+      var(--_nk-avatar-stack-fill),
+      var(--_nk-avatar-stack-fill)
+    );
     box-shadow: 0 0 0 calc(var(--nk-border-width) * 2) var(--nk-color-surface);
   }
 
@@ -23,12 +32,13 @@
   }
 
   :where([data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]) {
+    --_nk-avatar-stack-fill: var(--nk-color-elevated);
+
     display: inline-grid;
     place-items: center;
     font-weight: var(--nk-font-weight-semibold);
     line-height: 1;
     color: var(--nk-color-muted-foreground);
-    background-color: var(--nk-color-elevated);
     border-radius: var(--nk-radius-full);
   }
 

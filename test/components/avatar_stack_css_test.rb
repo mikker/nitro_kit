@@ -1,0 +1,49 @@
+require "test_helper"
+
+class AvatarStackCssTest < ActiveSupport::TestCase
+  test "stacked items paint their fill over an opaque surface underlay" do
+    rule = <<~CSS.strip
+      :where(
+          [data-nk="avatar-stack"] > [data-slot="avatar-stack-avatar"],
+          [data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]
+        ) {
+          --_nk-avatar-stack-fill: var(--nk-color-muted);
+
+          flex: none;
+          margin-inline-start: calc(var(--nk-space) * -3);
+          background-color: var(--nk-color-surface);
+          background-image: linear-gradient(
+            var(--_nk-avatar-stack-fill),
+            var(--_nk-avatar-stack-fill)
+          );
+    CSS
+
+    assert_includes source_css, rule
+    assert_includes bundle_css, rule
+  end
+
+  test "the overflow indicator declares a fill instead of its own background" do
+    rule = ':where([data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"])'
+
+    assert_match(
+      /#{Regexp.escape(rule)}\s*\{[^}]*--_nk-avatar-stack-fill: var\(--nk-color-elevated\);/,
+      bundle_css
+    )
+    refute_match(/#{Regexp.escape(rule)}\s*\{[^}]*background-color:/, bundle_css)
+    refute_match(/#{Regexp.escape(rule)}\s*\{[^}]*background-color:/, source_css)
+  end
+
+  private
+
+  def source_css
+    @source_css ||= Rails.root.join(
+      "../../src/stylesheets/nitro_kit/components/avatar_stack.css"
+    ).read
+  end
+
+  def bundle_css
+    @bundle_css ||= Rails.root.join(
+      "../../app/assets/stylesheets/nitro_kit.css"
+    ).read
+  end
+end

@@ -8,7 +8,7 @@ module Gallery
       end
 
       def api_note
-        "NitroKit::Dropzone.new(id:, name:, direct_upload:, multiple:, accept:, max_files:, max_bytes:)"
+        "NitroKit::Dropzone.new(id:, name:, presentation:, direct_upload:, multiple:, accept:, max_files:, max_bytes:)"
       end
 
       def component_template
@@ -29,18 +29,20 @@ module Gallery
               id: "gallery-dropzone-direct-form",
               data: { turbo: false }
             ) do |form|
-              form.dropzone(
-                :files,
-                id: "gallery-dropzone-direct",
-                label: "Upload supporting evidence",
-                description: "Up to two text or PNG files, each no larger than 2 MB.",
-                multiple: true,
-                accept: "text/plain,image/png",
-                max_files: 2,
-                max_bytes: 2 * 1024 * 1024,
-                required: true
-              )
-              form.submit("Save direct upload", id: "gallery-dropzone-direct-submit")
+              form.group do
+                form.dropzone(
+                  :files,
+                  id: "gallery-dropzone-direct",
+                  label: "Upload supporting evidence",
+                  description: "Up to two text or PNG files, each no larger than 2 MB.",
+                  multiple: true,
+                  accept: "text/plain,image/png",
+                  max_files: 2,
+                  max_bytes: 2 * 1024 * 1024,
+                  required: true
+                )
+                form.submit("Save direct upload", id: "gallery-dropzone-direct-submit")
+              end
             end
           end
 
@@ -56,18 +58,20 @@ module Gallery
               id: "gallery-dropzone-multipart-form",
               data: { turbo: false }
             ) do |form|
-              form.dropzone(
-                :files,
-                id: "gallery-dropzone-multipart",
-                label: "Add source files",
-                description: "Choose up to three text or PNG files.",
-                direct_upload: false,
-                multiple: true,
-                accept: "text/plain,image/png",
-                max_files: 3,
-                max_bytes: 1024 * 1024
-              )
-              form.submit("Submit files", id: "gallery-dropzone-multipart-submit")
+              form.group do
+                form.dropzone(
+                  :files,
+                  id: "gallery-dropzone-multipart",
+                  label: "Add source files",
+                  description: "Choose up to three text or PNG files.",
+                  direct_upload: false,
+                  multiple: true,
+                  accept: "text/plain,image/png",
+                  max_files: 3,
+                  max_bytes: 1024 * 1024
+                )
+                form.submit("Submit files", id: "gallery-dropzone-multipart-submit")
+              end
             end
           end
 
@@ -105,6 +109,31 @@ module Gallery
                 )
               end
             end
+          end
+        end
+
+        example_section(
+          "Presentation",
+          slug: "dropzone-presentation",
+          description: "The default presentation keeps the native file input visible beside the drop target. " \
+            "The minimal presentation hides it, so the drop target is the only visible affordance."
+        ) do
+          example(
+            "Drop target only",
+            slug: "dropzone-minimal",
+            description: "The input stays operable, focusable, and named: its own label opens the file picker, " \
+              "and the drop target wears the focus ring while the input has focus."
+          ) do
+            render NitroKit::Dropzone.new(
+              id: "gallery-dropzone-minimal",
+              name: "avatar[file]",
+              label: "Replace the workspace avatar",
+              description: "One PNG, no larger than 1 MB.",
+              presentation: :minimal,
+              direct_upload: false,
+              accept: "image/png",
+              max_bytes: 1024 * 1024
+            )
           end
         end
 

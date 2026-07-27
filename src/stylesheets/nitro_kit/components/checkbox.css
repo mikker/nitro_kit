@@ -144,9 +144,15 @@
     opacity: 0.6;
   }
 
+  /* A server-rendered error describes the value that was submitted. Once the
+     user has interacted with the control and it satisfies its own constraints,
+     that error is stale, so the danger border stands down and the native
+     checked treatment takes over again. `:user-valid` never matches before the
+     user touches the control, so an untouched invalid checkbox keeps its
+     border. */
   :where(
     [data-nk="checkbox"]
-      [data-slot="checkbox-control"][aria-invalid="true"]
+      [data-slot="checkbox-control"][aria-invalid="true"]:not(:user-valid)
       + [data-slot="checkbox-indicator"]
   ) {
     border-color: var(--nk-color-danger);

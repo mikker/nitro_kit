@@ -113,9 +113,13 @@
     opacity: 0.6;
   }
 
+  /* The server error describes the submitted value. Once the user picks a
+     value that satisfies the control's own constraints the error is stale, so
+     the danger border stands down. `:user-valid` never matches before the user
+     touches the control, so an untouched invalid radio keeps its border. */
   :where(
     [data-nk="radio-button"]
-      [data-slot="radio-button-control"][aria-invalid="true"]
+      [data-slot="radio-button-control"][aria-invalid="true"]:not(:user-valid)
       + [data-slot="radio-button-indicator"]
   ) {
     border-color: var(--nk-color-danger);

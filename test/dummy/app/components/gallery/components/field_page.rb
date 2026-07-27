@@ -18,8 +18,8 @@ module Gallery
           description: "One field contract composes labels and descriptions around native control types."
         ) do
           example(
-            "Text and choice controls",
-            slug: "field-control-matrix",
+            "Text controls",
+            slug: "field-text-controls",
             mode: :full_width,
             layout: :matrix
           ) do
@@ -46,6 +46,14 @@ module Gallery
                 html: { id: "gallery-field-textarea-wrapper" }
               )
             end
+          end
+
+          example(
+            "Choice controls",
+            slug: "field-choice-controls",
+            mode: :full_width,
+            layout: :matrix
+          ) do
             sample("Select", slug: "select") do
               render NitroKit::Field.new(
                 nil,
@@ -59,6 +67,26 @@ module Gallery
                 html: { id: "gallery-field-select-wrapper" }
               )
             end
+            sample("Radio group", slug: "radio-group") do
+              render NitroKit::Field.new(
+                nil,
+                :role,
+                as: :radio_group,
+                id: "gallery-field-radio-group",
+                value: "member",
+                label: "Default member role",
+                options: [ [ "Administrator", "admin" ], [ "Member", "member" ], [ "Viewer", "viewer" ] ],
+                html: { id: "gallery-field-radio-group-wrapper" }
+              )
+            end
+          end
+
+          example(
+            "Boolean controls",
+            slug: "field-boolean-controls",
+            mode: :full_width,
+            layout: :matrix
+          ) do
             sample("Checkbox", slug: "checkbox") do
               render NitroKit::Field.new(
                 nil,
@@ -81,18 +109,6 @@ module Gallery
                 label: "Deployment alerts",
                 description: "Notify the operations channel after every production deploy.",
                 html: { id: "gallery-field-switch-wrapper" }
-              )
-            end
-            sample("Radio group", slug: "radio-group") do
-              render NitroKit::Field.new(
-                nil,
-                :role,
-                as: :radio_group,
-                id: "gallery-field-radio-group",
-                value: "member",
-                label: "Default member role",
-                options: [ [ "Administrator", "admin" ], [ "Member", "member" ], [ "Viewer", "viewer" ] ],
-                html: { id: "gallery-field-radio-group-wrapper" }
               )
             end
           end
@@ -141,6 +157,70 @@ module Gallery
                 required: true,
                 html: { id: "gallery-field-invalid-wrapper" }
               )
+            end
+          end
+        end
+
+        example_section(
+          "Placement parents",
+          slug: "field-placement-parents",
+          description: "A Field owns its label, description, error, and one control, and nothing outside " \
+            "itself. Everything between fields belongs to a parent. FieldGroup — `form.group` on the " \
+            "builder — is the default vertical rhythm owner and is required as soon as a field has a " \
+            "stacked sibling, including the submit button; two bare siblings stack flush. Fieldset is " \
+            "optional and adds native grouping: reach for it when a set of fields needs one shared " \
+            "accessible name, and take the legend and description it brings with it. FormSection is also " \
+            "optional and is the page-level region above the form: a titled header, an optional status " \
+            "Alert, and exactly one form. Flex and Grid own placement when an arrangement is deliberately " \
+            "inline or multi-column."
+        ) do
+          example(
+            "Section, fieldset, and group together",
+            slug: "field-placement-composition",
+            mode: :full_width,
+            description: "The section titles the region, the fieldset names the related address fields, " \
+              "and each FieldGroup owns the gap between the controls it contains."
+          ) do
+            render NitroKit::FormSection.new(
+              title: "Billing contact",
+              description: "Invoices and receipts are sent to this contact.",
+              id: "gallery-field-placement-section"
+            ) do |section|
+              section.form do
+                billing = Gallery::FormExamples.billing_contact
+
+                form_with(
+                  model: billing,
+                  scope: :billing_contact,
+                  url: "#billing-contact",
+                  builder: NitroKit::FormBuilder,
+                  id: "gallery-field-placement-form"
+                ) do |form|
+                  form.group do
+                    form.field(:company_name, id: "gallery-field-placement-company", label: "Company name", required: true)
+                    form.field(:billing_email, as: :email, id: "gallery-field-placement-email", label: "Billing email")
+                  end
+
+                  render NitroKit::Fieldset.new(
+                    legend: "Tax registration",
+                    description: "Required for workspaces billed inside the EU.",
+                    html: { id: "gallery-field-placement-fieldset" }
+                  ) do
+                    form.group do
+                      form.field(
+                        :country,
+                        as: :select,
+                        id: "gallery-field-placement-country",
+                        label: "Country",
+                        options: [ [ "Denmark", "DK" ], [ "Germany", "DE" ], [ "United States", "US" ] ]
+                      )
+                      form.field(:tax_id, id: "gallery-field-placement-tax-id", label: "Tax ID")
+                    end
+                  end
+
+                  form.submit("Save billing contact", id: "gallery-field-placement-save")
+                end
+              end
             end
           end
         end

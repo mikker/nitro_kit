@@ -165,6 +165,26 @@ class GalleryInteractiveTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "toast page documents the whole controller to screen path" do
+    get_component("toast")
+
+    assert_select "#section-toast-controller-to-screen-description", text: /application layout/
+    assert_select "#example-toast-flash-lifecycle-description", text: /see_other/
+    assert_select "#example-toast-flash-lifecycle-description", text: /unprocessable_entity/
+    assert_select "#example-toast-region-announcement-description", text: /role=alert/
+    assert_select "#example-toast-flash-lifecycle-code [data-gallery='code-source']" do |sources|
+      source = sources.first.text
+
+      assert_match(/Toast::FlashMessages/, source)
+      assert_match(/status: :see_other/, source)
+      assert_match(/flash\.now\[:alert\]/, source)
+      assert_match(/status: :unprocessable_entity/, source)
+      assert_match(/turbo_stream\.append/, source)
+    end
+    assert_select "#gallery-toast-announcement [data-nk='toast-item'][data-variant='error'][role='alert']"
+    assert_select "#gallery-toast-announcement [data-nk='toast-item'][data-variant='success'][role='status']"
+  end
+
   test "toast page composes a settings result and exposes pause and dismissal actions" do
     get_component("toast")
 

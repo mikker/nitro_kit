@@ -2,7 +2,7 @@
 
 module NitroKit
   class SettingsLayout < Component
-    Item = ::Data.define(:text, :href, :current)
+    Item = ::Data.define(:text, :href, :icon, :current)
 
     def initialize(id: nil, html: {}, aria: {}, data: {}, desperately_need_a_class: nil)
       @label = nil
@@ -42,10 +42,11 @@ module NitroKit
       nil
     end
 
-    def item(text, href:, current: false)
+    def item(text, href:, icon: nil, current: false)
       ensure_phase!(:navigation, :item)
       text = validate_text!(:text, text)
       href = validate_text!(:href, href)
+      icon = item_icon(icon)
       current = validate_boolean!(:current, current)
 
       if current && @current_item
@@ -53,7 +54,7 @@ module NitroKit
       end
 
       @current_item = true if current
-      @items << Item.new(text:, href:, current:)
+      @items << Item.new(text:, href:, icon:, current:)
       nil
     end
 
@@ -108,7 +109,10 @@ module NitroKit
               data: { state: item.current ? "current" : "default" }
             }
           )
-        ) { plain(item.text) }
+        ) do
+          render_in_slot(item.icon, :item_icon) if item.icon
+          plain(item.text)
+        end
       end
     end
 
@@ -127,6 +131,16 @@ module NitroKit
       return if output.empty?
 
       raise ArgumentError, "SettingsLayout #{location} accepts declarations, not rendered content"
+    end
+
+    def item_icon(value)
+      return if value.nil?
+
+      unless (value.is_a?(String) || value.is_a?(Symbol)) && !value.to_s.strip.empty?
+        raise ArgumentError, "SettingsLayout icon must be a non-blank String or Symbol"
+      end
+
+      Icon.new(value, size: :sm)
     end
 
     def validate_text!(name, value)

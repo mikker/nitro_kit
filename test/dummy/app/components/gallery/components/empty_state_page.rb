@@ -5,6 +5,56 @@ module Gallery
 
       def component_template
         example_section(
+          "Presentation",
+          slug: "empty-state-presentation",
+          description: "variant: is a closed vocabulary of default and borderless; any other value raises ArgumentError. The dashed default frames a standalone region and deliberately resembles a drop target, so prefer borderless whenever a Card, DataSection, table, or dialog already draws the frame — and never place the dashed default next to a real Dropzone."
+        ) do
+          example("Variant matrix", slug: "empty-state-variant-matrix", layout: :matrix) do
+            sample("Default", slug: "default") do
+              render NitroKit::EmptyState.new(
+                title: "No saved views",
+                description: "The dashed frame marks an otherwise unframed region of the page.",
+                id: "gallery-empty-state-variant-default"
+              ) do |empty|
+                empty.icon NitroKit::Icon.new(:layout_grid)
+              end
+            end
+            sample("Borderless", slug: "borderless") do
+              render NitroKit::EmptyState.new(
+                title: "No saved views",
+                description: "Inside a frame of its own, the empty state drops its border and fill.",
+                variant: :borderless,
+                id: "gallery-empty-state-variant-borderless"
+              ) do |empty|
+                empty.icon NitroKit::Icon.new(:layout_grid)
+              end
+            end
+          end
+
+          example(
+            "Borderless inside a card",
+            slug: "empty-state-borderless-in-card",
+            description: "The card owns the surface and border, so a dashed empty state inside it would read as a second, droppable surface."
+          ) do
+            render NitroKit::Card.new(id: "gallery-empty-state-card") do |card|
+              card.title("Recent deployments", level: 3)
+              card.body do
+                render NitroKit::EmptyState.new(
+                  title: "No deployments this week",
+                  description: "Promote a release to see it listed here.",
+                  variant: :borderless,
+                  level: 4,
+                  id: "gallery-empty-state-in-card"
+                ) do |empty|
+                  empty.icon NitroKit::Icon.new(:rocket)
+                  empty.action NitroKit::Button.new("Promote a release", href: "#promote", variant: :primary)
+                end
+              end
+            end
+          end
+        end
+
+        example_section(
           "Optional content and actions",
           slug: "empty-state-pressure",
           description: "Heading levels, optional icon and description, and zero through two typed actions."
@@ -74,7 +124,7 @@ module Gallery
       end
 
       def api_note
-        "Supply the required title through title: or title { ... }; description supports the same two forms. level: accepts 2..6. icon accepts one Icon and action accepts at most two distinct Buttons."
+        "Supply the required title through title: or title { ... }; description supports the same two forms. variant: accepts :default or :borderless and level: accepts 2..6. icon accepts one Icon and action accepts at most two distinct Buttons."
       end
     end
   end

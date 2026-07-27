@@ -52,35 +52,37 @@ module Gallery
           end
 
           example(
-            "Minimal and grouped",
-            slug: "app-navigation-cardinality",
-            layout: :matrix,
+            "One destination",
+            slug: "app-navigation-minimal",
             mode: :full_width,
-            description: "The smallest valid body and a sectioned body share the same public grammar."
+            description: "The smallest valid body is a single destination."
           ) do
-            sample("One destination", slug: "app-navigation-minimal") do
-              render_navigation(
-                id: "gallery-app-navigation-minimal",
-                label: "Minimal",
-                destinations: [ [ "Home", "#minimal-home", :house ] ]
-              )
-            end
+            render_navigation(
+              id: "gallery-app-navigation-minimal",
+              label: "Minimal",
+              destinations: [ [ "Home", "#minimal-home", :house ] ]
+            )
+          end
 
-            sample("Two labelled groups", slug: "app-navigation-groups") do
-              render NitroKit::AppNavigation.new(
-                id: "gallery-app-navigation-groups",
-                label: "Grouped destinations",
-                data: { gallery_navigation_preview: "groups" }
-              ) do |navigation|
-                navigation.body do
-                  navigation.section(label: "Plan") do
-                    navigation.item("Roadmap", href: "#roadmap", icon: :map)
-                    navigation.item("Milestones", href: "#milestones", icon: :flag, current: true)
-                  end
-                  navigation.section(label: "Observe") do
-                    navigation.item("Activity", href: "#activity", icon: :activity)
-                    navigation.item("Reports", href: "#reports", icon: :chart_no_axes_column)
-                  end
+          example(
+            "Two labelled groups",
+            slug: "app-navigation-groups",
+            mode: :full_width,
+            description: "A sectioned body shares the same public grammar as the smallest one."
+          ) do
+            render NitroKit::AppNavigation.new(
+              id: "gallery-app-navigation-groups",
+              label: "Grouped destinations",
+              data: { gallery_navigation_preview: "groups" }
+            ) do |navigation|
+              navigation.body do
+                navigation.section(label: "Plan") do
+                  navigation.item("Roadmap", href: "#roadmap", icon: :map)
+                  navigation.item("Milestones", href: "#milestones", icon: :flag, current: true)
+                end
+                navigation.section(label: "Observe") do
+                  navigation.item("Activity", href: "#activity", icon: :activity)
+                  navigation.item("Reports", href: "#reports", icon: :chart_no_axes_column)
                 end
               end
             end
@@ -96,7 +98,7 @@ module Gallery
             "Long labels and dense badges",
             slug: "app-navigation-long-labels",
             mode: :full_width,
-            description: "Item labels truncate within the navigation boundary while numeric and text badges remain aligned."
+            description: "Item labels truncate within the navigation boundary, with or without an icon, while numeric and text badges remain aligned."
           ) do
             render NitroKit::AppNavigation.new(
               id: "gallery-app-navigation-pressure",
@@ -124,7 +126,19 @@ module Gallery
                     icon: :calendar_range
                   )
                 end
+                navigation.section(label: "Unaccompanied labels") do
+                  navigation.item(
+                    "Regional data residency and retention commitments",
+                    href: "#residency",
+                    badge: 64
+                  )
+                  navigation.item(
+                    "Deprecated provisioning workflows awaiting removal",
+                    href: "#deprecated"
+                  )
+                end
                 navigation.spacer
+                navigation.divider
                 navigation.item("Workspace settings", href: "#workspace-settings", icon: :settings)
               end
               navigation.footer do

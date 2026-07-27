@@ -63,6 +63,24 @@ module Gallery
             end
           end
 
+          example(
+            "Actions beside the text block",
+            slug: "page-header-actions-alignment",
+            mode: :full_width,
+            description: "Eyebrow, title, and description keep the leading column; the action group sits on the trailing edge of the last text row and never shares the title's line."
+          ) do
+            render NitroKit::PageHeader.new(
+              title: "Deployment history",
+              description: "Every release recorded for this environment.",
+              id: "gallery-page-header-actions-alignment"
+            ) do |header|
+              header.actions NitroKit::ButtonGroup.new(label: "Deployment actions") do |actions|
+                actions.button("Compare", href: "#compare")
+                actions.button("Deploy", href: "#deploy", variant: :primary)
+              end
+            end
+          end
+
           example("Nested in a narrow container", slug: "page-header-nested") do
             render NitroKit::Container.new(size: :sm, id: "gallery-page-header-container") do
               render NitroKit::PageHeader.new(
@@ -75,6 +93,37 @@ module Gallery
                 end
               end
             end
+          end
+        end
+
+        example_section(
+          "When to use an eyebrow",
+          slug: "page-header-eyebrow",
+          description: "Leave the eyebrow out unless it carries information the title cannot. A restated section name above every title is noise, so the eyebrow is styled as quiet supporting text rather than a label."
+        ) do
+          example(
+            "Prefer the title alone",
+            slug: "page-header-eyebrow-omitted",
+            description: "The navigation already says where the reader is, so an \"Administration\" eyebrow would only repeat it."
+          ) do
+            render NitroKit::PageHeader.new(
+              title: "Workspace members",
+              description: "Manage roles, invitations, and active access from one place.",
+              id: "gallery-page-header-eyebrow-omitted"
+            )
+          end
+
+          example(
+            "Earn the eyebrow",
+            slug: "page-header-eyebrow-earned",
+            description: "Here the eyebrow names the parent record the title belongs to, which the title itself never repeats."
+          ) do
+            render NitroKit::PageHeader.new(
+              eyebrow: "Analytical Engines",
+              title: "Invoice 2026-114",
+              description: "Issued 4 July 2026 and paid in full.",
+              id: "gallery-page-header-eyebrow-earned"
+            )
           end
         end
       end

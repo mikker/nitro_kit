@@ -124,6 +124,59 @@ module Gallery
         end
 
         example_section(
+          "Controller to screen",
+          slug: "toast-controller-to-screen",
+          description: "Rails flash is the whole feedback contract. Render NitroKit::Toast::FlashMessages once in the application layout, set ordinary flash in the controller, and never add a client-side notification store for a server outcome."
+        ) do
+          example(
+            "Flash lifecycle",
+            slug: "toast-flash-lifecycle",
+            description: "A successful action redirects with status: :see_other (303) and flash[:success], which Turbo follows so the message renders on the next page. A failed action never redirects: it sets flash.now and re-renders with status: :unprocessable_entity (422), which Turbo renders in place. Severity keys map notice to the default presentation, alert and error to error, and success, warning, and info to their matching variants; an unknown key falls back to the default presentation.",
+            code: Gallery::SourceCode.from_method(method(:flash_lifecycle_recipe))
+          ) do
+            render NitroKit::Toast.new(
+              duration: 600_000,
+              label: "Flash lifecycle result",
+              id: "gallery-toast-lifecycle"
+            ) do |toast|
+              toast.item(
+                title: "Project created",
+                description: "Rendered from flash[:success] after a 303 redirect.",
+                variant: :success
+              )
+              toast.item(
+                title: "Payment method was declined",
+                description: "Rendered from flash.now[:alert] with the 422 re-render of the form.",
+                variant: :error
+              )
+            end
+          end
+
+          example(
+            "Region and announcement",
+            slug: "toast-region-announcement",
+            description: "The region is section[data-nk=toast] with role=region, aria-live=polite, and the label passed as label:. Each notification is li[data-nk=toast-item] with aria-atomic=true and role=status, except the error variant, which uses role=alert so assistive technology interrupts. Every item is data-turbo-temporary so a cached page never replays old feedback, while the region survives and its ol stays addressable as the toast id plus \"-list\" for a Turbo Stream append. duration: is the auto-dismiss timer in milliseconds; it pauses on hover and focus, and dismissible: false keeps a notice on screen until the person dismisses the page."
+          ) do
+            render NitroKit::Toast.new(
+              duration: 600_000,
+              label: "Announcement examples",
+              id: "gallery-toast-announcement"
+            ) do |toast|
+              toast.item(
+                title: "Polite status",
+                description: "role=status waits for a pause in speech.",
+                variant: :success
+              )
+              toast.item(
+                title: "Assertive alert",
+                description: "role=alert interrupts, so it is reserved for the error variant.",
+                variant: :error
+              )
+            end
+          end
+        end
+
+        example_section(
           "Action result composition",
           slug: "toast-action-result",
           description: "A realistic settings result keeps source data, action controls, and notifications explicit."
@@ -159,6 +212,31 @@ module Gallery
               )
             end
           end
+        end
+      end
+
+      # The documented controller-to-screen path, kept as real Ruby so the Code
+      # tab above extracts it. The gallery never calls it: an application owns
+      # the layout, the controller, and the routes it names.
+      def flash_lifecycle_recipe
+        # app/views/layouts/application.rb renders the region once per page, so
+        # every action reaches the same one. Nothing else renders a Toast.
+        render NitroKit::Toast::FlashMessages.new(flash: flash, duration: 5_000)
+
+        # app/controllers/projects_controller.rb#create, when the record saves.
+        # 303 so Turbo follows the redirect after a non-GET request; the flash
+        # survives it and renders on the next page.
+        redirect_to(@project, status: :see_other, flash: { success: "Project created" })
+
+        # The same action, when validation fails. No redirect, so flash.now, and
+        # 422 so Turbo renders the response in place instead of ignoring it.
+        flash.now[:alert] = "Project could not be created"
+        render(UI::Projects::New.new(@project), status: :unprocessable_entity)
+
+        # A Turbo Stream that neither redirects nor re-renders appends to the
+        # region's list, addressable as the toast id plus "-list".
+        turbo_stream.append("nk-toast-list") do
+          render NitroKit::Toast::Item.new(title: "Import finished", variant: :success)
         end
       end
 

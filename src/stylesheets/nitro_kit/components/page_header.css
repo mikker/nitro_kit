@@ -7,11 +7,9 @@
 
   :where([data-nk="page-header"] > [data-slot="page-header-eyebrow"]) {
     color: var(--nk-color-muted-foreground);
-    font-size: var(--nk-text-xs);
-    font-weight: var(--nk-font-weight-semibold);
-    letter-spacing: 0.08em;
+    font-size: var(--nk-text-sm);
+    font-weight: var(--nk-font-weight-normal);
     line-height: var(--nk-leading-tight);
-    text-transform: uppercase;
   }
 
   :where([data-nk="page-header"] > [data-slot="page-header-title"]) {
@@ -41,6 +39,12 @@
       grid-template-columns: minmax(0, 1fr) auto;
     }
 
+    /* Every text slot owns the first column, so the eyebrow, title, and
+       description each keep a row of their own. Sparse auto-placement then
+       lands the actions in the last of those rows. No row span is declared:
+       a span resolves against explicit rows this grid does not have, which is
+       what used to seat the actions beside the eyebrow and push the title down
+       onto a line of its own. */
     :where(
       [data-nk="page-header"]:has(> [data-slot="page-header-actions"])
         > :not([data-slot="page-header-actions"])
@@ -50,7 +54,7 @@
 
     :where([data-nk="page-header"] > [data-slot="page-header-actions"]) {
       grid-column: 2;
-      grid-row: 1 / -1;
+      justify-self: end;
       align-self: end;
       margin-block-start: 0;
     }
