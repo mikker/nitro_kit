@@ -96,6 +96,15 @@ class GalleryLayoutsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-grid-team", text: /International Research, Production, and Reliability Engineering/
   end
 
+  test "badge-only grid examples align badges without changing Grid defaults" do
+    gallery_css = Rails.root.join("app/assets/stylesheets/gallery.css").read
+
+    assert_match(
+      /:where\(\s*#gallery-grid-breakpoints,\s*\[id\^="gallery-grid-cols-"\]\s*\)\s*\{\s*justify-items: start;/,
+      gallery_css
+    )
+  end
+
   test "container page covers every token width and documents omission for full width" do
     get_layout("container")
 

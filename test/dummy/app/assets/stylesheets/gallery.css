@@ -855,6 +855,15 @@
     gap: 0.75rem;
   }
 
+  /* Badge-only grids demonstrate track counts without making Badge look like
+     a full-width component. Grid's stretch default remains unchanged. */
+  :where(
+    #gallery-grid-breakpoints,
+    [id^="gallery-grid-cols-"]
+  ) {
+    justify-items: start;
+  }
+
   /* The canvas is the parent that owns available width: cap previews at the
      canvas so component-owned pressure behavior (scrolling groups,
      truncating labels, wrapping toolbars) engages instead of content
