@@ -58,7 +58,7 @@ Load the shipped stylesheet through the Rails asset pipeline:
 <%= stylesheet_link_tag "nitro_kit", "data-turbo-track": "reload" %>
 ```
 
-The stylesheet is plain CSS. It does not require Tailwind or Preflight. Load application styles containing token overrides after Nitro Kit. Applications that use Tailwind CSS v4 load the optional adapter first, then Nitro Kit, compiled Tailwind, and application styles:
+The stylesheet is plain CSS. It does not require Tailwind or Tailwind Preflight — it ships its own global preflight inside the `nitro-kit.reset` cascade layer, so unlayered application CSS always wins. Load application styles containing token overrides after Nitro Kit. Applications that use Tailwind CSS v4 load the optional adapter first, then Nitro Kit, compiled Tailwind, and application styles:
 
 ```erb
 <%= stylesheet_link_tag "nitro_kit-tailwind-v4", "nitro_kit", "tailwind", "application", "data-turbo-track": "reload" %>

@@ -289,11 +289,16 @@ Customization tools may read, preview, and export documented public tokens. Mode
 
 The optional `nitro_kit-tailwind-v4.css` adapter is a separate asset. It may map Nitro values into Tailwind v4 theme variables, but Tailwind compilation, source detection, and utilities remain application concerns. Do not add Tailwind as a Nitro runtime dependency.
 
-## Scoped baseline
+## Baseline
 
-Nitro CSS cannot rely on Tailwind Preflight. Add a small reset scoped to Nitro roots and owned parts for box sizing, form typography, borders, owned text/list margins, tables, SVGs, placeholders, hidden state, and native-control quirks actually used by Nitro.
+Nitro CSS never relies on Tailwind Preflight. Nitro ships its own global preflight in `src/stylesheets/nitro_kit/reset.css`, entirely inside the `nitro-kit.reset` cascade layer. It normalizes the whole page — box sizing, margins and padding, borders, root typography, headings, form-control typography and appearance, placeholders, tables, replaced elements, and native-control quirks — so arbitrary content inside a Nitro component behaves the same as Nitro's own markup.
 
-Do not reset arbitrary content supplied by the application.
+Because it is layered, unlayered application CSS always wins without needing extra specificity.
+
+Two deliberate exceptions to Preflight parity:
+
+- `min-width: 0` applies only to `[data-nk]` roots and owned `[data-slot]` parts.
+- `list-style: none` applies only to Nitro-owned lists. Prose lists keep real markers; `Typeset` states its own list styles in `nitro-kit.base`.
 
 ## Layout sizing
 

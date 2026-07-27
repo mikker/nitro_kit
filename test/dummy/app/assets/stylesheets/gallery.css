@@ -549,7 +549,10 @@
     min-width: 0;
   }
 
+  /* `--gallery-preview-width` is the emulated viewport width, so the divider
+     border has to sit outside it rather than eat a pixel of the iframe. */
   :where([data-gallery="preview-frame"]) {
+    box-sizing: content-box;
     min-width: 0;
     max-inline-size: 100%;
     inline-size: min(100%, var(--gallery-preview-width, 100%));

@@ -1,26 +1,81 @@
+/* Nitro Kit ships its own full-page preflight. It lives in the
+   `nitro-kit.reset` cascade layer, so unlayered application CSS always wins,
+   and Nitro never depends on Tailwind Preflight. */
 @layer nitro-kit.reset {
-  :where([data-nk], [data-nk] [data-slot]) {
+  /* Pseudo-elements cannot appear inside `:where()`, so they are listed
+     alongside it. They carry no more specificity than a bare element. */
+  :where(*),
+  ::before,
+  ::after,
+  ::backdrop,
+  ::file-selector-button {
     box-sizing: border-box;
-    min-width: 0;
     margin: 0;
     padding: 0;
-    border-width: 0;
-    border-style: solid;
+    border: 0 solid;
     border-color: var(--nk-color-border);
   }
 
-  :where([data-nk], [data-nk] [data-slot])::before,
-  :where([data-nk], [data-nk] [data-slot])::after {
-    box-sizing: inherit;
+  /* Nitro-owned boxes never establish a min-content floor, so long slot
+     content shrinks instead of overflowing its flex or grid parent. */
+  :where([data-nk], [data-nk] [data-slot]) {
+    min-width: 0;
   }
 
-  :where(
-    button[data-nk],
-    input[data-nk],
-    select[data-nk],
-    textarea[data-nk],
-    [data-nk] :is(button, input, select, textarea)[data-slot]
-  ) {
+  :where(html, :host) {
+    font-family: var(--nk-font-sans);
+    line-height: var(--nk-leading-normal);
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :where(body) {
+    line-height: inherit;
+  }
+
+  :where(h1, h2, h3, h4, h5, h6) {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  :where(b, strong) {
+    font-weight: bolder;
+  }
+
+  :where(a) {
+    color: inherit;
+    text-decoration: inherit;
+  }
+
+  :where(code, kbd, samp, pre) {
+    font-family: var(--nk-font-mono);
+    font-feature-settings: normal;
+    font-variation-settings: normal;
+    font-size: 1em;
+  }
+
+  :where(small) {
+    font-size: 80%;
+  }
+
+  :where(sub, sup) {
+    position: relative;
+    font-size: 75%;
+    line-height: 0;
+    vertical-align: baseline;
+  }
+
+  :where(sub) {
+    bottom: -0.25em;
+  }
+
+  :where(sup) {
+    top: -0.5em;
+  }
+
+  :where(button, input, select, optgroup, textarea),
+  ::file-selector-button {
     font: inherit;
     font-feature-settings: inherit;
     font-variation-settings: inherit;
@@ -31,35 +86,62 @@
     border-radius: 0;
   }
 
-  :where([data-nk]) {
-    font-family: var(--nk-font-sans);
-    line-height: var(--nk-leading-normal);
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  :where(
-    input[data-nk],
-    textarea[data-nk],
-    [data-nk] :is(input, textarea)[data-slot]
-  )::placeholder {
+  :where(input, textarea)::placeholder {
     color: var(--nk-color-muted-foreground);
     opacity: 1;
   }
 
-  :where(
-    button[data-nk],
-    input[data-nk],
-    [data-nk] :is(button, input)[data-slot]
-  )::file-selector-button {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font: inherit;
-    color: inherit;
-    background-color: transparent;
-    border: 0 solid transparent;
+  :where(button, input:is([type="button"], [type="reset"], [type="submit"])),
+  ::file-selector-button {
+    appearance: button;
   }
 
+  :where(
+    button,
+    input:is([type="button"], [type="reset"], [type="submit"]),
+    label[for]
+  ),
+  ::file-selector-button {
+    cursor: pointer;
+  }
+
+  :where(:disabled),
+  ::file-selector-button:disabled {
+    cursor: default;
+  }
+
+  :where(textarea) {
+    resize: vertical;
+  }
+
+  :where(input)::-webkit-search-decoration {
+    appearance: none;
+  }
+
+  :where(input)::-webkit-date-and-time-value {
+    min-height: 1lh;
+    text-align: inherit;
+  }
+
+  :where(input)::-webkit-datetime-edit {
+    display: inline-flex;
+  }
+
+  :where(input)::-webkit-datetime-edit-fields-wrapper {
+    padding: 0;
+  }
+
+  :where(input)::-webkit-inner-spin-button,
+  :where(input)::-webkit-outer-spin-button {
+    height: auto;
+  }
+
+  :where(input):-moz-ui-invalid {
+    box-shadow: none;
+  }
+
+  /* Only Nitro-owned lists lose their markers. Prose lists keep real markers,
+     and `typeset` restores its own in the `nitro-kit.base` layer. */
   :where(
     ol[data-nk],
     ul[data-nk],
@@ -69,59 +151,41 @@
     list-style: none;
   }
 
-  :where(table[data-nk], [data-nk] table[data-slot]) {
+  :where(table) {
     text-indent: 0;
     border-color: inherit;
     border-collapse: collapse;
   }
 
-  :where(
-    img[data-nk],
-    svg[data-nk],
-    video[data-nk],
-    [data-nk] :is(img, svg, video)[data-slot]
-  ) {
+  :where(img, svg, video, canvas, audio, iframe, embed, object) {
     display: block;
     vertical-align: middle;
   }
 
-  :where(img[data-nk], video[data-nk], [data-nk] :is(img, video)[data-slot]) {
+  :where(img, video) {
     max-width: 100%;
     height: auto;
   }
 
-  :where(hr[data-nk], [data-nk] hr[data-slot]) {
+  :where(hr) {
     height: 0;
     color: inherit;
     border-top-width: var(--nk-border-width);
   }
 
-  :where(textarea[data-nk], [data-nk] textarea[data-slot]) {
-    resize: vertical;
+  :where(abbr:where([title])) {
+    text-decoration: underline dotted;
   }
 
-  :where(
-    input[data-nk],
-    [data-nk] input[data-slot]
-  )::-webkit-search-decoration {
-    appearance: none;
+  :where(summary) {
+    display: list-item;
   }
 
-  :where(
-    input[data-nk],
-    [data-nk] input[data-slot]
-  )::-webkit-date-and-time-value {
-    min-height: 1lh;
-    text-align: inherit;
+  :where(progress) {
+    vertical-align: baseline;
   }
 
-  :where(input[data-nk], [data-nk] input[data-slot]):-moz-ui-invalid {
-    box-shadow: none;
-  }
-
-  :where([data-nk][hidden], [data-nk] [data-slot][hidden]):not(
-    [hidden="until-found"]
-  ) {
+  :where([hidden]):not([hidden="until-found"]) {
     display: none !important;
   }
 }

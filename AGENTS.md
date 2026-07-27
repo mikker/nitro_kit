@@ -62,7 +62,8 @@ Rails helpers remain welcome where Rails supplies real semantics: forms, routes,
 - Target `data-nk`, qualified `data-slot`, variant, size, ARIA, and state attributes inside `:where()`.
 - Scope slot selectors to their owner, using direct relationships where possible.
 - Use documented `--nk-*` variables for themeable decisions and private `--_nk-*` variables for component mechanics.
-- Do not rely on Tailwind Preflight or consumer Tailwind configuration.
+- Nitro ships its own global, Preflight-style reset in `reset.css`, inside the `nitro-kit.reset` cascade layer. Because it is layered, unlayered application CSS always wins. Do not rely on Tailwind Preflight or consumer Tailwind configuration.
+- The reset stays global except for `min-width: 0` and list-marker removal, which remain scoped to Nitro-owned elements so prose lists keep real markers.
 - Keep the optional Tailwind v4 adapter separate from the main asset.
 - Never use `transition: all`. Respect reduced motion and keep interactive transitions interruptible.
 

@@ -315,7 +315,7 @@ This registers Nitro's `controllers/nk/*` modules together with application cont
 
 ## Optional Tailwind CSS v4 adapter
 
-Nitro Kit does not require Tailwind, Tailwind configuration, or Preflight. The optional `nitro_kit-tailwind-v4.css` asset only establishes compatible cascade-layer order and maps Nitro tokens to common Tailwind v4 theme variables, including background, foreground, primary, destructive, radii, shadows, fonts, spacing, and transition defaults.
+Nitro Kit does not require Tailwind, Tailwind configuration, or Tailwind Preflight — it ships its own global preflight in the `nitro-kit.reset` cascade layer, which unlayered application CSS always overrides. The optional `nitro_kit-tailwind-v4.css` asset only establishes compatible cascade-layer order and maps Nitro tokens to common Tailwind v4 theme variables, including background, foreground, primary, destructive, radii, shadows, fonts, spacing, and transition defaults.
 
 Tailwind remains compiled and configured by the application. An application can add further aliases in its Tailwind CSS source with the v4 CSS-first API:
 

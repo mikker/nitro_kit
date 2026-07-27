@@ -335,7 +335,7 @@ nitro-kit.state
 nitro-kit.compound
 ```
 
-Selectors use `:where()` for zero authored specificity. The reset is scoped to Nitro roots and owned parts and does not reset arbitrary application content.
+Selectors use `:where()` for zero authored specificity. Nitro ships its own global, Preflight-style reset in the `nitro-kit.reset` layer and never depends on Tailwind Preflight. It normalizes the whole page, so arbitrary content inside a component gets the same baseline as Nitro's own markup, and because it is layered, unlayered application CSS always wins. `min-width: 0` and list-marker removal stay scoped to Nitro-owned elements so prose lists keep real markers.
 
 Public `--nk-*` variables cover semantic colors, the component-specific raised default-button treatment, typography, spacing, radii, border and focus geometry, shadows, motion, control heights, and content widths. Private `--_nk-*` variables coordinate component mechanics and are not theme API.
 
