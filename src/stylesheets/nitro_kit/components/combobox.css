@@ -79,7 +79,12 @@
     display: block;
   }
 
-  :where([data-nk="combobox"] [data-slot="combobox-option-description"]) {
+  :where(
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-option"]
+      > [data-slot="combobox-option-description"]
+  ) {
     display: block;
     margin-block-start: calc(var(--nk-space) * 0.5);
     color: var(--nk-color-muted-foreground);
@@ -97,6 +102,18 @@
       )
   ) {
     background: var(--nk-color-muted);
+  }
+
+  :where(
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-option"]:is(
+        [data-active="true"],
+        [aria-selected="true"]
+      )
+      > [data-slot="combobox-option-description"]
+  ) {
+    color: var(--nk-color-foreground);
   }
 
   :where(

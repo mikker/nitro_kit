@@ -240,7 +240,7 @@ module NitroKit
     end
 
     def render_divider
-      li(**slot_attributes(:divider, attributes: { role: "separator" }))
+      li(**slot_attributes(:divider, aria: { hidden: true }))
     end
 
     def render_spacer

@@ -36,14 +36,14 @@ class FormerProComponentsTest < ApplicationSystemTestCase
     visit gallery_component_path("progressive-image")
     assert_selector "#gallery-progressive-image-loaded[data-state='loaded']"
 
-    within("[data-gallery='sidebar']") { click_link("Details table") }
+    within("#gallery-navigation") { click_link("Details table") }
 
     assert_current_path gallery_component_path("details-table")
     assert_selector "#gallery-details-table-profile[data-nk='details-table']", count: 1
     assert_selector "#gallery-details-table-profile [data-slot='table-row']", count: 7
     assert_selector "#gallery-details-table-values [data-slot='details-table-empty']", text: "Not provided"
 
-    within("[data-gallery='sidebar']") { click_link("Progressive image") }
+    within("#gallery-navigation") { click_link("Progressive image") }
 
     assert_current_path gallery_component_path("progressive-image")
     assert_selector "#gallery-progressive-image-loaded[data-state='loaded']", count: 1

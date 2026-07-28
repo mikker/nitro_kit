@@ -51,7 +51,6 @@ class ApplicationCombinationsTest < ApplicationSystemTestCase
         sidebar
       )
       assert_selector "#{trigger}[aria-expanded='false'][aria-label='Open navigation']"
-      assert_gallery_navigation_bounded
       assert_mobile_containment(root)
       assert_document_fits_viewport
 
@@ -219,25 +218,5 @@ class ApplicationCombinationsTest < ApplicationSystemTestCase
     JAVASCRIPT
 
     assert_operator dimensions.fetch("documentWidth"), :<=, dimensions.fetch("viewportWidth")
-  end
-
-  def assert_gallery_navigation_bounded
-    geometry = evaluate_script(<<~JAVASCRIPT)
-      (() => {
-        const navigation = document.querySelector('[data-gallery="navigation"]');
-        const heading = document.querySelector('[data-gallery="composition-header"] h1');
-
-        return {
-          navigationHeight: navigation.clientHeight,
-          navigationScrollHeight: navigation.scrollHeight,
-          headingTop: heading.getBoundingClientRect().top,
-          viewportHeight: window.innerHeight,
-        };
-      })()
-    JAVASCRIPT
-
-    assert_operator geometry.fetch("navigationHeight"), :<=, geometry.fetch("viewportHeight") * 0.5
-    assert_operator geometry.fetch("navigationScrollHeight"), :>, geometry.fetch("navigationHeight")
-    assert_operator geometry.fetch("headingTop"), :<, geometry.fetch("viewportHeight")
   end
 end

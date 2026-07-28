@@ -38,7 +38,7 @@ class GalleryResponsivePreviewTest < ActionDispatch::IntegrationTest
     assert_select "link[rel='stylesheet'][href*='nitro_kit']"
     assert_select "link[rel='stylesheet'][href*='gallery']"
     assert_select "script[type='importmap']"
-    assert_select "[data-gallery='sidebar']", count: 0
+    assert_select "#gallery-shell", count: 0
     assert_select "main[data-gallery='example'][data-gallery-responsive-preview='true']" \
       "[data-gallery-example='flex-responsive-arrangement']",
       count: 1

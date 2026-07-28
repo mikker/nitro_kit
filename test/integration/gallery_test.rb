@@ -8,7 +8,15 @@ class GalleryTest < ActionDispatch::IntegrationTest
     assert_select "html[data-gallery='document']:not([data-theme])"
     assert_select "script[data-nk-appearance-default='system']"
     assert_select "body[data-gallery='body']"
-    assert_select "[data-gallery='sidebar']"
+    assert_select "#gallery-shell[data-gallery='shell'][data-nk='app-shell'][data-layout='sidebar']"
+    assert_select "#gallery-shell > [data-slot='app-shell-sidebar'] " \
+      "#gallery-navigation[data-nk='app-navigation'][data-turbo-permanent]" \
+      "[data-controller='gallery--navigation']"
+    assert_select "#gallery-navigation > [data-slot='app-navigation-header'] " \
+      "#gallery-filter[data-nk='combobox'][data-gallery='filter']" do
+      assert_select "input[role='combobox'][aria-label='Filter gallery'][placeholder='Filter gallery…']"
+      assert_select "[data-slot='combobox-option']", count: 3 + Gallery::Catalog.collections.sum { _1.entries.size }
+    end
     assert_select "[data-gallery='main'] div[data-gallery='page'][data-gallery-page='home']"
     assert_select "h1", text: "Nitro Kit"
     assert_select "[data-gallery='introduction'] section", count: 3
@@ -17,41 +25,36 @@ class GalleryTest < ActionDispatch::IntegrationTest
     assert_select "[data-gallery='introduction'] h2", text: "The idea"
   end
 
-  test "gallery renders components grouped by subcategory and nested composition categories" do
+  test "gallery renders every catalog category through AppNavigation sections" do
     get gallery_root_path
 
     assert_response :success
-    assert_select "[data-gallery='navigation-collection'][data-gallery-kind='component']" do |collections|
-      assert_select "details[data-gallery='navigation-category']", count: 6
-      assert_select "details[data-gallery-category='layout'] > summary", text: "Layout"
-      assert_select "details[data-gallery-category='navigation'] > summary", text: "Navigation"
-      assert_select "details[data-gallery-category='forms'] > summary", text: "Forms"
-      assert_select "details[data-gallery-category='data'] > summary", text: "Data display"
-      assert_select "details[data-gallery-category='feedback'] > summary", text: "Feedback"
-      assert_select "details[data-gallery-category='actions'] > summary", text: "Actions"
-      assert_equal(
-        Gallery::Catalog.entries(kind: :component).map(&:title),
-        collections.first.css("ul a").map(&:text)
-      )
-    end
-    assert_select "[data-gallery='navigation-collection'][data-gallery-kind='composition']" do
-      assert_select "[data-gallery='navigation-description']",
-        text: "Executable composition tests: the system exercised whole."
-      assert_select "details[data-gallery='navigation-category']", count: 7
-      assert_select "details[data-gallery-category='access-and-onboarding'] > summary", text: "Access & onboarding"
-      assert_select "details[data-gallery-category='complete-applications'] > summary", text: "Complete applications"
+    navigation = css_select("#gallery-navigation").sole
+    sections = navigation.css("[data-slot='app-navigation-section']")
+    labels = sections.map { |section| section.at_css("[data-slot='app-navigation-section-label']").text }
+
+    assert_equal Gallery::Catalog.collections.flat_map { |collection|
+      collection.categories.map { |category| "#{collection.title} · #{category.title}" }
+    }, labels
+    Gallery::Catalog.collections.each do |collection|
+      collection_sections = sections.select do |section|
+        section.at_css("[data-slot='app-navigation-section-label']").text.start_with?("#{collection.title} · ")
+      end
+      assert_equal collection.entries.map(&:title),
+        collection_sections.flat_map { |section|
+          section.css("[data-slot='app-navigation-item-label']").map(&:text)
+        }
     end
     assert_select "[data-gallery='navigation'] a", text: "Blocks", count: 0
     assert_select "[data-gallery='navigation'] a", text: "Flows", count: 0
   end
 
-  test "current composition category stays open and its entry remains current on every state" do
+  test "current composition entry remains current on every state" do
     get gallery_composition_path(slug: "settings", state: "appearance")
 
     assert_response :success
-    assert_select "details[data-gallery-category='workspace-and-organization'][open]" do
-      assert_select "a[href='/gallery/compositions/settings/profile'][aria-current='page']", text: "Workspace settings"
-    end
+    assert_select "#gallery-navigation a[href='/gallery/compositions/settings/profile'][aria-current='page']",
+      text: "Workspace settings"
     assert_select "[data-gallery='navigation'] a[aria-current='page']", count: 1
   end
 

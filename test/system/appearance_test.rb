@@ -23,7 +23,7 @@ class AppearanceSystemTest < ApplicationSystemTestCase
       window.__removedAppearancePicker = document.querySelector("#gallery-appearance-card-control");
     JAVASCRIPT
 
-    within("[data-gallery='sidebar']") { click_link("Button", exact: true) }
+    within("#gallery-navigation") { click_link("Button", exact: true) }
 
     assert_current_path gallery_component_path("button")
     assert_document_appearance(preference: "dark", theme: "dark")
@@ -40,7 +40,8 @@ class AppearanceSystemTest < ApplicationSystemTestCase
     assert_equal 1, evaluate_script("window.__appearanceChangeCount")
     assert_equal "dark", evaluate_script("window.__removedAppearancePicker.dataset.state")
 
-    within("[data-gallery='sidebar']") { click_link("Appearance picker", exact: true) }
+    within("#gallery-navigation") { click_link("Appearance picker", exact: true) }
+    assert_selector "#gallery-appearance-card-control"
     reconnected_count = all("[data-nk='appearance-picker']").size
     assert_synchronized_pickers("light", count: reconnected_count)
 

@@ -8,10 +8,10 @@ class GalleryGuidesTest < ActionDispatch::IntegrationTest
     get gallery_root_path
 
     assert_response :success
-    assert_select "[data-gallery='navigation-primary'] > li", count: 3
-    assert_select "[data-gallery='navigation-primary'] a[href='/gallery']", text: "Introduction"
-    assert_select "[data-gallery='navigation-primary'] a[href='/gallery/agent-guide']", text: "Agent guide"
-    assert_select "[data-gallery='navigation-primary'] a[href='/gallery/guide']", text: "Human guide"
+    assert_select "#gallery-navigation > [data-slot='app-navigation-body'] > [data-slot='app-navigation-item']", count: 3
+    assert_select "#gallery-navigation a[href='/gallery']", text: "Introduction"
+    assert_select "#gallery-navigation a[href='/gallery/agent-guide']", text: "Agent guide"
+    assert_select "#gallery-navigation a[href='/gallery/guide']", text: "Human guide"
     assert_select "[data-gallery='navigation'] a", text: "FAQ", count: 0
     assert_select "[data-gallery='navigation'] a", text: "Customize", count: 0
   end

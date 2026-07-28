@@ -41,7 +41,10 @@
     }
 
     :where(
-      [data-nk="app-shell"] [data-slot="app-shell-topbar"] > [data-nk="toolbar"]
+      [data-nk="app-shell"]
+        > [data-slot="app-shell-header"]
+        > [data-slot="app-shell-topbar"]
+        > [data-nk="toolbar"]
     ) {
       flex-direction: row;
       flex-wrap: nowrap;
@@ -50,7 +53,8 @@
 
     :where(
       [data-nk="app-shell"]
-        [data-slot="app-shell-topbar"]
+        > [data-slot="app-shell-header"]
+        > [data-slot="app-shell-topbar"]
         > [data-nk="toolbar"]
         > [data-slot="toolbar-leading"]
     ) {
@@ -61,7 +65,8 @@
 
     :where(
       [data-nk="app-shell"]
-        [data-slot="app-shell-topbar"]
+        > [data-slot="app-shell-header"]
+        > [data-slot="app-shell-topbar"]
         > [data-nk="toolbar"]
         > [data-slot="toolbar-trailing"]
     ) {

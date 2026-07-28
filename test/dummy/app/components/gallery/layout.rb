@@ -29,9 +29,15 @@ module Gallery
         end
 
         body(data: { gallery: "body" }) do
-          div(data: { gallery: "shell" }) do
-            gallery_sidebar
-            div(data: { gallery: "main" }) { yield }
+          render NitroKit::AppShell.new(
+            id: "gallery-shell",
+            layout: :sidebar,
+            navigation_dialog_label: "Gallery navigation",
+            data: { gallery: "shell" }
+          ) do |shell|
+            shell.brand { gallery_brand }
+            shell.navigation { gallery_navigation }
+            shell.main { div(data: { gallery: "main" }) { yield } }
           end
         end
       end
@@ -39,78 +45,79 @@ module Gallery
 
     private
 
-    def gallery_sidebar
-      aside(data: { gallery: "sidebar" }) do
-        header(data: { gallery: "brand" }) do
-          a(href: gallery_root_path) { "Nitro Kit" }
-          small { "2.0 gallery" }
+    def gallery_brand
+      a(href: gallery_root_path, data: { gallery: "brand" }) do
+        strong { "Nitro Kit" }
+        small { "2.0 gallery" }
+      end
+    end
+
+    def gallery_navigation
+      render NitroKit::AppNavigation.new(
+        id: "gallery-navigation",
+        label: "Gallery",
+        data: {
+          gallery: "navigation",
+          controller: "gallery--navigation",
+          action: "turbo:before-render@document->gallery--navigation#rememberScroll " \
+            "turbo:render@document->gallery--navigation#sync",
+          turbo_permanent: true
+        }
+      ) do |navigation|
+        navigation.header do
+          render NitroKit::Combobox.new(
+            id: "gallery-filter",
+            name: "gallery[destination]",
+            label: false,
+            options: navigation_choices,
+            placeholder: "Filter gallery…",
+            include_blank: "Choose a page",
+            control_aria: { label: "Filter gallery" },
+            data: {
+              gallery: "filter",
+              action: "keydown->gallery--navigation#visitSelection " \
+                "click->gallery--navigation#visitSelection"
+            }
+          )
         end
 
-        nav(aria: { label: "Gallery" }, data: { gallery: "navigation" }) do
-          ul(data: { gallery: "navigation-primary" }) do
-            li { navigation_link("Introduction", gallery_root_path) }
-            li { navigation_link("Agent guide", gallery_agent_guide_path) }
-            li { navigation_link("Human guide", gallery_guide_path) }
+        navigation.body do
+          navigation_guides.each do |guide|
+            navigation.item(
+              guide[:label],
+              href: guide[:path],
+              icon: guide[:icon],
+              current: request.path == guide[:path],
+              data: { gallery_navigation_match: "exact:#{guide[:path]}" }
+            )
           end
 
           Gallery::Catalog.collections.each do |collection|
-            navigation_collection(collection)
+            navigation.divider
+            collection.categories.each do |category|
+              navigation.section(label: "#{collection.title} · #{category.title}") do
+                category.entries.each do |entry|
+                  navigation.item(
+                    entry.title,
+                    href: entry_path(entry),
+                    current: current_entry?(entry),
+                    data: { gallery_navigation_match: navigation_match(entry) }
+                  )
+                end
+              end
+            end
           end
         end
 
-        div(data: { gallery: "theme-switcher" }) do
-          render NitroKit::AppearancePicker.new(
-            id: "gallery-appearance",
-            label: "Appearance"
-          )
+        navigation.footer do
+          div(data: { gallery: "theme-switcher" }) do
+            render NitroKit::AppearancePicker.new(
+              id: "gallery-appearance",
+              label: "Appearance"
+            )
+          end
         end
       end
-    end
-
-    def navigation_collection(collection)
-      section(
-        data: {
-          gallery: "navigation-collection",
-          gallery_kind: collection.kind
-        }
-      ) do
-        h2 { collection.title }
-        p(data: { gallery: "navigation-description" }) { collection.description }
-
-        collection.categories.each { |category| navigation_category(category) }
-      end
-    end
-
-    def navigation_category(category)
-      details(
-        open: current_category?(category) ? true : nil,
-        data: {
-          gallery: "navigation-category",
-          gallery_category: category.slug
-        }
-      ) do
-        summary { category.title }
-        navigation_entries(category.entries)
-      end
-    end
-
-    def navigation_entries(entries)
-      ul do
-        entries.each do |entry|
-          li { navigation_link(entry.title, entry_path(entry), entry:) }
-        end
-      end
-    end
-
-    def navigation_link(label, path, entry: nil)
-      a(
-        href: path,
-        aria: { current: navigation_current?(path, entry:) ? "page" : nil }
-      ) { label }
-    end
-
-    def navigation_current?(path, entry:)
-      entry ? current_entry?(entry) : request.path == path
     end
 
     def current_entry?(entry)
@@ -118,12 +125,41 @@ module Gallery
         request.path_parameters[:slug] == entry.slug
     end
 
-    def current_category?(category)
-      category.entries.any? { |entry| current_entry?(entry) }
-    end
-
     def entry_path(entry)
       Gallery::Catalog.path_for(entry, routes: self)
+    end
+
+    def navigation_match(entry)
+      return "exact:#{entry_path(entry)}" if entry.kind == :component
+
+      "prefix:/gallery/compositions/#{entry.slug}/"
+    end
+
+    def navigation_choices
+      guides = navigation_guides.map do |guide|
+        { label: guide[:label], value: guide[:path], description: "Gallery" }
+      end
+      catalog = Gallery::Catalog.collections.flat_map do |collection|
+        collection.categories.flat_map do |category|
+          category.entries.map do |entry|
+            {
+              label: entry.title,
+              value: entry_path(entry),
+              description: "#{collection.title} · #{category.title}"
+            }
+          end
+        end
+      end
+
+      guides + catalog
+    end
+
+    def navigation_guides
+      [
+        { label: "Introduction", path: gallery_root_path, icon: :house },
+        { label: "Agent guide", path: gallery_agent_guide_path, icon: :bot },
+        { label: "Human guide", path: gallery_guide_path, icon: :book_open }
+      ]
     end
 
     def document_data

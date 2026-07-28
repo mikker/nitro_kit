@@ -48,103 +48,34 @@
     color: inherit;
   }
 
-  :where([data-gallery="shell"]) {
-    display: grid;
-    grid-template-columns: minmax(13rem, 17rem) minmax(0, 1fr);
-    min-height: 100vh;
-  }
-
-  :where([data-gallery="sidebar"]) {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-    padding: 1.5rem;
-    background: color-mix(in srgb, currentColor 3%, transparent);
-    border-inline-end: 1px solid
-      color-mix(in srgb, currentColor 14%, transparent);
-  }
-
   :where([data-gallery="brand"]) {
     display: grid;
     gap: 0.25rem;
-  }
-
-  :where([data-gallery="brand"] a) {
     color: inherit;
     font-size: 1.1rem;
     font-weight: 650;
+    line-height: 1.1;
     text-decoration: none;
   }
 
-  :where([data-gallery="brand"] small, [data-gallery="sidebar"] small) {
+  :where([data-gallery="brand"] small) {
     color: color-mix(in srgb, currentColor 62%, transparent);
+    font-size: var(--nk-text-xs);
+    font-weight: var(--nk-font-weight-normal);
   }
 
-  :where([data-gallery="navigation"]) {
-    display: grid;
-    gap: 0.65rem;
+  :where(
+    [data-gallery="navigation"] > [data-slot="app-navigation-header"]
+  ) {
+    padding-inline: calc(var(--nk-space) * 3);
   }
 
-  :where([data-gallery="navigation"] ul) {
-    display: grid;
-    gap: 0.4rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+  :where([data-gallery="filter"]) {
+    inline-size: 100%;
   }
 
-  :where([data-gallery="navigation-primary"]) {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  :where([data-gallery="navigation"] a, [data-gallery="navigation"] summary) {
-    color: inherit;
-    line-height: 1.45;
-    text-decoration: none;
-  }
-
-  :where([data-gallery="navigation"] summary) {
-    cursor: pointer;
-    font-weight: 600;
-  }
-
-  :where([data-gallery="navigation"] a[aria-current="page"]) {
-    font-weight: 700;
-  }
-
-  :where([data-gallery="navigation-collection"]) {
-    display: grid;
-    gap: 0.45rem;
-    margin-block-start: 1rem;
-  }
-
-  :where([data-gallery="navigation-collection"] h2) {
-    margin: 0;
-    color: color-mix(in srgb, currentColor 62%, transparent);
-    font-size: 0.75rem;
-    font-weight: 650;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-
-  :where([data-gallery="navigation-description"]) {
-    margin: -0.2rem 0 0;
-    color: color-mix(in srgb, currentColor 52%, transparent);
-    font-size: 0.72rem;
-    line-height: 1.35;
-  }
-
-  :where([data-gallery="navigation-category"] > ul) {
-    margin-block-start: 0.45rem;
-    padding-inline-start: 1rem;
-  }
-
-  :where([data-gallery="navigation-category"] + [data-gallery="navigation-category"]) {
-    margin-block-start: 0.25rem;
-  }
-
-  :where([data-gallery="theme-switcher"]) {
-    margin-block-start: auto;
+  :where([data-gallery="theme-switcher"] [data-nk="appearance-picker"]) {
+    inline-size: 100%;
   }
 
   :where([data-gallery="main"]) {
@@ -1021,26 +952,6 @@
   }
 
   @media (max-width: 48rem) {
-    :where([data-gallery="shell"]) {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    :where([data-gallery="sidebar"]) {
-      position: static;
-      gap: 1rem;
-      border-inline-end: 0;
-      border-block-end: 1px solid
-        color-mix(in srgb, currentColor 14%, transparent);
-    }
-
-    :where([data-gallery="navigation"]) {
-      grid-template-columns: minmax(0, 1fr);
-      max-block-size: min(18rem, 42vh);
-      overflow-y: auto;
-      overscroll-behavior: contain;
-      scrollbar-gutter: stable;
-    }
-
     :where([data-gallery="code-toolbar"]) {
       display: grid;
       grid-template-columns: minmax(0, 1fr);

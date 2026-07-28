@@ -56,7 +56,9 @@ class AppNavigationTest < ActiveSupport::TestCase
     assert_equal "Manage", section_list["aria-label"]
     assert_equal %w[app-navigation-item app-navigation-divider],
       section_list.element_children.map { |child| child["data-slot"] }
-    assert_equal "separator", section_list.at_css("[data-slot='app-navigation-divider']")["role"]
+    divider = section_list.at_css("[data-slot='app-navigation-divider']")
+    assert_equal "true", divider["aria-hidden"]
+    assert_nil divider["role"]
     assert_equal "a", dashboard.name
     assert_equal "page", dashboard["aria-current"]
     assert_equal "current", dashboard["data-state"]

@@ -40,24 +40,13 @@ module BrowserHelpers
     browser.switch_to.active_element
   end
 
-  # Gallery categories are collapsed `details` disclosures unless they hold the
-  # current entry, so reaching another entry means opening its category first.
-  # Gallery categories are collapsed `details` disclosures unless they hold the
-  # current entry, and a Turbo Drive visit re-renders the sidebar, so keep
-  # expanding until the requested entry is actually reachable.
   def click_gallery_navigation_link(title)
-    link = "//aside[@data-gallery='sidebar']//a[normalize-space()=#{title.inspect}]"
-
-    wait_until(message: "Expected the gallery sidebar to expose #{title.inspect}") do
-      execute_script(<<~JAVASCRIPT)
-        document
-          .querySelectorAll("[data-gallery='sidebar'] details")
-          .forEach((category) => { category.open = true });
-      JAVASCRIPT
-      has_selector?(:xpath, link, wait: 0)
+    unless has_selector?("#gallery-navigation", visible: true, wait: 0)
+      find("#gallery-shell [data-slot='app-shell-mobile-trigger']").click
+      assert_selector "#gallery-shell > [data-slot='app-shell-dialog'][open] #gallery-navigation"
     end
 
-    find(:xpath, link).click
+    within("#gallery-navigation") { click_link(title, exact: true) }
   end
 
   def assert_focused(selector, **find_options)

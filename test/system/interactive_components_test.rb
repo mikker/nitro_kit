@@ -262,7 +262,7 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
     assert_selector "#gallery-toast-permanent [data-nk='toast-item']"
     assert_no_selector "#gallery-toast-permanent [data-slot='toast-item-dismiss']"
 
-    execute_script("arguments[0].focus()", find("[data-gallery='brand'] a"))
+    execute_script("arguments[0].focus()", find("[data-gallery='brand']"))
     assert_no_selector timed_item, wait: 2.5
 
     find("#{item} [data-slot='toast-item-dismiss']").click
