@@ -17,6 +17,7 @@ Rails.application.routes.draw do
 
     get("agent-guide" => "agent_guides#show", as: :agent_guide)
     get("guide" => "guides#show", as: :guide)
+    resource(:button_submission, only: :create)
     get("previews/:kind/:slug/:example" => "previews#show", as: :preview)
     resources(:components, only: :show, param: :slug)
     resources(:upload_submissions, only: :create)

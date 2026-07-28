@@ -56,7 +56,7 @@ Nitro Kit 2.0 is a complete, intentionally incompatible rewrite around gem-owned
 - Typed Choice values and direct-Phlex Rails FormBuilder integration with Active Model errors, native and direct uploads, and Turbo Frame/Stream examples.
 - Direct optional Pagy integration through `Pagination(pagy:)`, with an explicit URL callable for caller-owned destinations.
 - Optional Lexxy and Action Text integration through `form.field(..., as: :rich_text)`, preserving editor-native inputs, attachments, options, and behavior inside Nitro's Field contract.
-- Gem-owned importmap pins and Stimulus behavior for AppShell, AppearancePicker, Avatar, Checkbox (`nk--checkable`), Combobox, Dialog, Dropdown, Dropzone, ProgressiveImage, Tabs, Toast, and Tooltip. Accordion needs no JavaScript at all.
+- Gem-owned importmap pins and Stimulus behavior for AppShell, AppearancePicker, Avatar, Button submission feedback, Checkbox (`nk--checkable`), Combobox, Dialog, Dropdown, Dropzone, ProgressiveImage, Tabs, Toast, and Tooltip. Accordion needs no JavaScript at all.
 - `Typeset` for semantic rich content and `RichTextArea` for the host application's rich-text editor output.
 - A `nitro_kit.*` locale scope so component copy is translatable; Dropzone additionally hands its runtime strings to `nk--dropzone` as Stimulus values so no user-facing English lives in JavaScript.
 - A catalog-driven Phlex gallery covering components, blocks, broad application flows, complete application shells, responsive states, and light, dark, and system appearance.

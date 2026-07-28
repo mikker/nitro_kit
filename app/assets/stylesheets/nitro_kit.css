@@ -1737,6 +1737,11 @@
     flex: none;
   }
 
+  :where([data-nk="button"] > [data-slot="button-submission-spinner"]) {
+    display: none;
+    flex: none;
+  }
+
   :where([data-nk="button"] > [data-slot="button-label"]) {
     min-inline-size: 0;
     overflow: hidden;
@@ -1745,7 +1750,10 @@
 
   :where(
     [data-nk="button"]:has(> [data-slot="button-icon-start"]),
-    [data-nk="button"]:has(> [data-slot="button-spinner"])
+    [data-nk="button"]:has(> [data-slot="button-spinner"]),
+    [data-nk="button"]:has(
+      > [data-slot="button-submission-spinner"][data-state="visible"]
+    )
   ) {
     padding-inline-start: var(--_nk-button-icon-padding);
   }
@@ -1754,7 +1762,13 @@
     padding-inline-end: var(--_nk-button-icon-padding);
   }
 
-  :where([data-nk="button"]:not(:has(> [data-slot="button-label"]))) {
+  :where(
+    [data-nk="button"]:not(:has(> [data-slot="button-label"])):has(
+        > [data-slot="button-icon-start"],
+        > [data-slot="button-icon-end"],
+        > [data-slot="button-spinner"]
+      )
+  ) {
     inline-size: var(--_nk-button-height);
     padding-inline: 0;
   }
@@ -1883,6 +1897,14 @@
     animation: nk-button-spin 1s linear infinite;
   }
 
+  :where(
+    [data-nk="button"]
+      > [data-slot="button-submission-spinner"][data-state="visible"]
+  ) {
+    display: inline-flex;
+    animation: nk-button-spin 1s linear infinite;
+  }
+
   @keyframes nk-button-spin {
     to {
       rotate: 360deg;
@@ -1891,7 +1913,9 @@
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-      [data-nk="button"][aria-busy="true"] > [data-slot="button-spinner"]
+      [data-nk="button"][aria-busy="true"] > [data-slot="button-spinner"],
+      [data-nk="button"]
+        > [data-slot="button-submission-spinner"][data-state="visible"]
     ) {
       animation: none;
     }

@@ -5,6 +5,7 @@ module NitroKit
     VARIANTS = %i[default primary destructive ghost].freeze
     SIZES = %i[xs sm md lg xl].freeze
     TYPES = %i[button submit reset].freeze
+    SUBMISSION_INDICATORS = %i[spinner].freeze
     DEFAULT_TYPE = :button
     UNSET_TYPE = Object.new.freeze
     private_constant :UNSET_TYPE
@@ -27,6 +28,7 @@ module NitroKit
       download: nil,
       disabled: false,
       loading: false,
+      submission_indicator: nil,
       html: {},
       aria: {},
       data: {},
@@ -62,6 +64,18 @@ module NitroKit
       @loading = validate_boolean!(:loading, loading)
       @disabled = validate_boolean!(:disabled, disabled) || @loading
       @aria = aria
+      @submission_feedback = submission_feedback(data)
+      @submission_indicator = if submission_indicator.nil?
+        nil
+      else
+        validate_choice!(:submission_indicator, submission_indicator, SUBMISSION_INDICATORS)
+      end
+      if @submission_indicator && (href || @type != :submit)
+        raise ArgumentError, "submission_indicator: applies only to native submit Buttons"
+      end
+      if @submission_indicator && @loading
+        raise ArgumentError, "submission_indicator: and loading: cannot be combined"
+      end
 
       owned_aria = {
         label: @label,
@@ -85,7 +99,16 @@ module NitroKit
           attributes.delete(:aria) if attributes[:aria].empty?
         end
       else
-        { id:, type: @type, name:, value:, form:, disabled: @disabled, aria: owned_aria.presence }.compact
+        {
+          id:,
+          type: @type,
+          name:,
+          value:,
+          form:,
+          disabled: @disabled,
+          aria: owned_aria.presence,
+          data: submission_data
+        }.compact
       end
 
       super(
@@ -126,8 +149,34 @@ module NitroKit
       type.to_s.to_sym
     end
 
+    def submission_data
+      return unless @submission_feedback || @submission_indicator
+
+      {
+        controller: "nk--button",
+        action: [
+          "submit@document->nk--button#submit",
+          "turbo:submit-end@document->nk--button#reset",
+          "turbo:before-cache@document->nk--button#reset"
+        ].join(" ")
+      }
+    end
+
+    def submission_feedback(data)
+      data.each do |key, value|
+        next unless normalized_data_attribute(key) == "turbo-submits-with"
+        return if value == false || value.nil?
+        return value if value.is_a?(String) && !value.strip.empty?
+
+        raise ArgumentError, "data-turbo-submits-with must be a non-blank String"
+      end
+
+      nil
+    end
+
     def contents(&block)
       icon_only = text.nil? && !block
+      submission_spinner if @submission_indicator == :spinner
       spinner(icon_only:) if loading?
       icon_slot(icon, :icon_start, icon_only:) if icon && !loading?
 
@@ -138,6 +187,12 @@ module NitroKit
       end
 
       icon_slot(icon_end, :icon_end, icon_only:) if icon_end
+    end
+
+    def submission_spinner
+      span(**slot_attributes(:submission_spinner, attributes: { aria: { hidden: true } })) do
+        render(Icon.new(:"loader-circle", size: icon_size))
+      end
     end
 
     def spinner(icon_only:)

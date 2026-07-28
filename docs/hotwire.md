@@ -32,8 +32,11 @@ success, and cancel responses must preserve that identifier.
 
 ## Forms and application Stimulus
 
-Let Turbo submit real Rails forms. Use `data-turbo-submits-with` for submission
-feedback and `data-turbo-confirm` for compact destructive confirmation.
+Let Turbo submit real Rails forms. Use `data-turbo-submits-with` to opt a Button
+into submission feedback without replacing its visible label. The Button dims
+immediately; `submission_indicator: :spinner` additionally reveals an indicator
+after 1 second and lets the Button expand to fit it. Use `data-turbo-confirm` for
+compact destructive confirmation.
 Reviewed destructive flows may compose `DangerZone` and `Dialog`, but the
 dialog must still submit a real Rails form.
 

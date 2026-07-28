@@ -17,6 +17,17 @@ class GalleryVerticalSliceTest < ActionDispatch::IntegrationTest
     assert_select "a#gallery-button-link[href='#button-documentation']"
     assert_select "button#gallery-button-disabled[disabled]"
     assert_select "a#gallery-button-link-disabled[aria-disabled='true']:not([href])"
+    assert_select "form#gallery-button-turbo-form[action='#{gallery_button_submission_path}'][method='post']" do
+      assert_select "#gallery-button-turbo-submit[type='submit'][data-turbo-submits-with='Saving…']" do
+        assert_select "[data-slot='button-label']", text: "Save workspace changes"
+      end
+    end
+    assert_select "form#gallery-button-turbo-spinner-form[action='#{gallery_button_submission_path}'][method='post']" do
+      assert_select "#gallery-button-turbo-spinner-submit[type='submit']" do
+        assert_select "[data-slot='button-label']", text: "Save workspace changes"
+        assert_select "[data-slot='button-submission-spinner'][aria-hidden='true']"
+      end
+    end
   end
 
   test "icon page covers every size decorative state labels and stroke weights" do

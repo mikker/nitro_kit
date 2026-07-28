@@ -8,7 +8,7 @@ module Gallery
       end
 
       def api_note
-        "NitroKit::Button.new(text, variant:, size:, icon:)"
+        "NitroKit::Button.new(text, variant:, size:, icon:, submission_indicator:)"
       end
 
       def component_template
@@ -148,6 +148,40 @@ module Gallery
               href: "#button-disabled",
               disabled: true
             )
+          end
+          example(
+            "Turbo submission feedback",
+            slug: "button-turbo-submission-feedback",
+            description: "Submission keeps the original label, dims immediately, and can opt into a spinner that expands the button after 1 second.",
+            layout: :matrix
+          ) do
+            sample("Dim only", slug: "dim-only") do
+              form_with(
+                url: gallery_button_submission_path,
+                builder: NitroKit::FormBuilder,
+                id: "gallery-button-turbo-form"
+              ) do |form|
+                form.submit(
+                  "Save workspace changes",
+                  id: "gallery-button-turbo-submit",
+                  data: { turbo_submits_with: "Saving…" }
+                )
+              end
+            end
+            sample("Spinner after 1 second", slug: "delayed-spinner") do
+              form_with(
+                url: gallery_button_submission_path,
+                builder: NitroKit::FormBuilder,
+                id: "gallery-button-turbo-spinner-form"
+              ) do |form|
+                form.submit(
+                  "Save workspace changes",
+                  id: "gallery-button-turbo-spinner-submit",
+                  submission_indicator: :spinner,
+                  data: { turbo_submits_with: "Saving…" }
+                )
+              end
+            end
           end
         end
       end

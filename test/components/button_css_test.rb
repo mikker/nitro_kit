@@ -47,7 +47,9 @@ class ButtonCssTest < ActiveSupport::TestCase
 
     assert_includes css, "--_nk-button-height: calc(var(--nk-space) * 8)"
     assert_includes css, "--_nk-button-height: var(--nk-control-height-xs)"
-    assert_includes css, ':not(:has(> [data-slot="button-label"]))'
+    assert_includes css, ':not(:has(> [data-slot="button-label"])):has('
+    assert_includes css, '> [data-slot="button-icon-start"]'
+    assert_includes css, '> [data-slot="button-icon-end"]'
     assert_includes css, "opacity: 0.75"
     refute_includes css, "scale("
     refute_includes css, "transition:"

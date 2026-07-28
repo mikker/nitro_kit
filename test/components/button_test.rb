@@ -120,6 +120,38 @@ class ButtonTest < ActiveSupport::TestCase
     assert_raises(ArgumentError) { NitroKit::Button.new("Save", loading: nil) }
   end
 
+  test "owns Turbo submission feedback without changing the rendered label" do
+    node = render_node(
+      NitroKit::Button.new("Save workspace changes", type: :submit, data: { turbo_submits_with: "Saving…" })
+    )
+    spinner = render_node(
+      NitroKit::Button.new("Save workspace changes", type: :submit, submission_indicator: :spinner)
+    )
+
+    assert_equal "nk--button", node["data-controller"]
+    assert_includes node["data-action"], "submit@document->nk--button#submit"
+    assert_includes node["data-action"], "turbo:submit-end@document->nk--button#reset"
+    assert_equal "Saving…", node["data-turbo-submits-with"]
+    assert_equal "Save workspace changes", node.at_css("[data-slot='button-label']").text
+    assert_nil node.at_css("[data-slot='button-submission-spinner']")
+
+    assert_equal "nk--button", spinner["data-controller"]
+    assert_equal "true", spinner.at_css("[data-slot='button-submission-spinner']")["aria-hidden"]
+    assert_equal "icon", spinner.at_css("[data-slot='button-submission-spinner'] svg")["data-nk"]
+    assert_predicate NitroKit::Button::SUBMISSION_INDICATORS, :frozen?
+
+    assert_raises(ArgumentError) do
+      NitroKit::Button.new("Save", data: { turbo_submits_with: " " })
+    end
+    assert_raises(ArgumentError) { NitroKit::Button.new("Save", submission_indicator: :spinner) }
+    assert_raises(ArgumentError) do
+      NitroKit::Button.new("Save", type: :submit, submission_indicator: :dots)
+    end
+    assert_raises(ArgumentError) do
+      NitroKit::Button.new("Save", type: :submit, submission_indicator: :spinner, loading: true)
+    end
+  end
+
   test "rejects type on link Buttons and keeps the native default otherwise" do
     assert_equal "button", render_node(NitroKit::Button.new("Save"))["type"]
     assert_equal "submit", render_node(NitroKit::Button.new("Save", type: :submit))["type"]
