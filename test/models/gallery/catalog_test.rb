@@ -16,7 +16,7 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
     assert_equal(
       {
         "layout" => %w[accordion app-shell auth-shell card container flex grid page-header settings-layout typeset],
-        "navigation" => %w[app-navigation pagination pagination-bar tabs toolbar],
+        "navigation" => %w[app-navigation command-palette pagination pagination-bar tabs toolbar],
         "forms" => %w[
           checkbox checkbox-group combobox control-group dropzone field field-group fieldset form-section input label
           radio-button radio-button-group rich-text-area select switch textarea

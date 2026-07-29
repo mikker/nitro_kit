@@ -1,50 +1,65 @@
 require "application_system_test_case"
 
 class GalleryShellTest < ApplicationSystemTestCase
-  test "gallery filter narrows destinations and visits the selected result" do
+  test "gallery command palette narrows destinations and visits the selected result" do
     visit gallery_root_path
 
-    input = "#gallery-filter-input"
-    find(input).click
-    find(input).send_keys("Button group")
+    trigger = "#gallery-filter [data-slot='command-palette-trigger']"
+    panel = "#gallery-filter [data-slot='command-palette-panel']"
+    input = "#gallery-filter [data-slot='command-palette-input']"
+    destination = "#gallery-filter [data-slot='command-palette-destination']"
 
-    assert_selector "#gallery-filter[data-state='open']"
-    listbox = evaluate_script(<<~JAVASCRIPT)
-      (() => {
-        const listbox = document.querySelector("#gallery-filter-listbox");
-        return {
-          hidden: listbox.hidden,
-          state: listbox.dataset.state,
-          rootState: document.querySelector("#gallery-filter").dataset.state,
-          input: document.querySelector("#{input}").value
-        };
-      })()
+    find(trigger).click
+    assert_selector "#{panel}[open]"
+    assert_focused input
+    find(input).send_keys("Button to")
+
+    assert_equal [ "Button to" ], evaluate_script(<<~JAVASCRIPT)
+      Array.from(document.querySelectorAll("#{destination}"))
+        .filter((link) => !link.hidden)
+        .map((link) => link.querySelector("[data-slot='command-palette-destination-label']").textContent.trim());
     JAVASCRIPT
-    assert_equal false, listbox.fetch("hidden"), listbox.inspect
-    assert_equal [ "Radio button group", "Button group" ], evaluate_script(<<~JAVASCRIPT)
-      Array.from(document.querySelectorAll("#gallery-filter [data-slot='combobox-option']"))
-        .filter((option) => !option.hidden)
-        .map((option) => option.querySelector("[data-slot='combobox-option-label']").textContent.trim());
-    JAVASCRIPT
-    assert_selector "#gallery-filter [data-slot='combobox-status']",
-      text: "2 options available.", visible: :all
+    assert_selector "#gallery-filter [data-slot='command-palette-status']",
+      text: "1 destination available.", visible: :all
 
     assert_current_path gallery_root_path
     find(input).send_keys(:enter)
 
-    assert_current_path gallery_component_path("button-group")
-    assert_equal "", find(input).value
-    assert_selector "#gallery-navigation a[href='/gallery/components/button-group']" \
+    assert_current_path gallery_component_path("button-to")
+    assert_selector "#{panel}:not([open])", visible: :all
+    assert_equal "", find(input, visible: :all).value
+    assert_selector "#gallery-navigation a[href='/gallery/components/button-to']" \
       "[aria-current='page'][data-state='current']"
 
-    find(input).click
-    option = "#gallery-filter [data-slot='combobox-option']"
-    assert_selector option, count: 3 + Gallery::Catalog.collections.sum { _1.entries.size }
-    assert_no_selector "#{option}[hidden]", visible: :all
-    find("#{option}[data-value='#{gallery_guide_path}']").click
+    find(trigger).click
+    assert_selector destination, count: 3 + Gallery::Catalog.collections.sum { _1.entries.size }
+    assert_no_selector "#{destination}[hidden]", visible: :all
+    find("#{destination}[href='#{gallery_guide_path}']").click
 
     assert_current_path gallery_guide_path
-    assert_equal "", find(input).value
+    assert_no_severe_console_errors
+  end
+
+  test "command-k opens and closes the gallery command palette" do
+    visit gallery_root_path
+
+    panel = "#gallery-filter [data-slot='command-palette-panel']"
+    input = "#gallery-filter [data-slot='command-palette-input']"
+    trigger = "#gallery-filter [data-slot='command-palette-trigger']"
+    execute_script("arguments[0].focus()", find(trigger))
+    execute_script(<<~JAVASCRIPT)
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true }));
+    JAVASCRIPT
+
+    assert_selector "#{panel}[open]"
+    assert_focused input
+
+    execute_script(<<~JAVASCRIPT)
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true }));
+    JAVASCRIPT
+
+    assert_selector "#{panel}:not([open])", visible: :all
+    assert_focused trigger
     assert_no_severe_console_errors
   end
 
@@ -95,6 +110,12 @@ class GalleryShellTest < ApplicationSystemTestCase
     assert_selector "#gallery-shell[data-state='open']"
     assert_selector "#{dialog}[open] #gallery-navigation", count: 1
     assert_equal true, evaluate_script("document.querySelector(arguments[0]).matches(':modal')", dialog)
+
+    find("#gallery-filter [data-slot='command-palette-trigger']").click
+    command_panel = "#gallery-filter [data-slot='command-palette-panel']"
+    assert_selector "#{command_panel}[open]"
+    find("#gallery-filter [data-slot='command-palette-close']").click
+    assert_selector "#{command_panel}:not([open])", visible: :all
 
     within("#gallery-navigation") { click_link("Button", exact: true) }
 

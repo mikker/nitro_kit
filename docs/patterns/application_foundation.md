@@ -16,6 +16,8 @@ replaced later.
   every route; the shell owns viewport height and scrolling.
 - Infrequent account destinations go after `navigation.spacer`; settings
   compose with `SettingsLayout` and plain `FormSection` regions.
+- When destination count warrants search, compose one `CommandPalette` in the
+  shell and render only routes the current membership may visit.
 - Centralize cross-cutting feedback in one flash-driven toast region rendered
   by the layout.
 
@@ -64,6 +66,13 @@ end
 
 Application code owns destinations and current-route policy. Nitro owns shell
 layout, mobile disclosure, focus management, and navigation semantics.
+For larger products, place one `CommandPalette` in the shell. Its native links
+remain the navigation authority while Command-K or Control-K adds fast
+filtering. Render the same authorized destination set the user can reach in
+ordinary navigation; do not use the palette to bypass route policy.
+When the destination set is too large or dynamic to render eagerly, pass
+`search_url:` and return `CommandPalette::Results` from that endpoint. Keep the
+same authorization scope on the initial links and every remote query.
 Let the shell own viewport height and scrolling; do not add `min-height: 100vh`
 to its main region or page wrapper. Put brand and destination icons through the
 navigation slots so they share the same left alignment.

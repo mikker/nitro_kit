@@ -4,7 +4,7 @@ class InteractionControllerContractTest < ActiveSupport::TestCase
   CONTROLLER_ROOT = NitroKit::Engine.root.join("app/javascript/controllers/nk")
 
   test "interaction controllers use only packaged browser positioning" do
-    sources = %w[dropdown tooltip combobox toast].to_h do |name|
+    sources = %w[dropdown tooltip combobox command_palette toast].to_h do |name|
       [ name, CONTROLLER_ROOT.join("#{name}_controller.js").read ]
     end
 
@@ -41,6 +41,7 @@ class InteractionControllerContractTest < ActiveSupport::TestCase
     appearance = CONTROLLER_ROOT.join("appearance_controller.js").read
     tooltip = CONTROLLER_ROOT.join("tooltip_controller.js").read
     combobox = CONTROLLER_ROOT.join("combobox_controller.js").read
+    command_palette = CONTROLLER_ROOT.join("command_palette_controller.js").read
     tabs = CONTROLLER_ROOT.join("tabs_controller.js").read
     toast = CONTROLLER_ROOT.join("toast_controller.js").read
 
@@ -54,6 +55,11 @@ class InteractionControllerContractTest < ActiveSupport::TestCase
     assert_includes combobox, "listboxTargetConnected()"
     assert_includes combobox, "optionTargetDisconnected(option)"
     assert_includes combobox, "reflectOpenState"
+    assert_includes command_palette, "disconnect()"
+    assert_includes command_palette, ':scope > [data-slot="command-palette-panel"]'
+    assert_includes command_palette, "destinationTargetConnected()"
+    assert_includes command_palette, "destinationTargetDisconnected()"
+    assert_includes command_palette, "delete this.element.dataset.enhanced"
 
     assert_includes tabs, "panelTargetDisconnected()"
     assert_includes tabs, "tabTargetDisconnected()"

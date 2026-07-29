@@ -98,6 +98,16 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
+        subcategory: :navigation,
+        slug: "command-palette",
+        title: "Command palette",
+        description: "A Command-K destination search with a native dialog and link baseline.",
+        page: Gallery::Components::CommandPalettePage,
+        states: [],
+        expected_roots: %w[command-palette button icon input]
+      ),
+      Entry.new(
+        kind: :component,
         subcategory: :layout,
         slug: "card",
         title: "Card",
@@ -942,6 +952,7 @@ module Gallery
       [ :component, "checkbox" ] => %w[resource_form],
       [ :component, "checkbox-group" ] => %w[resource_form],
       [ :component, "combobox" ] => %w[resource_form],
+      [ :component, "command-palette" ] => %w[application_foundation],
       [ :component, "danger-zone" ] => %w[destructive_action],
       [ :component, "data-section" ] => %w[queryable_collection crud_resource],
       [ :component, "details-table" ] => %w[inline_edit crud_resource],

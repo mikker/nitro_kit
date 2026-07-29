@@ -19,6 +19,15 @@ en:
       results:
         one: "%{count} option available."
         other: "%{count} options available."
+    command_palette:
+      label: "Search"
+      placeholder: "Search destinations…"
+      empty: "No destinations found."
+      close: "Close search"
+      shortcut: "⌘K"
+      results:
+        one: "%{count} destination available."
+        other: "%{count} destinations available."
     details_table:
       empty: "Not provided"
       boolean_true: "Yes"

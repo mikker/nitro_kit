@@ -1,6 +1,29 @@
 require "application_system_test_case"
 
 class HotwireLifecycleTest < ApplicationSystemTestCase
+  test "command palette resets filtering across Turbo removal and reconnection" do
+    visit gallery_component_path("command-palette")
+
+    root = "#gallery-command-palette-workspace"
+    input = "#{root} [data-slot='command-palette-input']"
+    destination = "#{root} [data-slot='command-palette-destination']"
+    assert_stimulus_controller(root, "nk--command-palette")
+
+    find("#{root} [data-slot='command-palette-trigger']").click
+    find(input).send_keys("buttons")
+    assert_selector "#{destination}:not([hidden])", count: 1
+    find(input).send_keys(:enter)
+
+    assert_current_path gallery_component_path("button")
+    click_gallery_navigation_link("Command palette")
+
+    assert_current_path gallery_component_path("command-palette")
+    assert_stimulus_controller(root, "nk--command-palette")
+    assert_equal "", find(input, visible: :all).value
+    assert_no_selector "#{destination}[hidden]", visible: :all
+    assert_no_severe_console_errors
+  end
+
   test "Turbo Drive reconnects interactive components without duplicate roots" do
     visit gallery_component_path("tabs")
 

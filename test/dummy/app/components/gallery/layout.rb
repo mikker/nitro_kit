@@ -65,20 +65,20 @@ module Gallery
         }
       ) do |navigation|
         navigation.header do
-          render NitroKit::Combobox.new(
+          render NitroKit::CommandPalette.new(
             id: "gallery-filter",
-            name: "gallery[destination]",
-            label: false,
-            options: navigation_choices,
-            placeholder: "Filter gallery…",
-            include_blank: "Choose a page",
-            control_aria: { label: "Filter gallery" },
-            data: {
-              gallery: "filter",
-              action: "keydown->gallery--navigation#visitSelection " \
-                "click->gallery--navigation#visitSelection"
-            }
-          )
+            label: "Search gallery…",
+            placeholder: "Search destinations…",
+            data: { gallery: "filter" }
+          ) do |palette|
+            navigation_destinations.each do |destination|
+              palette.destination(
+                destination[:label],
+                href: destination[:path],
+                description: destination[:description]
+              )
+            end
+          end
         end
 
         navigation.body do
@@ -135,16 +135,16 @@ module Gallery
       "prefix:/gallery/compositions/#{entry.slug}/"
     end
 
-    def navigation_choices
+    def navigation_destinations
       guides = navigation_guides.map do |guide|
-        { label: guide[:label], value: guide[:path], description: "Gallery" }
+        { label: guide[:label], path: guide[:path], description: "Gallery" }
       end
       catalog = Gallery::Catalog.collections.flat_map do |collection|
         collection.categories.flat_map do |category|
           category.entries.map do |entry|
             {
               label: entry.title,
-              value: entry_path(entry),
+              path: entry_path(entry),
               description: "#{collection.title} · #{category.title}"
             }
           end

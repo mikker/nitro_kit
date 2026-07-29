@@ -13,9 +13,12 @@ class GalleryTest < ActionDispatch::IntegrationTest
       "#gallery-navigation[data-nk='app-navigation'][data-turbo-permanent]" \
       "[data-controller='gallery--navigation']"
     assert_select "#gallery-navigation > [data-slot='app-navigation-header'] " \
-      "#gallery-filter[data-nk='combobox'][data-gallery='filter']" do
-      assert_select "input[role='combobox'][aria-label='Filter gallery'][placeholder='Filter gallery…']"
-      assert_select "[data-slot='combobox-option']", count: 3 + Gallery::Catalog.collections.sum { _1.entries.size }
+      "#gallery-filter[data-nk='command-palette'][data-gallery='filter']" do
+      assert_select "button[data-slot='command-palette-trigger'][command='show-modal'] " \
+        "[data-slot='command-palette-trigger-label']", text: "Search gallery…"
+      assert_select "input[type='search'][aria-label='Search gallery…'][placeholder='Search destinations…']"
+      assert_select "[data-slot='command-palette-destination']",
+        count: 3 + Gallery::Catalog.collections.sum { _1.entries.size }
     end
     assert_select "[data-gallery='main'] div[data-gallery='page'][data-gallery-page='home']"
     assert_select "h1", text: "Nitro Kit"
@@ -47,6 +50,32 @@ class GalleryTest < ActionDispatch::IntegrationTest
     end
     assert_select "[data-gallery='navigation'] a", text: "Blocks", count: 0
     assert_select "[data-gallery='navigation'] a", text: "Flows", count: 0
+  end
+
+  test "command palette page previews its dialog and serves Turbo Frame results" do
+    get gallery_component_path("command-palette")
+
+    assert_response :success
+    assert_select "[data-gallery='command-palette-dialog-preview']"
+    assert_select "#reference-contract [data-gallery='contract-options'] li", count: 4
+    assert_select "#reference-contract [data-gallery='contract-options'] li", text: /required id:/i
+    assert_select "#reference-contract [data-gallery='contract-options'] li", text: /search_url: nil/
+    assert_select "#gallery-command-palette-async form[action='#{gallery_command_palette_results_path}']" \
+      "[data-turbo-frame='gallery-command-palette-async-results-frame']"
+
+    get gallery_command_palette_results_path(query: "billing")
+
+    assert_response :success
+    assert_select "turbo-frame#gallery-command-palette-async-results-frame[target='_top']" do
+      assert_select "[data-slot='command-palette-destination']", count: 1
+      assert_select "[data-slot='command-palette-destination-label']", text: "Billing"
+    end
+
+    get gallery_command_palette_results_path(query: "missing")
+
+    assert_response :success
+    assert_select "turbo-frame#gallery-command-palette-async-results-frame"
+    assert_select "[data-slot='command-palette-destination']", count: 0
   end
 
   test "current composition entry remains current on every state" do

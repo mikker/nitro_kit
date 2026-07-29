@@ -124,6 +124,65 @@ end
 
 The same declarations work with `layout: :topbar` and `layout: :hybrid`. Nitro owns responsive disclosure and focus behavior; the application owns destinations, authorization, current-route selection, and page content. The [customization guide](customization.md#application-shells) covers shell tokens, composition boundaries, and the three complete gallery applications.
 
+Large destination sets may add one command palette to the shell:
+
+```ruby
+render NitroKit::CommandPalette.new(id: "workspace-search", label: "Search workspace…") do |palette|
+  palette.destination("Overview", href: root_path, description: "Workspace")
+  palette.destination("Projects", href: projects_path, description: "Workspace")
+  palette.destination("Settings", href: settings_path, description: "Account")
+end
+```
+
+The application remains responsible for authorization and must render only destinations the current user may visit. Native dialog commands and links provide the baseline; Stimulus adds filtering and the Command-K or Control-K shortcut. Use `shortcut: false` for any additional palette on the same document so only one component owns the global shortcut.
+
+### Server-rendered command palette results
+
+For a large or dynamic destination set, pass a GET endpoint through `search_url:`. Keep a useful authorized set in the declaration block: those links are the no-JavaScript baseline and the immediate first render.
+
+```ruby
+render NitroKit::CommandPalette.new(
+  id: "workspace-search",
+  label: "Search workspace…",
+  search_url: command_palette_results_path
+) do |palette|
+  current_user.recent_destinations.each do |destination|
+    palette.destination(destination.name, href: destination.path, description: destination.section)
+  end
+end
+```
+
+Enhancement turns the search region into a debounced GET form. Its input is named `query` and targets the palette's owned Turbo Frame. Use an ordinary REST collection endpoint:
+
+```ruby
+# config/routes.rb
+resources :command_palette_results, only: :index
+
+# app/controllers/command_palette_results_controller.rb
+class CommandPaletteResultsController < ApplicationController
+  def index
+    @destinations = Current.user.destinations.search(params[:query])
+  end
+end
+```
+
+Return the matching frame with `CommandPalette::Results`. Its `id:` must exactly match the parent palette's stable `id:`. An empty result block is valid; Nitro shows the translated empty state and updates the live result count.
+
+```erb
+<%# app/views/command_palette_results/index.html.erb %>
+<%= render NitroKit::CommandPalette::Results.new(id: "workspace-search") do |results| %>
+  <% @destinations.each do |destination| %>
+    <% results.destination(
+      destination.name,
+      href: destination.path,
+      description: destination.section
+    ) %>
+  <% end %>
+<% end %>
+```
+
+The response is HTML, not JSON and not a Turbo Stream. Turbo replaces only the results frame; destination links target the full page. Scope and authorize every query on the server rather than sending hidden destinations to the browser and filtering them there.
+
 ## Model-backed forms
 
 Include the Rails helpers a Phlex component actually uses, then select `NitroKit::FormBuilder` explicitly:

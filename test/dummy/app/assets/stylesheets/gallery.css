@@ -328,9 +328,16 @@
 
   :where([data-gallery="reference-fields"]) {
     display: grid;
-    gap: 0.9rem;
     margin-block: 0;
     line-height: 1.6;
+  }
+
+  :where([data-gallery="reference-fields"] > div) {
+    display: grid;
+    gap: 0.3rem;
+    padding-block: 0.9rem;
+    border-block-start: 1px solid
+      color-mix(in srgb, currentColor 12%, transparent);
   }
 
   :where([data-gallery="reference-fields"] dt) {
@@ -341,6 +348,17 @@
     min-width: 0;
     margin: 0;
     color: color-mix(in srgb, currentColor 82%, transparent);
+  }
+
+  :where([data-gallery="contract-options"]) {
+    gap: 0.35rem;
+  }
+
+  @media (min-width: 48rem) {
+    :where([data-gallery="reference-fields"] > div) {
+      grid-template-columns: minmax(10rem, 0.4fr) minmax(0, 1fr);
+      gap: 1.5rem;
+    }
   }
 
   :where([data-gallery="reference-pattern"]) {
@@ -362,6 +380,26 @@
     font-family:
       ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.9em;
+  }
+
+  :where([data-gallery="command-palette-dialog-preview"]) {
+    inline-size: min(100%, 32rem);
+  }
+
+  :where(
+    [data-gallery="command-palette-dialog-preview"]
+      > [data-slot="command-palette-panel"]
+  ) {
+    position: static;
+    inset: auto;
+    margin: 0;
+  }
+
+  :where([data-gallery="command-palette-preview-input"]) {
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    color: color-mix(in srgb, currentColor 62%, transparent);
+    font-size: 0.9rem;
   }
 
   :where([data-gallery="notes"]) {

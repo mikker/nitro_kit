@@ -141,9 +141,9 @@ Native elements remain native. Nitro reflects application-owned state through AR
 
 The authoritative initializer, root, closed-option, and cardinality inventory lives in [`component_contracts.md`](component_contracts.md).
 
-The prerelease contains 36 atoms and components:
+The prerelease contains 40 atoms and components:
 
-- Actions, display, and navigation: Alert, AppNavigation, Avatar, AvatarStack, Badge, Button, ButtonTo, ButtonGroup, Icon, Pagination.
+- Actions, display, and navigation: Alert, AppNavigation, Avatar, AvatarStack, Badge, Button, ButtonTo, ButtonGroup, CommandPalette, Icon, Pagination.
 - Forms: AppearancePicker, Checkbox, CheckboxGroup, ControlGroup, Dropzone, Field, FieldGroup, Fieldset, Input, Label, RadioButton, RadioButtonGroup, RichTextArea, Select, Switch, Textarea.
 - Structured content and interaction: Accordion, Card, Combobox, DetailsTable, Dialog, Dropdown, ProgressiveImage, Sheet, Table, Tabs, Toast, Tooltip, Typeset.
 
@@ -158,6 +158,7 @@ Nitro uses current evergreen HTML primitives as the source of truth before addin
 - Accordion items are native `details`/`summary` disclosures. Single mode uses one shared `name`; it has no controller or disabled-item abstraction.
 - Dialog declarations produce exactly one native panel through the required `panel(title:, description: nil, nonmodal: false)` declaration, and Nitro renders close button, title, description, then application content inside it. `command="show-modal"` and `command="close"` controls target the panel through `commandfor`; `nonmodal: true` is the only server-rendered open mode and cannot be combined with a trigger. `nk--dialog` adds only backdrop light dismissal and, for `dismissible: false`, Escape suppression.
 - Dropdown visibility and invoker state belong to `popover="auto"`. `trigger` forwards `icon:`, `icon_end:`, and `label:` to Button, and `item` accepts its own `icon:`. Its small controller supplies menu focus, arrow/Home/End navigation, and focus restoration to the trigger when the popover closes with focus still inside it. CSS anchor positioning follows the trigger when supported and otherwise centers the menu safely in the viewport.
+- CommandPalette uses one native dialog, a declarative search-shaped trigger, and native destination links. Its controller adds the optional Command-K/Control-K shortcut, local filtering, result announcements, and Turbo cleanup without replacing link navigation or retaining hidden application policy. With `search_url:`, the same input submits debounced GET requests into the owned Turbo Frame; the endpoint returns `CommandPalette::Results` HTML and remains responsible for authorization.
 - Tooltip visibility belongs to CSS hover and focus selectors, including a hoverable bridge across the visual gap. Button triggers cover ordinary buttons and links; `as: :custom` forwards owned HTML, ARIA, and data to an existing focusable mutation or compound trigger. Its controller only implements Escape dismissal and reset.
 
 These components do not synchronize browser state into redundant `data-state` or explicit ARIA attributes. JavaScript fills semantic interaction gaps without replacing native ownership.

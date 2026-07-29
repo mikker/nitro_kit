@@ -233,7 +233,7 @@ Subclassing a Nitro component is allowed when composition cannot express the req
 
 The prerelease ships:
 
-- 37 atoms and components covering actions, display, forms, rich text, structure, navigation, appearance, uploads, images, and overlays.
+- 40 atoms and components covering actions, display, forms, rich text, structure, navigation, appearance, uploads, images, and overlays.
 - Three evidence-backed layouts: responsive `Flex`, responsive `Grid`, and `Container`.
 - Eleven blocks and shells: `AuthShell`, `AppShell`, `SettingsLayout`, `Toolbar`, `PaginationBar`, `PageHeader`, `StatGrid`, `DataSection`, `FormSection`, `DangerZone`, and `EmptyState`.
 - The non-visual `AppearanceBootstrap`, `NitroKit::FormBuilder`, and typed `NitroKit::Choice` values.

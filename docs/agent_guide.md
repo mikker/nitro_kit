@@ -36,7 +36,7 @@ Prefer the component that owns the whole region, then compose smaller components
 
 | Product need                     | Begin with                                                |
 | -------------------------------- | --------------------------------------------------------- |
-| Application chrome               | `AppShell`, `AppNavigation`                               |
+| Application chrome               | `AppShell`, `AppNavigation`, `CommandPalette`             |
 | Authentication page              | `AuthShell`                                               |
 | Settings navigation              | `SettingsLayout`                                          |
 | Team or account administration   | `AppShell`, `Toolbar`, `Table`, `FormSection`             |

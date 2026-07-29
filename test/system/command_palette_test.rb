@@ -1,0 +1,84 @@
+require "application_system_test_case"
+
+class CommandPaletteSystemTest < ApplicationSystemTestCase
+  test "filters destinations and keeps native dialog and link behavior" do
+    visit gallery_component_path("command-palette")
+
+    root = "#gallery-command-palette-workspace"
+    trigger = "#{root} [data-slot='command-palette-trigger']"
+    panel = "#{root} [data-slot='command-palette-panel']"
+    input = "#{root} [data-slot='command-palette-input']"
+    destination = "#{root} [data-slot='command-palette-destination']"
+
+    find(trigger).click
+
+    assert_selector "#{panel}[open]"
+    assert_focused input
+
+    find(input).send_keys("billing")
+
+    assert_selector "#{destination}:not([hidden])", count: 1, text: "Billing"
+    assert_selector "#{root} [data-slot='command-palette-status']",
+      text: "1 destination available.", visible: :all
+
+    find(input).send_keys(:arrow_down)
+    assert_focused "#{destination}[href='#billing']"
+    active_element.send_keys(:escape)
+
+    assert_selector "#{panel}:not([open])", visible: :all
+    assert_focused trigger
+
+    find(trigger).click
+    find(input).send_keys("missing")
+
+    assert_selector "#{root} [data-slot='command-palette-empty']", text: "No destinations found."
+    assert_selector "#{root} [data-slot='command-palette-status']",
+      text: "No destinations found.", visible: :all
+    assert_no_selector "#{destination}:not([hidden])"
+
+    find("#{root} [data-slot='command-palette-close']").click
+    execute_script("document.querySelector(arguments[0]).removeAttribute('data-controller')", root)
+
+    assert_selector "#{root}:not([data-enhanced])"
+    assert_selector "#{root} [data-slot='command-palette-search'][hidden]", visible: :all
+    assert_no_selector "#{destination}[hidden]", visible: :all
+    assert_selector "#{trigger}[command='show-modal']"
+
+    find(trigger).click
+
+    assert_selector "#{panel}[open]"
+    assert_selector destination, count: 5
+    find("#{root} [data-slot='command-palette-close']").click
+    assert_selector "#{panel}:not([open])", visible: :all
+    assert_no_severe_console_errors
+  end
+
+  test "replaces remote results through the owned Turbo Frame" do
+    visit gallery_component_path("command-palette")
+
+    root = "#gallery-command-palette-async"
+    input = "#{root} [data-slot='command-palette-input']"
+    destination = "#{root} [data-slot='command-palette-destination']"
+    frame = "#{root} turbo-frame#gallery-command-palette-async-results-frame"
+
+    find("#{root} [data-slot='command-palette-trigger']").click
+    assert_selector destination, count: 5
+
+    find(input).send_keys("billing")
+    assert_selector "#{destination}:not([hidden])", count: 1, text: "Billing"
+    assert_selector "#{root} [data-slot='command-palette-status']",
+      text: "1 destination available.", visible: :all
+    assert_no_selector "#{frame}[aria-busy='true']"
+
+    find(input).set("missing")
+    assert_selector "#{root} [data-slot='command-palette-empty']", text: "No destinations found."
+    assert_no_selector destination
+
+    find(input).set("buttons")
+    assert_selector "#{destination}:not([hidden])", count: 1, text: "Buttons"
+    find(input).send_keys(:enter)
+
+    assert_current_path gallery_component_path("button")
+    assert_no_severe_console_errors
+  end
+end

@@ -23,10 +23,24 @@ module Gallery
           row.fields.each do |field|
             div do
               dt { field.label }
-              dd { render MarkdownText.new(field.value) }
+              dd { render_field(field) }
             end
           end
         end
+      end
+    end
+
+    private
+
+    def render_field(field)
+      if field.label == "Constructor-specific options"
+        ul(data: { gallery: "contract-options" }) do
+          field.value.split("; ").each do |option|
+            li { render MarkdownText.new(option) }
+          end
+        end
+      else
+        render MarkdownText.new(field.value)
       end
     end
   end
