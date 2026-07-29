@@ -3,6 +3,8 @@ module Gallery
     class ContactPage < ScenarioPage
       include Phlex::Rails::Helpers::FormWith
 
+      SentInquiry = ::Data.define(:reference, :topic, :reply_email, :submitted)
+
       private
 
       def render_scenario
@@ -130,29 +132,23 @@ module Gallery
           section.actions(NitroKit::ButtonGroup.new(label: "Contact result actions")) do |actions|
             actions.button("Send another inquiry", href: entry_path(entry, state: "form"))
           end
-          section.table(NitroKit::Table.new(id: "gallery-contact-sent-table")) do |table|
-            table.caption("Submitted contact inquiry")
-            table.thead do
-              table.tr do
-                table.th("Detail")
-                table.th("Value")
-              end
-            end
-            table.tbody do
-              [
-                [ "Reference", "CON-2048" ],
-                [ "Topic", "Enterprise" ],
-                [ "Reply email", "ada@example.test" ],
-                [ "Submitted", "July 13, 2026 at 11:18 UTC" ]
-              ].each do |label, value|
-                table.tr do
-                  table.th(label, scope: :row)
-                  table.td(value)
-                end
-              end
-            end
+          section.table NitroKit::DetailsTable.new(
+            sent_inquiry,
+            caption: "Submitted contact inquiry",
+            id: "gallery-contact-sent-table"
+          ) do |details|
+            details.fields(:reference, :topic, :reply_email, :submitted)
           end
         end
+      end
+
+      def sent_inquiry
+        SentInquiry.new(
+          reference: "CON-2048",
+          topic: "Enterprise",
+          reply_email: "ada@example.test",
+          submitted: "July 13, 2026 at 11:18 UTC"
+        )
       end
 
       def contact_inquiry

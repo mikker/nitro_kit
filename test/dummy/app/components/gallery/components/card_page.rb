@@ -134,11 +134,13 @@ module Gallery
                   size: :sm
                 )
                 p { integration.description }
-                dl do
-                  dt { "Connected" }
-                  dd { integration.connected_at.iso8601 }
-                  dt { "Delivery target" }
-                  dd { "Team operations channel" }
+                render NitroKit::DetailsTable.new(
+                  integration,
+                  id: "gallery-card-integration-details",
+                  label: "Slack integration details"
+                ) do |details|
+                  details.field(:connected_at, label: "Connected")
+                  details.field(:delivery_target, label: "Delivery target", value: "Team operations channel")
                 end
               end
               card.divider

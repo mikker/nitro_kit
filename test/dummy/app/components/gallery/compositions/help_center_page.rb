@@ -3,6 +3,8 @@ module Gallery
     class HelpCenterPage < ScenarioPage
       include Phlex::Rails::Helpers::FormWith
 
+      SupportRequest = ::Data.define(:category, :priority, :submitted)
+
       private
 
       def render_scenario
@@ -237,13 +239,11 @@ module Gallery
                 alert.title("Request SUP-2048 was created")
                 alert.description("A reply will be sent to ada@example.test within one business day.")
               end
-              dl(data: { gallery: "support-request-metadata" }) do
-                dt { "Category" }
-                dd { "Integrations" }
-                dt { "Priority" }
-                dd { "Normal" }
-                dt { "Submitted" }
-                dd { "July 13, 2026 at 09:44 UTC" }
+              render NitroKit::DetailsTable.new(
+                support_request,
+                data: { gallery: "support-request-metadata" }
+              ) do |details|
+                details.fields(:category, :priority, :submitted)
               end
             end
           end
@@ -270,6 +270,10 @@ module Gallery
           end
           Gallery::Forms::HelpSearch.new(attributes)
         end
+      end
+
+      def support_request
+        SupportRequest.new(category: "Integrations", priority: "Normal", submitted: "July 13, 2026 at 09:44 UTC")
       end
 
       def help_contact(invalid:)

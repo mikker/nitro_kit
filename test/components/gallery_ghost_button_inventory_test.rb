@@ -6,9 +6,10 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
   GHOST_PATTERN = /:ghost\b/
   OWNED_FILES = [
     *ROOT.glob("test/dummy/app/components/gallery/components/**/*.rb"),
-    *ROOT.glob("test/dummy/app/components/gallery/components/**/*.rb"),
     *ROOT.glob("test/dummy/app/components/gallery/compositions/**/*.rb"),
-    ROOT.join("test/dummy/app/components/gallery/code_sample.rb")
+    ROOT.join("test/dummy/app/components/gallery/code_sample.rb"),
+    ROOT.join("test/dummy/app/components/gallery/example.rb"),
+    ROOT.join("test/dummy/app/components/gallery/page.rb")
   ].freeze
   RETAINED_GHOSTS = {
     "test/dummy/app/components/gallery/components/app_shell_page.rb" => [
@@ -29,6 +30,22 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
       GhostUse.new(
         pattern: /"Copy",\s+id: copy_button_id,.*?variant: :ghost,/m,
         reason: "copy control embedded in the code toolbar"
+      )
+    ],
+    "test/dummy/app/components/gallery/example.rb" => [
+      GhostUse.new(
+        pattern: /"Reset",\s+type: :button,\s+variant: :ghost,/m,
+        reason: "reset control embedded in the responsive preview toolbar"
+      ),
+      GhostUse.new(
+        pattern: /"Full width",\s+type: :button,\s+variant: :ghost,/m,
+        reason: "full-width control embedded in the responsive preview toolbar"
+      )
+    ],
+    "test/dummy/app/components/gallery/page.rb" => [
+      GhostUse.new(
+        pattern: /variant: destination\.fetch\(:current\) \? :primary : :ghost/,
+        reason: "inactive destinations in the gallery's composition-state navigation chrome"
       )
     ],
     "test/dummy/app/components/gallery/components/app_navigation_page.rb" => [
@@ -65,6 +82,12 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
         reason: "compact account menu trigger embedded in application-shell topbar chrome"
       )
     ],
+    "test/dummy/app/components/gallery/compositions/product_resource_page.rb" => [
+      GhostUse.new(
+        pattern: /href: back_path,\s+icon: :arrow_left,\s+label: back_label,\s+size: :sm,\s+variant: :ghost,/m,
+        reason: "compact back link embedded in product-resource toolbar chrome"
+      )
+    ],
     "test/dummy/app/components/gallery/compositions/sidebar_application_page.rb" => [
       GhostUse.new(
         pattern: /menu\.trigger\("Account", variant: :ghost, size: :sm\)/,
@@ -90,7 +113,7 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
     end.reject { |_path, count| count.zero? }
 
     assert_equal RETAINED_GHOSTS.keys.sort, actual_by_file.keys.sort
-    assert_equal 13, actual_by_file.values.sum
+    assert_equal 17, actual_by_file.values.sum
 
     RETAINED_GHOSTS.each do |relative_path, uses|
       source = ROOT.join(relative_path).read

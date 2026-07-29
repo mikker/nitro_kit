@@ -7,12 +7,7 @@ module Gallery
       private
 
       def page_template
-        header(data: { gallery: "composition-header" }) do
-          p(data: { gallery: "eyebrow" }) { "Recovery" }
-          h1 { entry.title }
-          p { entry.description }
-          state_navigation
-        end
+        render_composition_header(eyebrow: "Recovery")
 
         render Section.new(
           slug: "password-reset-screen",
@@ -185,15 +180,6 @@ module Gallery
         }.fetch(state)
       end
 
-      def state_navigation
-        nav(aria: { label: "Password reset states" }, data: { gallery: "composition-states" }) do
-          entry.states.each do |name|
-            a(href: entry_path(entry, state: name), aria: { current: state == name ? "page" : nil }) do
-              name.humanize
-            end
-          end
-        end
-      end
 
       def sign_in_path
         entry_path(Gallery::Catalog.fetch!(kind: :composition, slug: "sign-in"))

@@ -1,6 +1,9 @@
 module Gallery
   module Data
     Member = ::Data.define(:id, :name, :email, :role, :status, :avatar_url, :joined_on)
+    Membership = ::Data.define(:team_id, :id, :name, :email, :role, :status, :avatar_url, :joined_on)
+    Team = ::Data.define(:id, :name, :role, :member_count)
+    Invitation = ::Data.define(:id, :team_id, :email, :role, :invited_by, :sent_at, :expires_on)
     Activity = ::Data.define(:id, :actor, :action, :subject, :occurred_at)
     Invoice = ::Data.define(:id, :number, :status, :amount_cents, :currency, :issued_on, :due_on)
     Plan = ::Data.define(:id, :name, :price_cents, :interval, :features, :current)
@@ -63,6 +66,49 @@ module Gallery
         status: :invited,
         avatar_url: nil,
         joined_on: nil
+      )
+    ].freeze
+
+    TEAMS = [
+      Team.new(
+        id: "team_analytical",
+        name: "Analytical Engines — Research and Production",
+        role: :owner,
+        member_count: 10
+      ),
+      Team.new(
+        id: "team_apollo",
+        name: "Apollo Guidance Operations",
+        role: :administrator,
+        member_count: 14
+      ),
+      Team.new(
+        id: "team_compilers",
+        name: "Compiler Reliability Working Group",
+        role: :member,
+        member_count: 6
+      )
+    ].freeze
+    CURRENT_TEAM_ID = "team_analytical"
+
+    PENDING_INVITATIONS = [
+      Invitation.new(
+        id: "inv_katherine",
+        team_id: "team_analytical",
+        email: "katherine@example.test",
+        role: :member,
+        invited_by: "Ada Lovelace",
+        sent_at: Time.utc(2026, 7, 12, 16, 18),
+        expires_on: Date.new(2026, 7, 26)
+      ),
+      Invitation.new(
+        id: "inv_dorothy",
+        team_id: "team_analytical",
+        email: "dorothy.vaughan@example.test",
+        role: :administrator,
+        invited_by: "Grace Hopper",
+        sent_at: Time.utc(2026, 7, 13, 9, 4),
+        expires_on: Date.new(2026, 7, 27)
       )
     ].freeze
 
@@ -569,6 +615,19 @@ module Gallery
       )
     ]).freeze
 
+    memberships = lambda do |team_id, member, role = member.role|
+      Membership.new(team_id:, **member.to_h.merge(role:))
+    end
+    MEMBERSHIPS = [
+      *DENSE_MEMBERS.reject { |member| member.status == :invited }.map do |member|
+        memberships.call("team_analytical", member)
+      end,
+      memberships.call("team_apollo", MEMBERS.fetch(0), :admin),
+      memberships.call("team_apollo", MEMBERS.fetch(1), :owner),
+      memberships.call("team_compilers", MEMBERS.fetch(0), :member),
+      memberships.call("team_compilers", MEMBERS.fetch(1), :owner)
+    ].freeze
+
     DENSE_API_KEYS = (API_KEYS + [
       ApiKey.new(
         id: "key_audit_export",
@@ -628,6 +687,21 @@ module Gallery
     module_function
 
     def members = MEMBERS
+    def teams = TEAMS
+    def team(id) = TEAMS.find { |candidate| candidate.id == id }
+    def current_team = team(CURRENT_TEAM_ID)
+    def memberships(team_id:, dense: false)
+      matches = MEMBERSHIPS.select { |membership| membership.team_id == team_id }
+      return matches if dense || team_id != CURRENT_TEAM_ID
+
+      member_ids = MEMBERS.reject { |member| member.status == :invited }.map(&:id)
+      matches.select { |membership| member_ids.include?(membership.id) }
+    end
+    def pending_invitations(team_id: nil)
+      return PENDING_INVITATIONS unless team_id
+
+      PENDING_INVITATIONS.select { |invitation| invitation.team_id == team_id }
+    end
     def activities = ACTIVITIES
     def invoices = INVOICES
     def plans = PLANS

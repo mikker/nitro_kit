@@ -47,27 +47,13 @@ module Gallery
           section.actions(NitroKit::ButtonGroup.new(label: "Order summary actions")) do |actions|
             actions.button("Download record", href: "#download-#{outcome.reference.downcase}")
           end
-          section.table(NitroKit::Table.new(id: "gallery-checkout-result-page-table")) do |table|
-            table.caption("Caller-owned checkout outcome details")
-            table.thead do
-              table.tr do
-                table.th("Detail")
-                table.th("Value")
-              end
-            end
-            table.tbody do
-              [
-                [ "Reference", outcome.reference ],
-                [ "Amount", outcome.amount ],
-                [ "Next step", outcome.next_step ],
-                [ "Recorded", "July 13, 2026 at 11:24 UTC" ]
-              ].each do |label, value|
-                table.tr do
-                  table.th(label, scope: :row)
-                  table.td(value)
-                end
-              end
-            end
+          section.table NitroKit::DetailsTable.new(
+            outcome,
+            caption: "Caller-owned checkout outcome details",
+            id: "gallery-checkout-result-page-table"
+          ) do |details|
+            details.fields(:reference, :amount, :next_step)
+            details.field(:recorded, value: "July 13, 2026 at 11:24 UTC")
           end
         end
       end

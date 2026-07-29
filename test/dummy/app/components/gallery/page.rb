@@ -129,6 +129,44 @@ module Gallery
       !@preview_definitions.nil?
     end
 
+    def render_composition_header(eyebrow: nil, destinations: composition_destinations, navigation_label: nil)
+      render NitroKit::PageHeader.new(
+        title: entry.title,
+        eyebrow:,
+        description: entry.description,
+        data: { gallery: "composition-header" }
+      )
+
+      return if destinations.empty?
+
+      nav(
+        aria: { label: navigation_label || "#{entry.title} states" },
+        data: { gallery: "composition-states" }
+      ) do
+        render NitroKit::Flex.new(dir: :row, gap: 2, align: :center, wrap: :wrap) do
+          destinations.each do |destination|
+            render NitroKit::Button.new(
+              destination.fetch(:label),
+              href: destination.fetch(:href),
+              size: :sm,
+              variant: destination.fetch(:current) ? :primary : :ghost,
+              aria: { current: destination.fetch(:current) ? "page" : nil }
+            )
+          end
+        end
+      end
+    end
+
+    def composition_destinations
+      entry.states.map do |candidate|
+        {
+          label: candidate.humanize,
+          href: entry_path(entry, state: candidate),
+          current: candidate == state
+        }
+      end
+    end
+
     def normalize_example_slug(value)
       slug = value.to_s.tr("_", "-")
       return slug if slug.match?(Primitive::SLUG_PATTERN)

@@ -105,13 +105,13 @@ module Gallery
               render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
                 render NitroKit::Badge.new("Available", color: :info, id: "gallery-integration-detail-status")
                 p { provider.summary }
-                dl(data: { gallery: "integration-detail-metadata" }) do
-                  dt { "Category" }
-                  dd { provider.category.to_s.humanize }
-                  dt { "Authorization" }
-                  dd { "Workspace owner approval required" }
-                  dt { "Data shared" }
-                  dd { "Release names, deployment references, and error identifiers" }
+                render NitroKit::DetailsTable.new(
+                  provider,
+                  data: { gallery: "integration-detail-metadata" }
+                ) do |details|
+                  details.field(:category) { |category| plain category.to_s.humanize }
+                  details.field(:authorization, value: "Workspace owner approval required")
+                  details.field(:data_shared, value: "Release names, deployment references, and error identifiers")
                 end
               end
             end

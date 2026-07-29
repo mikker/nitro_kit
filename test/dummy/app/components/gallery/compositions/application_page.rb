@@ -30,11 +30,10 @@ module Gallery
       private
 
       def page_template
-        header(data: { gallery: "composition-header" }) do
-          h1 { entry.title }
-          p { entry.description }
-          application_navigation
-        end
+        render_composition_header(
+          destinations: application_destinations,
+          navigation_label: "Complete application layouts"
+        )
 
         application_template
       end
@@ -43,14 +42,14 @@ module Gallery
         raise NotImplementedError, "#{self.class.name} must implement #application_template"
       end
 
-      def application_navigation
-        nav(aria: { label: "Complete application layouts" }, data: { gallery: "composition-states" }) do
-          APPLICATION_SLUGS.each do |slug|
-            target = Gallery::Catalog.fetch!(kind: :composition, slug:)
-            a(href: entry_path(target), aria: { current: entry.slug == slug ? "page" : nil }) do
-              target.title
-            end
-          end
+      def application_destinations
+        APPLICATION_SLUGS.map do |slug|
+          target = Gallery::Catalog.fetch!(kind: :composition, slug:)
+          {
+            label: target.title,
+            href: entry_path(target),
+            current: entry.slug == slug
+          }
         end
       end
 

@@ -70,6 +70,7 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-billing-plan-grid[data-gallery='billing-plan-grid'][data-nk='grid'][data-cols='1 sm:2 lg:3']" \
                   "[aria-label='Available plans']"
     assert_select "[data-gallery='billing-plan-grid'] [data-nk='card']", count: 3
+    assert_select "[data-gallery='billing-plan-grid'] [data-nk='typeset']", count: 3
     assert_select "#gallery-billing-current-plan[data-color='success']", text: "Current: Team"
     assert_select "#gallery-billing-plan_team-badge", text: "Current plan"
     assert_select "#gallery-billing-plan_team-choose[aria-disabled='true']", text: "Manage Team plan"
@@ -104,7 +105,7 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
 
     get_flow("billing", "payment-updated")
     assert_select "#gallery-billing-payment-updated[data-variant='success']", text: /Future Team plan charges/
-    assert_select "[data-gallery='billing-payment-summary'] dt", count: 3
+    assert_select "[data-gallery='billing-payment-summary'][data-nk='details-table'] tbody tr", count: 3
     assert_select "#gallery-billing-payment-updated-continue[href$='/billing/invoices']"
   end
 
@@ -141,7 +142,7 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
 
     get_flow("billing", "invoice-detail")
     assert_select "#gallery-billing-invoice-detail-card", text: /NK-2026-0713/
-    assert_select "[data-gallery='billing-invoice-metadata'] dt", count: 4
+    assert_select "[data-gallery='billing-invoice-metadata'][data-nk='details-table'] tbody tr", count: 4
     assert_select "#gallery-billing-invoice-lines table" do
       assert_select "caption", text: "Line items for NK-2026-0713"
       assert_select "tbody tr", count: 3
@@ -188,11 +189,12 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
 
     get_flow("billing", "cancelled")
     assert_select "#gallery-billing-cancelled[data-variant='success']", text: /No further charges/
-    assert_select "[data-gallery='billing-cancellation-summary'] dt", count: 3
+    assert_select "[data-gallery='billing-cancellation-summary'][data-nk='details-table'] tbody tr", count: 3
     assert_select "#gallery-billing-reactivate[href='#reactivate']", text: "Reactivate Team plan"
 
     get_flow("billing", "mobile")
     assert_select "[data-gallery-composition='billing'][data-gallery-mobile='true']"
+    assert_select "[data-gallery='billing-mobile-summary'][data-nk='details-table'] tbody tr", count: 3
     assert_select "#gallery-billing-mobile-card", text: /accounts-payable\+international-research-and-production@example\.test/
   end
 
@@ -230,7 +232,7 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
     get_flow("users", "detail")
     assert_select "#gallery-users-detail-avatar[data-nk='avatar'][data-size='lg']"
     assert_select "#gallery-users-detail-status[data-color='success']", text: "Active"
-    assert_select "[data-gallery='user-detail-metadata'] dt", count: 5
+    assert_select "[data-gallery='user-detail-metadata'][data-nk='details-table'] tbody tr", count: 5
     assert_select "#gallery-users-detail-activity table" do
       assert_select "caption", text: "Recent activity for Grace Hopper"
       assert_select "tbody tr", count: 3
@@ -318,11 +320,12 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
 
     get_flow("users", "bulk-complete")
     assert_select "#gallery-users-bulk-complete[data-variant='success']", text: /2 user records were updated/
-    assert_select "[data-gallery='bulk-operation-summary'] dt", count: 3
+    assert_select "[data-gallery='bulk-operation-summary'][data-nk='details-table'] tbody tr", count: 3
     assert_select "#gallery-users-bulk-complete-return[href$='/users/index']"
 
     get_flow("users", "mobile")
     assert_select "[data-gallery-composition='users'][data-gallery-mobile='true']"
+    assert_select "[data-gallery='user-mobile-metadata'][data-nk='details-table'] tbody tr", count: 4
     assert_select "#gallery-users-mobile-card", text: /margaret\.hamilton\+apollo-guidance-software@example\.test/
     assert_select "#gallery-users-mobile-actions[role='group'][aria-label='Actions for Margaret Hamilton']"
   end

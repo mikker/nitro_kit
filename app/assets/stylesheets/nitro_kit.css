@@ -5925,8 +5925,6 @@
     min-width: 0;
   }
 
-  /* The indicator border is always present so the current item never shifts
-     its label, and the row keeps the compact height of a small control. */
   :where([data-nk="settings-layout"] [data-slot="settings-layout-item-link"]) {
     display: flex;
     gap: calc(var(--nk-space) * 2);
@@ -5938,11 +5936,9 @@
     font-weight: var(--nk-font-weight-medium);
     line-height: var(--nk-leading-tight);
     text-decoration: none;
-    border-inline-start: var(--nk-focus-width) solid transparent;
     border-radius: var(--nk-radius-md);
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
-      border-color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);
   }
 
@@ -5953,15 +5949,14 @@
 }
 
 @layer nitro-kit.state {
-  /* The current destination reads through emphasis and a leading indicator
-     rather than a filled block, which would outweigh the content beside it. */
+  /* Emphasis alone marks the current destination without adding a decorative
+     edge or a filled block that would outweigh the content beside it. */
   :where(
     [data-nk="settings-layout"]
       [data-slot="settings-layout-item-link"][data-state="current"]
   ) {
     color: var(--nk-color-foreground);
     font-weight: var(--nk-font-weight-semibold);
-    border-inline-start-color: var(--nk-color-primary);
   }
 
   :where(

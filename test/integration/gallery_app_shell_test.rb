@@ -72,6 +72,12 @@ class GalleryAppShellTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-app-shell-minimal [data-slot='app-shell-topbar']", count: 0
     assert_select "#gallery-app-shell-hybrid [data-slot='app-navigation-item']", minimum: 8
     assert_select "#gallery-app-shell-long [data-slot='app-navigation-item-label']", text: /Cross-regional capacity/
+    assert_select "#gallery-app-shell-sidebar [data-nk='page-header']" do
+      assert_select "h4[data-slot='page-header-title']", text: "Workspace overview"
+    end
+    assert_select "#gallery-app-shell-sidebar [data-nk='grid'][data-cols='1 sm:2 lg:3']" do
+      assert_select "> [data-nk='card']", count: 3
+    end
     assert_select "#example-app-shell-sidebar-code [data-gallery='code-source']", text: /NitroKit::AppShell\.new/
     assert_select "[data-gallery='example-canvas'] [class]", count: 0
     assert_select "[data-gallery='example-canvas'] [style]", count: 0

@@ -62,8 +62,10 @@ module Gallery
                 render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
                   render NitroKit::Badge.new("Recommended", color: :success) if plan.highlighted
                   strong { plan_price(plan) }
-                  p { plan.description }
-                  ul { plan.features.each { |feature| li { feature } } }
+                  render NitroKit::Typeset.new do
+                    p { plan.description }
+                    ul { plan.features.each { |feature| li { feature } } }
+                  end
                 end
               end
               card.footer do

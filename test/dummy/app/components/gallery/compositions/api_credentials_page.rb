@@ -7,12 +7,7 @@ module Gallery
       private
 
       def page_template
-        header(data: { gallery: "composition-header" }) do
-          p(data: { gallery: "eyebrow" }) { "API credential" }
-          h1 { entry.title }
-          p { entry.description }
-          state_navigation
-        end
+        render_composition_header(eyebrow: "API credential")
 
         render Section.new(
           slug: "api-credentials-screen",
@@ -395,16 +390,6 @@ module Gallery
           "dense" => "Six deterministic credentials pressure row actions and operational timestamps.",
           "mobile" => "The credential inventory remains semantic inside a narrow overflow surface."
         }.fetch(state)
-      end
-
-      def state_navigation
-        nav(aria: { label: "API credential states" }, data: { gallery: "composition-states" }) do
-          entry.states.each do |name|
-            a(href: entry_path(entry, state: name), aria: { current: state == name ? "page" : nil }) do
-              name.humanize
-            end
-          end
-        end
       end
     end
   end

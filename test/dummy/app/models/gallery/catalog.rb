@@ -114,7 +114,7 @@ module Gallery
         description: "A compound surface with typed title, body, divider, and footer slots.",
         page: Gallery::Components::CardPage,
         states: [],
-        expected_roots: %w[card field input badge button-group button]
+        expected_roots: %w[card details-table table field input badge button-group button]
       ),
       Entry.new(
         kind: :component,
@@ -484,7 +484,7 @@ module Gallery
         description: "Sidebar, topbar, and hybrid application frames that reflow one AppNavigation tree through an accessible narrow drawer.",
         page: Gallery::Components::AppShellPage,
         states: [],
-        expected_roots: %w[app-shell app-navigation icon badge button-group button container card]
+        expected_roots: %w[app-shell app-navigation icon badge button-group button container flex grid page-header card]
       ),
       Entry.new(
         kind: :component,
@@ -564,7 +564,7 @@ module Gallery
         description: "Impact anatomy around a caller-owned confirmation composition and explicit safe escape.",
         page: Gallery::Components::DangerZonePage,
         states: [],
-        expected_roots: %w[danger-zone button dialog field input container]
+        expected_roots: %w[danger-zone button-to button dialog field input container]
       ),
       Entry.new(
         kind: :component,
@@ -676,10 +676,11 @@ module Gallery
         kind: :composition,
         slug: "team-management",
         title: "Team management",
-        description: "Component-composed member inventory, invitation, role, removal, outcome, density, and mobile states.",
+        description: "Component-composed team context, current memberships, pending invitations, server-enforced ownership, access changes, and pressure states.",
         page: Gallery::Compositions::TeamManagementPage,
         states: %w[
-          members search empty invite invite-validation loading role-change remove-confirmation removed error dense mobile
+          members multiple-teams search empty invite invite-validation loading role-change last-owner-validation
+          remove-confirmation removed error dense mobile
         ],
         expected_roots: %w[container flex button]
       ),
@@ -756,6 +757,17 @@ module Gallery
         page: Gallery::Compositions::DataResourceSettingsPage,
         states: %w[general validation success access danger error long mobile],
         expected_roots: %w[page-header container flex button-group button]
+      ),
+      Entry.new(
+        kind: :composition,
+        slug: "product-resource",
+        title: "Product resource lifecycle",
+        description: "A coherent product resource composition covering queryable indexes, validated forms, lifecycle details, edit-owned deletion, and a narrow hybrid shell.",
+        page: Gallery::Compositions::ProductResourcePage,
+        states: %w[
+          index filtered empty paginated new new-validation edit edit-validation active archived history narrow
+        ],
+        expected_roots: %w[app-shell app-navigation toolbar container flex button]
       ),
       Entry.new(
         kind: :composition,
@@ -1066,6 +1078,7 @@ module Gallery
               "data-resource-overview",
               "data-resource-activity",
               "data-resource-settings",
+              "product-resource",
               "api-webhooks",
               "integration-management",
               "uploads",

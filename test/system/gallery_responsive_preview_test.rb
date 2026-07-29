@@ -56,10 +56,14 @@ class GalleryResponsivePreviewTest < ApplicationSystemTestCase
     assert_text "336 px · base"
     assert_equal "336", handle["aria-valuenow"]
 
-    viewport.find("button", text: "Full width").click
-    assert_text(/px · (md|lg|xl|2xl) · full/)
     viewport.find("button", text: "Reset").click
     assert_text(/px · (md|lg|xl|2xl) · full/)
     assert viewport.find("button", text: "Reset").disabled?
+
+    execute_script("arguments[0].focus()", range)
+    range.send_keys(:home)
+    viewport.find("button", text: "Full width").click
+    assert_text(/px · (md|lg|xl|2xl) · full/)
+    assert viewport.find("button", text: "Full width").disabled?
   end
 end

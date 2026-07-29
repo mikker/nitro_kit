@@ -4,6 +4,8 @@ module Gallery
       include Phlex::Rails::Helpers::FormWith
       include Phlex::Rails::Helpers::TurboFrameTag
 
+      BillingOverview = ::Data.define(:next_invoice, :receipt_destination, :payment_method)
+
       CANCELLATION_REASONS = [
         [ "The plan is too expensive", "too_expensive" ],
         [ "A feature we need is missing", "missing_feature" ],
@@ -15,12 +17,7 @@ module Gallery
       private
 
       def page_template
-        header(data: { gallery: "composition-header" }) do
-          p(data: { gallery: "eyebrow" }) { "Billing" }
-          h1 { entry.title }
-          p { entry.description }
-          state_navigation
-        end
+        render_composition_header(eyebrow: "Billing")
 
         render Section.new(
           slug: "billing-screen",
@@ -101,9 +98,11 @@ module Gallery
                 card.title(plan.name, level: 5)
                 card.body do
                   render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-                    p { plan_price(plan) }
-                    ul do
-                      plan.features.each { |feature| li { feature } }
+                    render NitroKit::Typeset.new do
+                      p { plan_price(plan) }
+                      ul do
+                        plan.features.each { |feature| li { feature } }
+                      end
                     end
                     if plan.current
                       render NitroKit::Badge.new("Current plan", id: "gallery-billing-#{plan.id}-badge", color: :success)
@@ -232,13 +231,13 @@ module Gallery
                 alert.title("Visa ending in 4242 is ready")
                 alert.description("Future Team plan charges and retry attempts will use this card.")
               end
-              dl(data: { gallery: "billing-payment-summary" }) do
-                dt { "Cardholder" }
-                dd { "Ada Lovelace" }
-                dt { "Receipt email" }
-                dd { "accounts-payable+analytical-engines@example.test" }
-                dt { "Next charge" }
-                dd { "$49.00 on August 1, 2026" }
+              render NitroKit::DetailsTable.new(
+                payment_method_example(invalid: false),
+                data: { gallery: "billing-payment-summary" }
+              ) do |details|
+                details.field(:cardholder_name, label: "Cardholder")
+                details.field(:billing_email, label: "Receipt email")
+                details.field(:next_charge, value: "$49.00 on August 1, 2026")
               end
             end
           end
@@ -361,15 +360,14 @@ module Gallery
           card.body do
             render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Badge.new("Paid", id: "gallery-billing-invoice-detail-status", color: :success)
-              dl(data: { gallery: "billing-invoice-metadata" }) do
-                dt { "Issued" }
-                dd { "July 1, 2026" }
-                dt { "Paid" }
-                dd { "July 1, 2026 at 08:04 UTC" }
-                dt { "Billed to" }
-                dd { "Analytical Engines Ltd., 12 Long Calculation Street, London SW1A 1AA, United Kingdom" }
-                dt { "Payment method" }
-                dd { "Visa ending in 4242" }
+              render NitroKit::DetailsTable.new(
+                invoice,
+                data: { gallery: "billing-invoice-metadata" }
+              ) do |details|
+                details.field(:issued_on, label: "Issued") { |date| plain date.to_fs(:long) }
+                details.field(:paid, value: "July 1, 2026 at 08:04 UTC")
+                details.field(:billed_to, value: "Analytical Engines Ltd., 12 Long Calculation Street, London SW1A 1AA, United Kingdom")
+                details.field(:payment_method, value: "Visa ending in 4242")
               end
 
               render NitroKit::Table.new(id: "gallery-billing-invoice-lines") do |table|
@@ -531,13 +529,13 @@ module Gallery
                 alert.title("Team plan ends August 1, 2026")
                 alert.description("No further charges are scheduled. You can reactivate before the period ends without losing settings.")
               end
-              dl(data: { gallery: "billing-cancellation-summary" }) do
-                dt { "Reference" }
-                dd { "cancel_2026_07_13_analytical_engines" }
-                dt { "Reason" }
-                dd { "Temporary pause" }
-                dt { "Access after cancellation" }
-                dd { "Starter plan with three active members" }
+              render NitroKit::DetailsTable.new(
+                cancellation_example(invalid: false),
+                data: { gallery: "billing-cancellation-summary" }
+              ) do |details|
+                details.field(:reference, value: "cancel_2026_07_13_analytical_engines")
+                details.field(:reason) { |reason| plain reason.humanize }
+                details.field(:access_after_cancellation, value: "Starter plan with three active members")
               end
             end
           end
@@ -559,13 +557,11 @@ module Gallery
           card.body do
             render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Badge.new("Active", id: "gallery-billing-mobile-status", color: :success)
-              dl(data: { gallery: "billing-mobile-summary" }) do
-                dt { "Next invoice" }
-                dd { "$49.00 USD on August 1, 2026" }
-                dt { "Receipt destination" }
-                dd { "accounts-payable+international-research-and-production@example.test" }
-                dt { "Payment method" }
-                dd { "Corporate Visa ending in 4242, expiring August 2026" }
+              render NitroKit::DetailsTable.new(
+                billing_overview,
+                data: { gallery: "billing-mobile-summary" }
+              ) do |details|
+                details.fields(:next_invoice, :receipt_destination, :payment_method)
               end
               p do
                 "Changing or cancelling the plan affects 18 active members, two pending invitations, automated " \
@@ -614,6 +610,14 @@ module Gallery
         Gallery::Forms::PaymentMethod.new(**attributes).tap { |form| form.validate if invalid }
       end
 
+      def billing_overview
+        BillingOverview.new(
+          next_invoice: "$49.00 USD on August 1, 2026",
+          receipt_destination: "accounts-payable+international-research-and-production@example.test",
+          payment_method: "Corporate Visa ending in 4242, expiring August 2026"
+        )
+      end
+
       def cancellation_example(invalid:)
         attributes = if invalid
           { reason: nil, feedback: "x" * 501, confirmed: false }
@@ -628,15 +632,6 @@ module Gallery
         Gallery::Forms::SubscriptionCancellation.new(**attributes).tap { |form| form.validate if invalid }
       end
 
-      def state_navigation
-        nav(aria: { label: "Billing states" }, data: { gallery: "composition-states" }) do
-          entry.states.each do |name|
-            a(href: entry_path(entry, state: name), aria: { current: state == name ? "page" : nil }) do
-              name.humanize
-            end
-          end
-        end
-      end
 
       def state_description
         {

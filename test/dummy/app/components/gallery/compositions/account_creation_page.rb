@@ -7,12 +7,7 @@ module Gallery
       private
 
       def page_template
-        header(data: { gallery: "composition-header" }) do
-          p(data: { gallery: "eyebrow" }) { "Registration" }
-          h1 { entry.title }
-          p { entry.description }
-          state_navigation
-        end
+        render_composition_header(eyebrow: "Registration")
 
         render Section.new(
           slug: "account-creation-screen",
@@ -165,16 +160,6 @@ module Gallery
           "long-copy" => "Specific privacy guidance wraps above the same unchanged form.",
           "mobile" => "A long email address and all required fields fit a narrow viewport."
         }.fetch(state)
-      end
-
-      def state_navigation
-        nav(aria: { label: "Account creation states" }, data: { gallery: "composition-states" }) do
-          entry.states.each do |name|
-            a(href: entry_path(entry, state: name), aria: { current: state == name ? "page" : nil }) do
-              name.humanize
-            end
-          end
-        end
       end
     end
   end

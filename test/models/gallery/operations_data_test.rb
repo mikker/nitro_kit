@@ -44,13 +44,37 @@ class Gallery::OperationsDataTest < ActiveSupport::TestCase
     invalid_removal = Gallery::OperationsFormExamples.team_member_action(:remove_invalid)
 
     assert role.valid?
-    assert_equal Gallery::Data.members.fetch(1), role.member
+    assert_equal Gallery::Data::CURRENT_TEAM_ID, role.team_id
+    assert_equal "mem_grace", role.member.id
+    assert_equal "grace@example.test", role.member.email
     assert_equal "viewer", role.role
     assert invalid_role.invalid?
     assert invalid_role.errors.of_kind?(:role, :inclusion)
     assert removal.valid?
     assert invalid_removal.invalid?
     assert_includes invalid_removal.errors[:confirmation], "must match the member email address"
+  end
+
+  test "team member ownership validation is scoped to one selected team" do
+    analytical_last_owner = Gallery::OperationsFormExamples.team_member_action(:last_owner_invalid)
+    promote_grace = Gallery::Forms::TeamMemberAction.new(
+      team_id: Gallery::Data::CURRENT_TEAM_ID,
+      action: "change_role",
+      member_id: "mem_grace",
+      role: "owner"
+    )
+    apollo_last_owner = Gallery::Forms::TeamMemberAction.new(
+      team_id: "team_apollo",
+      action: "change_role",
+      member_id: "mem_grace",
+      role: "member"
+    )
+
+    assert analytical_last_owner.invalid?
+    assert promote_grace.valid?
+    assert apollo_last_owner.invalid?
+    assert_includes apollo_last_owner.errors[:role],
+      "cannot be changed because every team must keep at least one owner"
   end
 
   test "credential revocation examples validate known keys and explicit acknowledgement" do

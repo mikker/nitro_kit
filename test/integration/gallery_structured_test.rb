@@ -134,6 +134,11 @@ class GalleryStructuredTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-card-integration[data-nk='card']" do
       assert_select "[data-slot='card-title']", text: "Slack"
       assert_select "#gallery-card-integration-status[data-nk='badge'][data-color='warning']"
+      assert_select "#gallery-card-integration-details[data-nk='details-table']" do
+        assert_select "th[scope='row']", text: "Connected"
+        assert_select "th[scope='row']", text: "Delivery target"
+        assert_select "td", text: "Team operations channel"
+      end
       assert_select "[data-slot='card-divider']", count: 1
       assert_select "#gallery-card-integration-actions[data-nk='button-group'] [data-nk='button']", count: 2
     end

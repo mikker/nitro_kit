@@ -77,7 +77,7 @@ class PublicSystemMarketingFlowsTest < ActionDispatch::IntegrationTest
       get_flow("system-status", state)
 
       assert_select "#gallery-system-status-alert[data-gallery-status-code]", text: /#{Regexp.escape(expected_copy.first)}/
-      assert_select "#gallery-system-status-table", text: /#{Regexp.escape(expected_copy.last)}/
+      assert_select "#gallery-system-status-table[data-nk='details-table']", text: /#{Regexp.escape(expected_copy.last)}/
       assert_select "#gallery-system-status-actions [data-nk='button']", minimum: 1
     end
 
@@ -120,6 +120,7 @@ class PublicSystemMarketingFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-pricing-cadence [aria-current='page']", text: "Monthly"
     assert_select "#gallery-pricing-plan-team", text: /\$49 per month/
     assert_select "#gallery-pricing-plan-grid > [data-nk='card']", count: 3
+    assert_select "#gallery-pricing-plan-grid [data-nk='typeset']", count: 3
 
     get_flow("pricing", "annual")
     assert_select "#gallery-pricing-cadence [aria-current='page']", text: "Annual"
@@ -191,7 +192,7 @@ class PublicSystemMarketingFlowsTest < ActionDispatch::IntegrationTest
 
     get_flow("contact", "sent")
     assert_select "#gallery-contact-sent[data-variant='success']", text: /CON-2048/
-    assert_select "#gallery-contact-sent-table tbody tr", count: 4
+    assert_select "#gallery-contact-sent-table[data-nk='details-table'] tbody tr", count: 4
     assert_select "#gallery-contact-form", count: 0
 
     get_flow("contact", "long")
@@ -213,7 +214,7 @@ class PublicSystemMarketingFlowsTest < ActionDispatch::IntegrationTest
       get_flow("checkout-result", state)
 
       assert_select "#gallery-checkout-result-page-alert[data-gallery-checkout-outcome='#{state}']", text: /#{expected_copy.last}/i
-      assert_select "#gallery-checkout-result-page-table", text: /#{expected_copy.first}/
+      assert_select "#gallery-checkout-result-page-table[data-nk='details-table']", text: /#{expected_copy.first}/
       assert_select "#gallery-checkout-result-page-actions [data-nk='button']", count: 2
     end
 
@@ -223,11 +224,11 @@ class PublicSystemMarketingFlowsTest < ActionDispatch::IntegrationTest
 
     get_flow("checkout-result", "long")
     assert_select "#gallery-checkout-result-page-alert", text: /International Research, Production/
-    assert_select "#gallery-checkout-result-page-table", text: /INV-INTERNATIONAL-RESEARCH-3049/
+    assert_select "#gallery-checkout-result-page-table[data-nk='details-table']", text: /INV-INTERNATIONAL-RESEARCH-3049/
 
     get_flow("checkout-result", "mobile")
     assert_select "[data-gallery-mobile='true']"
-    assert_select "#gallery-checkout-result-page-table tbody tr", count: 4
+    assert_select "#gallery-checkout-result-page-table[data-nk='details-table'] tbody tr", count: 4
   end
 
   private

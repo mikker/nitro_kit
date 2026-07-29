@@ -7,12 +7,7 @@ module Gallery
       private
 
       def page_template
-        header(data: { gallery: "composition-header" }) do
-          p(data: { gallery: "eyebrow" }) { "Identity" }
-          h1 { entry.title }
-          p { entry.description }
-          state_navigation
-        end
+        render_composition_header(eyebrow: "Identity")
 
         render Section.new(
           slug: "email-verification-screen",
@@ -180,16 +175,6 @@ module Gallery
           "invalid-token" => "An invalid or already-used token explains the next support path.",
           "long-copy" => "Long addresses and operational guidance wrap without special component modes."
         }.fetch(state)
-      end
-
-      def state_navigation
-        nav(aria: { label: "Email verification states" }, data: { gallery: "composition-states" }) do
-          entry.states.each do |name|
-            a(href: entry_path(entry, state: name), aria: { current: state == name ? "page" : nil }) do
-              name.humanize
-            end
-          end
-        end
       end
     end
   end

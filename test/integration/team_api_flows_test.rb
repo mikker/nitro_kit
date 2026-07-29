@@ -3,7 +3,8 @@ require "test_helper"
 class TeamApiFlowsTest < ActionDispatch::IntegrationTest
   FLOW_STATES = {
     "team-management" => %w[
-      members search empty invite invite-validation loading role-change remove-confirmation removed error dense mobile
+      members multiple-teams search empty invite invite-validation loading role-change last-owner-validation
+      remove-confirmation removed error dense mobile
     ],
     "api-credentials" => %w[
       list empty create validation loading reveal-once revoke-confirmation revoked expired error long dense mobile
@@ -82,28 +83,86 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
   test "team inventory search empty and pressure states preserve semantic operations" do
     get_flow("team-management", "members")
     assert_select "#gallery-team-members-section[data-nk='data-section']" do
-      assert_select "> [data-slot='data-section-header'] #gallery-team-directory-actions" \
-                    "[data-slot='data-section-actions'][data-nk='button-group']",
-        count: 1
       assert_select "> #gallery-team-members-table[data-slot='data-section-table'][data-nk='table']", count: 1
       assert_select "[data-nk='table']", count: 1
     end
     assert_select "#gallery-team-members-table table[aria-label='Workspace members']" do
-      assert_select "caption", text: "3 workspace members"
+      assert_select "caption", text: "2 workspace members"
       assert_select "thead th[scope='col']", count: 5
-      assert_select "tbody tr", count: 3
-      assert_select "tbody th[scope='row']", count: 3
+      assert_select "tbody tr", count: 2
+      assert_select "tbody th[scope='row']", count: 2
     end
     assert_select "[role='group'][aria-label='Actions for Ada Lovelace']"
-    assert_select "#gallery-team-member-mem_ada-change-role[aria-disabled='true'][tabindex='-1']"
-    assert_select "#gallery-team-member-mem_ada-change-role[href]", count: 0
-    assert_select "#gallery-team-member-mem_katherine-status[data-color='info']", text: "Invited"
+    assert_select "#gallery-team-member-mem_ada-change-role[href*='/team-management/last-owner-validation']"
+    assert_select "#gallery-team-member-mem_ada-remove[href*='/team-management/last-owner-validation']"
+    assert_select "#gallery-team-invitations-section[data-nk='data-section']" do
+      assert_select "> [data-slot='data-section-header'] #gallery-team-footer-invite" \
+        "[data-slot='data-section-actions'][data-nk='button']",
+        count: 1
+      assert_select "> #gallery-team-invitations-table[data-slot='data-section-table'][data-nk='table']"
+    end
+    assert_select "#gallery-team-invitations-table table[aria-label='Pending team invitations']" do
+      assert_select "caption", text: "2 pending invitations"
+      assert_select "tbody tr", count: 2
+      assert_select "tbody", text: /katherine@example\.test/
+    end
+
+    get_flow("team-management", "multiple-teams")
+    assert_select "#gallery-team-context-section[data-nk='form-section']"
+    assert_select "#gallery-team-context-status[data-variant='info']", text: /is selected/
+    assert_select "#gallery-team-context-form[method='get'][data-turbo-frame='gallery-team-management-frame']" \
+      "[data-turbo-action='replace']"
+    assert_select "#team_context_team_id option", count: 3
+    assert_select "#team_context_team_id option[selected][value='team_analytical']"
+    assert_select "#gallery-team-members-table tbody tr", count: 2
+    assert_select "#gallery-team-invitations-table tbody tr", count: 2
+
+    get gallery_composition_path(
+      slug: "team-management",
+      state: "multiple-teams",
+      team_context: { team_id: "team_apollo" }
+    )
+    assert_response :success
+    assert_select "#team_context_team_id option[selected][value='team_apollo']"
+    assert_select "#gallery-team-context-status", text: /Ada Lovelace is admin here/
+    assert_select "#gallery-team-members-table tbody tr", count: 2
+    assert_select "#gallery-team-invitations-empty", text: /No pending invitations match/
+    assert_select "#gallery-team-member-mem_ada-change-role" \
+                  "[href*='team_context%5Bteam_id%5D=team_apollo'][href*='member_id=mem_ada']"
+    assert_select "#gallery-team-member-mem_grace-change-role" \
+                  "[href*='/last-owner-validation'][href*='team_context%5Bteam_id%5D=team_apollo']"
+
+    get gallery_composition_path(
+      slug: "team-management",
+      state: "role-change",
+      team_context: { team_id: "team_apollo" },
+      member_id: "mem_ada"
+    )
+    assert_response :success
+    assert_select "#gallery-team-role-context", text: /Changing Ada Lovelace/
+    assert_select "#gallery-team-role-form input[name$='[team_id]'][value='team_apollo']"
+    assert_select "#gallery-team-role-form input[name$='[member_id]'][value='mem_ada']"
+
+    get gallery_composition_path(
+      slug: "team-management",
+      state: "remove-confirmation",
+      team_context: { team_id: "team_apollo" },
+      member_id: "mem_ada"
+    )
+    assert_response :success
+    assert_select "#gallery-team-remove-escape" \
+                  "[href*='team_context%5Bteam_id%5D=team_apollo'][href*='member_id=mem_ada']"
 
     get_flow("team-management", "search")
-    assert_select "#gallery-team-search-form[method='get'][data-turbo-frame='gallery-team-management-frame']"
+    assert_select "#gallery-team-search-section[data-nk='form-section']" do
+      assert_select "> [data-slot='form-section-form'] > #gallery-team-search-form", count: 1
+    end
+    assert_select "#gallery-team-search-form[method='get'][data-turbo-frame='gallery-team-management-frame']" \
+      "[data-turbo-action='replace']"
     assert_select "#gallery-team-search-query[type='search'][name='team[query]'][value='Grace']"
-    assert_select "#gallery-team-members-table caption", text: "1 workspace members"
+    assert_select "#gallery-team-members-table caption", text: "1 workspace member"
     assert_select "#gallery-team-members-table tbody tr", count: 1, text: /Grace Hopper/
+    assert_select "#gallery-team-invitations-empty", text: /No pending invitations match/
 
     get_flow("team-management", "empty")
     assert_select "#gallery-team-empty-section[data-nk='data-section']" do
@@ -115,13 +174,15 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
 
     get_flow("team-management", "dense")
     assert_select "[data-gallery-composition='team-management']"
-    assert_select "#gallery-team-members-table caption", text: "9 workspace members"
-    assert_select "#gallery-team-members-table tbody tr", count: 9
+    assert_select "#gallery-team-members-table caption", text: "8 workspace members"
+    assert_select "#gallery-team-members-table tbody tr", count: 8
     assert_select "#gallery-team-members-table", text: /hedy\.lamarr@example\.test/
+    assert_select "#gallery-team-invitations-table tbody tr", count: 2
 
     get_flow("team-management", "mobile")
     assert_select "[data-gallery-composition='team-management'][data-gallery-mobile='true']"
-    assert_select "#gallery-team-members-table tbody tr", count: 3
+    assert_select "#gallery-team-members-table tbody tr", count: 2
+    assert_select "#gallery-team-invitations-table tbody tr", count: 2
   end
 
   test "team invitation role and removal states use model errors disabled submission and explicit consequences" do
@@ -153,6 +214,18 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-team-role-context", text: /take effect immediately/
     assert_select "#gallery-team-role-form select[name$='[role]'] option[selected][value='viewer']"
 
+    get_flow("team-management", "last-owner-validation")
+    assert_select "#gallery-team-last-owner-section[data-nk='form-section']" do
+      assert_select "> #gallery-team-last-owner-error[data-slot='form-section-status'][data-variant='error']"
+      assert_select "> [data-slot='form-section-form'] > #gallery-team-last-owner-form", count: 1
+    end
+    assert_select "#gallery-team-last-owner-error[role='alert']", text: /server rejected this change/i
+    assert_select "#gallery-team-last-owner-form input[name$='[member_id]'][value='mem_ada']"
+    assert_select "#gallery-team-last-owner-form select[name$='[role]'][aria-invalid='true']" do
+      assert_select "option[value='member'][selected]"
+    end
+    assert_select "#gallery-team-last-owner-form [data-slot='field-error']", text: /every team must keep at least one owner/
+
     get_flow("team-management", "remove-confirmation")
     assert_select "#gallery-team-remove-zone[data-nk='danger-zone']" do
       assert_select "> [data-slot='danger-zone-confirmation'] > #gallery-team-remove-dialog[data-nk='dialog']"
@@ -170,6 +243,13 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
 
     get_flow("team-management", "error")
     assert_select "#gallery-team-error[data-variant='error']", text: /No access changed/
+  end
+
+  test "last-owner protection is a server-side form-model validation" do
+    action = Gallery::OperationsFormExamples.team_member_action(:last_owner_invalid)
+
+    assert_predicate action, :invalid?
+    assert_includes action.errors[:role], "cannot be changed because every team must keep at least one owner"
   end
 
   test "credential list empty and pressure states keep scope recency and labelled actions visible" do

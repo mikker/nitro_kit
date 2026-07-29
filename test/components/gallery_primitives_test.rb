@@ -62,9 +62,13 @@ class GalleryPrimitivesTest < ActiveSupport::TestCase
     page_node = fragment.at_css("[data-gallery='page'][data-gallery-page='button']")
     section = fragment.at_css("[data-gallery='section'][data-gallery-section='button-variants']")
     matrix = fragment.at_css("[data-gallery='example'][data-gallery-example='button-variant-matrix']")
+    component_header = page_node.at_css("[data-gallery='component-header']")
 
     assert page_node
-    assert_equal "Actions and links with typed variants and sizes.", page_node.at_css("[data-gallery='component-header'] > p").text
+    assert_equal "page-header", component_header["data-nk"]
+    assert_equal "Button", component_header.at_css("[data-slot='page-header-title']").text
+    assert_equal "Actions and links with typed variants and sizes.",
+      component_header.at_css("[data-slot='page-header-description']").text
     assert_equal "section-button-variants", section["id"]
     assert_equal "section-button-variants-title", section["aria-labelledby"]
     assert_equal "section-button-variants-description", section["aria-describedby"]
@@ -200,13 +204,18 @@ class GalleryPrimitivesTest < ActiveSupport::TestCase
     fragment = render_fragment(Gallery::CodeSample.new(id: "copy-source", source:))
     button = fragment.at_css("#copy-source-copy")
     status = fragment.at_css("#copy-source-copy-status")
+    toolbar = fragment.at_css("header[data-gallery='code-toolbar'] > [data-nk='toolbar']")
 
+    assert toolbar
+    assert_equal %w[toolbar-leading toolbar-trailing],
+      toolbar.xpath("./*[@data-slot]").map { |slot| slot["data-slot"] }
     assert_equal "button", button.name
     assert_equal "button", button["type"]
     assert_equal "copy-source-copy-status", button["aria-describedby"]
     assert_equal "status", status["role"]
     assert_equal "polite", status["aria-live"]
     assert_equal "gallery--code-sample", fragment.first_element_child["data-controller"]
+    assert fragment.at_css("pre[data-gallery='code-source']")
   end
 
   test "gallery primitives never add classes or inline styles" do

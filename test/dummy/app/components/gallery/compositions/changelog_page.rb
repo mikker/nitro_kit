@@ -39,9 +39,11 @@ module Gallery
                 color: :success,
                 id: "gallery-changelog-latest-status"
               )
-              p { latest.summary }
-              ul do
-                latest.changes.each { |change| li { change } }
+              render NitroKit::Typeset.new(id: "gallery-changelog-latest-prose") do
+                p { latest.summary }
+                ul do
+                  latest.changes.each { |change| li { change } }
+                end
               end
             end
           end

@@ -153,24 +153,25 @@ module Gallery
       def render_workspace_main(layout:, long:)
         div(data: { gallery: "app-shell-main" }) do
           render NitroKit::Container.new(size: :lg) do
-            header(data: { gallery: "app-shell-heading" }) do
-              p { layout.to_s.capitalize }
-              h4 do
-                long ? "International research, reliability, and production readiness" : "Workspace overview"
-              end
-              p do
-                if long
-                  "Coordinate analytical engine capacity, operational handoffs, and incident readiness across every research and production region."
-                else
-                  "A caller-owned dashboard composed from ordinary Nitro components."
-                end
-              end
-            end
+            render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch) do
+              render NitroKit::PageHeader.new(
+                eyebrow: layout.to_s.capitalize,
+                title: long ?
+                  "International research, reliability, and production readiness" :
+                  "Workspace overview",
+                description: long ?
+                  "Coordinate analytical engine capacity, operational handoffs, and incident readiness across every research and production region." :
+                  "A caller-owned dashboard composed from ordinary Nitro components.",
+                level: 4
+              )
 
-            div(data: { gallery: "app-shell-cards" }) do
-              workspace_card("Active projects", "12", "Three need a decision this week.")
-              workspace_card("Deployments", "4", "All production checks are passing.")
-              workspace_card("Open incidents", "2", "Both have an assigned responder.")
+              render NitroKit::Grid.new(
+                cols: "1 sm:2 lg:3"
+              ) do
+                workspace_card("Active projects", "12", "Three need a decision this week.")
+                workspace_card("Deployments", "4", "All production checks are passing.")
+                workspace_card("Open incidents", "2", "Both have an assigned responder.")
+              end
             end
           end
         end

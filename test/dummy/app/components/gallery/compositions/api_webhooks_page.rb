@@ -110,24 +110,12 @@ module Gallery
       end
 
       def render_detail
-        render NitroKit::Grid.new(cols: "1 sm:2 lg:3", id: "gallery-api-webhooks-detail-grid") do
-          render_detail_card("Endpoint", "Production events", "https://api.example.test/hooks/nitro")
-          render_detail_card("Subscribed events", "4 events", "deployment.created · incident.updated · member.invited · invoice.paid")
-          render_detail_card("Delivery policy", "Enabled", "10 second timeout · exponential retry managed by the application")
+        render NitroKit::StatGrid.new(id: "gallery-api-webhooks-detail-grid") do |stats|
+          stats.stat(key: :endpoint, label: "Endpoint", value: "Production events", detail: "https://api.example.test/hooks/nitro")
+          stats.stat(key: :events, label: "Subscribed events", value: "4 events", detail: "deployment.created · incident.updated · member.invited · invoice.paid")
+          stats.stat(key: :policy, label: "Delivery policy", value: "Enabled", detail: "10 second timeout · exponential retry managed by the application")
         end
         render_delivery_history(:success)
-      end
-
-      def render_detail_card(title, value, detail)
-        render NitroKit::Card.new do |card|
-          card.title(title)
-          card.body do
-            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              strong { value }
-              p { detail }
-            end
-          end
-        end
       end
 
       def render_form

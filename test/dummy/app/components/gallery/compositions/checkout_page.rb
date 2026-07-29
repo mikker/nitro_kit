@@ -3,6 +3,8 @@ module Gallery
     class CheckoutPage < ScenarioPage
       include Phlex::Rails::Helpers::FormWith
 
+      CheckoutResult = ::Data.define(:reference, :recorded)
+
       private
 
       def render_scenario
@@ -38,10 +40,10 @@ module Gallery
       end
 
       def render_review
-        render NitroKit::Grid.new(cols: "1 sm:2 lg:3", id: "gallery-checkout-review-grid") do
-          render_summary_card("Team plan", "$49.00 monthly", "20 members · unlimited projects · email support")
-          render_summary_card("Billing contact", "Ada Lovelace", "accounts-payable@example.test")
-          render_summary_card("Due today", "$49.00", "Renews August 13, 2026 unless cancelled")
+        render NitroKit::StatGrid.new(id: "gallery-checkout-review-grid") do |stats|
+          stats.stat(key: :plan, label: "Team plan", value: "$49.00 monthly", detail: "20 members · unlimited projects · email support")
+          stats.stat(key: :contact, label: "Billing contact", value: "Ada Lovelace", detail: "accounts-payable@example.test")
+          stats.stat(key: :total, label: "Due today", value: "$49.00", detail: "Renews August 13, 2026 unless cancelled")
         end
 
         render NitroKit::Toolbar.new(id: "gallery-checkout-review-actions") do |toolbar|
@@ -53,18 +55,6 @@ module Gallery
               id: "gallery-checkout-continue",
               variant: :primary
             )
-          end
-        end
-      end
-
-      def render_summary_card(title, value, detail)
-        render NitroKit::Card.new do |card|
-          card.title(title)
-          card.body do
-            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              strong { value }
-              p { detail }
-            end
           end
         end
       end
@@ -133,11 +123,11 @@ module Gallery
                 alert.title(title)
                 alert.description(description)
               end
-              dl(data: { gallery: "checkout-result-metadata" }) do
-                dt { "Reference" }
-                dd { state == "refunded" ? "RFN-2048" : "CHK-2048" }
-                dt { "Recorded" }
-                dd { "July 13, 2026 at 10:42 UTC" }
+              render NitroKit::DetailsTable.new(
+                checkout_result,
+                data: { gallery: "checkout-result-metadata" }
+              ) do |details|
+                details.fields(:reference, :recorded)
               end
             end
           end
@@ -239,6 +229,13 @@ module Gallery
           { cardholder_name: "Ada Lovelace", card_number: "4242424242424242", expiry: "08/28", billing_email: "billing@example.test", postal_code: "SW1A 1AA" }
 
         Gallery::Forms::PaymentMethod.new(**attributes).tap { |payment| payment.validate if invalid }
+      end
+
+      def checkout_result
+        CheckoutResult.new(
+          reference: state == "refunded" ? "RFN-2048" : "CHK-2048",
+          recorded: "July 13, 2026 at 10:42 UTC"
+        )
       end
 
       def checkout_title

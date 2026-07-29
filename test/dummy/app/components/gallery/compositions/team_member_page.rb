@@ -47,15 +47,25 @@ module Gallery
                   )
                 end
               end
-              dl(data: { gallery: "team-member-metadata" }) do
-                dt { "Email" }
-                dd { member.email }
-                dt { "Role" }
-                dd { member.role.to_s.humanize }
-                dt { "Joined" }
-                dd { member.joined_on&.to_fs(:long) || "Invitation pending" }
-                dt { "Organization" }
-                dd { Gallery::ExpandedData.organization.name }
+              render NitroKit::DetailsTable.new(
+                member,
+                label: "Team member metadata",
+                empty_text: "Invitation pending",
+                id: "gallery-team-member-metadata"
+              ) do |details|
+                details.field(:email)
+                details.field(:role) do |role|
+                  render NitroKit::Badge.new(
+                    role.to_s.humanize,
+                    color: role == :owner ? :info : :neutral,
+                    size: :sm
+                  )
+                end
+                details.field(:joined_on, label: "Joined")
+                details.field(
+                  :organization,
+                  value: Gallery::ExpandedData.organization.name
+                )
               end
             end
           end

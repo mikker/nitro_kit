@@ -21,6 +21,10 @@ class GalleryGuidesTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "[data-gallery-page='home'] h1", text: "Nitro Kit"
+    assert_select "[data-gallery='page-header'][data-nk='page-header']" do
+      assert_select "[data-slot='page-header-eyebrow']", text: "Nitro Kit for Rails"
+    end
+    assert_select "[data-gallery='introduction'][data-nk='typeset']", count: 1
     assert_select "[data-gallery='introduction'] h2", text: "What this is"
     assert_select "[data-gallery='introduction'] h2", text: "Who each surface serves"
     assert_select "[data-gallery='introduction'] a[href='https://nitrokit.dev']", text: "nitrokit.dev"
@@ -40,7 +44,8 @@ class GalleryGuidesTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "[data-gallery='navigation'] a[aria-current='page'][href='/gallery/agent-guide']"
     assert_select "[data-gallery='page'][data-gallery-page='agent-guide']"
-    assert_select "h1", text: "Agent guide"
+    assert_select "[data-gallery='page-header'][data-nk='page-header'] h1", text: "Agent guide"
+    assert_select "[data-gallery='guide'][data-nk='typeset']", count: 1
     assert_select "h2", text: "The composition model"
     assert_select "h2", text: "Every component page is self-contained"
     assert_select "a[href='/llms.txt']"
@@ -97,7 +102,8 @@ class GalleryGuidesTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "[data-gallery='navigation'] a[aria-current='page'][href='/gallery/guide']"
     assert_select "[data-gallery='page'][data-gallery-page='guide']"
-    assert_select "h1", text: "Human guide"
+    assert_select "[data-gallery='page-header'][data-nk='page-header'] h1", text: "Human guide"
+    assert_select "[data-gallery='guide'][data-nk='typeset']", count: 1
     assert_select "h2", text: "Reading a component page"
     assert_select "h2", text: "What the compositions are"
     assert_select "h2", text: "Theming basics"

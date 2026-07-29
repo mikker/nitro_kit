@@ -2,17 +2,13 @@ module Gallery
   module Compositions
     class TeamManagementPage < Page
       include Phlex::Rails::Helpers::FormWith
+      include Phlex::Rails::Helpers::Request
       include Phlex::Rails::Helpers::TurboFrameTag
 
       private
 
       def page_template
-        header(data: { gallery: "composition-header" }) do
-          p(data: { gallery: "eyebrow" }) { "Team operations" }
-          h1 { entry.title }
-          p { entry.description }
-          state_navigation
-        end
+        render_composition_header(eyebrow: "Team operations")
 
         render Section.new(
           slug: "team-management-screen",
@@ -29,6 +25,7 @@ module Gallery
               data: {
                 gallery: "composition-surface",
                 gallery_composition: "team-management",
+                gallery_composition_state: state,
                 gallery_mobile: state == "mobile" ? "true" : nil
               }.compact
             ) do
@@ -45,7 +42,9 @@ module Gallery
       def render_screen
         case state
         when "members", "dense", "mobile"
-          render_member_section(table_members)
+          render_team_inventory(table_members, pending_invitations)
+        when "multiple-teams"
+          render_multiple_teams
         when "search"
           render_search
         when "empty"
@@ -54,6 +53,8 @@ module Gallery
           render_invitation_form
         when "role-change"
           render_role_form
+        when "last-owner-validation"
+          render_last_owner_validation
         when "remove-confirmation"
           render_remove_confirmation
         when "removed"
@@ -63,22 +64,24 @@ module Gallery
         end
       end
 
+      def render_team_inventory(members, invitations)
+        render NitroKit::Flex.new(
+          dir: :col,
+          gap: 6,
+          align: :stretch,
+          id: "gallery-team-inventory-stack"
+        ) do
+          render_member_section(members)
+          render_pending_invitation_section(invitations)
+        end
+      end
+
       def render_member_section(members)
         render NitroKit::DataSection.new(
-          title: state == "dense" ? "Large team inventory" : "Workspace members",
-          description: "Member roles, invitation state, join dates, and account actions.",
+          title: state == "dense" ? "Large team inventory" : member_section_title,
+          description: "Current memberships, roles, join dates, and account actions.",
           id: "gallery-team-members-section"
         ) do |section|
-          section.actions(
-            NitroKit::ButtonGroup.new(id: "gallery-team-directory-actions", label: "Team directory actions")
-          ) do |group|
-            group.button(
-              "Invite teammate",
-              id: "gallery-team-footer-invite",
-              href: entry_path(entry, state: "invite"),
-              variant: :primary
-            )
-          end
           section.table NitroKit::Table.new(
             id: "gallery-team-members-table",
             table_aria: { label: "Workspace members" }
@@ -88,55 +91,124 @@ module Gallery
         end
       end
 
-      def render_member_table_content(table, members)
-          table.caption("#{members.length} workspace members")
-          table.thead do
-            table.tr do
-              table.th("Member")
-              table.th("Role")
-              table.th("Status")
-              table.th("Joined")
-              table.th("Actions", align: :right)
+      def render_pending_invitation_section(invitations)
+        render NitroKit::DataSection.new(
+          title: state == "search" ? "Pending invitation matches" : "Pending invitations",
+          description: "Invitations remain separate from memberships until the intended recipient accepts.",
+          id: "gallery-team-invitations-section"
+        ) do |section|
+          section.actions NitroKit::Button.new(
+            "Invite teammate",
+            id: "gallery-team-footer-invite",
+            href: entry_path(entry, state: "invite"),
+            variant: :primary
+          )
+          if invitations.empty?
+            section.empty_state NitroKit::EmptyState.new(
+              title: "No pending invitations match",
+              description: "The current member search did not match an invited email address.",
+              level: 3,
+              id: "gallery-team-invitations-empty"
+            ) do |empty|
+              empty.icon NitroKit::Icon.new(:mail_search)
             end
-          end
-          table.tbody do
-            members.each do |member|
-              table.tr do
-                table.th(scope: :row) do
-                  render NitroKit::Avatar.new(
-                    alt: member.name,
-                    fallback: initials(member.name),
-                    size: :sm,
-                    id: "gallery-team-member-#{member.id}-avatar"
-                  )
-                  strong { member.name }
-                  small { member.email }
+          else
+            section.table NitroKit::Table.new(
+              id: "gallery-team-invitations-table",
+              table_aria: { label: "Pending team invitations" }
+            ) do |table|
+              table.caption("#{invitations.length} pending invitations")
+              table.thead do
+                table.tr do
+                  table.th("Email")
+                  table.th("Role")
+                  table.th("Invited by")
+                  table.th("Sent")
+                  table.th("Expires")
+                  table.th("Actions", align: :right)
                 end
-                table.td do
-                  render NitroKit::Badge.new(
-                    member.role.to_s.humanize,
-                    id: "gallery-team-member-#{member.id}-role",
-                    variant: :outline,
-                    color: member.role == :owner ? :info : :neutral,
-                    size: :sm
-                  )
+              end
+              table.tbody do
+                invitations.each do |invitation|
+                  table.tr do
+                    table.th(invitation.email, scope: :row)
+                    table.td(invitation.role.to_s.humanize)
+                    table.td(invitation.invited_by)
+                    table.td(invitation.sent_at.to_fs(:short))
+                    table.td(invitation.expires_on.to_fs(:long))
+                    table.td(align: :right) do
+                      render NitroKit::ButtonGroup.new(
+                        label: "Actions for invitation to #{invitation.email}",
+                        id: "gallery-team-invitation-#{invitation.id}-actions"
+                      ) do |actions|
+                        actions.button("Resend", href: "#resend-#{invitation.id}", size: :sm)
+                        actions.button(
+                          "Revoke",
+                          href: "#revoke-#{invitation.id}",
+                          size: :sm,
+                          variant: :destructive
+                        )
+                      end
+                    end
+                  end
                 end
-                table.td do
-                  render NitroKit::Badge.new(
-                    member.status.to_s.humanize,
-                    id: "gallery-team-member-#{member.id}-status",
-                    color: member_status_color(member.status),
-                    size: :sm
-                  )
-                end
-                table.td(member.joined_on&.iso8601 || "Invitation pending")
-                table.td(align: :right) { render_member_actions(member) }
               end
             end
           end
+        end
+      end
+
+      def render_member_table_content(table, members)
+        table.caption("#{members.length} workspace #{'member'.pluralize(members.length)}")
+        table.thead do
+          table.tr do
+            table.th("Member")
+            table.th("Role")
+            table.th("Status")
+            table.th("Joined")
+            table.th("Actions", align: :right)
+          end
+        end
+        table.tbody do
+          members.each do |member|
+            table.tr do
+              table.th(scope: :row) do
+                render NitroKit::Avatar.new(
+                  alt: member.name,
+                  fallback: initials(member.name),
+                  size: :sm,
+                  id: "gallery-team-member-#{member.id}-avatar"
+                )
+                strong { member.name }
+                small { member.email }
+              end
+              table.td do
+                render NitroKit::Badge.new(
+                  member.role.to_s.humanize,
+                  id: "gallery-team-member-#{member.id}-role",
+                  variant: :outline,
+                  color: member.role == :owner ? :info : :neutral,
+                  size: :sm
+                )
+              end
+              table.td do
+                render NitroKit::Badge.new(
+                  member.status.to_s.humanize,
+                  id: "gallery-team-member-#{member.id}-status",
+                  color: member_status_color(member.status),
+                  size: :sm
+                )
+              end
+              table.td(member.joined_on&.iso8601 || "Invitation pending")
+              table.td(align: :right) { render_member_actions(member) }
+            end
+          end
+        end
       end
 
       def render_member_actions(member)
+        owner_validation_path = team_flow_path(state: "last-owner-validation", member_id: member.id)
+
         render NitroKit::ButtonGroup.new(
           id: "gallery-team-member-#{member.id}-actions",
           label: "Actions for #{member.name}"
@@ -144,73 +216,120 @@ module Gallery
           group.button(
             "Change role",
             id: "gallery-team-member-#{member.id}-change-role",
-            href: entry_path(entry, state: "role-change"),
-            size: :sm,
-            disabled: member.role == :owner
+            href: member.role == :owner ? owner_validation_path : team_flow_path(state: "role-change", member_id: member.id),
+            size: :sm
           )
           group.button(
             "Remove",
             id: "gallery-team-member-#{member.id}-remove",
-            href: entry_path(entry, state: "remove-confirmation"),
+            href: member.role == :owner ? owner_validation_path : team_flow_path(state: "remove-confirmation", member_id: member.id),
             size: :sm,
-            variant: :destructive,
-            disabled: member.role == :owner
+            variant: :destructive
           )
         end
       end
 
       def render_search
-        form(
-          id: "gallery-team-search-form",
-          action: entry_path(entry, state: "search"),
-          method: :get,
-          data: { turbo_frame: "gallery-team-management-frame" }
+        render NitroKit::Flex.new(
+          dir: :col,
+          gap: 6,
+          align: :stretch,
+          id: "gallery-team-search-stack"
         ) do
-          render NitroKit::FieldGroup.new do
-            render NitroKit::Field.new(
-              nil,
-              :query,
-              as: :search,
-              id: "gallery-team-search-query",
-              name: "team[query]",
-              value: "Grace",
-              label: "Search members",
-              placeholder: "Name or email",
-              autocomplete: "off"
-            )
-            render NitroKit::Button.new(
-              "Search",
-              id: "gallery-team-search-submit",
-              type: :submit,
-              variant: :primary,
-              data: { turbo_submits_with: "Searching…" }
-            )
+          render NitroKit::FormSection.new(
+            title: "Search the team",
+            description: "The GET query replaces this stable team-management frame.",
+            id: "gallery-team-search-section"
+          ) do |section|
+            section.form do
+              form_with(
+                scope: :team,
+                url: entry_path(entry, state: "search"),
+                method: :get,
+                builder: NitroKit::FormBuilder,
+                id: "gallery-team-search-form",
+                data: {
+                  turbo_frame: "gallery-team-management-frame",
+                  turbo_action: "replace"
+                }
+              ) do |form|
+                form.group do
+                  form.field(
+                    :query,
+                    as: :search,
+                    id: "gallery-team-search-query",
+                    value: "Grace",
+                    label: "Search members and invitations",
+                    placeholder: "Name or email",
+                    autocomplete: "off"
+                  )
+                  form.submit(
+                    "Search",
+                    id: "gallery-team-search-submit",
+                    data: { turbo_submits_with: "Searching…" }
+                  )
+                end
+              end
+            end
           end
+
+          render_team_inventory(
+            current_members.select { |member| member.name.include?("Grace") },
+            pending_invitations.select { |invitation| invitation.email.include?("Grace") }
+          )
         end
-        render NitroKit::DataSection.new(
-          title: "Search results",
-          description: "Members matching the current name or email query.",
-          id: "gallery-team-search-section"
-        ) do |section|
-          section.actions(
-            NitroKit::ButtonGroup.new(id: "gallery-team-search-actions", label: "Team search actions")
-          ) do |group|
-            group.button(
-              "Invite teammate",
-              id: "gallery-team-footer-invite",
-              href: entry_path(entry, state: "invite"),
-              variant: :primary
-            )
+      end
+
+      def render_multiple_teams
+        current_team = selected_team
+        ada_membership = current_members.find { |membership| membership.id == "mem_ada" }
+
+        render NitroKit::Flex.new(
+          dir: :col,
+          gap: 6,
+          align: :stretch,
+          id: "gallery-team-multiple-teams-stack"
+        ) do
+          render NitroKit::FormSection.new(
+            title: "Team context",
+            description: "Membership role and every mutation are scoped to the selected team.",
+            id: "gallery-team-context-section"
+          ) do |section|
+            section.status NitroKit::Alert.new(id: "gallery-team-context-status", variant: :info) do |alert|
+              alert.title("#{current_team.name} is selected")
+              alert.description(
+                "Ada Lovelace is #{ada_membership.role.to_s.humanize.downcase} here and has different roles in two other teams."
+              )
+            end
+            section.form do
+              form_with(
+                scope: :team_context,
+                url: entry_path(entry, state: "multiple-teams"),
+                method: :get,
+                builder: NitroKit::FormBuilder,
+                id: "gallery-team-context-form",
+                data: {
+                  turbo_frame: "gallery-team-management-frame",
+                  turbo_action: "replace"
+                }
+              ) do |form|
+                form.group do
+                  form.field(
+                    :team_id,
+                    as: :select,
+                    label: "Current team",
+                    value: current_team.id,
+                    options: Gallery::Data.teams.map do |team|
+                      [ "#{team.name} — #{team.role.to_s.humanize} — #{team.member_count} members", team.id ]
+                    end
+                  )
+                  form.submit("Switch team", id: "gallery-team-context-submit")
+                end
+              end
+            end
           end
-          section.table NitroKit::Table.new(
-            id: "gallery-team-members-table",
-            table_aria: { label: "Workspace members" }
-          ) do |table|
-            render_member_table_content(
-              table,
-              Gallery::Data.members.select { |member| member.name.include?("Grace") }
-            )
-          end
+
+          render_team_inventory(current_members, pending_invitations)
         end
       end
 
@@ -297,7 +416,13 @@ module Gallery
       end
 
       def render_role_form
-        action = Gallery::OperationsFormExamples.team_member_action(:role_valid)
+        membership = selected_membership(default_id: "mem_grace")
+        action = Gallery::Forms::TeamMemberAction.new(
+          team_id: selected_team.id,
+          action: "change_role",
+          member_id: membership.id,
+          role: "viewer"
+        )
 
         render NitroKit::FormSection.new(
           title: "Role assignment",
@@ -305,7 +430,7 @@ module Gallery
           id: "gallery-team-role-section"
         ) do |section|
           section.status NitroKit::Alert.new(id: "gallery-team-role-context") do |alert|
-            alert.title("Changing Grace Hopper")
+            alert.title("Changing #{membership.name}")
             alert.description("Role changes take effect immediately and are recorded in the audit log.")
           end
           section.form do
@@ -315,15 +440,16 @@ module Gallery
               builder: NitroKit::FormBuilder,
               id: "gallery-team-role-form",
               data: { turbo_frame: "gallery-team-management-frame" }
-            ) do |form|
-              form.group do
-                form.hidden_field(:action)
-                form.hidden_field(:member_id)
+              ) do |form|
+                form.group do
+                  form.hidden_field(:action)
+                  form.hidden_field(:team_id)
+                  form.hidden_field(:member_id)
                 form.field(
                   :role,
                   as: :select,
                   label: "New role",
-                  options: [ [ "Administrator", "admin" ], [ "Member", "member" ], [ "Viewer", "viewer" ] ],
+                  options: Gallery::Forms::TeamMemberAction::ROLES.map { |role| [ role.humanize, role ] },
                   required: true
                 )
                 form.submit(
@@ -337,19 +463,74 @@ module Gallery
         end
       end
 
+      def render_last_owner_validation
+        membership = selected_membership(default_id: "mem_ada")
+        action = Gallery::Forms::TeamMemberAction.new(
+          team_id: selected_team.id,
+          action: "change_role",
+          member_id: membership.id,
+          role: "member"
+        )
+        action.validate
+
+        render NitroKit::FormSection.new(
+          title: "Keep an owner",
+          description: "The domain model rejects role changes and removals that would leave a team ownerless.",
+          id: "gallery-team-last-owner-section"
+        ) do |section|
+          section.status NitroKit::Alert.new(
+            id: "gallery-team-last-owner-error",
+            variant: :error,
+            live: :assertive
+          ) do |alert|
+            alert.title("#{membership.name} is the last owner")
+            alert.description("The server rejected this change. Promote another member before changing #{membership.name}'s role.")
+          end
+          section.form do
+            form_with(
+              model: action,
+              url: "#last-owner-validation",
+              builder: NitroKit::FormBuilder,
+              id: "gallery-team-last-owner-form",
+              data: { turbo_frame: "gallery-team-management-frame" }
+              ) do |form|
+                form.group do
+                  form.hidden_field(:action)
+                  form.hidden_field(:team_id)
+                  form.hidden_field(:member_id)
+                form.field(
+                  :role,
+                  as: :select,
+                  label: "New role for #{membership.name}",
+                  options: Gallery::Forms::TeamMemberAction::ROLES.map { |role| [ role.humanize, role ] },
+                  required: true
+                )
+                form.submit("Change role", id: "gallery-team-last-owner-submit")
+              end
+            end
+          end
+        end
+      end
+
       def render_remove_confirmation
-        action = Gallery::OperationsFormExamples.team_member_action(:remove_valid)
+        membership = selected_membership(default_id: "mem_grace")
+        action = Gallery::Forms::TeamMemberAction.new(
+          team_id: selected_team.id,
+          action: "remove",
+          member_id: membership.id,
+          confirmation: membership.email
+        )
 
         render NitroKit::DangerZone.new(
           title: "Remove workspace access",
-          description: "Grace will immediately lose access to every project and all active sessions will be revoked.",
+          description: "#{membership.name} will immediately lose access to every project and all active sessions will be revoked.",
           id: "gallery-team-remove-zone"
         ) do |zone|
           zone.confirmation do
             render NitroKit::Dialog.new(id: "gallery-team-remove-dialog") do |dialog|
               dialog.panel(
-                title: "Remove Grace Hopper?",
-                description: "Grace will immediately lose access to every project in this workspace.",
+                title: "Remove #{membership.name}?",
+                description: "#{membership.name} will immediately lose access to every project in this workspace.",
                 nonmodal: true
               ) do
                 form_with(
@@ -361,11 +542,12 @@ module Gallery
                 ) do |form|
                   form.group do
                     form.hidden_field(:action)
+                    form.hidden_field(:team_id)
                     form.hidden_field(:member_id)
                     form.field(
                       :confirmation,
                       as: :email,
-                      label: "Type grace@example.test to confirm",
+                      label: "Type #{membership.email} to confirm",
                       autocomplete: "off",
                       required: true
                     )
@@ -384,7 +566,7 @@ module Gallery
           zone.escape NitroKit::Button.new(
             "Keep team member",
             id: "gallery-team-remove-escape",
-            href: entry_path(entry, state: "members")
+            href: team_flow_path(state: "members")
           )
         end
       end
@@ -415,12 +597,43 @@ module Gallery
         render NitroKit::Button.new(
           "Back to members",
           id: "gallery-team-footer-members",
-          href: entry_path(entry, state: "members")
+          href: team_flow_path(state: "members")
         )
       end
 
       def table_members
-        state == "dense" ? Gallery::Data.dense_members : Gallery::Data.members
+        Gallery::Data.memberships(team_id: selected_team.id, dense: state == "dense")
+      end
+
+      def current_members
+        Gallery::Data.memberships(team_id: selected_team.id)
+      end
+
+      def pending_invitations
+        Gallery::Data.pending_invitations(team_id: selected_team.id)
+      end
+
+      def selected_team
+        team_id = request.query_parameters.dig("team_context", "team_id")
+        Gallery::Data.team(team_id) || Gallery::Data.current_team
+      end
+
+      def selected_membership(default_id:)
+        member_id = request.query_parameters["member_id"].presence || default_id
+        current_members.find { |membership| membership.id == member_id } || current_members.first
+      end
+
+      def team_flow_path(state:, member_id: request.query_parameters["member_id"])
+        gallery_composition_path(
+          slug: entry.slug,
+          state:,
+          team_context: { team_id: selected_team.id },
+          member_id:
+        )
+      end
+
+      def member_section_title
+        state == "search" ? "Member matches" : "Workspace members"
       end
 
       def initials(name)
@@ -433,29 +646,21 @@ module Gallery
 
       def state_description
         {
-          "members" => "A semantic member inventory with role, status, dates, and labelled actions.",
-          "search" => "A GET search form and deterministic filtered result stay in one Turbo frame.",
+          "members" => "Current memberships and pending invitations use separately labelled data tables.",
+          "multiple-teams" => "A deterministic team selector keeps role and membership policy scoped to the current team.",
+          "search" => "A FormSection GET form and deterministic member and invitation results stay in one Turbo frame.",
           "empty" => "The absence of members leaves one clear invitation action.",
           "invite" => "A real invitation model collects email, role, and optional context.",
           "invite-validation" => "Active Model errors cover malformed email, unsupported role, and long copy.",
           "loading" => "Invitation controls and submission are disabled while Turbo processes.",
           "role-change" => "A role update names the member and warns about immediate access changes.",
+          "last-owner-validation" => "A failed server validation preserves the attempted demotion and explains last-owner policy.",
           "remove-confirmation" => "A native open dialog requires the member email before destructive submission.",
           "removed" => "Completion confirms session revocation and audit history.",
           "error" => "Failure copy confirms that no access changed and gives a safe retry path.",
-          "dense" => "Nine deterministic members pressure row actions and long account data.",
+          "dense" => "Eight deterministic memberships pressure row actions and long account data.",
           "mobile" => "The member inventory remains semantic inside a narrow overflow surface."
         }.fetch(state)
-      end
-
-      def state_navigation
-        nav(aria: { label: "Team management states" }, data: { gallery: "composition-states" }) do
-          entry.states.each do |name|
-            a(href: entry_path(entry, state: name), aria: { current: state == name ? "page" : nil }) do
-              name.humanize
-            end
-          end
-        end
       end
     end
   end

@@ -10,7 +10,17 @@ class GalleryResponsivePreviewTest < ActionDispatch::IntegrationTest
       assert_select "[role='tab']", text: "Responsive"
       assert_select "[role='tab']", text: "Code"
       assert_select "[data-controller='gallery--preview'][data-gallery-preview-mode='full-width']" do
-        assert_select "input[type='range'][min='320'][step='1'][aria-describedby]", count: 1
+        assert_select "[data-gallery='preview-toolbar'][data-nk='toolbar']" do
+          assert_select "> [data-slot='toolbar-leading'] [data-gallery='preview-measurement'][data-nk='flex']", count: 1
+          assert_select "> [data-slot='toolbar-trailing'] [data-gallery='preview-controls'][data-nk='flex']", count: 1
+          assert_select "[data-gallery='preview-control'][data-nk='flex']", count: 2
+          assert_select "[data-nk='label']", text: "Width", count: 1
+          assert_select "[data-nk='label']", text: "Preset", count: 1
+          assert_select "input[data-nk='input'][type='range'][min='320'][step='1'][aria-describedby]", count: 1
+          assert_select "[data-nk='select'] > select[data-gallery--preview-target='preset']", count: 1
+          assert_select "button[data-nk='button']", text: "Reset", count: 1
+          assert_select "button[data-nk='button']", text: "Full width", count: 1
+        end
         assert_select "[role='separator'][tabindex='0'][aria-label][aria-orientation='vertical']", count: 1
         assert_select "select[data-gallery--preview-target='preset'] option[value]", count: 11
         assert_select "option[value='639']", text: "Below sm · 639 px"

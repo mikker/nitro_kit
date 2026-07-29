@@ -45,14 +45,14 @@ class ResponsiveThemeTest < ApplicationSystemTestCase
       kind: :composition,
       slug: "api-webhooks",
       state: "dense",
-      selector: "[data-nk='page-header']",
+      selector: "[data-gallery='composition-surface'] [data-nk='page-header']",
       probe: :surface
     ),
     ReviewCase.new(
       kind: :composition,
       slug: "landing",
       state: "long",
-      selector: "[data-nk='page-header']",
+      selector: "[data-gallery='composition-surface'] [data-nk='page-header']",
       probe: :surface
     ),
     ReviewCase.new(

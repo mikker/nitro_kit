@@ -58,34 +58,17 @@ module Gallery
           section.actions(NitroKit::ButtonGroup.new(label: "Request context actions")) do |actions|
             actions.button("Copy reference", type: :button, data: { reference: status.reference })
           end
-          section.table(NitroKit::Table.new(id: "gallery-system-status-table")) do |table|
-            table.caption("Caller-owned system response context")
-            table.thead do
-              table.tr do
-                table.th("Detail")
-                table.th("Value")
-              end
-            end
-            table.tbody do
-              context_rows.each do |label, value|
-                table.tr do
-                  table.th(label, scope: :row)
-                  table.td(value)
-                end
-              end
-            end
+          section.table NitroKit::DetailsTable.new(
+            status,
+            caption: "Caller-owned system response context",
+            id: "gallery-system-status-table"
+          ) do |details|
+            details.field(:code, label: "Status")
+            details.field(:reference)
+            details.field(:recorded, value: "July 13, 2026 at 11:08 UTC")
+            details.field(:retry, value: status.retry_after) if status.retry_after
           end
         end
-      end
-
-      def context_rows
-        rows = [
-          [ "Status", status.code ],
-          [ "Reference", status.reference ],
-          [ "Recorded", "July 13, 2026 at 11:08 UTC" ]
-        ]
-        rows << [ "Retry", status.retry_after ] if status.retry_after
-        rows
       end
 
       def status

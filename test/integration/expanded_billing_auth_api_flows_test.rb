@@ -93,7 +93,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
 
   test "checkout covers review card entry provider outcomes cancellation refunds and empty state" do
     get_flow("checkout", "review")
-    assert_select "#gallery-checkout-review-grid[data-nk='grid'][data-cols='1 sm:2 lg:3'] > [data-nk='card']", count: 3
+    assert_select "#gallery-checkout-review-grid[data-nk='stat-grid'] [data-slot='stat-grid-stat']", count: 3
     assert_select "#gallery-checkout-review-actions[data-nk='toolbar']"
     assert_select "#gallery-checkout-continue[href$='/checkout/payment']"
 
@@ -118,6 +118,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
 
     get_flow("checkout", "succeeded")
     assert_select "#gallery-checkout-result-alert[data-variant='success']", text: /CHK-2048/
+    assert_select "[data-gallery='checkout-result-metadata'][data-nk='details-table'] tbody tr", count: 2
     assert_select "#gallery-checkout-result-action", text: "Open workspace"
 
     get_flow("checkout", "failed")
@@ -206,11 +207,11 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-onboarding-integrations-table tbody tr", count: 3
 
     get_flow("onboarding-branches", "review-company")
-    assert_select "#gallery-onboarding-review-table tbody tr", count: 6
+    assert_select "#gallery-onboarding-review-table[data-nk='details-table'] tbody tr", count: 6
     assert_select "#gallery-onboarding-review-section [data-slot='data-section-actions'] [data-nk='button']", count: 2
 
     get_flow("onboarding-branches", "review-solo")
-    assert_select "#gallery-onboarding-review-table tbody tr", count: 4
+    assert_select "#gallery-onboarding-review-table[data-nk='details-table'] tbody tr", count: 4
 
     get_flow("onboarding-branches", "validation")
     assert_select "#gallery-onboarding-company-error[data-variant='error']"
@@ -239,7 +240,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-api-webhooks-empty [data-slot='empty-state-action']", count: 2
 
     get_flow("api-webhooks", "detail")
-    assert_select "#gallery-api-webhooks-detail-grid[data-nk='grid'] > [data-nk='card']", count: 3
+    assert_select "#gallery-api-webhooks-detail-grid[data-nk='stat-grid'] [data-slot='stat-grid-stat']", count: 3
     assert_select "#gallery-api-webhooks-deliveries-table tbody tr", count: 1
 
     get_flow("api-webhooks", "create")

@@ -5,10 +5,12 @@ module Gallery
     private
 
     def page_template
-      header(data: { gallery: "component-header" }) do
-        h1 { entry.title }
-        p { entry.description } if entry.description
-
+      render NitroKit::Flex.new(dir: :col, gap: 2, align: :stretch) do
+        render NitroKit::PageHeader.new(
+          title: entry.title,
+          description: entry.description,
+          data: { gallery: "component-header" }
+        )
         notes = Notes.new(source: source_note, api: api_note)
         render(notes) if notes.any?
       end

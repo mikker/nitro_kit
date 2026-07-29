@@ -7,12 +7,7 @@ module Gallery
       private
 
       def page_template
-        header(data: { gallery: "composition-header" }) do
-          p(data: { gallery: "eyebrow" }) { "Onboarding" }
-          h1 { entry.title }
-          p { entry.description }
-          state_navigation
-        end
+        render_composition_header(eyebrow: "Onboarding")
 
         render Section.new(
           slug: "onboarding-screen",
@@ -187,15 +182,14 @@ module Gallery
         onboarding = Gallery::AuthFormExamples.onboarding(:valid, step: "review")
         disabled = state == "loading"
 
-        dl(data: { gallery: "composition-summary" }) do
-          dt { "Workspace" }
-          dd { onboarding.workspace_name }
-          dt { "Team size" }
-          dd { "Up to #{onboarding.team_size} people" }
-          dt { "Invitations" }
-          dd { onboarding.invitee_emails.to_sentence }
-          dt { "Integration" }
-          dd { onboarding.integration.humanize }
+        render NitroKit::DetailsTable.new(
+          onboarding,
+          data: { gallery: "composition-summary" }
+        ) do |details|
+          details.field(:workspace_name, label: "Workspace")
+          details.field(:team_size) { |size| plain "Up to #{size} people" }
+          details.field(:invitee_emails, label: "Invitations") { |emails| plain emails.to_sentence }
+          details.field(:integration) { |integration| plain integration.humanize }
         end
 
         form_with(
@@ -313,16 +307,6 @@ module Gallery
           "resume" => "A saved setup records where and when the user can continue.",
           "mobile" => "Long invitation addresses stress the team step at mobile width."
         }.fetch(state)
-      end
-
-      def state_navigation
-        nav(aria: { label: "Onboarding states" }, data: { gallery: "composition-states" }) do
-          entry.states.each do |name|
-            a(href: entry_path(entry, state: name), aria: { current: state == name ? "page" : nil }) do
-              name.humanize
-            end
-          end
-        end
       end
     end
   end

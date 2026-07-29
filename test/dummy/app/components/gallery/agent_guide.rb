@@ -164,18 +164,21 @@ module Gallery
 
     def view_template
       div(data: { gallery: "page", gallery_page: "agent-guide" }) do
-        header(data: { gallery: "page-header" }) do
-          p(data: { gallery: "eyebrow" }) { "Nitro Kit 2.0" }
-          h1 { TITLE }
-          p { INTRO }
-          p do
+        render NitroKit::PageHeader.new(
+          eyebrow: "Nitro Kit 2.0",
+          title: TITLE,
+          data: { gallery: "page-header" }
+        ) do |header|
+          header.description do
+            plain INTRO
+            br
             plain "The same content is served as plain text at "
             a(href: "/llms.txt") { "/llms.txt" }
             plain "."
           end
         end
 
-        div(data: { gallery: "guide" }) do
+        render NitroKit::Typeset.new(data: { gallery: "guide" }) do
           TOPICS.each { |topic| render_topic(topic) }
           render_refusals
         end

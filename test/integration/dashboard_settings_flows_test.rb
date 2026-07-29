@@ -30,7 +30,8 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
       get_flow("dashboard", state)
 
       assert_select "#gallery-dashboard-surface[data-gallery-composition-state='#{state}']"
-      assert_select "nav[aria-label='Dashboard states'] a[aria-current='page']", text: state.humanize
+      assert_select "nav[aria-label='Workspace dashboard states'] [data-nk='button'][aria-current='page']",
+        text: state.humanize
       assert_select "#gallery-dashboard-surface > " \
                     "#gallery-dashboard-container[data-nk='container'][data-size='xl'] > " \
                     "#gallery-dashboard-stack[data-nk='flex'][data-dir='col'][data-gap='6'][data-align='stretch']" do
@@ -151,7 +152,8 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
       get_flow("settings", state)
 
       assert_select "#gallery-settings-surface[data-gallery-composition-state='#{state}']"
-      assert_select "nav[aria-label='Settings states'] a[aria-current='page']", text: state.humanize
+      assert_select "nav[aria-label='Workspace settings states'] [data-nk='button'][aria-current='page']",
+        text: state.humanize
       assert_select "#gallery-settings-layout nav[data-slot='settings-layout-navigation'][aria-label='Settings sections']" do
         assert_select "ul[data-slot='settings-layout-items'] > li[data-slot='settings-layout-item']", count: 5
         assert_select "a[data-slot='settings-layout-item-link'][aria-current='page']", count: 1

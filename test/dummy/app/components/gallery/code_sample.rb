@@ -45,28 +45,30 @@ module Gallery
         }
       ) do
         header(data: { gallery: "code-toolbar" }) do
-          div do
-            strong { "Ruby" }
-            code(data: { gallery: "code-path" }) { source.path }
-          end
+          render NitroKit::Toolbar.new do |toolbar|
+            toolbar.leading do
+              strong { "Ruby" }
+              code(data: { gallery: "code-path" }) { source.path }
+            end
 
-          div do
-            span(
-              id: status_id,
-              role: "status",
-              aria: { live: "polite" },
-              data: { gallery_code_status: true, gallery__code_sample_target: "status" }
-            )
-            render NitroKit::Button.new(
-              "Copy",
-              id: copy_button_id,
-              type: :button,
-              size: :md,
-              variant: :ghost,
-              icon: :copy,
-              aria: { describedby: status_id },
-              data: { action: "gallery--code-sample#copy" }
-            )
+            toolbar.trailing do
+              span(
+                id: status_id,
+                role: "status",
+                aria: { live: "polite" },
+                data: { gallery_code_status: true, gallery__code_sample_target: "status" }
+              )
+              render NitroKit::Button.new(
+                "Copy",
+                id: copy_button_id,
+                type: :button,
+                size: :md,
+                variant: :ghost,
+                icon: :copy,
+                aria: { describedby: status_id },
+                data: { action: "gallery--code-sample#copy" }
+              )
+            end
           end
         end
 

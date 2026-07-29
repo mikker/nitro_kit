@@ -7,12 +7,7 @@ module Gallery
       private
 
       def page_template
-        header(data: { gallery: "composition-header" }) do
-          p(data: { gallery: "eyebrow" }) { "Invitation" }
-          h1 { entry.title }
-          p { entry.description }
-          state_navigation
-        end
+        render_composition_header(eyebrow: "Invitation")
 
         render Section.new(
           slug: "invitation-acceptance-screen",
@@ -187,16 +182,6 @@ module Gallery
           "invalid-token" => "A forged or already-used token cannot reveal account details.",
           "mobile" => "Long workspace and account names pressure a narrow composition."
         }.fetch(state)
-      end
-
-      def state_navigation
-        nav(aria: { label: "Invitation acceptance states" }, data: { gallery: "composition-states" }) do
-          entry.states.each do |name|
-            a(href: entry_path(entry, state: name), aria: { current: state == name ? "page" : nil }) do
-              name.humanize
-            end
-          end
-        end
       end
     end
   end

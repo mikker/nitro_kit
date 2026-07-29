@@ -3,17 +3,16 @@ module Gallery
     private
 
     def page_template
-      header(data: { gallery: "page-header" }) do
-        p(data: { gallery: "eyebrow" }) { "Nitro Kit for Rails" }
-        h1 { "Nitro Kit" }
-        p do
-          "Nitro Kit is a purposefully modest set of Phlex UI components for Rails, " \
-            "composed directly in Ruby. This is its gallery: the exhaustive test bed and " \
-            "the reference a coding agent reads."
-        end
-      end
+      render NitroKit::PageHeader.new(
+        eyebrow: "Nitro Kit for Rails",
+        title: "Nitro Kit",
+        description: "Nitro Kit is a purposefully modest set of Phlex UI components for Rails, " \
+          "composed directly in Ruby. This is its gallery: the exhaustive test bed and " \
+          "the reference a coding agent reads.",
+        data: { gallery: "page-header" }
+      )
 
-      div(data: { gallery: "introduction" }) do
+      render NitroKit::Typeset.new(data: { gallery: "introduction" }) do
         section(aria: { labelledby: "nitro-kit-gallery" }) do
           h2(id: "nitro-kit-gallery") { "What this is" }
           p do

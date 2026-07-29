@@ -6,11 +6,7 @@ module Gallery
       private
 
       def page_template
-        header(data: { gallery: "composition-header" }) do
-          h1 { entry.title }
-          p { entry.description }
-          state_navigation
-        end
+        render_composition_header
 
         render Section.new(
           slug: "#{entry.slug}-screen",
@@ -58,22 +54,6 @@ module Gallery
               label: "#{entry.title} actions"
             )
           ) { |actions| header_actions(actions) }
-        end
-      end
-
-      def state_navigation
-        nav(aria: { label: "#{entry.title} states" }) do
-          render NitroKit::ButtonGroup.new(label: "#{entry.title} states") do |group|
-            entry.states.each do |candidate|
-              group.button(
-                candidate.humanize,
-                href: flow_path(state: candidate),
-                size: :sm,
-                variant: candidate == state ? :primary : :default,
-                aria: { current: candidate == state ? "page" : nil }
-              )
-            end
-          end
         end
       end
 

@@ -12,13 +12,14 @@ module Gallery
 
     def view_template
       div(data: { gallery: "page", gallery_page: "guide" }) do
-        header(data: { gallery: "page-header" }) do
-          p(data: { gallery: "eyebrow" }) { "Nitro Kit 2.0" }
-          h1 { TITLE }
-          p { INTRO }
-        end
+        render NitroKit::PageHeader.new(
+          eyebrow: "Nitro Kit 2.0",
+          title: TITLE,
+          description: INTRO,
+          data: { gallery: "page-header" }
+        )
 
-        div(data: { gallery: "guide" }) do
+        render NitroKit::Typeset.new(data: { gallery: "guide" }) do
           reading_a_component_page
           compositions
           theming

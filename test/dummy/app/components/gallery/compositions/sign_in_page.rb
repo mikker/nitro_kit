@@ -7,12 +7,7 @@ module Gallery
       private
 
       def page_template
-        header(data: { gallery: "composition-header" }) do
-          p(data: { gallery: "eyebrow" }) { "Authentication" }
-          h1 { entry.title }
-          p { entry.description }
-          state_navigation
-        end
+        render_composition_header(eyebrow: "Authentication")
 
         render Section.new(
           slug: "sign-in-screen",
@@ -139,16 +134,6 @@ module Gallery
         end
       end
 
-      def state_navigation
-        nav(aria: { label: "Sign-in states" }, data: { gallery: "composition-states" }) do
-          entry.states.each do |name|
-            a(
-              href: entry_path(entry, state: name),
-              aria: { current: state == name ? "page" : nil }
-            ) { name.humanize }
-          end
-        end
-      end
 
       def state_description
         {

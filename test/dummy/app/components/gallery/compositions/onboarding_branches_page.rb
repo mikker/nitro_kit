@@ -3,6 +3,9 @@ module Gallery
     class OnboardingBranchesPage < ScenarioPage
       include Phlex::Rails::Helpers::FormWith
 
+      CompanyReview = ::Data.define(:branch, :workspace, :team_size, :region, :invitations, :integration)
+      PersonalReview = ::Data.define(:branch, :workspace, :primary_use, :team)
+
       private
 
       def render_scenario
@@ -251,6 +254,8 @@ module Gallery
       end
 
       def render_review(branch)
+        record = review_record(branch)
+
         render NitroKit::DataSection.new(
           title: branch == :company ? "Review company workspace" : "Review personal workspace",
           description: "The review is an application-owned summary; Nitro owns only section and table ordering.",
@@ -260,24 +265,29 @@ module Gallery
             actions.button("Create workspace", href: entry_path(entry, state: "saving"), variant: :primary)
             actions.button("Edit details", href: entry_path(entry, state: branch == :company ? "company" : "solo"))
           end
-          section.table NitroKit::Table.new(id: "gallery-onboarding-review-table") do |table|
-            table.caption("Onboarding choices")
-            table.tbody do
-              review_rows(branch).each do |label, value|
-                table.tr do
-                  table.th(label, scope: :row)
-                  table.td(value)
-                end
-              end
-            end
+          section.table NitroKit::DetailsTable.new(
+            record,
+            caption: "Onboarding choices",
+            id: "gallery-onboarding-review-table"
+          ) do |details|
+            details.fields(*record.class.members)
           end
         end
       end
 
-      def review_rows(branch)
-        return [ [ "Branch", "Personal" ], [ "Workspace", "Ada's research" ], [ "Primary use", "Research" ], [ "Team", "Skipped" ] ] if branch == :solo
-
-        [ [ "Branch", "Company" ], [ "Workspace", "Analytical Engines" ], [ "Team size", "Up to 20" ], [ "Region", "European Union" ], [ "Invitations", "2 pending" ], [ "Integration", "GitHub after creation" ] ]
+      def review_record(branch)
+        if branch == :solo
+          PersonalReview.new(branch: "Personal", workspace: "Ada's research", primary_use: "Research", team: "Skipped")
+        else
+          CompanyReview.new(
+            branch: "Company",
+            workspace: "Analytical Engines",
+            team_size: "Up to 20",
+            region: "European Union",
+            invitations: "2 pending",
+            integration: "GitHub after creation"
+          )
+        end
       end
 
       def render_complete

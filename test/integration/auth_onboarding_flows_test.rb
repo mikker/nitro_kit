@@ -195,7 +195,7 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
     end
 
     get_flow("onboarding", "review")
-    assert_select "[data-gallery='composition-summary'] dt", count: 4
+    assert_select "[data-gallery='composition-summary'][data-nk='details-table'] tbody tr", count: 4
     assert_select "#gallery-onboarding-review-form > [data-nk='field-group']", count: 1
     assert_select "#gallery-onboarding-review-form input[type='checkbox'][required][checked]"
 

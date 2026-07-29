@@ -175,66 +175,101 @@ module Gallery
     end
 
     def responsive_toolbar
-      div(data: { gallery: "preview-toolbar" }) do
-        div(data: { gallery: "preview-measurement" }) do
-          strong { "Viewport" }
-          output(
-            id: preview_output_id,
-            for: preview_range_id,
-            data: { gallery__preview_target: "output" }
-          ) { mode == :constrained ? "#{CONSTRAINED_PREVIEW_WIDTH} px · sm" : "Full width" }
+      render NitroKit::Toolbar.new(data: { gallery: "preview-toolbar" }) do |toolbar|
+        toolbar.leading do
+          render NitroKit::Flex.new(
+            dir: :col,
+            gap: 1,
+            align: :stretch,
+            data: { gallery: "preview-measurement" }
+          ) do
+            strong { "Viewport" }
+            output(
+              id: preview_output_id,
+              for: preview_range_id,
+              data: { gallery__preview_target: "output" }
+            ) { mode == :constrained ? "#{CONSTRAINED_PREVIEW_WIDTH} px · sm" : "Full width" }
+          end
         end
 
-        div(data: { gallery: "preview-controls" }) do
-          label(for: preview_range_id) do
-            span { "Width" }
-            input(
-              id: preview_range_id,
-              type: "range",
-              min: MINIMUM_PREVIEW_WIDTH,
-              max: CONSTRAINED_PREVIEW_WIDTH,
-              step: 1,
-              value: mode == :constrained ? CONSTRAINED_PREVIEW_WIDTH : CONSTRAINED_PREVIEW_WIDTH,
-              aria: { describedby: preview_output_id },
+        toolbar.trailing do
+          render NitroKit::Flex.new(
+            dir: "col sm:row",
+            gap: 2,
+            align: "stretch sm:end",
+            justify: "start sm:end",
+            wrap: "nowrap sm:wrap",
+            data: { gallery: "preview-controls" }
+          ) do
+            render NitroKit::Flex.new(
+              dir: :col,
+              gap: 1,
+              align: :stretch,
+              data: { gallery: "preview-control" }
+            ) do
+              render NitroKit::Label.new("Width", for: preview_range_id)
+              render NitroKit::Input.new(
+                id: preview_range_id,
+                type: :range,
+                min: MINIMUM_PREVIEW_WIDTH,
+                max: CONSTRAINED_PREVIEW_WIDTH,
+                step: 1,
+                value: CONSTRAINED_PREVIEW_WIDTH,
+                aria: { describedby: preview_output_id },
+                data: {
+                  gallery__preview_target: "range",
+                  action: "input->gallery--preview#resizeFromRange"
+                }
+              )
+            end
+
+            render NitroKit::Flex.new(
+              dir: :col,
+              gap: 1,
+              align: :stretch,
+              data: { gallery: "preview-control" }
+            ) do
+              render NitroKit::Label.new("Preset", for: preview_preset_id)
+              render NitroKit::Select.new(
+                id: preview_preset_id,
+                options: preview_presets,
+                prompt: "Choose a breakpoint",
+                control_data: {
+                  gallery__preview_target: "preset",
+                  action: "change->gallery--preview#choosePreset"
+                }
+              )
+            end
+
+            render NitroKit::Button.new(
+              "Reset",
+              type: :button,
+              variant: :ghost,
               data: {
-                gallery__preview_target: "range",
-                action: "input->gallery--preview#resizeFromRange"
+                gallery__preview_target: "reset",
+                action: "gallery--preview#reset"
+              }
+            )
+            render NitroKit::Button.new(
+              "Full width",
+              type: :button,
+              variant: :ghost,
+              data: {
+                gallery__preview_target: "full",
+                action: "gallery--preview#full"
               }
             )
           end
-
-          label(for: preview_preset_id) do
-            span { "Preset" }
-            select(
-              id: preview_preset_id,
-              data: {
-                gallery__preview_target: "preset",
-                action: "change->gallery--preview#choosePreset"
-              }
-            ) do
-              option(value: "") { "Choose a breakpoint" }
-              BREAKPOINTS.each do |name, width|
-                option(value: width - 1) { "Below #{name} · #{width - 1} px" }
-                option(value: width) { "#{name} · #{width} px" }
-              end
-            end
-          end
-
-          button(
-            type: "button",
-            data: {
-              gallery__preview_target: "reset",
-              action: "gallery--preview#reset"
-            }
-          ) { "Reset" }
-          button(
-            type: "button",
-            data: {
-              gallery__preview_target: "full",
-              action: "gallery--preview#full"
-            }
-          ) { "Full width" }
         end
+      end
+    end
+
+    def preview_presets
+      BREAKPOINTS.flat_map do |name, width|
+        [
+          [ "Below #{name} · #{width - 1} px", width - 1 ],
+          [ "#{name} · #{width} px", width ]
+        ]
       end
     end
 

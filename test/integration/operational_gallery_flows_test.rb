@@ -36,11 +36,7 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
         assert_select "div[data-gallery='page'][data-gallery-page='#{slug}'][data-gallery-state='#{state}']"
         assert_select "##{surface_id(slug)}[data-gallery='composition-surface'][data-gallery-composition='#{slug}']" \
                       "[data-gallery-composition-state='#{state}']"
-        if slug == "activity-audit"
-          assert_select "div[data-gallery='page'] > header nav [data-nk='button'][aria-current='page']", count: 1
-        else
-          assert_select "[data-gallery='composition-states'] > a[aria-current='page']", count: 1
-        end
+        assert_select "[data-gallery='composition-states'] [data-nk='button'][aria-current='page']", count: 1
         assert_select "[data-gallery='example'][data-gallery-mode='full-width']", count: 1
         assert_select "[data-gallery='composition-surface'] [data-nk='container'] > [data-nk='flex'][data-dir='col']", count: 1
         assert_select "[data-gallery='composition-surface'] [data-nk='page-header']", count: 1
@@ -81,7 +77,7 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
       assert_select "> #gallery-integration-detail-card[data-nk='card']", count: 1
       assert_select "> #gallery-integration-configuration-section[data-nk='form-section']", count: 1
     end
-    assert_select "[data-gallery='integration-detail-metadata'] dt", count: 3
+    assert_select "[data-gallery='integration-detail-metadata'][data-nk='details-table'] tbody tr", count: 3
     assert_select "#gallery-integration-configuration-form input[type='hidden'][name$='[provider]'][value='sentry']"
     assert_select "#gallery-integration-configuration-form input[type='url'][value^='https://']"
 
@@ -186,6 +182,7 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
   test "changelog covers latest archive empty long and mobile release records" do
     get_flow("changelog", "latest")
     assert_select "#gallery-changelog-latest-card", text: /2\.0\.0-beta\.3.*Typed application sections/m
+    assert_select "#gallery-changelog-latest-prose[data-nk='typeset']", count: 1
     assert_select "#gallery-changelog-latest-card li", count: 3
     assert_select "#gallery-changelog-table tbody tr", count: Gallery::OperationalData.changelog_entries.size
 
@@ -237,7 +234,7 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
 
     get_flow("help-center", "contact-sent")
     assert_select "#gallery-help-center-contact-sent[data-variant='success']", text: /SUP-2048/
-    assert_select "[data-gallery='support-request-metadata'] dt", count: 3
+    assert_select "[data-gallery='support-request-metadata'][data-nk='details-table'] tbody tr", count: 3
 
     get_flow("help-center", "long")
     assert_select "#gallery-help-center-header", text: /International Research, Production, Reliability Engineering/

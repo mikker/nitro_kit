@@ -4,12 +4,7 @@ module Gallery
       private
 
       def page_template
-        header(data: { gallery: "composition-header" }) do
-          p(data: { gallery: "eyebrow" }) { composition_label }
-          h1 { entry.title }
-          p { entry.description }
-          state_navigation
-        end
+        render_composition_header(eyebrow: composition_label)
 
         render Section.new(
           slug: "#{entry.slug}-screen",
@@ -33,16 +28,6 @@ module Gallery
                 gallery_mobile: state == "mobile" ? "true" : nil
               }.compact
             ) { render_scenario }
-          end
-        end
-      end
-
-      def state_navigation
-        nav(aria: { label: "#{entry.title} states" }, data: { gallery: "composition-states" }) do
-          entry.states.each do |name|
-            a(href: entry_path(entry, state: name), aria: { current: state == name ? "page" : nil }) do
-              name.humanize
-            end
           end
         end
       end

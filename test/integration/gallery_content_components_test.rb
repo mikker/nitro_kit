@@ -93,8 +93,11 @@ class GalleryContentComponentsTest < ActionDispatch::IntegrationTest
       assert zones.none? { |zone| zone.at_css("[data-slot='danger-zone-escape'][data-variant='destructive']") }
     end
     assert_select "#gallery-danger-zone-no-escape [data-slot='danger-zone-escape']", count: 0
-    assert_select "#gallery-danger-zone-disabled [data-slot='danger-zone-confirmation'] [data-variant='destructive'][disabled]"
+    assert_select "#gallery-danger-zone-disabled-form[data-nk='button-to'] " \
+                  "[data-variant='destructive'][disabled]"
     assert_select "#gallery-danger-zone-dialog [data-slot='danger-zone-confirmation'] [data-nk='dialog']"
+    assert_select "#gallery-danger-zone-no-escape-form[data-nk='button-to']"
+    assert_select "#gallery-danger-zone-long-form[data-nk='button-to']"
     assert_select "#gallery-danger-zone-long-container > #gallery-danger-zone-long"
   end
 

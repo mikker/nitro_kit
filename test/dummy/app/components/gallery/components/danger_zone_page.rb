@@ -31,9 +31,13 @@ module Gallery
               id: "gallery-danger-zone-disabled"
             ) do |zone|
               zone.confirmation do
-                form(action: "#delete-disabled", method: :post, id: "gallery-danger-zone-disabled-form") do
-                  render NitroKit::Button.new("Delete workspace", type: :submit, variant: :destructive, disabled: true)
-                end
+                render NitroKit::ButtonTo.new(
+                  "Delete workspace",
+                  href: "#delete-disabled",
+                  id: "gallery-danger-zone-disabled-form",
+                  variant: :destructive,
+                  disabled: true
+                )
               end
               zone.escape NitroKit::Button.new("Review ownership", href: "#ownership")
             end
@@ -78,9 +82,12 @@ module Gallery
               id: "gallery-danger-zone-no-escape"
             ) do |zone|
               zone.confirmation do
-                form(action: "#delete-project", method: :post, id: "gallery-danger-zone-no-escape-form") do
-                  render NitroKit::Button.new("Delete project", type: :submit, variant: :destructive)
-                end
+                render NitroKit::ButtonTo.new(
+                  "Delete project",
+                  href: "#delete-project",
+                  id: "gallery-danger-zone-no-escape-form",
+                  variant: :destructive
+                )
               end
             end
           end
@@ -93,9 +100,12 @@ module Gallery
                 id: "gallery-danger-zone-long"
               ) do |zone|
                 zone.confirmation do
-                  form(action: "#delete-long", method: :post, id: "gallery-danger-zone-long-form") do
-                    render NitroKit::Button.new("Permanently delete workspace", type: :submit, variant: :destructive)
-                  end
+                  render NitroKit::ButtonTo.new(
+                    "Permanently delete workspace",
+                    href: "#delete-long",
+                    id: "gallery-danger-zone-long-form",
+                    variant: :destructive
+                  )
                 end
                 zone.escape NitroKit::Button.new("Keep workspace and return to settings", href: "#settings")
               end

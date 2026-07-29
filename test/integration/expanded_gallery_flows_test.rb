@@ -135,6 +135,10 @@ class ExpandedGalleryFlowsTest < ActionDispatch::IntegrationTest
   test "team member detail covers lifecycle activity policy and missing records" do
     get_flow("team-member", "active")
     assert_select "#gallery-team-member-summary[data-nk='card']", text: /Grace Hopper/
+    assert_select "#gallery-team-member-metadata[data-nk='details-table']" do
+      assert_select "table[aria-label='Team member metadata'] tbody tr", count: 4
+      assert_select "tbody", text: /Analytical Engines — Research and Production/
+    end
     assert_select "#gallery-team-member-stats [data-slot='stat-grid-stat']", count: 3
     assert_select "#gallery-team-member-activity-table tbody tr", count: 1
     assert_select "#gallery-team-member-identity [data-variant='destructive'][href='#remove-member']"

@@ -4,6 +4,8 @@ module Gallery
       include Phlex::Rails::Helpers::FormWith
       include Phlex::Rails::Helpers::TurboFrameTag
 
+      BulkOperation = ::Data.define(:operation, :performed_by, :audit_records)
+
       USERS = (
         Gallery::Data.members + [
           Gallery::Data::Member.new(
@@ -57,12 +59,7 @@ module Gallery
       private
 
       def page_template
-        header(data: { gallery: "composition-header" }) do
-          p(data: { gallery: "eyebrow" }) { "Users" }
-          h1 { entry.title }
-          p { entry.description }
-          state_navigation
-        end
+        render_composition_header(eyebrow: "Users")
 
         render Section.new(
           slug: "users-screen",
@@ -161,17 +158,15 @@ module Gallery
                 id: "gallery-users-detail-avatar"
               )
               render NitroKit::Badge.new("Active", id: "gallery-users-detail-status", color: :success)
-              dl(data: { gallery: "user-detail-metadata" }) do
-                dt { "Email" }
-                dd { user.email }
-                dt { "Role" }
-                dd { user.role.to_s.humanize }
-                dt { "Joined" }
-                dd { user.joined_on.to_fs(:long) }
-                dt { "Last sign-in" }
-                dd { "July 13, 2026 at 07:58 UTC from 198.51.100.17" }
-                dt { "Multi-factor authentication" }
-                dd { "Security key and recovery codes" }
+              render NitroKit::DetailsTable.new(
+                user,
+                data: { gallery: "user-detail-metadata" }
+              ) do |details|
+                details.field(:email)
+                details.field(:role) { |role| plain role.to_s.humanize }
+                details.field(:joined_on, label: "Joined") { |date| plain date.to_fs(:long) }
+                details.field(:last_sign_in, value: "July 13, 2026 at 07:58 UTC from 198.51.100.17")
+                details.field(:multi_factor_authentication, value: "Security key and recovery codes")
               end
               render_activity_table(user)
             end
@@ -447,13 +442,11 @@ module Gallery
                 alert.title("2 user records were updated")
                 alert.description("Mary Jackson and Annie Easley are suspended. One active session ended; no invitations were changed.")
               end
-              dl(data: { gallery: "bulk-operation-summary" }) do
-                dt { "Operation" }
-                dd { "bulk_suspend_2026_07_13_0922" }
-                dt { "Performed by" }
-                dd { "Ada Lovelace" }
-                dt { "Audit records" }
-                dd { "Two events created" }
+              render NitroKit::DetailsTable.new(
+                bulk_operation,
+                data: { gallery: "bulk-operation-summary" }
+              ) do |details|
+                details.fields(:operation, :performed_by, :audit_records)
               end
             end
           end
@@ -483,15 +476,14 @@ module Gallery
                 id: "gallery-users-mobile-avatar"
               )
               render NitroKit::Badge.new("Active member", id: "gallery-users-mobile-status", color: :success)
-              dl(data: { gallery: "user-mobile-metadata" }) do
-                dt { "Email" }
-                dd { user.email }
-                dt { "Workspace" }
-                dd { "Analytical Engines — International Research, Production, and Reliability Engineering" }
-                dt { "Access" }
-                dd { "Seven production environments, audit exports, billing reports, and incident response schedules" }
-                dt { "Last sign-in" }
-                dd { "July 13, 2026 at 08:59 UTC from a managed security key in Cambridge, Massachusetts" }
+              render NitroKit::DetailsTable.new(
+                user,
+                data: { gallery: "user-mobile-metadata" }
+              ) do |details|
+                details.field(:email)
+                details.field(:workspace, value: "Analytical Engines — International Research, Production, and Reliability Engineering")
+                details.field(:access, value: "Seven production environments, audit exports, billing reports, and incident response schedules")
+                details.field(:last_sign_in, value: "July 13, 2026 at 08:59 UTC from a managed security key in Cambridge, Massachusetts")
               end
               p do
                 "Suspending this user ends three active browser sessions and pauses two personal deployment credentials. " \
@@ -547,6 +539,14 @@ module Gallery
             )
           end
         end
+      end
+
+      def bulk_operation
+        BulkOperation.new(
+          operation: "bulk_suspend_2026_07_13_0922",
+          performed_by: "Ada Lovelace",
+          audit_records: "Two events created"
+        )
       end
 
       def render_index_pagination
@@ -703,15 +703,6 @@ module Gallery
         end
       end
 
-      def state_navigation
-        nav(aria: { label: "Users states" }, data: { gallery: "composition-states" }) do
-          entry.states.each do |name|
-            a(href: entry_path(entry, state: name), aria: { current: state == name ? "page" : nil }) do
-              name.humanize
-            end
-          end
-        end
-      end
 
       def state_description
         {

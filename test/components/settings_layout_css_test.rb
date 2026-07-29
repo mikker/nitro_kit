@@ -12,13 +12,13 @@ class SettingsLayoutCssTest < ActiveSupport::TestCase
     end
   end
 
-  test "the current item is marked by emphasis and an indicator, never a filled block" do
+  test "the current item is marked by emphasis without a decorative edge or filled block" do
     [ source_css, bundle_section ].each do |css|
       assert_includes css, CURRENT_SELECTOR
       declarations = css.split(CURRENT_SELECTOR).last[/\{(.*?)\}/, 1]
 
-      assert_match(/border-inline-start-color: var\(--nk-color-primary\);/, declarations)
       assert_match(/font-weight: var\(--nk-font-weight-semibold\);/, declarations)
+      refute_match(/border-(?:inline-start|left)/, css)
       refute_match(/background/, declarations)
     end
   end
