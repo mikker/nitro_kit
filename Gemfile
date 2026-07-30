@@ -7,12 +7,12 @@ gemspec
 gem "puma"
 gem "sqlite3"
 gem "propshaft"
-gem "minitest", "< 6"
+gem "minitest"
 
 gem "stimulus-rails"
 gem "turbo-rails"
 gem "importmap-rails"
-gem "ransack", "~> 4.4"
+gem "ransack"
 gem "rubocop-rails-omakase", require: false
 
 group :development, :test do
