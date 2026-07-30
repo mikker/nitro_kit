@@ -30,15 +30,13 @@ module Gallery
           shell.topbar { render_product_toolbar }
           shell.main do
             div(data: { gallery: "product-resource-main" }) do
-              render NitroKit::Container.new(size: :xl, id: "gallery-product-resource-container") do
-                render NitroKit::Flex.new(
-                  dir: :col,
-                  gap: 6,
-                  align: :stretch,
-                  id: "gallery-product-resource-stack"
-                ) do
-                  render_product_state
-                end
+              render NitroKit::Flex.new(
+                dir: :col,
+                gap: 6,
+                align: :stretch,
+                id: "gallery-product-resource-stack"
+              ) do
+                render_product_state
               end
             end
           end

@@ -767,7 +767,7 @@ module Gallery
         states: %w[
           index filtered empty paginated new new-validation edit edit-validation active archived history narrow
         ],
-        expected_roots: %w[app-shell app-navigation toolbar container flex button]
+        expected_roots: %w[app-shell app-navigation toolbar flex button]
       ),
       Entry.new(
         kind: :composition,

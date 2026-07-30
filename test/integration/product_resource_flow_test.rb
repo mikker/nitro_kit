@@ -9,7 +9,7 @@ class ProductResourceFlowTest < ActionDispatch::IntegrationTest
     entry = Gallery::Catalog.fetch!(kind: :composition, slug: "product-resource")
 
     assert_equal STATES, entry.states
-    assert_equal %w[app-shell app-navigation toolbar container flex button], entry.expected_roots
+    assert_equal %w[app-shell app-navigation toolbar flex button], entry.expected_roots
     assert_match(/queryable indexes/, entry.description)
 
     STATES.each do |state|
@@ -53,9 +53,10 @@ class ProductResourceFlowTest < ActionDispatch::IntegrationTest
           " [data-slot='app-navigation-item-link'][aria-current='page']",
           text: "Products",
           count: 1
-        assert_select "#gallery-product-resource-container[data-nk='container'][data-size='xl']" do
+        assert_select "[data-gallery='product-resource-main']" do
           assert_select "> #gallery-product-resource-stack[data-nk='flex'][data-dir='col'][data-gap='6']",
             count: 1
+          assert_select "> [data-nk='container']", count: 0
         end
       end
       assert_select "[data-gallery='composition-states'] a[aria-current='page']", text: state.humanize, count: 1

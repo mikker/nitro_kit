@@ -18,7 +18,7 @@ and their tests together.
 - Child routes add one compact icon Back link before the title instead of a
   trailing Cancel action.
 - One responsive padding rule on the main wrapper owns the page gutter;
-  `Container` constrains measure and never owns padding.
+  data-heavy hybrid CRUD content uses the full available width.
 
 ## Use the hybrid application frame
 
@@ -51,7 +51,7 @@ AppShell(id: "admin", layout: :hybrid) do |shell|
   end
   shell.main do
     div(data: { ui: "admin-main" }) do
-      Container(size: :xl) { render page }
+      render page
     end
   end
 end
@@ -62,8 +62,9 @@ Button with an explicit label such as `aria: { label: "Back to projects" }`.
 Do not repeat that navigation as a trailing Cancel action.
 
 The application stylesheet gives `admin-main` one responsive padding rule.
-Child pages do not add another outer gutter. `Container` constrains measure;
-it does not own page padding.
+Child pages do not add another outer gutter. Keep data-heavy hybrid CRUD
+content full width; constrain only a specific content-led region whose measure
+benefits from it.
 
 Do not add viewport height or another outer padding rule to `admin-main`; the
 shell owns viewport geometry and the wrapper owns the one page gutter. Use the
