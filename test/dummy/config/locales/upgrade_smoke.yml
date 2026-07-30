@@ -1,0 +1,11 @@
+upgrade_smoke:
+  activemodel:
+    attributes:
+      nitro_kit/upgrade_smoke/profile:
+        name: Arbejdsområdenavn
+    errors:
+      models:
+        nitro_kit/upgrade_smoke/profile:
+          attributes:
+            name:
+              too_short: er for kort (mindst %{count} tegn)

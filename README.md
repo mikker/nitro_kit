@@ -60,9 +60,27 @@ time:
 
 ```sh
 bin/rails nitro_kit:doctor
+bin/rails generate nitro_kit:upgrade_smoke_tests
+bin/rails test test/integration/nitro_kit_upgrade_smoke_test.rb
+bin/rails test test/system/nitro_kit_upgrade_smoke_test.rb
 bin/rails nitro_kit:prompt
 bin/rails nitro_kit:prompt --copy
 ```
+
+The upgrade smoke-test generator adds focused tests supported by the host's
+existing Rails Minitest and system-test infrastructure, without replacing
+existing files. Skipped prerequisites include an actionable setup message.
+The tests use the currently bundled Nitro Kit code and a temporary,
+collision-checked test route. They render through the host ApplicationController
+and application layout, covering model-backed validation and Turbo mutation,
+Dialog and Sheet behavior, layout-owned flash Toast feedback, a stable Turbo
+Frame, and changed Phlex content after redirect.
+
+Because host authentication and account callbacks remain active, customize
+the generated `prepare_nitro_kit_upgrade_smoke_test` methods with the same
+sign-in and account-selection helpers used by the application's other tests.
+The generated classes are application-owned extension points; Nitro does not
+bypass host integration.
 
 The installer never launches an agent. Its final interactive step only offers
 to copy the initialization prompt to the clipboard. Use `--no-prompt` for CI

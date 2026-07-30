@@ -20,11 +20,13 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
+    <%= render NitroKit::AppearanceBootstrap.new(default: :system, nonce: content_security_policy_nonce) %>
     <%= stylesheet_link_tag "nitro_kit", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
   <body>
+    <%= render NitroKit::Toast::FlashMessages.new(flash: flash) %>
     <main><%= yield %></main>
   </body>
 </html>

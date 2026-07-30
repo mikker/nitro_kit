@@ -273,6 +273,31 @@ end
 
 ## Verify fidelity
 
+Install and run Nitro Kit's focused host-integration acceptance flow:
+
+```sh
+bin/rails generate nitro_kit:upgrade_smoke_tests
+bin/rails test test/integration/nitro_kit_upgrade_smoke_test.rb
+bin/rails test test/system/nitro_kit_upgrade_smoke_test.rb
+```
+
+The generator does not overwrite existing tests. It generates only files
+supported by the host's Rails Minitest and system-test setup and prints setup
+guidance for skipped files. The tests use the currently bundled gem and cover
+the shared upgrade boundary — browser-submitted Turbo validation and mutation,
+Dialog and Sheet, layout-owned Rails flash, Turbo Frame identity, redirects,
+and post-mutation Phlex rendering. Their collision-checked route exists only
+during each test and is restored afterward; they add no production route or
+component source. Keep application-specific migration tests for inventoried
+product behavior alongside them.
+
+The endpoint deliberately inherits `ApplicationController` callbacks. If the
+application requires authentication or current-account state, fill in the
+generated `prepare_nitro_kit_upgrade_smoke_test` methods with the same sign-in
+and account-selection helpers used by ordinary integration and system tests.
+Extend those application-owned classes rather than changing gem test support
+or skipping host callbacks.
+
 Run focused request and component tests, then compare the converted flows in a
 browser at wide and narrow widths. Exercise keyboard focus, dialogs and sheets,
 Turbo submissions, errors, empty states, light/dark appearance, and dense

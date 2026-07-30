@@ -66,6 +66,16 @@ catalog is available, search by product workflow rather than old component
 name, then prefer the highest-level matching composition before replacing
 atoms.
 
+After establishing that inventory, generate the host integration smoke tests
+from the currently bundled gem with `bin/rails generate
+nitro_kit:upgrade_smoke_tests`. The generator preserves existing files and
+skips missing Rails Minitest or system-test infrastructure with setup guidance.
+Run supported generated tests before and after the application conversion,
+while retaining application-specific acceptance coverage for every inventoried
+flow. Customize each generated `prepare_nitro_kit_upgrade_smoke_test` method
+with host sign-in and account-selection helpers when `ApplicationController`
+requires them; do not disable the host callbacks.
+
 In an existing application, replace a form control only when the installed
 Nitro Kit catalog provides a genuine semantic and behavioral equivalent.
 Preserve its parameter name, IDs, values, errors, accessibility, uploads, and

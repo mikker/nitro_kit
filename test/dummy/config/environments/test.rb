@@ -28,6 +28,10 @@ Rails.application.configure do
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
 
+  # Exercise the host layout's nonce propagation without enforcing a test-only policy.
+  config.content_security_policy_nonce_generator = ->(_request) { SecureRandom.base64(16) }
+  config.content_security_policy_nonce_directives = %w[script-src]
+
   # Store uploaded files on the local file system in a temporary directory.
   config.active_storage.service = :test
 

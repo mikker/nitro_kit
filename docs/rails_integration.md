@@ -62,6 +62,57 @@ the gem, then run `bin/rails nitro_kit:doctor`. Doctor fails for a missing,
 duplicate, or misordered bootstrap or stylesheet entry and reports the exact
 repair.
 
+Install a focused upgrade acceptance flow separately:
+
+```sh
+bin/rails generate nitro_kit:upgrade_smoke_tests
+bin/rails test test/integration/nitro_kit_upgrade_smoke_test.rb
+bin/rails test test/system/nitro_kit_upgrade_smoke_test.rb
+```
+
+The generator creates each test only when its path is absent and its host
+prerequisite exists: `test/test_helper.rb` for integration coverage and
+`test/application_system_test_case.rb` for browser coverage. It prints an
+actionable message for unsupported pieces and never overwrites
+application-owned coverage. Using the currently bundled gem, the tests install
+a collision-checked route only for each test, then restore host routing. The
+endpoint inherits the host `ApplicationController` and renders through the
+application layout, so Nitro CSS, the appearance bootstrap, host JavaScript and
+CSP handling remain in the exercised path. Coverage includes browser-submitted
+Turbo validation and mutation, 303 redirect, layout-owned flash-to-Toast
+feedback, stable Turbo Frame identity, Dialog and Sheet behavior, and
+post-mutation Phlex rendering. No production route or application source is
+added.
+
+The endpoint intentionally keeps every `ApplicationController` callback. The
+generated classes expose a setup hook for authentication and account context;
+replace these example helper names with the host application's real test API:
+
+```ruby
+class NitroKitUpgradeSmokeTest < NitroKit::UpgradeSmokeTest
+  private
+    def prepare_nitro_kit_upgrade_smoke_test
+      sign_in users(:owner)
+      select_account accounts(:primary)
+    end
+end
+
+class NitroKitUpgradeSmokeSystemTest < ApplicationSystemTestCase
+  include NitroKit::UpgradeSmokeSystemTests
+
+  private
+    def prepare_nitro_kit_upgrade_smoke_test
+      sign_in_as users(:owner)
+      select_account accounts(:primary)
+    end
+end
+```
+
+The hook runs before the inherited requests or browser visits. These generated
+files are application-owned extension points: use the same session, sign-in,
+and account-selection path as other host tests. Do not skip callbacks or alter
+the gem controller, because that would bypass the integration under test.
+
 ## Stimulus and importmap
 
 Enhanced components use gem-owned Stimulus controllers, including `nk--app-shell`, `nk--appearance`, `nk--avatar`, `nk--checkable`, `nk--combobox`, `nk--dropdown`, `nk--dropzone`, `nk--progressive-image`, `nk--tabs`, `nk--toast`, and `nk--tooltip`.

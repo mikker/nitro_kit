@@ -5,10 +5,14 @@ require "rbconfig"
 
 class LegacySurfaceTest < ActiveSupport::TestCase
   ROOT = NitroKit::Engine.root
+  GENERATORS = %w[
+    lib/generators/nitro_kit/install_generator.rb
+    lib/generators/nitro_kit/upgrade_smoke_tests_generator.rb
+  ].freeze
 
   test "ships only the direct Phlex component surface" do
     assert_empty ROOT.glob("app/helpers/nitro_kit/**/*")
-    assert_equal [ ROOT.join("lib/generators/nitro_kit/install_generator.rb") ],
+    assert_equal GENERATORS.map { ROOT.join(_1) },
       ROOT.glob("lib/generators/nitro_kit/**/*").select(&:file?)
     refute ROOT.join("lib/nitro_kit/schema_builder.rb").exist?
     refute ROOT.join("lib/nitro_kit/variants.rb").exist?
@@ -23,8 +27,7 @@ class LegacySurfaceTest < ActiveSupport::TestCase
 
     refute_includes specification.dependencies.map(&:name), "tailwind_merge"
     refute specification.files.any? { |path| path.start_with?("app/helpers/") }
-    assert_equal [ "lib/generators/nitro_kit/install_generator.rb" ],
-      specification.files.grep(%r{\Alib/generators/})
+    assert_equal GENERATORS, specification.files.grep(%r{\Alib/generators/})
     refute specification.files.any? { |path| path.start_with?("vendor/javascript/") }
     refute_includes specification.files, "Rakefile"
     refute ROOT.join("Gemfile").read.include?("tailwindcss-rails")
