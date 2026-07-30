@@ -35,15 +35,12 @@ class InputFieldTest < ActiveSupport::TestCase
   test "normalizes Safari's internal date field alignment on the shared input control" do
     css = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/input.css").read
     date_rule = css[/:where\(\[data-nk="input"\]\[type="date"\]\) \{[^}]+\}/m]
-    editor_rule = css[/:where\(\[data-nk="input"\]\[type="date"\]\)::\-webkit-datetime-edit \{[^}]+\}/m]
 
     refute NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/datepicker.css").exist?
     assert date_rule, "input.css must own the date alignment rule"
     assert_includes date_rule, "block-size: var(--nk-control-height-md)"
     assert_includes date_rule, "padding-block: 0"
     assert_includes date_rule, "line-height: calc("
-    assert editor_rule, "input.css must normalize Safari's native date editor"
-    assert_includes editor_rule, "line-height: normal"
   end
 
   test "normalizes datetime-local values and never gives file inputs a value" do

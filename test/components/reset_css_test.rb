@@ -22,6 +22,13 @@ class ResetCssTest < ActiveSupport::TestCase
     )
   end
 
+  test "native WebKit date editors keep their intrinsic line box" do
+    assert_rule(
+      ":where(input)::-webkit-datetime-edit",
+      /display: inline-flex;\s*line-height: normal;/
+    )
+  end
+
   test "list markers are stripped only from Nitro-owned lists" do
     scoped = /
       :where\(\s*

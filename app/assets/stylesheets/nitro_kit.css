@@ -340,6 +340,7 @@
 
   :where(input)::-webkit-datetime-edit {
     display: inline-flex;
+    line-height: normal;
   }
 
   :where(input)::-webkit-datetime-edit-fields-wrapper {
@@ -4632,12 +4633,6 @@
     line-height: calc(
       var(--nk-control-height-md) - (var(--nk-border-width) * 2)
     );
-  }
-
-  /* Keep the explicit outer line box from stretching Safari's closed native
-     month, day, and year editor across the control's full content height. */
-  :where([data-nk="input"][type="date"])::-webkit-datetime-edit {
-    line-height: normal;
   }
 
   :where([data-nk="input"][type="file"]) {

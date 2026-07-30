@@ -125,6 +125,7 @@
 
   :where(input)::-webkit-datetime-edit {
     display: inline-flex;
+    line-height: normal;
   }
 
   :where(input)::-webkit-datetime-edit-fields-wrapper {
