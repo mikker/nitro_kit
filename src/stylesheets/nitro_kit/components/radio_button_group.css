@@ -33,6 +33,13 @@
   }
 
   :where(
+    [data-nk="radio-button-group"][data-presentation="list"][data-orientation="vertical"]
+      > [data-slot="radio-button-group-choices"]
+  ) {
+    gap: 0;
+  }
+
+  :where(
     [data-nk="radio-button-group"][data-orientation="horizontal"]
       > [data-slot="radio-button-group-choices"]
   ) {

@@ -50,6 +50,89 @@ module Gallery
                 render NitroKit::Button.new("Apply", type: :submit)
               end
             end
+            sample("Currency prefix and suffix", slug: "currency") do
+              render NitroKit::ControlGroup.new(id: "gallery-control-group-currency", label: "Invoice amount") do |group|
+                group.addon("$", html: { id: "gallery-currency-symbol" })
+                render NitroKit::Input.new(
+                  type: :number,
+                  id: "gallery-currency-input",
+                  name: "invoice[amount]",
+                  value: "125.00",
+                  min: 0,
+                  step: "0.01",
+                  aria: {
+                    label: "Invoice amount",
+                    describedby: "gallery-currency-symbol gallery-currency-code"
+                  }
+                )
+                group.addon("USD", html: { id: "gallery-currency-code" })
+              end
+            end
+            sample("Measurement units", slug: "units") do
+              render NitroKit::ControlGroup.new(id: "gallery-control-group-units", label: "Package weight") do |group|
+                render NitroKit::Input.new(
+                  type: :number,
+                  id: "gallery-weight-input",
+                  name: "package[weight]",
+                  value: "12.5",
+                  min: 0,
+                  step: "0.1",
+                  aria: { label: "Package weight", describedby: "gallery-weight-unit" }
+                )
+                group.addon("kg", html: { id: "gallery-weight-unit" })
+              end
+            end
+            sample("Phone country selector", slug: "phone-country") do
+              render NitroKit::ControlGroup.new(id: "gallery-control-group-phone", label: "Phone number") do
+                render NitroKit::Select.new(
+                  name: "contact[country_code]",
+                  value: "+1",
+                  control_aria: { label: "Country code" },
+                  options: [ [ "US +1", "+1" ], [ "DK +45", "+45" ], [ "GB +44", "+44" ] ]
+                )
+                render NitroKit::Input.new(
+                  type: :tel,
+                  name: "contact[phone]",
+                  placeholder: "555 012 3456",
+                  aria: { label: "Phone number" }
+                )
+              end
+            end
+            sample("Intrinsic button heights", slug: "intrinsic-button-heights") do
+              render NitroKit::Flex.new(dir: :col, gap: 3) do
+                render NitroKit::ControlGroup.new(id: "gallery-control-group-size-sm", label: "Small action") do
+                  render NitroKit::Input.new(
+                    value: "Shared 40 px height",
+                    aria: { label: "Small action value" }
+                  )
+                  render NitroKit::Button.new("Save", size: :sm)
+                end
+                render NitroKit::ControlGroup.new(id: "gallery-control-group-size-lg", label: "Large action") do |group|
+                  render NitroKit::Select.new(
+                    value: "week",
+                    control_aria: {
+                      label: "Large action period",
+                      describedby: "gallery-control-group-size-lg-addon"
+                    },
+                    options: [ [ "This week", "week" ], [ "This month", "month" ] ]
+                  )
+                  group.addon("UTC", html: { id: "gallery-control-group-size-lg-addon" })
+                  render NitroKit::Button.new("Run", size: :lg)
+                end
+                render NitroKit::ControlGroup.new(id: "gallery-control-group-size-xl", label: "Extra large action") do |group|
+                  group.addon("Date", html: { id: "gallery-control-group-size-xl-addon" })
+                  render NitroKit::Input.new(
+                    type: :date,
+                    value: "2026-07-30",
+                    aria: {
+                      label: "Extra large action date",
+                      describedby: "gallery-control-group-size-xl-addon"
+                    }
+                  )
+                  render NitroKit::Button.new("Rotate", size: :xl)
+                end
+              end
+            end
           end
         end
       end

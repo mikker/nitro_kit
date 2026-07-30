@@ -1511,7 +1511,10 @@
     display: inline-grid;
     flex: none;
     place-items: center;
+    width: var(--_nk-avatar-size);
+    height: var(--_nk-avatar-size);
     overflow: hidden;
+    font-size: var(--_nk-avatar-font-size);
     font-weight: var(--nk-font-weight-medium);
     line-height: 1;
     color: var(--nk-color-muted-foreground);
@@ -1564,27 +1567,23 @@
 
 @layer nitro-kit.size {
   :where([data-nk="avatar"][data-size="xs"]) {
-    width: 1.5rem;
-    height: 1.5rem;
-    font-size: calc(var(--nk-text-xs) * 0.875);
+    --_nk-avatar-size: 1.5rem;
+    --_nk-avatar-font-size: calc(var(--nk-text-xs) * 0.875);
   }
 
   :where([data-nk="avatar"][data-size="sm"]) {
-    width: 2rem;
-    height: 2rem;
-    font-size: var(--nk-text-xs);
+    --_nk-avatar-size: 2rem;
+    --_nk-avatar-font-size: var(--nk-text-xs);
   }
 
   :where([data-nk="avatar"][data-size="md"]) {
-    width: 3rem;
-    height: 3rem;
-    font-size: var(--nk-text-sm);
+    --_nk-avatar-size: 3rem;
+    --_nk-avatar-font-size: var(--nk-text-sm);
   }
 
   :where([data-nk="avatar"][data-size="lg"]) {
-    width: 4rem;
-    height: 4rem;
-    font-size: var(--nk-text-lg);
+    --_nk-avatar-size: 4rem;
+    --_nk-avatar-font-size: var(--nk-text-lg);
   }
 }
 
@@ -1920,6 +1919,8 @@
     --_nk-button-radius: var(--nk-radius-md);
     --_nk-button-font-size: var(--nk-text-xs);
     --_nk-button-line-height: 1rem;
+    --_nk-button-avatar-size: 1rem;
+    --_nk-button-avatar-font-size: calc(var(--nk-text-xs) * 0.75);
   }
 
   :where([data-nk="button"][data-size="sm"]) {
@@ -1927,12 +1928,21 @@
     --_nk-button-padding: calc(var(--nk-space) * 3);
     --_nk-button-icon-padding: calc(var(--nk-space) * 2);
     --_nk-button-radius: var(--nk-radius-md);
+    --_nk-button-avatar-size: 1.25rem;
+    --_nk-button-avatar-font-size: calc(var(--nk-text-xs) * 0.875);
+  }
+
+  :where([data-nk="button"][data-size="md"]) {
+    --_nk-button-avatar-size: 1.5rem;
+    --_nk-button-avatar-font-size: calc(var(--nk-text-xs) * 0.875);
   }
 
   :where([data-nk="button"][data-size="lg"]) {
     --_nk-button-height: var(--nk-control-height-lg);
     --_nk-button-padding: calc(var(--nk-space) * 5);
     --_nk-button-icon-padding: calc(var(--nk-space) * 4);
+    --_nk-button-avatar-size: 1.75rem;
+    --_nk-button-avatar-font-size: var(--nk-text-xs);
   }
 
   :where([data-nk="button"][data-size="xl"]) {
@@ -1942,6 +1952,8 @@
     --_nk-button-radius: var(--nk-radius-xl);
     --_nk-button-font-size: var(--nk-text-base);
     --_nk-button-line-height: 1.5rem;
+    --_nk-button-avatar-size: 2rem;
+    --_nk-button-avatar-font-size: var(--nk-text-xs);
     gap: calc(var(--nk-space) * 4);
   }
 }
@@ -1993,6 +2005,30 @@
     ) {
       animation: none;
     }
+  }
+}
+
+@layer nitro-kit.compound {
+  :where(
+    [data-nk="button"]
+      > [data-slot="button-label"]:has(> [data-nk="avatar"])
+  ) {
+    display: inline-flex;
+    gap: calc(var(--nk-space) * 2);
+    align-items: center;
+  }
+
+  :where(
+    [data-nk="button"]
+      > [data-slot="button-label"]
+      > [data-nk="avatar"]
+  ) {
+    width: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size));
+    height: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size));
+    font-size: min(
+      var(--_nk-avatar-font-size),
+      var(--_nk-button-avatar-font-size)
+    );
   }
 }
 
@@ -2793,9 +2829,31 @@
 /* Source: src/stylesheets/nitro_kit/components/control_group.css */
 @layer nitro-kit.compound {
   :where([data-nk="control-group"]) {
+    --_nk-control-group-height: var(--nk-control-height-md);
+
     display: flex;
     align-items: stretch;
     min-inline-size: 0;
+  }
+
+  :where(
+    [data-nk="control-group"]
+      > :is(
+        [data-nk="input"],
+        [data-nk="select"],
+        [data-nk="button"],
+        span[data-slot="control-group-addon"]
+      )
+  ) {
+    position: relative;
+    min-block-size: var(--_nk-control-group-height);
+  }
+
+  :where(
+    [data-nk="control-group"]
+      > :is([data-nk="input"], [data-nk="select"], [data-nk="button"]):focus-within
+  ) {
+    z-index: 1;
   }
 
   :where(
@@ -2812,6 +2870,15 @@
   :where([data-nk="control-group"] > [data-nk="select"] > select) {
     height: 100%;
     border-radius: 0;
+  }
+
+  /* A standalone date input needs Input's fixed Safari line box. Within a
+     stretching group, the shared boundary and native editor need to grow. */
+  :where(
+    [data-nk="control-group"] > [data-nk="input"][type="date"]
+  ) {
+    block-size: auto;
+    line-height: normal;
   }
 
   :where(
@@ -2865,6 +2932,12 @@
 
   :where([data-nk="control-group"] > [data-nk="button"]) {
     flex: none;
+    min-block-size: max(
+      var(--_nk-control-group-height),
+      var(--_nk-button-height)
+    );
+    block-size: auto;
+    box-shadow: none;
   }
 
   :where([data-nk="control-group"] > [data-slot="control-group-addon"]) {
@@ -5697,6 +5770,13 @@
     display: grid;
     gap: var(--nk-space);
     margin-block-start: calc(var(--nk-space) * 2);
+  }
+
+  :where(
+    [data-nk="radio-button-group"][data-presentation="list"][data-orientation="vertical"]
+      > [data-slot="radio-button-group-choices"]
+  ) {
+    gap: 0;
   }
 
   :where(

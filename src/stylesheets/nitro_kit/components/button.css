@@ -169,6 +169,8 @@
     --_nk-button-radius: var(--nk-radius-md);
     --_nk-button-font-size: var(--nk-text-xs);
     --_nk-button-line-height: 1rem;
+    --_nk-button-avatar-size: 1rem;
+    --_nk-button-avatar-font-size: calc(var(--nk-text-xs) * 0.75);
   }
 
   :where([data-nk="button"][data-size="sm"]) {
@@ -176,12 +178,21 @@
     --_nk-button-padding: calc(var(--nk-space) * 3);
     --_nk-button-icon-padding: calc(var(--nk-space) * 2);
     --_nk-button-radius: var(--nk-radius-md);
+    --_nk-button-avatar-size: 1.25rem;
+    --_nk-button-avatar-font-size: calc(var(--nk-text-xs) * 0.875);
+  }
+
+  :where([data-nk="button"][data-size="md"]) {
+    --_nk-button-avatar-size: 1.5rem;
+    --_nk-button-avatar-font-size: calc(var(--nk-text-xs) * 0.875);
   }
 
   :where([data-nk="button"][data-size="lg"]) {
     --_nk-button-height: var(--nk-control-height-lg);
     --_nk-button-padding: calc(var(--nk-space) * 5);
     --_nk-button-icon-padding: calc(var(--nk-space) * 4);
+    --_nk-button-avatar-size: 1.75rem;
+    --_nk-button-avatar-font-size: var(--nk-text-xs);
   }
 
   :where([data-nk="button"][data-size="xl"]) {
@@ -191,6 +202,8 @@
     --_nk-button-radius: var(--nk-radius-xl);
     --_nk-button-font-size: var(--nk-text-base);
     --_nk-button-line-height: 1.5rem;
+    --_nk-button-avatar-size: 2rem;
+    --_nk-button-avatar-font-size: var(--nk-text-xs);
     gap: calc(var(--nk-space) * 4);
   }
 }
@@ -242,5 +255,29 @@
     ) {
       animation: none;
     }
+  }
+}
+
+@layer nitro-kit.compound {
+  :where(
+    [data-nk="button"]
+      > [data-slot="button-label"]:has(> [data-nk="avatar"])
+  ) {
+    display: inline-flex;
+    gap: calc(var(--nk-space) * 2);
+    align-items: center;
+  }
+
+  :where(
+    [data-nk="button"]
+      > [data-slot="button-label"]
+      > [data-nk="avatar"]
+  ) {
+    width: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size));
+    height: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size));
+    font-size: min(
+      var(--_nk-avatar-font-size),
+      var(--_nk-button-avatar-font-size)
+    );
   }
 }

@@ -55,6 +55,28 @@ class ButtonCssTest < ActiveSupport::TestCase
     refute_includes css, "transition:"
   end
 
+  test "caps nested avatars for every button size without enlarging smaller avatars" do
+    css = button_css
+
+    {
+      xs: "1rem",
+      sm: "1.25rem",
+      md: "1.5rem",
+      lg: "1.75rem",
+      xl: "2rem"
+    }.each do |size, avatar_size|
+      assert_match(
+        /\[data-size="#{size}"\]\)\s*\{[^}]*--_nk-button-avatar-size: #{avatar_size};/m,
+        css
+      )
+    end
+
+    assert_includes css, "width: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size))"
+    assert_includes css, "height: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size))"
+    assert_includes avatar_css, "--_nk-avatar-size: 1.5rem"
+    assert_includes avatar_css, "--_nk-avatar-size: 3rem"
+  end
+
   test "spins the owned loading slot and respects reduced motion" do
     css = button_css
 
@@ -77,5 +99,9 @@ class ButtonCssTest < ActiveSupport::TestCase
 
   def input_css
     NitroKit::CssBundle::ROOT.join("src/stylesheets/nitro_kit/components/input.css").read
+  end
+
+  def avatar_css
+    NitroKit::CssBundle::ROOT.join("src/stylesheets/nitro_kit/components/avatar.css").read
   end
 end

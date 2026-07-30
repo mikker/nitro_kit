@@ -5,7 +5,7 @@ class ControlGroupTest < ActiveSupport::TestCase
     def view_template
       render NitroKit::ControlGroup.new(label: "Copy API URL", id: "copy-api-url") do
         render NitroKit::Input.new(value: "https://example.test/api", readonly: true)
-        render NitroKit::Button.new("Copy", type: :button)
+        render NitroKit::Button.new("Copy", type: :button, size: :sm)
       end
     end
   end
@@ -19,6 +19,7 @@ class ControlGroupTest < ActiveSupport::TestCase
     assert_equal %w[input button], node.element_children.map { |child| child["data-nk"] }
     assert node.at_css("input[readonly]")
     assert_equal "button", node.at_css("button")["type"]
+    assert_equal "sm", node.at_css("button")["data-size"]
   end
 
   test "allows a layout-only group and requires direct content" do
@@ -44,12 +45,51 @@ class ControlGroupTest < ActiveSupport::TestCase
   end
 
   test "owns joined Input and Button geometry in static CSS" do
-    source = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/control_group.css").read
+    source = source_css
 
     assert_includes source, '[data-nk="control-group"]'
     assert_includes source, '[data-nk="input"]'
     assert_includes source, '[data-nk="button"]'
+    assert_includes source, "--_nk-control-group-height: var(--nk-control-height-md)"
+    assert_includes source, "min-block-size: var(--_nk-control-group-height)"
+    assert_includes source, "var(--_nk-button-height)"
+    assert_includes source, "block-size: auto"
+    assert_includes source, "box-shadow: none"
     assert_includes source, "margin-inline-start"
     refute_includes source, "transition: all"
+  end
+
+  test "lets a direct date Input stretch without changing its standalone Safari fix" do
+    [ source_css, bundle_css ].each do |css|
+      group_rule = css[/:where\(\s*\[data-nk="control-group"\] > \[data-nk="input"\]\[type="date"\]\s*\)\s*\{[^}]+\}/m]
+
+      assert group_rule, "ControlGroup CSS must scope the date override to a direct Input"
+      assert_includes group_rule, "block-size: auto"
+      assert_includes group_rule, "line-height: normal"
+    end
+
+    standalone = input_css[/:where\(\[data-nk="input"\]\[type="date"\]\) \{[^}]+\}/m]
+    assert_includes standalone, "block-size: var(--nk-control-height-md)"
+    assert_includes standalone, "line-height: calc("
+  end
+
+  private
+
+  def source_css
+    @source_css ||= NitroKit::Engine.root.join(
+      "src/stylesheets/nitro_kit/components/control_group.css"
+    ).read
+  end
+
+  def input_css
+    @input_css ||= NitroKit::Engine.root.join(
+      "src/stylesheets/nitro_kit/components/input.css"
+    ).read
+  end
+
+  def bundle_css
+    @bundle_css ||= NitroKit::Engine.root.join(
+      "app/assets/stylesheets/nitro_kit.css"
+    ).read
   end
 end

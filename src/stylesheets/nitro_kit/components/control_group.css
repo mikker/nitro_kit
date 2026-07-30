@@ -1,8 +1,30 @@
 @layer nitro-kit.compound {
   :where([data-nk="control-group"]) {
+    --_nk-control-group-height: var(--nk-control-height-md);
+
     display: flex;
     align-items: stretch;
     min-inline-size: 0;
+  }
+
+  :where(
+    [data-nk="control-group"]
+      > :is(
+        [data-nk="input"],
+        [data-nk="select"],
+        [data-nk="button"],
+        span[data-slot="control-group-addon"]
+      )
+  ) {
+    position: relative;
+    min-block-size: var(--_nk-control-group-height);
+  }
+
+  :where(
+    [data-nk="control-group"]
+      > :is([data-nk="input"], [data-nk="select"], [data-nk="button"]):focus-within
+  ) {
+    z-index: 1;
   }
 
   :where(
@@ -19,6 +41,15 @@
   :where([data-nk="control-group"] > [data-nk="select"] > select) {
     height: 100%;
     border-radius: 0;
+  }
+
+  /* A standalone date input needs Input's fixed Safari line box. Within a
+     stretching group, the shared boundary and native editor need to grow. */
+  :where(
+    [data-nk="control-group"] > [data-nk="input"][type="date"]
+  ) {
+    block-size: auto;
+    line-height: normal;
   }
 
   :where(
@@ -72,6 +103,12 @@
 
   :where([data-nk="control-group"] > [data-nk="button"]) {
     flex: none;
+    min-block-size: max(
+      var(--_nk-control-group-height),
+      var(--_nk-button-height)
+    );
+    block-size: auto;
+    box-shadow: none;
   }
 
   :where([data-nk="control-group"] > [data-slot="control-group-addon"]) {

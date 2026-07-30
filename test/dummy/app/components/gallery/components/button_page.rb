@@ -101,6 +101,27 @@ module Gallery
                 icon: :download
               )
             end
+            sample("Avatar and label", slug: "avatar-label") do
+              render NitroKit::Button.new(id: "gallery-button-avatar", size: :xs) do
+                render NitroKit::Avatar.new(
+                  src: "/icon.svg",
+                  alt: "",
+                  fallback: "NK",
+                  size: :xs
+                )
+                plain "Nitro Kit"
+              end
+            end
+            sample("Default avatar and label", slug: "default-avatar-label") do
+              render NitroKit::Button.new(id: "gallery-button-avatar-default") do
+                render NitroKit::Avatar.new(
+                  src: "/icon.svg",
+                  alt: "",
+                  fallback: "NK"
+                )
+                plain "Open workspace"
+              end
+            end
           end
         end
 

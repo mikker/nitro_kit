@@ -4,7 +4,10 @@
     display: inline-grid;
     flex: none;
     place-items: center;
+    width: var(--_nk-avatar-size);
+    height: var(--_nk-avatar-size);
     overflow: hidden;
+    font-size: var(--_nk-avatar-font-size);
     font-weight: var(--nk-font-weight-medium);
     line-height: 1;
     color: var(--nk-color-muted-foreground);
@@ -57,26 +60,22 @@
 
 @layer nitro-kit.size {
   :where([data-nk="avatar"][data-size="xs"]) {
-    width: 1.5rem;
-    height: 1.5rem;
-    font-size: calc(var(--nk-text-xs) * 0.875);
+    --_nk-avatar-size: 1.5rem;
+    --_nk-avatar-font-size: calc(var(--nk-text-xs) * 0.875);
   }
 
   :where([data-nk="avatar"][data-size="sm"]) {
-    width: 2rem;
-    height: 2rem;
-    font-size: var(--nk-text-xs);
+    --_nk-avatar-size: 2rem;
+    --_nk-avatar-font-size: var(--nk-text-xs);
   }
 
   :where([data-nk="avatar"][data-size="md"]) {
-    width: 3rem;
-    height: 3rem;
-    font-size: var(--nk-text-sm);
+    --_nk-avatar-size: 3rem;
+    --_nk-avatar-font-size: var(--nk-text-sm);
   }
 
   :where([data-nk="avatar"][data-size="lg"]) {
-    width: 4rem;
-    height: 4rem;
-    font-size: var(--nk-text-lg);
+    --_nk-avatar-size: 4rem;
+    --_nk-avatar-font-size: var(--nk-text-lg);
   }
 }

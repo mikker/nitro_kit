@@ -5,6 +5,23 @@ class ButtonTest < ActiveSupport::TestCase
     def to_s = value
   end
 
+  class AvatarButtons < Phlex::HTML
+    def view_template
+      render NitroKit::Button.new(size: :xs) do
+        render NitroKit::Avatar.new(alt: "", fallback: "XS", size: :xs)
+        plain "Extra small"
+      end
+      render NitroKit::Button.new(size: :md) do
+        render NitroKit::Avatar.new(alt: "", fallback: "MD", size: :md)
+        plain "Medium"
+      end
+      render NitroKit::Button.new(size: :md) do
+        render NitroKit::Avatar.new(alt: "", fallback: "XS", size: :xs)
+        plain "Smaller avatar"
+      end
+    end
+  end
+
   test "renders every variant and size without classes" do
     assert_predicate NitroKit::Button::VARIANTS, :frozen?
     assert_predicate NitroKit::Button::SIZES, :frozen?
@@ -34,6 +51,16 @@ class ButtonTest < ActiveSupport::TestCase
     assert_equal "icon", text_node.at_css("[data-slot='button-icon-start'] svg")["data-nk"]
     assert_equal "Block label", block_node.at_css("[data-slot='button-label']").text
     assert_equal "icon", block_node.at_css("[data-slot='button-icon-end'] svg")["data-nk"]
+  end
+
+  test "composes xs and md avatars with labels while preserving declared avatar sizes" do
+    nodes = Nokogiri::HTML.fragment(AvatarButtons.new.call).css("[data-nk='button']")
+
+    assert_equal %w[xs md md], nodes.map { |node| node["data-size"] }
+    assert_equal %w[xs md xs], nodes.map { |node| node.at_css("[data-nk='avatar']")["data-size"] }
+    assert_equal [ "Extra small", "Medium", "Smaller avatar" ], nodes.map { |node|
+      node.at_css("[data-slot='button-label']").xpath("text()").text
+    }
   end
 
   test "renders native links and accessible disabled links" do

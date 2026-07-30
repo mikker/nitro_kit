@@ -1,6 +1,23 @@
 require "test_helper"
 
 class RadioButtonGroupCssTest < ActiveSupport::TestCase
+  test "a vertical list packs three short options into contiguous comfortable rows" do
+    selector = ':where( [data-nk="radio-button-group"][data-presentation="list"][data-orientation="vertical"] ' \
+      '> [data-slot="radio-button-group-choices"] )'
+    group = Nokogiri::HTML.fragment(
+      NitroKit::RadioButtonGroup.new(
+        legend: "Density",
+        name: "density",
+        options: [ "Compact", "Default", "Comfortable" ]
+      ).call
+    ).first_element_child
+
+    assert_equal 3, group.css("[data-slot='radio-button-group-choice']").size
+    assert_match(/#{Regexp.escape(selector)} \{ gap: 0; \}/, squish(source_css))
+    assert_match(/#{Regexp.escape(selector)} \{ gap: 0; \}/, squish(bundle_css))
+    assert_includes radio_button_css, "min-block-size: var(--nk-control-height-md)"
+  end
+
   # A segment hides the indicator, so the native radio must stop reserving the
   # space the indicator would have taken: it covers the segment instead, which
   # leaves the label evenly padded between the segment's own paddings.
@@ -38,6 +55,12 @@ class RadioButtonGroupCssTest < ActiveSupport::TestCase
   def bundle_css
     @bundle_css ||= Rails.root.join(
       "../../app/assets/stylesheets/nitro_kit.css"
+    ).read
+  end
+
+  def radio_button_css
+    @radio_button_css ||= Rails.root.join(
+      "../../src/stylesheets/nitro_kit/components/radio_button.css"
     ).read
   end
 end
