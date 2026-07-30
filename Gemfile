@@ -12,7 +12,6 @@ gem "minitest", "< 6"
 gem "stimulus-rails"
 gem "turbo-rails"
 gem "importmap-rails"
-gem "hotwire-spark"
 gem "ransack", "~> 4.4"
 gem "rubocop-rails-omakase", require: false
 

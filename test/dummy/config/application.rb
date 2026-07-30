@@ -24,8 +24,5 @@ module Dummy
     # in config/environments, which are processed later.
     #
     # config.time_zone = "Central Time (US & Canada)"
-
-    config.hotwire.spark.html_paths << Rails.root.join("../../app/components")
-    config.hotwire.spark.stimulus_paths << Rails.root.join("../../app/javascript")
   end
 end
