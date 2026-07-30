@@ -8,6 +8,12 @@ Nitro Kit is a gem-owned, agent-native UI system for Ruby on Rails. Applications
 
 The `2.0.0.pre.1` release is a complete break from Nitro Kit 1.x. Components are no longer generated into applications, there are no `nk_*` view helpers, and consumer Tailwind configuration is not required.
 
+> [!IMPORTANT]
+> Nitro Kit 2 is a ground-up rebuild. The free core is landing first; a new
+> documentation site and the verified Nitro Kit Pro catalog are coming next.
+> Follow this repository and come back soon. Maintaining Nitro Kit 1? Its
+> frozen documentation will remain at [v1.nitrokit.dev](https://v1.nitrokit.dev).
+
 [![RubyGems](https://img.shields.io/gem/v/nitro_kit.svg)](https://rubygems.org/gems/nitro_kit)
 
 ## Requirements
