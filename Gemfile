@@ -7,7 +7,7 @@ gemspec
 gem "puma"
 gem "sqlite3"
 gem "propshaft"
-gem "minitest", "< 6"
+gem "minitest", "< 7"
 
 gem "stimulus-rails"
 gem "turbo-rails"
