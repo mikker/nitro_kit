@@ -279,7 +279,7 @@ Buttons and data-entry controls share control heights, radii, border geometry, f
 
 Private `--_nk-*` variables coordinate component mechanics and are not a theme API.
 
-The browser asset order is optional Tailwind adapter → generated Nitro Kit CSS → compiled Tailwind CSS when present → unlayered application theme overrides. Without Tailwind, load Nitro Kit before application overrides. Never edit the generated distribution asset; keep the complete supported-token inventory and copyable recipes in [`docs/customization.md`](docs/customization.md).
+The browser asset order is optional third-party base CSS (such as Lexxy) → optional Tailwind adapter → generated Nitro Kit CSS → compiled Tailwind CSS when present → unlayered application theme overrides. Without Tailwind, load Nitro Kit before application overrides. `AppearanceBootstrap` precedes every stylesheet. Never edit the generated distribution asset; keep the complete supported-token inventory and copyable recipes in [`docs/customization.md`](docs/customization.md).
 
 Do not turn structural keywords, percentages, zero values, grid mechanics, or layout breakpoints into theme tokens. Responsive layout breakpoints are fixed component API, not customizable `--nk-*` values.
 

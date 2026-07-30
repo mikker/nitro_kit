@@ -4,11 +4,25 @@ Nitro Kit 2.0 uses Rails where Rails owns important application semantics: model
 
 ## Installation and assets
 
-Add Nitro Kit to the application's Gemfile and install it:
+During the Nitro Kit 2 prerelease, pin the Git source to a reviewed full commit
+instead of a moving branch or a loose prerelease constraint:
 
 ```ruby
-gem "nitro_kit", "2.0.0.pre.1"
+NITRO_KIT_REVIEWED_COMMIT = "REPLACE_WITH_FULL_REVIEWED_COMMIT_SHA"
+
+gem "nitro_kit",
+  git: "https://github.com/mikker/nitro_kit.git",
+  ref: NITRO_KIT_REVIEWED_COMMIT
 ```
+
+Replace the placeholder with the complete 40-character SHA you reviewed; do
+not run Bundler with the placeholder. Verify that revision contains the Ruby,
+CSS, controllers, and integration behavior your application will use. To
+advance safely, review a newer revision, replace the SHA, run
+`bundle update nitro_kit`, rerun the generator and doctor, and run the
+application's focused and full tests before committing both Gemfile files.
+Never use a moving branch for production. This advice is prerelease-only; use
+an ordinary released-version constraint after Nitro Kit 2 is stable.
 
 ```sh
 bundle install
@@ -27,10 +41,26 @@ Keep application token overrides after Nitro Kit. The [customization guide](cust
 
 Raised default Buttons have their own public background, hover, foreground, and border tokens. Override `--nk-button-default-*` rather than changing `--nk-color-surface` when form controls, cards, dialogs, and menus should retain their existing surfaces.
 
-The install generator writes only project-owned agent guidance: a managed
-Nitro Kit 2 block in `AGENTS.md` and thin skill routers under `.agents/skills`
-and `.claude/skills`. There is no component source-copy step. Re-run the
-generator after upgrading the gem, then run `bin/rails nitro_kit:doctor`.
+The install generator writes project-owned agent guidance — a managed Nitro Kit
+2 block in `AGENTS.md` and thin skill routers under `.agents/skills` and
+`.claude/skills` — and additively completes conventional ERB and Phlex layouts.
+It preserves existing bootstrap calls, stylesheet expressions, and their
+options. It inserts only missing entries where order is unambiguous, and adds
+`application` only when that asset exists or the layout already names it.
+Dynamic, conditional, or custom layouts remain unchanged and doctor reports a
+manual repair. The resulting order keeps optional third-party base styles such
+as Lexxy first, then the optional Tailwind adapter, Nitro Kit, compiled
+Tailwind, and application styles. A Lexxy application therefore has this exact
+three-entry baseline:
+
+```ruby
+stylesheet_link_tag("lexxy", "nitro_kit", "application", data: { turbo_track: "reload" })
+```
+
+There is no component source-copy step. Re-run the generator after upgrading
+the gem, then run `bin/rails nitro_kit:doctor`. Doctor fails for a missing,
+duplicate, or misordered bootstrap or stylesheet entry and reports the exact
+repair.
 
 ## Stimulus and importmap
 

@@ -4,6 +4,28 @@ Treat a 1.x migration as a product-flow review, not a helper rename. Nitro Kit
 2 deliberately removed copied components, `nk_*` helpers, application-owned
 `controllers/nk`, and unrestricted utility-class customization.
 
+## Pin the prerelease before migrating
+
+During the Nitro Kit 2 prerelease, use a reviewed full Git commit rather than a
+moving branch or a loose prerelease dependency:
+
+```ruby
+NITRO_KIT_REVIEWED_COMMIT = "REPLACE_WITH_FULL_REVIEWED_COMMIT_SHA"
+
+gem "nitro_kit",
+  git: "https://github.com/mikker/nitro_kit.git",
+  ref: NITRO_KIT_REVIEWED_COMMIT
+```
+
+Replace the placeholder with the complete 40-character SHA you reviewed; do
+not run Bundler with the placeholder. Verify that revision contains every
+component, migration rule, and installer behavior the migration will rely on.
+Advance only after reviewing a newer revision: replace the SHA, run
+`bundle update nitro_kit`, rerun the installer and doctor, exercise the
+converted flows, and commit `Gemfile` with `Gemfile.lock`. Never use a moving
+branch for production. This guidance applies only to prereleases; switch to a
+normal released-version constraint once Nitro Kit 2 is stable.
+
 ## Inventory behavior before editing
 
 1. List every `nk_*` helper, `NitroKit::*` component, copied Nitro source file,
@@ -26,16 +48,16 @@ the free component contract.
 
 Map each flow to the highest-level matching 2.x component first:
 
-| Existing need | Begin with |
-| --- | --- |
-| Sign-in or recovery card | `AuthShell` |
-| Application navigation | `AppShell`, `AppNavigation` |
-| Mobile contextual navigation or details | `Sheet` |
-| Settings screen | `SettingsLayout`, `FormSection` |
-| Empty collection card | `EmptyState` |
-| Data collection | `DataSection`, `Table`, `PaginationBar` |
-| Destructive settings | `DangerZone`, `Dialog`, `ButtonTo` |
-| Joined copy or filter controls | `ControlGroup` |
+| Existing need                           | Begin with                              |
+| --------------------------------------- | --------------------------------------- |
+| Sign-in or recovery card                | `AuthShell`                             |
+| Application navigation                  | `AppShell`, `AppNavigation`             |
+| Mobile contextual navigation or details | `Sheet`                                 |
+| Settings screen                         | `SettingsLayout`, `FormSection`         |
+| Empty collection card                   | `EmptyState`                            |
+| Data collection                         | `DataSection`, `Table`, `PaginationBar` |
+| Destructive settings                    | `DangerZone`, `Dialog`, `ButtonTo`      |
+| Joined copy or filter controls          | `ControlGroup`                          |
 
 Only then replace remaining atoms. Common direct mappings include:
 
@@ -85,3 +107,19 @@ panel, interactive Card treatment, or responsive composition survived.
 Finish by deleting copied components, helpers, and controllers; run
 `bin/rails nitro_kit:doctor`; and record every remaining application-owned
 fallback as either intentional product UI or a Nitro Kit coverage gap.
+
+Doctor inventories only concrete Nitro Kit 1.x conventions: `nk_*` helpers,
+generated files under `app/components/nitro_kit`, controllers under
+`app/javascript/controllers/nk`, the old Floating UI and combobox packages,
+and `tailwind_merge`. Every finding includes a file and replacement. Its
+disposition is:
+
+- `migrated` — no remaining occurrence in that category.
+- `unresolved` — a known 1.x integration still needs its documented 2.x
+  replacement or removal.
+- `application-owned` — custom or unsupported behavior must be preserved under
+  an application namespace, not as a Nitro shadow.
+
+The inventory deliberately does not guess from generic component, JavaScript,
+or dependency names. Review application-owned product behavior separately and
+keep its migration record with the application.

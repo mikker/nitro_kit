@@ -6,10 +6,19 @@ Nitro Kit owns component Ruby, markup, behavior, and default CSS. Applications c
 
 Load browser styles in this order:
 
-1. The optional `nitro_kit-tailwind-v4` adapter.
-2. The generated `nitro_kit` distribution stylesheet.
-3. The application's compiled Tailwind CSS, when present.
-4. Application styles, including Nitro token overrides.
+1. Optional third-party base styles, such as Lexxy.
+2. The optional `nitro_kit-tailwind-v4` adapter.
+3. The generated `nitro_kit` distribution stylesheet.
+4. The application's compiled Tailwind CSS, when present.
+5. Application styles, including Nitro token overrides.
+
+`NitroKit::AppearanceBootstrap` precedes every entry in this list. The install
+generator owns this ordering and can safely be rerun. For example, an
+application with Lexxy and no Tailwind has exactly three stylesheet entries:
+
+```erb
+<%= stylesheet_link_tag "lexxy", "nitro_kit", "application", "data-turbo-track": "reload" %>
+```
 
 A Rails application without Tailwind can use:
 

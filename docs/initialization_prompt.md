@@ -11,9 +11,11 @@ APIs or examples.
    conventions unless they conflict with the requested Nitro Kit 2 setup.
 4. Ensure an application base Phlex component includes `NitroKit` once and
    product components inherit from it.
-5. Ensure the application layout loads `nitro_kit` before application token
-   overrides. Add the appearance bootstrap and flash toast rendering when the
-   application uses those features.
+5. Re-run `bin/rails generate nitro_kit:install`. Ensure its application layout
+   setup has one appearance bootstrap before every stylesheet, then optional
+   third-party base styles, the optional Tailwind adapter, `nitro_kit`, compiled
+   Tailwind, and application token overrides in that order. Add flash toast
+   rendering when the application uses it.
 6. Ensure Turbo and Stimulus are wired and the normal Stimulus loader can
    discover the gem-owned `nk--*` controllers. Never copy Nitro components,
    helpers, or controllers into the application.

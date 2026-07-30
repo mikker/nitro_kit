@@ -340,7 +340,7 @@ Selectors use `:where()` for zero authored specificity. Nitro ships its own glob
 
 Public `--nk-*` variables cover semantic colors, the component-specific raised default-button treatment, typography, spacing, radii, border and focus geometry, shadows, motion, control heights, and content widths. Private `--_nk-*` variables coordinate component mechanics and are not theme API.
 
-The exact browser order is optional `nitro_kit-tailwind-v4.css`, generated `nitro_kit.css`, compiled Tailwind CSS when present, then unlayered application styles containing token overrides. Applications never edit the generated asset. [`customization.md`](customization.md) is the complete public token inventory and usage guide.
+The exact browser order is optional third-party base CSS such as Lexxy, optional `nitro_kit-tailwind-v4.css`, generated `nitro_kit.css`, compiled Tailwind CSS when present, then unlayered application styles containing token overrides. `AppearanceBootstrap` precedes every stylesheet. Applications never edit the generated asset. [`customization.md`](customization.md) is the complete public token inventory and usage guide.
 
 Before JavaScript connects, `:root` follows `prefers-color-scheme`; explicit `[data-theme="light"]` and `[data-theme="dark"]` contracts override it and set the matching `color-scheme`. `nk--appearance` keeps `data-theme` equal to the effective light or dark appearance and records the selected light, dark, or system preference separately. Applications override the same public variables for both theme contracts.
 

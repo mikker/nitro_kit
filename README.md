@@ -19,11 +19,26 @@ The `2.0.0.pre.1` release is a complete break from Nitro Kit 1.x. Components are
 
 ## Installation
 
-Add the prerelease to your application:
+While Nitro Kit 2 is a prerelease, pin the Git source to a reviewed full commit
+SHA rather than a moving branch or an ambiguous prerelease constraint:
 
 ```ruby
-gem "nitro_kit", "2.0.0.pre.1"
+NITRO_KIT_REVIEWED_COMMIT = "REPLACE_WITH_FULL_REVIEWED_COMMIT_SHA"
+
+gem "nitro_kit",
+  git: "https://github.com/mikker/nitro_kit.git",
+  ref: NITRO_KIT_REVIEWED_COMMIT
 ```
+
+Replace the placeholder with the complete 40-character SHA you reviewed; do
+not run Bundler with the placeholder. Confirm that revision contains the
+components, installer behavior, and guidance you intend to use before relying
+on them. To advance, review a newer revision first, replace the SHA, run
+`bundle update nitro_kit`, rerun the install generator and
+`bin/rails nitro_kit:doctor`, then run the application's focused and full tests
+before committing `Gemfile` and `Gemfile.lock` together. Never use a moving
+branch in production. This advice is prerelease-only; use an ordinary released
+version constraint once Nitro Kit 2 is stable.
 
 Then install it:
 
@@ -33,9 +48,12 @@ bin/rails generate nitro_kit:install
 ```
 
 The setup generator installs project-local Rails, Hotwire, and UI skills for
-Codex and Claude, and maintains the Nitro Kit 2 section in `AGENTS.md`. It does
-not copy component Ruby, CSS, helpers, or controllers into the application.
-Run it again after upgrading Nitro Kit to refresh the thin skill routers.
+Codex and Claude, maintains the Nitro Kit 2 section in `AGENTS.md`, and
+additively completes conventional application layouts. It preserves existing
+bootstrap and stylesheet calls and leaves dynamic or ambiguous layouts for
+manual repair reported by doctor. It does not copy component Ruby, CSS,
+helpers, or controllers into the application. Run it again after upgrading
+Nitro Kit to refresh the integration.
 
 Verify the integration or print the application initialization prompt at any
 time:
@@ -52,10 +70,11 @@ and scripted installation.
 
 ### CSS
 
-Load the shipped stylesheet through the Rails asset pipeline:
+The installer loads the shipped stylesheet before application styles through
+the Rails asset pipeline:
 
 ```erb
-<%= stylesheet_link_tag "nitro_kit", "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "nitro_kit", "application", "data-turbo-track": "reload" %>
 ```
 
 The stylesheet is plain CSS. It does not require Tailwind or Tailwind Preflight — it ships its own global preflight inside the `nitro-kit.reset` cascade layer, so unlayered application CSS always wins. Load application styles containing token overrides after Nitro Kit. Applications that use Tailwind CSS v4 load the optional adapter first, then Nitro Kit, compiled Tailwind, and application styles:
