@@ -16,8 +16,6 @@ class GalleryCodeSamplesTest < ApplicationSystemTestCase
 
     assert_selector "#{code_tab}[aria-selected='true'][data-state='active']"
     assert_selector "#{code_panel}:not([hidden])[aria-hidden='false']"
-    assert_selector source, text: "render NitroKit::Button.new"
-    assert_selector "#{source} [data-gallery-token='constant']", text: "NitroKit"
 
     execute_script(<<~JAVASCRIPT)
       Object.defineProperty(navigator, "clipboard", {

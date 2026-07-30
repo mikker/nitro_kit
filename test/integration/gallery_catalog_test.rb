@@ -51,6 +51,7 @@ class GalleryCatalogTest < ActionDispatch::IntegrationTest
 
         assert_unique_ids
         assert_valid_id_references
+        assert_owned_form_rhythm(entry, state)
       end
     end
   end
@@ -60,6 +61,7 @@ class GalleryCatalogTest < ActionDispatch::IntegrationTest
   # Nitro never emits classes or styles, but application content slots such as
   # the rich-text editor region carry the host editor's own markup.
   APPLICATION_OWNED_SLOTS = "[data-slot='rich-text-area-editor']"
+  SPACING_OWNERS = %w[field-group flex grid fieldset].freeze
 
   def nitro_owned(selector)
     document.css(selector).reject do |node|
@@ -86,6 +88,40 @@ class GalleryCatalogTest < ActionDispatch::IntegrationTest
     missing = id_references.to_set - ids
 
     assert_empty missing, "references to missing document IDs: #{missing.to_a.sort.inspect}"
+  end
+
+  def assert_owned_form_rhythm(entry, state)
+    document.css("form").each do |form|
+      ([ form ] + form.css("*").to_a).each do |parent|
+        stacked = parent.element_children.select { |node| field?(node) || submit_button?(node) }
+
+        next if stacked.count { |node| field?(node) }.zero?
+        next if stacked.size < 2
+        next if SPACING_OWNERS.include?(parent["data-nk"])
+
+        flunk <<~MESSAGE
+          #{entry.kind} page "#{entry.slug}"#{" (state #{state})" if state}, example "#{example_slug(form)}":
+          #{stacked.size} stacked controls (#{stacked.map { |node| node["data-nk"] }.join(", ")}) are direct
+          siblings inside <#{parent.name}#{" data-nk=\"#{parent["data-nk"]}\"" if parent["data-nk"]}#{" id=\"#{parent["id"]}\"" if parent["id"]}>,
+          which owns no gap, so they stack flush against each other.
+          Wrap them in NitroKit::FieldGroup (or form.group inside a form_with block);
+          use Flex or Grid when the arrangement is deliberately inline or multi-column.
+          Form: #{form["id"] || "(no id)"}
+        MESSAGE
+      end
+    end
+  end
+
+  def field?(node)
+    node["data-nk"] == "field" || node["data-nk"] == "dropzone"
+  end
+
+  def submit_button?(node)
+    node["data-nk"] == "button" && node["type"] == "submit"
+  end
+
+  def example_slug(node)
+    node.ancestors("[data-gallery='example']").first&.[]("data-gallery-example") || "(unknown)"
   end
 
   def document

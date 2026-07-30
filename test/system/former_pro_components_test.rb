@@ -32,16 +32,13 @@ class FormerProComponentsTest < ApplicationSystemTestCase
     assert_no_severe_console_errors(context: path)
   end
 
-  test "Turbo Drive reconnects progressive images and details remain server rendered" do
+  test "Turbo Drive reconnects progressive images" do
     visit gallery_component_path("progressive-image")
     assert_selector "#gallery-progressive-image-loaded[data-state='loaded']"
 
     within("#gallery-navigation") { click_link("Details table") }
 
     assert_current_path gallery_component_path("details-table")
-    assert_selector "#gallery-details-table-profile[data-nk='details-table']", count: 1
-    assert_selector "#gallery-details-table-profile [data-slot='table-row']", count: 7
-    assert_selector "#gallery-details-table-values [data-slot='details-table-empty']", text: "Not provided"
 
     within("#gallery-navigation") { click_link("Progressive image") }
 

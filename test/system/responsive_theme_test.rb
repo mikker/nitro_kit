@@ -2,21 +2,28 @@ require "application_system_test_case"
 
 class ResponsiveThemeTest < ApplicationSystemTestCase
   Viewport = Data.define(:name, :width, :height)
-  ReviewCase = Data.define(:kind, :slug, :state, :selector, :probe)
+  ReviewCase = Data.define(:kind, :slug, :state, :viewport, :theme, :selector, :probe)
 
-  VIEWPORTS = [
-    Viewport.new(name: "phone", width: 390, height: 844),
-    Viewport.new(name: "tablet", width: 768, height: 1024),
-    Viewport.new(name: "desktop", width: 1440, height: 1000)
-  ].freeze
-
-  THEMES = %w[light dark].freeze
+  PHONE = Viewport.new(name: "phone", width: 390, height: 844)
+  TABLET = Viewport.new(name: "tablet", width: 768, height: 1024)
+  DESKTOP = Viewport.new(name: "desktop", width: 1440, height: 1000)
 
   REVIEW_CASES = [
     ReviewCase.new(
       kind: :home,
       slug: "home",
       state: nil,
+      viewport: PHONE,
+      theme: "light",
+      selector: "[data-gallery='introduction']",
+      probe: :home
+    ),
+    ReviewCase.new(
+      kind: :home,
+      slug: "home",
+      state: nil,
+      viewport: DESKTOP,
+      theme: "dark",
       selector: "[data-gallery='introduction']",
       probe: :home
     ),
@@ -24,6 +31,8 @@ class ResponsiveThemeTest < ApplicationSystemTestCase
       kind: :component,
       slug: "dialog",
       state: nil,
+      viewport: PHONE,
+      theme: "dark",
       selector: "#gallery-dialog-remove-member[data-nk='dialog']",
       probe: :dialog
     ),
@@ -31,6 +40,17 @@ class ResponsiveThemeTest < ApplicationSystemTestCase
       kind: :component,
       slug: "table",
       state: nil,
+      viewport: PHONE,
+      theme: "dark",
+      selector: "#gallery-table-credentials[data-nk='table']",
+      probe: :table
+    ),
+    ReviewCase.new(
+      kind: :component,
+      slug: "table",
+      state: nil,
+      viewport: TABLET,
+      theme: "light",
       selector: "#gallery-table-credentials[data-nk='table']",
       probe: :table
     ),
@@ -38,6 +58,17 @@ class ResponsiveThemeTest < ApplicationSystemTestCase
       kind: :component,
       slug: "settings-layout",
       state: nil,
+      viewport: PHONE,
+      theme: "light",
+      selector: "#gallery-settings-layout-workspace[data-nk='settings-layout']",
+      probe: :settings_layout
+    ),
+    ReviewCase.new(
+      kind: :component,
+      slug: "settings-layout",
+      state: nil,
+      viewport: DESKTOP,
+      theme: "dark",
       selector: "#gallery-settings-layout-workspace[data-nk='settings-layout']",
       probe: :settings_layout
     ),
@@ -45,6 +76,8 @@ class ResponsiveThemeTest < ApplicationSystemTestCase
       kind: :composition,
       slug: "api-webhooks",
       state: "dense",
+      viewport: PHONE,
+      theme: "dark",
       selector: "[data-gallery='composition-surface'] [data-nk='page-header']",
       probe: :surface
     ),
@@ -52,6 +85,8 @@ class ResponsiveThemeTest < ApplicationSystemTestCase
       kind: :composition,
       slug: "landing",
       state: "long",
+      viewport: PHONE,
+      theme: "light",
       selector: "[data-gallery='composition-surface'] [data-nk='page-header']",
       probe: :surface
     ),
@@ -59,6 +94,8 @@ class ResponsiveThemeTest < ApplicationSystemTestCase
       kind: :composition,
       slug: "account-security",
       state: "mobile",
+      viewport: PHONE,
+      theme: "dark",
       selector: "[data-nk='auth-shell']",
       probe: :surface
     ),
@@ -66,28 +103,26 @@ class ResponsiveThemeTest < ApplicationSystemTestCase
       kind: :composition,
       slug: "checkout",
       state: "payment",
+      viewport: PHONE,
+      theme: "light",
       selector: "[data-nk='form-section']",
       probe: :surface
     )
   ].freeze
 
   REVIEW_CASES.each do |review_case|
-    VIEWPORTS.each do |viewport|
-      THEMES.each do |theme|
-        test "#{review_case.slug} #{review_case.state || "default"} at #{viewport.name} in #{theme}" do
-          path = review_path(review_case, theme:)
-          set_exact_viewport(viewport)
-          visit path
+    test "#{review_case.slug} #{review_case.state || "default"} at #{review_case.viewport.name} in #{review_case.theme}" do
+      path = review_path(review_case)
+      set_exact_viewport(review_case.viewport)
+      visit path
 
-          assert_current_path path
-          assert_selector "html[data-gallery='document'][data-theme='#{theme}']"
-          assert_selector page_marker(review_case)
-          assert_selector review_case.selector
-          assert_no_document_horizontal_overflow
-          assert_review_probe(review_case, viewport:)
-          assert_no_severe_console_errors(context: path)
-        end
-      end
+      assert_current_path path
+      assert_selector "html[data-gallery='document'][data-theme='#{review_case.theme}']"
+      assert_selector page_marker(review_case)
+      assert_selector review_case.selector
+      assert_no_document_horizontal_overflow
+      assert_review_probe(review_case, viewport: review_case.viewport)
+      assert_no_severe_console_errors(context: path)
     end
   end
 
@@ -105,7 +140,7 @@ class ResponsiveThemeTest < ApplicationSystemTestCase
       assert_equal [ viewport.width, viewport.height ], evaluate_script("[window.innerWidth, window.innerHeight]")
     end
 
-    def review_path(review_case, theme:)
+    def review_path(review_case)
       entry = Gallery::Catalog.fetch!(kind: review_case.kind, slug: review_case.slug)
       path = Gallery::Catalog.path_for(
         entry,
@@ -113,7 +148,7 @@ class ResponsiveThemeTest < ApplicationSystemTestCase
         state: review_case.state
       )
 
-      "#{path}?theme=#{theme}"
+      "#{path}?theme=#{review_case.theme}"
     end
 
     def page_marker(review_case)

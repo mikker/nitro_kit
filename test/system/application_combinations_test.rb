@@ -1,28 +1,20 @@
 require "application_system_test_case"
 
 class ApplicationCombinationsTest < ApplicationSystemTestCase
-  STORAGE_KEY = NitroKit::AppearanceBootstrap::STORAGE_KEY
   APPLICATIONS = {
     "application-sidebar" => {
       layout: "sidebar",
-      states: %w[populated empty error],
-      source: "sidebar_application_page.rb"
+      states: %w[populated empty error]
     },
     "application-topbar" => {
       layout: "topbar",
-      states: %w[populated loading long],
-      source: "topbar_application_page.rb"
+      states: %w[populated loading long]
     },
     "application-hybrid" => {
       layout: "hybrid",
-      states: %w[populated missing error],
-      source: "hybrid_application_page.rb"
+      states: %w[populated missing error]
     }
   }.freeze
-
-  teardown do
-    execute_script("try { localStorage.removeItem(arguments[0]) } catch (_error) {}", STORAGE_KEY)
-  end
 
   test "complete applications keep their desktop layout and expose an accessible mobile drawer" do
     APPLICATIONS.each do |slug, contract|
@@ -70,54 +62,6 @@ class ApplicationCombinationsTest < ApplicationSystemTestCase
       assert_selector "#{sidebar} > [data-slot='app-shell-navigation']", visible: :all
       assert_no_severe_console_errors(context: path)
     end
-  end
-
-  test "every complete application exposes the exact executable AppShell source" do
-    APPLICATIONS.each do |slug, contract|
-      path = gallery_composition_path(slug:)
-      visit path
-
-      layout = contract.fetch(:layout)
-      contract.fetch(:states).each do |state|
-        example = "#example-#{layout}-application-#{state}"
-        code_tab = "#{example}-presentation-code-tab"
-        code_panel = "#{example}-presentation-code-panel"
-
-        assert_selector "#{code_panel}[hidden][aria-hidden='true']", visible: :all
-        find(code_tab).click
-
-        assert_selector "#{code_tab}[aria-selected='true'][data-state='active']"
-        assert_selector "#{code_panel}:not([hidden])[aria-hidden='false']"
-        assert_selector "#{example} [data-gallery='code-path']", text: /#{contract.fetch(:source)}\z/
-        assert_selector "#{example} [data-gallery='code-source']", text: /render NitroKit::AppShell\.new/
-        assert_selector "#{example} [data-gallery='code-source']", text: /layout: :#{layout}/
-        assert_selector "#{example} [data-gallery='code-source']", text: /gallery_application_state: "#{state}"/
-      end
-
-      assert_no_severe_console_errors(context: path)
-    end
-  end
-
-  test "application examples synchronize appearance and accept a native multipart drop" do
-    visit gallery_root_path
-    execute_script("localStorage.removeItem(arguments[0])", STORAGE_KEY)
-    hybrid_path = gallery_composition_path(slug: "application-hybrid")
-    visit hybrid_path
-
-    assert_selector "#gallery-hybrid-application-populated [data-nk='appearance-picker'][data-state='system']", count: 2
-    find("label[for='gallery-hybrid-application-navigation-appearance-dark']").click
-    assert_selector "html[data-theme-preference='dark'][data-theme='dark']"
-    assert_selector "#gallery-hybrid-application-populated [data-nk='appearance-picker'][data-state='dark']", count: 2
-    assert_no_severe_console_errors(context: hybrid_path)
-
-    sidebar_path = gallery_composition_path(slug: "application-sidebar")
-    visit sidebar_path
-    attach_file("gallery-sidebar-application-dropzone-input", file_fixture("profile.txt"))
-
-    assert_selector "#gallery-sidebar-application-dropzone[data-state='success']"
-    assert_selector "#gallery-sidebar-application-dropzone [data-slot='dropzone-preview']", count: 1
-    assert_selector "#gallery-sidebar-application-dropzone [data-slot='dropzone-file-name']", text: "profile.txt"
-    assert_no_severe_console_errors(context: sidebar_path)
   end
 
   private

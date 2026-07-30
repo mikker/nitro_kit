@@ -5,6 +5,7 @@ require "generators/nitro_kit/upgrade_smoke_tests_generator"
 class UpgradeSmokeTestsGeneratorTest < Rails::Generators::TestCase
   tests NitroKit::UpgradeSmokeTestsGenerator
   destination File.expand_path("../../tmp/upgrade_smoke_tests_generator", __dir__)
+  setup { self.destination_root = File.join(self.class.destination_root, name) }
   setup :prepare_destination
 
   test "installs tests when the host Minitest infrastructure is present" do
