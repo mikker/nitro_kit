@@ -1,6 +1,6 @@
 # Nitro Kit 2.0 component contracts
 
-This is the shipped public catalog for `2.0.0`. It describes current Ruby construction, rendered roots, closed vocabularies, compound cardinalities, and integration boundaries. Other candidate abstractions and the historical delivery plan are not public API.
+This is the shipped public catalog for `2.0.0.alpha.1`. It describes current Ruby construction, rendered roots, closed vocabularies, compound cardinalities, and integration boundaries. Other candidate abstractions and the historical delivery plan are not public API.
 
 ## Shared component boundary
 

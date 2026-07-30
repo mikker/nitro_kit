@@ -6,14 +6,14 @@
 
 **Rails front-end for the agent era.**
 
-Nitro Kit is a gem-owned, agent-native UI system for Ruby on Rails. The `2.0.0` release is a ground-up rebuild. The free core is available now; new documentation and the verified Nitro Kit Pro catalog are coming next.
+Nitro Kit is a gem-owned, agent-native UI system for Ruby on Rails. The `2.0.0.alpha.1` prerelease is a ground-up rebuild. The free core is available now; new documentation and the verified Nitro Kit Pro catalog are coming next.
 
 [![RubyGems](https://img.shields.io/gem/v/nitro_kit.svg)](https://rubygems.org/gems/nitro_kit)
 
 ## Installation
 
 ```ruby
-gem "nitro_kit", "~> 2.0"
+gem "nitro_kit", "2.0.0.alpha.1"
 ```
 
 Use the released gem and commit `Gemfile` with `Gemfile.lock`. Before upgrading, review the changelog, run `bundle update nitro_kit`, rerun the installer, and test the application.
