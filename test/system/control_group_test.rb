@@ -9,6 +9,7 @@ class ControlGroupSystemTest < ApplicationSystemTestCase
     xl_group = "#gallery-control-group-size-xl"
     assert_equal "date", find("#{xl_group} > [data-nk='input']")[:type]
     assert_group_heights xl_group, group: 56, input: 56, addon: 56, button: 56
+    assert_in_delta 54, date_line_height(xl_group), 0.01
     assert_no_severe_console_errors(context: "ControlGroup intrinsic heights")
   end
 
@@ -34,5 +35,11 @@ class ControlGroupSystemTest < ApplicationSystemTestCase
     expected.each do |part, height|
       assert_in_delta height, actual.fetch(part.to_s), 0.01, "#{selector} #{part} height"
     end
+  end
+
+  def date_line_height(selector)
+    evaluate_script(<<~JAVASCRIPT, find("#{selector} > [data-nk='input'][type='date']"))
+      parseFloat(getComputedStyle(arguments[0]).lineHeight)
+    JAVASCRIPT
   end
 end

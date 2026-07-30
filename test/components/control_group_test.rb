@@ -51,21 +51,22 @@ class ControlGroupTest < ActiveSupport::TestCase
     assert_includes source, '[data-nk="input"]'
     assert_includes source, '[data-nk="button"]'
     assert_includes source, "--_nk-control-group-height: var(--nk-control-height-md)"
+    assert_includes source, "--_nk-control-group-height: var(--nk-control-height-lg)"
+    assert_includes source, "--_nk-control-group-height: var(--nk-control-height-xl)"
+    assert_includes source, "block-size: var(--_nk-control-group-height)"
     assert_includes source, "min-block-size: var(--_nk-control-group-height)"
-    assert_includes source, "var(--_nk-button-height)"
-    assert_includes source, "block-size: auto"
     assert_includes source, "box-shadow: none"
     assert_includes source, "margin-inline-start"
     refute_includes source, "transition: all"
   end
 
-  test "lets a direct date Input stretch without changing its standalone Safari fix" do
+  test "gives a grouped date Input an explicit Safari line box at the shared height" do
     [ source_css, bundle_css ].each do |css|
       group_rule = css[/:where\(\s*\[data-nk="control-group"\] > \[data-nk="input"\]\[type="date"\]\s*\)\s*\{[^}]+\}/m]
 
       assert group_rule, "ControlGroup CSS must scope the date override to a direct Input"
-      assert_includes group_rule, "block-size: auto"
-      assert_includes group_rule, "line-height: normal"
+      assert_includes group_rule, "line-height: calc("
+      assert_includes group_rule, "var(--_nk-control-group-height)"
     end
 
     standalone = input_css[/:where\(\[data-nk="input"\]\[type="date"\]\) \{[^}]+\}/m]

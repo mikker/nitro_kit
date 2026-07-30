@@ -8,6 +8,18 @@
   }
 
   :where(
+    [data-nk="control-group"]:has(> [data-nk="button"][data-size="lg"])
+  ) {
+    --_nk-control-group-height: var(--nk-control-height-lg);
+  }
+
+  :where(
+    [data-nk="control-group"]:has(> [data-nk="button"][data-size="xl"])
+  ) {
+    --_nk-control-group-height: var(--nk-control-height-xl);
+  }
+
+  :where(
     [data-nk="control-group"]
       > :is(
         [data-nk="input"],
@@ -17,6 +29,7 @@
       )
   ) {
     position: relative;
+    block-size: var(--_nk-control-group-height);
     min-block-size: var(--_nk-control-group-height);
   }
 
@@ -43,13 +56,15 @@
     border-radius: 0;
   }
 
-  /* A standalone date input needs Input's fixed Safari line box. Within a
-     stretching group, the shared boundary and native editor need to grow. */
+  /* Safari positions its native date editor from the line box's top edge.
+     Give the grouped editor the same explicit line-box treatment as a
+     standalone date Input, using the compound control's resolved height. */
   :where(
     [data-nk="control-group"] > [data-nk="input"][type="date"]
   ) {
-    block-size: auto;
-    line-height: normal;
+    line-height: calc(
+      var(--_nk-control-group-height) - (var(--nk-border-width) * 2)
+    );
   }
 
   :where(
@@ -103,11 +118,6 @@
 
   :where([data-nk="control-group"] > [data-nk="button"]) {
     flex: none;
-    min-block-size: max(
-      var(--_nk-control-group-height),
-      var(--_nk-button-height)
-    );
-    block-size: auto;
     box-shadow: none;
   }
 
