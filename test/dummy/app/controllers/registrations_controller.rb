@@ -32,6 +32,6 @@ class RegistrationsController < ApplicationController
     end
 
     def registration_params
-      params.expect(registration: [ :email, :role, :terms, :source, :attachment ])
+      params.expect(registration: [ :email, :role, :terms, :note, :source, :attachment ])
     end
 end

@@ -69,9 +69,13 @@ module Gallery
         ) do
           example("One and many", slug: "settings-layout-cardinality-states", mode: :full_width) do
             sample("One destination", slug: "one") do
+              destinations = [ [ "Profile", "#profile", :user_round ] ]
+
               render NitroKit::SettingsLayout.new(id: "gallery-settings-layout-one") do |layout|
                 layout.navigation(label: "Account settings") do
-                  layout.item("Profile", href: "#profile", icon: :user_round, current: true)
+                  destinations.each do |text, href, icon|
+                    layout.item(text, href:, icon:, current: true)
+                  end
                 end
                 layout.content do
                   render NitroKit::Alert.new(id: "gallery-settings-layout-one-alert") do |alert|

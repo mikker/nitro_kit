@@ -20,18 +20,28 @@ module RailsIntegration
           id: dom_id(registration, :details)
         ) do |form|
           form.hidden_field(:source)
-          form.field(:email, as: :email, description: "We only use this for the receipt", required: true)
-          form.field(
-            :role,
-            as: :select,
-            label: "Role",
-            options: [ [ "Developer", "developer" ], [ "Designer", "designer" ] ],
-            prompt: "Choose a role",
-            required: true
-          )
-          form.field(:terms, as: :checkbox, label: "I accept the terms", required: true)
-          form.field(:attachment, as: :file, label: "Supporting note", accept: "text/plain")
-          form.submit("Register", data: { turbo_submits_with: "Registering…" })
+          form.group do
+            form.field(:email, as: :email, description: "We only use this for the receipt", required: true)
+            form.field(
+              :role,
+              as: :select,
+              label: "Role",
+              options: [ [ "Developer", "developer" ], [ "Designer", "designer" ] ],
+              prompt: "Choose a role",
+              required: true
+            )
+            form.field(
+              :note,
+              as: :textarea,
+              label: "Note",
+              description: "This submitted content is rendered in the replacement frame.",
+              required: true,
+              rows: 3
+            )
+            form.field(:terms, as: :checkbox, label: "I accept the terms", required: true)
+            form.field(:attachment, as: :file, label: "Supporting file", accept: "text/plain")
+            form.submit("Register", data: { turbo_submits_with: "Registering…" })
+          end
         end
 
         a(href: new_registration_path, data: { turbo_frame: "_top" }) { "Start over" }

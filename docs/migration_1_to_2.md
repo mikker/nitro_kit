@@ -71,6 +71,181 @@ Do not preserve a Card merely because 1.x used one. Empty states,
 authentication shells, settings regions, and data sections have stronger
 semantics and more useful responsive behavior.
 
+## Move ERB collections and yielded content into compound declarations
+
+The ERB below is representative application-owned migration input, not a
+Nitro Kit 2 API. Nitro Kit 2 has no ERB component bridge. Move the collection
+to the Phlex component, then declare entries only inside their owning compound
+region. Content formerly yielded by a partial belongs directly inside the
+matching `panel` or `content` block.
+
+### AppNavigation
+
+ERB source — the call site owns the destination collection and the partial
+iterates it:
+
+```erb
+<% destinations = [["Home", root_path], ["Projects", projects_path]] %>
+<%= render "app_navigation", label: "Primary", destinations: destinations %>
+
+<%# _app_navigation.html.erb %>
+<nav aria-label="<%= label %>">
+  <ul>
+    <% destinations.each do |text, href| %>
+      <li><%= link_to text, href %></li>
+    <% end %>
+  </ul>
+</nav>
+```
+
+Phlex destination — declare the collection before `AppNavigation`; consume it
+inside the required `body` collection region:
+
+```ruby
+destinations = [["Home", root_path], ["Projects", projects_path]]
+
+render NitroKit::AppNavigation.new(label: "Primary") do |navigation|
+  navigation.body do
+    destinations.each_with_index do |(text, href), index|
+      navigation.item(text, href:, current: index.zero?)
+    end
+  end
+end
+```
+
+The executable minimal version is on the
+[`AppNavigation` gallery page](/gallery/components/app-navigation#example-app-navigation-minimal).
+
+### Dialog
+
+ERB source — the call-site block is yielded inside the partial's panel:
+
+```erb
+<%= render "dialog", id: "transcript-details", title: "Transcript details" do %>
+  <p>The transcript was recorded at 09:42 UTC.</p>
+<% end %>
+
+<%# _dialog.html.erb %>
+<button command="show-modal" commandfor="<%= id %>-panel">Details</button>
+<dialog id="<%= id %>-panel">
+  <h2><%= title %></h2>
+  <%= yield %>
+</dialog>
+```
+
+Phlex destination — trigger and panel declarations live inside `Dialog`; the
+former yielded content lives inside `panel`:
+
+```ruby
+render NitroKit::Dialog.new(id: "transcript-details") do |dialog|
+  dialog.trigger("Details")
+  dialog.panel(title: "Transcript details") do
+    p { "The transcript was recorded at 09:42 UTC." }
+  end
+end
+```
+
+Placement belongs to the parent. In the conversion that exposed this rule, a
+`Flex` containing **Redact** and **Permalink** was followed by a `Dialog`
+sibling, so the Dialog trigger started a second line. Put the Dialog root
+inside the same no-wrap action cluster:
+
+```ruby
+Flex(dir: :row, gap: 1, align: :center, wrap: :nowrap) do
+  Button("Redact", size: :sm, variant: :destructive)
+  Button("Permalink", href: transcript_path(transcript), size: :sm)
+
+  Dialog(id: dom_id(transcript, :details)) do |dialog|
+    dialog.trigger("Details", size: :sm)
+    dialog.panel(title: "Transcript details") do
+      render UI::TranscriptDetails.new(transcript)
+    end
+  end
+end
+```
+
+The gallery runs this structure at narrow widths in
+[`Narrow transcript actions`](/gallery/components/dialog#example-dialog-narrow-action-cluster).
+
+### Sheet
+
+ERB source — the partial yields contextual content into its side panel:
+
+```erb
+<%= render "sheet", id: "transcript-prompts", title: "Prompts" do %>
+  <%= render "prompts", prompts: @prompts %>
+<% end %>
+
+<%# _sheet.html.erb %>
+<button command="show-modal" commandfor="<%= id %>-panel">Prompts</button>
+<dialog id="<%= id %>-panel">
+  <h2><%= title %></h2>
+  <%= yield %>
+</dialog>
+```
+
+Phlex destination — declare the collection before `Sheet`; render it only
+inside the `panel` content slot:
+
+```ruby
+prompts = transcript.prompts.map { |prompt| [prompt.title, prompt_path(prompt)] }
+
+render NitroKit::Sheet.new(id: "transcript-prompts", side: :left) do |sheet|
+  sheet.trigger("Prompts", icon: :list)
+  sheet.panel(title: "Transcript prompts") do
+    render NitroKit::AppNavigation.new(label: "Transcript prompts") do |navigation|
+      navigation.body do
+        prompts.each do |text, href|
+          navigation.item(text, href:)
+        end
+      end
+    end
+  end
+end
+```
+
+See the executable
+[`Sheet` collection example](/gallery/components/sheet#example-sheet-constructions).
+
+### SettingsLayout
+
+ERB source — the call site supplies both the navigation collection and yielded
+settings content:
+
+```erb
+<% sections = [["Profile", profile_settings_path], ["Security", security_settings_path]] %>
+<%= render "settings_layout", sections: sections do %>
+  <%= render "profile_form" %>
+<% end %>
+
+<%# _settings_layout.html.erb %>
+<nav aria-label="Settings">
+  <% sections.each do |text, href| %>
+    <%= link_to text, href %>
+  <% end %>
+</nav>
+<main><%= yield %></main>
+```
+
+Phlex destination — navigation entries stay inside `navigation`; the former
+yield lives inside the one `content` region:
+
+```ruby
+sections = [["Profile", profile_settings_path], ["Security", security_settings_path]]
+
+render NitroKit::SettingsLayout.new do |layout|
+  layout.navigation(label: "Settings") do
+    sections.each_with_index do |(text, href), index|
+      layout.item(text, href:, current: index.zero?)
+    end
+  end
+  layout.content { render UI::ProfileForm.new(profile) }
+end
+```
+
+See the executable
+[`SettingsLayout` minimal example](/gallery/components/settings-layout#example-settings-layout-cardinality-states).
+
 ## Preserve unsupported behavior honestly
 
 When no equivalent exists, keep semantic Rails or HTML under the application

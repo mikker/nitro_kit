@@ -54,11 +54,13 @@ class HotwireLifecycleTest < ApplicationSystemTestCase
 
     within("turbo-frame#form_registration") do
       fill_in "Email", with: "valid@example.test"
+      fill_in "Note", with: "Preserve this note through both mutations"
       click_button "Register"
     end
 
     assert_current_path new_registration_path
     assert_selector "turbo-frame#form_registration #registration_email[value='valid@example.test']"
+    assert_field "Note", with: "Preserve this note through both mutations"
     assert_selector "turbo-frame#form_registration #registration_role[aria-invalid='true']"
     assert_selector "turbo-frame#form_registration #registration_terms[aria-invalid='true']", visible: :all
     assert_selector "turbo-frame#form_registration [data-slot='field-error']", minimum: 2
@@ -72,8 +74,13 @@ class HotwireLifecycleTest < ApplicationSystemTestCase
     end
 
     assert_current_path new_registration_path
-    assert_selector "turbo-frame#form_registration h1", text: "Registration received"
-    assert_selector "turbo-frame#form_registration a", text: "Create another"
+    within("turbo-frame#form_registration") do
+      assert_selector "h1", text: "Registration received"
+      assert_selector "[data-application-component='status-pill']", text: "Received"
+      assert_text "dev@example.test"
+      assert_text "Preserve this note through both mutations"
+      assert_link "Create another"
+    end
     assert_no_severe_console_errors
   end
 

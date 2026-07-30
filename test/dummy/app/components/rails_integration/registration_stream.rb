@@ -11,7 +11,7 @@ module RailsIntegration
     def view_template
       turbo_stream.replace(target) do
         if success?
-          render RegistrationSuccess.new(frame_id: target)
+          render RegistrationSuccess.new(registration:, frame_id: target)
         else
           render RegistrationForm.new(registration)
         end

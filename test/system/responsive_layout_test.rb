@@ -99,6 +99,27 @@ class ResponsiveLayoutTest < ApplicationSystemTestCase
     assert_no_severe_console_errors(context: "responsive Flex")
   end
 
+  test "Dialog trigger stays in the narrow transcript action cluster" do
+    set_exact_viewport(320)
+    visit gallery_preview_path(
+      kind: :component,
+      slug: "dialog",
+      example: "dialog-narrow-action-cluster"
+    )
+
+    assert_selector "#gallery-dialog-transcript-actions[data-wrap='nowrap']"
+    tops = evaluate_script(<<~JAVASCRIPT)
+      Array.from(document.querySelectorAll(
+        "#gallery-dialog-transcript-actions > [data-nk='button'], " +
+        "#gallery-dialog-transcript-actions > [data-nk='dialog'] > [data-slot='dialog-trigger']"
+      )).map((element) => element.getBoundingClientRect().top)
+    JAVASCRIPT
+
+    assert_equal 3, tops.size
+    assert_operator tops.max - tops.min, :<=, 1
+    assert_no_severe_console_errors(context: "narrow Dialog action cluster")
+  end
+
   private
 
   def set_exact_viewport(width)

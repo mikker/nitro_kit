@@ -55,13 +55,21 @@ module Gallery
             "One destination",
             slug: "app-navigation-minimal",
             mode: :full_width,
-            description: "The smallest valid body is a single destination."
+            description: "Declare the collection before the component, then consume it inside the required body slot."
           ) do
-            render_navigation(
+            destinations = [ [ "Home", "#minimal-home", :house ] ]
+
+            render NitroKit::AppNavigation.new(
               id: "gallery-app-navigation-minimal",
               label: "Minimal",
-              destinations: [ [ "Home", "#minimal-home", :house ] ]
-            )
+              data: { gallery_navigation_preview: "minimal" }
+            ) do |navigation|
+              navigation.body do
+                destinations.each do |text, href, icon|
+                  navigation.item(text, href:, icon:, current: true)
+                end
+              end
+            end
           end
 
           example(
@@ -198,20 +206,6 @@ module Gallery
             description: "A longer real-world inventory proves body scrolling, the single spacer, and one current destination."
           ) do
             render_inventory_navigation
-          end
-        end
-      end
-
-      def render_navigation(id:, label:, destinations:)
-        render NitroKit::AppNavigation.new(
-          id:,
-          label:,
-          data: { gallery_navigation_preview: "minimal" }
-        ) do |navigation|
-          navigation.body do
-            destinations.each_with_index do |(text, href, icon), index|
-              navigation.item(text, href:, icon:, current: index.zero?)
-            end
           end
         end
       end

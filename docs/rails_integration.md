@@ -418,7 +418,17 @@ end
 
 Deliver the submitting user's stream over the HTTP response. A successful non-Turbo POST should redirect with `303 See Other`; an invalid HTML or Turbo submission should return 422. Reserve Action Cable broadcasts for updates that must reach other sessions.
 
-The dummy application's `RailsIntegration::RegistrationForm`, `RegistrationStream`, and request tests are executable reference implementations of this contract.
+The dummy application's `RailsIntegration::RegistrationForm`,
+`RegistrationStream`, `RegistrationSuccess`, and request/system tests are an
+executable reference implementation of this contract. The form submits a
+note. A 422 response replaces `form_registration` with the same invalid Phlex
+form and preserves that submitted note; a successful stream replaces the same
+frame with `RegistrationSuccess` and renders the submitted email and note.
+The tests scope those assertions to
+`turbo-stream > template > turbo-frame#form_registration` and, in the browser,
+to the live `turbo-frame#form_registration`. This matching-ID boundary is
+intentional: a page-level text assertion can pass while a frame response is
+missing its target and Turbo renders nothing.
 
 ## Pagy pagination
 

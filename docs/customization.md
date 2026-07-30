@@ -214,6 +214,135 @@ The customizer copies text to the clipboard. It does not download files, write i
 
 Composition is the default extension mechanism. Put product policy, routes, copy, and domain objects in application components while Nitro owns the visual components:
 
+Use an application-owned base beside Nitro Kit. Including `NitroKit` once makes
+capitalized Kit methods available to descendants; the merge helper below is
+ordinary application code and does not call Nitro private APIs:
+
+```ruby
+class ApplicationComponent < Phlex::HTML
+  include NitroKit
+
+  private
+
+  def merge_attributes(defaults = {}, html: {}, data: {}, aria: {})
+    defaults = canonical_attributes(defaults, "defaults")
+    html = canonical_attributes(html, "HTML")
+    validate_html_boundaries!(html)
+
+    default_data = canonical_attributes(defaults.delete(:data) || {}, "default data", prefix: "data")
+    default_aria = canonical_attributes(defaults.delete(:aria) || {}, "default ARIA", prefix: "aria")
+    data = canonical_attributes(data, "data", prefix: "data")
+    aria = canonical_attributes(aria, "ARIA", prefix: "aria")
+    classes = merged_classes(defaults.delete(:class), html.delete(:class))
+
+    defaults.merge(html).tap do |attributes|
+      attributes[:class] = classes if classes
+      attributes[:data] = default_data.merge(data) if default_data.any? || data.any?
+      attributes[:aria] = default_aria.merge(aria) if default_aria.any? || aria.any?
+    end
+  end
+
+  def canonical_attributes(value, name, prefix: nil)
+    raise ArgumentError, "#{name} must be a Hash" unless value.is_a?(Hash)
+
+    value.each_with_object({}) do |(key, item), normalized|
+      unless key.is_a?(String) || key.is_a?(Symbol)
+        raise ArgumentError, "#{name} attribute keys must be Strings or Symbols"
+      end
+
+      key = key.to_s.downcase.tr("_", "-").to_sym
+      emitted_name = [ prefix, key ].compact.join("-")
+      raise ArgumentError, "Duplicate #{name} attribute #{emitted_name}" if normalized.key?(key)
+
+      normalized[key] = item
+    end
+  end
+
+  def validate_html_boundaries!(html)
+    html.each_key do |key|
+      boundary = %w[data aria].find do |name|
+        key == name.to_sym || key.to_s.start_with?("#{name}-")
+      end
+      next unless boundary
+
+      raise ArgumentError, "Pass #{key} through #{boundary}:, not html:"
+    end
+  end
+
+  def merged_classes(*values)
+    tokens = values.compact.flat_map do |value|
+      raise ArgumentError, "class values must be Strings" unless value.is_a?(String)
+
+      value.split
+    end
+    tokens = tokens.reverse.uniq.reverse
+    tokens.join(" ") if tokens.any?
+  end
+end
+```
+
+The precedence is explicit:
+
+1. Caller `html:` values replace same-key defaults.
+2. Caller `data:` and `aria:` values replace same-key nested defaults.
+3. Classes merge instead of replacing. Default tokens come first; caller
+   tokens come last; a duplicate survives once at its caller position.
+
+Class attribute order does not override the CSS cascade; application
+stylesheet source order still decides conflicts between class rules. The
+helper canonicalizes keys to their lowercase, hyphenated HTML spelling before
+merging, rejects nested or flattened `data-*`/`aria-*` attributes inside
+`html:`, and never mutates the defaults. String, symbol, underscore, and dash
+aliases therefore emit once; caller values win over defaults, while duplicate
+aliases within one bag raise an error naming the emitted attribute.
+
+A small reusable application component can then provide its own class-based
+root while composing Nitro through the public Kit method:
+
+```ruby
+module RailsIntegration
+  class StatusPill < ApplicationComponent
+    STATUSES = %i[received reviewed].freeze
+
+    def initialize(status, html: {}, data: {}, aria: {})
+      @status = status.respond_to?(:to_sym) ? status.to_sym : status
+      raise ArgumentError, "Unknown status #{status.inspect}" unless STATUSES.include?(@status)
+
+      @attributes = merge_attributes(
+        {
+          class: "status-pill status-pill--quiet",
+          title: "Submission status",
+          data: { application_component: "status-pill", state: @status },
+          aria: { live: "polite" }
+        },
+        html:,
+        data:,
+        aria:
+      )
+    end
+
+    def view_template
+      span(**attributes) do
+        Badge(status.to_s.humanize, color: :success, size: :sm)
+      end
+    end
+
+    private
+
+    attr_reader :attributes, :status
+  end
+end
+```
+
+For example, `html: { class: "receipt-state status-pill--quiet" }, data:
+{ state: "reviewed" }, aria: { live: "assertive" }` renders the classes as
+`status-pill receipt-state status-pill--quiet` and lets the caller replace the
+default state and live mode. The dummy application's
+`ApplicationComponent`, `RailsIntegration::StatusPill`, and focused component
+test execute this exact reference implementation.
+
+Product components that do not need application classes remain smaller:
+
 ```ruby
 module UI
   class UpgradeNotice < Phlex::HTML

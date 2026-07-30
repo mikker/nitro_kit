@@ -20,6 +20,12 @@ module Gallery
           description: "A native modal dialog enters from either inline edge without changing surrounding flex or grid layout."
         ) do
           example("Navigation and details", slug: "sheet-constructions", layout: :row) do
+            prompts = [
+              [ "Set up the project", "#prompt-1" ],
+              [ "Review the implementation", "#prompt-2" ],
+              [ "Prepare the release", "#prompt-3" ]
+            ]
+
             render NitroKit::Sheet.new(id: "gallery-sheet-prompts", side: :left, size: :sm) do |sheet|
               sheet.trigger("Prompts", icon: :list)
               sheet.panel(
@@ -28,9 +34,9 @@ module Gallery
               ) do
                 render NitroKit::AppNavigation.new(label: "Transcript prompts") do |navigation|
                   navigation.body do |items|
-                    items.item("Set up the project", href: "#prompt-1", current: true)
-                    items.item("Review the implementation", href: "#prompt-2")
-                    items.item("Prepare the release", href: "#prompt-3")
+                    prompts.each_with_index do |(text, href), index|
+                      items.item(text, href:, current: index.zero?)
+                    end
                   end
                 end
               end

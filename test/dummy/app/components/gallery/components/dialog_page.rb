@@ -13,6 +13,36 @@ module Gallery
 
       def component_template
         example_section(
+          "Action cluster",
+          slug: "dialog-action-cluster",
+          description: "The Dialog root belongs inside the action layout that places its trigger."
+        ) do
+          example(
+            "Narrow transcript actions",
+            slug: "dialog-narrow-action-cluster",
+            mode: :full_width,
+            description: "A converted Redact and Permalink Flex once ended before the Dialog sibling, wrapping its trigger. One no-wrap cluster now owns all three actions, including the Dialog root."
+          ) do
+            render NitroKit::Flex.new(
+              dir: :row,
+              gap: 1,
+              align: :center,
+              wrap: :nowrap,
+              id: "gallery-dialog-transcript-actions"
+            ) do
+              render NitroKit::Button.new("Redact", size: :sm, variant: :destructive)
+              render NitroKit::Button.new("Permalink", href: "#transcript-permalink", size: :sm)
+              render NitroKit::Dialog.new(id: "gallery-dialog-transcript-details") do |dialog|
+                dialog.trigger("Details", size: :sm)
+                dialog.panel(title: "Transcript details") do
+                  p { "The panel block is the yielded application-content slot." }
+                end
+              end
+            end
+          end
+        end
+
+        example_section(
           "Confirmation sequence",
           slug: "dialog-confirmation",
           description: "The trigger opens a native dialog whose title and description are connected by ID."

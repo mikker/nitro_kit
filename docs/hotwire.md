@@ -84,6 +84,8 @@ understandable state and a path to retry or continue without JavaScript.
 ## Verify behavior
 
 - Request-test `303`, `422`, HTML fallback, and stable frame IDs.
+- On mutation responses, assert submitted content inside the response's
+  matching frame, not merely somewhere in the response body.
 - System-test focus, dialogs, frame navigation, and multi-target changes.
 - Use Capybara assertions that wait for the DOM; never use `sleep`.
 - Test navigation, morphing, and reconnection without duplicating controller

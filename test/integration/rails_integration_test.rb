@@ -12,6 +12,8 @@ class RailsIntegrationTest < ActionDispatch::IntegrationTest
       assert_select "input#registration_email[name='registration[email]'][type='email'][required]"
       assert_select "label[for='registration_role']", text: "Role"
       assert_select "select#registration_role[name='registration[role]'][required]"
+      assert_select "label[for='registration_note']", text: "Note"
+      assert_select "textarea#registration_note[name='registration[note]'][required][rows='3']"
       assert_select "label[for='registration_terms']", text: "I accept the terms"
       assert_select "input[type='hidden'][name='registration[terms]'][value='0']"
       assert_select "input#registration_terms[type='checkbox'][name='registration[terms]'][value='1']"
@@ -27,6 +29,7 @@ class RailsIntegrationTest < ActionDispatch::IntegrationTest
         email: "not-an-email",
         role: "",
         terms: "0",
+        note: "Keep this submitted note",
         source: "html-submit"
       }
     }
@@ -34,6 +37,7 @@ class RailsIntegrationTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     assert_select "turbo-frame#form_registration"
     assert_select "input#registration_email[value='not-an-email'][aria-invalid='true']"
+    assert_select "textarea#registration_note", text: "Keep this submitted note"
     assert_select "input#registration_source[value='html-submit']"
     assert_select "[data-nk='field'][data-state='invalid'] [data-slot='field-error']", minimum: 3
     assert_select "#registration_email-errors", text: /Email is invalid/
@@ -43,13 +47,15 @@ class RailsIntegrationTest < ActionDispatch::IntegrationTest
 
   test "returns a Phlex-generated Turbo Stream for validation errors" do
     post registration_path,
-      params: { registration: { email: "", role: "", terms: "0" } },
+      params: { registration: { email: "", role: "", terms: "0", note: "Turbo keeps this note" } },
       as: :turbo_stream
 
     assert_response :unprocessable_entity
     assert_select "turbo-stream[action='replace'][target='form_registration']", count: 1
-    assert_select "turbo-stream template turbo-frame#form_registration"
-    assert_select "turbo-stream [data-slot='field-error']", minimum: 3
+    assert_select "turbo-stream template > turbo-frame#form_registration" do
+      assert_select "textarea#registration_note", text: "Turbo keeps this note"
+      assert_select "[data-slot='field-error']", minimum: 3
+    end
   end
 
   test "redirects successful HTML submissions with 303 and a working fallback page" do
@@ -69,7 +75,14 @@ class RailsIntegrationTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_turbo_stream action: :replace, target: "form_registration"
-    assert_select "turbo-stream template turbo-frame#form_registration h1", text: "Registration received"
+    assert_select "turbo-stream template > turbo-frame#form_registration" do
+      assert_select "h1", text: "Registration received"
+      assert_select "[data-application-component='status-pill'] [data-nk='badge']", text: "Received"
+      assert_select "[data-rails-integration='submitted-registration']" do
+        assert_select "dd", text: "dev@example.com"
+        assert_select "dd", text: "Turbo rendered this submitted note"
+      end
+    end
   end
 
   private
@@ -80,6 +93,7 @@ class RailsIntegrationTest < ActionDispatch::IntegrationTest
         email: "dev@example.com",
         role: "developer",
         terms: "1",
+        note: "Turbo rendered this submitted note",
         source: "integration-test",
         attachment: fixture_file_upload("profile.txt", "text/plain")
       }
