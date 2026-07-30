@@ -6,10 +6,10 @@ class ControlGroupSystemTest < ApplicationSystemTestCase
 
     assert_group_heights "#gallery-control-group-size-sm", group: 40, input: 40, button: 40
     assert_group_heights "#gallery-control-group-size-lg", group: 44, select: 44, addon: 44, button: 44
-    xl_group = "#gallery-control-group-size-xl"
-    assert_equal "date", find("#{xl_group} > [data-nk='input']")[:type]
-    assert_group_heights xl_group, group: 56, input: 56, addon: 56, button: 56
-    assert_in_delta 54, date_line_height(xl_group), 0.01
+    date_group = "#gallery-control-group-date"
+    assert_equal "date", find("#{date_group} > [data-nk='input']")[:type]
+    assert_group_heights date_group, group: 40, input: 40, addon: 40, button: 40
+    assert_in_delta 38, date_line_height(date_group), 0.01
     assert_no_severe_console_errors(context: "ControlGroup intrinsic heights")
   end
 

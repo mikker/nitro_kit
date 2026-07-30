@@ -119,17 +119,17 @@ module Gallery
                   group.addon("UTC", html: { id: "gallery-control-group-size-lg-addon" })
                   render NitroKit::Button.new("Run", size: :lg)
                 end
-                render NitroKit::ControlGroup.new(id: "gallery-control-group-size-xl", label: "Extra large action") do |group|
-                  group.addon("Date", html: { id: "gallery-control-group-size-xl-addon" })
+                render NitroKit::ControlGroup.new(id: "gallery-control-group-date", label: "Date action") do |group|
+                  group.addon("Date", html: { id: "gallery-control-group-date-addon" })
                   render NitroKit::Input.new(
                     type: :date,
                     value: "2026-07-30",
                     aria: {
-                      label: "Extra large action date",
-                      describedby: "gallery-control-group-size-xl-addon"
+                      label: "Action date",
+                      describedby: "gallery-control-group-date-addon"
                     }
                   )
-                  render NitroKit::Button.new("Rotate", size: :xl)
+                  render NitroKit::Button.new("Rotate")
                 end
               end
             end

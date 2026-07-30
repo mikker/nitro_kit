@@ -36,9 +36,11 @@ class GalleryCompositionPrimitivesTest < ActionDispatch::IntegrationTest
       assert_select "> [data-nk='select'] select[aria-label='Country code']", count: 1
       assert_select "> input[type='tel'][aria-label='Phone number']", count: 1
     end
-    assert_select "#gallery-control-group-size-xl" do
-      assert_select "> input[data-nk='input'][type='date'][value='2026-07-30']", count: 1
-      assert_select "> button[data-nk='button'][data-size='xl']", count: 1
+    assert_select "#gallery-control-group-date" do
+      assert_select "> input[data-nk='input'][type='date'][value='2026-07-30']" \
+        "[aria-describedby='gallery-control-group-date-addon']",
+        count: 1
+      assert_select "> button[data-nk='button'][data-size='md']", count: 1
     end
   end
 
