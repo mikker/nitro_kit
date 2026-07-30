@@ -4634,6 +4634,12 @@
     );
   }
 
+  /* Keep the explicit outer line box from stretching Safari's closed native
+     month, day, and year editor across the control's full content height. */
+  :where([data-nk="input"][type="date"])::-webkit-datetime-edit {
+    line-height: normal;
+  }
+
   :where([data-nk="input"][type="file"]) {
     padding-inline-start: 0;
   }
