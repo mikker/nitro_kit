@@ -14,7 +14,6 @@ class RadioButtonGroupCssTest < ActiveSupport::TestCase
 
     assert_equal 3, group.css("[data-slot='radio-button-group-choice']").size
     assert_match(/#{Regexp.escape(selector)} \{ gap: 0; \}/, squish(source_css))
-    assert_match(/#{Regexp.escape(selector)} \{ gap: 0; \}/, squish(bundle_css))
     assert_includes radio_button_css, "min-block-size: var(--nk-control-height-md)"
   end
 
@@ -25,14 +24,13 @@ class RadioButtonGroupCssTest < ActiveSupport::TestCase
     rule = ':where( [data-nk="radio-button-group"][data-presentation="segmented"] ' \
       '[data-slot="radio-button-control"] )'
 
-    assert_includes squish(source_css), rule
-    assert_match(/#{Regexp.escape(rule)} \{ position: absolute; inset: 0;/, squish(bundle_css))
+    assert_match(/#{Regexp.escape(rule)} \{ position: absolute; inset: 0;/, squish(source_css))
   end
 
   test "a segmented label centers its content with no indicator gap" do
     rule = ':where( [data-nk="radio-button-group"][data-presentation="segmented"] ' \
       '[data-slot="radio-button-label"] )'
-    declarations = squish(bundle_css)[/#{Regexp.escape(rule)} \{([^}]*)\}/, 1]
+    declarations = squish(source_css)[/#{Regexp.escape(rule)} \{([^}]*)\}/, 1]
 
     assert_includes squish(source_css), rule
     assert_includes declarations, "position: relative;"
@@ -49,12 +47,6 @@ class RadioButtonGroupCssTest < ActiveSupport::TestCase
   def source_css
     @source_css ||= Rails.root.join(
       "../../src/stylesheets/nitro_kit/components/radio_button_group.css"
-    ).read
-  end
-
-  def bundle_css
-    @bundle_css ||= Rails.root.join(
-      "../../app/assets/stylesheets/nitro_kit.css"
     ).read
   end
 

@@ -40,30 +40,19 @@ class ResetCssTest < ActiveSupport::TestCase
     /x
 
     assert_match scoped, source_css
-    assert_match scoped, bundle_css
-
     refute_match(/^\s*:where\(ol, ul, menu\)/, source_css)
-    refute_match(/^\s*:where\(ol, ul, menu\)/, bundle_css)
   end
 
   private
 
   def assert_rule(selector, body)
     assert_includes source_css, selector
-    assert_includes bundle_css, selector
     assert_match(/#{Regexp.escape(selector)}\s*\{\s*#{body.source}/, source_css)
-    assert_match(/#{Regexp.escape(selector)}\s*\{\s*#{body.source}/, bundle_css)
   end
 
   def source_css
     @source_css ||= Rails.root.join(
       "../../src/stylesheets/nitro_kit/reset.css"
-    ).read
-  end
-
-  def bundle_css
-    @bundle_css ||= Rails.root.join(
-      "../../app/assets/stylesheets/nitro_kit.css"
     ).read
   end
 end

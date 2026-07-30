@@ -26,12 +26,7 @@ module NitroKit
       "nk_checkbox_tag" => "replace with Checkbox(...) and preserve the submitted name and values",
       "nk_check_box_tag" => "replace with Checkbox(...) and preserve the submitted name and values"
     }.freeze
-    DIRECT_HELPERS = %w[
-      accordion alert avatar avatar_stack badge button button_group card checkbox
-      checkbox_group combobox dialog dropdown field field_group fieldset icon input
-      label pagination radio_button radio_button_group select switch table tabs textarea
-      toast tooltip
-    ].freeze
+    DIRECT_HELPERS = (LEGACY_COMPONENTS - %w[component datepicker form_builder]).freeze
     FIELD_TAG_REPLACEMENTS = {
       "color" => :color,
       "date" => :date,

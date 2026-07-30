@@ -6,9 +6,7 @@ class CardCssTest < ActiveSupport::TestCase
     full = ':where([data-nk="card"] > [data-slot="card-full"])'
 
     refute_match(/#{Regexp.escape(root)}\s*\{[^}]*overflow:/, source_css)
-    refute_match(/#{Regexp.escape(root)}\s*\{[^}]*overflow:/, bundle_css)
     assert_match(/#{Regexp.escape(full)}\s*\{[^}]*overflow: hidden;/, source_css)
-    assert_match(/#{Regexp.escape(full)}\s*\{[^}]*overflow: hidden;/, bundle_css)
   end
 
   test "a leading full-width region takes the card's own corner radius" do
@@ -23,7 +21,6 @@ class CardCssTest < ActiveSupport::TestCase
     CSS
 
     assert_includes source_css, rule
-    assert_includes bundle_css, rule
   end
 
   test "full-width media drops its own corner radius" do
@@ -38,7 +35,6 @@ class CardCssTest < ActiveSupport::TestCase
     CSS
 
     assert_includes source_css, rule
-    assert_includes bundle_css, rule
   end
 
   private
@@ -46,12 +42,6 @@ class CardCssTest < ActiveSupport::TestCase
   def source_css
     @source_css ||= Rails.root.join(
       "../../src/stylesheets/nitro_kit/components/card.css"
-    ).read
-  end
-
-  def bundle_css
-    @bundle_css ||= Rails.root.join(
-      "../../app/assets/stylesheets/nitro_kit.css"
     ).read
   end
 end

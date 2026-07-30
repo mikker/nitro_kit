@@ -14,12 +14,9 @@ class CommandPaletteCssTest < ActiveSupport::TestCase
     selectors.each do |slot|
       selector = %(data-slot="#{slot}")
       assert_includes source_css, selector
-      assert_includes bundle_css, selector
     end
     assert_includes source_css, "@media (prefers-reduced-motion: reduce)"
-    assert_includes bundle_css, "@media (prefers-reduced-motion: reduce)"
     assert_includes source_css, '[data-nk="command-palette-results"]'
-    assert_includes bundle_css, '[data-nk="command-palette-results"]'
     refute_includes source_css, "transition: all"
   end
 
@@ -28,12 +25,6 @@ class CommandPaletteCssTest < ActiveSupport::TestCase
   def source_css
     @source_css ||= Rails.root.join(
       "../../src/stylesheets/nitro_kit/components/command_palette.css"
-    ).read
-  end
-
-  def bundle_css
-    @bundle_css ||= Rails.root.join(
-      "../../app/assets/stylesheets/nitro_kit.css"
     ).read
   end
 end

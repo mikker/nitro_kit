@@ -5,12 +5,13 @@ module Rails
     class NitroKitCommand < Base
       desc "doctor", "Verify the Nitro Kit 2 application and agent integration"
       def doctor
-        installation.checks.each do |check|
+        checks = installation.checks
+        checks.each do |check|
           color = { pass: :green, warn: :yellow, fail: :red }.fetch(check.status)
           say_status(check.status.to_s.upcase, "#{check.label}: #{check.detail}", color)
         end
 
-        exit 1 unless installation.healthy?
+        exit 1 if checks.any? { _1.status == :fail }
       end
 
       desc "prompt", "Print the Nitro Kit 2 initialization prompt"

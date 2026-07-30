@@ -36,7 +36,7 @@ module NitroKit
     MARKDOWN
 
     Check = Struct.new(:status, :label, :detail, keyword_init: true)
-    LayoutExpression = Struct.new(:range, :source, :type, :assets, :dynamic, keyword_init: true)
+    LayoutExpression = Struct.new(:range, :type, :assets, :dynamic, keyword_init: true)
     LayoutAnalysis = Struct.new(:head_range, :stylesheets, :bootstraps, :errors, keyword_init: true)
 
     attr_reader :application_root
@@ -185,8 +185,9 @@ module NitroKit
         errors << "add one NitroKit::AppearanceBootstrap before every stylesheet" if bootstrap_count.zero?
         errors << "remove duplicate NitroKit::AppearanceBootstrap entries" if bootstrap_count > 1
 
+        assets = managed_stylesheet_assets(analysis)
         expected.each do |stylesheet|
-          count = stylesheet_occurrences(analysis, stylesheet)
+          count = assets.count(stylesheet)
           errors << "add stylesheet #{stylesheet.inspect}" if count.zero?
           errors << "remove duplicate stylesheet #{stylesheet.inspect}" if count > 1
         end
@@ -195,7 +196,6 @@ module NitroKit
           errors << "installer left the layout unchanged: #{edit_error}"
         end
 
-        assets = managed_stylesheet_assets(analysis)
         if assets.include?("nitro_kit-tailwind-v4") && !expected.include?("tailwind")
           errors << "remove nitro_kit-tailwind-v4 or load compiled Tailwind after nitro_kit"
         end
@@ -227,13 +227,11 @@ module NitroKit
           Check.new(
             status: findings.empty? ? :pass : :warn,
             label: "Migration: #{label}",
-            detail: findings.empty? ? "migrated: none found" : findings.map { "#{migration_status(_1)}: #{_1.path} — #{_1.guidance}" }.join("\n")
+            detail: findings.empty? ? "migrated: none found" : findings.map do |finding|
+              "#{finding.status.to_s.tr('_', '-')}: #{finding.path} — #{finding.guidance}"
+            end.join("\n")
           )
         end
-      end
-
-      def migration_status(finding)
-        finding.status == :application_owned ? "application-owned" : finding.status
       end
 
       def layout_path
@@ -410,13 +408,13 @@ module NitroKit
           range = ruby_expression_range(lines, start)
           source = lines[range].join
           assets = static_stylesheet_assets(source)
-          LayoutExpression.new(range:, source:, type: :stylesheet, assets: assets || [], dynamic: assets.nil?)
+          LayoutExpression.new(range:, type: :stylesheet, assets: assets || [], dynamic: assets.nil?)
         end + lines.each_index.filter_map do |index|
           range = ruby_expression_range(lines, index)
           source = lines[range].join
           next unless source.lstrip.start_with?("render") && bootstrap_expression?(source)
 
-          LayoutExpression.new(range:, source:, type: :bootstrap, assets: [], dynamic: false)
+          LayoutExpression.new(range:, type: :bootstrap, assets: [], dynamic: false)
         end.uniq { [ _1.type, _1.range ] }.sort_by { _1.range.begin }
       end
 
@@ -428,9 +426,9 @@ module NitroKit
           source = match[1]
           if ruby_identifier?(source, "stylesheet_link_tag")
             assets = static_stylesheet_assets(source)
-            LayoutExpression.new(range: start..finish, source:, type: :stylesheet, assets: assets || [], dynamic: assets.nil?)
+            LayoutExpression.new(range: start..finish, type: :stylesheet, assets: assets || [], dynamic: assets.nil?)
           elsif bootstrap_expression?(source)
-            LayoutExpression.new(range: start..finish, source:, type: :bootstrap, assets: [], dynamic: false)
+            LayoutExpression.new(range: start..finish, type: :bootstrap, assets: [], dynamic: false)
           end
         end.sort_by { _1.range.begin }
       end
@@ -631,10 +629,6 @@ module NitroKit
         else
           "#{indent}<%= stylesheet_link_tag #{asset.inspect}, \"data-turbo-track\": \"reload\" %>\n"
         end
-      end
-
-      def stylesheet_occurrences(analysis, stylesheet)
-        managed_stylesheet_assets(analysis).count(stylesheet)
       end
 
       def managed_stylesheet_assets(analysis)

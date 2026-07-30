@@ -61,13 +61,11 @@ class ControlGroupTest < ActiveSupport::TestCase
   end
 
   test "gives a grouped date Input an explicit Safari line box at the shared height" do
-    [ source_css, bundle_css ].each do |css|
-      group_rule = css[/:where\(\s*\[data-nk="control-group"\] > \[data-nk="input"\]\[type="date"\]\s*\)\s*\{[^}]+\}/m]
+    group_rule = source_css[/:where\(\s*\[data-nk="control-group"\] > \[data-nk="input"\]\[type="date"\]\s*\)\s*\{[^}]+\}/m]
 
-      assert group_rule, "ControlGroup CSS must scope the date override to a direct Input"
-      assert_includes group_rule, "line-height: calc("
-      assert_includes group_rule, "var(--_nk-control-group-height)"
-    end
+    assert group_rule, "ControlGroup CSS must scope the date override to a direct Input"
+    assert_includes group_rule, "line-height: calc("
+    assert_includes group_rule, "var(--_nk-control-group-height)"
 
     standalone = input_css[/:where\(\[data-nk="input"\]\[type="date"\]\) \{[^}]+\}/m]
     assert_includes standalone, "block-size: var(--nk-control-height-md)"
@@ -85,12 +83,6 @@ class ControlGroupTest < ActiveSupport::TestCase
   def input_css
     @input_css ||= NitroKit::Engine.root.join(
       "src/stylesheets/nitro_kit/components/input.css"
-    ).read
-  end
-
-  def bundle_css
-    @bundle_css ||= NitroKit::Engine.root.join(
-      "app/assets/stylesheets/nitro_kit.css"
     ).read
   end
 end

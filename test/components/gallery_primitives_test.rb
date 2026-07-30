@@ -157,6 +157,26 @@ class GalleryPrimitivesTest < ActiveSupport::TestCase
     refute_includes source.content, "def component_template"
   end
 
+  test "method extraction selects the final runtime definition when definitions share a line" do
+    constant_name = :SourceCodeDuplicateProbe
+
+    Dir.mktmpdir("gallery-source-", Rails.root.join("tmp")) do |directory|
+      path = Pathname(directory).join("duplicate_method.rb")
+      path.write <<~RUBY
+        module #{constant_name}
+          def self.preview; "discarded"; end; def self.preview; "runtime"; end
+        end
+      RUBY
+      load path
+
+      source = Gallery::SourceCode.from_method(Object.const_get(constant_name).method(:preview))
+
+      assert_equal '"runtime"', source.content
+    ensure
+      Object.send(:remove_const, constant_name) if Object.const_defined?(constant_name, false)
+    end
+  end
+
   test "standalone previews discard page chrome and render only the selected block" do
     fragment = render_fragment(ProbePage.new(entry: probe_entry, preview: "button-single"))
 

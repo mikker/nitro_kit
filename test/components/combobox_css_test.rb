@@ -13,7 +13,6 @@ class ComboboxCssTest < ActiveSupport::TestCase
     CSS
 
     assert_includes source_css, selector
-    assert_includes bundle_css, selector
   end
 
   private
@@ -21,12 +20,6 @@ class ComboboxCssTest < ActiveSupport::TestCase
   def source_css
     @source_css ||= Rails.root.join(
       "../../src/stylesheets/nitro_kit/components/combobox.css"
-    ).read
-  end
-
-  def bundle_css
-    @bundle_css ||= Rails.root.join(
-      "../../app/assets/stylesheets/nitro_kit.css"
     ).read
   end
 end

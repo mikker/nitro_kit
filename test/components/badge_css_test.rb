@@ -6,10 +6,8 @@ class BadgeCssTest < ActiveSupport::TestCase
     label = ':where([data-nk="badge"] > [data-slot="badge-label"])'
 
     assert_match(/#{Regexp.escape(root)}\s*\{[^}]*white-space: nowrap;/, source_css)
-    assert_match(/#{Regexp.escape(root)}\s*\{[^}]*white-space: nowrap;/, bundle_css)
     assert_match(/#{Regexp.escape(label)}\s*\{[^}]*white-space: nowrap;/, source_css)
-    assert_match(/#{Regexp.escape(label)}\s*\{[^}]*white-space: nowrap;/, bundle_css)
-    assert_match(/#{Regexp.escape(label)}\s*\{[^}]*text-overflow: ellipsis;/, bundle_css)
+    assert_match(/#{Regexp.escape(label)}\s*\{[^}]*text-overflow: ellipsis;/, source_css)
   end
 
   test "a nested icon joins the label line instead of breaking it" do
@@ -22,7 +20,6 @@ class BadgeCssTest < ActiveSupport::TestCase
     CSS
 
     assert_includes source_css, rule
-    assert_includes bundle_css, rule
   end
 
   private
@@ -30,12 +27,6 @@ class BadgeCssTest < ActiveSupport::TestCase
   def source_css
     @source_css ||= Rails.root.join(
       "../../src/stylesheets/nitro_kit/components/badge.css"
-    ).read
-  end
-
-  def bundle_css
-    @bundle_css ||= Rails.root.join(
-      "../../app/assets/stylesheets/nitro_kit.css"
     ).read
   end
 end

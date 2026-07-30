@@ -61,9 +61,11 @@ module Gallery
       blocks = Hash.new { |hash, line| hash[line] = [] }
       methods = {}
       nodes = [ result.value ]
+      node_index = 0
 
-      until nodes.empty?
-        node = nodes.shift
+      until node_index == nodes.length
+        node = nodes[node_index]
+        node_index += 1
 
         case node
         when Prism::BlockNode

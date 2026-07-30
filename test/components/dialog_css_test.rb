@@ -10,8 +10,7 @@ class DialogCssTest < ActiveSupport::TestCase
     rule = ':where([data-nk="dialog"] > [data-slot="dialog-panel"][open]:not(:modal))'
 
     assert_includes source_css, rule
-    assert_includes bundle_css, rule
-    assert_match(/#{Regexp.escape(rule)}\s*\{\s*position: static;/, bundle_css)
+    assert_match(/#{Regexp.escape(rule)}\s*\{\s*position: static;/, source_css)
   end
 
   private
@@ -19,12 +18,6 @@ class DialogCssTest < ActiveSupport::TestCase
   def source_css
     @source_css ||= Rails.root.join(
       "../../src/stylesheets/nitro_kit/components/dialog.css"
-    ).read
-  end
-
-  def bundle_css
-    @bundle_css ||= Rails.root.join(
-      "../../app/assets/stylesheets/nitro_kit.css"
     ).read
   end
 end

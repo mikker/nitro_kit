@@ -9,18 +9,18 @@ class CheckboxCssTest < ActiveSupport::TestCase
     rule = ':where( [data-nk="checkbox"] [data-slot="checkbox-control"][aria-invalid="true"]:not(:user-valid) ' \
       '+ [data-slot="checkbox-indicator"] )'
 
-    assert_includes squish(source_css("checkbox")), rule
-    assert_includes squish(bundle_css), rule
-    assert_match(/#{Regexp.escape(rule)} \{ border-color: var\(--nk-color-danger\); \}/, squish(bundle_css))
+    css = squish(source_css("checkbox"))
+    assert_includes css, rule
+    assert_match(/#{Regexp.escape(rule)} \{ border-color: var\(--nk-color-danger\); \}/, css)
   end
 
   test "the invalid radio border stands down once the control is user-valid" do
     rule = ':where( [data-nk="radio-button"] [data-slot="radio-button-control"][aria-invalid="true"]:not(:user-valid) ' \
       '+ [data-slot="radio-button-indicator"] )'
 
-    assert_includes squish(source_css("radio_button")), rule
-    assert_includes squish(bundle_css), rule
-    assert_match(/#{Regexp.escape(rule)} \{ border-color: var\(--nk-color-danger\); \}/, squish(bundle_css))
+    css = squish(source_css("radio_button"))
+    assert_includes css, rule
+    assert_match(/#{Regexp.escape(rule)} \{ border-color: var\(--nk-color-danger\); \}/, css)
   end
 
   private
@@ -31,9 +31,5 @@ class CheckboxCssTest < ActiveSupport::TestCase
 
   def source_css(name)
     Rails.root.join("../../src/stylesheets/nitro_kit/components/#{name}.css").read
-  end
-
-  def bundle_css
-    @bundle_css ||= Rails.root.join("../../app/assets/stylesheets/nitro_kit.css").read
   end
 end

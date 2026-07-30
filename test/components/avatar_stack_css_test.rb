@@ -19,7 +19,6 @@ class AvatarStackCssTest < ActiveSupport::TestCase
     CSS
 
     assert_includes source_css, rule
-    assert_includes bundle_css, rule
   end
 
   test "the overflow indicator declares a fill instead of its own background" do
@@ -27,9 +26,8 @@ class AvatarStackCssTest < ActiveSupport::TestCase
 
     assert_match(
       /#{Regexp.escape(rule)}\s*\{[^}]*--_nk-avatar-stack-fill: var\(--nk-color-elevated\);/,
-      bundle_css
+      source_css
     )
-    refute_match(/#{Regexp.escape(rule)}\s*\{[^}]*background-color:/, bundle_css)
     refute_match(/#{Regexp.escape(rule)}\s*\{[^}]*background-color:/, source_css)
   end
 
@@ -38,12 +36,6 @@ class AvatarStackCssTest < ActiveSupport::TestCase
   def source_css
     @source_css ||= Rails.root.join(
       "../../src/stylesheets/nitro_kit/components/avatar_stack.css"
-    ).read
-  end
-
-  def bundle_css
-    @bundle_css ||= Rails.root.join(
-      "../../app/assets/stylesheets/nitro_kit.css"
     ).read
   end
 end

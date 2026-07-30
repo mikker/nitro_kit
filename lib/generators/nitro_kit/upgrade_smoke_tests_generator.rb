@@ -47,13 +47,15 @@ module NitroKit
       TESTS.each do |path, test_file|
         if File.exist?(destination_path(path))
           say_status :skip, "#{path} already exists", :yellow
-        elsif !File.exist?(destination_path(test_file.prerequisite))
-          say_status :skip,
-            "#{path}: missing #{test_file.prerequisite}. #{test_file.remedy}",
-            :yellow
-        else
-          create_file(path, test_file.content)
+          next
         end
+
+        unless File.exist?(destination_path(test_file.prerequisite))
+          say_status :skip, "#{path}: missing #{test_file.prerequisite}. #{test_file.remedy}", :yellow
+          next
+        end
+
+        create_file(path, test_file.content)
       end
     end
 
