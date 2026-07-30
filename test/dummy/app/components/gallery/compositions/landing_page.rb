@@ -28,7 +28,7 @@ module Gallery
 
       def render_announcement
         render NitroKit::Alert.new(variant: :success, id: "gallery-landing-announcement") do |alert|
-          alert.title("Nitro Kit 2.0 beta is available")
+          alert.title("Nitro Kit 2.0 is available")
           alert.description("The agent-native release adds typed layouts, application sections, and static themeable CSS.")
         end
       end

@@ -6,10 +6,10 @@
 
 Nitro Kit is a gem-owned, agent-native UI system for Ruby on Rails. Applications compose typed Phlex components, layouts, and blocks; Nitro Kit owns their rendered structure, static CSS, and Stimulus behavior.
 
-The `2.0.0.pre.1` release is a complete break from Nitro Kit 1.x. Components are no longer generated into applications, there are no `nk_*` view helpers, and consumer Tailwind configuration is not required.
+The `2.0.0` release is a complete break from Nitro Kit 1.x. Components are no longer generated into applications, there are no `nk_*` view helpers, and consumer Tailwind configuration is not required.
 
 > [!IMPORTANT]
-> Nitro Kit 2 is a ground-up rebuild. The free core is landing first; a new
+> Nitro Kit 2 is a ground-up rebuild. The free core is available now; a new
 > documentation site and the verified Nitro Kit Pro catalog are coming next.
 > Follow this repository and come back soon. Maintaining Nitro Kit 1? Its
 > frozen documentation will remain at [v1.nitrokit.dev](https://v1.nitrokit.dev).
@@ -21,30 +21,23 @@ The `2.0.0.pre.1` release is a complete break from Nitro Kit 1.x. Components are
 - Ruby 4.0.6 or newer.
 - Rails 7.0 or newer.
 - A Phlex Rails view layer through `phlex-rails`.
-- Stimulus when using interactive components. Importmap is the verified automatic-loading path for this prerelease.
+- Stimulus when using interactive components. Importmap is the verified automatic-loading path for Nitro Kit 2.
 
 ## Installation
 
-While Nitro Kit 2 is a prerelease, pin the Git source to a reviewed full commit
-SHA rather than a moving branch or an ambiguous prerelease constraint:
+Add the stable 2.0 release to the application's Gemfile with a compatible
+version constraint:
 
 ```ruby
-NITRO_KIT_REVIEWED_COMMIT = "REPLACE_WITH_FULL_REVIEWED_COMMIT_SHA"
-
-gem "nitro_kit",
-  git: "https://github.com/mikker/nitro_kit.git",
-  ref: NITRO_KIT_REVIEWED_COMMIT
+gem "nitro_kit", "~> 2.0"
 ```
 
-Replace the placeholder with the complete 40-character SHA you reviewed; do
-not run Bundler with the placeholder. Confirm that revision contains the
-components, installer behavior, and guidance you intend to use before relying
-on them. To advance, review a newer revision first, replace the SHA, run
+Bundler records the exact released version in `Gemfile.lock`; commit `Gemfile`
+and `Gemfile.lock` together. Before upgrading, review the changelog, run
 `bundle update nitro_kit`, rerun the install generator and
 `bin/rails nitro_kit:doctor`, then run the application's focused and full tests
-before committing `Gemfile` and `Gemfile.lock` together. Never use a moving
-branch in production. This advice is prerelease-only; use an ordinary released
-version constraint once Nitro Kit 2 is stable.
+before committing the updated lockfile. Production applications should use the
+released gem and a committed lockfile rather than a moving Git branch.
 
 Then install it:
 
@@ -119,7 +112,7 @@ import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading";
 eagerLoadControllersFrom("controllers", application);
 ```
 
-The host application must provide `@hotwired/stimulus` and `@hotwired/stimulus-loading`; Nitro Kit does not install those packages. It ships no third-party JavaScript runtime. Rails applications without importmap can render and style every component, but must expose and register Nitro's Stimulus controllers themselves. A JavaScript-package entrypoint is not part of this prerelease.
+The host application must provide `@hotwired/stimulus` and `@hotwired/stimulus-loading`; Nitro Kit does not install those packages. It ships no third-party JavaScript runtime. Rails applications without importmap can render and style every component, but must expose and register Nitro's Stimulus controllers themselves. Nitro Kit 2.0 does not include a JavaScript-package entrypoint.
 
 Date inputs and Switch use native inputs and do not have controllers.
 
@@ -274,7 +267,7 @@ Subclassing a Nitro component is allowed when composition cannot express the req
 
 ## Catalog
 
-The prerelease ships:
+The stable 2.0 release ships:
 
 - 40 atoms and components covering actions, display, forms, rich text, structure, navigation, appearance, uploads, images, and overlays.
 - Three evidence-backed layouts: responsive `Flex`, responsive `Grid`, and `Container`.

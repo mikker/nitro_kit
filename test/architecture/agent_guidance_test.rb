@@ -73,18 +73,18 @@ class AgentGuidanceTest < ActiveSupport::TestCase
     end
   end
 
-  test "installation and migration docs pin only prereleases to a commit" do
+  test "installation and migration docs use the stable RubyGems release" do
     [ "README.md", "docs/rails_integration.md", "docs/migration_1_to_2.md" ].each do |name|
       guidance = ROOT.join(name).read
 
-      assert_includes guidance, 'git: "https://github.com/mikker/nitro_kit.git"'
-      assert_includes guidance, 'NITRO_KIT_REVIEWED_COMMIT = "REPLACE_WITH_FULL_REVIEWED_COMMIT_SHA"'
-      assert_includes guidance, "ref: NITRO_KIT_REVIEWED_COMMIT"
-      assert_match(/40-character SHA/, guidance)
-      refute_match(/\b[0-9a-f]{40}\b/, guidance)
+      assert_includes guidance, 'gem "nitro_kit", "~> 2.0"'
       assert_match(/bundle update nitro_kit/, guidance)
-      assert_match(/prerelease/i, guidance)
-      assert_match(/stable|released-version/, guidance)
+      assert_match(/review the\s+changelog/i, guidance)
+      assert_includes guidance, "Gemfile.lock"
+      assert_match(/released gem/i, guidance)
+      refute_match(/prerelease/i, guidance)
+      refute_includes guidance, 'git: "https://github.com/mikker/nitro_kit.git"'
+      refute_includes guidance, "REPLACE_WITH_FULL_REVIEWED_COMMIT_SHA"
     end
   end
 

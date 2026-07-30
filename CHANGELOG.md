@@ -1,8 +1,8 @@
 # Changelog
 
-## 2.0.0.pre.1
+## 2.0.0
 
-Nitro Kit 2.0 is a complete, intentionally incompatible rewrite around gem-owned Phlex composition.
+Nitro Kit 2.0 is the stable release of a ground-up, intentionally incompatible rebuild around gem-owned Phlex composition. It replaces the generated, helper-driven 1.x architecture with a versioned component system owned by the gem.
 
 ### Breaking changes
 

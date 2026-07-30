@@ -4,27 +4,21 @@ Treat a 1.x migration as a product-flow review, not a helper rename. Nitro Kit
 2 deliberately removed copied components, `nk_*` helpers, application-owned
 `controllers/nk`, and unrestricted utility-class customization.
 
-## Pin the prerelease before migrating
+## Install stable 2.0 before migrating
 
-During the Nitro Kit 2 prerelease, use a reviewed full Git commit rather than a
-moving branch or a loose prerelease dependency:
+Add the stable 2.0 release to the application's Gemfile with a compatible
+version constraint:
 
 ```ruby
-NITRO_KIT_REVIEWED_COMMIT = "REPLACE_WITH_FULL_REVIEWED_COMMIT_SHA"
-
-gem "nitro_kit",
-  git: "https://github.com/mikker/nitro_kit.git",
-  ref: NITRO_KIT_REVIEWED_COMMIT
+gem "nitro_kit", "~> 2.0"
 ```
 
-Replace the placeholder with the complete 40-character SHA you reviewed; do
-not run Bundler with the placeholder. Verify that revision contains every
-component, migration rule, and installer behavior the migration will rely on.
-Advance only after reviewing a newer revision: replace the SHA, run
-`bundle update nitro_kit`, rerun the installer and doctor, exercise the
-converted flows, and commit `Gemfile` with `Gemfile.lock`. Never use a moving
-branch for production. This guidance applies only to prereleases; switch to a
-normal released-version constraint once Nitro Kit 2 is stable.
+Bundler records the exact released version in `Gemfile.lock`; commit `Gemfile`
+and `Gemfile.lock` together. Before upgrading during the migration, review the
+changelog, run `bundle update nitro_kit`, rerun the installer and doctor, and
+exercise the converted flows before committing the updated lockfile.
+Production applications should use the released gem and a committed lockfile
+rather than a moving Git branch.
 
 ## Inventory behavior before editing
 

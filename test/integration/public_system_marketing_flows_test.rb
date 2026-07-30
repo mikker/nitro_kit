@@ -102,7 +102,7 @@ class PublicSystemMarketingFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-landing-announcement", count: 0
 
     get_flow("landing", "announcement")
-    assert_select "#gallery-landing-announcement[data-variant='success']", text: /2.0 beta/
+    assert_select "#gallery-landing-announcement[data-variant='success']", text: /Nitro Kit 2.0 is available/
 
     get_flow("landing", "customer-proof")
     assert_select "#gallery-landing-proof-table tbody tr", count: 3

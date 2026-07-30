@@ -449,7 +449,7 @@ import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading";
 eagerLoadControllersFrom("controllers", application);
 ```
 
-This registers Nitro's `controllers/nk/*` modules together with application controllers. Without importmap, Ruby and CSS still work, but a bundler-based application must expose and register those Stimulus modules itself. Nitro Kit ships no third-party JavaScript runtime and no JavaScript-package entrypoint in this prerelease.
+This registers Nitro's `controllers/nk/*` modules together with application controllers. Without importmap, Ruby and CSS still work, but a bundler-based application must expose and register those Stimulus modules itself. Nitro Kit ships no third-party JavaScript runtime, and Nitro Kit 2.0 has no JavaScript-package entrypoint.
 
 ## Optional Tailwind CSS v4 adapter
 

@@ -180,8 +180,10 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
   end
 
   test "changelog covers latest archive empty long and mobile release records" do
+    assert_equal "2.0.0", Gallery::OperationalData.changelog_entries.first.version
+
     get_flow("changelog", "latest")
-    assert_select "#gallery-changelog-latest-card", text: /2\.0\.0-beta\.3.*Typed application sections/m
+    assert_select "#gallery-changelog-latest-card", text: /2\.0\.0.*Typed application sections/m
     assert_select "#gallery-changelog-latest-prose[data-nk='typeset']", count: 1
     assert_select "#gallery-changelog-latest-card li", count: 3
     assert_select "#gallery-changelog-table tbody tr", count: Gallery::OperationalData.changelog_entries.size

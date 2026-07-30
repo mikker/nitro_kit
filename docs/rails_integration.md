@@ -4,25 +4,19 @@ Nitro Kit 2.0 uses Rails where Rails owns important application semantics: model
 
 ## Installation and assets
 
-During the Nitro Kit 2 prerelease, pin the Git source to a reviewed full commit
-instead of a moving branch or a loose prerelease constraint:
+Add the stable 2.0 release to the application's Gemfile with a compatible
+version constraint:
 
 ```ruby
-NITRO_KIT_REVIEWED_COMMIT = "REPLACE_WITH_FULL_REVIEWED_COMMIT_SHA"
-
-gem "nitro_kit",
-  git: "https://github.com/mikker/nitro_kit.git",
-  ref: NITRO_KIT_REVIEWED_COMMIT
+gem "nitro_kit", "~> 2.0"
 ```
 
-Replace the placeholder with the complete 40-character SHA you reviewed; do
-not run Bundler with the placeholder. Verify that revision contains the Ruby,
-CSS, controllers, and integration behavior your application will use. To
-advance safely, review a newer revision, replace the SHA, run
+Bundler records the exact released version in `Gemfile.lock`; commit `Gemfile`
+and `Gemfile.lock` together. Before upgrading, review the changelog, run
 `bundle update nitro_kit`, rerun the generator and doctor, and run the
-application's focused and full tests before committing both Gemfile files.
-Never use a moving branch for production. This advice is prerelease-only; use
-an ordinary released-version constraint after Nitro Kit 2 is stable.
+application's focused and full tests before committing the updated lockfile.
+Production applications should use the released gem and a committed lockfile
+rather than a moving Git branch.
 
 ```sh
 bundle install
@@ -130,7 +124,7 @@ eagerLoadControllersFrom("controllers", application);
 
 Nitro Kit packages no third-party JavaScript. Accordion, Dialog, date inputs, and Switch use native browser behavior and need no controllers.
 
-The engine deliberately boots when importmap is absent. In that configuration, Ruby and CSS remain available, but automatic JavaScript registration does not: a bundler-based application must expose and register the controller modules itself. This prerelease does not ship a JavaScript-package entrypoint.
+The engine deliberately boots when importmap is absent. In that configuration, Ruby and CSS remain available, but automatic JavaScript registration does not: a bundler-based application must expose and register the controller modules itself. Nitro Kit 2.0 does not ship a JavaScript-package entrypoint.
 
 ## Appearance and content security policy
 

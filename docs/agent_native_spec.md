@@ -1,6 +1,6 @@
 # Nitro Kit 2.0 — agent-native Phlex UI system
 
-This is the canonical architecture specification for the Nitro Kit 2.0 prerelease line. The delivery sequence and ticket map are retained in [`implementation_plan.md`](implementation_plan.md) as design history; `tk` is the source of truth for live work status. [`component_contracts.md`](component_contracts.md) records the shipped Ruby and integration contracts.
+This is the canonical architecture specification for the stable Nitro Kit 2.0 line. The delivery sequence and ticket map are retained in [`implementation_plan.md`](implementation_plan.md) as design history; `tk` is the source of truth for live work status. [`component_contracts.md`](component_contracts.md) records the shipped Ruby and integration contracts.
 
 Nitro Kit is a gem-owned, versioned UI system for Rails. Developers and coding agents compose application interfaces in Ruby with Phlex. Nitro Kit owns component behavior, rendered structure, and default aesthetics. Applications own product code and documented theme overrides, not copies of Nitro Kit internals.
 
@@ -141,7 +141,7 @@ Native elements remain native. Nitro reflects application-owned state through AR
 
 The authoritative initializer, root, closed-option, and cardinality inventory lives in [`component_contracts.md`](component_contracts.md).
 
-The prerelease contains 40 atoms and components:
+The stable release contains 40 atoms and components:
 
 - Actions, display, and navigation: Alert, AppNavigation, Avatar, AvatarStack, Badge, Button, ButtonTo, ButtonGroup, CommandPalette, Icon, Pagination.
 - Forms: AppearancePicker, Checkbox, CheckboxGroup, ControlGroup, Dropzone, Field, FieldGroup, Fieldset, Input, Label, RadioButton, RadioButtonGroup, RichTextArea, Select, Switch, Textarea.
@@ -219,7 +219,7 @@ These are intentionally a small vocabulary rather than a general page framework.
 
 ## Shipped 2.0 additions
 
-The following additions ship in the 2.0 prerelease. Their exact public constructors and compound cardinalities are recorded in [`component_contracts.md`](component_contracts.md). Existing Nitro ownership, validation, classless markup, CSS, and testing rules apply without exception.
+The following additions ship in 2.0. Their exact public constructors and compound cardinalities are recorded in [`component_contracts.md`](component_contracts.md). Existing Nitro ownership, validation, classless markup, CSS, and testing rules apply without exception.
 
 ### Appearance
 
@@ -360,7 +360,7 @@ Turbo Frames and Turbo Streams remain Rails helpers used directly from Phlex. In
 
 Server-rendered feedback is the Rails flash. `Toast` renders `section[data-nk="toast"][role="region"]` wrapping `ol[data-slot="toast-list"]`, whose id is the toast id plus `-list`, so the default region is addressable as `nk-toast-list` and a Turbo Stream can append `NitroKit::Toast::Item` to it directly. Items carry `role="status"`, or `role="alert"` for the error variant, so a server-rendered item announces without waiting for a DOM mutation, and every item is `data-turbo-temporary` so a cached page never replays stale feedback while the region and list survive. `Toast::FlashMessages` maps an enumerable Rails flash onto the same items. Nitro does not add a client-side notification store.
 
-The engine ships CSS assets and Nitro-owned Stimulus controllers for enhancements that native HTML and CSS do not cover. When importmap is present it adds its pins automatically; the host still owns Stimulus and its normal controller loader. The engine boots without importmap: Accordion is complete with no controller at all and Dialog still opens and closes through declarative `command`/`commandfor`, while enhanced interactions such as Dropdown keyboard navigation, Tooltip Escape dismissal, and Dialog backdrop light dismissal require their pinned controllers. This prerelease does not define a JavaScript-package entrypoint for automatic bundler registration.
+The engine ships CSS assets and Nitro-owned Stimulus controllers for enhancements that native HTML and CSS do not cover. When importmap is present it adds its pins automatically; the host still owns Stimulus and its normal controller loader. The engine boots without importmap: Accordion is complete with no controller at all and Dialog still opens and closes through declarative `command`/`commandfor`, while enhanced interactions such as Dropdown keyboard navigation, Tooltip Escape dismissal, and Dialog backdrop light dismissal require their pinned controllers. Nitro Kit 2.0 does not define a JavaScript-package entrypoint for automatic bundler registration.
 
 Date inputs, Switch, and ordinary checked state deliberately use native inputs rather than custom controllers. The one exception is `indeterminate:`, which HTML cannot express as an attribute: `Checkbox` mounts `nk--checkable` only in that case, and the controller's whole job is to apply the native DOM property and own the matching `data-state="indeterminate"`. No third-party JavaScript runtime is vendored.
 
@@ -384,7 +384,7 @@ Primary verification remains:
 - Deterministic CSS build and package audits.
 - Catalog-driven browser behavior and Turbo-lifecycle verification.
 
-## Explicitly outside the prerelease
+## Explicitly outside 2.0
 
 The following are not current contracts:
 
@@ -408,7 +408,7 @@ The first evidence pass rejected more abstractions than it accepted. `Spacer`, `
 
 ## Definition of done
 
-The 2.0 architecture is release-ready when:
+The stable 2.0 architecture requires:
 
 - Core components are gem-owned and composed directly through Phlex.
 - Generated copies, ERB component helpers, Tailwind Merge, and consumer Tailwind dependence are absent.

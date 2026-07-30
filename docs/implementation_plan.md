@@ -173,7 +173,7 @@ Extract the smallest vocabulary that removes proven repetition. The evidence pas
 
 This list records the first extraction decision. It has since been superseded: `VStack` and `HStack` were removed in favor of unified responsive `Flex`, and the fixed three-column Grid became a responsive 1–12-column `Grid`. See the canonical specification and component contracts for the current API.
 
-At that stage, the evidence pass deferred Spacer, Split, Frame, AppShell, MarketingShell, AuthenticationPanel, and ProgressSteps because their responsibilities were not stable across enough domains. A later application-layout mandate supplied enough evidence to accept AppShell; the other deferred candidates remain outside the prerelease. The settled contracts, rather than this historical stage record, live in [`agent_native_spec.md`](agent_native_spec.md) and [`component_contracts.md`](component_contracts.md).
+At that stage, the evidence pass deferred Spacer, Split, Frame, AppShell, MarketingShell, AuthenticationPanel, and ProgressSteps because their responsibilities were not stable across enough domains. A later application-layout mandate supplied enough evidence to accept AppShell; the other deferred candidates remain outside 2.0. The settled contracts, rather than this historical stage record, live in [`agent_native_spec.md`](agent_native_spec.md) and [`component_contracts.md`](component_contracts.md).
 
 Each abstraction must:
 
