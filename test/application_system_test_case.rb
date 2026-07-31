@@ -19,6 +19,15 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     # Headless Chrome otherwise reports document.hasFocus() == false for a
     # backgrounded target and silently drops focus/focusin events.
     browser.execute_cdp("Emulation.setFocusEmulationEnabled", enabled: true)
+    browser.execute_cdp(
+      "Emulation.setEmulatedMedia",
+      features: [
+        { name: "hover", value: "hover" },
+        { name: "any-hover", value: "hover" },
+        { name: "pointer", value: "fine" },
+        { name: "any-pointer", value: "fine" }
+      ]
+    )
     resize_viewport(width: 1440, height: 1200)
   end
 
