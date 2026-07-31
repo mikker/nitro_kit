@@ -35,7 +35,7 @@ jobs:
       - name: Install packages
         run: |
           sudo apt-get update
-          sudo apt-get install --no-install-recommends -y build-essential git pkg-config google-chrome-stable
+          sudo apt-get install --no-install-recommends -y build-essential git pkg-config google-chrome-stable xvfb
           if command -v chromedriver; then sudo rm "$(command -v chromedriver)"; fi
 
       - name: Checkout code
@@ -49,8 +49,9 @@ jobs:
 
       - name: Run system tests
         env:
+          HEADLESS: "false"
           RAILS_ENV: test
-        run: bin/rails test:system
+        run: xvfb-run --auto-servernum bin/rails test:system
 
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v7
