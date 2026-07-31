@@ -92,14 +92,20 @@ class GalleryShellTest < ApplicationSystemTestCase
     assert_selector "#gallery-navigation[data-nk='app-navigation']", count: 1
     assert_selector "#gallery-navigation a[href='/gallery'][aria-current='page']", text: "Introduction"
     widths = evaluate_script(<<~JAVASCRIPT)
-      (() => ({
-        filter: document.querySelector("#gallery-filter").getBoundingClientRect().width,
-        item: document.querySelector(
-          "#gallery-navigation [data-slot='app-navigation-item-link']"
-        ).getBoundingClientRect().width
-      }))()
+      (() => {
+        const body = document.querySelector(
+          "#gallery-navigation > [data-slot='app-navigation-body']"
+        );
+        return {
+          filter: document.querySelector("#gallery-filter").getBoundingClientRect().width,
+          item: document.querySelector(
+            "#gallery-navigation [data-slot='app-navigation-item-link']"
+          ).getBoundingClientRect().width,
+          scrollbar: body.offsetWidth - body.clientWidth
+        };
+      })()
     JAVASCRIPT
-    assert_equal widths.fetch("item"), widths.fetch("filter")
+    assert_equal widths.fetch("item") + widths.fetch("scrollbar"), widths.fetch("filter")
 
     resize_viewport(width: 390, height: 844)
     trigger = "#gallery-shell [data-slot='app-shell-mobile-trigger']"
