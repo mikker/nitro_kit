@@ -93,6 +93,17 @@ class BadgeTest < ActiveSupport::TestCase
     end
   end
 
+  test "keeps warning badges dark enough on their light tint" do
+    css = NitroKit::Engine.root.join(
+      "src/stylesheets/nitro_kit/components/palette.css"
+    ).read
+
+    assert_match(
+      /data-color="warning"[^}]+--_nk-palette-light: oklch\(55% 0\.163 48\.998\)/m,
+      css
+    )
+  end
+
   private
 
   def render_node(component, &block)

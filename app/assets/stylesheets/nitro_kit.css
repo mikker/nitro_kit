@@ -5394,7 +5394,7 @@
     [data-nk="badge"][data-color="warning"],
     [data-nk="alert"][data-variant="warning"]
   ) {
-    --_nk-palette-light: oklch(55.5% 0.163 48.998);
+    --_nk-palette-light: oklch(55% 0.163 48.998);
     --_nk-palette-dark: oklch(92.4% 0.12 95.746);
     --_nk-palette-tint: oklch(82.8% 0.189 84.429);
   }
