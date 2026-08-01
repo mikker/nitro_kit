@@ -129,12 +129,12 @@ class InputFieldTest < ActiveSupport::TestCase
     assert_equal "file inputs never carry a value; omit value:", file.message
   end
 
-  test "field errors announce through an alert region" do
+  test "field errors retain list semantics and announce assertively" do
     node = render_node(NitroKit::Field.new(nil, :email, errors: [ "Email is invalid" ]))
     errors = node.at_css("[data-slot='field-error']")
 
-    assert_equal "alert", errors["role"]
-    assert_nil errors["aria-live"]
+    assert_nil errors["role"]
+    assert_equal "assertive", errors["aria-live"]
     assert_equal "email-errors", errors["id"]
   end
 

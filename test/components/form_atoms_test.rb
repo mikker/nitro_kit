@@ -489,13 +489,14 @@ class FormAtomsTest < ActiveSupport::TestCase
       )
     )
 
-    assert_equal "true", checkbox["aria-required"]
-    assert_equal "true", radio["aria-required"]
+    assert_nil checkbox["aria-required"]
+    assert_nil radio["aria-required"]
+    assert_equal "true", checkbox["data-required"]
+    assert_equal "true", radio["data-required"]
     assert_empty checkbox.css("input[aria-describedby]")
     assert_empty radio.css("input[aria-describedby]")
     assert_equal "features-description", checkbox.at_css("[data-slot='checkbox-group-description']")["id"]
     assert_equal "size-description", radio.at_css("[data-slot='radio-button-group-description']")["id"]
-    assert_nil radio["data-required"]
     assert radio.css("input[required]").any?
     assert_empty checkbox.css("input[type='checkbox'][required]")
   end

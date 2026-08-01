@@ -48,7 +48,7 @@
 
   :where([data-nk="alert"] > [data-slot="alert-description"]) {
     max-width: var(--nk-content-lg);
-    color: color-mix(in oklab, var(--_nk-alert-foreground) 82%, transparent);
+    color: var(--_nk-alert-foreground);
     text-wrap: pretty;
   }
 }

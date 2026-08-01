@@ -247,7 +247,7 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
       assert_select "#notifications_security_alerts[role='switch'][name='notifications[security_alerts]'][checked]"
       assert_select "#notifications_deployment_alerts[role='switch'][name='notifications[deployment_alerts]'][checked]"
       assert_select "#notifications_weekly_digest[type='checkbox'][name='notifications[weekly_digest]']:not([checked])"
-      assert_select "#notifications_delivery_frequency[data-nk='radio-button-group'][aria-required='true']" do
+      assert_select "#notifications_delivery_frequency[data-nk='radio-button-group'][data-required='true']:not([aria-required])" do
         assert_select "input[type='radio'][name='notifications[delivery_frequency]'][required]", count: 3
         assert_select "input[value='immediately'][checked]"
       end

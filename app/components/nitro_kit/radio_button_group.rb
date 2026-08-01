@@ -45,8 +45,11 @@ module NitroKit
         attributes: {
           id: @id,
           disabled: @disabled,
-          aria: { required: @required ? "true" : nil }.compact,
-          data: { orientation: @orientation, presentation: @presentation }
+          data: {
+            orientation: @orientation,
+            presentation: @presentation,
+            required: @required ? "true" : nil
+          }.compact
         }.compact,
         html:,
         aria:,

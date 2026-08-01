@@ -90,7 +90,7 @@
     --nk-color-success-content: oklch(0.393 0.095 152.535);
     --nk-color-warning: oklch(0.681 0.162 75.834);
     --nk-color-warning-content: oklch(0.421 0.095 57.708);
-    --nk-color-danger: oklch(0.637 0.237 25.331);
+    --nk-color-danger: oklch(0.577 0.237 25.331);
     --nk-color-danger-foreground: oklch(1 0 0);
     --nk-color-danger-content: oklch(0.444 0.177 26.899);
     --nk-color-overlay: oklch(0 0 0 / 0.5);
@@ -185,8 +185,8 @@
       transparent 10%
     );
     --nk-color-danger-hover: light-dark(
-      oklch(0.577 0.245 27.325),
-      oklch(0.637 0.237 25.331)
+      oklch(0.54 0.237 25.331),
+      oklch(0.59 0.237 25.331)
     );
     --nk-app-shell-background: var(--nk-color-canvas);
     --nk-app-shell-sidebar-background: var(--nk-color-surface);

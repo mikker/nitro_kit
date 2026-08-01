@@ -244,7 +244,7 @@ module NitroKit
       assert_response :unprocessable_entity
       assert_select "turbo-frame##{UpgradeSmoke::FRAME_ID}", count: 1 do
         assert_select "input#profile_name[value='x'][aria-invalid='true'][aria-describedby~='profile_name-errors']"
-        assert_select "ul#profile_name-errors[data-slot='field-error'][role='alert'] > li", count: 1
+        assert_select "ul#profile_name-errors[data-slot='field-error'][aria-live='assertive']:not([role]) > li", count: 1
       end
       assert_select "section[data-nk='toast'] [data-nk='toast-item'][data-variant='error']"
     end
@@ -316,7 +316,7 @@ module NitroKit
         find("#nitro-kit-upgrade-smoke-form button[type='submit']").click
 
         assert_selector "#profile_name[value='x'][aria-invalid='true'][aria-describedby~='profile_name-errors']"
-        assert_selector "ul#profile_name-errors[data-slot='field-error'][role='alert'] > li", count: 1
+        assert_selector "ul#profile_name-errors[data-slot='field-error'][aria-live='assertive']:not([role]) > li", count: 1
         assert_selector "body section[data-nk='toast'] [data-nk='toast-item'][data-variant='error']"
         assert_stable_frame
 

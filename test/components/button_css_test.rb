@@ -38,8 +38,10 @@ class ButtonCssTest < ActiveSupport::TestCase
     assert_includes css, "--_nk-button-hover-background: var(--nk-color-danger-hover)"
     assert_includes css, "oklch(0.274 0.006 286.033 / 0.05)"
     assert_includes css, "oklch(1 0 0 / 0.15)"
+    assert_includes tokens_css, "--nk-color-danger: oklch(0.577 0.237 25.331)"
+    assert_includes tokens_css, "oklch(0.54 0.237 25.331)"
+    assert_includes tokens_css, "oklch(0.59 0.237 25.331)"
     assert_includes tokens_css, "oklch(0.577 0.245 27.325)"
-    assert_includes tokens_css, "oklch(0.637 0.237 25.331)"
   end
 
   test "matches Flux compact sizes icon padding and disabled state" do

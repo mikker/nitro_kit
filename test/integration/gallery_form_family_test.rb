@@ -155,7 +155,7 @@ class GalleryFormFamilyTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-checkbox-group-many input[type='checkbox']", count: 6
     assert_select "#gallery-checkbox-group-many input[value='billing'][disabled]"
     assert_select "#gallery-checkbox-group-disabled[disabled] input[disabled]", count: 3
-    assert_select "#gallery-checkbox-group-required[aria-required='true'][data-size='lg']" do
+    assert_select "#gallery-checkbox-group-required[data-required='true'][data-size='lg']:not([aria-required])" do
       assert_select "[data-nk='checkbox'][data-size='lg']", count: 2
       assert_select "input[type='checkbox'][required]", count: 0
     end
@@ -194,7 +194,7 @@ class GalleryFormFamilyTest < ActionDispatch::IntegrationTest
   test "radio group page preserves fieldset descriptions requirements selection and errors" do
     get_component("radio-button-group")
 
-    assert_select "#gallery-radio-button-group-role[data-nk='radio-button-group'][aria-required='true']:not([data-required])" do
+    assert_select "#gallery-radio-button-group-role[data-nk='radio-button-group'][data-required='true']:not([aria-required])" do
       assert_select "legend", text: "Default member role"
       assert_select "#gallery-radio-button-group-role-description"
       assert_select "input[type='radio'][name='workspace[default_role]'][required]", count: 3

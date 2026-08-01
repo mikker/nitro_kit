@@ -175,7 +175,7 @@ module NitroKit
       ul(
         **slot_attributes(
           :error,
-          attributes: { id: errors_id, role: "alert" }.compact,
+          attributes: { id: errors_id, aria: { live: "assertive" } }.compact,
           html:,
           aria:,
           data:,
