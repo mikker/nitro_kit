@@ -100,10 +100,16 @@
 }
 
 @layer nitro-kit.compound {
-  :where([data-nk="table"] [data-align="center"]) {
+  :where(
+    [data-nk="table"] [data-slot="table-header"][data-align="center"],
+    [data-nk="table"] [data-slot="table-cell"][data-align="center"]
+  ) {
     text-align: center;
   }
-  :where([data-nk="table"] [data-align="right"]) {
+  :where(
+    [data-nk="table"] [data-slot="table-header"][data-align="right"],
+    [data-nk="table"] [data-slot="table-cell"][data-align="right"]
+  ) {
     font-variant-numeric: tabular-nums;
     text-align: right;
   }
