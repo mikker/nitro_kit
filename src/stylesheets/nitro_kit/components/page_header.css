@@ -40,11 +40,9 @@
     }
 
     /* Every text slot owns the first column, so the eyebrow, title, and
-       description each keep a row of their own. Sparse auto-placement then
-       lands the actions in the last of those rows. No row span is declared:
-       a span resolves against explicit rows this grid does not have, which is
-       what used to seat the actions beside the eyebrow and push the title down
-       onto a line of its own. */
+       description each keep a row of their own. Actions explicitly occupy
+       the first row so their top edge aligns with the header instead of
+       dropping beside the final line of supporting text. */
     :where(
       [data-nk="page-header"]:has(> [data-slot="page-header-actions"])
         > :not([data-slot="page-header-actions"])
@@ -54,8 +52,9 @@
 
     :where([data-nk="page-header"] > [data-slot="page-header-actions"]) {
       grid-column: 2;
+      grid-row: 1;
       justify-self: end;
-      align-self: end;
+      align-self: start;
       margin-block-start: 0;
     }
   }

@@ -1,15 +1,12 @@
 require "test_helper"
 
 class PageHeaderCssTest < ActiveSupport::TestCase
-  test "actions take the trailing column without spanning the text rows" do
+  test "actions align with the top edge of the trailing column" do
     selector = ':where([data-nk="page-header"] > [data-slot="page-header-actions"])'
-    placement = /grid-column: 2;\s+justify-self: end;\s+align-self: end;/
+    placement = /grid-column: 2;\s+grid-row: 1;\s+justify-self: end;\s+align-self: start;/
 
     assert_includes source_css, selector
     assert_match placement, source_css
-    # A row span resolves against explicit rows this grid never declares, so
-    # it collapsed to row one and seated the actions beside the eyebrow.
-    refute_match(/grid-row/, source_css)
   end
 
   test "the eyebrow is quiet supporting text rather than a small-caps label" do

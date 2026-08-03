@@ -67,7 +67,7 @@ module Gallery
             "Actions beside the text block",
             slug: "page-header-actions-alignment",
             mode: :full_width,
-            description: "Eyebrow, title, and description keep the leading column; the action group sits on the trailing edge of the last text row and never shares the title's line."
+            description: "Eyebrow, title, and description keep the leading column; the action group aligns with the header's top edge."
           ) do
             render NitroKit::PageHeader.new(
               title: "Deployment history",
