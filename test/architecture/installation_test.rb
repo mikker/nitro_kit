@@ -411,6 +411,13 @@ class InstallationTest < ActiveSupport::TestCase
           dropdown.trigger(icon: "ellipsis", aria: { label: "More" })
         end
       RUBY
+      write_file(root, "app/views/people/_row.html.erb", <<~ERB)
+        <%= table.tr(id: dom_id(person)) do %>
+          <%= table.td(class: "name") { person.name } %>
+        <% end %>
+        <tr id="<%= dom_id(person) %>" class="<%= row_class %>"></tr>
+        <%= yield :footer %>
+      ERB
 
       check = NitroKit::Installation.new(root).checks.index_by(&:label)
         .fetch("Migration: 2.0 runtime contract errors")
@@ -422,6 +429,10 @@ class InstallationTest < ActiveSupport::TestCase
       assert_includes check.detail, "icon-only NitroKit::Button requires label:"
       assert_includes check.detail, "app/components/runtime_contracts.rb:8"
       assert_includes check.detail, "icon-only Dropdown#trigger requires label:"
+      assert_includes check.detail, "app/views/people/_row.html.erb:1"
+      assert_includes check.detail, "Table#tr does not accept id: directly"
+      assert_includes check.detail, "app/views/people/_row.html.erb:2"
+      assert_includes check.detail, "Table#td does not accept class: directly"
       refute_includes check.detail, "runtime_contracts.rb:3"
       refute_includes check.detail, "runtime_contracts.rb:6"
       refute_includes check.detail, "runtime_contracts.rb:9"

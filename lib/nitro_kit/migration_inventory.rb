@@ -56,7 +56,15 @@ module NitroKit
     }.freeze
     BUTTON_TREATMENT_DEFINITION = /@utility\s+btn\b|\.btn(?:\s|[,{.:])/.freeze
     BUTTON_CLASS = /(?<![a-z0-9_-])btn(?:-[a-z0-9_-]+)?(?![a-z0-9_-])/i.freeze
-    TABLE_COMPOUND_METHODS = %i[caption thead tbody tr th td].freeze
+    ERB_TAG_PATTERN = /<%(?!%|#)(==|[-=])?(.*?)(?:-)?%>/m
+    TABLE_COMPOUND_KEYWORDS = {
+      caption: %i[html aria data desperately_need_a_class],
+      thead: %i[html aria data desperately_need_a_class],
+      tbody: %i[html aria data desperately_need_a_class],
+      tr: %i[html aria data desperately_need_a_class],
+      th: %i[align scope sort href sort_data html aria data desperately_need_a_class],
+      td: %i[align html aria data desperately_need_a_class]
+    }.freeze
 
     class ContractVisitor < Prism::Visitor
       private
@@ -76,6 +84,27 @@ module NitroKit
               (argument.is_a?(Prism::KeywordHashNode) && argument.elements.any? { _1.is_a?(Prism::AssocSplatNode) })
           end
         end
+
+        def table_keyword_issues(node)
+          allowed = TABLE_COMPOUND_KEYWORDS[node.name]
+          return [] unless allowed
+
+          (keyword_names(node) - allowed).map do |keyword|
+            guidance = if keyword == :class
+              "Table##{node.name} does not accept class: directly; move it to desperately_need_a_class:"
+            elsif keyword == :style
+              "Table##{node.name} does not allow style overrides; preserve this as application-owned HTML"
+            else
+              "Table##{node.name} does not accept #{keyword}: directly; move it to html: { #{keyword}: ... }"
+            end
+            RuntimeContractVisitor::Issue.new(line: node.location.start_line, guidance:)
+          end
+        end
+
+        def receiver_named?(receiver, name)
+          receiver.is_a?(Prism::LocalVariableReadNode) && receiver.name == name ||
+            receiver.is_a?(Prism::CallNode) && receiver.receiver.nil? && receiver.name == name && receiver.arguments.nil?
+        end
     end
 
     class RuntimeContractVisitor < ContractVisitor
@@ -90,6 +119,7 @@ module NitroKit
       def visit_call_node(node)
         inspect_button(node)
         inspect_table(node)
+        inspect_table_local(node)
         inspect_icon_triggers(node)
         super
       end
@@ -115,10 +145,17 @@ module NitroKit
 
           parameter = node.block.parameters&.parameters&.requireds&.first
           return unless parameter.is_a?(Prism::RequiredParameterNode)
+          return if parameter.name == :table
 
           visitor = TableCompoundVisitor.new(parameter.name)
           visitor.visit(node.block.body) if node.block.body
           issues.concat(visitor.issues)
+        end
+
+        def inspect_table_local(node)
+          return unless receiver_named?(node.receiver, :table)
+
+          issues.concat(table_keyword_issues(node))
         end
 
         def inspect_icon_triggers(node)
@@ -184,12 +221,8 @@ module NitroKit
       end
 
       def visit_call_node(node)
-        if node.receiver.is_a?(Prism::LocalVariableReadNode) && node.receiver.name == @receiver_name &&
-            TABLE_COMPOUND_METHODS.include?(node.name) && keyword_names(node).include?(:id)
-          issues << RuntimeContractVisitor::Issue.new(
-            line: node.location.start_line,
-            guidance: "Table##{node.name} does not accept id: directly; move it to html: { id: ... }"
-          )
+        if receiver_named?(node.receiver, @receiver_name)
+          issues.concat(table_keyword_issues(node))
         end
         super
       end
@@ -307,12 +340,18 @@ module NitroKit
 
       def runtime_contract_errors
         source_files.flat_map do |path|
-          result = Prism.parse(path.read)
-          next [] unless result.success?
+          source = runtime_ruby_source(path)
+          next [] unless source
 
-          visitor = RuntimeContractVisitor.new
-          visitor.visit(result.value)
-          visitor.issues.map do |issue|
+          result = Prism.parse(source)
+          issues = if result.success?
+            runtime_contract_issues(result.value)
+          elsif path.extname == ".erb"
+            erb_runtime_contract_issues(path.read)
+          else
+            []
+          end
+          issues.map do |issue|
             Finding.new(
               status: :unresolved,
               path: location(path, issue.line),
@@ -320,6 +359,50 @@ module NitroKit
             )
           end
         end
+      end
+
+      def runtime_contract_issues(node, line_offset: 0)
+        visitor = RuntimeContractVisitor.new
+        visitor.visit(node)
+        visitor.issues.map { _1.with(line: _1.line + line_offset) }
+      end
+
+      def erb_runtime_contract_issues(source)
+        source.to_enum(:scan, ERB_TAG_PATTERN).flat_map do
+          match = Regexp.last_match
+          fragment = match[2].sub(/\bdo(?:\s*\|[^|]*\|)?\s*\z/, "")
+          result = Prism.parse(fragment)
+          next [] unless result.success?
+
+          line_offset = source[0...match.begin(2)].count("\n")
+          runtime_contract_issues(result.value, line_offset:)
+        end
+      end
+
+      def runtime_ruby_source(path)
+        case path.extname
+        when ".rb" then path.read
+        when ".erb" then erb_ruby_source(path.read)
+        end
+      end
+
+      def erb_ruby_source(source)
+        ruby = source.gsub(/[^\n]/, " ")
+        source.to_enum(:scan, ERB_TAG_PATTERN).each do
+          match = Regexp.last_match
+          next if match[1]&.include?("=") && !standalone_erb_tag?(source, match)
+
+          ruby[match.begin(2)...match.end(2)] = match[2]
+        end
+        ruby
+      end
+
+      def standalone_erb_tag?(source, match)
+        line_break = source.rindex("\n", match.begin(0) - 1)
+        line_start = line_break ? line_break + 1 : 0
+        line_end = source.index("\n", match.end(0)) || source.length
+
+        source[line_start...match.begin(0)].strip.empty? && source[match.end(0)...line_end].strip.empty?
       end
 
       def replacement_summary
