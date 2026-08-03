@@ -221,6 +221,27 @@ class FormBuilderRailsTest < ActiveSupport::TestCase
     end
   end
 
+  class StrictRegistration < Registration
+    def self.human_attribute_name(attribute, options = {})
+      raise I18n::MissingTranslationData.new(I18n.locale, "activemodel.attributes.strict_registration.#{attribute}", options) if attribute.to_s == "virtual_setting"
+
+      super
+    end
+  end
+
+  class CustomFieldBlockProbe < Phlex::HTML
+    include Phlex::Rails::Helpers::FormWith
+
+    def view_template
+      form_with(model: StrictRegistration.new, url: "/registration", builder: NitroKit::FormBuilder) do |form|
+        form.field(:virtual_setting) do |field|
+          field.label("Virtual setting")
+          field.control
+        end
+      end
+    end
+  end
+
   class TranslatedLabelProbe < Phlex::HTML
     include Phlex::Rails::Helpers::FormWith
 
@@ -235,6 +256,13 @@ class FormBuilderRailsTest < ActiveSupport::TestCase
         form.field(:role, as: :radio_group, options: [ [ "Developer", "developer" ] ])
       end
     end
+  end
+
+  test "custom field blocks do not eagerly resolve an unused implicit label" do
+    form = render_form(CustomFieldBlockProbe.new)
+
+    assert_equal "Virtual setting", form.at_css("[data-slot='field-label']").text
+    assert form.at_css("input[type='text']")
   end
 
   test "builder labels come from Rails human attribute names" do

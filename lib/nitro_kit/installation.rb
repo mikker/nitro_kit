@@ -152,12 +152,17 @@ module NitroKit
       end
 
       def stimulus_loader_check
-        path = application_root.join("app/javascript/controllers/index.js")
-        ready = path.exist? && path.read.include?("eagerLoadControllersFrom")
+        javascript = application_root.glob("app/javascript/**/*.{js,ts}").select(&:file?).map(&:read)
+        loader = if javascript.any? { _1.include?("eagerLoadControllersFrom") }
+          "eager controller loading"
+        elsif javascript.any? { _1.match?(/\bapplication\.register\s*\(/) }
+          "explicit controller registration"
+        end
+
         Check.new(
-          status: ready ? :pass : :warn,
+          status: loader ? :pass : :warn,
           label: "Stimulus loader",
-          detail: ready ? "eager controller loading is configured" : "verify the application's controller registration"
+          detail: loader ? "#{loader} is configured" : "verify the application's controller registration"
         )
       end
 

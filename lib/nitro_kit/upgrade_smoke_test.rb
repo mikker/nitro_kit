@@ -171,34 +171,32 @@ module NitroKit
 
         private
           def install_routes!
-            collisions = %w[GET PATCH].select { |method| route_matches?(method) }
+            collisions = %w[GET PATCH].select { |method| exact_route_matches?(method) }
             if collisions.any?
               raise "Nitro Kit upgrade smoke route #{PATH} collides with host #{collisions.join("/")} routing"
             end
 
-            Rails.application.routes.append(&ROUTE_BLOCK)
+            Rails.application.routes.prepend(&ROUTE_BLOCK)
             Rails.application.reload_routes!
           end
 
           def uninstall_routes!
-            append_blocks.delete(ROUTE_BLOCK)
+            prepend_blocks.delete(ROUTE_BLOCK)
             Rails.application.reload_routes!
           end
 
-          def route_matches?(method)
-            request = ActionDispatch::Request.new(
-              Rack::MockRequest.env_for(PATH, method:)
-            )
-            Rails.application.routes.router.recognize(request) { return true }
-            false
+          def exact_route_matches?(method)
+            Rails.application.routes.routes.any? do |route|
+              route.verb.to_s.match?(method) && route.path.spec.to_s.split("(", 2).first == PATH
+            end
           end
 
           def route_block_installed?
-            append_blocks.include?(ROUTE_BLOCK)
+            prepend_blocks.include?(ROUTE_BLOCK)
           end
 
-          def append_blocks
-            Rails.application.routes.instance_variable_get(:@append)
+          def prepend_blocks
+            Rails.application.routes.instance_variable_get(:@prepend)
           end
 
           def ensure_test_environment!

@@ -66,7 +66,6 @@ module NitroKit
       &block
     )
       as = validate_as!(as)
-      label = default_label_for(field_name) if label.nil?
       errors ||= errors_for(field_name)
       control_html = merge_control_boundary(:html, control_html, html)
       control_aria = merge_control_boundary(:aria, control_aria, aria)

@@ -3,7 +3,7 @@
     --_nk-button-height: var(--nk-control-height-md);
     --_nk-button-padding: calc(var(--nk-space) * 4);
     --_nk-button-icon-padding: calc(var(--nk-space) * 3);
-    --_nk-button-radius: var(--nk-radius-lg);
+    --_nk-button-radius: var(--nk-button-radius, var(--nk-radius-lg));
     --_nk-button-font-size: var(--nk-text-sm);
     --_nk-button-line-height: 1.25rem;
     --_nk-button-background: var(--nk-button-default-background);
@@ -66,6 +66,9 @@
   }
 
   :where([data-nk="button"] > [data-slot="button-label"]) {
+    display: inline-flex;
+    gap: calc(var(--nk-space) * 2);
+    align-items: center;
     min-inline-size: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -166,7 +169,7 @@
     --_nk-button-height: var(--nk-control-height-xs);
     --_nk-button-padding: calc(var(--nk-space) * 2);
     --_nk-button-icon-padding: var(--nk-space);
-    --_nk-button-radius: var(--nk-radius-md);
+    --_nk-button-radius: var(--nk-button-radius, var(--nk-radius-md));
     --_nk-button-font-size: var(--nk-text-xs);
     --_nk-button-line-height: 1rem;
     --_nk-button-avatar-size: 1rem;
@@ -177,7 +180,7 @@
     --_nk-button-height: calc(var(--nk-space) * 8);
     --_nk-button-padding: calc(var(--nk-space) * 3);
     --_nk-button-icon-padding: calc(var(--nk-space) * 2);
-    --_nk-button-radius: var(--nk-radius-md);
+    --_nk-button-radius: var(--nk-button-radius, var(--nk-radius-md));
     --_nk-button-avatar-size: 1.25rem;
     --_nk-button-avatar-font-size: calc(var(--nk-text-xs) * 0.875);
   }
@@ -199,7 +202,7 @@
     --_nk-button-height: var(--nk-control-height-xl);
     --_nk-button-padding: calc(var(--nk-space) * 8);
     --_nk-button-icon-padding: calc(var(--nk-space) * 7);
-    --_nk-button-radius: var(--nk-radius-xl);
+    --_nk-button-radius: var(--nk-button-radius, var(--nk-radius-xl));
     --_nk-button-font-size: var(--nk-text-base);
     --_nk-button-line-height: 1.5rem;
     --_nk-button-avatar-size: 2rem;
@@ -259,15 +262,6 @@
 }
 
 @layer nitro-kit.compound {
-  :where(
-    [data-nk="button"]
-      > [data-slot="button-label"]:has(> [data-nk="avatar"])
-  ) {
-    display: inline-flex;
-    gap: calc(var(--nk-space) * 2);
-    align-items: center;
-  }
-
   :where(
     [data-nk="button"]
       > [data-slot="button-label"]

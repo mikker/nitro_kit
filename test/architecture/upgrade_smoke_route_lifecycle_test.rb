@@ -26,6 +26,22 @@ class UpgradeSmokeRouteLifecycleTest < ActiveSupport::TestCase
     NitroKit::UpgradeSmoke::RouteLifecycle.uninstall!(owner)
   end
 
+  test "installs ahead of a host catch-all route" do
+    owner = Object.new
+    catch_all = proc { get "*path", to: ->(_environment) { [ 204, {}, [] ] } }
+    Rails.application.routes.append(&catch_all)
+    Rails.application.reload_routes!
+
+    NitroKit::UpgradeSmoke::RouteLifecycle.install!(owner)
+
+    assert_equal NitroKit::UpgradeSmoke::PATH,
+      matching_routes("GET").first.path.spec.to_s.split("(", 2).first
+  ensure
+    NitroKit::UpgradeSmoke::RouteLifecycle.uninstall!(owner)
+    Rails.application.routes.instance_variable_get(:@append).delete(catch_all)
+    Rails.application.reload_routes!
+  end
+
   test "refuses to mask a host route" do
     owner = Object.new
     collision = proc { get NitroKit::UpgradeSmoke::PATH, to: ->(_environment) { [ 204, {}, [] ] } }

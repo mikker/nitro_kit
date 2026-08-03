@@ -8,7 +8,8 @@ class ButtonCssTest < ActiveSupport::TestCase
 
     assert_includes css, "--_nk-button-height: var(--nk-control-height-md)"
     assert_includes css, "--_nk-button-padding: calc(var(--nk-space) * 4)"
-    assert_includes css, "--_nk-button-radius: var(--nk-radius-lg)"
+    assert_includes css, "--_nk-button-radius: var(--nk-button-radius, var(--nk-radius-lg))"
+    assert_includes tokens_css, "--nk-button-radius: initial"
     assert_includes css, "--_nk-button-font-size: var(--nk-text-sm)"
     assert_includes css, "--_nk-button-line-height: 1.25rem"
     assert_includes css, "--_nk-button-shadow: 0 1px 2px 0 oklch(0 0 0 / 0.05)"
@@ -19,6 +20,23 @@ class ButtonCssTest < ActiveSupport::TestCase
     %w[background hover-background foreground border].each do |token|
       assert_includes tokens_css, "--nk-button-default-#{token}:"
     end
+  end
+
+  test "lets applications override button shape independently from shared radii" do
+    css = button_css
+
+    assert_includes css, "var(--nk-button-radius, var(--nk-radius-md))"
+    assert_includes css, "var(--nk-button-radius, var(--nk-radius-lg))"
+    assert_includes css, "var(--nk-button-radius, var(--nk-radius-xl))"
+  end
+
+  test "lays out arbitrary block content inside the label" do
+    css = button_css
+
+    assert_match(
+      /\[data-slot="button-label"\]\)\s*\{[^}]*display: inline-flex;[^}]*align-items: center;/m,
+      css
+    )
   end
 
   test "shares the default action treatment with the native file selector" do

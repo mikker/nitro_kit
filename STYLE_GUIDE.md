@@ -275,7 +275,7 @@ Never target an unqualified `[data-slot]`. Never use `transition: all`.
 
 Public `--nk-*` variables cover themeable decisions: semantic colors, paired foregrounds, typography, spacing, radii, control dimensions, shadows, borders, motion, and content widths.
 
-Buttons and data-entry controls share control heights, radii, border geometry, focus treatment, and disabled treatment, but they do not share one surface role. Inputs, selects, textareas, and unchecked controls use the general surface tokens. The raised default Button uses the public `--nk-button-default-background`, `--nk-button-default-hover-background`, `--nk-button-default-foreground`, and `--nk-button-default-border` tokens. Button-like controls such as the native file selector may consume the same treatment; do not make ordinary data-entry surfaces depend on it.
+Buttons and data-entry controls share control heights, the default radius scale, border geometry, focus treatment, and disabled treatment, but they do not share one surface role. `--nk-button-radius` may override only Button shape when an application deliberately distinguishes buttons from inputs and surfaces. Inputs, selects, textareas, and unchecked controls use the general surface tokens. The raised default Button uses the public `--nk-button-default-background`, `--nk-button-default-hover-background`, `--nk-button-default-foreground`, and `--nk-button-default-border` tokens. Button-like controls such as the native file selector may consume the same treatment; do not make ordinary data-entry surfaces depend on it.
 
 Private `--_nk-*` variables coordinate component mechanics and are not a theme API.
 

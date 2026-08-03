@@ -338,7 +338,7 @@ nitro-kit.compound
 
 Selectors use `:where()` for zero authored specificity. Nitro ships its own global, Preflight-style reset in the `nitro-kit.reset` layer and never depends on Tailwind Preflight. It normalizes the whole page, so arbitrary content inside a component gets the same baseline as Nitro's own markup, and because it is layered, unlayered application CSS always wins. `min-width: 0` and list-marker removal stay scoped to Nitro-owned elements so prose lists keep real markers.
 
-Public `--nk-*` variables cover semantic colors, the component-specific raised default-button treatment, typography, spacing, radii, border and focus geometry, shadows, motion, control heights, and content widths. Private `--_nk-*` variables coordinate component mechanics and are not theme API.
+Public `--nk-*` variables cover semantic colors, the component-specific raised default-button treatment and optional button-only radius, typography, spacing, shared radii, border and focus geometry, shadows, motion, control heights, and content widths. Private `--_nk-*` variables coordinate component mechanics and are not theme API.
 
 The exact browser order is optional third-party base CSS such as Lexxy, optional `nitro_kit-tailwind-v4.css`, generated `nitro_kit.css`, compiled Tailwind CSS when present, then unlayered application styles containing token overrides. `AppearanceBootstrap` precedes every stylesheet. Applications never edit the generated asset. [`customization.md`](customization.md) is the complete public token inventory and usage guide.
 

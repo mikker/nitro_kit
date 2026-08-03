@@ -79,7 +79,15 @@ Color tokens need a light value, a no-JavaScript system fallback, and a dark val
 
 The media query matters when JavaScript or the appearance bootstrap is unavailable. When the runtime is active, `data-theme` is always the resolved `light` or `dark` appearance. `system` is a stored preference in `data-theme-preference`, not a third palette and never a `data-theme="system"` selector.
 
-Raised default Buttons have their own tokens, so their dark treatment can change without recoloring cards, dialogs, menus, or data-entry controls:
+Buttons can also preserve a product-specific shape without changing inputs or surfaces:
+
+```css
+:root {
+  --nk-button-radius: var(--nk-radius-full);
+}
+```
+
+Raised default Buttons have their own color tokens, so their dark treatment can change without recoloring cards, dialogs, menus, or data-entry controls:
 
 ```css
 @media (prefers-color-scheme: dark) {
@@ -187,7 +195,7 @@ Treat related tokens as a system:
 - Accent changes usually set `--nk-color-primary`, `--nk-color-primary-foreground`, and `--nk-color-focus` for both appearances. The default hover value is derived automatically; set `--nk-color-primary-hover` only when the derived color is unsuitable.
 - Neutral changes should coordinate canvas, surface, elevated, foreground, muted, border, and neutral-content pairs for both appearances.
 - Default Button changes use the `--nk-button-default-*` tokens. They are separate from `--nk-color-surface` so a raised neutral action can change without recoloring inputs, cards, dialogs, and menus.
-- Radius changes should move `--nk-radius-xs` through `--nk-radius-xl` together. Leave `--nk-radius-full` alone unless pills and circular controls should stop being fully rounded.
+- Radius changes should move `--nk-radius-xs` through `--nk-radius-xl` together. Leave `--nk-radius-full` alone unless pills and circular controls should stop being fully rounded. Set `--nk-button-radius` when buttons intentionally use a distinct shape, such as a pill treatment, without changing inputs and surfaces.
 - Density changes should coordinate `--nk-space` with all five control-height tokens. Changing one component's internal gap is not a public theme contract.
 - Font changes normally set `--nk-font-sans`; set `--nk-font-mono`, text sizes, line heights, or weights only when the whole type system calls for it.
 
@@ -471,7 +479,7 @@ Use `@theme inline` when a Tailwind theme variable references another custom pro
 
 ## Public token reference
 
-The following 84 variables are the complete public token set. Theme-independent tokens are declared on `:root`. Appearance tokens have light, dark, and system-fallback values. Derived tokens have defaults expressed in terms of other public tokens and remain overrideable.
+The following 85 variables are the complete public token set. Theme-independent tokens are declared on `:root`. Appearance tokens have light, dark, and system-fallback values. Derived tokens have defaults expressed in terms of other public tokens and remain overrideable.
 
 ### Typography
 
@@ -524,6 +532,7 @@ The following 84 variables are the complete public token set. Theme-independent 
 | `--nk-radius-lg`    | Large surface corner radius.        |
 | `--nk-radius-xl`    | Extra-large overlay corner radius.  |
 | `--nk-radius-full`  | Fully rounded pills and circles.    |
+| `--nk-button-radius` | Optional Button-only radius override; the default `initial` preserves size-specific radii. |
 | `--nk-border-width` | Default border and separator width. |
 | `--nk-focus-width`  | Focus-ring width.                   |
 | `--nk-focus-offset` | Focus-ring offset.                  |

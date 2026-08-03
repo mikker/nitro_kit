@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Add `--nk-button-radius` so applications can preserve a button-specific shape without changing inputs and surfaces.
+- Add structured JSON output to `nitro_kit:doctor` for migration automation.
+
+### Changed
+
+- Make migration diagnostics surface usages of application-owned button treatments and provable 2.0 Table/Button runtime contract errors, and require semantic theme translation plus wide and narrow browser comparison.
+- Recognize explicit Stimulus controller registration used by JavaScript bundlers.
+
+### Fixed
+
+- Keep arbitrary multi-element Button content aligned inside the label slot.
+- Resolve implicit FormBuilder labels only when rendered, so custom field blocks work under strict i18n.
+- Allow generated upgrade smoke tests to coexist with host catch-all routes while still rejecting exact route collisions.
+
 ## 2.0.0.alpha.2
 
 This alpha keeps the 2.0 API experimental while incorporating the first full

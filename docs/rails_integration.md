@@ -53,7 +53,7 @@ stylesheet_link_tag("lexxy", "nitro_kit", "application", data: { turbo_track: "r
 There is no component source-copy step. Re-run the generator after upgrading
 the gem, then run `bin/rails nitro_kit:doctor`. Doctor fails for a missing,
 duplicate, or misordered bootstrap or stylesheet entry and reports the exact
-repair.
+repair. Use `--format=json` for structured automation output.
 
 Install a focused upgrade acceptance flow separately:
 
@@ -67,8 +67,9 @@ The generator creates each test only when its path is absent and its host
 prerequisite exists: `test/test_helper.rb` for integration coverage and
 `test/application_system_test_case.rb` for browser coverage. It prints an
 actionable message for unsupported pieces and never overwrites
-application-owned coverage. Using the currently bundled gem, the tests install
-a collision-checked route only for each test, then restore host routing. The
+application-owned coverage. Using the currently bundled gem, the tests prepend
+a route only for each test, then restore host routing. Catch-all routes remain
+compatible, while an exact GET or PATCH collision is rejected. The
 endpoint inherits the host `ApplicationController` and renders through the
 application layout, so Nitro CSS, the appearance bootstrap, host JavaScript and
 CSP handling remain in the exercised path. Coverage includes browser-submitted

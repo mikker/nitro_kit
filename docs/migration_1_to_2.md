@@ -22,14 +22,19 @@ rather than a moving Git branch.
 ## Inventory behavior before editing
 
 1. List every `nk_*` helper, `NitroKit::*` component, copied Nitro source file,
-   and `controllers/nk` controller.
+   `controllers/nk` controller, rendered native or Rails button helper, and
+   application-owned button class such as `.btn`.
 2. Group usage by user flow: authentication, settings, collection browsing,
    mobile navigation, editing, destructive actions, notifications, and
    copy/share controls.
 3. Record behavior that must survive: native element, submitted method and
    parameters, Turbo target, accessible name and description, focus behavior,
    narrow-screen presentation, empty/error state, and visual density.
-4. Capture representative wide and narrow screenshots before conversion.
+4. Inventory the existing semantic primary, focus, danger, neutral, font,
+   density, and radius decisions. Translate those roles to public `--nk-*`
+   tokens rather than choosing similar raw palette values. Record separately
+   when buttons use a distinct shape from inputs and surfaces.
+5. Capture representative wide and narrow screenshots before conversion.
 
 If the Nitro Kit MCP catalog is connected, search it by workflow after this
 inventory — for example `mobile transcript navigation`, `settings form`, or
@@ -51,6 +56,7 @@ Map each flow to the highest-level matching 2.x component first:
 | Data collection                         | `DataSection`, `Table`, `PaginationBar` |
 | Destructive settings                    | `DangerZone`, `Dialog`, `ButtonTo`      |
 | Joined copy or filter controls          | `ControlGroup`                          |
+| Joined action controls                  | `ButtonGroup`                           |
 
 Only then replace remaining atoms. Common direct mappings include:
 
@@ -279,9 +285,11 @@ supported by the host's Rails Minitest and system-test setup and prints setup
 guidance for skipped files. The tests use the currently bundled gem and cover
 the shared upgrade boundary — browser-submitted Turbo validation and mutation,
 Dialog and Sheet, layout-owned Rails flash, Turbo Frame identity, redirects,
-and post-mutation Phlex rendering. Their collision-checked route exists only
-during each test and is restored afterward; they add no production route or
-component source. Keep application-specific migration tests for inventoried
+and post-mutation Phlex rendering. Their route is prepended only during each
+test, so host catch-all routes remain compatible; an exact GET or PATCH route
+at the same path is still rejected rather than masked. The route is restored
+afterward and adds no production route or component source. Keep
+application-specific migration tests for inventoried
 product behavior alongside them.
 
 The endpoint deliberately inherits `ApplicationController` callbacks. If the
@@ -294,17 +302,29 @@ or skipping host callbacks.
 Run focused request and component tests, then compare the converted flows in a
 browser at wide and narrow widths. Exercise keyboard focus, dialogs and sheets,
 Turbo submissions, errors, empty states, light/dark appearance, and dense
-metadata. A green request suite does not prove that a tooltip, off-canvas
+metadata. Inspect computed styles for missing application classes, stacked
+Button content, broken compound corners, double focus rings, clipping, and
+theme drift. A green request suite does not prove that a tooltip, off-canvas
 panel, interactive Card treatment, or responsive composition survived.
 
 Finish by deleting copied components, helpers, and controllers; run
 `bin/rails nitro_kit:doctor`; and record every remaining application-owned
-fallback as either intentional product UI or a Nitro Kit coverage gap.
+fallback as either intentional product UI or a Nitro Kit coverage gap. Use
+`bin/rails nitro_kit:doctor --format=json` when migration automation needs
+stable `status`, `label`, and `detail` fields.
 
-Doctor inventories only concrete Nitro Kit 1.x conventions: `nk_*` helpers,
+Doctor inventories concrete Nitro Kit 1.x conventions: `nk_*` helpers,
 generated files under `app/components/nitro_kit`, controllers under
 `app/javascript/controllers/nk`, the old Floating UI and combobox packages,
-and `tailwind_merge`. Every finding includes a file and replacement. Its
+and `tailwind_merge`. When application CSS defines a `.btn` treatment, Doctor
+also records rendered `btn` class usages as application-owned review work; it
+does not assume every specialized control should become a Nitro Button. Doctor
+also uses Ruby syntax trees to catch provable 2.0 runtime violations: direct
+`id:` keywords on Table compound methods and statically icon-only
+`NitroKit::Button`, Dropdown trigger, and Sheet trigger declarations without an
+accessible name. Rendering remains
+the final authority for dynamic wrappers and delegated component declarations.
+Every finding includes a file and replacement or review instruction. Its
 disposition is:
 
 - `migrated` — no remaining occurrence in that category.
@@ -314,5 +334,7 @@ disposition is:
   an application namespace, not as a Nitro shadow.
 
 The inventory deliberately does not guess from generic component, JavaScript,
-or dependency names. Review application-owned product behavior separately and
-keep its migration record with the application.
+or dependency names beyond a button treatment the application itself defines.
+Review application-owned product behavior separately and keep its migration
+record with the application. Re-audit native buttons, Rails button helpers, and
+application-owned button classes after Doctor is otherwise clean.

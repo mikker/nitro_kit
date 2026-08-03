@@ -331,7 +331,13 @@ class InstallationTest < ActiveSupport::TestCase
         <%# nk_button_to "Comment only", account_path %>
         <%= "nk_form_with in a string" %>
         <%= :nk_button_to %>
+        <%= link_to "Legacy", account_path, class: "btn btn-small" %>
       ERB
+      write_file(root, "app/assets/stylesheets/buttons.css", <<~CSS)
+        @utility btn {
+          border-radius: 9999px;
+        }
+      CSS
       write_file(root, "app/models/account.rb", <<~RUBY)
         # nk_button_to "Comment only"
         EXAMPLE = "nk_form_with in a string"
@@ -371,6 +377,11 @@ class InstallationTest < ActiveSupport::TestCase
       assert_includes dependencies.detail, "config/importmap.rb:1"
       assert_includes dependencies.detail, "Gemfile:1"
 
+      buttons = checks.fetch("Migration: Application-owned button treatments")
+      assert_equal :warn, buttons.status
+      assert_includes buttons.detail, "application-owned: app/views/accounts/show.html.erb:8"
+      assert_includes buttons.detail, "migrate ordinary actions to NitroKit::Button"
+
       replacements = checks.fetch("Migration: Known replacements")
       assert_includes replacements.detail, "NitroKit::Button"
       assert_includes replacements.detail, "gem-owned Nitro behavior"
@@ -382,6 +393,68 @@ class InstallationTest < ActiveSupport::TestCase
       assert_includes dispositions.detail, "per-file replacement"
       refute_includes helpers.detail, "Comment only"
       assert_equal 4, helpers.detail.lines.size
+    end
+  end
+
+  test "doctor finds provable Nitro Kit 2 runtime contract errors" do
+    Dir.mktmpdir do |directory|
+      root = Pathname.new(directory)
+      write_file(root, "app/components/runtime_contracts.rb", <<~RUBY)
+        render NitroKit::Table.new do |table|
+          table.tr(id: "person-1") {}
+          table.td("Ada", html: { id: "person-name" })
+        end
+        render NitroKit::Button.new(icon: "x")
+        render NitroKit::Button.new(icon: "x", label: "Close")
+        render NitroKit::Dropdown.new do |dropdown|
+          dropdown.trigger(icon: "ellipsis")
+          dropdown.trigger(icon: "ellipsis", aria: { label: "More" })
+        end
+      RUBY
+
+      check = NitroKit::Installation.new(root).checks.index_by(&:label)
+        .fetch("Migration: 2.0 runtime contract errors")
+
+      assert_equal :warn, check.status
+      assert_includes check.detail, "app/components/runtime_contracts.rb:2"
+      assert_includes check.detail, "Table#tr does not accept id: directly"
+      assert_includes check.detail, "app/components/runtime_contracts.rb:5"
+      assert_includes check.detail, "icon-only NitroKit::Button requires label:"
+      assert_includes check.detail, "app/components/runtime_contracts.rb:8"
+      assert_includes check.detail, "icon-only Dropdown#trigger requires label:"
+      refute_includes check.detail, "runtime_contracts.rb:3"
+      refute_includes check.detail, "runtime_contracts.rb:6"
+      refute_includes check.detail, "runtime_contracts.rb:9"
+    end
+  end
+
+  test "doctor recognizes explicit Stimulus registration used by bundlers" do
+    Dir.mktmpdir do |directory|
+      root = Pathname.new(directory)
+      write_file(root, "app/javascript/controllers/index.js", <<~JAVASCRIPT)
+        import { application } from "./application"
+        import SearchController from "./search_controller"
+
+        application.register("search", SearchController)
+      JAVASCRIPT
+
+      check = NitroKit::Installation.new(root).checks.index_by(&:label).fetch("Stimulus loader")
+
+      assert_equal :pass, check.status
+      assert_equal "explicit controller registration is configured", check.detail
+    end
+  end
+
+  test "doctor ignores generic btn classes when the application defines no button treatment" do
+    Dir.mktmpdir do |directory|
+      root = Pathname.new(directory)
+      write_file(root, "app/views/example.html.erb", '<%= link_to "Example", root_path, class: "btn" %>')
+
+      check = NitroKit::Installation.new(root).checks.index_by(&:label)
+        .fetch("Migration: Application-owned button treatments")
+
+      assert_equal :pass, check.status
+      assert_equal "migrated: none found", check.detail
     end
   end
 

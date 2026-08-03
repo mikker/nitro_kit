@@ -38,6 +38,7 @@
     --nk-radius-lg: 0.5rem;
     --nk-radius-xl: 0.75rem;
     --nk-radius-full: 9999px;
+    --nk-button-radius: initial;
 
     --nk-border-width: 1px;
     --nk-focus-width: 2px;

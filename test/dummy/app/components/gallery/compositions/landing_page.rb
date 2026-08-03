@@ -37,7 +37,7 @@ module Gallery
         render NitroKit::StatGrid.new(id: "gallery-landing-results") do |stats|
           stats.stat(key: :components, label: "Typed components", value: "36", detail: "Direct Phlex APIs")
           stats.stat(key: :helpers, label: "Template helpers", value: "0", detail: "Rails helpers still welcome")
-          stats.stat(key: :themes, label: "Theme variables", value: "84", detail: "Light and dark ready")
+          stats.stat(key: :themes, label: "Theme variables", value: "85", detail: "Light and dark ready")
         end
       end
 

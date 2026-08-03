@@ -1,14 +1,21 @@
+require "json"
 require "rails/command"
 
 module Rails
   module Command
     class NitroKitCommand < Base
       desc "doctor", "Verify the Nitro Kit 2 application and agent integration"
+      option :format, type: :string, default: "text", enum: %w[text json],
+        desc: "Output human-readable text or structured JSON"
       def doctor
         checks = installation.checks
-        checks.each do |check|
-          color = { pass: :green, warn: :yellow, fail: :red }.fetch(check.status)
-          say_status(check.status.to_s.upcase, "#{check.label}: #{check.detail}", color)
+        if options[:format] == "json"
+          say JSON.pretty_generate(checks.map { { status: _1.status, label: _1.label, detail: _1.detail } })
+        else
+          checks.each do |check|
+            color = { pass: :green, warn: :yellow, fail: :red }.fetch(check.status)
+            say_status(check.status.to_s.upcase, "#{check.label}: #{check.detail}", color)
+          end
         end
 
         exit 1 if checks.any? { _1.status == :fail }

@@ -7,7 +7,11 @@ APIs or examples.
    `2.`.
 2. Read `docs/agent_guide.md` from that installed gem, then read the locally
    installed `nitro-kit-rails`, `nitro-kit-hotwire`, and `nitro-kit-ui` skills.
-3. Inspect the application before editing. Preserve established application
+3. Inspect the application before editing. Inventory user flows, every rendered
+   button treatment (including application-owned `.btn` classes and native Rails
+   helpers), joined controls, and the existing semantic color, focus, radius,
+   density, and typography tokens. Capture representative wide and narrow
+   screenshots before changing markup. Preserve established application
    conventions unless they conflict with the requested Nitro Kit 2 setup.
 4. Ensure an application base Phlex component includes `NitroKit` once and
    product components inherit from it.
@@ -25,11 +29,31 @@ APIs or examples.
 8. Use ordinary Rails routes, models, forms, and server-rendered HTML. Follow
    the installed Rails and Hotwire guidance for new work. During a migration,
    replace an existing control only when Nitro Kit 2 has a genuine semantic
-   and behavioral equivalent. Otherwise preserve it as application-owned
-   Rails and semantic HTML; never downgrade specialized behavior or retain
-   copied Nitro Kit 1.x source as the fallback.
-9. Run `bin/rails nitro_kit:doctor`, fix actionable failures, and run the
-   application's relevant tests.
+   and behavioral equivalent. Preserve compound ownership: use `ButtonGroup`
+   for joined actions and `ControlGroup` for joined inputs, addons, and buttons
+   instead of rebuilding their geometry with a raw flex wrapper. Otherwise
+   preserve the control as application-owned Rails and semantic HTML; never
+   downgrade specialized behavior or retain copied Nitro Kit 1.x source as the
+   fallback. Preserve strict component boundaries: route native attributes
+   through `html:`, `aria:`, or `data:`, explicitly name icon-only Buttons and
+   triggers, and give custom `form.field` blocks explicit labels.
+9. Translate the application's existing semantic theme into documented public
+   `--nk-*` tokens. Preserve primary, focus, danger, neutral, font, density, and
+   radius decisions rather than selecting visually similar raw palette values.
+   Use `--nk-button-radius` when buttons intentionally have a different shape
+   from inputs and surfaces.
+10. Run `bin/rails nitro_kit:doctor`, fix actionable failures, and run the
+    application's relevant tests plus the generated upgrade smoke tests. When
+    the application uses strict i18n, render representative forms with
+    `ActiveModel::Translation.raise_on_missing_translations` enabled. Doctor
+    inventories migration work; a clean result is not runtime or visual
+    verification.
+11. Compare the same representative flows in a browser at wide and narrow
+    widths. Exercise keyboard focus and inspect computed styles for missing
+    application classes, stacked Button content, broken compound corners,
+    double focus rings, clipping, and theme drift. Re-audit rendered native
+    buttons, `button_tag`, `submit_tag`, and application-owned button classes
+    before declaring the migration complete.
 
 Report what you changed, any existing convention you deliberately preserved,
 any unsupported control recorded as a Nitro Kit coverage gap, and any warning

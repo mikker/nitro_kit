@@ -64,7 +64,7 @@ module NitroKit
       @id = id || form&.field_id(field_name) || default_field_id
       @name = name || form&.field_name(field_name, multiple: @multiple) || default_field_name
       @explicit_value = value
-      @field_label = label.nil? ? derived_label : label
+      @field_label = label.nil? ? UNSET : label
       @field_description = description
       @field_error_messages = Array(errors).compact
       @options = options
@@ -124,7 +124,11 @@ module NitroKit
       )
     end
 
-    attr_reader :as, :form, :name, :id, :field_label, :field_description, :field_error_messages
+    attr_reader :as, :form, :name, :id, :field_description, :field_error_messages
+
+    def field_label
+      @field_label.equal?(UNSET) ? derived_label : @field_label
+    end
 
     def view_template(&block)
       div(**root_attributes) do
@@ -460,10 +464,11 @@ module NitroKit
     end
 
     def derived_label
+      return @derived_label if defined?(@derived_label)
       return unless @field_name
 
       object = form&.object
-      if object && object.class.respond_to?(:human_attribute_name)
+      @derived_label = if object && object.class.respond_to?(:human_attribute_name)
         object.class.human_attribute_name(@field_name)
       else
         @field_name.humanize
