@@ -26,6 +26,14 @@ bin/rails generate nitro_kit:install
 bin/rails nitro_kit:doctor
 ```
 
+Example migration prompt:
+
+> Upgrade this Rails app to Nitro Kit `2.0.0.alpha.2`. Run the installer, follow its diagnostics, preserve existing behavior and styling, and use Nitro Kit MCP patterns where helpful. Run tests and summarize changes or unresolved issues.
+
+Example new application prompt:
+
+> Build this Rails app with Nitro Kit `2.0.0.alpha.2`. Run the installer, follow the included agent guide, compose gem-owned components, and use Nitro Kit MCP patterns where helpful. Add tests and summarize the result.
+
 The [agent guide](docs/agent_guide.md), [Rails integration guide](docs/rails_integration.md), and [component contracts](docs/component_contracts.md) are included with the gem.
 
 Maintaining Nitro Kit 1? Its frozen documentation remains at [v1.nitrokit.dev](https://v1.nitrokit.dev).
