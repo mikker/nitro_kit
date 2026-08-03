@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.0.0.alpha.2
+
+This alpha keeps the 2.0 API experimental while incorporating the first full
+catalog-pattern and external-agent testing pass.
+
+### Changed
+
+- Add the setup-only installer, project-local agent guidance, diagnostics, and
+  initialization prompt used by new and existing Rails applications.
+- Align desktop page-header actions with the title edge and improve nested
+  table and responsive dropzone composition.
+- Exercise desktop pointer capabilities in browser CI with environment-matched
+  Chrome tooling.
+
+### Fixed
+
+- Improve warning, destructive, form-error, and dark-mode contrast.
+- Preserve native list and fieldset semantics in form errors and grouped
+  controls.
+- Fix table-cell alignment leakage and cramped upload actions at narrow widths.
+
 ## 2.0.0.alpha.1
 
 Nitro Kit 2.0 alpha is a ground-up, intentionally incompatible rebuild around gem-owned Phlex composition. It replaces the generated, helper-driven 1.x architecture with a versioned component system owned by the gem.

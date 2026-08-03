@@ -6,17 +6,16 @@
 
 **Rails front-end for the agent era.**
 
-Nitro Kit is a gem-owned, agent-native UI system for Ruby on Rails. The `2.0.0.alpha.1` prerelease is a ground-up rebuild under active testing. It is not yet published to RubyGems and must not be treated as stable. New documentation and the Nitro Kit Pro alpha catalog are coming next.
+Nitro Kit is a gem-owned, agent-native UI system for Ruby on Rails. The `2.0.0.alpha.2` prerelease is a ground-up rebuild under active testing and must not be treated as stable. New documentation and the Nitro Kit Pro alpha catalog are coming next.
 
 [![RubyGems](https://img.shields.io/gem/v/nitro_kit.svg)](https://rubygems.org/gems/nitro_kit)
 
 ## Installation
 
-The following applies after the alpha is published. Until then, use this
-repository only for evaluation and development.
+Install the alpha explicitly and keep it pinned while evaluating it.
 
 ```ruby
-gem "nitro_kit", "2.0.0.alpha.1"
+gem "nitro_kit", "2.0.0.alpha.2"
 ```
 
 Use the released gem and commit `Gemfile` with `Gemfile.lock`. Before upgrading, review the changelog, run `bundle update nitro_kit`, rerun the installer, and test the application.

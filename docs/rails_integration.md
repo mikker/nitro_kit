@@ -7,7 +7,7 @@ Nitro Kit 2.0 uses Rails where Rails owns important application semantics: model
 Add the 2.0 alpha prerelease to the application's Gemfile:
 
 ```ruby
-gem "nitro_kit", "2.0.0.alpha.1"
+gem "nitro_kit", "2.0.0.alpha.2"
 ```
 
 Bundler records the exact released version in `Gemfile.lock`; commit `Gemfile`
