@@ -1,6 +1,6 @@
 # Nitro Kit 2.0 — agent-native Phlex UI system
 
-This is the canonical architecture specification for the stable Nitro Kit 2.0 line. The delivery sequence and ticket map are retained in [`implementation_plan.md`](implementation_plan.md) as design history; `tk` is the source of truth for live work status. [`component_contracts.md`](component_contracts.md) records the shipped Ruby and integration contracts.
+This is the canonical architecture specification for the stable Nitro Kit 2.0 line. `tk` is the source of truth for live work status, and [`component_contracts.md`](component_contracts.md) records the shipped Ruby and integration contracts.
 
 Nitro Kit is a gem-owned, versioned UI system for Rails. Developers and coding agents compose application interfaces in Ruby with Phlex. Nitro Kit owns component behavior, rendered structure, and default aesthetics. Applications own product code and documented theme overrides, not copies of Nitro Kit internals.
 
@@ -404,7 +404,7 @@ These ideas require new evidence and a deliberate future API decision. Their app
 
 The pivot was delivered in evidence-seeking stages: establish the kernel and representative vertical slice, migrate atoms, build atom-only product flows, record repeated friction, extract only proven layouts and page sections, expand the gallery, remove 1.x, then consolidate behavior, packaging, and documentation.
 
-The first evidence pass rejected more abstractions than it accepted. `Spacer`, `Split`, `Frame`, App/Marketing shells, AuthenticationPanel, and ProgressSteps stayed out because those flows did not establish a stable cross-domain responsibility. That pass initially extracted separate `VStack` and `HStack` components plus a fixed three-column Grid. The later responsive-layout consolidation superseded those APIs with unified `Flex` and responsive `Grid`; [`notes/block_candidates.md`](../notes/block_candidates.md) retains the original evidence as history. The application-layout mandate and the Sidebar and Top Navigation reference audit supplied enough repeated responsibility to approve `AppShell`; MarketingShell, AuthenticationPanel, and speculative layout primitives remain rejected.
+The first evidence pass rejected more abstractions than it accepted. `Spacer`, `Split`, `Frame`, App/Marketing shells, AuthenticationPanel, and ProgressSteps stayed out because those flows did not establish a stable cross-domain responsibility. That pass initially extracted separate `VStack` and `HStack` components plus a fixed three-column Grid. The later responsive-layout consolidation superseded those APIs with unified `Flex` and responsive `Grid`. The application-layout mandate and the Sidebar and Top Navigation reference audit supplied enough repeated responsibility to approve `AppShell`; MarketingShell, AuthenticationPanel, and speculative layout primitives remain rejected.
 
 ## Definition of done
 

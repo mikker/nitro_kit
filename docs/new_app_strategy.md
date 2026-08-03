@@ -2,17 +2,15 @@
 
 Recommend a Rails application template for new applications, not a return to Nitro Kit's old component-copying generator.
 
-Rails application templates are designed to configure a new app during `rails new`, can add gems, and can run generators after Bundler finishes. That gives Nitro Kit an eventual one-command entry point:
+Rails application templates are designed to configure a new app during `rails new`, can add gems, and can run generators after Bundler finishes. Nitro Kit's starter therefore remains a thin one-command entry point:
 
 ```sh
 rails new my_app -m https://nitrokit.dev/template.rb
 ```
 
-The template should remain thin while the conventions settle. Its first
-version should add Nitro Kit and invoke `nitro_kit:install`. The generator owns
-the project-local skills and `AGENTS.md`; the template may add an application
-layout that renders the stylesheet, appearance bootstrap, and flash toasts. It
-must not copy Nitro components or their controllers.
+The template adds Nitro Kit and invokes `nitro_kit:install`. The generator owns
+the project-local skills and `AGENTS.md`. The template does not copy Nitro
+components, controllers, authentication, teams, billing, or product models.
 
 Existing applications install the gem directly and run the setup generator.
 Agent discovery, version-matched skill routing, diagnostics, and initialization
