@@ -70,6 +70,8 @@ After establishing that inventory, generate the host integration smoke tests
 from the currently bundled gem with `bin/rails generate
 nitro_kit:upgrade_smoke_tests`. The generator preserves existing files and
 skips missing Rails Minitest or system-test infrastructure with setup guidance.
+Keep the generated explanatory header in each test: these are host-integration
+regression checks, not substitutes for application-specific acceptance tests.
 Run supported generated tests before and after the application conversion,
 while retaining application-specific acceptance coverage for every inventoried
 flow. Customize each generated `prepare_nitro_kit_upgrade_smoke_test` method
