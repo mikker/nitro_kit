@@ -6974,13 +6974,14 @@
     inline-size: max-content;
     max-inline-size: min(20rem, calc(100vw - (var(--nk-space) * 8)));
     padding: calc(var(--nk-space) * 1.5) calc(var(--nk-space) * 2.5);
-    color: var(--nk-color-primary-foreground);
+    color: var(--nk-color-foreground);
     font-size: var(--nk-text-xs);
     line-height: var(--nk-leading-normal);
     text-wrap: pretty;
     pointer-events: auto;
     visibility: hidden;
-    background: var(--nk-color-primary);
+    background: var(--nk-color-elevated);
+    border: var(--nk-border-width) solid var(--nk-color-border);
     border-radius: var(--nk-radius-md);
     box-shadow: var(--nk-shadow-sm);
     opacity: 0;

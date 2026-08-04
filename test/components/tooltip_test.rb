@@ -185,6 +185,10 @@ class TooltipComponentTest < ActiveSupport::TestCase
     assert_includes source, "@media (hover: hover)"
     assert_includes source, ":not([data-dismissed])"
     assert_includes source, "visibility: hidden"
+    assert_includes source, "color: var(--nk-color-foreground)"
+    assert_includes source, "background: var(--nk-color-elevated)"
+    assert_includes source, "border: var(--nk-border-width) solid var(--nk-color-border)"
+    refute_includes source, "background: var(--nk-color-primary)"
     assert_equal 5, source.scan("::before").size
     assert_includes source, "inset-block-start: 100%"
     assert_includes source, "inset-inline-end: 100%"
