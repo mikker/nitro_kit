@@ -250,16 +250,25 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "renders the observable class escape hatch" do
-    node = render_node(Probe.new(desperately_need_a_class: "third-party-trigger"))
+    node = render_node(
+      Probe.new(
+        desperately_need_a_class: [
+          "third-party-trigger flex",
+          nil,
+          [ :items_center, { hidden: false, active: true } ],
+          "flex"
+        ]
+      )
+    )
 
-    assert_equal "third-party-trigger", node["class"]
+    assert_equal "third-party-trigger flex items_center active", node["class"]
     assert_equal "class", node["data-nk-escape"]
   end
 
   test "validates the class escape hatch" do
-    [ "", "   ", false, :utility, [ "utility" ] ].each do |value|
+    [ "", "   ", false, [], [ nil, false, " " ], { hidden: false } ].each do |value|
       error = assert_raises(ArgumentError) { Probe.new(desperately_need_a_class: value) }
-      assert_match(/must be a non-blank String/, error.message)
+      assert_match(/must contain at least one class name/, error.message)
     end
   end
 
@@ -282,10 +291,10 @@ class ComponentTest < ActiveSupport::TestCase
   end
 
   test "supports the class escape on an owned slot" do
-    node = render_node(SlotProbe.new(slot_class: "external-label"))
+    node = render_node(SlotProbe.new(slot_class: [ "external-label", { active: true } ]))
     label = node.at_css("[data-slot='slot-probe-label']")
 
-    assert_equal "external-label", label["class"]
+    assert_equal "external-label active", label["class"]
     assert_equal "class", label["data-nk-escape"]
   end
 

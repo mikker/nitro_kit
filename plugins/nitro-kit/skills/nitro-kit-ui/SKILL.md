@@ -56,7 +56,7 @@ If the gem is not installed, say that the skill requires Nitro Kit and follow th
 - Never downgrade a specialized control to a generic Nitro control for visual
   consistency, and never retain copied Nitro Kit 1.x source as the fallback.
 - Do not introduce `nk_*` helpers, a general ERB bridge, or generated variant helpers.
-- Pass native attributes through each component method's documented `html:`, `aria:`, or `data:` boundary; for example, use `table.tr(html: { id: dom_id(record) })`, not `table.tr(id: ...)`. Do not pass `class:` or `style:`. Prefer component options, composition, or theme tokens. Use `desperately_need_a_class:` only for a genuine external integration boundary.
+- Pass native attributes through each component method's documented `html:`, `aria:`, or `data:` boundary; for example, use `table.tr(html: { id: dom_id(record) })`, not `table.tr(id: ...)`. Do not pass `class:` or `style:`. Prefer component options, composition, or theme tokens. Use `desperately_need_a_class:` only for a genuine external integration boundary; it accepts Rails-style strings, symbols, nested arrays, and conditional hashes without manual joining.
 - Give every icon-only Button, Dropdown trigger, and Sheet trigger an explicit `label:` or ARIA label. For custom `form.field` blocks, render an explicit field label instead of relying on an unused implicit model translation.
 - Do not add application-specific behavior to Nitro-owned Stimulus controllers.
 - Do not recreate a Nitro component with raw HTML unless the installed catalog cannot express the semantics.

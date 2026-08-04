@@ -351,7 +351,6 @@ class InstallationTest < ActiveSupport::TestCase
       write_file(root, "app/javascript/controllers/nk/transcript_controller.js", "export default class {}\n")
       write_file(root, "vendor/javascript/@floating-ui--dom.js", "export {}\n")
       write_file(root, "config/importmap.rb", 'pin "@github/combobox-nav"\n')
-      root.join("Gemfile").write("gem \"tailwind_merge\"\n")
 
       checks = NitroKit::Installation.new(root).checks.index_by(&:label)
 
@@ -375,7 +374,6 @@ class InstallationTest < ActiveSupport::TestCase
       dependencies = checks.fetch("Migration: Vendored dependencies")
       assert_includes dependencies.detail, "vendor/javascript/@floating-ui--dom.js"
       assert_includes dependencies.detail, "config/importmap.rb:1"
-      assert_includes dependencies.detail, "Gemfile:1"
 
       buttons = checks.fetch("Migration: Application-owned button treatments")
       assert_equal :warn, buttons.status

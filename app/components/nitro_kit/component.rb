@@ -117,8 +117,7 @@ module NitroKit
       merged[:data] = merged_data if merged_data.any?
 
       unless desperately_need_a_class.nil?
-        validate_class_escape!(desperately_need_a_class)
-        merged[:class] = desperately_need_a_class
+        merged[:class] = normalize_class_escape(desperately_need_a_class)
         merged[:data] = merge_owned_data(merged.fetch(:data, {}), { nk_escape: "class" })
       end
 
@@ -306,10 +305,13 @@ module NitroKit
       end
     end
 
-    def validate_class_escape!(value)
-      return if value.is_a?(String) && !value.strip.empty?
+    def normalize_class_escape(value)
+      tokens = ActionView::Helpers::TagHelper.build_tag_values(value)
+        .flat_map { CGI.unescape_html(_1.to_s).split }
+        .uniq
+      return tokens.join(" ") if tokens.any?
 
-      raise ArgumentError, "desperately_need_a_class: must be a non-blank String"
+      raise ArgumentError, "desperately_need_a_class: must contain at least one class name"
     end
 
     def text_or_block(text = nil, &block)

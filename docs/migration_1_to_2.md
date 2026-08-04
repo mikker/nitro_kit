@@ -313,10 +313,17 @@ fallback as either intentional product UI or a Nitro Kit coverage gap. Use
 `bin/rails nitro_kit:doctor --format=json` when migration automation needs
 stable `status`, `label`, and `detail` fields.
 
+Pass migrated application classes directly to `desperately_need_a_class:` as
+Rails-style strings, symbols, nested arrays, or conditional hashes; Nitro
+normalizes them without requiring manual `compact.join(" ")` formatting. A
+Tailwind application may keep or add its own Tailwind-aware merger when it
+needs conflicting utility classes resolved. Nitro does not require that
+dependency because its own component CSS is static and classless.
+
 Doctor inventories concrete Nitro Kit 1.x conventions: `nk_*` helpers,
 generated files under `app/components/nitro_kit`, controllers under
-`app/javascript/controllers/nk`, the old Floating UI and combobox packages,
-and `tailwind_merge`. When application CSS defines a `.btn` treatment, Doctor
+`app/javascript/controllers/nk`, and the old Floating UI and combobox packages.
+When application CSS defines a `.btn` treatment, Doctor
 also records rendered `btn` class usages as application-owned review work; it
 does not assume every specialized control should become a Nitro Button. Doctor
 also uses Ruby syntax trees to catch provable 2.0 runtime violations: direct

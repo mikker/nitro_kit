@@ -14,7 +14,7 @@ Many components also expose `id:` or other common native semantics directly. Les
 
 Nitro Kit reserves `data-nk`, `data-slot`, `data-variant`, `data-size`, `data-nk-escape`, `data-enhanced`, and the component-owned `data-state`, `data-disabled`, `data-required`, `data-orientation`, `data-presentation`, `data-placement`, `data-layout`, `data-side`, and `data-field-type`. Passing any of them through `data:` raises "reserved by Nitro Kit". Application `data-controller` and `data-action` values compose additively with Nitro behavior; other owned-data collisions raise. `class` and `style` are rejected, including inside `html:`.
 
-The single styling escape is `desperately_need_a_class:`. It requires a non-blank string and emits both the class and `data-nk-escape="class"`. There is no untyped structural bypass.
+The single styling escape is `desperately_need_a_class:`. It accepts the same strings, symbols, nested arrays, and conditional hashes as Rails `class_names`, normalizes them to a deduplicated string, and emits both the class and `data-nk-escape="class"`. The normalized value must contain at least one class name. There is no untyped structural bypass. Tailwind applications may additionally use an application-owned Tailwind merger when conflicting utility classes need resolution; Nitro itself does not depend on Tailwind.
 
 Every default string a person can read or hear comes from the engine-loaded `nitro_kit.*` locale scope, so a keyword documented below as "defaulting to `I18n.t(...)`" resolves through the host application's locale. Passing the keyword explicitly always wins.
 

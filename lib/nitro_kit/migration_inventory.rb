@@ -306,13 +306,6 @@ module NitroKit
             VENDORED_MODULES.each do |name, guidance|
               findings << Finding.new(status: :unresolved, path: location(path, line_number), guidance:) if line.include?(name)
             end
-            if line.match?(/\btailwind_merge\b/)
-              findings << Finding.new(
-                status: :unresolved,
-                path: location(path, line_number),
-                guidance: "remove tailwind_merge; Nitro Kit 2 ships static CSS and does not use it"
-              )
-            end
           end
         end
 

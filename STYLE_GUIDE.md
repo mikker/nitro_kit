@@ -219,10 +219,13 @@ a translator sees one grammar in both languages.
 Nitro components never emit or depend on classes. The only exception is:
 
 ```ruby
-desperately_need_a_class: "external-widget-hook"
+desperately_need_a_class: [
+  "external-widget-hook",
+  { "is-active": active? }
+]
 ```
 
-It must produce both the class and `data-nk-escape="class"`. Blank or non-string values raise. Implement this once in the base component.
+It accepts Rails `class_names` values—strings, symbols, nested arrays, and conditional hashes—and normalizes them into a deduplicated string. It must contain at least one class and produce both the class and `data-nk-escape="class"`. Implement this once in the base component. Tailwind applications may run a Tailwind-aware merger before passing classes when conflicting utilities need resolution; Nitro does not require one.
 
 ## CSS architecture
 
