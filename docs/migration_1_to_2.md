@@ -313,12 +313,24 @@ fallback as either intentional product UI or a Nitro Kit coverage gap. Use
 `bin/rails nitro_kit:doctor --format=json` when migration automation needs
 stable `status`, `label`, and `detail` fields.
 
-Pass migrated application classes directly to `desperately_need_a_class:` as
-Rails-style strings, symbols, nested arrays, or conditional hashes; Nitro
-normalizes them without requiring manual `compact.join(" ")` formatting. A
-Tailwind application may keep or add its own Tailwind-aware merger when it
-needs conflicting utility classes resolved. Nitro does not require that
-dependency because its own component CSS is static and classless.
+Before declaring the migration complete, search for every
+`desperately_need_a_class:` use and review each one. Aim for zero. Move layout,
+spacing, width, responsive positioning, and application colors to an
+application-owned wrapper; use documented component options and native
+attributes for semantics and state; accept Nitro defaults where the difference
+is incidental; and keep specialized controls or navigation application-owned
+when Nitro is not the right abstraction. Remove generic class forwarding from
+shared builders. A scoped wrapper rule may target ordinary descendant elements
+when the application truly owns that layout behavior, such as fixed table
+layout. Retain the escape only when a named external integration actually
+requires a class hook, and document why.
+
+For such a retained integration, `desperately_need_a_class:` accepts Rails-style
+strings, symbols, nested arrays, or conditional hashes without manual
+`compact.join(" ")` formatting. A Tailwind application may use its own
+Tailwind-aware merger when that hook needs conflicting utility classes
+resolved. Nitro does not require the dependency because its own component CSS
+is static and classless.
 
 Doctor inventories concrete Nitro Kit 1.x conventions: `nk_*` helpers,
 generated files under `app/components/nitro_kit`, controllers under

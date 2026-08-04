@@ -9,7 +9,7 @@
 
 ### Changed
 
-- Accept Rails-style nested and conditional class values through `desperately_need_a_class:`, normalizing them without manual string formatting, and treat Tailwind conflict merging as an optional host-application concern.
+- Accept Rails-style nested and conditional class values through `desperately_need_a_class:`, normalizing retained external-integration hooks without manual string formatting, while directing migrations to review every use and aim for zero.
 - Make migration diagnostics surface usages of application-owned button treatments and provable 2.0 Table/Button runtime contract errors, and require semantic theme translation plus wide and narrow browser comparison.
 - Recognize explicit Stimulus controller registration used by JavaScript bundlers.
 

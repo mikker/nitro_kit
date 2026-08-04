@@ -89,6 +89,15 @@ Do not retain copied Nitro Kit 1.x source as the fallback. Remove the legacy
 component and preserve the unsupported behavior in clearly application-owned
 code. Report the missing equivalent as a Nitro Kit coverage gap.
 
+At the end of a migration, search the whole application for
+`desperately_need_a_class:` and review every result. Aim for zero rather than
+translating old utility classes mechanically. Move application layout and
+visual treatment to wrappers, use semantic component options or native
+attributes, accept incidental Nitro defaults, and keep unmatched product UI
+application-owned. Remove generic class forwarding from shared builders.
+Retain an escape only for a named external integration that requires a class
+hook, and record that reason in the migration review.
+
 ## Use one interaction grammar
 
 Choose the smallest primitive that completes the interaction:
