@@ -14,10 +14,17 @@ class CommandPaletteSystemTest < ApplicationSystemTestCase
 
     assert_selector "#{panel}[open]"
     assert_focused input
+    wait_until(message: "command palette animation did not settle") do
+      find(panel).evaluate_script(
+        "this.getAnimations().every((animation) => animation.playState === 'finished')"
+      )
+    end
+    panel_top = find(panel).evaluate_script("this.getBoundingClientRect().top")
 
     find(input).send_keys("billing")
 
     assert_selector "#{destination}:not([hidden])", count: 1, text: "Billing"
+    assert_in_delta panel_top, find(panel).evaluate_script("this.getBoundingClientRect().top"), 0.5
     assert_selector "#{root} [data-slot='command-palette-status']",
       text: "1 destination available.", visible: :all
 
