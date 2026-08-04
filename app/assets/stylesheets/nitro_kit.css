@@ -3365,6 +3365,7 @@
 /* Source: src/stylesheets/nitro_kit/components/dropzone.css */
 @layer nitro-kit.base {
   :where([data-nk="dropzone"]) {
+    position: relative;
     display: grid;
     gap: calc(var(--nk-space) * 3);
     padding: calc(var(--nk-space) * 4);
@@ -3372,6 +3373,7 @@
     background: var(--nk-color-surface);
     border: calc(var(--nk-border-width) * 2) dashed var(--nk-color-border);
     border-radius: var(--nk-radius-lg);
+    container: nk-dropzone / inline-size;
   }
 
   :where([data-nk="dropzone"] > [data-slot="dropzone-message"]) {
@@ -3383,6 +3385,7 @@
 
   :where(
     [data-nk="dropzone"] [data-slot="dropzone-instruction"],
+    [data-nk="dropzone"] [data-slot="dropzone-compact-instruction"],
     [data-nk="dropzone"] [data-slot="dropzone-description"],
     [data-nk="dropzone"] [data-slot="dropzone-file-size"],
     [data-nk="dropzone"] [data-slot="dropzone-file-status"],
@@ -3390,6 +3393,12 @@
   ) {
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
+  }
+
+  :where(
+    [data-nk="dropzone"] [data-slot="dropzone-compact-instruction"]
+  ) {
+    display: none;
   }
 
   :where([data-nk="dropzone"] > [data-slot="dropzone-input"]) {
@@ -3420,10 +3429,6 @@
      accessibility tree while the drop target is the only visible affordance.
      The label already points at the input, so clicking anywhere in the message
      still opens the file picker. */
-  :where([data-nk="dropzone"][data-presentation="minimal"]) {
-    position: relative;
-  }
-
   :where(
     [data-nk="dropzone"][data-presentation="minimal"]
       > [data-slot="dropzone-input"]
@@ -3550,14 +3555,56 @@
   }
 }
 
-@media (max-width: 40rem) {
+@container nk-dropzone (max-width: 24rem) {
   @layer nitro-kit.base {
+    :where([data-nk="dropzone"] [data-slot="dropzone-instruction"]) {
+      display: none;
+    }
+
+    :where(
+      [data-nk="dropzone"] [data-slot="dropzone-compact-instruction"]
+    ) {
+      display: inline;
+    }
+
+    :where([data-nk="dropzone"] > [data-slot="dropzone-input"]) {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      white-space: nowrap;
+      clip-path: inset(50%);
+    }
+
+    :where(
+      [data-nk="dropzone"][data-state="idle"]
+        > [data-slot="dropzone-status"]
+    ) {
+      position: absolute;
+      inline-size: 1px;
+      block-size: 1px;
+      overflow: hidden;
+      white-space: nowrap;
+      clip-path: inset(50%);
+    }
+
     :where([data-nk="dropzone"] [data-slot="dropzone-preview"]) {
       grid-template-columns: minmax(0, 1fr) auto;
     }
 
     :where([data-nk="dropzone"] [data-slot="dropzone-preview-image"]) {
       display: none;
+    }
+  }
+
+  @layer nitro-kit.state {
+    :where(
+      [data-nk="dropzone"]:has(
+          > [data-slot="dropzone-input"]:focus-visible
+        )
+    ) {
+      outline: var(--nk-focus-width) solid var(--nk-color-focus);
+      outline-offset: var(--nk-focus-offset);
     }
   }
 }

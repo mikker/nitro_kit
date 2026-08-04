@@ -80,6 +80,10 @@ class DropzoneTest < ActiveSupport::TestCase
       node.at_css("[data-slot='dropzone-instruction']").text
     )
     assert_equal(
+      I18n.t("nitro_kit.dropzone.compact_prompt"),
+      node.at_css("[data-slot='dropzone-compact-instruction']").text
+    )
+    assert_equal(
       I18n.t("nitro_kit.dropzone.status.empty"),
       node.at_css("[data-slot='dropzone-status']").text
     )

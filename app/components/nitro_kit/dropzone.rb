@@ -127,6 +127,7 @@ module NitroKit
       ) do
         strong(**slot_attributes(:title, attributes: { id: title_id })) { plain(@label) }
         span(**slot_attributes(:instruction)) { plain(I18n.t("nitro_kit.dropzone.prompt")) }
+        span(**slot_attributes(:compact_instruction)) { plain(I18n.t("nitro_kit.dropzone.compact_prompt")) }
 
         if description
           span(**slot_attributes(:description, attributes: { id: description_id })) { plain(description) }

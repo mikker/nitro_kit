@@ -37,6 +37,7 @@ en:
     dropzone:
       label: "Upload files"
       prompt: "Drop files here or choose them from your device."
+      compact_prompt: "Drop or choose files."
       preview_list: "Selected files"
       progress: "Upload progress"
       progress_for: "Upload progress for %{name}"
