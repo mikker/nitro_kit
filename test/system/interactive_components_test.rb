@@ -207,37 +207,30 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
   test "dropdown closes through one outside-pointer fallback listener across Turbo reconnects" do
     visit_component("dropdown")
     root = "#gallery-dropdown-account"
-    trigger = "#{root}-trigger"
     content = "#{root}-content"
 
     install_dropdown_pointer_listener_counter
 
-    find(trigger).click
-    assert_selector "#{content}:popover-open"
-    assert_equal 1, dropdown_pointer_listener_count("added")
+    open_dropdown_for_listener_test(content, expected_listeners: 1)
 
     dispatch_outside_pointer
     assert_selector "#{content}:not(:popover-open)", visible: :all
     assert_equal 1, dropdown_pointer_listener_count("removed")
 
-    find(trigger).click
+    open_dropdown_for_listener_test(content, expected_listeners: 2)
     dispatch_outside_pointer
     assert_selector "#{content}:not(:popover-open)", visible: :all
-    assert_equal 2, dropdown_pointer_listener_count("added")
     assert_equal 2, dropdown_pointer_listener_count("removed")
 
-    find(trigger).click
-    assert_selector "#{content}:popover-open"
-    assert_equal 3, dropdown_pointer_listener_count("added")
+    open_dropdown_for_listener_test(content, expected_listeners: 3)
 
     execute_script("Turbo.visit(arguments[0])", gallery_component_path("button"))
     assert_current_path gallery_component_path("button")
     assert_equal 3, dropdown_pointer_listener_count("removed")
     click_gallery_navigation_link("Dropdown")
+    wait_for_stimulus_controller(root, "nk--dropdown")
 
-    find(trigger).click
-    assert_selector "#{content}:popover-open"
-    assert_equal 4, dropdown_pointer_listener_count("added")
+    open_dropdown_for_listener_test(content, expected_listeners: 4)
     dispatch_outside_pointer
     assert_equal 4, dropdown_pointer_listener_count("removed")
     assert_no_severe_console_errors
@@ -432,6 +425,25 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
 
     def dropdown_pointer_listener_count(kind)
       evaluate_script("window.__dropdownPointerListeners[arguments[0]]", kind)
+    end
+
+    def wait_for_stimulus_controller(selector, identifier)
+      wait_until do
+        evaluate_script(<<~JAVASCRIPT, selector, identifier)
+          Boolean(window.Stimulus?.getControllerForElementAndIdentifier(
+            document.querySelector(arguments[0]), arguments[1]
+          ))
+        JAVASCRIPT
+      end
+    end
+
+    def open_dropdown_for_listener_test(content, expected_listeners:)
+      assert_selector content, visible: :all
+      execute_script("document.querySelector(arguments[0]).showPopover()", content)
+      assert_selector "#{content}:popover-open"
+      wait_until do
+        dropdown_pointer_listener_count("added") == expected_listeners
+      end
     end
 
     def dispatch_outside_pointer

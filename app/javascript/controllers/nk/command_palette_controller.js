@@ -62,14 +62,14 @@ export default class extends Controller {
       event.preventDefault();
       event.stopPropagation();
       if (!wasOpen) {
-        queueMicrotask(() => {
+        setTimeout(() => {
           if (this.panelTarget.open) this.panelTarget.close();
-        });
+        }, 0);
       }
       return;
     }
 
-    this.returnFocus = document.activeElement;
+    this.returnFocus = event.currentTarget;
     this.restoreFocus = true;
     clearTimeout(this.openTimer);
     this.openTimer = setTimeout(() => this.#prepareOpenPanel(), 0);
