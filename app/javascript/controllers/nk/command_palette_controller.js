@@ -28,7 +28,6 @@ export default class extends Controller {
 
   disconnect() {
     this.connected = false;
-    clearTimeout(this.blockedOpenTimer);
     clearTimeout(this.openTimer);
     clearTimeout(this.searchTimer);
     const trigger = this.element.querySelector(
@@ -58,21 +57,8 @@ export default class extends Controller {
 
   openedByTrigger(event) {
     if (!this.canOpen) {
-      const wasOpen = this.panelTarget.open;
-
       event.preventDefault();
       event.stopPropagation();
-      if (!wasOpen) {
-        const invoker = event.currentTarget;
-        const nativeCommand = invoker.getAttribute("command");
-
-        invoker.removeAttribute("command");
-        clearTimeout(this.blockedOpenTimer);
-        this.blockedOpenTimer = setTimeout(() => {
-          if (nativeCommand) invoker.setAttribute("command", nativeCommand);
-          if (this.panelTarget.open) this.panelTarget.close();
-        }, 50);
-      }
       return;
     }
 

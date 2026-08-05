@@ -120,15 +120,18 @@ class CommandPaletteSystemTest < ApplicationSystemTestCase
     trigger = "#{root} [data-slot='command-palette-trigger']"
     panel = "#{root} [data-slot='command-palette-panel']"
 
-    execute_script(<<~JAVASCRIPT, trigger)
+    execute_script(<<~JAVASCRIPT)
       const activeModal = document.createElement("dialog");
       activeModal.id = "active-modal";
       document.body.append(activeModal);
       activeModal.showModal();
-      document.querySelector(arguments[0]).click();
     JAVASCRIPT
 
     assert_selector "dialog#active-modal[open]", visible: :all
+    wait_until(message: "active modal did not enter the top layer") do
+      evaluate_script("document.querySelector('#active-modal').matches(':modal')")
+    end
+    execute_script("document.querySelector(arguments[0]).click()", trigger)
     assert_selector "#{panel}:not([open])", visible: :all
     assert_no_severe_console_errors
   ensure
