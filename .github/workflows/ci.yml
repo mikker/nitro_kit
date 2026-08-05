@@ -90,4 +90,4 @@ jobs:
         env:
           DOKKU_HOST: ${{ secrets.DOKKU_SERVER_HOST }}
           DOKKU_APP: nk-gallery
-        run: bin/deploy-gallery
+        run: git push "dokku@${DOKKU_HOST}:${DOKKU_APP}" HEAD:main
