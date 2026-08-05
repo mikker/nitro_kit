@@ -4,6 +4,10 @@ export default class extends Controller {
   static targets = ["panel"];
   static values = { dismissible: Boolean };
 
+  disconnect() {
+    this.returnFocus = null;
+  }
+
   invoke(event) {
     const invoker = event.target.closest(
       "[command], [data-nk--dialog-command]",
@@ -16,7 +20,9 @@ export default class extends Controller {
     if (!["show-modal", "close"].includes(command)) return;
 
     const panel = this.#commandPanel(invoker);
-    if (!panel || this.#nativeRelationshipRuns(invoker, panel, command)) return;
+    if (!panel) return;
+    if (command === "show-modal") this.returnFocus = invoker;
+    if (this.#nativeRelationshipRuns(invoker, panel, command)) return;
 
     event.preventDefault();
     if (command === "show-modal" && !panel.open) panel.showModal();
@@ -24,7 +30,15 @@ export default class extends Controller {
   }
 
   closeForCache() {
+    this.returnFocus = null;
     if (this.panelTarget.open) this.panelTarget.close();
+  }
+
+  restoreFocus() {
+    const returnFocus = this.returnFocus;
+
+    this.returnFocus = null;
+    if (returnFocus?.isConnected) returnFocus.focus();
   }
 
   dismiss(event) {

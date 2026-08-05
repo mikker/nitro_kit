@@ -57,7 +57,15 @@ export default class extends Controller {
 
   openedByTrigger(event) {
     if (!this.canOpen) {
+      const wasOpen = this.panelTarget.open;
+
       event.preventDefault();
+      event.stopPropagation();
+      if (!wasOpen) {
+        queueMicrotask(() => {
+          if (this.panelTarget.open) this.panelTarget.close();
+        });
+      }
       return;
     }
 

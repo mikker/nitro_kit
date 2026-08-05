@@ -36,7 +36,7 @@ class HotwireLifecycleTest < ApplicationSystemTestCase
     assert_stimulus_controller("#gallery-dialog-remove-member", "nk--dialog")
     find("#gallery-dialog-remove-member [data-slot='dialog-trigger']").click
     assert_selector "#gallery-dialog-remove-member [data-slot='dialog-panel'][open]"
-    find("body").send_keys(:escape)
+    active_element.send_keys(:escape)
     assert_no_selector "#gallery-dialog-remove-member [data-slot='dialog-panel'][open]"
 
     click_gallery_navigation_link("Tabs")

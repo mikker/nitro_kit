@@ -155,7 +155,7 @@ module NitroKit
             }.compact,
             data: {
               nk__dialog_target: "panel",
-              action: "click->nk--dialog#dismiss cancel->nk--dialog#cancel"
+              action: "click->nk--dialog#dismiss cancel->nk--dialog#cancel close->nk--dialog#restoreFocus"
             }
           }
         )

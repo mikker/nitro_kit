@@ -216,7 +216,7 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
     assert_selector "#{content}:popover-open"
     assert_equal 1, dropdown_pointer_listener_count("added")
 
-    find(trigger).click
+    dispatch_outside_pointer
     assert_selector "#{content}:not(:popover-open)", visible: :all
     assert_equal 1, dropdown_pointer_listener_count("removed")
 

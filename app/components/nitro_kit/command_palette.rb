@@ -279,6 +279,7 @@ module NitroKit
               action: [
                 "click->nk--dialog#dismiss",
                 "cancel->nk--dialog#cancel",
+                "close->nk--dialog#restoreFocus",
                 "close->nk--command-palette#closed"
               ].join(" ")
             }
