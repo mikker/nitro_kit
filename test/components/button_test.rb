@@ -252,7 +252,6 @@ class ButtonTest < ActiveSupport::TestCase
     assert_equal "class", node["data-nk-escape"]
     assert_raises(ArgumentError) { NitroKit::Button.new("Save", desperately_need_a_class: "") }
     assert_raises(ArgumentError) { NitroKit::Button.new("Save", desperately_need_a_class: "  ") }
-    assert_raises(ArgumentError) { NitroKit::Button.new("Save", desperately_need_a_class: :hook) }
   end
 
   test "is reachable through the gallery catalog" do

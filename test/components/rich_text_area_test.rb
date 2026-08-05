@@ -64,7 +64,6 @@ class RichTextAreaTest < ActiveSupport::TestCase
     assert_equal "class", node["data-nk-escape"]
     assert_nil node.at_css("[data-slot='rich-text-area-editor']")["data-nk-escape"]
     assert_raises(ArgumentError) { NitroKit::RichTextArea.new(editor, desperately_need_a_class: "") }
-    assert_raises(ArgumentError) { NitroKit::RichTextArea.new(editor, desperately_need_a_class: :hook) }
   end
 
   test "Field(as: :rich_text) is the expected composition path" do

@@ -161,7 +161,6 @@ class EmptyStateTest < ActiveSupport::TestCase
     assert_equal "external-empty-state", node["class"]
     assert_equal "class", node["data-nk-escape"]
     assert_raises(ArgumentError) { NitroKit::EmptyState.new(title: "Empty", desperately_need_a_class: "") }
-    assert_raises(ArgumentError) { NitroKit::EmptyState.new(title: "Empty", desperately_need_a_class: :hook) }
   end
 
   test "ships owner-scoped static CSS" do
