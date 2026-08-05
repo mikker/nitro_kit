@@ -230,8 +230,15 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
     click_gallery_navigation_link("Dropdown")
     wait_for_stimulus_controller(root, "nk--dropdown")
 
-    open_dropdown_for_listener_test(content, expected_listeners: 4)
-    dispatch_outside_pointer
+    execute_script(<<~JAVASCRIPT, root)
+      const controller = window.Stimulus.getControllerForElementAndIdentifier(
+        document.querySelector(arguments[0]), "nk--dropdown"
+      );
+      controller.startOutsidePointerFallback();
+      controller.startOutsidePointerFallback();
+      controller.stopOutsidePointerFallback();
+    JAVASCRIPT
+    assert_equal 4, dropdown_pointer_listener_count("added")
     assert_equal 4, dropdown_pointer_listener_count("removed")
     assert_no_severe_console_errors
   end

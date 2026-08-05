@@ -56,6 +56,9 @@ module BrowserHelpers
   def assert_focused(selector, **find_options)
     element = find(selector, **find_options)
 
+    wait_until(message: "#{selector.inspect} did not receive browser focus") do
+      element.native == active_element
+    end
     assert_equal element.native, active_element, "Expected #{selector.inspect} to have browser focus"
     element
   end

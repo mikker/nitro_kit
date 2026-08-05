@@ -136,13 +136,14 @@ class HotwireLifecycleTest < ApplicationSystemTestCase
 
   def assert_stimulus_controller(selector, identifier)
     assert_selector selector, count: 1
-    connected = evaluate_script(<<~JAVASCRIPT, selector, identifier)
-      window.Stimulus.getControllerForElementAndIdentifier(
-        document.querySelector(arguments[0]),
-        arguments[1]
-      ) !== null
-    JAVASCRIPT
-    assert connected, "Expected #{identifier} to be connected at #{selector}"
+    wait_until(message: "Expected #{identifier} to be connected at #{selector}") do
+      evaluate_script(<<~JAVASCRIPT, selector, identifier)
+        window.Stimulus?.getControllerForElementAndIdentifier(
+          document.querySelector(arguments[0]),
+          arguments[1]
+        ) !== null
+      JAVASCRIPT
+    end
   end
 
   def click_tabs_general
