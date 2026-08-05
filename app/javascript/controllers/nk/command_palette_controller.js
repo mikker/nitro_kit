@@ -62,9 +62,14 @@ export default class extends Controller {
       event.preventDefault();
       event.stopPropagation();
       if (!wasOpen) {
-        setTimeout(() => {
+        const invoker = event.currentTarget;
+        const nativeCommand = invoker.getAttribute("command");
+
+        invoker.removeAttribute("command");
+        requestAnimationFrame(() => {
+          if (nativeCommand) invoker.setAttribute("command", nativeCommand);
           if (this.panelTarget.open) this.panelTarget.close();
-        }, 0);
+        });
       }
       return;
     }
