@@ -39,6 +39,16 @@ the practical browser target when Nitro can preserve essential behavior:
 4. Use a focused polyfill only when a local fallback cannot provide the
    required semantics.
 
+Typeset is a CSS-only exception to the usual progressive-enhancement note:
+its readable source uses `@scope`, while the stylesheet also contains a
+low-specificity fallback for engines that do not parse `@scope` (including
+Firefox through 145). The fallback provides root typography and explicitly
+anchored direct-child rules for headings, flow elements, lists, code/pre, and
+tables, plus links within those supported semantic elements and their focus
+state. It excludes direct nested
+`[data-nk]` and `data-typeset="off"` boundaries and intentionally does not
+promise the full descendant styling of the scoped path.
+
 Applications should not need to copy Nitro controllers or install a general
 polyfill bundle for a Nitro-owned component. Browsers outside a release's matrix
 may still work, but Nitro does not promise fixes for them.
