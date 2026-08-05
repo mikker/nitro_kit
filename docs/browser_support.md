@@ -43,6 +43,24 @@ Applications should not need to copy Nitro controllers or install a general
 polyfill bundle for a Nitro-owned component. Browsers outside a release's matrix
 may still work, but Nitro does not promise fixes for them.
 
+### Month and week inputs
+
+`Input(type: :month)` and `Input(type: :week)`, including the matching `Field`
+and `FormBuilder` paths, retain the standard native input types as progressive
+enhancement. Desktop Safari and Firefox can expose these controls as text
+inputs, and native week selection arrived later on iOS Safari. In those cases a
+picker, browser normalization, and enforcement of `min`, `max`, and `step` may
+be absent.
+
+Applications must accept and validate the submitted ISO shapes on the server:
+`YYYY-MM` for month and `YYYY-Www` for ISO week. They must also validate allowed
+ranges and increments as domain rules; the native constraint attributes are
+client-side hints, not an authorization or validation boundary. When choosing
+only from an exact, bounded set is essential, compose an application-owned
+`Select` with explicit month or week options instead of relying on a generic
+Nitro datepicker. Ordinary `date`, `time`, and `datetime-local` controls keep
+their existing contracts.
+
 ## JavaScript and progressive enhancement
 
 Normal support assumes the documented Nitro JavaScript is installed. Nitro is

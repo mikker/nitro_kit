@@ -50,6 +50,9 @@ public.
 ## Use ordinary Rails responses
 
 - Use `form_with` and `NitroKit::FormBuilder` for model-backed forms.
+- Treat `month_field` and `week_field` as progressive enhancement. Validate
+  `YYYY-MM` and `YYYY-Www`, ranges, and increments in the model; use an
+  application-owned Select with explicit options when exact selection matters.
 - Redirect successful non-GET submissions with `status: :see_other`.
 - Render the same invalid model with `status: :unprocessable_entity`.
 - Keep an HTML response for every Turbo-enhanced flow.

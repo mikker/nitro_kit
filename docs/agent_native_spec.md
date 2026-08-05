@@ -163,7 +163,7 @@ The stable release contains 40 atoms and components:
 
 The non-visual `AppearanceBootstrap` installs the shared document appearance runtime, and `NitroKit::Choice` is the typed option value shared by the choice controls.
 
-There is no Datepicker component and no date controller. `Input`'s `type: :date` is the only date control; `Field` and `FormBuilder` reach it through `as: :date`, and their CSS inherits the Safari date-editor alignment fix. `Combobox::Option` is likewise gone in favor of `Choice`.
+There is no Datepicker component and no date controller. `Input`'s native date-family types are progressive enhancement; `Field` and `FormBuilder` preserve them, and `type: :date` inherits the Safari date-editor alignment fix. Month and week may render as text controls without picker, normalization, or constraint enforcement, so applications validate their ISO formats and ranges on the server and compose an application-owned `Select` when an exact bounded choice is required. `Combobox::Option` is likewise gone in favor of `Choice`.
 
 ### Native interaction authority
 
@@ -379,7 +379,7 @@ Server-rendered feedback is the Rails flash. `Toast` renders `section[data-nk="t
 
 The engine ships CSS assets and Nitro-owned Stimulus controllers for enhancements and compatibility bridges that native HTML and CSS do not cover throughout the support window. When importmap is present it adds its pins automatically; the host still owns Stimulus and its normal controller loader. The engine boots without importmap, but only the component-specific no-JavaScript baselines remain. In the current alpha, Accordion disclosure works while unsupported named grouping degrades, and Dialog opens without its controller only where declarative `command`/`commandfor` is supported. Nitro Kit 2.0 does not define a JavaScript-package entrypoint for automatic bundler registration.
 
-Date inputs, Switch, and ordinary checked state deliberately use native inputs rather than custom controllers. The one exception is `indeterminate:`, which HTML cannot express as an attribute: `Checkbox` mounts `nk--checkable` only in that case, and the controller's whole job is to apply the native DOM property and own the matching `data-state="indeterminate"`. No third-party JavaScript runtime is vendored.
+Date-family inputs, Switch, and ordinary checked state deliberately use native inputs rather than custom controllers. Month and week retain their native types as progressive enhancement even where a browser exposes text entry; Nitro does not promise a picker or client-side normalization. The one exception is `indeterminate:`, which HTML cannot express as an attribute: `Checkbox` mounts `nk--checkable` only in that case, and the controller's whole job is to apply the native DOM property and own the matching `data-state="indeterminate"`. No third-party JavaScript runtime is vendored.
 
 ## Examples and verification
 

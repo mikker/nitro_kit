@@ -58,6 +58,8 @@ class FormBuilderRailsTest < ActiveSupport::TestCase
         form.hidden_field(:source)
         form.check_box(:terms, { include_hidden: true }, "yes", "no")
         form.file_field(:attachment, accept: "text/plain")
+        form.month_field(:billing_month, min: "2026-01", max: "2026-12")
+        form.week_field(:delivery_week, step: 2)
         form.text_field(
           :email,
           maxlength: 40,
@@ -302,6 +304,8 @@ class FormBuilderRailsTest < ActiveSupport::TestCase
     hidden = form.at_css("input[type='hidden'][name='registration[source]']")
     checkbox = form.at_css("input[type='checkbox']")
     file = form.at_css("input[type='file']")
+    month = form.at_css("input[type='month']")
+    week = form.at_css("input[type='week']")
     text = form.at_css("input[type='text']")
 
     assert_equal "multipart/form-data", form["enctype"]
@@ -312,6 +316,11 @@ class FormBuilderRailsTest < ActiveSupport::TestCase
     assert_equal "no", form.at_css("input[type='hidden'][name='registration[terms]']")["value"]
     assert_equal "text/plain", file["accept"]
     assert_nil file["value"]
+    assert_equal "registration[billing_month]", month["name"]
+    assert_equal "2026-01", month["min"]
+    assert_equal "2026-12", month["max"]
+    assert_equal "registration[delivery_week]", week["name"]
+    assert_equal "2", week["step"]
     assert_equal "40", text["maxlength"]
     assert_equal "email", text["data-tracking-id"]
     assert_equal "email-help", text["aria-describedby"]

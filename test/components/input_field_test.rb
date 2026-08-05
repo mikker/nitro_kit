@@ -61,6 +61,35 @@ class InputFieldTest < ActiveSupport::TestCase
     end
   end
 
+  test "preserves month and week as native progressive enhancement types" do
+    month = render_node(
+      NitroKit::Field.new(nil, :billing_month, as: :month, value: "2026-08", min: "2026-01", max: "2026-12")
+    )
+    week = render_node(
+      NitroKit::Field.new(nil, :delivery_week, as: :week, value: "2026-W32", step: 2)
+    )
+
+    assert_equal "month", month.at_css("input")["type"]
+    assert_equal "2026-08", month.at_css("input")["value"]
+    assert_equal "2026-01", month.at_css("input")["min"]
+    assert_equal "2026-12", month.at_css("input")["max"]
+    assert_equal "week", week.at_css("input")["type"]
+    assert_equal "2026-W32", week.at_css("input")["value"]
+    assert_equal "2", week.at_css("input")["step"]
+  end
+
+  test "documents honest month and week validation and selection guidance" do
+    contracts = NitroKit::Engine.root.join("docs/component_contracts.md").read
+    browser_support = NitroKit::Engine.root.join("docs/browser_support.md").read
+    rails_integration = NitroKit::Engine.root.join("docs/rails_integration.md").read
+
+    assert_includes contracts, "browsers may expose text entry without picker, normalization"
+    assert_includes contracts, "server-validate `YYYY-MM` or `YYYY-Www`"
+    assert_includes browser_support, "Applications must accept and validate the submitted ISO shapes on the server"
+    assert_includes rails_integration, "form.field(..., as: :select,"
+    assert_match(/Nitro does not ship a generic\s+datepicker/, rails_integration)
+  end
+
   test "renders nested input ownership and invalid semantics" do
     node = render_node(
       NitroKit::Field.new(

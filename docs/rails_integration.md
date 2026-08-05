@@ -361,6 +361,15 @@ The complete builder surface includes:
 - `submit` and `button`.
 - Rails-shaped color, date, datetime, email, file, month, number, password, phone/telephone, range, rich text, search, text, textarea, time, URL, and week fields.
 
+`month_field` and `week_field` emit native `month` and `week` input types as
+progressive enhancement. Some supported desktop browsers expose ordinary text
+entry, and older iOS Safari releases lack week selection, so do not rely on a
+picker, browser normalization, or `min`, `max`, and `step`. Validate `YYYY-MM`
+and `YYYY-Www` plus domain range and increment rules on the model. If the user
+must choose from an exact bounded set, render `form.field(..., as: :select,
+options: ...)` with application-owned options. Nitro does not ship a generic
+datepicker for this case.
+
 `submit` renders a primary submit Button named `commit`, and `button` defaults
 to `type: :submit`. The Rails helpers Nitro does not style — `label`,
 `collection_select`, `grouped_collection_select`, `collection_radio_buttons`,

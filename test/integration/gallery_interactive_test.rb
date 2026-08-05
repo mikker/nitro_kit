@@ -121,6 +121,13 @@ class GalleryInteractiveTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-input-date-required[min='2026-07-13'][max='2026-08-13'][required]"
     assert_select "#gallery-input-date-readonly[value='2026-07-13'][readonly]"
     assert_select "#gallery-input-date-disabled[value='2026-07-13'][disabled]"
+    assert_select "#gallery-input-month[type='month'][name='billing[month]'][value='2026-08'][min='2026-01'][max='2026-12']"
+    assert_select "#gallery-input-month-description", text: /YYYY-MM/
+    assert_select "#gallery-input-week[type='week'][name='delivery[week]'][value='2026-W32']"
+    assert_select "#gallery-input-week-description", text: /YYYY-Www/
+    assert_select "[data-nk='select'] select#gallery-input-month-select[name='report[month]']" do
+      assert_select "option[value='2026-08'][selected]", text: "August 2026"
+    end
   end
 
   test "input page composes date field anatomy and scheduling action" do

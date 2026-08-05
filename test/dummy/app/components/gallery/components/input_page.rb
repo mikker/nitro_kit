@@ -145,6 +145,56 @@ module Gallery
               end
             end
           end
+
+          example(
+            "Month and ISO week",
+            slug: "input-month-week",
+            layout: :matrix,
+            description: "Native month and week types are progressive enhancement. The server must validate " \
+              "YYYY-MM or YYYY-Www and all range rules."
+          ) do
+            sample("Native month", slug: "month") do
+              render NitroKit::Field.new(
+                nil,
+                :billing_month,
+                as: :month,
+                id: "gallery-input-month",
+                name: "billing[month]",
+                value: "2026-08",
+                label: "Billing month",
+                description: "Enter YYYY-MM if your browser does not provide a picker.",
+                min: "2026-01",
+                max: "2026-12",
+                required: true
+              )
+            end
+            sample("Native ISO week", slug: "week") do
+              render NitroKit::Field.new(
+                nil,
+                :delivery_week,
+                as: :week,
+                id: "gallery-input-week",
+                name: "delivery[week]",
+                value: "2026-W32",
+                label: "Delivery week",
+                description: "Enter YYYY-Www if your browser does not provide a picker.",
+                required: true
+              )
+            end
+            sample("Exact month choice", slug: "month-select") do
+              render NitroKit::Field.new(
+                nil,
+                :reporting_month,
+                as: :select,
+                id: "gallery-input-month-select",
+                name: "report[month]",
+                value: "2026-08",
+                label: "Reporting month",
+                description: "Use explicit application-owned options when only these periods are valid.",
+                options: [ [ "July 2026", "2026-07" ], [ "August 2026", "2026-08" ] ]
+              )
+            end
+          end
         end
 
         example_section(
