@@ -160,8 +160,11 @@ class HotwireLifecycleTest < ApplicationSystemTestCase
   end
 
   def refresh_with_turbo_stream
+    wait_until(message: "Turbo did not finish loading") do
+      evaluate_script("typeof window.Turbo !== 'undefined'")
+    end
     execute_script <<~JAVASCRIPT
-      Turbo.renderStreamMessage('<turbo-stream action="refresh"></turbo-stream>');
+      window.Turbo.renderStreamMessage('<turbo-stream action="refresh"></turbo-stream>');
     JAVASCRIPT
   end
 
