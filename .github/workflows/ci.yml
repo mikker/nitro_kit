@@ -4,6 +4,7 @@ on:
   pull_request:
   push:
     branches: [main]
+    tags: ["v*"]
 
 jobs:
   test:
@@ -60,3 +61,33 @@ jobs:
           name: screenshots
           path: ${{ github.workspace }}/test/dummy/tmp/capybara
           if-no-files-found: ignore
+
+  deploy:
+    name: Deploy gallery
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [test, system]
+    timeout-minutes: 20
+    runs-on: ubuntu-latest
+    concurrency:
+      group: gallery-production-deploy
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: "0"
+
+      - name: Install SSH private key
+        uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
+
+      - name: Add host to SSH known_hosts
+        run: mkdir -p ~/.ssh && ssh-keyscan "${{ secrets.DOKKU_SERVER_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy
+        env:
+          DOKKU_HOST: ${{ secrets.DOKKU_SERVER_HOST }}
+          DOKKU_APP: nk-gallery
+        run: bin/deploy-gallery
