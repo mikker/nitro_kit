@@ -5,6 +5,8 @@ module BrowserHelpers
 
   def browser_console_entries
     browser.logs.get(:browser)
+  rescue Selenium::WebDriver::Error::UnsupportedCommandError
+    []
   end
 
   def severe_console_entries

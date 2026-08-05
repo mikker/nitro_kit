@@ -29,7 +29,11 @@ jobs:
         run: bin/rails test
 
   system:
-    name: Browser smoke
+    name: Browser smoke (${{ matrix.browser }})
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chrome, firefox]
     runs-on: ubuntu-latest
 
     steps:
@@ -38,6 +42,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install --no-install-recommends -y build-essential git pkg-config google-chrome-stable xvfb
           if command -v chromedriver; then sudo rm "$(command -v chromedriver)"; fi
+
+      - name: Set up Firefox
+        if: matrix.browser == 'firefox'
+        uses: browser-actions/setup-firefox@v1
 
       - name: Checkout code
         uses: actions/checkout@v7
@@ -50,6 +58,7 @@ jobs:
 
       - name: Run system tests
         env:
+          BROWSER: ${{ matrix.browser }}
           HEADLESS: "false"
           RAILS_ENV: test
         run: xvfb-run --auto-servernum bin/rails test:system
@@ -62,10 +71,38 @@ jobs:
           path: ${{ github.workspace }}/test/dummy/tmp/capybara
           if-no-files-found: ignore
 
+  safari:
+    name: Browser smoke (Safari)
+    runs-on: macos-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: .ruby-version
+          bundler-cache: true
+      - name: Enable Safari automation
+        run: sudo -n safaridriver --enable
+      - name: Run system tests
+        env:
+          BROWSER: safari
+          HEADLESS: "false"
+          PARALLEL_WORKERS: "1"
+          RAILS_ENV: test
+        run: bin/rails test:system
+      - name: Keep screenshots from failed system tests
+        uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: safari-screenshots
+          path: ${{ github.workspace }}/test/dummy/tmp/capybara
+          if-no-files-found: ignore
+
   deploy:
     name: Deploy gallery
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: [test, system]
+    needs: [test, system, safari]
     timeout-minutes: 20
     runs-on: ubuntu-latest
     concurrency:

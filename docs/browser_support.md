@@ -117,3 +117,40 @@ remain server-rendered, but content inside a closed dialog is not reachable.
 Each Nitro release records a dated tested-browser matrix. The rolling policy is
 the durable contract; the matrix records the concrete versions used to verify a
 particular release.
+
+## Nitro Kit 2.0 release matrix (2026-08-05)
+
+This is the release checklist for the next Nitro 2.0 release. “Automated” means
+the Rails/Selenium system suite runs in CI; it does not claim that Selenium
+reproduces every device or browser UI detail. Version numbers are the stable
+targets recorded on this date, and should be refreshed if the release slips.
+
+| Target          | Near-floor reference | Current release verification | Method                                                   |
+| --------------- | -------------------- | ---------------------------- | -------------------------------------------------------- |
+| Chrome desktop  | Chrome 128           | Chrome 151                   | Automated Ubuntu lane                                    |
+| Edge desktop    | Edge 128             | Edge 151                     | Manual Chromium release check (same engine as Chrome)    |
+| Chrome Android  | Chrome 128           | Chrome 151 on Android        | Manual real-device check                                 |
+| Firefox desktop | Firefox 128 ESR      | Firefox 153                  | Automated Ubuntu lane; capability branches are simulated |
+| Safari macOS    | Safari 18            | Safari 26.5                  | Automated `macos-latest` Selenium lane                   |
+| Safari iOS      | Safari 18 / iOS 18   | Safari 26.5 / iOS 26.5       | Manual real-device release check                         |
+
+The automated matrix intentionally tests current Chrome, Firefox, and macOS
+Safari rather than downloading historical binaries. The component system suite
+is the mapped smoke set: Dialog, Sheet, CommandPalette, Dropdown, and Accordion
+exercise open/close, focus, keyboard, and native/fallback paths; the Typeset
+component/gallery coverage covers long and narrow text; and
+`ProgressiveControlsTest` plus the Field/Input contract tests cover date,
+time, datetime-local, month, and week inputs. Run the full suite for each lane;
+the focused classes are the first release triage set.
+
+Before release, manually repeat those flows on one current Android Chrome and
+one current iPhone Safari, including narrow layout, VoiceOver/TalkBack where
+available, real form submission, and month/week ISO values. Record device OS,
+browser build, date, and any reduced-baseline behavior in the release notes.
+Do not describe the near-floor or iOS rows as automated coverage.
+
+The Firefox 128 ESR and older Safari behavior that cannot be installed
+reliably on GitHub-hosted runners is represented by capability-focused tests:
+stripping Invoker Commands and exercising Nitro fallbacks, plus the documented
+native month/week degradation. These branch simulations supplement, but do not
+replace, the dated real-browser checks.

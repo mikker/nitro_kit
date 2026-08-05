@@ -6,19 +6,30 @@ require_relative "system/support/browser_helpers"
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
   include BrowserHelpers
 
-  driven_by :selenium, using: :chrome, screen_size: [ 1440, 1200 ] do |options|
-    options.add_argument("--headless=new") unless ENV["HEADLESS"] == "false"
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-background-networking")
-    options.logging_prefs = { browser: "ALL" }
+  BROWSER = ENV.fetch("BROWSER", "chrome").downcase.to_sym
+  SUPPORTED_BROWSERS = %i[chrome firefox safari].freeze
+  raise ArgumentError, "BROWSER must be one of #{SUPPORTED_BROWSERS.join(", ")}" unless SUPPORTED_BROWSERS.include?(BROWSER)
+
+  driven_by :selenium, using: BROWSER, screen_size: [ 1440, 1200 ] do |options|
+    case BROWSER
+    when :chrome
+      options.add_argument("--headless=new") unless ENV["HEADLESS"] == "false"
+      options.add_argument("--no-sandbox")
+      options.add_argument("--disable-dev-shm-usage")
+      options.add_argument("--disable-background-networking")
+      options.logging_prefs = { browser: "ALL" }
+    when :firefox
+      options.add_argument("-headless") unless ENV["HEADLESS"] == "false"
+    end
   end
 
   setup do
-    browser.execute_cdp("Emulation.clearDeviceMetricsOverride")
-    # Headless Chrome otherwise reports document.hasFocus() == false for a
-    # backgrounded target and silently drops focus/focusin events.
-    browser.execute_cdp("Emulation.setFocusEmulationEnabled", enabled: true)
+    if BROWSER == :chrome
+      browser.execute_cdp("Emulation.clearDeviceMetricsOverride")
+      # Headless Chrome otherwise reports document.hasFocus() == false for a
+      # backgrounded target and silently drops focus/focusin events.
+      browser.execute_cdp("Emulation.setFocusEmulationEnabled", enabled: true)
+    end
     resize_viewport(width: 1440, height: 1200)
   end
 
