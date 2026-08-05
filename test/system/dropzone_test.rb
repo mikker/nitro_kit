@@ -64,7 +64,7 @@ class DropzoneSystemTest < ApplicationSystemTestCase
 
     attach_file("gallery-dropzone-multipart-input", file_fixture("evidence.txt"))
     assert_selector "#{root} [data-slot='dropzone-preview']", count: 1
-    assert_selector "#{root} [data-slot='dropzone-file-name']", text: "evidence.txt"
+    assert_equal "evidence.txt", find("#{root} [data-slot='dropzone-file-name']", visible: :all).text(:all)
     assert_no_selector "#{input}[aria-invalid]"
 
     execute_script("document.querySelector('#{input}').focus()")
