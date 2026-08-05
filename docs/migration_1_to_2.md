@@ -9,7 +9,7 @@ Treat a 1.x migration as a product-flow review, not a helper rename. Nitro Kit
 Add the 2.0 alpha prerelease to the application's Gemfile:
 
 ```ruby
-gem "nitro_kit", "2.0.0.alpha.2"
+gem "nitro_kit", "2.0.0.alpha.3"
 ```
 
 Bundler records the exact released version in `Gemfile.lock`; commit `Gemfile`

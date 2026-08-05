@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2.0.0.alpha.3
+
 ### Added
 
 - Add `--nk-button-radius` so applications can preserve a button-specific shape without changing inputs and surfaces.
@@ -12,10 +14,13 @@
 - Accept Rails-style nested and conditional class values through `desperately_need_a_class:`, normalizing retained external-integration hooks without manual string formatting, while directing migrations to review every use and aim for zero.
 - Make migration diagnostics surface usages of application-owned button treatments and provable 2.0 Table/Button runtime contract errors, and require semantic theme translation plus wide and narrow browser comparison.
 - Recognize explicit Stimulus controller registration used by JavaScript bundlers.
+- Explain the purpose and limits of generated host-integration smoke tests in each generated file.
 
 ### Fixed
 
 - Keep arbitrary multi-element Button content aligned inside the label slot.
+- Keep the command palette at a stable height while filtering destinations.
+- Use a neutral elevated surface instead of the primary accent for tooltips.
 - Resolve implicit FormBuilder labels only when rendered, so custom field blocks work under strict i18n.
 - Allow generated upgrade smoke tests to coexist with host catch-all routes while still rejecting exact route collisions.
 
