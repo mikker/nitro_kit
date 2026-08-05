@@ -131,6 +131,9 @@ Successful non-GET HTML submissions redirect with `303 See Other`. Invalid form 
   inline or multi-column.
 - Use component options, compound declarations, layouts, and documented `--nk-*` theme properties.
 - Keep an HTML fallback for every Turbo form flow.
+- Treat that HTML response as a Turbo transport fallback, not automatically a
+  JavaScript-free interaction; use `docs/browser_support.md` for the canonical
+  component classifications.
 - Test semantic output and stable owned attributes.
 
 Do not copy component source, add `nk_*` helpers, invent a general ERB bridge, mutate Nitro-owned Stimulus controllers, or pass `class:` and `style:`. The intentionally loud `desperately_need_a_class:` escape exists only for external integrations that require a class hook.

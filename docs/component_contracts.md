@@ -239,6 +239,11 @@ body and associates the external Button through the native `form` attribute.
 
 ## Behavior and dependency boundaries
 
+This table assigns ownership and dependencies. The canonical dated browser
+matrix and full/reduced/unavailable no-JavaScript classifications live in
+[`browser_support.md`](browser_support.md); do not infer a JavaScript-free
+interaction merely from server-rendered markup in this table.
+
 | Surface           | Nitro behavior                                                                                                                                                                                                                                                                                                                                                                                                  | Host dependency                                                                                    |
 | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | Appearance        | The bootstrap singleton restores and persists preference, resolves theme, owns media/storage listeners, and broadcasts updates even without a picker. Pickers only request and synchronize changes and release their subscriptions.                                                                                                                                                                             | Browser storage and `matchMedia`; Stimulus for pickers. Storage failure falls back without raising |

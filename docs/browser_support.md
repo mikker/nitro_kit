@@ -79,13 +79,50 @@ links, ordinary forms, and only the component-specific baselines documented in
 the component contracts are guaranteed without JavaScript. Turbo transport,
 Stimulus enhancements, and compatibility bridges are then unavailable.
 
-Each interactive component classifies its no-JavaScript baseline as full,
-reduced, or unavailable. When JavaScript is unavailable and the preferred
-native API is also unsupported, the component documentation must state the
-limitation and recipes for critical actions must retain an ordinary
-server-rendered path where practical.
+The classifications below describe the rendered page with Nitro JavaScript,
+Stimulus, and Turbo absent:
 
-### Accordion
+- **Full** means the component's essential content and action remain available;
+  documented convenience behavior may still be absent.
+- **Reduced** means useful content or a simpler native interaction remains, but
+  part of the component's defining interaction is absent.
+- **Unavailable** means the defining interaction cannot be completed. Critical
+  actions need an ordinary server-rendered route outside that component.
+
+A server-rendered HTML response is not automatically a JavaScript-free
+interaction. It can still place content in a closed dialog or rely on Turbo to
+submit, replace, or confirm. Likewise, an HTML response branch is the fallback
+for Turbo transport, not proof that the surrounding control works without
+JavaScript.
+
+### No-JavaScript component matrix
+
+| Component or family | Classification | Concise baseline without JavaScript |
+| ------------------- | -------------- | ------------------------------------ |
+| Links, Button, ButtonTo, and ordinary forms | Full | Native navigation and submission work. Submission indicators and Turbo transport or confirmation do not. |
+| Input, Select, Textarea, Switch, RadioButton, and Checkbox | Full; reduced for indeterminate Checkbox | Native controls edit and submit. `indeterminate: true` cannot be applied because it is a DOM property; month/week have the separate native-control limitations below. |
+| Accordion | Full; reduced single grouping where named `details` is unsupported | Every `details` opens and closes. Exclusive grouping depends on native shared-`name` support. |
+| AppShell | Full | Navigation stays visible in document flow at narrow widths; the enhanced drawer interaction is absent. |
+| Appearance | Reduced | CSS follows the system preference and server-rendered picker state remains visible, but a picker cannot apply or persist a new choice without the bootstrap runtime and controller. |
+| Avatar | Reduced | The native image and rendered fallback remain, but a failed image is not swapped to its fallback. |
+| Combobox | Full | The labelled native Select remains the named control and submission source; searchable listbox behavior is absent. |
+| Dialog and Sheet | Reduced with Invoker Commands; unavailable without them | Declarative trigger and close controls work only with native Invoker Commands. A server-open nonmodal Dialog remains visible; controller dismissal policy and the compatibility bridge are absent. |
+| CommandPalette | Reduced with Invoker Commands; unavailable without them | Native commands can open the dialog and its destination links navigate, but search, shortcut, announcements, and Turbo results are absent. Without Invoker Commands the closed content is unreachable. |
+| Dropdown | Reduced | Native Popover opens, closes, and light-dismisses. Menu keyboard conventions, focus restoration, collision-aware placement, and Nitro's outside-pointer compatibility fallback are absent; CSS supplies bounded top-left placement. |
+| Dropzone | Full | Its labelled native file input and ordinary form submission work; drag preview, policy feedback, progress, and direct upload are absent. |
+| RichTextArea | Unavailable unless the host editor provides its own fallback | Nitro wraps trusted host-editor markup and does not manufacture a plain-text control. The host editor owns its JavaScript and fallback contract. |
+| ProgressiveImage | Reduced | The native image loads and retains its accessible alternative; decode/load state and the visible error fallback are not enhanced. |
+| Tabs | Reduced | Every panel and its heading control remain visible and reachable; single-panel selection and APG keyboard behavior are absent. |
+| Toast | Reduced | Server-rendered flash content and live-region semantics remain; timed and manual dismissal are absent. |
+| Tooltip | Reduced | CSS hover and focus disclosure remain; Escape dismissal is absent. |
+
+Typeset is not interactive, but its no-JavaScript and no-`@scope` CSS path is
+also reduced: the fallback covers the documented semantic subset rather than
+full descendant parity.
+
+### Compatibility details
+
+#### Accordion
 
 Accordion always keeps native `details` and `summary` as the disclosure
 authority. Its no-JavaScript baseline is full for opening and closing each
@@ -140,8 +177,8 @@ system suite. Firefox and Safari run `bin/browser-smoke`, the single maintained
 priority lane for Dialog, Sheet, CommandPalette, Dropdown/AppearancePicker,
 Accordion, Hotwire lifecycle, Typeset contracts, and date-family input
 behavior. Chrome DevTools emulation remains Chrome-only coverage and is not
-presented as cross-engine verification. All browser lanes run with one worker;
-the Safari command uses no macOS `timeout` wrapper.
+presented as cross-engine verification. Priority smoke lanes run with one
+worker; Chrome retains the full suite's normal parallelism.
 
 Before release, manually repeat those flows on one current Android Chrome and
 one current iPhone Safari, including narrow layout, VoiceOver/TalkBack where

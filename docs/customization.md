@@ -459,6 +459,9 @@ eagerLoadControllersFrom("controllers", application);
 
 This registers Nitro's `controllers/nk/*` modules together with application controllers. Without importmap, server-rendered HTML and CSS remain available, but controller-dependent behavior and compatibility bridges are unavailable unless a bundler-based application exposes and registers those Stimulus modules itself. Nitro Kit ships no third-party JavaScript runtime, and Nitro Kit 2.0 has no JavaScript-package entrypoint.
 
+For the resulting behavior when those modules are not registered, use the
+canonical no-JavaScript matrix in [`browser_support.md`](browser_support.md).
+
 ## Optional Tailwind CSS v4 adapter
 
 Nitro Kit does not require Tailwind, Tailwind configuration, or Tailwind Preflight — it ships its own global preflight in the `nitro-kit.reset` cascade layer, which unlayered application CSS always overrides. The optional `nitro_kit-tailwind-v4.css` asset only establishes compatible cascade-layer order and maps Nitro tokens to common Tailwind v4 theme variables, including background, foreground, primary, destructive, radii, shadows, fonts, spacing, and transition defaults.

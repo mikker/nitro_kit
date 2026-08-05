@@ -44,7 +44,8 @@ practical target is current stable and popular evergreen releases from roughly
 the previous two years, with Mobile Safari as a first-class target. Small,
 feature-detected fallbacks preserve essential behavior without holding
 components to the oldest browser's feature set; visual polish may degrade. See
-the [browser support policy](docs/browser_support.md) for the complete contract.
+the [browser support policy](docs/browser_support.md) for the dated browser
+matrix and canonical full/reduced/unavailable no-JavaScript classifications.
 
 Maintaining Nitro Kit 1? Its frozen documentation remains at [v1.nitrokit.dev](https://v1.nitrokit.dev).
 

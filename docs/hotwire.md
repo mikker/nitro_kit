@@ -44,7 +44,11 @@ immediately; `submission_indicator: :spinner` additionally reveals an indicator
 after 1 second and lets the Button expand to fit it. Use `data-turbo-confirm` for
 compact destructive confirmation.
 Reviewed destructive flows may compose `DangerZone` and `Dialog`, but the
-dialog must still submit a real Rails form.
+dialog must still submit a real Rails form. `data-turbo-confirm` is a Turbo
+enhancement, while an ordinary server-owned review route is the no-JavaScript
+confirmation path; neither an HTML response branch nor a form inside a closed
+dialog supplies that interaction by itself. See the canonical classifications
+in [`browser_support.md`](browser_support.md).
 
 Keep application controllers small, declarative, and disposable. For a
 self-submitting control, the complete controller can be:

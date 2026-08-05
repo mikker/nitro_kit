@@ -21,6 +21,8 @@ established application outside the requested scope.
 7. For authentication, teams, application navigation, or settings, read
    `NITRO_KIT_ROOT/docs/patterns/application_foundation.md` completely.
 8. Read the matching Hotwire recipe before implementing an interaction.
+9. Read `NITRO_KIT_ROOT/docs/browser_support.md` before claiming an
+   interaction works without JavaScript.
 
 Never use a Nitro Kit 1.x helper, copied component, controller, or Tailwind
 contract as a substitute for the installed API.

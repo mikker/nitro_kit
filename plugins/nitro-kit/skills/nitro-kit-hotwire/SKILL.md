@@ -22,6 +22,8 @@ Make the server response and stable DOM boundary the interaction API. Add Stimul
    - application-wide confirmation and settings forms:
      `application_foundation.md`
 6. Inspect the installed Nitro component contract used by the recipe. Never assume a recipe from another version still matches.
+7. Read `NITRO_KIT_ROOT/docs/browser_support.md` for the canonical
+   full/reduced/unavailable no-JavaScript classification.
 
 Do not proceed with a remembered Nitro Kit 1.x API. Do not copy or recreate
 the installed gem's `nk--*` controllers under `app/javascript/controllers/nk`.
@@ -41,6 +43,8 @@ Keep frames around complete resource or collection regions, not individual butto
 - Redirect successful non-GET form submissions with `303 See Other`.
 - Render invalid HTML and Turbo submissions with `422 Unprocessable Entity` and the same invalid model instance.
 - Preserve an HTML response branch as the progressive fallback.
+- Do not describe that HTML branch as a JavaScript-free interaction when its
+  control still depends on Turbo or a closed overlay.
 - Let GET query parameters be the source of truth for filtering, sorting, and pagination.
 - Use native Nitro Dialog behavior for reviewed destructive actions. Use `data: { turbo_confirm: ... }` for compact confirmations that do not need a dialog.
 - Render flash through `NitroKit::Toast::FlashMessages`; the application owns setting the flash.

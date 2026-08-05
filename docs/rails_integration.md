@@ -120,6 +120,10 @@ controller checks each invoker's reflected relationship and uses
 `HTMLDialogElement.showModal()` or `close()` only when the native command will
 not run. CommandPalette uses the same bridge instead of replacing the native
 path. Without JavaScript, these controls still require native Invoker Commands.
+Server-rendered content inside a closed overlay is therefore not itself a
+JavaScript-free fallback; critical content needs an ordinary server review
+route. The canonical classification matrix is in
+[`browser_support.md`](browser_support.md).
 Dropdown uses native Popover as its source of truth and adds menu keyboard focus
 and positioning; Tooltip uses CSS for hover/focus and JavaScript only for Escape
 dismissal. See the [browser support policy](browser_support.md).

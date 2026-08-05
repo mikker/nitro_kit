@@ -14,7 +14,9 @@ Use the documentation shipped with the application's installed gem as the source
 3. Run `bundle show nitro_kit` and treat its output as `NITRO_KIT_ROOT`.
 4. Read `NITRO_KIT_ROOT/docs/agent_guide.md` completely.
 5. Read the relevant sections of `NITRO_KIT_ROOT/docs/component_contracts.md`. Read `customization.md` only for themes, tokens, or application composition.
-6. Inspect the installed component source when constructor or compound-slot details remain unclear. Never guess a component API from memory.
+6. For any interactive component or no-JavaScript claim, read the canonical
+   classifications in `NITRO_KIT_ROOT/docs/browser_support.md`.
+7. Inspect the installed component source when constructor or compound-slot details remain unclear. Never guess a component API from memory.
 
 For a Nitro Kit 1.x migration, read
 `NITRO_KIT_ROOT/docs/migration_1_to_2.md` before editing. Inventory product
