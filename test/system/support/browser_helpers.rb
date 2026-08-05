@@ -4,9 +4,11 @@ module BrowserHelpers
   end
 
   def browser_console_entries
-    browser.logs.get(:browser)
-  rescue Selenium::WebDriver::Error::UnsupportedCommandError
-    []
+    chrome? ? browser.logs.get(:browser) : []
+  end
+
+  def chrome?
+    ApplicationSystemTestCase::BROWSER == :chrome
   end
 
   def severe_console_entries

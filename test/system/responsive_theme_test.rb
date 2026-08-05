@@ -1,6 +1,8 @@
 require "application_system_test_case"
 
 class ResponsiveThemeTest < ApplicationSystemTestCase
+  setup { skip "Chrome DevTools emulation coverage" unless chrome? }
+
   Viewport = Data.define(:name, :width, :height)
   ReviewCase = Data.define(:kind, :slug, :state, :viewport, :theme, :selector, :probe)
 

@@ -1,6 +1,8 @@
 require "application_system_test_case"
 
 class ResponsiveLayoutTest < ApplicationSystemTestCase
+  setup { skip "Chrome DevTools emulation coverage" unless chrome? }
+
   GridState = Data.define(:width, :columns, :gap)
   FlexState = Data.define(:width, :direction, :gap, :alignment, :justification, :wrap)
 

@@ -5,7 +5,7 @@ class AppearanceSystemTest < ApplicationSystemTestCase
 
   teardown do
     execute_script("try { localStorage.removeItem(arguments[0]) } catch (_error) {}", STORAGE_KEY)
-    browser.execute_cdp("Emulation.setEmulatedMedia", media: "", features: [])
+    browser.execute_cdp("Emulation.setEmulatedMedia", media: "", features: []) if chrome?
   end
 
   test "explicit preference persists through reload and Turbo while every picker stays synchronized" do
@@ -53,6 +53,8 @@ class AppearanceSystemTest < ApplicationSystemTestCase
   end
 
   test "system preference follows live media changes without any picker while explicit preference does not" do
+    skip "Chrome DevTools media emulation coverage" unless chrome?
+
     clear_saved_preference
     emulate_system_theme("dark")
     visit gallery_component_path("appearance-picker")
@@ -159,6 +161,8 @@ class AppearanceSystemTest < ApplicationSystemTestCase
   end
 
   test "malformed and denied storage fall back safely while in-document changes still work" do
+    skip "Chrome DevTools new-document injection coverage" unless chrome?
+
     visit gallery_root_path
     execute_script("localStorage.setItem(arguments[0], 'sepia')", STORAGE_KEY)
     browser.navigate.refresh

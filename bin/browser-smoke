@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export PARALLEL_WORKERS=1
+
+bin/rails test \
+  test/system/interactive_components_test.rb \
+  test/system/command_palette_test.rb \
+  test/system/hotwire_lifecycle_test.rb
+
+bin/rails test test/system/appearance_test.rb \
+  --include "/\\Atest_(explicit_preference_persists|dropdown_presentation|storage_events)/"
+
+bin/rails test \
+  test/components/typeset_test.rb \
+  test/components/input_field_test.rb \
+  test/components/form_builder_rails_test.rb

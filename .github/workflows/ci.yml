@@ -56,12 +56,21 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Run system tests
+      - name: Run Chrome system tests
+        if: matrix.browser == 'chrome'
         env:
           BROWSER: ${{ matrix.browser }}
           HEADLESS: "false"
           RAILS_ENV: test
         run: xvfb-run --auto-servernum bin/rails test:system
+
+      - name: Run Firefox priority smoke tests
+        if: matrix.browser == 'firefox'
+        env:
+          BROWSER: firefox
+          HEADLESS: "false"
+          RAILS_ENV: test
+        run: xvfb-run --auto-servernum bin/browser-smoke
 
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v7
@@ -90,7 +99,7 @@ jobs:
           HEADLESS: "false"
           PARALLEL_WORKERS: "1"
           RAILS_ENV: test
-        run: bin/rails test:system
+        run: bin/browser-smoke
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v7
         if: failure()

@@ -125,23 +125,23 @@ the Rails/Selenium system suite runs in CI; it does not claim that Selenium
 reproduces every device or browser UI detail. Version numbers are the stable
 targets recorded on this date, and should be refreshed if the release slips.
 
-| Target          | Near-floor reference | Current release verification | Method                                                   |
-| --------------- | -------------------- | ---------------------------- | -------------------------------------------------------- |
-| Chrome desktop  | Chrome 128           | Chrome 151                   | Automated Ubuntu lane                                    |
-| Edge desktop    | Edge 128             | Edge 151                     | Manual Chromium release check (same engine as Chrome)    |
-| Chrome Android  | Chrome 128           | Chrome 151 on Android        | Manual real-device check                                 |
-| Firefox desktop | Firefox 128 ESR      | Firefox 153                  | Automated Ubuntu lane; capability branches are simulated |
-| Safari macOS    | Safari 18            | Safari 26.5                  | Automated `macos-latest` Selenium lane                   |
-| Safari iOS      | Safari 18 / iOS 18   | Safari 26.5 / iOS 26.5       | Manual real-device release check                         |
+| Target          | Near-floor reference | Current release verification | Method                                                |
+| --------------- | -------------------- | ---------------------------- | ----------------------------------------------------- |
+| Chrome desktop  | Chrome 128           | Chrome 151                   | Automated Ubuntu full-system-suite lane               |
+| Edge desktop    | Edge 128             | Edge 151                     | Manual Chromium release check (same engine as Chrome) |
+| Chrome Android  | Chrome 128           | Chrome 151 on Android        | Manual real-device check                              |
+| Firefox desktop | Firefox 128 ESR      | Firefox 153                  | Automated Ubuntu priority-smoke lane                  |
+| Safari macOS    | Safari 18            | Safari 26.5                  | Automated `macos-latest` priority-smoke lane          |
+| Safari iOS      | Safari 18 / iOS 18   | Safari 26.5 / iOS 26.5       | Manual real-device release check                      |
 
 The automated matrix intentionally tests current Chrome, Firefox, and macOS
-Safari rather than downloading historical binaries. The component system suite
-is the mapped smoke set: Dialog, Sheet, CommandPalette, Dropdown, and Accordion
-exercise open/close, focus, keyboard, and native/fallback paths; the Typeset
-component/gallery coverage covers long and narrow text; and
-`ProgressiveControlsTest` plus the Field/Input contract tests cover date,
-time, datetime-local, month, and week inputs. Run the full suite for each lane;
-the focused classes are the first release triage set.
+Safari rather than downloading historical binaries. Chrome runs the full
+system suite. Firefox and Safari run `bin/browser-smoke`, the single maintained
+priority lane for Dialog, Sheet, CommandPalette, Dropdown/AppearancePicker,
+Accordion, Hotwire lifecycle, Typeset contracts, and date-family input
+behavior. Chrome DevTools emulation remains Chrome-only coverage and is not
+presented as cross-engine verification. All browser lanes run with one worker;
+the Safari command uses no macOS `timeout` wrapper.
 
 Before release, manually repeat those flows on one current Android Chrome and
 one current iPhone Safari, including narrow layout, VoiceOver/TalkBack where
