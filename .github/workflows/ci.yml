@@ -78,13 +78,11 @@ jobs:
         with:
           fetch-depth: "0"
 
-      - name: Install SSH private key
-        uses: webfactory/ssh-agent@v0.9.1
+      - name: Set up SSH
+        uses: brnbw/actions/setup-ssh@eaef61d361491dfe22dec075718bb91779540d2a # v1.0.0
         with:
-          ssh-private-key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
-
-      - name: Add host to SSH known_hosts
-        run: mkdir -p ~/.ssh && ssh-keyscan "${{ secrets.DOKKU_SERVER_HOST }}" >> ~/.ssh/known_hosts
+          private-key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
+          known-hosts: ${{ secrets.DOKKU_SSH_KNOWN_HOSTS }}
 
       - name: Deploy
         env:
