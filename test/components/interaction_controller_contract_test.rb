@@ -8,9 +8,11 @@ class InteractionControllerContractTest < ActiveSupport::TestCase
       [ name, CONTROLLER_ROOT.join("#{name}_controller.js").read ]
     end
 
-    sources.each_value do |source|
+    sources.each do |name, source|
       refute_includes source, "@floating-ui"
       refute_includes source, "@github/combobox-nav"
+      next if name == "dropdown"
+
       refute_includes source, "addEventListener"
       refute_includes source, "MutationObserver"
       refute_includes source, "requestAnimationFrame"
@@ -18,6 +20,8 @@ class InteractionControllerContractTest < ActiveSupport::TestCase
 
     assert_includes sources.fetch("dropdown"), "showPopover"
     assert_includes sources.fetch("dropdown"), "hidePopover"
+    assert_includes sources.fetch("dropdown"), "pointerdown"
+    assert_includes sources.fetch("dropdown"), "composedPath"
     refute_includes sources.fetch("dropdown"), "aria-expanded"
     refute_includes sources.fetch("dropdown"), "dataset.state"
     assert_includes sources.fetch("combobox"), "setCustomValidity"

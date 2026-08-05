@@ -3222,7 +3222,9 @@
     min-inline-size: 12rem;
     max-inline-size: min(24rem, calc(100vw - (var(--nk-space) * 8)));
     max-block-size: min(24rem, calc(100dvh - (var(--nk-space) * 8)));
-    inset: var(--_nk-overlay-top, 50%) auto auto var(--_nk-overlay-left, 50%);
+    inset: var(--nk-space);
+    inset: var(--_nk-overlay-top, var(--nk-space)) auto auto
+      var(--_nk-overlay-left, var(--nk-space));
     margin: 0;
     padding: var(--nk-space);
     overflow: auto;

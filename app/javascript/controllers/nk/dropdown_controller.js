@@ -7,8 +7,13 @@ import {
 export default class extends Controller {
   static targets = ["trigger", "content", "item"];
 
+  connect() {
+    this.outsidePointerDown = this.outsidePointerDown.bind(this);
+  }
+
   disconnect() {
     this.stopPositioning?.();
+    this.stopOutsidePointerFallback();
   }
 
   openFromKeyboard(event) {
@@ -36,10 +41,12 @@ export default class extends Controller {
   focusOpened(event) {
     if (event.newState === "open") {
       this.startPositioning();
+      this.startOutsidePointerFallback();
       this.focusInitialItem();
     } else {
       this.stopPositioning?.();
       this.stopPositioning = null;
+      this.stopOutsidePointerFallback();
       this.focusLast = false;
       this.restoreFocus();
     }
@@ -63,6 +70,37 @@ export default class extends Controller {
 
     update();
     this.stopPositioning = observeOverlayPosition(update);
+  }
+
+  startOutsidePointerFallback() {
+    if (!this.supportsPopover || this.stopOutsidePointerFallbackListener)
+      return;
+
+    document.addEventListener("pointerdown", this.outsidePointerDown, true);
+    this.stopOutsidePointerFallbackListener = () => {
+      document.removeEventListener(
+        "pointerdown",
+        this.outsidePointerDown,
+        true,
+      );
+      this.stopOutsidePointerFallbackListener = null;
+    };
+  }
+
+  stopOutsidePointerFallback() {
+    this.stopOutsidePointerFallbackListener?.();
+  }
+
+  outsidePointerDown(event) {
+    if (!this.contentTarget.matches(":popover-open")) return;
+
+    const path = event.composedPath?.();
+    const insideMenu = path
+      ? path.includes(this.contentTarget) || path.includes(this.triggerTarget)
+      : this.contentTarget.contains(event.target) ||
+        this.triggerTarget.contains(event.target);
+
+    if (!insideMenu) this.hide();
   }
 
   navigate(event) {
@@ -121,6 +159,13 @@ export default class extends Controller {
   get enabledItems() {
     return this.itemTargets.filter(
       (item) => !item.disabled && item.getAttribute("aria-disabled") !== "true",
+    );
+  }
+
+  get supportsPopover() {
+    return (
+      typeof this.contentTarget.showPopover === "function" &&
+      typeof this.contentTarget.hidePopover === "function"
     );
   }
 }

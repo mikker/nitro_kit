@@ -96,6 +96,26 @@ class AppearanceSystemTest < ApplicationSystemTestCase
     assert_no_severe_console_errors
   end
 
+  test "dropdown presentation closes on an outside pointer without selecting a preference" do
+    visit_without_saved_preference(gallery_component_path("appearance-picker"))
+
+    trigger = "#gallery-appearance-dropdown-dropdown-trigger"
+    content = "#gallery-appearance-dropdown-dropdown-content"
+    find(trigger).click
+    assert_selector "#{content}:popover-open"
+
+    execute_script <<~JAVASCRIPT
+      document.querySelector("h1").dispatchEvent(
+        new PointerEvent("pointerdown", { bubbles: true, composed: true })
+      );
+    JAVASCRIPT
+
+    assert_selector "#{content}:not(:popover-open)", visible: :all
+    assert_document_appearance(preference: "system", theme: "light")
+    assert_equal glyph_for("system"), trigger_glyph
+    assert_no_severe_console_errors
+  end
+
   test "storage events synchronize multiple pickers and repeated bootstrap execution remains singular" do
     visit_without_saved_preference(gallery_component_path("appearance-picker"))
     picker_count = all("[data-nk='appearance-picker']").size

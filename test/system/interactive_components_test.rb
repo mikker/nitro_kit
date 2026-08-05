@@ -204,6 +204,45 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
     assert_no_severe_console_errors(context: path)
   end
 
+  test "dropdown closes through one outside-pointer fallback listener across Turbo reconnects" do
+    visit_component("dropdown")
+    root = "#gallery-dropdown-account"
+    trigger = "#{root}-trigger"
+    content = "#{root}-content"
+
+    install_dropdown_pointer_listener_counter
+
+    find(trigger).click
+    assert_selector "#{content}:popover-open"
+    assert_equal 1, dropdown_pointer_listener_count("added")
+
+    find(trigger).click
+    assert_selector "#{content}:not(:popover-open)", visible: :all
+    assert_equal 1, dropdown_pointer_listener_count("removed")
+
+    find(trigger).click
+    dispatch_outside_pointer
+    assert_selector "#{content}:not(:popover-open)", visible: :all
+    assert_equal 2, dropdown_pointer_listener_count("added")
+    assert_equal 2, dropdown_pointer_listener_count("removed")
+
+    find(trigger).click
+    assert_selector "#{content}:popover-open"
+    assert_equal 3, dropdown_pointer_listener_count("added")
+
+    execute_script("Turbo.visit(arguments[0])", gallery_component_path("button"))
+    assert_current_path gallery_component_path("button")
+    assert_equal 3, dropdown_pointer_listener_count("removed")
+    click_gallery_navigation_link("Dropdown")
+
+    find(trigger).click
+    assert_selector "#{content}:popover-open"
+    assert_equal 4, dropdown_pointer_listener_count("added")
+    dispatch_outside_pointer
+    assert_equal 4, dropdown_pointer_listener_count("removed")
+    assert_no_severe_console_errors
+  end
+
   test "tooltip opens for focus and pointer intent and closes on escape and pointer leave" do
     path = visit_component("tooltip")
     root = "#gallery-tooltip-primary"
@@ -368,6 +407,38 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
         arguments[0].value = arguments[1]
         arguments[0].dispatchEvent(new Event("input", { bubbles: true }))
         arguments[0].dispatchEvent(new Event("change", { bubbles: true }))
+      JAVASCRIPT
+    end
+
+    def install_dropdown_pointer_listener_counter
+      execute_script <<~JAVASCRIPT
+        window.__dropdownPointerListeners = { added: 0, removed: 0 };
+        const addEventListener = document.addEventListener.bind(document);
+        const removeEventListener = document.removeEventListener.bind(document);
+        document.addEventListener = (type, listener, options) => {
+          if (type === "pointerdown" && listener.name === "bound outsidePointerDown") {
+            window.__dropdownPointerListeners.added += 1;
+          }
+          addEventListener(type, listener, options);
+        };
+        document.removeEventListener = (type, listener, options) => {
+          if (type === "pointerdown" && listener.name === "bound outsidePointerDown") {
+            window.__dropdownPointerListeners.removed += 1;
+          }
+          removeEventListener(type, listener, options);
+        };
+      JAVASCRIPT
+    end
+
+    def dropdown_pointer_listener_count(kind)
+      evaluate_script("window.__dropdownPointerListeners[arguments[0]]", kind)
+    end
+
+    def dispatch_outside_pointer
+      execute_script <<~JAVASCRIPT
+        document.querySelector("h1").dispatchEvent(
+          new PointerEvent("pointerdown", { bubbles: true, composed: true })
+        );
       JAVASCRIPT
     end
 end

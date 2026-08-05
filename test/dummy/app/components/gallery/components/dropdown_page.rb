@@ -15,7 +15,7 @@ module Gallery
         example_section(
           "Placements",
           slug: "dropdown-placements",
-          description: "Anchor positioning follows the trigger when supported and safely centers otherwise."
+          description: "Nitro JavaScript positions menus from their triggers; the native no-JavaScript baseline remains safely bounded."
         ) do
           example("Placement matrix", slug: "dropdown-placement-matrix", layout: :matrix) do
             NitroKit::Dropdown::PLACEMENTS.each do |placement|

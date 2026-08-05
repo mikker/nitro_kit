@@ -212,11 +212,31 @@ class DropdownComponentTest < ActiveSupport::TestCase
     assert_includes source, "this.hide({ restoreFocus: false })"
   end
 
+  test "uses native popover dismissal for an outside-pointer fallback with reconnect cleanup" do
+    source = NitroKit::Engine.root.join("app/javascript/controllers/nk/dropdown_controller.js").read
+
+    assert_includes source, "connect()"
+    assert_includes source, "this.outsidePointerDown = this.outsidePointerDown.bind(this)"
+    assert_includes source, 'document.addEventListener("pointerdown", this.outsidePointerDown, true)'
+    assert_includes source, "document.removeEventListener("
+    assert_includes source, '"pointerdown",'
+    assert_includes source, "this.outsidePointerDown"
+    assert_includes source, "event.composedPath?.()"
+    assert_includes source, "path.includes(this.contentTarget) || path.includes(this.triggerTarget)"
+    assert_includes source, "if (!insideMenu) this.hide()"
+    assert_includes source, "this.stopOutsidePointerFallback()"
+    assert_includes source, "typeof this.contentTarget.hidePopover === \"function\""
+    refute_includes source, "dataset.state"
+    refute_includes source, "navigator.userAgent"
+  end
+
   test "positions the popover from controller-owned coordinates" do
     source = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/dropdown.css").read
 
     assert_includes source, "--_nk-overlay-top"
     assert_includes source, "--_nk-overlay-left"
+    assert_includes source, "inset: var(--nk-space)"
+    assert_includes source, "var(--_nk-overlay-top, var(--nk-space))"
     assert_includes source, "translate: none"
     refute_includes source, "anchor("
     assert_includes source, ":popover-open"
