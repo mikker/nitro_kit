@@ -28,8 +28,11 @@ class ProgressiveImageControllerContractTest < ActiveSupport::TestCase
     assert_includes SOURCE, "fallbackTargetConnected(fallback)"
     assert_includes SOURCE, 'this.setState("loading")'
     assert_includes SOURCE, 'this.setState("empty")'
+    assert_includes SOURCE, "if (image.complete)"
+    assert_includes SOURCE, 'this.setState(image.naturalWidth > 0 ? "loaded" : "error")'
     assert_includes SOURCE, "!this.hasImageTarget"
     assert_includes SOURCE, "revision !== this.revision"
     assert_includes SOURCE, "delete this.element.dataset.enhanced"
+    assert_includes SOURCE, "prepareForCache()"
   end
 end

@@ -51,6 +51,7 @@ class ProgressiveImageTest < ActiveSupport::TestCase
     assert_equal "loading", node["data-state"]
     assert_equal "true", node["aria-busy"]
     assert_equal "nk--progressive-image", node["data-controller"]
+    assert_equal "turbo:before-cache@document->nk--progressive-image#prepareForCache", node["data-action"]
 
     placeholder = node.at_css("[data-slot='progressive-image-placeholder']")
     image = node.at_css("[data-slot='progressive-image-image']")
@@ -94,6 +95,7 @@ class ProgressiveImageTest < ActiveSupport::TestCase
 
     assert_equal "empty", node["data-state"]
     assert_nil node["data-controller"]
+    assert_nil node["data-action"]
     assert_nil node["aria-busy"]
     assert_empty node.css("img")
 

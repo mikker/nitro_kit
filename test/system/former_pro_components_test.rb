@@ -44,6 +44,13 @@ class FormerProComponentsTest < ApplicationSystemTestCase
 
     assert_current_path gallery_component_path("progressive-image")
     assert_selector "#gallery-progressive-image-loaded[data-state='loaded']", count: 1
+    assert_equal "1", evaluate_script(<<~JAVASCRIPT)
+      getComputedStyle(
+        document.querySelector(
+          "#gallery-progressive-image-loaded [data-slot='progressive-image-image']"
+        )
+      ).opacity
+    JAVASCRIPT
     execute_script(
       "arguments[0].scrollIntoView({ block: 'center' })",
       find("#gallery-progressive-image-error")
@@ -89,6 +96,26 @@ class FormerProComponentsTest < ApplicationSystemTestCase
 
     assert_equal "1", visibility.fetch("imageOpacity")
     assert_equal "0", visibility.fetch("placeholderOpacity")
+    assert_no_severe_console_errors(context: path)
+  end
+
+  test "Turbo caches progressive images without transient loading styles" do
+    path = gallery_component_path("progressive-image")
+    visit path
+
+    root = "#gallery-progressive-image-loaded"
+    assert_selector "#{root}[data-state='loaded'][data-enhanced='true']"
+
+    execute_script("document.dispatchEvent(new Event('turbo:before-cache'))")
+
+    assert_selector "#{root}:not([data-enhanced])"
+    opacity = evaluate_script(<<~JAVASCRIPT)
+      getComputedStyle(
+        document.querySelector("#{root} [data-slot='progressive-image-image']")
+      ).opacity
+    JAVASCRIPT
+
+    assert_equal "1", opacity
     assert_no_severe_console_errors(context: path)
   end
 end

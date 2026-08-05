@@ -24,6 +24,10 @@ export default class extends Controller {
     if (this.hasFallbackTarget) this.fallbackTarget.hidden = true;
   }
 
+  prepareForCache() {
+    delete this.element.dataset.enhanced;
+  }
+
   imageTargetConnected(image) {
     if (this.connected) this.bindImage(image);
   }
@@ -47,11 +51,14 @@ export default class extends Controller {
     this.releaseImage();
     this.boundImage = image;
     this.revision = (this.revision || 0) + 1;
-    this.setState("loading");
     image.addEventListener("load", this.onLoad);
     image.addEventListener("error", this.onError);
 
-    if (image.complete) this.reflectComplete(image);
+    if (image.complete) {
+      this.reflectComplete(image);
+    } else {
+      this.setState("loading");
+    }
   }
 
   releaseImage() {
@@ -98,11 +105,8 @@ export default class extends Controller {
   }
 
   reflectComplete(image) {
-    if (image.naturalWidth > 0) {
-      this.loaded();
-    } else {
-      this.failed();
-    }
+    this.revision = (this.revision || 0) + 1;
+    this.setState(image.naturalWidth > 0 ? "loaded" : "error");
   }
 
   setState(state) {

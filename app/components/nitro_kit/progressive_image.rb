@@ -34,7 +34,8 @@ module NitroKit
           aria: { busy: @attached ? true : nil },
           data: {
             state: @attached ? "loading" : "empty",
-            controller: @attached ? "nk--progressive-image" : nil
+            controller: @attached ? "nk--progressive-image" : nil,
+            action: @attached ? "turbo:before-cache@document->nk--progressive-image#prepareForCache" : nil
           }.compact
         },
         html:,
