@@ -109,9 +109,16 @@ the gem controller, because that would bypass the integration under test.
 
 ## Stimulus and importmap
 
-Enhanced components use gem-owned Stimulus controllers, including `nk--app-shell`, `nk--appearance`, `nk--avatar`, `nk--checkable`, `nk--combobox`, `nk--dropdown`, `nk--dropzone`, `nk--progressive-image`, `nk--tabs`, `nk--toast`, and `nk--tooltip`.
+Enhanced components use gem-owned Stimulus controllers, including `nk--app-shell`, `nk--appearance`, `nk--avatar`, `nk--checkable`, `nk--combobox`, `nk--dialog`, `nk--dropdown`, `nk--dropzone`, `nk--progressive-image`, `nk--tabs`, `nk--toast`, and `nk--tooltip`.
 
-Accordion and Dialog are controller-free: native `details` grouping and declarative `command`/`commandfor` own their complete interaction. Dropdown uses native Popover as its source of truth and adds only menu keyboard focus; Tooltip uses CSS for hover/focus and JavaScript only for Escape dismissal. Nitro does not promise dialog light dismiss.
+Accordion disclosure is controller-free; named single-group exclusivity may
+degrade near the browser-support floor. Dialog and Sheet prefer declarative
+`command`/`commandfor`, while `nk--dialog` owns backdrop and cancel policy. The
+current alpha does not yet bridge Invoker Commands on older supported browsers,
+so its no-JavaScript Dialog path works only where those commands are available.
+Dropdown uses native Popover as its source of truth and adds menu keyboard focus
+and positioning; Tooltip uses CSS for hover/focus and JavaScript only for Escape
+dismissal. See the [browser support policy](browser_support.md).
 
 When `importmap-rails` is present, the engine adds its importmap and asset paths automatically. The application must still install Stimulus and provide the normal controller loader:
 
@@ -122,7 +129,10 @@ import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading";
 eagerLoadControllersFrom("controllers", application);
 ```
 
-Nitro Kit packages no third-party JavaScript. Accordion, Dialog, date inputs, and Switch use native browser behavior and need no controllers.
+Nitro Kit packages no third-party JavaScript. Accordion disclosure, date inputs,
+and Switch use native browser behavior. Dialog and Sheet mount their packaged
+controller for dismissal policy and, once the compatibility issue lands, the
+feature-detected Invoker Commands bridge.
 
 The engine deliberately boots when importmap is absent. In that configuration, Ruby and CSS remain available, but automatic JavaScript registration does not: a bundler-based application must expose and register the controller modules itself. Nitro Kit 2.0 does not ship a JavaScript-package entrypoint.
 
@@ -209,11 +219,11 @@ render NitroKit::CommandPalette.new(id: "workspace-search", label: "Search works
 end
 ```
 
-The application remains responsible for authorization and must render only destinations the current user may visit. Native dialog commands and links provide the baseline; Stimulus adds filtering and the Command-K or Control-K shortcut. Use `shortcut: false` for any additional palette on the same document so only one component owns the global shortcut.
+The application remains responsible for authorization and must render only destinations the current user may visit. Stimulus adds filtering and the Command-K or Control-K shortcut. Without JavaScript, the trigger and destination links are available only where declarative dialog commands are supported. Use `shortcut: false` for any additional palette on the same document so only one component owns the global shortcut.
 
 ### Server-rendered command palette results
 
-For a large or dynamic destination set, pass a GET endpoint through `search_url:`. Keep a useful authorized set in the declaration block: those links are the no-JavaScript baseline and the immediate first render.
+For a large or dynamic destination set, pass a GET endpoint through `search_url:`. Keep a useful authorized set in the declaration block: those links are the immediate first render and the no-JavaScript baseline in browsers with declarative dialog commands.
 
 ```ruby
 render NitroKit::CommandPalette.new(

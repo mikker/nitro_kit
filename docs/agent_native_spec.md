@@ -66,6 +66,20 @@ Rails remains first-class where Rails owns meaningful semantics:
 
 Applications include the `Phlex::Rails::Helpers::*` adapters they actually use. Nitro Kit does not recreate Rails helpers under an `nk_*` namespace.
 
+### Browser support
+
+Nitro Kit uses modern web standards while keeping core content and actions
+usable for the overwhelming majority of people on maintained browsers. The
+practical target is current stable and popular evergreen Chrome, Edge, Firefox,
+macOS Safari, and iOS Safari releases from roughly the two years before each
+Nitro release. Mobile Safari is a first-class functional target. Nitro
+feature-detects newer capabilities and owns the smallest fallback needed to
+keep essential actions operable without holding components to the oldest
+browser's feature set. Visual polish may degrade when the underlying content,
+request path, semantics, and keyboard behavior remain intact. The versioned
+public contract and no-JavaScript policy are in
+[`browser_support.md`](browser_support.md).
+
 ## Consistency boundary
 
 The initial correctness layer is explicit Ruby APIs and immediate component validation, not a generalized page linter.
@@ -153,11 +167,14 @@ There is no Datepicker component and no date controller. `Input`'s `type: :date`
 
 ### Native interaction authority
 
-Nitro uses current evergreen HTML primitives as the source of truth before adding JavaScript:
+Nitro uses standards-based HTML primitives as the preferred path before adding
+JavaScript. Native is not proof of compatibility: the primitive must cover the
+browser-support window or Nitro must supply a focused fallback for essential
+behavior.
 
-- Accordion items are native `details`/`summary` disclosures. Single mode uses one shared `name`; it has no controller or disabled-item abstraction.
-- Dialog declarations produce exactly one native panel through the required `panel(title:, description: nil, nonmodal: false)` declaration, and Nitro renders close button, title, description, then application content inside it. `command="show-modal"` and `command="close"` controls target the panel through `commandfor`; `nonmodal: true` is the only server-rendered open mode and cannot be combined with a trigger. `nk--dialog` adds only backdrop light dismissal and, for `dismissible: false`, Escape suppression.
-- Dropdown visibility and invoker state belong to `popover="auto"`. `trigger` forwards `icon:`, `icon_end:`, and `label:` to Button, and `item` accepts its own `icon:`. Its small controller supplies menu focus, arrow/Home/End navigation, and focus restoration to the trigger when the popover closes with focus still inside it. CSS anchor positioning follows the trigger when supported and otherwise centers the menu safely in the viewport.
+- Accordion items are native `details`/`summary` disclosures. Single mode uses one shared `name`; browsers without named-details grouping degrade to independently open disclosures until the compatibility work supplies or rejects a fallback.
+- Dialog declarations produce exactly one native panel through the required `panel(title:, description: nil, nonmodal: false)` declaration, and Nitro renders close button, title, description, then application content inside it. `command="show-modal"` and `command="close"` controls target the panel through `commandfor`; `nonmodal: true` is the only server-rendered open mode and cannot be combined with a trigger. `nk--dialog` handles backdrop light dismissal and, for `dismissible: false`, Escape suppression. Invoker Commands do not cover the full browser-support window yet; the current alpha's missing imperative fallback is a known compatibility gap.
+- Dropdown visibility and invoker state belong to `popover="auto"`. `trigger` forwards `icon:`, `icon_end:`, and `label:` to Button, and `item` accepts its own `icon:`. Its small controller supplies menu focus, arrow/Home/End navigation, focus restoration, and collision-aware positioning. The unenhanced placement and older Mobile Safari light-dismiss behavior remain compatibility-audit work.
 - CommandPalette uses one native dialog, a declarative search-shaped trigger, and native destination links. Its controller adds the optional Command-K/Control-K shortcut, local filtering, result announcements, and Turbo cleanup without replacing link navigation or retaining hidden application policy. With `search_url:`, the same input submits debounced GET requests into the owned Turbo Frame; the endpoint returns `CommandPalette::Results` HTML and remains responsible for authorization.
 - Tooltip visibility belongs to CSS hover and focus selectors, including a hoverable bridge across the visual gap. Button triggers cover ordinary buttons and links; `as: :custom` forwards owned HTML, ARIA, and data to an existing focusable mutation or compound trigger. Its controller only implements Escape dismissal and reset.
 
@@ -294,7 +311,7 @@ The audited former-Pro catalog maps completely to the new architecture:
 
 | Former surface                                           | 2.0 disposition                                                                                                                               |
 | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| Sidebar and Top Navigation layouts                       | Rebuilt as `AppShell` for whole-application navigation and `Sheet` for contextual narrow panels                                                |
+| Sidebar and Top Navigation layouts                       | Rebuilt as `AppShell` for whole-application navigation and `Sheet` for contextual narrow panels                                               |
 | Details Table                                            | Rebuilt as `DetailsTable`                                                                                                                     |
 | Dropzone                                                 | Rebuilt as native `Dropzone`; Dropzone.js is removed                                                                                          |
 | Progressive Image                                        | Rebuilt as `ProgressiveImage`                                                                                                                 |
@@ -360,7 +377,7 @@ Turbo Frames and Turbo Streams remain Rails helpers used directly from Phlex. In
 
 Server-rendered feedback is the Rails flash. `Toast` renders `section[data-nk="toast"][role="region"]` wrapping `ol[data-slot="toast-list"]`, whose id is the toast id plus `-list`, so the default region is addressable as `nk-toast-list` and a Turbo Stream can append `NitroKit::Toast::Item` to it directly. Items carry `role="status"`, or `role="alert"` for the error variant, so a server-rendered item announces without waiting for a DOM mutation, and every item is `data-turbo-temporary` so a cached page never replays stale feedback while the region and list survive. `Toast::FlashMessages` maps an enumerable Rails flash onto the same items. Nitro does not add a client-side notification store.
 
-The engine ships CSS assets and Nitro-owned Stimulus controllers for enhancements that native HTML and CSS do not cover. When importmap is present it adds its pins automatically; the host still owns Stimulus and its normal controller loader. The engine boots without importmap: Accordion is complete with no controller at all and Dialog still opens and closes through declarative `command`/`commandfor`, while enhanced interactions such as Dropdown keyboard navigation, Tooltip Escape dismissal, and Dialog backdrop light dismissal require their pinned controllers. Nitro Kit 2.0 does not define a JavaScript-package entrypoint for automatic bundler registration.
+The engine ships CSS assets and Nitro-owned Stimulus controllers for enhancements and compatibility bridges that native HTML and CSS do not cover throughout the support window. When importmap is present it adds its pins automatically; the host still owns Stimulus and its normal controller loader. The engine boots without importmap, but only the component-specific no-JavaScript baselines remain. In the current alpha, Accordion disclosure works while unsupported named grouping degrades, and Dialog opens without its controller only where declarative `command`/`commandfor` is supported. Nitro Kit 2.0 does not define a JavaScript-package entrypoint for automatic bundler registration.
 
 Date inputs, Switch, and ordinary checked state deliberately use native inputs rather than custom controllers. The one exception is `indeterminate:`, which HTML cannot express as an attribute: `Checkbox` mounts `nk--checkable` only in that case, and the controller's whole job is to apply the native DOM property and own the matching `data-state="indeterminate"`. No third-party JavaScript runtime is vendored.
 

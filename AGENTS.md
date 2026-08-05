@@ -74,6 +74,9 @@ Rails helpers remain welcome where Rails supplies real semantics: forms, routes,
 - Keep Stimulus controllers small and state visible through ARIA and `data-state`.
 - Remove listeners, observers, timers, and other external resources in `disconnect`.
 - Test behavior through Turbo Drive, Frames, Streams, and morphing.
+- Follow `docs/browser_support.md`. Treat Mobile Safari as a priority target;
+  native APIs outside the support window need capability detection and a
+  Nitro-owned fallback when core functionality depends on them.
 
 Importmap applications receive Nitro's controller pins from the engine, but the host application still owns Stimulus and its controller loader. Do not add vendored third-party JavaScript or assume a JavaScript-package entrypoint exists.
 

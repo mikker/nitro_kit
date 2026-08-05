@@ -48,8 +48,9 @@ APIs or examples.
     `ActiveModel::Translation.raise_on_missing_translations` enabled. Doctor
     inventories migration work; a clean result is not runtime or visual
     verification.
-11. Compare the same representative flows in a browser at wide and narrow
-    widths. Exercise keyboard focus and inspect computed styles for missing
+11. Compare the same representative flows across the dated matrix in
+    `docs/browser_support.md`, including Mobile Safari where available, at wide
+    and narrow widths. Exercise keyboard focus and inspect computed styles for missing
     application classes, stacked Button content, broken compound corners,
     double focus rings, clipping, and theme drift. Re-audit rendered native
     buttons, `button_tag`, `submit_tag`, and application-owned button classes

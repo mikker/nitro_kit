@@ -16,7 +16,9 @@ responses. Hotwire transports server-rendered HTML between those boundaries.
 
 Do not copy Nitro Kit controllers into the application. Do not add files under
 `app/javascript/controllers/nk`; consume the `nk--*` controllers packaged by
-the installed gem.
+the installed gem. For browser-sensitive interactions, follow
+[`browser_support.md`](browser_support.md); Nitro owns compatibility bridges for
+its own components.
 
 ## Response matrix
 
@@ -29,6 +31,10 @@ the installed gem.
 
 Use `dom_id` or one named constant for a frame. The show, edit, invalid,
 success, and cancel responses must preserve that identifier.
+
+An HTML response branch preserves the request path when Turbo is unavailable;
+it is not a blanket guarantee that every surrounding component operates
+without JavaScript.
 
 ## Forms and application Stimulus
 

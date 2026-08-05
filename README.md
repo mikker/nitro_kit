@@ -34,7 +34,17 @@ Example new application prompt:
 
 > Build this Rails app with Nitro Kit `2.0.0.alpha.3`. Run the installer, follow the included agent guide, compose gem-owned components, and use Nitro Kit MCP patterns where helpful. Add tests and summarize the result.
 
-The [agent guide](docs/agent_guide.md), [Rails integration guide](docs/rails_integration.md), and [component contracts](docs/component_contracts.md) are included with the gem.
+The [agent guide](docs/agent_guide.md), [Rails integration guide](docs/rails_integration.md), [component contracts](docs/component_contracts.md), and [browser support policy](docs/browser_support.md) are included with the gem.
+
+## Browser support
+
+Nitro Kit uses modern web standards while keeping core content and actions
+usable for the overwhelming majority of people on maintained browsers. The
+practical target is current stable and popular evergreen releases from roughly
+the previous two years, with Mobile Safari as a first-class target. Small,
+feature-detected fallbacks preserve essential behavior without holding
+components to the oldest browser's feature set; visual polish may degrade. See
+the [browser support policy](docs/browser_support.md) for the complete contract.
 
 Maintaining Nitro Kit 1? Its frozen documentation remains at [v1.nitrokit.dev](https://v1.nitrokit.dev).
 

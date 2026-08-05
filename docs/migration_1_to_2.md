@@ -299,8 +299,9 @@ and account-selection helpers used by ordinary integration and system tests.
 Extend those application-owned classes rather than changing gem test support
 or skipping host callbacks.
 
-Run focused request and component tests, then compare the converted flows in a
-browser at wide and narrow widths. Exercise keyboard focus, dialogs and sheets,
+Run focused request and component tests, then compare the converted flows
+across the dated matrix in `docs/browser_support.md`, including Mobile Safari
+where available, at wide and narrow widths. Exercise keyboard focus, dialogs and sheets,
 Turbo submissions, errors, empty states, light/dark appearance, and dense
 metadata. Inspect computed styles for missing application classes, stacked
 Button content, broken compound corners, double focus rings, clipping, and

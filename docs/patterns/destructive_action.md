@@ -100,6 +100,20 @@ end
 
 Do not stack `turbo_confirm` inside a Dialog. Choose one confirmation surface.
 
+## Browser fallback
+
+The reviewed flow depends on Dialog opening in the user's browser. Nitro owns
+the compatibility path when its packaged controller is installed, but no
+client-side dialog can guarantee confirmation when both JavaScript and the
+required native dialog invocation API are unavailable. Applications that must
+support that case should link to a server-rendered review route with an ordinary
+deletion form.
+
+`data-turbo-confirm` is a compact Turbo enhancement, not that no-JavaScript
+fallback. Without Turbo it does not display a confirmation, although the real
+form can still submit. When confirmation must be unavoidable, make review a
+server-owned step rather than stacking both client confirmation surfaces.
+
 ## Tests
 
 Request-test authorization, deletion, 303 redirect, and flash. System-test the dialog only when the reviewed flow matters: trigger opens it, Cancel closes and restores focus, and the destructive submit removes the record.

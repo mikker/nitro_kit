@@ -20,8 +20,9 @@ Read this guide from that directory, then consult only the reference needed for 
 | Choose or compose UI                        | `docs/component_contracts.md`             |
 | Rails assets, forms, and application shells | `docs/rails_integration.md`               |
 | Turbo, Frames, Streams, morphs, or Stimulus | `docs/hotwire.md`                         |
+| Browser support or progressive fallback     | `docs/browser_support.md`                 |
 | Theme tokens and application composition    | `docs/customization.md`                   |
-| Upgrade an existing Nitro Kit 1.x app        | `docs/migration_1_to_2.md`                |
+| Upgrade an existing Nitro Kit 1.x app       | `docs/migration_1_to_2.md`                |
 | Query, sort, filter, or paginate            | `docs/patterns/queryable_collection.md`   |
 | Create, update, and show validation         | `docs/patterns/resource_form.md`          |
 | Delete, revoke, archive, or confirm         | `docs/patterns/destructive_action.md`     |

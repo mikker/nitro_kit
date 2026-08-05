@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Documentation
+
+- Define the rolling evergreen browser-support policy, with Mobile Safari as a
+  first-class target and standards-first, feature-detected fallbacks for core
+  behavior.
+
 ## 2.0.0.alpha.3
 
 ### Added

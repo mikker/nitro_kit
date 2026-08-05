@@ -18,6 +18,7 @@ class AgentGuidanceTest < ActiveSupport::TestCase
     specification = Gem::Specification.load(ROOT.join("nitro_kit.gemspec").to_s)
 
     assert_includes specification.files, "docs/agent_guide.md"
+    assert_includes specification.files, "docs/browser_support.md"
     assert_includes specification.files, "docs/hotwire.md"
     assert_includes specification.files, "docs/initialization_prompt.md"
     assert_includes specification.files, "docs/rails_conventions.md"

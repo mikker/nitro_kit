@@ -32,6 +32,35 @@ render immediately and only work from a Phlex context; they do not work in ERB.
 - Let applications customize themes and compose product-specific UI without editing Nitro internals.
 - Keep behavior minimal, progressive, and Turbo-safe.
 
+## Browser compatibility
+
+The public compatibility contract lives in
+[`docs/browser_support.md`](docs/browser_support.md). Use modern standards while
+keeping essential behavior usable for the overwhelming majority of people on
+maintained browsers. The practical target is current stable and popular
+evergreen Chrome, Edge, Firefox, macOS Safari, and iOS Safari releases from
+roughly the previous two years. Treat Mobile Safari as a primary browser. The
+dated release matrix sets the actual floor by release date and usage, not equal
+major-version counts.
+
+Prefer approved native standards even when their support is newer than the
+window, but do not confuse standards adoption with baseline availability.
+Feature-detect the preferred path and add the smallest Nitro-owned fallback
+when its absence breaks core content, navigation, submission, disclosure, or
+overlay operation. A simpler layout, placement, wrapping, or animation is an
+acceptable fallback. Copying controllers into applications, requiring every
+consumer to choose a polyfill, or silently leaving a control inert is not.
+
+Record no-JavaScript behavior per interactive component. Test the native and
+fallback paths, Turbo cache and reconnect lifecycles, keyboard behavior, and a
+representative browser near the support-window floor. Chromium emulation alone
+does not establish Safari or iOS compatibility.
+
+Place a broadly supported CSS declaration before a newer visual enhancement,
+or use a feature query when unsupported syntax would invalidate layout, color,
+contrast, focus visibility, or interaction. Unsupported polish may disappear;
+readability and operability may not.
+
 ## File layout
 
 ```text
@@ -206,7 +235,7 @@ component translates each string the controller needs and emits it through the
 Stimulus values API:
 
 ```html
-<div data-nk--dropzone-queued-value="Queued">
+<div data-nk--dropzone-queued-value="Queued"></div>
 ```
 
 The controller reads the value and keeps the shipped English literal only as an
@@ -373,7 +402,7 @@ Do not add mandatory Dropzone.js, Ransack, or image-processing dependencies to N
 
 Native HTML and CSS own behavior when they already provide the required semantics. Stimulus adds the smallest missing enhancement.
 
-- Use `details`/`summary` for disclosure, declarative `command`/`commandfor` for dialogs, native Popover for dropdown visibility, and CSS hover/focus for tooltips.
+- Prefer `details`/`summary` for disclosure, declarative `command`/`commandfor` for dialogs, native Popover for dropdown visibility, and CSS hover/focus for tooltips. Before making one authoritative, verify that it covers `docs/browser_support.md` or pair it with the smallest capability-detected fallback.
 - Do not mirror browser-owned open state into `data-state`, `aria-expanded`, or hidden attributes. Use targets and values only for state Nitro genuinely owns.
 - The exception is state HTML cannot express as an attribute at all. A checkbox's `indeterminate` is a DOM property with no markup form, so `Checkbox` mounts `nk--checkable` only when `indeterminate: true`, and that controller's whole scope is applying the property and owning the matching `data-state="indeterminate"`. Ordinary checked state stays native, with no controller and no mirrored `data-state`. Do not widen a controller past the one state the browser cannot express.
 - Keep native state selectors such as `[open]` and `:popover-open` authoritative in CSS.
