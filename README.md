@@ -6,16 +6,16 @@
 
 **Rails front-end for the agent era.**
 
-Nitro Kit is a gem-owned, agent-native UI system for Ruby on Rails. The `2.0.0.alpha.3` prerelease is a ground-up rebuild under active testing and must not be treated as stable. New documentation and the Nitro Kit Pro alpha catalog are coming next.
+Nitro Kit is a gem-owned, agent-native UI system for Ruby on Rails. The `2.0.0.pre.1` prerelease is a ground-up rebuild under active testing and must not be treated as stable. New documentation and the Nitro Kit Pro alpha catalog are coming next.
 
 [![RubyGems](https://img.shields.io/gem/v/nitro_kit.svg)](https://rubygems.org/gems/nitro_kit)
 
 ## Installation
 
-Install the alpha explicitly and keep it pinned while evaluating it.
+Install the prerelease explicitly and keep it pinned while evaluating it.
 
 ```ruby
-gem "nitro_kit", "2.0.0.alpha.3"
+gem "nitro_kit", "2.0.0.pre.1"
 ```
 
 Use the released gem and commit `Gemfile` with `Gemfile.lock`. Before upgrading, review the changelog, run `bundle update nitro_kit`, rerun the installer, and test the application.
@@ -28,11 +28,11 @@ bin/rails nitro_kit:doctor
 
 Example migration prompt:
 
-> Upgrade this Rails app to Nitro Kit `2.0.0.alpha.3`. Run the installer, follow its diagnostics, preserve existing behavior and styling, and use Nitro Kit MCP patterns where helpful. Run tests and summarize changes or unresolved issues.
+> Upgrade this Rails app to Nitro Kit `2.0.0.pre.1`. Run the installer, follow its diagnostics, preserve existing behavior and styling, and use Nitro Kit MCP patterns where helpful. Run tests and summarize changes or unresolved issues.
 
 Example new application prompt:
 
-> Build this Rails app with Nitro Kit `2.0.0.alpha.3`. Run the installer, follow the included agent guide, compose gem-owned components, and use Nitro Kit MCP patterns where helpful. Add tests and summarize the result.
+> Build this Rails app with Nitro Kit `2.0.0.pre.1`. Run the installer, follow the included agent guide, compose gem-owned components, and use Nitro Kit MCP patterns where helpful. Add tests and summarize the result.
 
 The [agent guide](docs/agent_guide.md), [Rails integration guide](docs/rails_integration.md), [component contracts](docs/component_contracts.md), and [browser support policy](docs/browser_support.md) are included with the gem.
 

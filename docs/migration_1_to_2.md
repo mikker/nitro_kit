@@ -4,12 +4,12 @@ Treat a 1.x migration as a product-flow review, not a helper rename. Nitro Kit
 2 deliberately removed copied components, `nk_*` helpers, application-owned
 `controllers/nk`, and unrestricted utility-class customization.
 
-## Install the 2.0 alpha before migrating
+## Install the 2.0 prerelease before migrating
 
-Add the 2.0 alpha prerelease to the application's Gemfile:
+Add the 2.0 prerelease to the application's Gemfile:
 
 ```ruby
-gem "nitro_kit", "2.0.0.alpha.3"
+gem "nitro_kit", "2.0.0.pre.1"
 ```
 
 Bundler records the exact released version in `Gemfile.lock`; commit `Gemfile`

@@ -2,11 +2,35 @@
 
 ## Unreleased
 
+## 2.0.0.pre.1
+
+### Added
+
+- Add a dated browser verification matrix with full Chrome coverage, focused
+  Firefox and macOS Safari lanes, and explicit Android, iOS, and near-floor
+  release checks.
+
 ### Documentation
 
 - Define the rolling evergreen browser-support policy, with Mobile Safari as a
   first-class target and standards-first, feature-detected fallbacks for core
   behavior.
+- Classify every interactive component's no-JavaScript baseline as full,
+  reduced, or unavailable.
+- Document native month and week inputs as progressive enhancement, including
+  server-side ISO validation and bounded Select guidance.
+- Document Accordion's reduced single-group behavior where named details are
+  unavailable instead of adding a compatibility controller.
+
+### Fixed
+
+- Keep Dialog, Sheet, and CommandPalette controls working when Invoker Commands
+  are unavailable while preserving the native declarative path and consistent
+  focus restoration in Safari.
+- Restore Dropdown outside-tap dismissal on affected Mobile Safari Popover
+  implementations and keep its reduced placement inside the viewport.
+- Provide readable Typeset styling in Firefox versions without CSS `@scope`.
+- Keep settled progressive images visible when Turbo restores a cached page.
 
 ## 2.0.0.alpha.3
 

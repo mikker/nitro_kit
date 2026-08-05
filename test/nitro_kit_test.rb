@@ -7,7 +7,7 @@ class NitroKitTest < ActiveSupport::TestCase
     version = NitroKit::VERSION
     specification = Gem::Specification.load(ROOT.join("nitro_kit.gemspec").to_s)
 
-    assert_equal "2.0.0.alpha.3", version
+    assert_equal "2.0.0.pre.1", version
     assert Gem::Version.new(version).prerelease?
     assert_equal version, specification.version.to_s
     assert_includes ROOT.join("README.md").read, "The `#{version}` prerelease"

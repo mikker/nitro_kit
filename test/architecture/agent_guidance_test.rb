@@ -74,11 +74,11 @@ class AgentGuidanceTest < ActiveSupport::TestCase
     end
   end
 
-  test "installation and migration docs use the alpha RubyGems release" do
+  test "installation and migration docs use the current RubyGems prerelease" do
     [ "README.md", "docs/rails_integration.md", "docs/migration_1_to_2.md" ].each do |name|
       guidance = ROOT.join(name).read
 
-      assert_includes guidance, 'gem "nitro_kit", "2.0.0.alpha.3"'
+      assert_includes guidance, 'gem "nitro_kit", "2.0.0.pre.1"'
       assert_match(/bundle update nitro_kit/, guidance)
       assert_match(/review the\s+changelog/i, guidance)
       assert_includes guidance, "Gemfile.lock"

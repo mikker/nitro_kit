@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    nitro_kit (2.0.0.alpha.3)
+    nitro_kit (2.0.0.pre.1)
       lucide-rails (~> 0.7)
       phlex-rails (>= 2.1.0)
       rails (>= 7.0.0)
