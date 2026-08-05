@@ -77,6 +77,88 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
     assert_no_severe_console_errors(context: path)
   end
 
+  test "dialog fallback opens and closes stripped controls without double-running native commands" do
+    path = visit_component("dialog")
+    root = "#gallery-dialog-remove-member"
+    trigger = "#{root} [data-slot='dialog-trigger']"
+    panel = "#{root} [data-slot='dialog-panel']"
+    close = "#{root} [data-slot='dialog-close']"
+
+    execute_script(<<~JAVASCRIPT, panel)
+      const panel = document.querySelector(arguments[0]);
+      window.__nitroShowModalCalls = 0;
+      const showModal = panel.showModal.bind(panel);
+      panel.showModal = () => { window.__nitroShowModalCalls += 1; showModal(); };
+    JAVASCRIPT
+    find(trigger).click
+    assert_selector "#{panel}[open]"
+    assert_equal 0, evaluate_script("window.__nitroShowModalCalls"),
+      "the fallback must not call showModal when the native relationship runs"
+    find(close).click
+
+    execute_script(<<~JAVASCRIPT, trigger, close)
+      for (const selector of [arguments[0], arguments[1]]) {
+        const control = document.querySelector(selector);
+        control.removeAttribute("command");
+        control.removeAttribute("commandfor");
+      }
+    JAVASCRIPT
+    find(trigger).click
+    assert_selector "#{panel}[open]"
+    assert_equal 1, evaluate_script("window.__nitroShowModalCalls")
+    find(close).click
+    assert_selector "#{panel}:not([open])", visible: :all
+
+    required = "#gallery-dialog-required"
+    required_trigger = "#{required} [data-slot='dialog-trigger']"
+    custom_cancel = "#{required} #gallery-dialog-required-accept"
+    find(required_trigger).click
+    active_element.send_keys(:escape)
+    assert_selector "#{required} [data-slot='dialog-panel'][open]"
+    execute_script(<<~JAVASCRIPT, custom_cancel)
+      const control = document.querySelector(arguments[0]);
+      Object.defineProperty(control, "commandForElement", { value: undefined });
+    JAVASCRIPT
+    find(custom_cancel).click
+    assert_selector "#{required} [data-slot='dialog-panel']:not([open])", visible: :all
+    assert_no_severe_console_errors(context: path)
+  end
+
+  test "sheet fallback opens and closes controls with stripped commands" do
+    path = visit_component("sheet")
+    root = "#gallery-sheet-prompts"
+    trigger = "#{root} [data-slot='sheet-trigger']"
+    panel = "#{root} [data-slot='sheet-panel']"
+    close = "#{root} [data-slot='sheet-close']"
+
+    execute_script(<<~JAVASCRIPT, trigger, close)
+      for (const selector of [arguments[0], arguments[1]]) {
+        const control = document.querySelector(selector);
+        control.removeAttribute("command");
+        control.removeAttribute("commandfor");
+      }
+    JAVASCRIPT
+    find(trigger).click
+    assert_selector "#{panel}[open]"
+    find(close).click
+    assert_selector "#{panel}:not([open])", visible: :all
+    assert_no_severe_console_errors(context: path)
+  end
+
+  test "dialog submits a real Rails DELETE form and follows its 303 redirect" do
+    path = visit_component("dialog")
+    root = "#gallery-dialog-remove-member"
+
+    find("#{root} [data-slot='dialog-trigger']").click
+    within("#{root} #gallery-dialog-delete-form") do
+      click_button "Remove team member"
+    end
+
+    assert_current_path gallery_component_path("dialog")
+    assert_selector "#{root} [data-slot='dialog-panel']:not([open])", visible: :all
+    assert_no_severe_console_errors(context: path)
+  end
+
   test "dropdown follows menu keyboard focus and closes on escape tab and selection" do
     path = visit_component("dropdown")
     root = "#gallery-dropdown-account"

@@ -22,13 +22,13 @@ export default class extends Controller {
     this.connected = true;
     this.restoreFocus = true;
     this.loadedQuery = this.inputTarget.value;
-    this.triggerTarget.removeAttribute("command");
     this.searchTarget.hidden = false;
     this.element.dataset.enhanced = "true";
   }
 
   disconnect() {
     this.connected = false;
+    clearTimeout(this.openTimer);
     clearTimeout(this.searchTimer);
     const trigger = this.element.querySelector(
       ':scope > [data-slot="command-palette-trigger"]',
@@ -51,21 +51,20 @@ export default class extends Controller {
       });
     if (empty) empty.hidden = true;
     if (status) status.textContent = "";
-    trigger?.setAttribute("command", "show-modal");
     if (search) search.hidden = true;
     delete this.element.dataset.enhanced;
   }
 
-  open(event) {
-    event?.preventDefault();
-    if (!this.canOpen) return;
+  openedByTrigger(event) {
+    if (!this.canOpen) {
+      event.preventDefault();
+      return;
+    }
 
     this.returnFocus = document.activeElement;
     this.restoreFocus = true;
-    this.reset();
-    this.panelTarget.showModal();
-    this.inputTarget.focus();
-    if (this.hasFormTarget) this.submitSearch();
+    clearTimeout(this.openTimer);
+    this.openTimer = setTimeout(() => this.#prepareOpenPanel(), 0);
   }
 
   shortcut(event) {
@@ -87,7 +86,9 @@ export default class extends Controller {
       if (!this.canOpen) return;
 
       event.preventDefault();
-      this.open();
+      this.returnFocus = document.activeElement;
+      this.panelTarget.showModal();
+      this.#prepareOpenPanel();
     }
   }
 
@@ -245,5 +246,13 @@ export default class extends Controller {
     const activeModal = document.querySelector("dialog:modal");
 
     return !activeModal || activeModal.contains(this.element);
+  }
+
+  #prepareOpenPanel() {
+    if (!this.panelTarget.open) return;
+
+    this.reset();
+    this.inputTarget.focus();
+    if (this.hasFormTarget) this.submitSearch();
   }
 }

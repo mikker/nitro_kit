@@ -15,6 +15,8 @@ class CommandPaletteTest < ActiveSupport::TestCase
     assert_equal "nk--dialog nk--command-palette", node["data-controller"]
     assert_includes node["data-action"], "keydown@document->nk--command-palette#shortcut"
     assert_includes node["data-action"], "turbo:before-cache@document->nk--command-palette#closeForVisit"
+    assert_includes node["data-action"], "click->nk--dialog#invoke"
+    assert_includes node["data-action"], "turbo:before-cache@document->nk--dialog#closeForCache"
     assert_equal I18n.t("nitro_kit.command_palette.empty"),
       node["data-nk--command-palette-empty-value"]
     assert_equal I18n.t("nitro_kit.command_palette.results.one"),
@@ -26,6 +28,7 @@ class CommandPaletteTest < ActiveSupport::TestCase
     assert_equal "button", trigger["data-nk"]
     assert_equal "show-modal", trigger["command"]
     assert_equal "workspace-search-panel", trigger["commandfor"]
+    assert_equal "show-modal", trigger["data-nk--dialog-command"]
     assert_equal "dialog", trigger["aria-haspopup"]
     assert_equal "Meta+K Control+K", trigger["aria-keyshortcuts"]
     assert_equal "Search workspace", trigger.at_css("[data-slot='command-palette-trigger-label']").text
@@ -35,6 +38,7 @@ class CommandPaletteTest < ActiveSupport::TestCase
     assert_equal "dialog", panel.name
     assert_equal "workspace-search-panel", panel["id"]
     assert_equal "any", panel["closedby"]
+    assert_equal "close", node.at_css("[data-slot='command-palette-close']")["data-nk--dialog-command"]
     assert_equal "workspace-search-title", panel["aria-labelledby"]
     assert_equal "Search workspace", panel.at_css("[data-slot='command-palette-title']").text
     assert search.key?("hidden")

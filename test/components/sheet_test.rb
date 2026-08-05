@@ -63,6 +63,10 @@ class SheetTest < ActiveSupport::TestCase
     assert_includes source, 'data-side="right"'
     assert_includes source, "prefers-reduced-motion"
     assert_equal "nk--dialog", node["data-controller"]
+    assert_includes node["data-action"], "click->nk--dialog#invoke"
+    assert_includes node["data-action"], "turbo:before-cache@document->nk--dialog#closeForCache"
+    assert_equal "show-modal", node.at_css("[data-slot='sheet-trigger']")["data-nk--dialog-command"]
+    assert_equal "close", node.at_css("[data-slot='sheet-close']")["data-nk--dialog-command"]
   end
 
   private

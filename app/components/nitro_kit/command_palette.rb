@@ -250,7 +250,8 @@ module NitroKit
           }.compact,
           data: {
             nk__command_palette_target: "trigger",
-            action: "click->nk--command-palette#open"
+            nk__dialog_command: "show-modal",
+            action: "click->nk--command-palette#openedByTrigger"
           }
         ),
         :trigger
@@ -342,6 +343,7 @@ module NitroKit
           variant: :ghost,
           size: :md,
           html: { command: "close", commandfor: panel_id },
+          data: { nk__dialog_command: "close" },
           aria: { label: @close_label }
         ),
         :close
@@ -392,7 +394,9 @@ module NitroKit
     def root_actions
       actions = [
         "turbo:before-visit@document->nk--command-palette#closeForVisit",
-        "turbo:before-cache@document->nk--command-palette#closeForVisit"
+        "turbo:before-cache@document->nk--command-palette#closeForVisit",
+        "click->nk--dialog#invoke",
+        "turbo:before-cache@document->nk--dialog#closeForCache"
       ]
       actions.prepend("keydown@document->nk--command-palette#shortcut") if @shortcut
       actions.join(" ")

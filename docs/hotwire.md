@@ -74,7 +74,9 @@ permanent.
 
 Clean ephemeral UI before Turbo caches the page. Nitro Kit controllers own
 their own cache and reconnect behavior; application controllers must do the
-same for application-owned state.
+same for application-owned state. `nk--dialog` closes an open Dialog, Sheet, or
+CommandPalette on `turbo:before-cache`; reconnecting does not install listeners
+or retain a mirrored open flag.
 
 ## Frame escape and recovery
 

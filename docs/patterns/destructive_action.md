@@ -2,6 +2,11 @@
 
 Use a native Nitro Dialog when the user needs to review impact or type confirmation. The dialog only owns accessible disclosure and focus behavior; a real Rails form owns the destructive request.
 
+Nitro keeps the declarative dialog command as the native path and supplies a
+capability-detected JavaScript bridge for supported browsers that lack Invoker
+Commands. The bridge changes only disclosure; it never intercepts or recreates
+the form request.
+
 ## Summary
 
 - Use a native Nitro `Dialog` only when the user must review impact or type a
@@ -117,3 +122,9 @@ server-owned step rather than stacking both client confirmation surfaces.
 ## Tests
 
 Request-test authorization, deletion, 303 redirect, and flash. System-test the dialog only when the reviewed flow matters: trigger opens it, Cancel closes and restores focus, and the destructive submit removes the record.
+
+The successful `DELETE` response must redirect with `303 See Other`, including
+when Turbo submits the form. Without JavaScript the real form still provides a
+request path, but a form placed only inside a closed dialog is reachable only
+where Invoker Commands are supported; provide an ordinary server-rendered link
+to a review page when deletion must remain reachable across that baseline.

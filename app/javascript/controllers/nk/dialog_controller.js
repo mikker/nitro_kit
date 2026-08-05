@@ -4,6 +4,29 @@ export default class extends Controller {
   static targets = ["panel"];
   static values = { dismissible: Boolean };
 
+  invoke(event) {
+    const invoker = event.target.closest(
+      "[command], [data-nk--dialog-command]",
+    );
+    if (!invoker || !this.element.contains(invoker) || invoker.disabled) return;
+
+    const command =
+      invoker.getAttribute("command") ||
+      invoker.getAttribute("data-nk--dialog-command");
+    if (!["show-modal", "close"].includes(command)) return;
+
+    const panel = this.#commandPanel(invoker);
+    if (!panel || this.#nativeRelationshipRuns(invoker, panel, command)) return;
+
+    event.preventDefault();
+    if (command === "show-modal" && !panel.open) panel.showModal();
+    if (command === "close" && panel.open) panel.close();
+  }
+
+  closeForCache() {
+    if (this.panelTarget.open) this.panelTarget.close();
+  }
+
   dismiss(event) {
     if (!this.dismissibleValue || event.target !== this.panelTarget) return;
 
@@ -19,5 +42,22 @@ export default class extends Controller {
 
   cancel(event) {
     if (!this.dismissibleValue) event.preventDefault();
+  }
+
+  #commandPanel(invoker) {
+    const targetId = invoker.getAttribute("commandfor");
+    if (targetId) {
+      const target = document.getElementById(targetId);
+      if (target instanceof HTMLDialogElement && this.element.contains(target))
+        return target;
+    }
+
+    return invoker.hasAttribute("data-nk--dialog-command")
+      ? this.panelTarget
+      : null;
+  }
+
+  #nativeRelationshipRuns(invoker, panel, command) {
+    return invoker.commandForElement === panel && invoker.command === command;
   }
 }

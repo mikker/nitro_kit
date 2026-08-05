@@ -36,6 +36,8 @@ class DialogTest < ActiveSupport::TestCase
     assert_equal "delete-account", node["id"]
     assert_equal "dialog", node["data-nk"]
     assert_equal "nk--dialog", node["data-controller"]
+    assert_includes node["data-action"], "click->nk--dialog#invoke"
+    assert_includes node["data-action"], "turbo:before-cache@document->nk--dialog#closeForCache"
     assert node.key?("data-nk--dialog-dismissible-value")
     assert_equal "dialog", panel.name
     assert_equal "delete-account-panel", panel["id"]
@@ -45,10 +47,12 @@ class DialogTest < ActiveSupport::TestCase
     assert_equal "any", panel["closedby"]
     assert_equal "show-modal", trigger["command"]
     assert_equal "delete-account-panel", trigger["commandfor"]
+    assert_equal "show-modal", trigger["data-nk--dialog-command"]
     assert_equal "dialog", trigger["aria-haspopup"]
     assert_equal "click->analytics#track", trigger["data-action"]
     assert_equal "close", close["command"]
     assert_equal "delete-account-panel", close["commandfor"]
+    assert_equal "close", close["data-nk--dialog-command"]
     assert_equal "click->analytics#track", close["data-action"]
     assert_equal I18n.t("nitro_kit.dialog.close"), close["aria-label"]
     assert_equal "ghost", close["data-variant"]

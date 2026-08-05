@@ -32,6 +32,10 @@ module NitroKit
           id:,
           data: {
             controller: "nk--dialog",
+            action: [
+              "click->nk--dialog#invoke",
+              "turbo:before-cache@document->nk--dialog#closeForCache"
+            ].join(" "),
             nk__dialog_dismissible_value: @dismissible
           }
         },
@@ -162,7 +166,7 @@ module NitroKit
         disabled: @trigger.disabled,
         html: with_command(@trigger.html, "show-modal", disabled: @trigger.disabled),
         aria: @trigger.aria.merge(haspopup: "dialog"),
-        data: @trigger.data,
+        data: command_data(@trigger.data, "show-modal", disabled: @trigger.disabled),
         desperately_need_a_class: @trigger.css_class
       )
 
@@ -235,7 +239,7 @@ module NitroKit
           size: :sm,
           html: with_command(declaration.html, "close"),
           aria: declaration.aria.merge(label: declaration.label),
-          data: declaration.data,
+          data: command_data(declaration.data, "close"),
           desperately_need_a_class: declaration.css_class
         ),
         :close
@@ -287,6 +291,10 @@ module NitroKit
       end
 
       disabled ? html : html.merge(command:, commandfor: element_id(:panel))
+    end
+
+    def command_data(data, command, disabled: false)
+      disabled ? data : data.merge(nk__dialog_command: command)
     end
   end
 end

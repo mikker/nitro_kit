@@ -48,6 +48,31 @@ class HotwireLifecycleTest < ApplicationSystemTestCase
     assert_no_severe_console_errors
   end
 
+  test "Turbo cache closes dialogs and reconnect preserves the fallback" do
+    visit gallery_component_path("dialog")
+
+    root = "#gallery-dialog-remove-member"
+    trigger = "#{root} [data-slot='dialog-trigger']"
+    panel = "#{root} [data-slot='dialog-panel']"
+    find(trigger).click
+    assert_selector "#{panel}[open]"
+
+    execute_script("document.dispatchEvent(new Event('turbo:before-cache'))")
+    assert_selector "#{panel}:not([open])", visible: :all
+
+    click_gallery_navigation_link("Tabs")
+    click_gallery_navigation_link("Dialog")
+    assert_stimulus_controller(root, "nk--dialog")
+    execute_script(<<~JAVASCRIPT, trigger)
+      const control = document.querySelector(arguments[0]);
+      control.removeAttribute("command");
+      control.removeAttribute("commandfor");
+    JAVASCRIPT
+    find(trigger).click
+    assert_selector "#{panel}[open]"
+    assert_no_severe_console_errors
+  end
+
   test "Turbo Frame handles validation and success stream replacements" do
     visit new_registration_path
     execute_script("document.querySelector('#details_registration').noValidate = true")

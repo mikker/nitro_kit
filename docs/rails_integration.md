@@ -114,8 +114,10 @@ Enhanced components use gem-owned Stimulus controllers, including `nk--app-shell
 Accordion disclosure is controller-free; named single-group exclusivity may
 degrade near the browser-support floor. Dialog and Sheet prefer declarative
 `command`/`commandfor`, while `nk--dialog` owns backdrop and cancel policy. The
-current alpha does not yet bridge Invoker Commands on older supported browsers,
-so its no-JavaScript Dialog path works only where those commands are available.
+controller checks each invoker's reflected relationship and uses
+`HTMLDialogElement.showModal()` or `close()` only when the native command will
+not run. CommandPalette uses the same bridge instead of replacing the native
+path. Without JavaScript, these controls still require native Invoker Commands.
 Dropdown uses native Popover as its source of truth and adds menu keyboard focus
 and positioning; Tooltip uses CSS for hover/focus and JavaScript only for Escape
 dismissal. See the [browser support policy](browser_support.md).
@@ -131,8 +133,8 @@ eagerLoadControllersFrom("controllers", application);
 
 Nitro Kit packages no third-party JavaScript. Accordion disclosure, date inputs,
 and Switch use native browser behavior. Dialog and Sheet mount their packaged
-controller for dismissal policy and, once the compatibility issue lands, the
-feature-detected Invoker Commands bridge.
+controller for dismissal policy, Turbo cache cleanup, and the feature-detected
+Invoker Commands bridge.
 
 The engine deliberately boots when importmap is absent. In that configuration, Ruby and CSS remain available, but automatic JavaScript registration does not: a bundler-based application must expose and register the controller modules itself. Nitro Kit 2.0 does not ship a JavaScript-package entrypoint.
 

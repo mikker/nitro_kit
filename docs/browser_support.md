@@ -81,6 +81,14 @@ work prioritizes real Safari and iOS Safari coverage in addition to Chromium;
 tests that merely remove an attribute in current Chrome are useful branch tests,
 but are not a substitute for the affected browser engine.
 
+Dialog, Sheet, and CommandPalette keep declarative `command`/`commandfor`
+controls in their server markup. With Nitro JavaScript installed, their shared
+controller uses the reflected invoker relationship when available and falls
+back to `HTMLDialogElement.showModal()` or `close()` only when that relationship
+cannot run. Without JavaScript, opening and closing these overlays is available
+only in browsers with Invoker Commands; destination links and ordinary forms
+remain server-rendered, but content inside a closed dialog is not reachable.
+
 Each Nitro release records a dated tested-browser matrix. The rolling policy is
 the durable contract; the matrix records the concrete versions used to verify a
 particular release.

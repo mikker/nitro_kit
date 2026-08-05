@@ -88,4 +88,50 @@ class CommandPaletteSystemTest < ApplicationSystemTestCase
     assert_current_path gallery_component_path("button")
     assert_no_severe_console_errors
   end
+
+  test "opens and closes through the shared fallback when commands are stripped" do
+    visit gallery_component_path("command-palette")
+
+    root = "#gallery-command-palette-workspace"
+    trigger = "#{root} [data-slot='command-palette-trigger']"
+    panel = "#{root} [data-slot='command-palette-panel']"
+    close = "#{root} [data-slot='command-palette-close']"
+    execute_script(<<~JAVASCRIPT, trigger, close)
+      for (const selector of [arguments[0], arguments[1]]) {
+        const control = document.querySelector(selector);
+        control.removeAttribute("command");
+        control.removeAttribute("commandfor");
+      }
+    JAVASCRIPT
+
+    find(trigger).click
+    assert_selector "#{panel}[open]"
+    assert_focused "#{root} [data-slot='command-palette-input']"
+    find(close).click
+    assert_selector "#{panel}:not([open])", visible: :all
+    assert_focused trigger
+    assert_no_severe_console_errors
+  end
+
+  test "does not open from its trigger while another modal is active" do
+    visit gallery_component_path("command-palette")
+
+    root = "#gallery-command-palette-workspace"
+    trigger = "#{root} [data-slot='command-palette-trigger']"
+    panel = "#{root} [data-slot='command-palette-panel']"
+
+    execute_script(<<~JAVASCRIPT, trigger)
+      const activeModal = document.createElement("dialog");
+      activeModal.id = "active-modal";
+      document.body.append(activeModal);
+      activeModal.showModal();
+      document.querySelector(arguments[0]).click();
+    JAVASCRIPT
+
+    assert_selector "dialog#active-modal[open]", visible: :all
+    assert_selector "#{panel}:not([open])", visible: :all
+    assert_no_severe_console_errors
+  ensure
+    execute_script("document.querySelector('#active-modal')?.remove()")
+  end
 end
