@@ -75,6 +75,21 @@ native API is also unsupported, the component documentation must state the
 limitation and recipes for critical actions must retain an ordinary
 server-rendered path where practical.
 
+### Accordion
+
+Accordion always keeps native `details` and `summary` as the disclosure
+authority. Its no-JavaScript baseline is full for opening and closing each
+item. In `single` mode, a shared `name` is the browser-native exclusive-group
+mechanism: browsers that support named details provide the full one-open-item
+behavior without a Nitro controller.
+
+The short Firefox gap before Firefox 130, including Firefox 128 ESR, has a
+reduced `single` baseline: each disclosure still opens and closes normally,
+but more than one item can remain open. Nitro does not detect the browser or
+install JavaScript merely to duplicate that native grouping. Applications for
+which strict one-open-at-a-time behavior is essential in that gap should use a
+different interaction with an application-owned server or JavaScript policy.
+
 Browser compatibility is verified against current stable browsers and
 representative older releases near the edge of the support window. Compatibility
 work prioritizes real Safari and iOS Safari coverage in addition to Chromium;

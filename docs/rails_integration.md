@@ -111,8 +111,10 @@ the gem controller, because that would bypass the integration under test.
 
 Enhanced components use gem-owned Stimulus controllers, including `nk--app-shell`, `nk--appearance`, `nk--avatar`, `nk--checkable`, `nk--combobox`, `nk--dialog`, `nk--dropdown`, `nk--dropzone`, `nk--progressive-image`, `nk--tabs`, `nk--toast`, and `nk--tooltip`.
 
-Accordion disclosure is controller-free; named single-group exclusivity may
-degrade near the browser-support floor. Dialog and Sheet prefer declarative
+Accordion disclosure is controller-free. Its shared `name` is the native
+single-group authority; browsers without named-details grouping retain full
+disclosure but have the documented reduced, independently-open single-mode
+baseline. Dialog and Sheet prefer declarative
 `command`/`commandfor`, while `nk--dialog` owns backdrop and cancel policy. The
 controller checks each invoker's reflected relationship and uses
 `HTMLDialogElement.showModal()` or `close()` only when the native command will

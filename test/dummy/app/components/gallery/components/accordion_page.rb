@@ -15,7 +15,7 @@ module Gallery
         example_section(
           "Account questions",
           slug: "accordion-account",
-          description: "Native details and summary elements work before JavaScript and keep stable keyed IDs."
+          description: "Native details and summary elements work without JavaScript; single mode uses browser-native named grouping and keeps stable keyed IDs."
         ) do
           example("Billing questions", slug: "accordion-billing-questions") do
             render NitroKit::Accordion.new(id: "gallery-accordion-billing", mode: :single) do |accordion|

@@ -36,7 +36,7 @@ class AccordionTest < ActiveSupport::TestCase
     assert_empty node.css("[class], [style]")
   end
 
-  test "renders single mode and keeps public attributes inside their boundaries" do
+  test "renders controller-free single mode and keeps public attributes inside their boundaries" do
     component = NitroKit::Accordion.new(
       id: "preferences",
       mode: :single,
@@ -46,10 +46,12 @@ class AccordionTest < ActiveSupport::TestCase
     )
     node = render_accordion(component) do |accordion|
       accordion.item(:account, title: "Account") { "Account content" }
+      accordion.item(:security, title: "Security") { "Security content" }
     end
 
     assert_equal "single", node["data-mode"]
-    assert_equal "preferences", node.at_css("details")["name"]
+    assert_equal [ "preferences" ], node.css("details").map { |item| item["name"] }.uniq
+    refute_includes node["data-controller"].split, "nk--accordion"
     assert_equal "Preferences", node["title"]
     assert_equal "Preference sections", node["aria-label"]
     assert_equal "application", node["data-controller"]
