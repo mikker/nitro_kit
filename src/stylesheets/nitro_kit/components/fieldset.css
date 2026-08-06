@@ -25,4 +25,12 @@
     gap: calc(var(--nk-space) * 6);
     margin-block-start: calc(var(--nk-space) * 6);
   }
+
+  :where(
+      [data-nk="fieldset"]
+        > [data-slot="fieldset-fields"]
+        > [data-nk="button"]
+    ) {
+    justify-self: start;
+  }
 }
