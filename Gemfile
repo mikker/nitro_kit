@@ -12,12 +12,12 @@ gem "minitest"
 gem "stimulus-rails"
 gem "turbo-rails"
 gem "importmap-rails"
+gem "pagy", "~> 43.6"
 gem "ransack"
 gem "rubocop-rails-omakase", require: false
 
 group :development, :test do
   gem "prism", "~> 1.0"
-  gem "pagy", "~> 43.6"
 end
 
 group :test do

@@ -1,6 +1,7 @@
 name: CI
 
 on:
+  workflow_dispatch:
   pull_request:
   push:
     branches: [main]
@@ -110,7 +111,7 @@ jobs:
 
   deploy:
     name: Deploy gallery
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
     needs: [test, system, safari]
     timeout-minutes: 20
     runs-on: ubuntu-latest
