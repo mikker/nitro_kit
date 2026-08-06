@@ -298,7 +298,11 @@ class GalleryFormFamilyTest < ActionDispatch::IntegrationTest
                     "[name='registration[source]'][value='gallery']"
       assert_select "#gallery-fieldset-registration[data-nk='fieldset']" do
         assert_select "[data-slot='fieldset-legend']", text: "Registration details"
-        assert_select "#gallery-fieldset-registration-fields[data-nk='field-group'] > [data-nk='field']", count: 4
+        assert_select "> [data-slot='fieldset-fields']" do
+          assert_select "> #gallery-fieldset-registration-fields[data-nk='field-group']"
+          assert_select "> #gallery-fieldset-registration-save[data-nk='button'][type='submit']"
+        end
+        assert_select "#gallery-fieldset-registration-fields > [data-nk='field']", count: 4
       end
       assert_select "#gallery-fieldset-registration-email[type='email'][name='registration[email]']" \
                     "[value='not-an-email'][aria-invalid='true']"

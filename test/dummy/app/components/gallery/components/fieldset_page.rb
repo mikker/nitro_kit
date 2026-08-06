@@ -154,8 +154,8 @@ module Gallery
                     accept: "text/plain"
                   )
                 end
+                form.submit("Register", id: "gallery-fieldset-registration-save")
               end
-              form.submit("Register", id: "gallery-fieldset-registration-save")
             end
           end
         end

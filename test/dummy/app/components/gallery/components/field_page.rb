@@ -166,10 +166,10 @@ module Gallery
           slug: "field-placement-parents",
           description: "A Field owns its label, description, error, and one control, and nothing outside " \
             "itself. Everything between fields belongs to a parent. FieldGroup — `form.group` on the " \
-            "builder — is the default vertical rhythm owner and is required as soon as a field has a " \
-            "stacked sibling, including the submit button; two bare siblings stack flush. Fieldset is " \
-            "optional and adds native grouping: reach for it when a set of fields needs one shared " \
-            "accessible name, and take the legend and description it brings with it. FormSection is also " \
+            "builder — is the default vertical rhythm owner for bare fields and actions; two bare siblings " \
+            "stack flush. Fieldset provides that rhythm for its direct field, group, and submit children " \
+            "while adding native grouping: reach for it when a set of fields needs one shared accessible " \
+            "name, and take the legend and description it brings with it. FormSection is also " \
             "optional and is the page-level region above the form: a titled header, an optional status " \
             "Alert, and exactly one form. Flex and Grid own placement when an arrangement is deliberately " \
             "inline or multi-column."
