@@ -6925,41 +6925,6 @@
       justify-content: flex-start;
       margin-inline-start: 0;
     }
-
-    :where(
-      [data-nk="app-shell"]
-        > [data-slot="app-shell-header"]
-        > [data-slot="app-shell-topbar"]
-        > [data-nk="toolbar"]
-    ) {
-      flex-direction: row;
-      flex-wrap: nowrap;
-      align-items: center;
-    }
-
-    :where(
-      [data-nk="app-shell"]
-        > [data-slot="app-shell-header"]
-        > [data-slot="app-shell-topbar"]
-        > [data-nk="toolbar"]
-        > [data-slot="toolbar-leading"]
-    ) {
-      flex: 1 1 auto;
-      flex-wrap: nowrap;
-      overflow: hidden;
-    }
-
-    :where(
-      [data-nk="app-shell"]
-        > [data-slot="app-shell-header"]
-        > [data-slot="app-shell-topbar"]
-        > [data-nk="toolbar"]
-        > [data-slot="toolbar-trailing"]
-    ) {
-      flex: 0 0 auto;
-      justify-content: flex-end;
-      margin-inline-start: auto;
-    }
   }
 }
 

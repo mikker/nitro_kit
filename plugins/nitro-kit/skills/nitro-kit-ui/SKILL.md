@@ -40,7 +40,9 @@ If the gem is not installed, say that the skill requires Nitro Kit and follow th
 7. For authenticated CRUD, prefer a hybrid `AppShell` with a `Toolbar` that
    owns the route's single `h1` and basic actions. The shell main region owns
    one content gutter. Do not repeat that heading in `PageHeader`, or wrap each
-   table, form, and detail region in another Card.
+   table, form, and detail region in another Card. At narrow widths, preserve
+   the full title and persistent actions by stacking the trailing actions below
+   the title rather than clipping either region.
 8. For team administration and account settings, read
    `docs/patterns/application_foundation.md`. Put Settings after an
    `AppNavigation` spacer and use `SettingsLayout` with plain `FormSection`

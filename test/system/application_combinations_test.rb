@@ -64,6 +64,52 @@ class ApplicationCombinationsTest < ApplicationSystemTestCase
     end
   end
 
+  test "a narrow child-route toolbar preserves its title above persistent actions" do
+    resize_viewport(width: 390, height: 844)
+    visit gallery_composition_path(
+      slug: "product-resource",
+      state: "active",
+      product_id: "product_release_console"
+    )
+
+    assert_selector "#gallery-product-resource-back"
+    assert_selector "#gallery-product-resource-toolbar-actions [data-nk='button']", count: 2
+    assert_selector "#gallery-product-resource-toolbar h1", text: "Release Console"
+
+    geometry = evaluate_script(<<~JAVASCRIPT)
+      (() => {
+        const toolbar = document.querySelector("#gallery-product-resource-toolbar")
+        const leading = toolbar.querySelector('[data-slot="toolbar-leading"]')
+        const trailing = toolbar.querySelector('[data-slot="toolbar-trailing"]')
+        const title = leading.querySelector("h1")
+        const toolbarRect = toolbar.getBoundingClientRect()
+        const leadingRect = leading.getBoundingClientRect()
+        const trailingRect = trailing.getBoundingClientRect()
+        const titleRect = title.getBoundingClientRect()
+
+        return {
+          titleWidth: titleRect.width,
+          titleInsideLeading:
+            titleRect.left >= leadingRect.left - 1 &&
+            titleRect.right <= leadingRect.right + 1,
+          actionsBelowTitle: leadingRect.bottom <= trailingRect.top + 1,
+          childrenInsideToolbar: [leadingRect, trailingRect].every((rect) =>
+            rect.left >= toolbarRect.left - 1 &&
+            rect.right <= toolbarRect.right + 1 &&
+            rect.top >= toolbarRect.top - 1 &&
+            rect.bottom <= toolbarRect.bottom + 1
+          )
+        }
+      })()
+    JAVASCRIPT
+
+    assert_operator geometry.fetch("titleWidth"), :>, 80
+    assert geometry.fetch("titleInsideLeading")
+    assert geometry.fetch("actionsBelowTitle")
+    assert geometry.fetch("childrenInsideToolbar")
+    assert_document_fits_viewport
+  end
+
   private
 
   def assert_desktop_layout(root, layout:)

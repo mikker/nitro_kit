@@ -46,16 +46,16 @@ class AppShellCssTest < ActiveSupport::TestCase
     assert_includes unenhanced_mobile, "display: none"
   end
 
-  test "lets a toolbar own the full topbar at wide and narrow widths" do
+  test "lets a toolbar own the full topbar and stack its narrow regions" do
     shell = SHELL.read
     toolbar = TOOLBAR.read
 
     assert_includes shell, '[data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])'
     assert_includes shell, "> [data-nk=\"toolbar\"]"
-    assert_includes toolbar, '> [data-slot="app-shell-header"]'
-    refute_includes toolbar, '[data-nk="app-shell"] [data-slot="app-shell-topbar"]'
-    assert_includes toolbar, "flex-direction: row"
-    assert_includes toolbar, "flex-wrap: nowrap"
+    assert_includes toolbar, "@media (max-width: 48rem)"
+    assert_includes toolbar, "flex-direction: column"
+    assert_includes toolbar, "align-items: stretch"
+    refute_includes toolbar, '> [data-slot="app-shell-header"]'
   end
 
   test "styles the complete navigation anatomy without utility classes" do

@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Fixed
+
+- Stack AppShell toolbar actions below the title on narrow screens instead of
+  clipping child-route titles when a Back affordance and several actions share
+  the header.
+
 ## 2.0.0.pre.1
 
 ### Added

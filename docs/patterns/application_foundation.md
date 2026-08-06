@@ -19,7 +19,7 @@ replaced later.
 - When destination count warrants search, compose one `CommandPalette` in the
   shell and render only routes the current membership may visit.
 - Centralize cross-cutting feedback in one flash-driven toast region rendered
-  by the layout.
+  by the layout, and set the document language on the root `html` element.
 
 ## Use memberships from the first user
 
@@ -46,7 +46,9 @@ primary destinations in `AppNavigation`; place route titles and persistent
 basic actions in the shell `Toolbar`. One wrapper immediately inside
 `shell.main` owns responsive page padding for every route. The topbar and
 sidebar header should use the shell's shared height and border tokens rather
-than independent padding guesses.
+than independent padding guesses. At narrow widths, allow trailing actions to
+stack below the Back affordance and title so neither the title nor persistent
+actions are clipped.
 
 Put infrequent account navigation after `navigation.spacer`, near the account
 controls at the bottom of the sidebar:

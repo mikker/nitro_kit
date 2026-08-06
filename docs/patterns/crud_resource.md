@@ -17,6 +17,8 @@ and their tests together.
   `DataSection`, Card, and caption.
 - Child routes add one compact icon Back link before the title instead of a
   trailing Cancel action.
+- At narrow widths, trailing actions stack below the Back affordance and title;
+  do not clip the title or hide persistent actions to keep the header short.
 - One responsive padding rule on the main wrapper owns the page gutter;
   data-heavy hybrid CRUD content uses the full available width.
 
@@ -31,7 +33,8 @@ Put a `Toolbar` in `shell.topbar`. Its leading region contains the route's one
 `h1`; its trailing region contains basic actions such as New, Edit, Cancel,
 Save, Publish, or View. A Button outside a form can submit it through the
 native `form:` attribute. This keeps the same action hierarchy on narrow and
-wide screens without custom JavaScript.
+wide screens without custom JavaScript. Nitro Kit stacks the regions at narrow
+widths so a Back affordance, long title, and several actions remain legible.
 
 ```ruby
 AppShell(id: "admin", layout: :hybrid) do |shell|
