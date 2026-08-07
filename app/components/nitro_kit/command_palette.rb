@@ -16,12 +16,6 @@ module NitroKit
     module Validation
       private
 
-      def component_id(value)
-        return value if value.is_a?(String) && value.match?(/\A[A-Za-z0-9][A-Za-z0-9_-]*\z/)
-
-        raise ArgumentError, "CommandPalette id: must contain only letters, numbers, underscores, and hyphens"
-      end
-
       def required_text(name, value)
         return value if value.is_a?(String) && !value.strip.empty?
 
@@ -30,41 +24,7 @@ module NitroKit
     end
     private_constant :Validation
 
-    include Validation
-
-    class Results < Component
-      include Validation
-
-      def initialize(
-        id:,
-        html: {},
-        aria: {},
-        data: {},
-        desperately_need_a_class: nil
-      )
-        @identifier = component_id(id)
-        @destinations = []
-
-        super(
-          component: :command_palette_results,
-          attributes: {
-            id: frame_id,
-            target: "_top",
-            data: {
-              nk__command_palette_target: "frame",
-              action: [
-                "turbo:before-fetch-request->nk--command-palette#loading",
-                "turbo:frame-load->nk--command-palette#loaded"
-              ].join(" ")
-            }
-          },
-          html:,
-          aria:,
-          data:,
-          desperately_need_a_class:
-        )
-      end
-
+    module Destinations
       def destination(
         label,
         href:,
@@ -87,6 +47,45 @@ module NitroKit
         )
         nil
       end
+    end
+    private_constant :Destinations
+
+    include Validation
+    include Destinations
+
+    class Results < Component
+      include Validation
+      include Destinations
+
+      def initialize(
+        id:,
+        html: {},
+        aria: {},
+        data: {},
+        desperately_need_a_class: nil
+      )
+        @identifier = validate_id!("CommandPalette id:", id)
+        @destinations = []
+
+        super(
+          component: :command_palette_results,
+          attributes: {
+            id: frame_id,
+            target: "_top",
+            data: {
+              nk__command_palette_target: "frame",
+              action: [
+                "turbo:before-fetch-request->nk--command-palette#loading",
+                "turbo:frame-load->nk--command-palette#loaded"
+              ].join(" ")
+            }
+          },
+          html:,
+          aria:,
+          data:,
+          desperately_need_a_class:
+        )
+      end
 
       def view_template(&block)
         @collecting = true
@@ -94,9 +93,10 @@ module NitroKit
 
         tag(:"turbo-frame", **root_attributes) do
           nav(
-            id: results_id,
-            aria: { labelledby: title_id },
-            data: { slot: "command-palette-results" }
+            **slot_attributes(
+              :results,
+              attributes: { id: results_id, aria: { labelledby: title_id } }
+            )
           ) do
             @destinations.each_with_index { |destination, index| render_destination(destination, index) }
           end
@@ -163,7 +163,7 @@ module NitroKit
       data: {},
       desperately_need_a_class: nil
     )
-      @identifier = component_id(id)
+      @identifier = validate_id!("CommandPalette id:", id)
       @label = required_text(:label, label)
       @placeholder = required_text(:placeholder, placeholder)
       @empty_text = required_text(:empty_text, empty_text)
@@ -202,29 +202,6 @@ module NitroKit
         render_trigger
         render_panel
       end
-    end
-
-    def destination(
-      label,
-      href:,
-      description: nil,
-      html: {},
-      aria: {},
-      data: {},
-      desperately_need_a_class: nil
-    )
-      ensure_collecting!
-
-      @destinations << Destination.new(
-        label: required_text(:label, label),
-        href: required_text(:href, href),
-        description: validate_optional_text!(:description, description),
-        html:,
-        aria:,
-        data:,
-        css_class: desperately_need_a_class
-      )
-      nil
     end
 
     private

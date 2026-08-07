@@ -13,7 +13,7 @@ module NitroKit
       data: {},
       desperately_need_a_class: nil
     )
-      @identifier = component_id(id)
+      @identifier = validate_id!("Accordion id", id)
       @mode = validate_choice!(:mode, mode, MODES)
       @items = []
 
@@ -151,12 +151,6 @@ module NitroKit
       return value if value == true || value == false
 
       raise ArgumentError, "Accordion #{name} must be true or false"
-    end
-
-    def component_id(value)
-      return value if value.is_a?(String) && value.present? && !value.match?(/\s/)
-
-      raise ArgumentError, "Accordion id must be a non-blank String without whitespace"
     end
   end
 end

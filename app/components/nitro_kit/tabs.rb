@@ -17,7 +17,7 @@ module NitroKit
       data: {},
       desperately_need_a_class: nil
     )
-      @identifier = component_id(id)
+      @identifier = validate_id!("Tabs id", id)
       @default = default.nil? ? nil : normalize_identity(default, name: "default tab key")
       @label = validate_label!(label)
       @orientation = validate_choice!(:orientation, orientation, ORIENTATIONS)
@@ -192,18 +192,6 @@ module NitroKit
       return value if value.is_a?(String) && value.present?
 
       raise ArgumentError, "Tabs labels must be non-blank Strings"
-    end
-
-    def validate_boolean!(name, value)
-      return value if value == true || value == false
-
-      raise ArgumentError, "Tabs #{name} must be true or false"
-    end
-
-    def component_id(value)
-      return value if value.is_a?(String) && value.present? && !value.match?(/\s/)
-
-      raise ArgumentError, "Tabs id must be a non-blank String without whitespace"
     end
   end
 end

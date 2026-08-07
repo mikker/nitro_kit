@@ -105,9 +105,9 @@ class TabsComponentTest < ActiveSupport::TestCase
   test "requires an explicit stable id" do
     assert_raises(ArgumentError) { NitroKit::Tabs.new }
 
-    [ nil, "", "   ", "two words", :tabs, 123 ].each do |id|
+    [ nil, "", "   ", "two words", "a.b#c[", :tabs, 123 ].each do |id|
       error = assert_raises(ArgumentError) { NitroKit::Tabs.new(id:) }
-      assert_match(/id must be a non-blank String without whitespace/, error.message)
+      assert_match(/id must be a fragment-safe String/, error.message)
     end
   end
 

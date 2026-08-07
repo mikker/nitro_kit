@@ -194,7 +194,15 @@ class ComponentTest < ActiveSupport::TestCase
       :placement,
       :layout,
       :field_type,
-      "data-field-type"
+      "data-field-type",
+      :dir,
+      "data-gap",
+      :align,
+      :justify,
+      :wrap,
+      :cols,
+      :mode,
+      "data-key"
     ]
 
     reserved_data_keys.each do |key|

@@ -7,6 +7,7 @@ module NitroKit
     # Data keys a component sets for itself through `attributes:`.
     COMPONENT_OWNED_DATA_ATTRIBUTES = %w[
       state disabled required orientation presentation placement layout side field-type
+      dir gap align justify wrap cols mode key
     ].freeze
     # Every data key Nitro owns. Applications may not pass any of them through `data:`.
     RESERVED_DATA_ATTRIBUTES = (
@@ -91,6 +92,18 @@ module NitroKit
 
       expected = allow_nil ? "true, false, or nil" : "true or false"
       raise ArgumentError, "#{name} must be #{expected}; received #{value.inspect}"
+    end
+
+    def validate_id!(name, value)
+      return value if value.is_a?(String) && value.match?(/\A[A-Za-z0-9][A-Za-z0-9_-]*\z/)
+
+      raise ArgumentError, "#{name} must be a fragment-safe String using letters, numbers, underscores, or hyphens"
+    end
+
+    def validate_text!(name, text)
+      return text if text.is_a?(String) && !text.strip.empty?
+
+      raise ArgumentError, "#{name} must be a non-blank String"
     end
 
     def owned_attributes(attributes:, html:, aria:, data:, owned_data:, desperately_need_a_class:)
@@ -290,6 +303,43 @@ module NitroKit
 
     def component_words
       @component_name.tr("-", " ")
+    end
+
+    # Conventions shared by the choice group components. They read the `id`
+    # and `options` readers those components already keep.
+
+    def deterministic_id(name)
+      derived = name.to_s.gsub(/[^a-zA-Z0-9_-]+/, "_").gsub(/\A_+|_+\z/, "")
+      return derived unless derived.empty?
+
+      raise ArgumentError, "name #{name.inspect} cannot derive an id; pass id:"
+    end
+
+    def choice_id(index)
+      "#{id}-#{index}" if id
+    end
+
+    def validate_unique_choices!
+      duplicate_value = options.group_by { |choice| choice.value.to_s }.find { |_value, matches| matches.many? }
+      raise ArgumentError, "choice values must be unique" if duplicate_value
+
+      ids = options.each_with_index.filter_map { |choice, index| choice.id || choice_id(index) }
+      raise ArgumentError, "choice ids must be unique" unless ids.uniq.length == ids.length
+    end
+
+    # Command invoker plumbing shared by the nk--dialog overlay components.
+
+    def command_attributes(html, command, commandfor:, disabled: false)
+      raise ArgumentError, "html must be a Hash" unless html.is_a?(Hash)
+
+      collision = html.keys.find { |key| %w[command commandfor].include?(key.to_s.downcase) }
+      raise ArgumentError, "#{collision}: is owned by #{component_words.capitalize}" if collision
+
+      disabled ? html : html.merge(command:, commandfor:)
+    end
+
+    def command_data(data, command, disabled: false)
+      disabled ? data : data.merge(nk__dialog_command: command)
     end
 
     def validate_optional_text!(name, text)

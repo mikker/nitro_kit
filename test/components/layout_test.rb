@@ -250,6 +250,18 @@ class LayoutTest < ActiveSupport::TestCase
     end
   end
 
+  test "flex and grid reserve their owned data attributes" do
+    %i[dir gap align justify wrap].each do |key|
+      error = assert_raises(ArgumentError) { NitroKit::Flex.new(dir: :row, data: { key => "row" }) }
+      assert_match(/data-#{key} is reserved by Nitro Kit/, error.message)
+    end
+
+    %i[cols gap].each do |key|
+      error = assert_raises(ArgumentError) { NitroKit::Grid.new(cols: 2, data: { key => "1" }) }
+      assert_match(/data-#{key} is reserved by Nitro Kit/, error.message)
+    end
+  end
+
   test "static layout CSS maps every value at every mobile-first breakpoint" do
     css = NitroKit::CssBundle.compile
     responsive_css = %w[layout flex grid].map do |name|

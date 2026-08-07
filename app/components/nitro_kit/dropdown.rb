@@ -373,15 +373,10 @@ module NitroKit
         "Unknown Dropdown trigger #{name} #{value.inspect}; expected one of: #{choices.map(&:inspect).join(", ")}"
     end
 
-    # Private copy of the AppShell identifier contract. Extract a shared
-    # validator into Component once its owner lands.
     def component_id(value)
       return generated_id if value.nil?
-      return value if value.is_a?(String) && value.match?(/\A[A-Za-z0-9][A-Za-z0-9_-]*\z/)
 
-      raise ArgumentError,
-        "Dropdown id must be nil or a String starting with a letter or digit and containing " \
-        "only letters, digits, hyphens, and underscores"
+      validate_id!("Dropdown id", value)
     end
 
     def generated_id

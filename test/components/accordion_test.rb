@@ -60,6 +60,8 @@ class AccordionTest < ActiveSupport::TestCase
 
   test "keeps reserved attributes owned and makes the class escape observable" do
     assert_raises(ArgumentError) { NitroKit::Accordion.new(id: "faq", data: { state: "open" }) }
+    assert_raises(ArgumentError) { NitroKit::Accordion.new(id: "faq", data: { mode: "single" }) }
+    assert_raises(ArgumentError) { NitroKit::Accordion.new(id: "faq", data: { key: "billing" }) }
     assert_raises(ArgumentError) { NitroKit::Accordion.new(id: "faq", html: { class: "utility" }) }
     assert_raises(ArgumentError) { NitroKit::Accordion.new(id: "faq", html: { style: "display:none" }) }
 
@@ -75,9 +77,9 @@ class AccordionTest < ActiveSupport::TestCase
   test "requires an explicit stable id" do
     assert_raises(ArgumentError) { NitroKit::Accordion.new }
 
-    [ nil, "", "   ", "two words", :faq, 123 ].each do |id|
+    [ nil, "", "   ", "two words", "faq#1?", "-faq", :faq, 123 ].each do |id|
       error = assert_raises(ArgumentError) { NitroKit::Accordion.new(id:) }
-      assert_match(/id must be a non-blank String without whitespace/, error.message)
+      assert_match(/id must be a fragment-safe String/, error.message)
     end
   end
 

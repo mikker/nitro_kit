@@ -26,7 +26,7 @@ module NitroKit
       @option_tags = validate_option_tags!(option_tags)
       @value = value
       @include_blank = validate_blank_option!(include_blank)
-      @prompt = validate_optional_text!(:prompt, prompt)
+      @prompt = validate_prompt!(prompt)
       if @include_blank && @prompt
         raise ArgumentError, "include_blank: and prompt: are mutually exclusive"
       end
@@ -151,11 +151,11 @@ module NitroKit
       raise ArgumentError, "include_blank must be true, false, nil, or a String"
     end
 
-    def validate_optional_text!(name, value)
+    def validate_prompt!(value)
       return if value.nil? || value == false
       return value if value.is_a?(String) && !value.strip.empty?
 
-      raise ArgumentError, "#{name} must be a non-blank String, false, or nil"
+      raise ArgumentError, "prompt must be a non-blank String, false, or nil"
     end
   end
 end

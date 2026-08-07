@@ -99,30 +99,5 @@ module NitroKit
     def selected?(choice)
       !value.nil? && value.to_s == choice.value.to_s
     end
-
-    def deterministic_id(name)
-      derived = name.to_s.gsub(/[^a-zA-Z0-9_-]+/, "_").gsub(/\A_+|_+\z/, "")
-      return derived unless derived.empty?
-
-      raise ArgumentError, "name #{name.inspect} cannot derive an id; pass id:"
-    end
-
-    def choice_id(index)
-      "#{id}-#{index}" if id
-    end
-
-    def validate_text!(name, text)
-      return text if text.is_a?(String) && !text.strip.empty?
-
-      raise ArgumentError, "#{name} must be a non-blank String"
-    end
-
-    def validate_unique_choices!
-      duplicate_value = options.group_by { |choice| choice.value.to_s }.find { |_value, matches| matches.many? }
-      raise ArgumentError, "choice values must be unique" if duplicate_value
-
-      ids = options.each_with_index.filter_map { |choice, index| choice.id || choice_id(index) }
-      raise ArgumentError, "choice ids must be unique" unless ids.uniq.length == ids.length
-    end
   end
 end

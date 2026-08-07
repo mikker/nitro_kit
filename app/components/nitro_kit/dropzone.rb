@@ -57,8 +57,8 @@ module NitroKit
       data: {},
       desperately_need_a_class: nil
     )
-      @identifier = component_id(id)
-      @name = form_name(name)
+      @identifier = validate_id!("Dropzone id", id)
+      @name = validate_text!("Dropzone name", name)
       @label = required_text(:label, label)
       @description = optional_text(:description, description)
       @presentation = validate_choice!(:presentation, presentation, PRESENTATIONS)
@@ -290,18 +290,6 @@ module NitroKit
 
     def direct_upload_routes
       Rails.application.routes.url_helpers
-    end
-
-    def component_id(value)
-      return value if value.is_a?(String) && value.present? && !value.match?(/\s/)
-
-      raise ArgumentError, "Dropzone id must be a non-blank String without whitespace"
-    end
-
-    def form_name(value)
-      return value if value.is_a?(String) && value.present?
-
-      raise ArgumentError, "Dropzone name must be a non-blank String"
     end
 
     def required_text(name, value)

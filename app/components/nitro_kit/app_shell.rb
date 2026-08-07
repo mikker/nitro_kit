@@ -21,7 +21,7 @@ module NitroKit
       data: {},
       desperately_need_a_class: nil
     )
-      @identifier = component_id(id)
+      @identifier = validate_id!("AppShell id", id)
       @layout = validate_choice!(:layout, layout, LAYOUTS)
       @skip_link_label = validate_label!(:skip_link_label, skip_link_label)
       @open_navigation_label = validate_label!(:open_navigation_label, open_navigation_label)
@@ -210,12 +210,6 @@ module NitroKit
 
     def main_id
       "#{identifier}-main"
-    end
-
-    def component_id(value)
-      return value if value.is_a?(String) && value.match?(/\A[A-Za-z0-9][A-Za-z0-9_-]*\z/)
-
-      raise ArgumentError, "AppShell id must be a fragment-safe String using letters, numbers, underscores, or hyphens"
     end
 
     def validate_label!(name, value)
