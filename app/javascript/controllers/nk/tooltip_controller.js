@@ -6,6 +6,8 @@ export default class extends Controller {
   }
 
   dismiss(event) {
+    if (!this.shown) return;
+
     event.preventDefault();
     this.element.dataset.dismissed = "";
   }
@@ -20,5 +22,12 @@ export default class extends Controller {
 
   reset() {
     delete this.element.dataset.dismissed;
+  }
+
+  get shown() {
+    return (
+      !("dismissed" in this.element.dataset) &&
+      this.element.matches(":hover, :focus-within")
+    );
   }
 }

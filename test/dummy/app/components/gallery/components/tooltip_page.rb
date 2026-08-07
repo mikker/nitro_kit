@@ -50,10 +50,11 @@ module Gallery
                 content: "Copy the account identifier."
               ) do |tooltip|
                 tooltip.trigger(
+                  icon: :copy,
                   variant: :ghost,
                   size: :sm,
                   aria: { label: "Copy account identifier" }
-                ) { "Copy" }
+                )
               end
             end
             sample("Long explanation", slug: "long") do
@@ -61,6 +62,14 @@ module Gallery
                 "gallery-tooltip-long",
                 "Only workspace owners can rotate this credential; active integrations continue using the old value until the rotation completes."
               )
+            end
+            sample("Plain HTML trigger", slug: "html-trigger") do
+              render NitroKit::Tooltip.new(
+                id: "gallery-tooltip-html",
+                content: "Deploys pause while the incident review is open."
+              ) do |tooltip|
+                tooltip.trigger("Deploys paused", as: :span)
+              end
             end
           end
         end

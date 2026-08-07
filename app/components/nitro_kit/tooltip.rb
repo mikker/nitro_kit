@@ -16,7 +16,6 @@ module NitroKit
       :icon,
       :icon_end,
       :label,
-      :disabled,
       :target,
       :rel,
       :download,
@@ -48,7 +47,7 @@ module NitroKit
             controller: "nk--tooltip",
             placement: @placement,
             dismissed: nil,
-            action: "pointerleave->nk--tooltip#resetIfUninterested focusout->nk--tooltip#resetIfUninterested"
+            action: "keydown.esc@document->nk--tooltip#dismiss pointerleave->nk--tooltip#resetIfUninterested focusout->nk--tooltip#resetIfUninterested"
           }
         },
         html:,
@@ -81,8 +80,8 @@ module NitroKit
       text = nil,
       as: Button,
       href: nil,
-      variant: :default,
-      size: :md,
+      variant: nil,
+      size: nil,
       icon: nil,
       icon_end: nil,
       label: nil,
@@ -106,7 +105,7 @@ module NitroKit
       if as == :custom && content&.arity != 1
         raise ArgumentError, "Tooltip custom trigger block must accept trigger attributes"
       end
-      if as != Button && [ href, icon, icon_end, label, target, rel, download ].any?
+      if as != Button && [ href, variant, size, icon, icon_end, label, target, rel, download ].any?
         raise ArgumentError, "Tooltip #{as.inspect} trigger does not accept Button options"
       end
 
@@ -114,12 +113,11 @@ module NitroKit
         as:,
         text:,
         href:,
-        variant:,
-        size:,
+        variant: variant || :default,
+        size: size || :md,
         icon:,
         icon_end:,
         label:,
-        disabled: false,
         target:,
         rel:,
         download:,
@@ -156,7 +154,6 @@ module NitroKit
         icon: @trigger.icon,
         icon_end: @trigger.icon_end,
         label: @trigger.label,
-        disabled: @trigger.disabled,
         target: @trigger.target,
         rel: @trigger.rel,
         download: @trigger.download,
@@ -192,7 +189,7 @@ module NitroKit
     end
 
     def render_custom_trigger
-      span(**slot_attributes(:trigger)) do
+      div(**slot_attributes(:trigger)) do
         raw(safe(capture(trigger_attributes, &@trigger.content)))
       end
     end

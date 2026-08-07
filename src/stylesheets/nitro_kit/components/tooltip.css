@@ -21,7 +21,9 @@
     border-radius: var(--nk-radius-md);
     box-shadow: var(--nk-shadow-sm);
     opacity: 0;
-    transition: opacity var(--nk-duration-fast) var(--nk-ease);
+    transition:
+      opacity var(--nk-duration-fast) var(--nk-ease),
+      visibility var(--nk-duration-fast) var(--nk-ease) allow-discrete;
   }
 
   :where([data-nk="tooltip"] > [data-slot="tooltip-content"]::before) {
@@ -30,68 +32,70 @@
   }
 
   :where(
-    [data-nk="tooltip"][data-placement="top"] > [data-slot="tooltip-content"]
-  ) {
+      [data-nk="tooltip"][data-placement="top"] > [data-slot="tooltip-content"]
+    ) {
     inset-block-end: calc(100% + (var(--nk-space) * 2));
     inset-inline-start: 50%;
     transform: translateX(-50%);
   }
 
   :where(
-    [data-nk="tooltip"][data-placement="top"]
-      > [data-slot="tooltip-content"]::before
-  ) {
+      [data-nk="tooltip"][data-placement="top"]
+        > [data-slot="tooltip-content"]::before
+    ) {
     inset-block-start: 100%;
     inset-inline: 0;
     block-size: calc(var(--nk-space) * 2);
   }
 
   :where(
-    [data-nk="tooltip"][data-placement="right"] > [data-slot="tooltip-content"]
-  ) {
+      [data-nk="tooltip"][data-placement="right"]
+        > [data-slot="tooltip-content"]
+    ) {
     inset-block-start: 50%;
     inset-inline-start: calc(100% + (var(--nk-space) * 2));
     transform: translateY(-50%);
   }
 
   :where(
-    [data-nk="tooltip"][data-placement="right"]
-      > [data-slot="tooltip-content"]::before
-  ) {
+      [data-nk="tooltip"][data-placement="right"]
+        > [data-slot="tooltip-content"]::before
+    ) {
     inset-block: 0;
     inset-inline-end: 100%;
     inline-size: calc(var(--nk-space) * 2);
   }
 
   :where(
-    [data-nk="tooltip"][data-placement="bottom"] > [data-slot="tooltip-content"]
-  ) {
+      [data-nk="tooltip"][data-placement="bottom"]
+        > [data-slot="tooltip-content"]
+    ) {
     inset-block-start: calc(100% + (var(--nk-space) * 2));
     inset-inline-start: 50%;
     transform: translateX(-50%);
   }
 
   :where(
-    [data-nk="tooltip"][data-placement="bottom"]
-      > [data-slot="tooltip-content"]::before
-  ) {
+      [data-nk="tooltip"][data-placement="bottom"]
+        > [data-slot="tooltip-content"]::before
+    ) {
     inset-block-end: 100%;
     inset-inline: 0;
     block-size: calc(var(--nk-space) * 2);
   }
 
   :where(
-    [data-nk="tooltip"][data-placement="left"] > [data-slot="tooltip-content"]
-  ) {
+      [data-nk="tooltip"][data-placement="left"] > [data-slot="tooltip-content"]
+    ) {
     inset-block-start: 50%;
     inset-inline-end: calc(100% + (var(--nk-space) * 2));
     transform: translateY(-50%);
   }
 
   :where(
-    [data-nk="tooltip"][data-placement="left"]
-      > [data-slot="tooltip-content"]::before
-  ) {
+      [data-nk="tooltip"][data-placement="left"]
+        > [data-slot="tooltip-content"]::before
+    ) {
     inset-block: 0;
     inset-inline-start: 100%;
     inline-size: calc(var(--nk-space) * 2);
@@ -100,18 +104,18 @@
 
 @layer nitro-kit.state {
   :where(
-    [data-nk="tooltip"]:not([data-dismissed]):focus-within
-      > [data-slot="tooltip-content"]
-  ) {
+      [data-nk="tooltip"]:not([data-dismissed]):focus-within
+        > [data-slot="tooltip-content"]
+    ) {
     visibility: visible;
     opacity: 1;
   }
 
   @media (hover: hover) {
     :where(
-      [data-nk="tooltip"]:not([data-dismissed]):hover
-        > [data-slot="tooltip-content"]
-    ) {
+        [data-nk="tooltip"]:not([data-dismissed]):hover
+          > [data-slot="tooltip-content"]
+      ) {
       visibility: visible;
       opacity: 1;
     }

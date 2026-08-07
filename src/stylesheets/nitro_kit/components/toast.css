@@ -73,7 +73,11 @@
       var(--nk-color-surface)
     );
     --_nk-toast-foreground: var(--nk-color-info-content);
-    --_nk-toast-border: var(--nk-color-info);
+    --_nk-toast-border: color-mix(
+      in oklab,
+      var(--nk-color-info) 45%,
+      transparent
+    );
   }
 
   :where([data-nk="toast-item"][data-variant="success"]) {
@@ -83,7 +87,11 @@
       var(--nk-color-surface)
     );
     --_nk-toast-foreground: var(--nk-color-success-content);
-    --_nk-toast-border: var(--nk-color-success);
+    --_nk-toast-border: color-mix(
+      in oklab,
+      var(--nk-color-success) 45%,
+      transparent
+    );
   }
 
   :where([data-nk="toast-item"][data-variant="warning"]) {
@@ -93,7 +101,11 @@
       var(--nk-color-surface)
     );
     --_nk-toast-foreground: var(--nk-color-warning-content);
-    --_nk-toast-border: var(--nk-color-warning);
+    --_nk-toast-border: color-mix(
+      in oklab,
+      var(--nk-color-warning) 45%,
+      transparent
+    );
   }
 
   :where([data-nk="toast-item"][data-variant="error"]) {
@@ -103,7 +115,11 @@
       var(--nk-color-surface)
     );
     --_nk-toast-foreground: var(--nk-color-danger-content);
-    --_nk-toast-border: var(--nk-color-danger);
+    --_nk-toast-border: color-mix(
+      in oklab,
+      var(--nk-color-danger) 45%,
+      transparent
+    );
   }
 }
 
@@ -116,11 +132,6 @@
   :where([data-nk="toast-item"][data-state="closed"]) {
     opacity: 0;
     transform: translateY(calc(var(--nk-space) * 3));
-  }
-
-  :where([data-nk="toast-item"]:focus-visible) {
-    outline: var(--nk-focus-width) solid var(--nk-color-focus);
-    outline-offset: var(--nk-focus-offset);
   }
 
   @media (prefers-reduced-motion: reduce) {

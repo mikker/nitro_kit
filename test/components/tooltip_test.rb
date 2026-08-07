@@ -145,6 +145,11 @@ class TooltipComponentTest < ActiveSupport::TestCase
         tooltip.trigger("Open", disabled: true)
       end
     end
+    assert_match(/does not accept Button options/, assert_raises(ArgumentError) do
+      NitroKit::Tooltip.new(id: "tip", content: "Context").call do |tooltip|
+        tooltip.trigger("Open", as: :div, variant: :primary, size: :xl)
+      end
+    end.message)
     assert_raises(ArgumentError) do
       NitroKit::Tooltip.new(id: "tip", content: "Context").call do |tooltip|
         tooltip.trigger("Open", as: NitroKit::Card)

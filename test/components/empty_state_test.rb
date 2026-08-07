@@ -81,6 +81,8 @@ class EmptyStateTest < ActiveSupport::TestCase
 
   test "rejects missing mixed and repeated content declarations" do
     assert_match(/requires title/, assert_raises(ArgumentError) { render_node(NitroKit::EmptyState.new) }.message)
+    component = NitroKit::EmptyState.new
+    assert_match(/inside the render block/, assert_raises(ArgumentError) { component.title("Outside") }.message)
     assert_raises(ArgumentError) do
       render_node(NitroKit::EmptyState.new(title: "Keyword title")) { |empty| empty.title("Nested title") }
     end

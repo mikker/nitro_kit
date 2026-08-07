@@ -11,7 +11,7 @@ class InteractionControllerContractTest < ActiveSupport::TestCase
     sources.each do |name, source|
       refute_includes source, "@floating-ui"
       refute_includes source, "@github/combobox-nav"
-      next if name == "dropdown"
+      next if %w[dropdown combobox].include?(name)
 
       refute_includes source, "addEventListener"
       refute_includes source, "MutationObserver"
@@ -25,6 +25,7 @@ class InteractionControllerContractTest < ActiveSupport::TestCase
     refute_includes sources.fetch("dropdown"), "aria-expanded"
     refute_includes sources.fetch("dropdown"), "dataset.state"
     assert_includes sources.fetch("combobox"), "setCustomValidity"
+    assert_includes sources.fetch("combobox"), "pointerdown"
     refute_includes sources.fetch("combobox"), 'removeAttribute("role")'
     refute_includes sources.fetch("combobox"), "TODO(i18n)"
     assert_includes sources.fetch("combobox"), "INVALID_SELECTION_MESSAGE"

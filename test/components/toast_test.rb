@@ -13,7 +13,7 @@ class ToastTest < ActiveSupport::TestCase
     assert_equal "nk-toast", node["id"]
     assert_equal "region", node["role"]
     assert_equal I18n.t("nitro_kit.toast.label"), node["aria-label"]
-    assert_equal "polite", node["aria-live"]
+    assert_nil node["aria-live"]
     assert_equal "nk--toast", node["data-controller"]
     assert_includes node["data-action"], "turbo:before-cache@document->nk--toast#teardown"
     assert_equal "5000", node["data-nk--toast-duration-value"]
@@ -120,6 +120,10 @@ class ToastTest < ActiveSupport::TestCase
       assert_raises(ArgumentError) { NitroKit::Toast.new(id:) }
     end
     assert_raises(ArgumentError) { NitroKit::Toast.new(html: { class: "utility" }) }
+    assert_raises(ArgumentError) { NitroKit::Toast.new(aria: { label: "Mine" }) }
+    assert_raises(ArgumentError) do
+      render_toast { |toast| toast.item(description: "No", aria: { atomic: "false" }) }
+    end
     assert_raises(ArgumentError) { NitroKit::Toast::FlashMessages.new(flash: nil) }
 
     component = NitroKit::Toast.new

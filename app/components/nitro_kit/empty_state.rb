@@ -39,8 +39,8 @@ module NitroKit
 
     attr_reader :level, :variant
 
-    def view_template
-      yield self if block_given?
+    def view_template(&block)
+      collect_declarations(&block)
       require_content!("EmptyState", :title, @title_content)
 
       section(**root_attributes) do
@@ -54,16 +54,19 @@ module NitroKit
     end
 
     def title(text = nil, &block)
+      ensure_collecting!
       @title_content = declare_content(:title, @title_content, text, &block)
       nil
     end
 
     def description(text = nil, &block)
+      ensure_collecting!
       @description_content = declare_content(:description, @description_content, text, &block)
       nil
     end
 
     def icon(component, &content)
+      ensure_collecting!
       unless component.is_a?(NitroKit::Icon)
         raise ArgumentError, "EmptyState icon must be a NitroKit::Icon"
       end
@@ -74,6 +77,7 @@ module NitroKit
     end
 
     def action(component, &content)
+      ensure_collecting!
       unless component.is_a?(NitroKit::Button)
         raise ArgumentError, "EmptyState actions must be NitroKit::Button instances"
       end
@@ -87,6 +91,21 @@ module NitroKit
     end
 
     private
+
+    def collect_declarations
+      return unless block_given?
+
+      @collecting = true
+      yield(self)
+    ensure
+      @collecting = false
+    end
+
+    def ensure_collecting!
+      return if @collecting
+
+      raise ArgumentError, "EmptyState declarations must be inside the render block"
+    end
 
     def render_actions
       div(**slot_attributes(:actions)) do

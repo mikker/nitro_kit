@@ -32,6 +32,7 @@ module NitroKit
           attributes: {
             id:,
             role: ASSERTIVE_VARIANTS.include?(@variant) ? "alert" : "status",
+            aria: { atomic: true },
             data: {
               state: "open",
               turbo_temporary: true,
@@ -47,7 +48,7 @@ module NitroKit
             }
           },
           html:,
-          aria: aria.merge(atomic: true),
+          aria:,
           data:,
           variant:,
           desperately_need_a_class:
@@ -175,6 +176,7 @@ module NitroKit
         attributes: {
           id:,
           role: "region",
+          aria: { label: },
           data: {
             controller: "nk--toast",
             action: "turbo:before-cache@document->nk--toast#teardown",
@@ -182,7 +184,7 @@ module NitroKit
           }
         },
         html:,
-        aria: aria.merge(label:, live: "polite"),
+        aria:,
         data:,
         desperately_need_a_class:
       )

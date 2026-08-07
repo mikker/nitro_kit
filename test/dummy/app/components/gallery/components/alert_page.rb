@@ -15,7 +15,7 @@ module Gallery
         example_section(
           "Variants",
           slug: "alert-variants",
-          description: "Every semantic intent stays visible in data while retaining the native alert role."
+          description: "Every semantic intent stays visible in data. live: defaults to :off, so these static alerts render without a live region role."
         ) do
           example(
             "Intent matrix",
@@ -73,6 +73,33 @@ module Gallery
                   )
                 end
               end
+            end
+          end
+        end
+
+        example_section(
+          "Live announcement",
+          slug: "alert-live",
+          description: "live: :polite renders role=status and live: :assertive renders role=alert, so alerts inserted by Turbo are announced; the :off default stays silent."
+        ) do
+          example("Live modes", slug: "alert-live-modes", layout: :matrix) do
+            sample("Polite", slug: "polite") do
+              render NitroKit::Alert.new(
+                id: "gallery-alert-live-polite",
+                variant: :info,
+                live: :polite,
+                title: "Export ready",
+                description: "The workspace export finished and is ready to download."
+              )
+            end
+            sample("Assertive", slug: "assertive") do
+              render NitroKit::Alert.new(
+                id: "gallery-alert-live-assertive",
+                variant: :error,
+                live: :assertive,
+                title: "Connection lost",
+                description: "Changes stopped saving; check the network before continuing."
+              )
             end
           end
         end

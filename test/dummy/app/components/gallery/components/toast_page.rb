@@ -1,6 +1,8 @@
 module Gallery
   module Components
     class ToastPage < ComponentPage
+      include Phlex::Rails::Helpers::TurboFrameTag
+
       private
 
       def source_note
@@ -18,17 +20,25 @@ module Gallery
           description: "Every notification intent renders as explicit server-owned markup. The list is addressable as <toast id>-list so Turbo Streams can append items."
         ) do
           example("Intent stack", slug: "toast-intent-stack", mode: :full_width) do
-            render NitroKit::Toast.new(
-              duration: 600_000,
-              label: "Variant examples",
-              id: "gallery-toast-variants"
-            ) do |toast|
-              NitroKit::Toast::Item::VARIANTS.each do |variant|
-                toast.item(
-                  title: variant.to_s.humanize,
-                  description: toast_description(variant),
-                  variant:
-                )
+            turbo_frame_tag("gallery-toast-variants-frame") do
+              render NitroKit::Button.new(
+                "Replay dismissed notifications",
+                id: "gallery-toast-variants-replay",
+                href: "/gallery/components/toast",
+                size: :sm
+              )
+              render NitroKit::Toast.new(
+                duration: 600_000,
+                label: "Variant examples",
+                id: "gallery-toast-variants"
+              ) do |toast|
+                NitroKit::Toast::Item::VARIANTS.each do |variant|
+                  toast.item(
+                    title: variant.to_s.humanize,
+                    description: toast_description(variant),
+                    variant:
+                  )
+                end
               end
             end
           end
@@ -62,12 +72,20 @@ module Gallery
               end
             end
             sample("Timed pause", slug: "timed-pause") do
-              render NitroKit::Toast.new(
-                duration: 1_200,
-                label: "Timed notification",
-                id: "gallery-toast-timed"
-              ) do |toast|
-                toast.item(title: "Focus keeps this notification visible")
+              turbo_frame_tag("gallery-toast-timed-frame") do
+                render NitroKit::Button.new(
+                  "Replay",
+                  id: "gallery-toast-timed-replay",
+                  href: "/gallery/components/toast",
+                  size: :sm
+                )
+                render NitroKit::Toast.new(
+                  duration: 1_200,
+                  label: "Timed notification",
+                  id: "gallery-toast-timed"
+                ) do |toast|
+                  toast.item(title: "Focus keeps this notification visible")
+                end
               end
             end
             sample("Block content", slug: "block") do
@@ -155,7 +173,7 @@ module Gallery
           example(
             "Region and announcement",
             slug: "toast-region-announcement",
-            description: "The region is section[data-nk=toast] with role=region, aria-live=polite, and the label passed as label:. Each notification is li[data-nk=toast-item] with aria-atomic=true and role=status, except the error variant, which uses role=alert so assistive technology interrupts. Every item is data-turbo-temporary so a cached page never replays old feedback, while the region survives and its ol stays addressable as the toast id plus \"-list\" for a Turbo Stream append. duration: is the auto-dismiss timer in milliseconds; it pauses on hover and focus, and dismissible: false keeps a notice on screen until the person dismisses the page."
+            description: "The region is section[data-nk=toast] with role=region and the label passed as label:. Each notification is li[data-nk=toast-item] with aria-atomic=true and role=status, except the error variant, which uses role=alert so assistive technology interrupts. Every item is data-turbo-temporary so a cached page never replays old feedback, while the region survives and its ol stays addressable as the toast id plus \"-list\" for a Turbo Stream append. duration: is the auto-dismiss timer in milliseconds; it pauses on hover and focus, and dismissible: false keeps a notice on screen until the person dismisses the page."
           ) do
             render NitroKit::Toast.new(
               duration: 600_000,
@@ -196,6 +214,7 @@ module Gallery
                 render NitroKit::Button.new(
                   "Configure",
                   id: "gallery-toast-configure",
+                  href: "#configure",
                   variant: :default
                 )
               end

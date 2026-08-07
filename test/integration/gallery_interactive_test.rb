@@ -47,7 +47,8 @@ class GalleryInteractiveTest < ActionDispatch::IntegrationTest
     end
 
     assert_select "#gallery-tooltip-icon-trigger[aria-label='Copy account identifier']" do
-      assert_select "[data-slot='button-label']", text: "Copy"
+      assert_select "svg[data-nk='icon']"
+      assert_select "[data-slot='button-label']", count: 0
     end
     assert_select "#gallery-tooltip-long-content", text: /active integrations continue/
   end
@@ -149,7 +150,7 @@ class GalleryInteractiveTest < ActionDispatch::IntegrationTest
   test "toast page covers every intent content mode and explicit Rails flash mapping" do
     get_component("toast")
 
-    assert_select "#gallery-toast-variants[role='region'][aria-live='polite']" do
+    assert_select "#gallery-toast-variants[role='region']:not([aria-live])" do
       assert_select "[data-nk='toast-item']", count: NitroKit::Toast::Item::VARIANTS.size
       NitroKit::Toast::Item::VARIANTS.each do |variant|
         assert_select "[data-nk='toast-item'][data-variant='#{variant}']", count: 1

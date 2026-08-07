@@ -7,7 +7,7 @@
 
     position: relative;
     display: grid;
-    width: 100%;
+    inline-size: 100%;
     gap: calc(var(--nk-space) * 2);
     padding: calc(var(--nk-space) * 4);
     font-size: var(--nk-text-sm);
@@ -32,22 +32,22 @@
 
   :where([data-nk="alert"] > [data-slot="alert-icon"]) {
     grid-row: 1 / -1;
-    width: 1.25rem;
-    height: 1.25rem;
+    inline-size: 1.25rem;
+    block-size: 1.25rem;
     margin-block-start: 0.0625rem;
   }
 
   :where(
-    [data-nk="alert"]:has(> [data-slot="alert-icon"])
-      > [data-slot="alert-title"],
-    [data-nk="alert"]:has(> [data-slot="alert-icon"])
-      > [data-slot="alert-description"]
-  ) {
+      [data-nk="alert"]:has(> [data-slot="alert-icon"])
+        > [data-slot="alert-title"],
+      [data-nk="alert"]:has(> [data-slot="alert-icon"])
+        > [data-slot="alert-description"]
+    ) {
     grid-column: 2;
   }
 
   :where([data-nk="alert"] > [data-slot="alert-description"]) {
-    max-width: var(--nk-content-lg);
+    max-inline-size: var(--nk-content-lg);
     color: var(--_nk-alert-foreground);
     text-wrap: pretty;
   }
