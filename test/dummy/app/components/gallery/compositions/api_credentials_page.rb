@@ -166,7 +166,7 @@ module Gallery
         key = Gallery::FormExamples.api_key(state == "validation" ? :invalid : :valid)
         disabled = state == "loading"
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Credential details",
           description: "The application owns credential scope, expiration policy, persistence, and delivery.",
           id: "gallery-api-credential-section"

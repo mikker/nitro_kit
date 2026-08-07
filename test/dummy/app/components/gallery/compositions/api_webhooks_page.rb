@@ -122,10 +122,10 @@ module Gallery
         invalid = state == "validation"
         disabled = state == "loading"
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Endpoint configuration",
           description: "URL validation, allowed event policy, ownership, signing secrets, and persistence remain application code.",
-          id: "gallery-api-webhooks-form-section"
+          id: "gallery-api-webhooks-settings-section"
         ) do |section|
           if invalid
             section.status NitroKit::Alert.new(variant: :error, id: "gallery-api-webhooks-form-error") do |alert|

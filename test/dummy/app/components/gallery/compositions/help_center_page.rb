@@ -43,7 +43,7 @@ module Gallery
       end
 
       def render_search
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Search help",
           description: "Documentation indexing, ranking, and category policy remain application behavior.",
           id: "gallery-help-center-search-section"
@@ -173,7 +173,7 @@ module Gallery
         invalid = state == "contact-validation"
         contact = help_contact(invalid:)
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Contact support",
           description: "The application owns routing, attachments, service levels, delivery, and ticket persistence.",
           id: "gallery-help-center-contact-section"

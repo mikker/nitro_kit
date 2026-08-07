@@ -236,7 +236,7 @@ module Gallery
           align: :stretch,
           id: "gallery-team-search-stack"
         ) do
-          render NitroKit::FormSection.new(
+          render NitroKit::SettingsSection.new(
             title: "Search the team",
             description: "The GET query replaces this stable team-management frame.",
             id: "gallery-team-search-section"
@@ -290,7 +290,7 @@ module Gallery
           align: :stretch,
           id: "gallery-team-multiple-teams-stack"
         ) do
-          render NitroKit::FormSection.new(
+          render NitroKit::SettingsSection.new(
             title: "Team context",
             description: "Membership role and every mutation are scoped to the selected team.",
             id: "gallery-team-context-section"
@@ -360,7 +360,7 @@ module Gallery
         invitation = Gallery::FormExamples.team_invitation(state == "invite-validation" ? :invalid : :valid)
         disabled = state == "loading"
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Invitation details",
           description: "The application owns the invitation model, role policy, route, and Turbo frame.",
           id: "gallery-team-invitation-section"
@@ -424,7 +424,7 @@ module Gallery
           role: "viewer"
         )
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Role assignment",
           description: "The submitted member ID and allowed roles remain application policy.",
           id: "gallery-team-role-section"
@@ -473,7 +473,7 @@ module Gallery
         )
         action.validate
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Keep an owner",
           description: "The domain model rejects role changes and removals that would leave a team ownerless.",
           id: "gallery-team-last-owner-section"
@@ -648,7 +648,7 @@ module Gallery
         {
           "members" => "Current memberships and pending invitations use separately labelled data tables.",
           "multiple-teams" => "A deterministic team selector keeps role and membership policy scoped to the current team.",
-          "search" => "A FormSection GET form and deterministic member and invitation results stay in one Turbo frame.",
+          "search" => "A SettingsSection GET form and deterministic member and invitation results stay in one Turbo frame.",
           "empty" => "The absence of members leaves one clear invitation action.",
           "invite" => "A real invitation model collects email, role, and optional context.",
           "invite-validation" => "Active Model errors cover malformed email, unsupported role, and long copy.",

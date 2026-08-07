@@ -64,7 +64,7 @@ module Gallery
         disabled = state == "processing"
         payment = payment_example(invalid:)
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Payment method",
           description: "Card collection, tokenization, submission routes, and payment policy remain application code.",
           id: "gallery-checkout-payment-section"
@@ -143,7 +143,7 @@ module Gallery
       end
 
       def render_failed
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Try payment again",
           description: "The previous authorization was declined. No workspace access or subscription state changed.",
           id: "gallery-checkout-failed-section"

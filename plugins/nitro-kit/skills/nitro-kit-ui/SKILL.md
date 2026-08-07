@@ -45,7 +45,7 @@ If the gem is not installed, say that the skill requires Nitro Kit and follow th
    the title rather than clipping either region.
 8. For team administration and account settings, read
    `docs/patterns/application_foundation.md`. Put Settings after an
-   `AppNavigation` spacer and use `SettingsLayout` with plain `FormSection`
+   `AppNavigation` spacer and use `SettingsLayout` with plain `SettingsSection`
    regions instead of a stack of Cards.
 
 ## Preserve the boundary

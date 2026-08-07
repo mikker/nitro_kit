@@ -130,7 +130,7 @@ module Gallery
         disabled = state == "payment-loading"
         payment_method = payment_method_example(invalid:)
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Replace payment method",
           description: "Update the card and receipt destination used for future Team plan charges.",
           id: "gallery-billing-payment-card"

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module NitroKit
-  class FormSection < Component
+  class SettingsSection < Component
     Child = Data.define(:component, :content)
     TITLE_LEVELS = (1..6).freeze
 
@@ -20,10 +20,10 @@ module NitroKit
       @description_content = content_from_keyword(:description, description)
       @status = nil
       @form = nil
-      @title_id = "#{id || "nk-form-section-#{SecureRandom.hex(4)}"}-title"
+      @title_id = "#{id || "nk-settings-section-#{SecureRandom.hex(4)}"}-title"
 
       super(
-        component: :form_section,
+        component: :settings_section,
         attributes: { id:, aria: { labelledby: @title_id } }.compact,
         html:,
         aria:,
@@ -34,8 +34,8 @@ module NitroKit
 
     def view_template
       yield self if block_given?
-      require_content!("FormSection", :title, @title_content)
-      raise ArgumentError, "FormSection requires exactly one form" unless @form
+      require_content!("SettingsSection", :title, @title_content)
+      raise ArgumentError, "SettingsSection requires exactly one form" unless @form
 
       section(**root_attributes) do
         header(**slot_attributes(:header)) do
@@ -67,17 +67,17 @@ module NitroKit
 
     def status(component, &content)
       unless component.is_a?(NitroKit::Alert)
-        raise ArgumentError, "FormSection status must be a NitroKit::Alert"
+        raise ArgumentError, "SettingsSection status must be a NitroKit::Alert"
       end
-      raise ArgumentError, "FormSection accepts at most one status" if @status
+      raise ArgumentError, "SettingsSection accepts at most one status" if @status
 
       @status = Child.new(component:, content:)
       nil
     end
 
     def form(&content)
-      raise ArgumentError, "FormSection form requires a block" unless content
-      raise ArgumentError, "FormSection accepts exactly one form" if @form
+      raise ArgumentError, "SettingsSection form requires a block" unless content
+      raise ArgumentError, "SettingsSection accepts exactly one form" if @form
 
       @form = content
       nil

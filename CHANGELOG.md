@@ -133,7 +133,7 @@ Nitro Kit 2.0 alpha is a ground-up, intentionally incompatible rebuild around ge
 - Static zero-specificity CSS, light and dark theme tokens with a no-JavaScript system fallback, and a separate Tailwind CSS v4 adapter.
 - Responsive Flex and Grid layouts with fixed mobile-first breakpoints, closed values, classless data contracts, and no Tailwind runtime; plus the constrained-width Container.
 - Sortable `Table` headers with caller-owned URLs, native `aria-sort`, and an optional Ransack gallery recipe.
-- Eleven blocks and shells: AuthShell, AppShell, SettingsLayout, Toolbar, PaginationBar, PageHeader, StatGrid, DataSection, FormSection, DangerZone, and EmptyState.
+- Eleven blocks and shells: AuthShell, AppShell, SettingsLayout, Toolbar, PaginationBar, PageHeader, StatGrid, DataSection, SettingsSection, DangerZone, and EmptyState.
 - AppNavigation, AppearancePicker, DetailsTable, Dropzone, and ProgressiveImage components, plus the non-visual AppearanceBootstrap runtime.
 - Typed Choice values and direct-Phlex Rails FormBuilder integration with Active Model errors, native and direct uploads, and Turbo Frame/Stream examples.
 - Direct optional Pagy integration through `Pagination(pagy:)`, with an explicit URL callable for caller-owned destinations.

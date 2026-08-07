@@ -15,7 +15,7 @@ replaced later.
 - One wrapper immediately inside `shell.main` owns responsive page padding for
   every route; the shell owns viewport height and scrolling.
 - Infrequent account destinations go after `navigation.spacer`; settings
-  compose with `SettingsLayout` and plain `FormSection` regions.
+  compose with `SettingsLayout` and plain `SettingsSection` regions.
 - When destination count warrants search, compose one `CommandPalette` in the
   shell and render only routes the current membership may visit.
 - Centralize cross-cutting feedback in one flash-driven toast region rendered
@@ -93,7 +93,7 @@ its major regions.
 
 Use `SettingsLayout` inside the normal shell main region. Its navigation lists
 stable subsections such as Profile, Notifications, Appearance, and Password;
-its content renders the selected form. Use `FormSection` for genuinely distinct
+its content renders the selected form. Use `SettingsSection` for genuinely distinct
 form regions and ordinary whitespace or dividers between them.
 
 Render subsection destinations as links and mark the active link with

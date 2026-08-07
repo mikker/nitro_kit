@@ -178,7 +178,7 @@ module Gallery
                 end
               end
 
-              render NitroKit::FormSection.new(
+              render NitroKit::SettingsSection.new(
                 title: "Import project evidence",
                 description: "This example uses ordinary multipart submission and remains useful without JavaScript.",
                 id: "gallery-sidebar-application-import"

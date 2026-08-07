@@ -94,7 +94,7 @@ class GalleryReferenceTest < ActionDispatch::IntegrationTest
       assert_select "li", text: /a stable ID owns filters, sorting, results/
     end
 
-    get gallery_component_path("form-section")
+    get gallery_component_path("settings-section")
 
     assert_response :success
 

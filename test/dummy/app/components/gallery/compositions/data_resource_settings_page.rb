@@ -31,10 +31,10 @@ module Gallery
         form = resource_form
         disabled = !policy.manage_resources?
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Resource configuration",
           description: "Identity, visibility, retention, and notifications remain application-owned values.",
-          id: "gallery-data-resource-settings-form-section"
+          id: "gallery-data-resource-settings-settings-section"
         ) do |section|
           render_form_status(section, form)
           section.form do

@@ -107,7 +107,7 @@ class ResponsiveThemeTest < ApplicationSystemTestCase
       state: "payment",
       viewport: PHONE,
       theme: "light",
-      selector: "[data-nk='form-section']",
+      selector: "[data-nk='settings-section']",
       probe: :surface
     )
   ].freeze

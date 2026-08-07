@@ -98,7 +98,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-checkout-continue[href$='/checkout/payment']"
 
     get_flow("checkout", "payment")
-    assert_select "#gallery-checkout-payment-section[data-nk='form-section']"
+    assert_select "#gallery-checkout-payment-section[data-nk='settings-section']"
     assert_select "#gallery-checkout-payment-form" do
       assert_select "input[autocomplete='cc-name'][required]"
       assert_select "input[autocomplete='cc-number'][inputmode='numeric'][required]"
@@ -108,7 +108,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
     end
 
     get_flow("checkout", "validation")
-    assert_select "#gallery-checkout-payment-error[data-slot='form-section-status'][data-variant='error']"
+    assert_select "#gallery-checkout-payment-error[data-slot='settings-section-status'][data-variant='error']"
     assert_select "#gallery-checkout-payment-form [data-nk='field'][data-state='invalid']", count: 5
 
     get_flow("checkout", "processing")
@@ -122,7 +122,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-checkout-result-action", text: "Open workspace"
 
     get_flow("checkout", "failed")
-    assert_select "#gallery-checkout-failed-section[data-nk='form-section']"
+    assert_select "#gallery-checkout-failed-section[data-nk='settings-section']"
     assert_select "#gallery-checkout-failed-alert[data-variant='error']", text: /declined/
     assert_select "#gallery-checkout-retry-form", count: 1
 
@@ -188,7 +188,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
     end
 
     get_flow("onboarding-branches", "company")
-    assert_select "#gallery-onboarding-company-section[data-nk='form-section']"
+    assert_select "#gallery-onboarding-company-section[data-nk='settings-section']"
     assert_select "#gallery-onboarding-company-form input[name='company[workspace_name]'][value='Analytical Engines']"
 
     get_flow("onboarding-branches", "solo")
@@ -244,7 +244,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-api-webhooks-deliveries-table tbody tr", count: 1
 
     get_flow("api-webhooks", "create")
-    assert_select "#gallery-api-webhooks-form-section[data-nk='form-section']"
+    assert_select "#gallery-api-webhooks-settings-section[data-nk='settings-section']"
     assert_select "#gallery-api-webhooks-form input[type='url'][value='https://api.example.test/hooks/nitro']"
     assert_select "#gallery-api-webhooks-form [data-nk='checkbox-group'] input[type='checkbox']", count: 4
 

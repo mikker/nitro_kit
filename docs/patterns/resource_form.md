@@ -37,7 +37,7 @@ module UI
     end
 
     def view_template
-      render NitroKit::FormSection.new(
+      render NitroKit::SettingsSection.new(
         title: project.persisted? ? "Edit project" : "New project",
         description: "Project details are visible to every workspace member."
       ) do |section|

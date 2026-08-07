@@ -1,5 +1,5 @@
 @layer nitro-kit.base {
-  :where([data-nk="form-section"]) {
+  :where([data-nk="settings-section"]) {
     display: grid;
     grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr);
     column-gap: calc(var(--nk-space) * 8);
@@ -9,19 +9,21 @@
     color: var(--nk-color-foreground);
   }
 
-  :where([data-nk="form-section"] > [data-slot="form-section-header"]) {
+  :where([data-nk="settings-section"] > [data-slot="settings-section-header"]) {
     display: grid;
     gap: calc(var(--nk-space) * 2);
   }
 
-  :where([data-nk="form-section"] [data-slot="form-section-title"]) {
+  :where([data-nk="settings-section"] [data-slot="settings-section-title"]) {
     font-size: var(--nk-text-xl);
     font-weight: var(--nk-font-weight-semibold);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
 
-  :where([data-nk="form-section"] [data-slot="form-section-description"]) {
+  :where(
+      [data-nk="settings-section"] [data-slot="settings-section-description"]
+    ) {
     max-inline-size: var(--nk-content-lg);
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
@@ -29,7 +31,7 @@
     text-wrap: pretty;
   }
 
-  :where([data-nk="form-section"] > [data-slot="form-section-form"]) {
+  :where([data-nk="settings-section"] > [data-slot="settings-section-form"]) {
     display: grid;
     grid-column: 2;
     gap: calc(var(--nk-space) * 4);
@@ -37,18 +39,20 @@
     max-inline-size: var(--nk-content-lg);
   }
 
-  :where([data-nk="form-section"] > [data-slot="form-section-status"]) {
+  :where([data-nk="settings-section"] > [data-slot="settings-section-status"]) {
     grid-column: 2;
     inline-size: 100%;
     max-inline-size: var(--nk-content-lg);
   }
 
-  :where([data-nk="form-section"] > [data-slot="form-section-form"] > form) {
+  :where(
+      [data-nk="settings-section"] > [data-slot="settings-section-form"] > form
+    ) {
     display: grid;
     gap: calc(var(--nk-space) * 5);
   }
 
-  :where([data-nk="form-section"] + [data-nk="form-section"]) {
+  :where([data-nk="settings-section"] + [data-nk="settings-section"]) {
     padding-block-start: calc(var(--nk-space) * 8);
     border-block-start: var(--nk-border-width) solid var(--nk-color-border);
   }
@@ -56,14 +60,14 @@
 
 @layer nitro-kit.compound {
   @media (width < 48rem) {
-    :where([data-nk="form-section"]) {
+    :where([data-nk="settings-section"]) {
       grid-template-columns: minmax(0, 1fr);
       row-gap: calc(var(--nk-space) * 4);
     }
 
     :where(
-        [data-nk="form-section"] > [data-slot="form-section-status"],
-        [data-nk="form-section"] > [data-slot="form-section-form"]
+        [data-nk="settings-section"] > [data-slot="settings-section-status"],
+        [data-nk="settings-section"] > [data-slot="settings-section-form"]
       ) {
       grid-column: 1;
     }

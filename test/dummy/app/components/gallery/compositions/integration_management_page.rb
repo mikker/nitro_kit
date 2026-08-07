@@ -130,7 +130,7 @@ module Gallery
       def render_configuration(invalid:)
         configuration = integration_configuration(invalid:)
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: invalid ? "Repair Slack configuration" : "Configure Sentry",
           description: "The application owns authorization, destinations, event policy, and persistence.",
           id: "gallery-integration-configuration-section"

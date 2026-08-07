@@ -228,7 +228,7 @@ Eleven blocks and shells were extracted:
 - `PageHeader`
 - `StatGrid`
 - `DataSection`
-- `FormSection`
+- `SettingsSection`
 - `DangerZone`
 - `EmptyState`
 

@@ -344,10 +344,10 @@ module Gallery
       def render_product_form
         form = product_form
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: state.start_with?("new") ? "Product details" : "Edit product details",
           description: "Rails owns submitted values and validation; the route toolbar owns the single primary submit.",
-          id: "gallery-product-resource-form-section"
+          id: "gallery-product-resource-settings-section"
         ) do |section|
           if validation_state?
             section.status NitroKit::Alert.new(
@@ -719,7 +719,7 @@ module Gallery
           "filtered" => "Filters and sort links replace the current history entry inside one stable query frame.",
           "empty" => "A valid zero-result query returns the same frame with a typed EmptyState.",
           "paginated" => "Second-page navigation inherits the frame's advance action and preserves query parameters.",
-          "new" => "A new-product FormSection uses one toolbar-associated native submit.",
+          "new" => "A new-product SettingsSection uses one toolbar-associated native submit.",
           "new-validation" => "Server validation preserves invalid new-product values and accessible errors.",
           "edit" => "The edit form keeps its single Save action in the toolbar and deletion in a separate DangerZone.",
           "edit-validation" => "An invalid edit keeps submitted values, field errors, and edit-owned deletion visible.",

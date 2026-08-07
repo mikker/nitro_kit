@@ -549,12 +549,12 @@ module Gallery
       Entry.new(
         kind: :component,
         subcategory: :forms,
-        slug: "form-section",
+        slug: "settings-section",
         title: "Form section",
         description: "A section frame for one complete caller-owned Rails form and an optional typed status.",
-        page: Gallery::Components::FormSectionPage,
+        page: Gallery::Components::SettingsSectionPage,
         states: [],
-        expected_roots: %w[form-section alert field input switch button container]
+        expected_roots: %w[settings-section alert field input switch button container]
       ),
       Entry.new(
         kind: :component,
@@ -924,7 +924,7 @@ module Gallery
         states: [],
         expected_roots: %w[
           app-shell app-navigation page-header appearance-picker stat-grid toast data-section empty-state
-          dropzone form-section alert details-table dialog container flex button
+          dropzone settings-section alert details-table dialog container flex button
         ]
       ),
       Entry.new(
@@ -947,7 +947,7 @@ module Gallery
         page: Gallery::Compositions::HybridApplicationPage,
         states: [],
         expected_roots: %w[
-          app-shell app-navigation page-header appearance-picker settings-layout progressive-image details-table form-section
+          app-shell app-navigation page-header appearance-picker settings-layout progressive-image details-table settings-section
           fieldset field-group field input empty-state alert dialog toast dropdown container flex button
         ]
       )
@@ -974,7 +974,7 @@ module Gallery
       [ :component, "field" ] => %w[resource_form],
       [ :component, "field-group" ] => %w[resource_form],
       [ :component, "fieldset" ] => %w[resource_form],
-      [ :component, "form-section" ] => %w[resource_form crud_resource],
+      [ :component, "settings-section" ] => %w[resource_form crud_resource],
       [ :component, "input" ] => %w[resource_form],
       [ :component, "label" ] => %w[resource_form],
       [ :component, "page-header" ] => %w[crud_resource],

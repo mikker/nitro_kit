@@ -87,7 +87,7 @@ module Gallery
       end
 
       def render_company_form(invalid: false, disabled: false)
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Company workspace",
           description: "The application owns workspace availability, organization policy, persistence, and resume tokens.",
           id: "gallery-onboarding-company-section"
@@ -147,7 +147,7 @@ module Gallery
       end
 
       def render_solo_form
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Personal workspace",
           description: "A solo branch omits team policy without inventing placeholder organization fields.",
           id: "gallery-onboarding-solo-section"
@@ -165,7 +165,7 @@ module Gallery
       end
 
       def render_import_form
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Import workspace configuration",
           description: "File parsing, size limits, signatures, validation, and imported policy remain application code.",
           id: "gallery-onboarding-import-section"
@@ -187,7 +187,7 @@ module Gallery
       end
 
       def render_invitation_form
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Invite teammates",
           description: "Invitation limits, roles, email delivery, and authorization remain server-owned.",
           id: "gallery-onboarding-invite-section"

@@ -11,7 +11,7 @@ module Gallery
       end
 
       def render_filters
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Filter audit history",
           description: "Search, category, export policy, and pagination remain caller-owned query behavior.",
           id: "gallery-activity-audit-filter-section"

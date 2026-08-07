@@ -1,7 +1,7 @@
 require "test_helper"
 
 class GalleryContentComponentsTest < ActionDispatch::IntegrationTest
-  SLUGS = %w[page-header stat-grid data-section form-section danger-zone empty-state].freeze
+  SLUGS = %w[page-header stat-grid data-section settings-section danger-zone empty-state].freeze
 
   test "catalog exposes the six content and form component routes" do
     entries = SLUGS.map { |slug| Gallery::Catalog.fetch!(kind: :component, slug:) }
@@ -73,15 +73,15 @@ class GalleryContentComponentsTest < ActionDispatch::IntegrationTest
   end
 
   test "form section gallery owns status ordering around complete Rails forms" do
-    get_block("form-section")
+    get_block("settings-section")
 
-    assert_select "#gallery-form-section-minimal > [data-slot='form-section-form'] > form", count: 1
-    assert_select "#gallery-form-section-validation" do
-      assert_select "> [data-slot='form-section-status'][data-nk='alert'][data-variant='error']"
-      assert_select "> [data-slot='form-section-form'] > form#gallery-form-section-validation-form"
+    assert_select "#gallery-settings-section-minimal > [data-slot='settings-section-form'] > form", count: 1
+    assert_select "#gallery-settings-section-validation" do
+      assert_select "> [data-slot='settings-section-status'][data-nk='alert'][data-variant='error']"
+      assert_select "> [data-slot='settings-section-form'] > form#gallery-settings-section-validation-form"
     end
-    assert_select "#gallery-form-section-success > [data-slot='form-section-status'][data-variant='success']"
-    assert_select "#gallery-form-section-dense [data-nk='field']", count: 5
+    assert_select "#gallery-settings-section-success > [data-slot='settings-section-status'][data-variant='success']"
+    assert_select "#gallery-settings-section-dense [data-nk='field']", count: 5
   end
 
   test "danger zone gallery keeps confirmation composition and safe escape distinct" do

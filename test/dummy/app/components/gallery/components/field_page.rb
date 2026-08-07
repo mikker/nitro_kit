@@ -169,7 +169,7 @@ module Gallery
             "builder — is the default vertical rhythm owner for bare fields and actions; two bare siblings " \
             "stack flush. Fieldset provides that rhythm for its direct field, group, and submit children " \
             "while adding native grouping: reach for it when a set of fields needs one shared accessible " \
-            "name, and take the legend and description it brings with it. FormSection is also " \
+            "name, and take the legend and description it brings with it. SettingsSection is also " \
             "optional and is the page-level region above the form: a titled header, an optional status " \
             "Alert, and exactly one form. Flex and Grid own placement when an arrangement is deliberately " \
             "inline or multi-column."
@@ -181,7 +181,7 @@ module Gallery
             description: "The section titles the region, the fieldset names the related address fields, " \
               "and each FieldGroup owns the gap between the controls it contains."
           ) do
-            render NitroKit::FormSection.new(
+            render NitroKit::SettingsSection.new(
               title: "Billing contact",
               description: "Invoices and receipts are sent to this contact.",
               id: "gallery-field-placement-section"

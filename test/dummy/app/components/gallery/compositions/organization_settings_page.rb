@@ -31,10 +31,10 @@ module Gallery
         form = organization_form
         disabled = !policy.manage_organization?
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Organization identity",
           description: "Names, URLs, defaults, and notifications remain application-owned settings.",
-          id: "gallery-organization-settings-form-section"
+          id: "gallery-organization-settings-settings-section"
         ) do |section|
           render_form_status(section, form)
           section.form do

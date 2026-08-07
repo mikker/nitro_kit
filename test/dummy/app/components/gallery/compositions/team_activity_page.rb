@@ -13,7 +13,7 @@ module Gallery
       def render_filters
         filter = activity_filter
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Filter team activity",
           description: "Search terms and outcome filters remain caller-owned query state.",
           id: "gallery-team-activity-filters"

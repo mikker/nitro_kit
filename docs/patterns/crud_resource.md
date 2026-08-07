@@ -73,7 +73,7 @@ Do not add viewport height or another outer padding rule to `admin-main`; the
 shell owns viewport geometry and the wrapper owns the one page gutter. Use the
 same shell and gutter on team administration and settings routes.
 Place a bottom-anchored Settings destination after `AppNavigation#spacer`, then
-compose settings subsections with `SettingsLayout` and plain `FormSection`
+compose settings subsections with `SettingsLayout` and plain `SettingsSection`
 regions. Settings destinations are links with `aria-current`, not action
 Buttons. Read `application_foundation.md` for the complete application frame.
 
@@ -93,7 +93,7 @@ renders its table and pagination directly. Use `DataSection` when a page has
 multiple independently named datasets. At zero records, replace the data region
 with one intentional `EmptyState`; keep the primary New action in the toolbar.
 
-A new or edit page begins with `FormSection`. Use one form component for new,
+A new or edit page begins with `SettingsSection`. Use one form component for new,
 edit, and invalid renders. Put the primary submit in the toolbar by setting the
 button's `form:` to the form's stable DOM ID. Invalid submissions render the
 same model and form with `422 Unprocessable Entity`. The toolbar owns that

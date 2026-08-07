@@ -11,7 +11,7 @@ module Gallery
       end
 
       def render_filters
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Filter resource activity",
           description: "The application combines free text, outcome, and resource identity into a normal GET form.",
           id: "gallery-data-resource-activity-filters"

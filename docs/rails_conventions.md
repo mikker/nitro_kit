@@ -71,7 +71,7 @@ Do not repeat the route title in a `PageHeader`, section heading, card title,
 and table caption. Use `PageHeader` inside an application shell only when the
 page needs a genuinely content-led introduction beyond the toolbar title. A
 single-table index renders the table directly. A form page begins with the
-actual `FormSection`. A detail page begins with status or metadata. Use a Card
+actual `SettingsSection`. A detail page begins with status or metadata. Use a Card
 only for a bounded object that needs a surface, never as the automatic wrapper
 for every region.
 

@@ -5,7 +5,7 @@ load File.expand_path("../../lib/tasks/nitro_kit_tasks.rake", __dir__) unless de
 class ContentBlocksTest < ActiveSupport::TestCase
   class CompleteFormProbe < Phlex::HTML
     def view_template
-      render NitroKit::FormSection.new(
+      render NitroKit::SettingsSection.new(
         title: "Profile",
         description: "Update the public details shown to teammates.",
         id: "profile-section"
@@ -59,7 +59,7 @@ class ContentBlocksTest < ActiveSupport::TestCase
           section.empty_state NitroKit::EmptyState.new(title: "No invoices", level: 3)
         end
 
-        render NitroKit::FormSection.new(id: "deferred-form-section") do |section|
+        render NitroKit::SettingsSection.new(id: "deferred-settings-section") do |section|
           section.description { plain "Update the "; em { "public" }; plain " details." }
           section.title("Profile")
           section.form { form(action: "/profile") }
@@ -139,8 +139,8 @@ class ContentBlocksTest < ActiveSupport::TestCase
     data_section = root.at_css("#deferred-data-section")
     assert_equal "newest", data_section.at_css("[data-slot='data-section-description'] strong").text
 
-    form_section = root.at_css("#deferred-form-section")
-    assert_equal "public", form_section.at_css("[data-slot='form-section-description'] em").text
+    settings_section = root.at_css("#deferred-settings-section")
+    assert_equal "public", settings_section.at_css("[data-slot='settings-section-description'] em").text
 
     danger_zone = root.at_css("#deferred-danger-zone")
     assert_equal "project", danger_zone.at_css("[data-slot='danger-zone-description'] strong").text
@@ -161,7 +161,7 @@ class ContentBlocksTest < ActiveSupport::TestCase
       render_node(NitroKit::DataSection.new) { |section| section.title("Text") { "Block" } }
     end
     assert_raises(ArgumentError) do
-      render_node(NitroKit::FormSection.new) { |section| section.title("") }
+      render_node(NitroKit::SettingsSection.new) { |section| section.title("") }
     end
     assert_raises(ArgumentError) do
       render_node(NitroKit::DangerZone.new) do |zone|
@@ -246,36 +246,36 @@ class ContentBlocksTest < ActiveSupport::TestCase
   test "form section frames exactly one complete caller-owned form" do
     node = Nokogiri::HTML.fragment(CompleteFormProbe.new.call).first_element_child
 
-    assert_equal "form-section", node["data-nk"]
-    assert_equal "Profile", node.at_css("h2[data-slot='form-section-title']").text
-    assert_equal "profile-section-title", node.at_css("h2[data-slot='form-section-title']")["id"]
+    assert_equal "settings-section", node["data-nk"]
+    assert_equal "Profile", node.at_css("h2[data-slot='settings-section-title']").text
+    assert_equal "profile-section-title", node.at_css("h2[data-slot='settings-section-title']")["id"]
     assert_equal "profile-section-title", node["aria-labelledby"]
-    assert_equal "alert", node.at_css("[data-slot='form-section-status']")["data-nk"]
-    assert_equal 1, node.css("[data-slot='form-section-form'] > form#profile-form").count
+    assert_equal "alert", node.at_css("[data-slot='settings-section-status']")["data-nk"]
+    assert_equal 1, node.css("[data-slot='settings-section-form'] > form#profile-form").count
     assert_equal "field-group", node.at_css("#profile-form [data-nk='field-group']")["data-nk"]
     assert_equal "submit", node.at_css("#profile-form [data-nk='button']")["type"]
     assert_empty node.css("[class], [style], [data-nk-escape]")
   end
 
   test "form section rejects missing duplicate and blockless forms" do
-    assert_raises(ArgumentError) { render_node(NitroKit::FormSection.new(title: "Profile")) }
+    assert_raises(ArgumentError) { render_node(NitroKit::SettingsSection.new(title: "Profile")) }
     assert_raises(ArgumentError) do
-      render_node(NitroKit::FormSection.new(title: "Profile")) { |section| section.form }
+      render_node(NitroKit::SettingsSection.new(title: "Profile")) { |section| section.form }
     end
     assert_raises(ArgumentError) do
-      render_node(NitroKit::FormSection.new(title: "Profile")) do |section|
+      render_node(NitroKit::SettingsSection.new(title: "Profile")) do |section|
         section.form { "First" }
         section.form { "Second" }
       end
     end
     assert_raises(ArgumentError) do
-      render_node(NitroKit::FormSection.new(title: "Profile")) do |section|
+      render_node(NitroKit::SettingsSection.new(title: "Profile")) do |section|
         section.status NitroKit::Button.new("Wrong")
         section.form { "Form" }
       end
     end
     assert_raises(ArgumentError) do
-      render_node(NitroKit::FormSection.new(title: "Profile")) do |section|
+      render_node(NitroKit::SettingsSection.new(title: "Profile")) do |section|
         section.status NitroKit::Alert.new
         section.status NitroKit::Alert.new(variant: :success)
         section.form { "Form" }
@@ -383,7 +383,7 @@ class ContentBlocksTest < ActiveSupport::TestCase
   end
 
   def block_names
-    %w[page-header stat-grid data-section form-section danger-zone empty-state]
+    %w[page-header stat-grid data-section settings-section danger-zone empty-state]
   end
 
   def block_factories
@@ -395,7 +395,7 @@ class ContentBlocksTest < ActiveSupport::TestCase
           section.empty_state(NitroKit::EmptyState.new(title: "Empty", level: 3))
         end
       end,
-      ->(**attrs) { render_node(NitroKit::FormSection.new(title: "Form", **attrs)) { |section| section.form { "Form" } } },
+      ->(**attrs) { render_node(NitroKit::SettingsSection.new(title: "Form", **attrs)) { |section| section.form { "Form" } } },
       lambda do |**attrs|
         render_node(NitroKit::DangerZone.new(title: "Danger", description: "Permanent", **attrs)) do |zone|
           zone.confirmation { "Confirm" }

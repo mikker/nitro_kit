@@ -54,7 +54,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
         end
         assert_select(
           "[data-gallery='composition-surface'] [data-nk='card'][id], " \
-            "[data-gallery='composition-surface'] [data-nk='form-section'][id], " \
+            "[data-gallery='composition-surface'] [data-nk='settings-section'][id], " \
             "[data-gallery='composition-surface'] [data-nk='data-section'][id], " \
             "[data-gallery='composition-surface'] [data-nk='danger-zone'][id], " \
             "[data-gallery='composition-surface'] turbo-frame > [data-nk='flex'][data-dir='col'][id]",
@@ -108,7 +108,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
     end
 
     get_flow("team-management", "multiple-teams")
-    assert_select "#gallery-team-context-section[data-nk='form-section']"
+    assert_select "#gallery-team-context-section[data-nk='settings-section']"
     assert_select "#gallery-team-context-status[data-variant='info']", text: /is selected/
     assert_select "#gallery-team-context-form[method='get'][data-turbo-frame='gallery-team-management-frame']" \
       "[data-turbo-action='replace']"
@@ -154,8 +154,8 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
                   "[href*='team_context%5Bteam_id%5D=team_apollo'][href*='member_id=mem_ada']"
 
     get_flow("team-management", "search")
-    assert_select "#gallery-team-search-section[data-nk='form-section']" do
-      assert_select "> [data-slot='form-section-form'] > #gallery-team-search-form", count: 1
+    assert_select "#gallery-team-search-section[data-nk='settings-section']" do
+      assert_select "> [data-slot='settings-section-form'] > #gallery-team-search-form", count: 1
     end
     assert_select "#gallery-team-search-form[method='get'][data-turbo-frame='gallery-team-management-frame']" \
       "[data-turbo-action='replace']"
@@ -187,8 +187,8 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
 
   test "team invitation role and removal states use model errors disabled submission and explicit consequences" do
     get_flow("team-management", "invite")
-    assert_select "#gallery-team-invitation-section[data-nk='form-section']" do
-      assert_select "> [data-slot='form-section-form'] > #gallery-team-invitation-form", count: 1
+    assert_select "#gallery-team-invitation-section[data-nk='settings-section']" do
+      assert_select "> [data-slot='settings-section-form'] > #gallery-team-invitation-form", count: 1
     end
     assert_select "#gallery-team-invitation-form[data-turbo-frame='gallery-team-management-frame']"
     assert_select "input[type='email'][name='gallery_forms_team_invitation[email]'][required]"
@@ -197,7 +197,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
 
     get_flow("team-management", "invite-validation")
     assert_select "#gallery-team-invitation-error[data-variant='error']"
-    assert_select "#gallery-team-invitation-section > #gallery-team-invitation-error[data-slot='form-section-status']"
+    assert_select "#gallery-team-invitation-section > #gallery-team-invitation-error[data-slot='settings-section-status']"
     assert_select "#gallery-team-invitation-form [data-nk='field'][data-state='invalid']", count: 3
     assert_select "#gallery-team-invitation-form [aria-invalid='true']", count: 3
 
@@ -208,16 +208,16 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-team-invitation-submit[disabled][data-turbo-submits-with='Sending invitation…']"
 
     get_flow("team-management", "role-change")
-    assert_select "#gallery-team-role-section[data-nk='form-section']"
+    assert_select "#gallery-team-role-section[data-nk='settings-section']"
     assert_select "#gallery-team-role-form input[type='hidden'][name$='[action]'][value='change_role']"
     assert_select "#gallery-team-role-form input[type='hidden'][name$='[member_id]'][value='mem_grace']"
     assert_select "#gallery-team-role-context", text: /take effect immediately/
     assert_select "#gallery-team-role-form select[name$='[role]'] option[selected][value='viewer']"
 
     get_flow("team-management", "last-owner-validation")
-    assert_select "#gallery-team-last-owner-section[data-nk='form-section']" do
-      assert_select "> #gallery-team-last-owner-error[data-slot='form-section-status'][data-variant='error']"
-      assert_select "> [data-slot='form-section-form'] > #gallery-team-last-owner-form", count: 1
+    assert_select "#gallery-team-last-owner-section[data-nk='settings-section']" do
+      assert_select "> #gallery-team-last-owner-error[data-slot='settings-section-status'][data-variant='error']"
+      assert_select "> [data-slot='settings-section-form'] > #gallery-team-last-owner-form", count: 1
     end
     assert_select "#gallery-team-last-owner-error[role='alert']", text: /server rejected this change/i
     assert_select "#gallery-team-last-owner-form input[name$='[member_id]'][value='mem_ada']"
@@ -295,8 +295,8 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
 
   test "credential creation reveal revocation and recovery states enforce the security lifecycle" do
     get_flow("api-credentials", "create")
-    assert_select "#gallery-api-credential-section[data-nk='form-section']" do
-      assert_select "> [data-slot='form-section-form'] > #gallery-api-credential-form", count: 1
+    assert_select "#gallery-api-credential-section[data-nk='settings-section']" do
+      assert_select "> [data-slot='settings-section-form'] > #gallery-api-credential-form", count: 1
     end
     assert_select "#gallery-api-credential-form[data-turbo-frame='gallery-api-credentials-frame']"
     assert_select "input[name='gallery_forms_api_key[name]'][required][value='Reporting']"
@@ -305,7 +305,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
 
     get_flow("api-credentials", "validation")
     assert_select "#gallery-api-credential-validation[data-variant='error']"
-    assert_select "#gallery-api-credential-section > #gallery-api-credential-validation[data-slot='form-section-status']"
+    assert_select "#gallery-api-credential-section > #gallery-api-credential-validation[data-slot='settings-section-status']"
     assert_select "#gallery-api-credential-form [data-nk='field'][data-state='invalid']", count: 3
     assert_select "#gallery-api-credential-form [aria-invalid='true']", count: 3
 

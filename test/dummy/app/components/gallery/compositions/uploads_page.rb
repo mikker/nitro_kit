@@ -34,10 +34,10 @@ module Gallery
         disabled = state == "uploading"
         multiple = state.in?(%w[uploading multiple])
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: multiple ? "Upload data files" : "Upload a data file",
           description: "The application owns accepted formats, limits, storage, scanning, processing, and retention.",
-          id: "gallery-uploads-form-section"
+          id: "gallery-uploads-settings-section"
         ) do |section|
           render_upload_status(section)
           section.form do

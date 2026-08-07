@@ -51,7 +51,7 @@ Map each flow to the highest-level matching 2.x component first:
 | Sign-in or recovery card                | `AuthShell`                             |
 | Application navigation                  | `AppShell`, `AppNavigation`             |
 | Mobile contextual navigation or details | `Sheet`                                 |
-| Settings screen                         | `SettingsLayout`, `FormSection`         |
+| Settings screen                         | `SettingsLayout`, `SettingsSection`     |
 | Empty collection card                   | `EmptyState`                            |
 | Data collection                         | `DataSection`, `Table`, `PaginationBar` |
 | Destructive settings                    | `DangerZone`, `Dialog`, `ButtonTo`      |

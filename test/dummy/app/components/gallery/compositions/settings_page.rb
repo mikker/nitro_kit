@@ -68,7 +68,7 @@ module Gallery
       def render_profile
         profile = profile_example
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Profile",
           description: "Public details shown to workspace members in activity, assignments, and security events.",
           id: "gallery-settings-profile-section"
@@ -134,7 +134,7 @@ module Gallery
         disabled = state == "security-disabled"
         settings = Gallery::SettingsFormExamples.security
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Password and sessions",
           description: "Changing the password signs out other browser sessions.",
           id: "gallery-settings-security-section"
@@ -253,7 +253,7 @@ module Gallery
       def render_notifications
         settings = Gallery::SettingsFormExamples.notifications
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Notifications",
           description: "Choose how workspace security, deployment, and digest events are delivered.",
           id: "gallery-settings-notifications-section"
@@ -438,7 +438,7 @@ module Gallery
         disabled = state == "appearance-loading"
         settings = Gallery::SettingsFormExamples.appearance
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Appearance",
           description: "Preferences follow your account across workspaces and browser sessions.",
           id: "gallery-settings-appearance-section"

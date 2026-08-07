@@ -43,7 +43,7 @@ module Gallery
         invalid = state == "recovery-validation"
         disabled = state == "loading"
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Send recovery link",
           description: "The application owns rate limits, account discovery protection, tokens, delivery, and expiry.",
           id: "gallery-account-security-recovery-section"
@@ -85,7 +85,7 @@ module Gallery
       end
 
       def render_password_reset
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Choose a new password",
           description: "Token validation, password rules, session revocation, and audit events remain application responsibilities.",
           id: "gallery-account-security-reset-section"
@@ -129,7 +129,7 @@ module Gallery
       def render_two_factor
         invalid = state == "two-factor-invalid"
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Enter authentication code",
           description: "Challenge generation, replay protection, attempt limits, and device trust remain application policy.",
           id: "gallery-account-security-two-factor-section"
@@ -163,7 +163,7 @@ module Gallery
       def render_recovery_code
         invalid = state == "recovery-code-invalid"
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Use a recovery code",
           description: "Recovery codes are single-use secrets. Consumption and replacement remain server-owned.",
           id: "gallery-account-security-code-section"
@@ -193,7 +193,7 @@ module Gallery
       end
 
       def render_trusted_device
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Trust this browser",
           description: "The application decides trust duration, cookie protection, revocation, and risk thresholds.",
           id: "gallery-account-security-trust-section"

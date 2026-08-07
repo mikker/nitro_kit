@@ -75,7 +75,7 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
     get_flow("integration-management", "detail")
     assert_select "#gallery-integration-detail-grid[data-nk='grid'][data-cols='1 sm:2 lg:3']" do
       assert_select "> #gallery-integration-detail-card[data-nk='card']", count: 1
-      assert_select "> #gallery-integration-configuration-section[data-nk='form-section']", count: 1
+      assert_select "> #gallery-integration-configuration-section[data-nk='settings-section']", count: 1
     end
     assert_select "[data-gallery='integration-detail-metadata'][data-nk='details-table'] tbody tr", count: 3
     assert_select "#gallery-integration-configuration-form input[type='hidden'][name$='[provider]'][value='sentry']"
@@ -89,7 +89,7 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-integration-connected-table tbody tr", count: 2
 
     get_flow("integration-management", "config-error")
-    assert_select "#gallery-integration-configuration-error[data-slot='form-section-status'][data-variant='error']"
+    assert_select "#gallery-integration-configuration-error[data-slot='settings-section-status'][data-variant='error']"
     assert_select "#gallery-integration-configuration-form [data-nk='field'][data-state='invalid']", count: 3
     assert_select "input[name$='[webhook_url]'][value='http://expired.example.test'][aria-invalid='true']"
     assert_select "select[name$='[event]'] option[value='everything'][selected]", count: 0
@@ -231,7 +231,7 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
     end
 
     get_flow("help-center", "contact-validation")
-    assert_select "#gallery-help-center-contact-error[data-slot='form-section-status'][data-variant='error']"
+    assert_select "#gallery-help-center-contact-error[data-slot='settings-section-status'][data-variant='error']"
     assert_select "#gallery-help-center-contact-form [data-nk='field'][data-state='invalid']", count: 4
 
     get_flow("help-center", "contact-sent")

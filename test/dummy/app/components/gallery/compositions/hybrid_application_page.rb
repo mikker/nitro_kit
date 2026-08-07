@@ -118,10 +118,10 @@ module Gallery
                       details.fields(:website, :joined_on, :last_seen)
                     end
 
-                    render NitroKit::FormSection.new(
+                    render NitroKit::SettingsSection.new(
                       title: "Public profile",
                       description: "These values appear in workspace activity and invitations.",
-                      id: "gallery-hybrid-application-profile-form-section"
+                      id: "gallery-hybrid-application-profile-settings-section"
                     ) do |section|
                       section.form do
                         form_with(
@@ -265,7 +265,7 @@ module Gallery
                 alert.description("Choose an owner and add a specific operational reason before asking an administrator to review it.")
               end
 
-              render NitroKit::FormSection.new(
+              render NitroKit::SettingsSection.new(
                 title: "Production access",
                 description: "Restricted fields remain visible so the failed request can be understood.",
                 id: "gallery-hybrid-application-access-section"

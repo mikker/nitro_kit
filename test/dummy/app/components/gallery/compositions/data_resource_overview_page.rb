@@ -12,7 +12,7 @@ module Gallery
       end
 
       def render_search
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Find data resources",
           description: "Search terms and facets are ordinary caller-owned GET parameters.",
           id: "gallery-data-resource-overview-search"
@@ -70,7 +70,7 @@ module Gallery
           action: "export"
         )
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Bulk resource action",
           description: "Selection and operation semantics belong to an application form object.",
           id: "gallery-data-resource-overview-bulk"

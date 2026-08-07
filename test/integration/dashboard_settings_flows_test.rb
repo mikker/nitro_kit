@@ -171,8 +171,8 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
   test "profile settings preserve Rails values help validation success and mobile pressure" do
     get_flow("settings", "profile")
 
-    assert_select "#gallery-settings-profile-section[data-nk='form-section']" do
-      assert_select "> [data-slot='form-section-form'] > #gallery-settings-profile-form", count: 1
+    assert_select "#gallery-settings-profile-section[data-nk='settings-section']" do
+      assert_select "> [data-slot='settings-section-form'] > #gallery-settings-profile-form", count: 1
     end
     assert_select "#gallery-settings-profile-form" do
       assert_select "#gallery-settings-profile-fieldset[data-nk='fieldset']"
@@ -187,7 +187,7 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
     get_flow("settings", "profile-validation")
 
     assert_select "#gallery-settings-profile-section > " \
-                  "#gallery-settings-profile-error[data-slot='form-section-status'][data-variant='error']",
+                  "#gallery-settings-profile-error[data-slot='settings-section-status'][data-variant='error']",
       text: /Email is invalid/
     assert_select "#gallery-settings-profile-form [data-nk='field'][data-state='invalid']", count: 4
     assert_select "#profile_email[aria-invalid='true'][aria-describedby='profile_email-errors']"
@@ -206,8 +206,8 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
   test "security settings cover password semantics sessions and fully disabled mutation" do
     get_flow("settings", "security")
 
-    assert_select "#gallery-settings-security-section[data-nk='form-section']" do
-      assert_select "> [data-slot='form-section-form'] > #gallery-settings-security-form", count: 1
+    assert_select "#gallery-settings-security-section[data-nk='settings-section']" do
+      assert_select "> [data-slot='settings-section-form'] > #gallery-settings-security-form", count: 1
     end
     assert_select "#gallery-settings-sessions-section[data-nk='data-section']" do
       assert_select "> #gallery-settings-sessions-table[data-slot='data-section-table'][data-nk='table']", count: 1
@@ -240,8 +240,8 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
   test "notification settings preserve switch checkbox radio and success semantics" do
     get_flow("settings", "notifications")
 
-    assert_select "#gallery-settings-notifications-section[data-nk='form-section']" do
-      assert_select "> [data-slot='form-section-form'] > #gallery-settings-notifications-form", count: 1
+    assert_select "#gallery-settings-notifications-section[data-nk='settings-section']" do
+      assert_select "> [data-slot='settings-section-form'] > #gallery-settings-notifications-form", count: 1
     end
     assert_select "#gallery-settings-notifications-form" do
       assert_select "#notifications_security_alerts[role='switch'][name='notifications[security_alerts]'][checked]"
@@ -290,8 +290,8 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
   test "appearance settings preserve native choice relationships and loading state" do
     get_flow("settings", "appearance")
 
-    assert_select "#gallery-settings-appearance-section[data-nk='form-section']" do
-      assert_select "> [data-slot='form-section-form'] > #gallery-settings-appearance-form", count: 1
+    assert_select "#gallery-settings-appearance-section[data-nk='settings-section']" do
+      assert_select "> [data-slot='settings-section-form'] > #gallery-settings-appearance-form", count: 1
     end
     assert_select "#gallery-settings-appearance-form" do
       assert_select "#appearance_theme[data-nk='radio-button-group'] input[type='radio']", count: 3

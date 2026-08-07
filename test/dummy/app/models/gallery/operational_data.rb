@@ -171,7 +171,7 @@ module Gallery
         title: "Typed application sections",
         summary: "Adds explicit data, form, navigation, and safety compositions for Rails applications.",
         changes: [
-          "Added DataSection, FormSection, DangerZone, and EmptyState.",
+          "Added DataSection, SettingsSection, DangerZone, and EmptyState.",
           "Added deterministic Container, responsive Grid, and Flex layouts.",
           "Expanded direct Phlex gallery coverage for application pressure states."
         ].freeze

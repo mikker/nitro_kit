@@ -36,10 +36,10 @@ module Gallery
         inquiry = contact_inquiry
         disabled = state.in?(%w[sending unavailable])
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Tell us about your application",
           description: "Routing, response times, persistence, consent, and delivery remain application responsibilities.",
-          id: "gallery-contact-form-section"
+          id: "gallery-contact-settings-section"
         ) do |section|
           render_form_status(section, inquiry)
           section.form do

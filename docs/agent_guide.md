@@ -35,21 +35,21 @@ The installed component source is the final authority for constructor and compou
 
 Prefer the component that owns the whole region, then compose smaller components inside it.
 
-| Product need                     | Begin with                                                |
-| -------------------------------- | --------------------------------------------------------- |
-| Application chrome               | `AppShell`, `AppNavigation`, `CommandPalette`             |
-| Authentication page              | `AuthShell`                                               |
-| Settings navigation              | `SettingsLayout`                                          |
-| Team or account administration   | `AppShell`, `Toolbar`, `Table`, `FormSection`             |
-| App page title and basic actions | `AppShell`, then `Toolbar`                                |
-| Content-led page introduction    | `PageHeader`                                              |
-| Data region                      | `DataSection`, then `Table` or `EmptyState`               |
-| Queryable tabular data           | `Table`, `Toolbar`, `PaginationBar`                       |
-| Model-backed form                | `FormSection`, Rails `form_with`, `NitroKit::FormBuilder` |
-| Destructive settings             | `DangerZone`, optionally `Dialog`                         |
-| Transient server feedback        | `Toast::FlashMessages`                                    |
-| Rendered Markdown or rich text   | `Container`, then `Typeset`                               |
-| General grouping                 | `Card`, `Flex`, `Grid`, `Container`                       |
+| Product need                     | Begin with                                                    |
+| -------------------------------- | ------------------------------------------------------------- |
+| Application chrome               | `AppShell`, `AppNavigation`, `CommandPalette`                 |
+| Authentication page              | `AuthShell`                                                   |
+| Settings navigation              | `SettingsLayout`                                              |
+| Team or account administration   | `AppShell`, `Toolbar`, `Table`, `SettingsSection`             |
+| App page title and basic actions | `AppShell`, then `Toolbar`                                    |
+| Content-led page introduction    | `PageHeader`                                                  |
+| Data region                      | `DataSection`, then `Table` or `EmptyState`                   |
+| Queryable tabular data           | `Table`, `Toolbar`, `PaginationBar`                           |
+| Model-backed form                | `SettingsSection`, Rails `form_with`, `NitroKit::FormBuilder` |
+| Destructive settings             | `DangerZone`, optionally `Dialog`                             |
+| Transient server feedback        | `Toast::FlashMessages`                                        |
+| Rendered Markdown or rich text   | `Container`, then `Typeset`                                   |
+| General grouping                 | `Card`, `Flex`, `Grid`, `Container`                           |
 
 Application-specific product UI belongs under the application's namespace and composes Nitro components. Nitro owns component markup, styles, accessibility structure, and narrowly scoped progressive behavior. The application owns product policy, records, routes, authorization, queries, DOM IDs, and server responses.
 

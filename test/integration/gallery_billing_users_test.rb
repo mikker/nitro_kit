@@ -40,7 +40,7 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
         end
         assert_select(
           "[data-gallery='example-canvas'] [data-nk='card'][id], " \
-            "[data-gallery='example-canvas'] [data-nk='form-section'][id], " \
+            "[data-gallery='example-canvas'] [data-nk='settings-section'][id], " \
             "[data-gallery='example-canvas'] [data-nk='data-section'][id], " \
             "[data-gallery='example-canvas'] [data-nk='danger-zone'][id]",
           minimum: 1
@@ -80,9 +80,9 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
 
   test "payment method covers native autocomplete validation loading and success" do
     get_flow("billing", "payment-method")
-    assert_select "#gallery-billing-payment-card[data-nk='form-section']" do
-      assert_select "> [data-slot='form-section-form'] > #gallery-billing-current-payment[data-nk='alert']", count: 1
-      assert_select "> [data-slot='form-section-form'] > #gallery-billing-payment-form", count: 1
+    assert_select "#gallery-billing-payment-card[data-nk='settings-section']" do
+      assert_select "> [data-slot='settings-section-form'] > #gallery-billing-current-payment[data-nk='alert']", count: 1
+      assert_select "> [data-slot='settings-section-form'] > #gallery-billing-payment-form", count: 1
     end
     assert_select "#gallery-billing-payment-actions[data-nk='toolbar']"
     assert_select "#gallery-billing-payment-form[data-turbo-frame='gallery-billing-frame']"
@@ -93,7 +93,7 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
     assert_select "input[name*='[postal_code]'][autocomplete='postal-code']"
 
     get_flow("billing", "payment-validation")
-    assert_select "#gallery-billing-payment-validation[data-slot='form-section-status'][data-variant='error']",
+    assert_select "#gallery-billing-payment-validation[data-slot='settings-section-status'][data-variant='error']",
       text: /Card number must be 16 digits/
     assert_select "#gallery-billing-payment-form [data-nk='field'][data-state='invalid']", count: 5
     assert_select "#gallery-billing-payment-form input[aria-invalid='true'][aria-describedby*='errors']", count: 5
@@ -294,8 +294,8 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
 
   test "bulk user flow carries native selection through destructive review and audit outcome" do
     get_flow("users", "bulk")
-    assert_select "#gallery-users-bulk-section[data-nk='form-section']" do
-      assert_select "> [data-slot='form-section-form'] > #gallery-users-bulk-form", count: 1
+    assert_select "#gallery-users-bulk-section[data-nk='settings-section']" do
+      assert_select "> [data-slot='settings-section-form'] > #gallery-users-bulk-form", count: 1
     end
     assert_select "#gallery-users-bulk-selection[data-nk='checkbox-group']" do
       assert_select "legend", text: "Users to update"

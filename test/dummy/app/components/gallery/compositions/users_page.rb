@@ -311,7 +311,7 @@ module Gallery
           action: "remind"
         )
 
-        render NitroKit::FormSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Bulk user actions",
           description: "Select users, choose one action, and review the affected records before applying it.",
           id: "gallery-users-bulk-section"
