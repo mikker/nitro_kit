@@ -21,8 +21,10 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%= render NitroKit::AppearanceBootstrap.new(default: :system, nonce: content_security_policy_nonce) %>
+    <%= stylesheet_link_tag "lexxy", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "nitro_kit", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <%= javascript_import_module_tag "lexxy" %>
   </head>
 
   <body>

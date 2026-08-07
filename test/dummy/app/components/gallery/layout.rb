@@ -24,8 +24,9 @@ module Gallery
             default: appearance_default,
             nonce: content_security_policy_nonce
           )
-          stylesheet_link_tag("nitro_kit", "gallery", data: { turbo_track: "reload" })
+          stylesheet_link_tag("lexxy", "nitro_kit", "gallery", data: { turbo_track: "reload" })
           javascript_importmap_tags
+          javascript_import_module_tag("lexxy")
         end
 
         body(data: { gallery: "body" }) do

@@ -13,6 +13,7 @@ gem "stimulus-rails"
 gem "turbo-rails"
 gem "importmap-rails"
 gem "pagy", "~> 43.6"
+gem "lexxy"
 gem "ransack"
 gem "rubocop-rails-omakase", require: false
 
