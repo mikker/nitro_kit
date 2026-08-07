@@ -20,18 +20,18 @@
   }
 
   :where(
-    [data-nk="checkbox"] [data-slot="checkbox-control"],
-    [data-nk="checkbox"] [data-slot="checkbox-indicator"]
-  ) {
+      [data-nk="checkbox"] [data-slot="checkbox-control"],
+      [data-nk="checkbox"] [data-slot="checkbox-indicator"]
+    ) {
     grid-area: 1 / 1;
     inline-size: 1.125rem;
     block-size: 1.125rem;
   }
 
   :where(
-    [data-nk="checkbox"][data-size="lg"] [data-slot="checkbox-control"],
-    [data-nk="checkbox"][data-size="lg"] [data-slot="checkbox-indicator"]
-  ) {
+      [data-nk="checkbox"][data-size="lg"] [data-slot="checkbox-control"],
+      [data-nk="checkbox"][data-size="lg"] [data-slot="checkbox-indicator"]
+    ) {
     inline-size: 1.5rem;
     block-size: 1.5rem;
   }
@@ -68,53 +68,57 @@
   }
 
   :where(
-    [data-nk="checkbox"][data-size="lg"] [data-slot="checkbox-indicator"]
-  )::after {
+      [data-nk="checkbox"][data-size="lg"] [data-slot="checkbox-indicator"]
+    )::after {
     inline-size: 0.625rem;
     block-size: 0.375rem;
   }
 
   :where([data-nk="checkbox"] [data-slot="checkbox-label-text"]) {
     display: block;
-  }
-
-  :where([data-nk="checkbox"] [data-slot="checkbox-content"]) {
     grid-column: 2;
   }
 
-  :where([data-nk="checkbox"] [data-slot="checkbox-description"]) {
+  :where([data-nk="checkbox"] > [data-slot="checkbox-description"]) {
     display: block;
     margin-block-start: var(--nk-space);
+    padding-inline-start: calc(1.125rem + (var(--nk-space) * 2));
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
     text-wrap: pretty;
+  }
+
+  :where(
+      [data-nk="checkbox"][data-size="lg"] > [data-slot="checkbox-description"]
+    ) {
+    padding-inline-start: calc(1.5rem + (var(--nk-space) * 2));
   }
 }
 
 @layer nitro-kit.state {
   :where(
-    [data-nk="checkbox"]
-      [data-slot="checkbox-control"]:checked
-      + [data-slot="checkbox-indicator"],
-    [data-nk="checkbox"][data-state="indeterminate"]
-      [data-slot="checkbox-indicator"]
-  ) {
+      [data-nk="checkbox"]
+        [data-slot="checkbox-control"]:checked
+        + [data-slot="checkbox-indicator"],
+      [data-nk="checkbox"][data-state="indeterminate"]
+        [data-slot="checkbox-indicator"]
+    ) {
     background: var(--nk-color-primary);
     border-color: var(--nk-color-primary);
   }
 
   :where(
-    [data-nk="checkbox"]
-      [data-slot="checkbox-control"]:checked
-      + [data-slot="checkbox-indicator"]
-  )::after {
+      [data-nk="checkbox"]
+        [data-slot="checkbox-control"]:checked
+        + [data-slot="checkbox-indicator"]
+    )::after {
     opacity: 1;
   }
 
   :where(
-    [data-nk="checkbox"][data-state="indeterminate"]
-      [data-slot="checkbox-indicator"]
-  )::after {
+      [data-nk="checkbox"][data-state="indeterminate"]
+        [data-slot="checkbox-indicator"]
+    )::after {
     inline-size: 0.55rem;
     block-size: 0;
     border-block-end: 0.125rem solid currentcolor;
@@ -124,17 +128,17 @@
   }
 
   :where(
-    [data-nk="checkbox"][data-size="lg"][data-state="indeterminate"]
-      [data-slot="checkbox-indicator"]
-  )::after {
+      [data-nk="checkbox"][data-size="lg"][data-state="indeterminate"]
+        [data-slot="checkbox-indicator"]
+    )::after {
     inline-size: 0.7rem;
   }
 
   :where(
-    [data-nk="checkbox"]
-      [data-slot="checkbox-control"]:focus-visible
-      + [data-slot="checkbox-indicator"]
-  ) {
+      [data-nk="checkbox"]
+        [data-slot="checkbox-control"]:focus-visible
+        + [data-slot="checkbox-indicator"]
+    ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -151,10 +155,10 @@
      user touches the control, so an untouched invalid checkbox keeps its
      border. */
   :where(
-    [data-nk="checkbox"]
-      [data-slot="checkbox-control"][aria-invalid="true"]:not(:user-valid)
-      + [data-slot="checkbox-indicator"]
-  ) {
+      [data-nk="checkbox"]
+        [data-slot="checkbox-control"][aria-invalid="true"]:not(:user-valid)
+        + [data-slot="checkbox-indicator"]
+    ) {
     border-color: var(--nk-color-danger);
   }
 }

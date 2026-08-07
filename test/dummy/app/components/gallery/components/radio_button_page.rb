@@ -109,7 +109,9 @@ module Gallery
         example_section(
           "Rails form builder",
           slug: "radio-button-builder",
-          description: "Individual builder radio helpers preserve Rails naming and explicit accessible names."
+          description: "Individual builder radio helpers preserve Rails naming and explicit accessible names. " \
+            "These radios are deliberately ARIA-only: each control is named through aria-label for dense " \
+            "surfaces such as a table selection column, so no visible label text renders."
         ) do
           example("Invitation role", slug: "radio-button-invitation-role") do
             invitation = Gallery::FormExamples.team_invitation

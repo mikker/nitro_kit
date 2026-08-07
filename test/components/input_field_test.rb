@@ -240,10 +240,11 @@ class InputFieldTest < ActiveSupport::TestCase
       )
     )
     control = node.at_css("[data-slot='field-control']")
+    editor = control.at_css("[data-slot='rich-text-area-editor'] > lexxy-editor")
 
     assert_equal "rich-text-area", control["data-nk"]
-    assert_equal "true", control["aria-invalid"]
-    assert_equal "notes-description notes-errors", control["aria-describedby"]
+    assert_equal "true", editor["aria-invalid"]
+    assert_equal "notes-description notes-errors", editor["aria-describedby"]
     assert_equal "notes", control["data-tracking-id"]
   end
 

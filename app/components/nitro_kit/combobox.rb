@@ -22,8 +22,8 @@ module NitroKit
       control_aria: {},
       desperately_need_a_class: nil
     )
-      @identifier = component_id(id)
-      @name = form_name(name)
+      @identifier = validate_id!("Combobox id", id)
+      @name = validate_text!("Combobox name", name)
       @label = visible_label(label)
       @options = typed_options(options)
       @value = value
@@ -52,7 +52,6 @@ module NitroKit
             controller: "nk--combobox",
             placement: placement_value,
             state: "closed",
-            action: "click@window->nk--combobox#closeFromOutside",
             nk__combobox_open_value: "false",
             nk__combobox_required_value: @required,
             nk__combobox_invalid_selection_value: I18n.t("nitro_kit.combobox.invalid_selection"),
@@ -103,7 +102,7 @@ module NitroKit
               autocomplete: "list",
               controls: listbox_id,
               expanded: false,
-              required: @required
+              required: @required || nil
             ),
             data: {
               nk__combobox_target: "input",
@@ -297,18 +296,6 @@ module NitroKit
       @control_aria.keys.select do |key|
         %w[label labelledby].include?(key.to_s.downcase.delete("_-"))
       end
-    end
-
-    def component_id(value)
-      return value if value.is_a?(String) && value.present? && !value.match?(/\s/)
-
-      raise ArgumentError, "Combobox id must be a non-blank String without whitespace"
-    end
-
-    def form_name(value)
-      return value if value.is_a?(String) && value.present?
-
-      raise ArgumentError, "Combobox name must be a non-blank String"
     end
 
     def visible_label(value)

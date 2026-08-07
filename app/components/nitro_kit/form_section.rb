@@ -3,16 +3,19 @@
 module NitroKit
   class FormSection < Component
     Child = Data.define(:component, :content)
+    TITLE_LEVELS = (1..6).freeze
 
     def initialize(
       title: nil,
       description: nil,
+      level: 2,
       id: nil,
       html: {},
       aria: {},
       data: {},
       desperately_need_a_class: nil
     )
+      @title_level = validate_choice!(:level, level, TITLE_LEVELS)
       @title_content = content_from_keyword(:title, title)
       @description_content = content_from_keyword(:description, description)
       @status = nil
@@ -36,7 +39,10 @@ module NitroKit
 
       section(**root_attributes) do
         header(**slot_attributes(:header)) do
-          h2(**slot_attributes(:title, attributes: { id: @title_id })) do
+          public_send(
+            :"h#{@title_level}",
+            **slot_attributes(:title, attributes: { id: @title_id })
+          ) do
             render_deferred_content(@title_content)
           end
           if @description_content
@@ -48,7 +54,8 @@ module NitroKit
       end
     end
 
-    def title(text = nil, &block)
+    def title(text = nil, level: nil, &block)
+      @title_level = validate_choice!(:level, level, TITLE_LEVELS) if level
       @title_content = declare_content(:title, @title_content, text, &block)
       nil
     end

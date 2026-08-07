@@ -80,11 +80,33 @@ class RichTextAreaTest < ActiveSupport::TestCase
     )
     control = node.at_css("[data-slot='field-control']")
 
+    editor_element = control.at_css("[data-slot='rich-text-area-editor'] > lexxy-editor")
+
     assert_equal "rich-text-area", control["data-nk"]
-    assert_equal "true", control["aria-invalid"]
-    assert_equal "brief-description brief-errors", control["aria-describedby"]
-    assert control.at_css("[data-slot='rich-text-area-editor'] > lexxy-editor")
+    assert_equal "true", editor_element["aria-invalid"]
+    assert_equal "brief-description brief-errors", editor_element["aria-describedby"]
     assert_includes NitroKit::Field::TYPES, :rich_text
+  end
+
+  test "Field(as: :rich_text) injects control ARIA into the lexxy editor element" do
+    content = %(<input type="hidden" id="brief" name="brief"><lexxy-editor input="brief"></lexxy-editor>).html_safe
+    node = render_node(
+      NitroKit::Field.new(
+        nil,
+        :brief,
+        as: :rich_text,
+        label: "Project brief",
+        errors: [ "Brief is required" ],
+        rich_text_content: content
+      )
+    )
+    control = node.at_css("[data-slot='field-control']")
+    editor = control.at_css("[data-slot='rich-text-area-editor'] > lexxy-editor")
+
+    assert_equal "true", editor["aria-invalid"]
+    assert_equal "brief-errors", editor["aria-describedby"]
+    assert_nil control["aria-invalid"]
+    assert_nil control["aria-describedby"]
   end
 
   test "documents Field(as: :rich_text) as the expected path in the contract" do

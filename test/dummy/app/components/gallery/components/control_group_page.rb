@@ -18,7 +18,7 @@ module Gallery
           description: "Input, Select, Button, and textual addons share one boundary while retaining native behavior."
         ) do
           example("Common constructions", slug: "control-group-constructions", layout: :stack) do
-            sample("Copy field", slug: "copy-field") do
+            sample("Copy field (static preview; the application wires the copy behavior)", slug: "copy-field") do
               render NitroKit::ControlGroup.new(id: "gallery-control-group-copy", label: "Copy webhook URL") do
                 render NitroKit::Input.new(
                   value: "https://example.test/hooks/nk_live_7P3F",
@@ -130,6 +130,45 @@ module Gallery
                     }
                   )
                   render NitroKit::Button.new("Rotate")
+                end
+              end
+            end
+            sample("Disabled members", slug: "disabled") do
+              render NitroKit::ControlGroup.new(id: "gallery-control-group-disabled", label: "Rotate API key") do
+                render NitroKit::Input.new(
+                  value: "nk_live_7P3F",
+                  disabled: true,
+                  aria: { label: "API key" }
+                )
+                render NitroKit::Button.new("Rotate", disabled: true)
+              end
+            end
+            sample("Invalid member", slug: "invalid") do
+              render NitroKit::ControlGroup.new(id: "gallery-control-group-invalid", label: "Workspace domain") do |group|
+                group.addon("https://")
+                render NitroKit::Input.new(
+                  name: "workspace[subdomain]",
+                  value: "or bital",
+                  aria: { label: "Workspace subdomain", invalid: true }
+                )
+                group.addon(".example.test")
+              end
+            end
+            sample("Narrow container", slug: "narrow") do
+              render NitroKit::Container.new(size: :sm, id: "gallery-control-group-narrow-container") do
+                render NitroKit::ControlGroup.new(id: "gallery-control-group-narrow", label: "Filter activity") do
+                  render NitroKit::Select.new(
+                    name: "narrow_filter[period]",
+                    value: "week",
+                    control_aria: { label: "Activity period" },
+                    options: [ [ "This week", "week" ], [ "This month", "month" ] ]
+                  )
+                  render NitroKit::Input.new(
+                    name: "narrow_filter[query]",
+                    placeholder: "Search events",
+                    aria: { label: "Search events" }
+                  )
+                  render NitroKit::Button.new("Apply", type: :submit)
                 end
               end
             end

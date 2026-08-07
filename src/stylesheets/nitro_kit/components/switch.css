@@ -14,9 +14,9 @@
   }
 
   :where(
-    [data-nk="switch"] [data-slot="switch-control"],
-    [data-nk="switch"] [data-slot="switch-track"]
-  ) {
+      [data-nk="switch"] [data-slot="switch-control"],
+      [data-nk="switch"] [data-slot="switch-track"]
+    ) {
     grid-area: 1 / 1;
   }
 
@@ -46,9 +46,9 @@
   }
 
   :where(
-    [data-nk="switch"][data-size="lg"] [data-slot="switch-control"],
-    [data-nk="switch"][data-size="lg"] [data-slot="switch-track"]
-  ) {
+      [data-nk="switch"][data-size="lg"] [data-slot="switch-control"],
+      [data-nk="switch"][data-size="lg"] [data-slot="switch-track"]
+    ) {
     inline-size: 3.25rem;
     block-size: 2rem;
   }
@@ -83,45 +83,45 @@
   }
 
   :where(
-    [data-nk="switch"][data-size="lg"] > [data-slot="switch-description"]
-  ) {
+      [data-nk="switch"][data-size="lg"] > [data-slot="switch-description"]
+    ) {
     padding-inline-start: calc(3.25rem + (var(--nk-space) * 3));
   }
 }
 
 @layer nitro-kit.state {
   :where(
-    [data-nk="switch"]
-      [data-slot="switch-control"]:checked
-      + [data-slot="switch-track"]
-  ) {
+      [data-nk="switch"]
+        [data-slot="switch-control"]:checked
+        + [data-slot="switch-track"]
+    ) {
     background: var(--nk-color-primary);
     border-color: var(--nk-color-primary);
   }
 
   :where(
-    [data-nk="switch"]
-      [data-slot="switch-control"]:checked
-      + [data-slot="switch-track"]
-      > [data-slot="switch-handle"]
-  ) {
+      [data-nk="switch"]
+        [data-slot="switch-control"]:checked
+        + [data-slot="switch-track"]
+        > [data-slot="switch-handle"]
+    ) {
     transform: translateX(1rem);
   }
 
   :where(
-    [data-nk="switch"][data-size="lg"]
-      [data-slot="switch-control"]:checked
-      + [data-slot="switch-track"]
-      > [data-slot="switch-handle"]
-  ) {
+      [data-nk="switch"][data-size="lg"]
+        [data-slot="switch-control"]:checked
+        + [data-slot="switch-track"]
+        > [data-slot="switch-handle"]
+    ) {
     transform: translateX(1.25rem);
   }
 
   :where(
-    [data-nk="switch"]
-      [data-slot="switch-control"]:focus-visible
-      + [data-slot="switch-track"]
-  ) {
+      [data-nk="switch"]
+        [data-slot="switch-control"]:focus-visible
+        + [data-slot="switch-track"]
+    ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -131,11 +131,15 @@
     opacity: 0.6;
   }
 
+  /* The server error describes the submitted value. Once the user toggles the
+     control and it satisfies its own constraints the error is stale, so the
+     danger border stands down. `:user-valid` never matches before the user
+     touches the control, so an untouched invalid switch keeps its border. */
   :where(
-    [data-nk="switch"]
-      [data-slot="switch-control"][aria-invalid="true"]
-      + [data-slot="switch-track"]
-  ) {
+      [data-nk="switch"]
+        [data-slot="switch-control"][aria-invalid="true"]:not(:user-valid)
+        + [data-slot="switch-track"]
+    ) {
     border-color: var(--nk-color-danger);
   }
 }
@@ -143,9 +147,9 @@
 @media (prefers-reduced-motion: reduce) {
   @layer nitro-kit.base {
     :where(
-      [data-nk="switch"] [data-slot="switch-track"],
-      [data-nk="switch"] [data-slot="switch-handle"]
-    ) {
+        [data-nk="switch"] [data-slot="switch-track"],
+        [data-nk="switch"] [data-slot="switch-handle"]
+      ) {
       transition-duration: 0.01ms;
     }
   }

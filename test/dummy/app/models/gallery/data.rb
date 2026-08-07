@@ -475,7 +475,7 @@ module Gallery
         label: "Search members",
         type: :search,
         value: nil,
-        placeholder: "Search by name or email",
+        placeholder: "Name or email",
         disabled: false,
         readonly: false,
         required: false

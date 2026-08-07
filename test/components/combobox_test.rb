@@ -24,7 +24,7 @@ class ComboboxTest < ActiveSupport::TestCase
     assert_equal "closed", node["data-state"]
     assert_equal "bottom-start", node["data-placement"]
     assert_equal "nk--combobox", node["data-controller"]
-    assert_includes node["data-action"], "click@window->nk--combobox#closeFromOutside"
+    assert_nil node["data-action"]
 
     assert_equal(
       I18n.t("nitro_kit.combobox.invalid_selection"),

@@ -42,13 +42,6 @@
     padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
     appearance: auto;
   }
-
-  :where(
-    [data-nk="select"]:has(> [data-slot="select-control"][multiple])
-      > [data-slot="select-icon"]
-  ) {
-    display: none;
-  }
 }
 
 @layer nitro-kit.state {
@@ -63,8 +56,8 @@
   }
 
   :where(
-    [data-nk="select"] > [data-slot="select-control"][aria-invalid="true"]
-  ) {
+      [data-nk="select"] > [data-slot="select-control"][aria-invalid="true"]
+    ) {
     border-color: var(--nk-color-danger);
   }
 }

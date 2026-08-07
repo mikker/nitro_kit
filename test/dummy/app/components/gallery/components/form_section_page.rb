@@ -30,8 +30,8 @@ module Gallery
               section.form do
                 form_with(url: "#profile", scope: :profile, builder: NitroKit::FormBuilder, id: "gallery-form-section-validation-form") do |form|
                   form.group do
-                    form.field(:name, label: "Display name", value: "", errors: [ "cannot be blank" ], required: true)
-                    form.field(:email, as: :email, label: "Email", value: "not-an-email", errors: [ "is invalid" ], required: true)
+                    form.field(:name, label: "Display name", value: "", errors: [ "Display name can't be blank" ], required: true)
+                    form.field(:email, as: :email, label: "Email", value: "not-an-email", errors: [ "Email is invalid" ], required: true)
                     form.submit("Save profile")
                   end
                 end

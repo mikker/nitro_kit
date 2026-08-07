@@ -339,15 +339,30 @@ module NitroKit
     end
 
     def rich_text_control(html:, aria:, data:)
+      editor_aria = control_aria(aria)
+      content = annotated_rich_text_content(editor_aria)
+
       render_in_slot(
         RichTextArea.new(
-          @rich_text_content,
+          content,
           html: @control_html.merge(html),
-          aria: control_aria(aria),
+          aria: content.equal?(@rich_text_content) ? editor_aria : {},
           data: @control_data.merge(data)
         ),
         :control
       )
+    end
+
+    # The application owns the editor markup, so the control ARIA is injected
+    # into the lexxy-editor tag where assistive technology reads it instead of
+    # landing on the role-less wrapper.
+    def annotated_rich_text_content(aria)
+      return @rich_text_content unless @rich_text_content&.include?("<lexxy-editor")
+
+      attributes = aria.map { |key, value| %(aria-#{key}="#{ERB::Util.html_escape(value)}") }.join(" ")
+      return @rich_text_content if attributes.empty?
+
+      @rich_text_content.sub("<lexxy-editor", "<lexxy-editor #{attributes}").html_safe
     end
 
     def checkbox_control(html:, aria:, data:)
@@ -364,7 +379,7 @@ module NitroKit
           disabled: @disabled,
           required: @required,
           control_html: @control_html.merge(html),
-          control_aria: control_aria(aria),
+          control_aria: labeled_control_aria(aria),
           control_data: @control_data.merge(data)
         ),
         :control
@@ -385,7 +400,7 @@ module NitroKit
           disabled: @disabled,
           required: @required,
           control_html: @control_html.merge(html),
-          control_aria: switch_aria(aria),
+          control_aria: labeled_control_aria(aria),
           control_data: @control_data.merge(data)
         ),
         :control
@@ -405,7 +420,7 @@ module NitroKit
           disabled: @disabled || choice.disabled,
           required: @required,
           control_html: @control_html.merge(html),
-          control_aria: control_aria(aria),
+          control_aria: labeled_control_aria(aria),
           control_data: @control_data.merge(data)
         ),
         :control
@@ -424,7 +439,9 @@ module NitroKit
           disabled: @disabled,
           required: @required,
           html: @control_html.merge(html),
-          aria: control_aria(aria),
+          # The fieldset's implicit group role does not support aria-invalid,
+          # so the error state stays on the error list it references.
+          aria: control_aria(aria).except(:invalid),
           data: @control_data.merge(data)
         ),
         :control
@@ -447,13 +464,15 @@ module NitroKit
       ).compact
     end
 
-    def switch_aria(extra)
+    def labeled_control_aria(extra)
       attributes = control_aria(extra)
       return attributes unless field_label == false
       return attributes if attributes.keys.any? { |key| %w[label labelledby].include?(key.to_s.delete("_-")) }
 
       accessible_name = derived_label || name.to_s.humanize.presence
-      raise ArgumentError, "an unlabeled switch requires a field name or control ARIA label" unless accessible_name
+      unless accessible_name
+        raise ArgumentError, "an unlabeled #{as.to_s.tr("_", " ")} requires a field name or control ARIA label"
+      end
 
       attributes.merge(label: accessible_name)
     end

@@ -67,11 +67,14 @@ module NitroKit
           render_in_slot(Label.new(for: id), :label) do
             render_control
             span(**slot_attributes(:indicator), aria: { hidden: "true" })
-            span(**slot_attributes(:content)) do
-              span(**slot_attributes(:label_text)) { text_or_block(label, &block) }
-              span(**slot_attributes(:description, attributes: { id: description_id })) { plain(description) } if description
-            end
+            span(**slot_attributes(:label_text)) { text_or_block(label, &block) }
           end
+        end
+
+        # The description stays outside the label so aria-describedby carries it
+        # instead of it joining the control's accessible name.
+        if description
+          span(**slot_attributes(:description, attributes: { id: description_id })) { plain(description) }
         end
       end
     end

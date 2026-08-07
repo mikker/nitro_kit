@@ -212,7 +212,7 @@ class GalleryFormFamilyTest < ActionDispatch::IntegrationTest
     end
 
     assert_select "#gallery-radio-button-group-invitation-form [data-nk='field'][data-state='invalid']" do
-      assert_select "#gallery-radio-button-group-invitation-role[aria-invalid='true']" \
+      assert_select "#gallery-radio-button-group-invitation-role:not([aria-invalid])" \
                     "[aria-describedby='gallery-radio-button-group-invitation-role-description gallery-radio-button-group-invitation-role-errors']"
       assert_select "input[type='radio'][name='invitation[role]'][required]", count: 3
       assert_select "input[type='radio'][checked]", count: 0

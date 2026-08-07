@@ -50,6 +50,7 @@ export default class extends Controller {
   }
 
   connect() {
+    this.outsidePointerDown = this.outsidePointerDown.bind(this);
     this.activeOption = null;
     this.enhanced = true;
     this.nativeRequired = this.requiredValue;
@@ -64,6 +65,7 @@ export default class extends Controller {
 
   disconnect() {
     this.stopPositioning?.();
+    this.stopOutsideDismissal();
     this.enhanced = false;
     const control = this.element.querySelector(
       ':scope > [data-slot="combobox-control"]',
@@ -143,6 +145,17 @@ export default class extends Controller {
   open() {
     if (this.inputTarget.disabled) return;
 
+    // A committed selection is replaced, not appended to: opening selects the
+    // visible text so the first keystroke starts a fresh filter.
+    if (!this.openValue && this.inputTarget.value !== "") {
+      this.inputTarget.select();
+      this.inputTarget.addEventListener(
+        "mouseup",
+        (event) => event.preventDefault(),
+        { once: true },
+      );
+    }
+
     this.openValue = true;
   }
 
@@ -151,8 +164,28 @@ export default class extends Controller {
     this.setActive(null);
   }
 
-  closeFromOutside(event) {
+  // Capture-phase document pointerdown mirrors the Dropdown controller: iOS
+  // Safari does not reliably deliver window click events for outside taps.
+  outsidePointerDown(event) {
     if (!this.element.contains(event.target)) this.close();
+  }
+
+  startOutsideDismissal() {
+    if (this.stopOutsideDismissalListener) return;
+
+    document.addEventListener("pointerdown", this.outsidePointerDown, true);
+    this.stopOutsideDismissalListener = () => {
+      document.removeEventListener(
+        "pointerdown",
+        this.outsidePointerDown,
+        true,
+      );
+      this.stopOutsideDismissalListener = null;
+    };
+  }
+
+  stopOutsideDismissal() {
+    this.stopOutsideDismissalListener?.();
   }
 
   filter() {
@@ -268,9 +301,11 @@ export default class extends Controller {
 
     if (open) {
       this.startPositioning();
+      this.startOutsideDismissal();
     } else {
       this.stopPositioning?.();
       this.stopPositioning = null;
+      this.stopOutsideDismissal();
     }
   }
 
@@ -351,6 +386,21 @@ export default class extends Controller {
 
     this.statusTarget.textContent =
       count === 0 ? this.noResultsMessage : this.resultsMessage(count);
+    this.toggleEmptyState(count === 0);
+  }
+
+  toggleEmptyState(empty) {
+    if (empty && !this.emptyElement) {
+      const item = document.createElement("li");
+      item.setAttribute("role", "presentation");
+      item.setAttribute("data-slot", "combobox-empty");
+      item.textContent = this.noResultsMessage;
+      this.listboxTarget.append(item);
+      this.emptyElement = item;
+    } else if (!empty && this.emptyElement) {
+      this.emptyElement.remove();
+      this.emptyElement = null;
+    }
   }
 
   get visibleOptions() {

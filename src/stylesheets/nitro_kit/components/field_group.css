@@ -3,4 +3,11 @@
     display: grid;
     gap: calc(var(--nk-space) * 6);
   }
+
+  /* Whatever follows a group (another group, a submit control) keeps the same
+     rhythm as the fields inside it, so a trailing error list never reads as
+     attached to the next element. */
+  :where([data-nk="field-group"] + *) {
+    margin-block-start: calc(var(--nk-space) * 6);
+  }
 }
