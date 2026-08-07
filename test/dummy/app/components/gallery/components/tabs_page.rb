@@ -52,6 +52,19 @@ module Gallery
             end
           end
 
+          example("Horizontal manual tabs", slug: "tabs-horizontal-manual") do
+            render NitroKit::Tabs.new(
+              id: "gallery-tabs-horizontal-manual",
+              default: :usage,
+              label: "Plan usage",
+              activation: :manual
+            ) do |tabs|
+              tabs.tab(:usage, "Usage") { "Seats, storage, and API request volume." }
+              tabs.tab(:limits, "Limits") { "Plan limits and overage behavior." }
+              tabs.tab(:history, "History") { "Monthly usage totals for the past year." }
+            end
+          end
+
           example("Single tab", slug: "tabs-single") do
             render NitroKit::Tabs.new(id: "gallery-tabs-one", label: "Release information") do |tabs|
               tabs.tab(:summary, "Summary") { "Release 1842 is operational in the EU region." }

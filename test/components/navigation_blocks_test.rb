@@ -187,7 +187,7 @@ class NavigationBlocksTest < ActiveSupport::TestCase
       path = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/#{name}.css")
       [ name, File.read(path) ]
     end
-    block_css.each_value { |source| assert_includes source, "@media (max-width: 48rem)" }
+    block_css.each_value { |source| assert_includes source, "@media (width < 48rem)" }
     block_css.each_value { |source| refute_includes source, "max-width: 40rem" }
     assert_includes css, "flex-direction: column"
     assert_includes css, %([data-nk="pagination"][data-slot="pagination-bar-pagination"])

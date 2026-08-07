@@ -90,9 +90,9 @@ class GalleryActionsTest < ActionDispatch::IntegrationTest
 
     assert_select "#gallery-pagination-labels" do
       assert_select "[data-nk='icon']", count: 0
-      assert_select "#gallery-pagination-labels-previous", text: /previous collection/
+      assert_select "#gallery-pagination-labels-previous", text: /newer archived records/
       assert_select "#gallery-pagination-labels-page", text: "A custom page label"
-      assert_select "#gallery-pagination-labels-next", text: /Continue through/
+      assert_select "#gallery-pagination-labels-next", text: /older archived records/
     end
 
     assert_select "#gallery-pagination-pressure [data-slot='pagination-item'][data-kind='page']", count: 12

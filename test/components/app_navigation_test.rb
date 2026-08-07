@@ -61,7 +61,7 @@ class AppNavigationTest < ActiveSupport::TestCase
     assert_nil divider["role"]
     assert_equal "a", dashboard.name
     assert_equal "page", dashboard["aria-current"]
-    assert_equal "current", dashboard["data-state"]
+    assert_nil dashboard["data-state"]
     assert_empty node.css("h1, h2, h3, h4, h5, h6")
     assert_equal "true", body.at_css("[data-slot='app-navigation-spacer']")["aria-hidden"] if body.at_css("[data-slot='app-navigation-spacer']")
   end
@@ -137,9 +137,9 @@ class AppNavigationTest < ActiveSupport::TestCase
     icon = current.at_css("[data-slot='app-navigation-item-icon']")
     badge = inbox.at_css("[data-slot='app-navigation-item-badge']")
 
-    assert_equal "current", current["data-state"]
+    assert_nil current["data-state"]
     assert_equal "page", current["aria-current"]
-    assert_equal "default", inbox["data-state"]
+    assert_nil inbox["data-state"]
     assert_nil inbox["aria-current"]
     assert_equal "icon", icon["data-nk"]
     assert_equal "true", icon["aria-hidden"]

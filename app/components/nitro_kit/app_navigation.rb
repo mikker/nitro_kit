@@ -223,8 +223,7 @@ module NitroKit
             :item_link,
             attributes: {
               href: entry.href,
-              aria: { current: entry.current ? "page" : nil },
-              data: { state: entry.current ? "current" : "default" }
+              aria: { current: entry.current ? "page" : nil }
             },
             html: entry.html,
             aria: entry.aria,

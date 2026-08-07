@@ -49,6 +49,43 @@ module Gallery
           end
 
           example(
+            "Global shortcut",
+            slug: "command-palette-shortcut",
+            description: "The default shortcut: true owns Command-K, labels the trigger hint, and exposes aria-keyshortcuts."
+          ) do
+            render NitroKit::CommandPalette.new(
+              id: "gallery-command-palette-shortcut",
+              label: "Search workspace…",
+              placeholder: "Search destinations…"
+            ) do |palette|
+              palette.destination("Dashboard", href: "#dashboard", description: "Workspace overview")
+              palette.destination("Projects", href: "#projects", description: "Active and archived work")
+              palette.destination("Billing", href: "#billing", description: "Plans and invoices")
+            end
+          end
+
+          example(
+            "Many long destinations",
+            slug: "command-palette-many-destinations",
+            description: "A long result list scrolls inside the panel instead of growing past its 26rem cap."
+          ) do
+            render NitroKit::CommandPalette.new(
+              id: "gallery-command-palette-many",
+              label: "Search workspace…",
+              placeholder: "Search destinations…",
+              shortcut: false
+            ) do |palette|
+              (1..18).each do |number|
+                palette.destination(
+                  "Quarterly compliance and audit-retention report #{number}",
+                  href: "#report-#{number}",
+                  description: "Retention evidence, reviewer sign-off, and export history for period #{number}"
+                )
+              end
+            end
+          end
+
+          example(
             "Server-rendered results",
             slug: "command-palette-async",
             description: "The search form targets a Turbo Frame; the endpoint returns CommandPalette::Results HTML.",

@@ -1,26 +1,29 @@
 @layer nitro-kit.base {
   :where([data-nk="tabs"]) {
-    width: 100%;
+    inline-size: 100%;
     color: var(--nk-color-foreground);
   }
 
   :where([data-nk="tabs"] > [data-slot="tabs-list"]) {
     display: flex;
-    max-width: 100%;
+    max-inline-size: 100%;
     overflow-x: auto;
     border-block-end: var(--nk-border-width) solid var(--nk-color-border);
   }
 
   :where([data-nk="tabs"] > [data-slot="tabs-list"] > [data-slot="tabs-tab"]) {
-    display: flex;
-    min-height: 2.5rem;
-    align-items: center;
-    justify-content: center;
+    display: block;
+    min-inline-size: 0;
+    min-block-size: var(--nk-control-height-md);
+    align-content: center;
     padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
     font: inherit;
     font-weight: var(--nk-font-weight-medium);
     color: var(--nk-color-muted-foreground);
+    text-align: center;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     cursor: pointer;
     background: transparent;
     border: 0;
@@ -44,8 +47,8 @@
   }
 
   :where(
-    [data-nk="tabs"][data-orientation="vertical"] > [data-slot="tabs-list"]
-  ) {
+      [data-nk="tabs"][data-orientation="vertical"] > [data-slot="tabs-list"]
+    ) {
     flex-direction: column;
     grid-column: 1;
     grid-row: 1;
@@ -56,27 +59,26 @@
   }
 
   :where(
-    [data-nk="tabs"][data-orientation="vertical"]
-      > [data-slot="tabs-list"]
-      > [data-slot="tabs-tab"]
-  ) {
-    justify-content: flex-start;
+      [data-nk="tabs"][data-orientation="vertical"]
+        > [data-slot="tabs-list"]
+        > [data-slot="tabs-tab"]
+    ) {
     text-align: start;
     border-block-end: 0;
     border-inline-end: var(--nk-focus-width) solid transparent;
   }
 
   :where(
-    [data-nk="tabs"][data-orientation="vertical"]
-      > [data-slot="tabs-list"]
-      > [data-slot="tabs-tab"][aria-selected="true"]
-  ) {
+      [data-nk="tabs"][data-orientation="vertical"]
+        > [data-slot="tabs-list"]
+        > [data-slot="tabs-tab"][aria-selected="true"]
+    ) {
     border-inline-end-color: var(--nk-color-primary);
   }
 
   :where(
-    [data-nk="tabs"][data-orientation="vertical"] > [data-slot="tabs-panel"]
-  ) {
+      [data-nk="tabs"][data-orientation="vertical"] > [data-slot="tabs-panel"]
+    ) {
     grid-column: 2;
     grid-row: 1;
     padding-block-start: calc(var(--nk-space) * 2);
@@ -86,43 +88,45 @@
 @layer nitro-kit.state {
   @media (hover: hover) {
     :where(
-      [data-nk="tabs"]
-        > [data-slot="tabs-list"]
-        > [data-slot="tabs-tab"]:hover:not(:disabled)
-    ) {
+        [data-nk="tabs"]
+          > [data-slot="tabs-list"]
+          > [data-slot="tabs-tab"]:hover:not(:disabled)
+      ) {
       color: var(--nk-color-foreground);
     }
   }
 
   :where(
-    [data-nk="tabs"]
-      > [data-slot="tabs-list"]
-      > [data-slot="tabs-tab"][aria-selected="true"]
-  ) {
+      [data-nk="tabs"]
+        > [data-slot="tabs-list"]
+        > [data-slot="tabs-tab"][aria-selected="true"]
+    ) {
     color: var(--nk-color-foreground);
     border-block-end-color: var(--nk-color-primary);
   }
 
   :where(
-    [data-nk="tabs"][data-orientation="vertical"]
-      > [data-slot="tabs-list"]
-      > [data-slot="tabs-tab"][aria-selected="true"]
-  ) {
+      [data-nk="tabs"][data-orientation="vertical"]
+        > [data-slot="tabs-list"]
+        > [data-slot="tabs-tab"][aria-selected="true"]
+    ) {
     border-block-end-color: transparent;
   }
 
   :where(
-    [data-nk="tabs"]
-      > [data-slot="tabs-list"]
-      > [data-slot="tabs-tab"]:focus-visible
-  ) {
+      [data-nk="tabs"]
+        > [data-slot="tabs-list"]
+        > [data-slot="tabs-tab"]:focus-visible
+    ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: calc(var(--nk-focus-offset) * -1);
   }
 
   :where(
-    [data-nk="tabs"] > [data-slot="tabs-list"] > [data-slot="tabs-tab"]:disabled
-  ) {
+      [data-nk="tabs"]
+        > [data-slot="tabs-list"]
+        > [data-slot="tabs-tab"]:disabled
+    ) {
     color: var(--nk-color-muted-foreground);
     cursor: not-allowed;
     opacity: 0.55;
@@ -130,8 +134,8 @@
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-      [data-nk="tabs"] > [data-slot="tabs-list"] > [data-slot="tabs-tab"]
-    ) {
+        [data-nk="tabs"] > [data-slot="tabs-list"] > [data-slot="tabs-tab"]
+      ) {
       transition-duration: 0.01ms;
     }
   }

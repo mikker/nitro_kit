@@ -141,7 +141,7 @@ class PaginationBarTest < ActiveSupport::TestCase
 
     assert_includes css, %([data-nk="pagination-bar"])
     assert_includes css, %([data-nk="pagination"][data-slot="pagination-bar-pagination"])
-    assert_includes source, "@media (max-width: 48rem)"
+    assert_includes source, "@media (width < 48rem)"
     refute_includes source, "transition: all"
     refute_match(/(?:\:where\(\s*|,\s*)\[data-slot=/m, source)
   end

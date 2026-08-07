@@ -17,24 +17,24 @@
   }
 
   :where(
-    [data-nk="pagination-bar"]
-      > [data-nk="pagination"][data-slot="pagination-bar-pagination"]
-  ) {
+      [data-nk="pagination-bar"]
+        > [data-nk="pagination"][data-slot="pagination-bar-pagination"]
+    ) {
     margin-inline-start: auto;
   }
 }
 
 @layer nitro-kit.state {
-  @media (max-width: 48rem) {
+  @media (width < 48rem) {
     :where([data-nk="pagination-bar"]) {
       flex-direction: column;
       align-items: stretch;
     }
 
     :where(
-      [data-nk="pagination-bar"]
-        > [data-nk="pagination"][data-slot="pagination-bar-pagination"]
-    ) {
+        [data-nk="pagination-bar"]
+          > [data-nk="pagination"][data-slot="pagination-bar-pagination"]
+      ) {
       margin-inline-start: 0;
     }
   }

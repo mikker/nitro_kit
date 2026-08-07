@@ -59,16 +59,22 @@ class ToolbarTest < ActiveSupport::TestCase
     assert_match(/requires a leading or trailing region/, assert_raises(ArgumentError) do
       NitroKit::Toolbar.new.call
     end.message)
+    assert_match(/leading region requires a block/, assert_raises(ArgumentError) do
+      NitroKit::Toolbar.new.call { |toolbar| toolbar.leading }
+    end.message)
+    assert_match(/trailing region requires a block/, assert_raises(ArgumentError) do
+      NitroKit::Toolbar.new.call { |toolbar| toolbar.trailing }
+    end.message)
     assert_match(/at most one leading region/, assert_raises(ArgumentError) do
       NitroKit::Toolbar.new.call do |toolbar|
-        toolbar.leading
-        toolbar.leading
+        toolbar.leading { "One" }
+        toolbar.leading { "Two" }
       end
     end.message)
     assert_match(/at most one trailing region/, assert_raises(ArgumentError) do
       NitroKit::Toolbar.new.call do |toolbar|
-        toolbar.trailing
-        toolbar.trailing
+        toolbar.trailing { "One" }
+        toolbar.trailing { "Two" }
       end
     end.message)
   end
@@ -82,8 +88,8 @@ class ToolbarTest < ActiveSupport::TestCase
         data: { application_state: "ready" }
       )
     ) do |bar|
-      bar.leading(html: { id: "leading-attrs" }, aria: { label: "Counts" }, data: { region: "leading" })
-      bar.trailing(html: { id: "trailing-attrs" }, data: { region: "trailing" })
+      bar.leading(html: { id: "leading-attrs" }, aria: { label: "Counts" }, data: { region: "leading" }) { "Counts" }
+      bar.trailing(html: { id: "trailing-attrs" }, data: { region: "trailing" }) { "Actions" }
     end
 
     assert_equal "toolbar-attrs", node["id"]
@@ -100,8 +106,8 @@ class ToolbarTest < ActiveSupport::TestCase
     node = render_node(
       NitroKit::Toolbar.new(desperately_need_a_class: "external-toolbar")
     ) do |bar|
-      bar.leading(desperately_need_a_class: "external-leading", html: { id: "leading-escape" })
-      bar.trailing(desperately_need_a_class: "external-trailing", html: { id: "trailing-escape" })
+      bar.leading(desperately_need_a_class: "external-leading", html: { id: "leading-escape" }) { "Counts" }
+      bar.trailing(desperately_need_a_class: "external-trailing", html: { id: "trailing-escape" }) { "Actions" }
     end
 
     assert_equal "external-toolbar", node["class"]
@@ -115,7 +121,7 @@ class ToolbarTest < ActiveSupport::TestCase
       assert_raises(ArgumentError) { NitroKit::Toolbar.new(data: { reserved => "replacement" }) }
     end
     assert_raises(ArgumentError) do
-      NitroKit::Toolbar.new.call { |bar| bar.leading(data: { slot: "replacement" }) }
+      NitroKit::Toolbar.new.call { |bar| bar.leading(data: { slot: "replacement" }) { "Counts" } }
     end
   end
 
@@ -123,7 +129,7 @@ class ToolbarTest < ActiveSupport::TestCase
     source = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/toolbar.css").read
 
     assert_includes NitroKit::CssBundle.compile, %([data-nk="toolbar"])
-    assert_includes source, "@media (max-width: 48rem)"
+    assert_includes source, "@media (width < 48rem)"
     refute_includes source, "transition: all"
     refute_match(/(?:\:where\(\s*|,\s*)\[data-slot=/m, source)
   end

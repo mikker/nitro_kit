@@ -101,7 +101,7 @@ module Gallery
               label: "Archived audit record pages"
             ) do |pagination|
               pagination.prev(
-                "Go back to the previous collection of archived audit records",
+                "Back to newer archived records",
                 href: "/gallery/archive?page=4",
                 icon: nil,
                 id: "gallery-pagination-labels-previous"
@@ -110,7 +110,7 @@ module Gallery
                 "A custom page label"
               end
               pagination.next(
-                "Continue through the archived audit record collection",
+                "Continue to older archived records",
                 href: "/gallery/archive?page=6",
                 icon: nil,
                 id: "gallery-pagination-labels-next"

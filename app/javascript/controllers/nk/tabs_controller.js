@@ -43,9 +43,12 @@ export default class extends Controller {
   }
 
   navigate(event) {
+    const rightToLeft = getComputedStyle(this.element).direction === "rtl";
     const directionKeys =
       this.orientationValue === "vertical"
         ? ["ArrowUp", "ArrowDown"]
+        : rightToLeft
+        ? ["ArrowRight", "ArrowLeft"]
         : ["ArrowLeft", "ArrowRight"];
 
     if (![...directionKeys, "Home", "End"].includes(event.key)) return;
@@ -142,7 +145,11 @@ export default class extends Controller {
       const active = panel.dataset.key === value;
 
       panel.hidden = !active;
-      panel.setAttribute("aria-hidden", String(!active));
+      if (active) {
+        panel.setAttribute("aria-hidden", "false");
+      } else {
+        panel.removeAttribute("aria-hidden");
+      }
       panel.dataset.state = active ? "active" : "inactive";
       panel.tabIndex = active ? 0 : -1;
     });

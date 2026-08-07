@@ -13,10 +13,10 @@
   }
 
   :where(
-    [data-nk="command-palette"]
-      > [data-slot="command-palette-trigger"]
-      > [data-slot="button-label"]
-  ) {
+      [data-nk="command-palette"]
+        > [data-slot="command-palette-trigger"]
+        > [data-slot="button-label"]
+    ) {
     display: flex;
     flex: 1 1 auto;
     gap: calc(var(--nk-space) * 2);
@@ -25,8 +25,8 @@
   }
 
   :where(
-    [data-nk="command-palette"] [data-slot="command-palette-trigger-label"]
-  ) {
+      [data-nk="command-palette"] [data-slot="command-palette-trigger-label"]
+    ) {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -48,7 +48,7 @@
 
   :where([data-nk="command-palette"] > [data-slot="command-palette-panel"]) {
     inline-size: min(calc(100% - (var(--nk-space) * 8)), var(--nk-content-md));
-    block-size: min(36rem, calc(100dvh - (var(--nk-space) * 8)));
+    max-block-size: min(36rem, calc(100dvh - (var(--nk-space) * 8)));
     margin: auto;
     padding: 0;
     overflow: hidden;
@@ -60,15 +60,15 @@
   }
 
   :where(
-    [data-nk="command-palette"] > [data-slot="command-palette-panel"]
-  )::backdrop {
+      [data-nk="command-palette"] > [data-slot="command-palette-panel"]
+    )::backdrop {
     background: var(--nk-color-overlay);
   }
 
   :where(
-    [data-nk="command-palette"] [data-slot="command-palette-title"],
-    [data-nk="command-palette"] [data-slot="command-palette-status"]
-  ) {
+      [data-nk="command-palette"] [data-slot="command-palette-title"],
+      [data-nk="command-palette"] [data-slot="command-palette-status"]
+    ) {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -90,19 +90,19 @@
   }
 
   :where(
-    [data-nk="command-palette"]
-      > [data-slot="command-palette-panel"]
-      > [data-slot="command-palette-close"]
-  ) {
+      [data-nk="command-palette"]
+        > [data-slot="command-palette-panel"]
+        > [data-slot="command-palette-close"]
+    ) {
     margin-block: calc(var(--nk-space) * 2);
     margin-inline: auto calc(var(--nk-space) * 2);
   }
 
   :where(
-    [data-nk="command-palette"][data-enhanced]
-      > [data-slot="command-palette-panel"]
-      > [data-slot="command-palette-close"]
-  ) {
+      [data-nk="command-palette"][data-enhanced]
+        > [data-slot="command-palette-panel"]
+        > [data-slot="command-palette-close"]
+    ) {
     position: absolute;
     z-index: 1;
     inset-block-start: calc(var(--nk-space) * 2);
@@ -111,23 +111,23 @@
   }
 
   :where(
-    [data-nk="command-palette"][data-enhanced]
-      [data-slot="command-palette-search"]
-  ) {
+      [data-nk="command-palette"][data-enhanced]
+        [data-slot="command-palette-search"]
+    ) {
     padding-inline-end: calc(
       var(--nk-control-height-md) + (var(--nk-space) * 4)
     );
   }
 
   :where(
-    [data-nk="command-palette"] [data-slot="command-palette-search"][hidden]
-  ) {
+      [data-nk="command-palette"] [data-slot="command-palette-search"][hidden]
+    ) {
     display: none;
   }
 
   :where(
-    [data-nk="command-palette"] [data-slot="command-palette-search-icon"]
-  ) {
+      [data-nk="command-palette"] [data-slot="command-palette-search-icon"]
+    ) {
     flex: 0 0 auto;
     margin-inline-start: calc(var(--nk-space) * 2);
     color: var(--nk-color-muted-foreground);
@@ -138,8 +138,9 @@
     min-inline-size: 0;
   }
 
-  :where([data-nk="command-palette"])
-    [data-slot="command-palette-input"]::-webkit-search-cancel-button {
+  :where(
+      [data-nk="command-palette"] [data-slot="command-palette-input"]
+    )::-webkit-search-cancel-button {
     appearance: none;
   }
 
@@ -158,8 +159,8 @@
   }
 
   :where(
-    [data-nk="command-palette"] [data-slot="command-palette-destination"]
-  ) {
+      [data-nk="command-palette"] [data-slot="command-palette-destination"]
+    ) {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -177,9 +178,9 @@
   }
 
   :where(
-    [data-nk="command-palette"]
-      [data-slot="command-palette-destination-description"]
-  ) {
+      [data-nk="command-palette"]
+        [data-slot="command-palette-destination-description"]
+    ) {
     margin-block-start: calc(var(--nk-space) * 0.5);
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-xs);
@@ -198,18 +199,18 @@
 @layer nitro-kit.state {
   @media (hover: hover) {
     :where(
-      [data-nk="command-palette"]
-        [data-slot="command-palette-destination"]:hover
-    ) {
+        [data-nk="command-palette"]
+          [data-slot="command-palette-destination"]:hover
+      ) {
       color: var(--nk-color-foreground);
       background: var(--nk-color-muted);
     }
   }
 
   :where(
-    [data-nk="command-palette"]
-      [data-slot="command-palette-destination"]:focus-visible
-  ) {
+      [data-nk="command-palette"]
+        [data-slot="command-palette-destination"]:focus-visible
+    ) {
     color: var(--nk-color-foreground);
     background: var(--nk-color-muted);
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
@@ -217,16 +218,16 @@
   }
 
   :where(
-    [data-nk="command-palette"]
-      [data-slot="command-palette-destination"]:is(:hover, :focus-visible)
-      [data-slot="command-palette-destination-description"]
-  ) {
+      [data-nk="command-palette"]
+        [data-slot="command-palette-destination"]:is(:hover, :focus-visible)
+        [data-slot="command-palette-destination-description"]
+    ) {
     color: var(--nk-color-foreground);
   }
 
   :where(
-    [data-nk="command-palette"] > [data-slot="command-palette-panel"][open]
-  ) {
+      [data-nk="command-palette"] > [data-slot="command-palette-panel"][open]
+    ) {
     animation: nk-command-palette-enter var(--nk-duration-slow) var(--nk-ease);
   }
 
@@ -247,8 +248,8 @@
     }
 
     :where(
-      [data-nk="command-palette"] [data-slot="command-palette-destination"]
-    ) {
+        [data-nk="command-palette"] [data-slot="command-palette-destination"]
+      ) {
       transition-duration: 0.01ms;
     }
   }

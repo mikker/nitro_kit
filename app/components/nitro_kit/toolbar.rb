@@ -30,6 +30,7 @@ module NitroKit
 
     def leading(html: {}, aria: {}, data: {}, desperately_need_a_class: nil, &block)
       raise ArgumentError, "Toolbar accepts at most one leading region" if @leading_region
+      raise ArgumentError, "Toolbar leading region requires a block" unless block
       @leading_region = Region.new(
         content: block,
         html:,
@@ -42,6 +43,7 @@ module NitroKit
 
     def trailing(html: {}, aria: {}, data: {}, desperately_need_a_class: nil, &block)
       raise ArgumentError, "Toolbar accepts at most one trailing region" if @trailing_region
+      raise ArgumentError, "Toolbar trailing region requires a block" unless block
       @trailing_region = Region.new(
         content: block,
         html:,
