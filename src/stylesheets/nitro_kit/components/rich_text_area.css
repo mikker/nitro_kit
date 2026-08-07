@@ -5,8 +5,13 @@
     --lexxy-color-text-subtle: var(--nk-color-muted-foreground);
     --lexxy-color-link: var(--nk-color-primary);
     --lexxy-color-accent-dark: var(--nk-color-primary);
+    --lexxy-color-ink: var(--nk-color-foreground);
+    --lexxy-color-ink-medium: var(--nk-color-muted-foreground);
+    --lexxy-color-ink-inverted: var(--nk-color-primary-foreground);
     --lexxy-color-ink-lighter: var(--nk-color-border);
     --lexxy-color-ink-lightest: var(--nk-color-muted);
+    --lexxy-color-selected: var(--nk-color-muted);
+    --lexxy-color-selected-hover: var(--nk-color-border);
     --lexxy-radius: var(--nk-radius-md);
     display: block;
     inline-size: 100%;
@@ -17,5 +22,15 @@
   :where([data-nk="rich-text-area"]) > [data-slot="rich-text-area-editor"] {
     display: block;
     min-block-size: calc(var(--nk-space) * 24);
+  }
+}
+
+@layer nitro-kit.state {
+  :where(
+      [data-nk="rich-text-area"]
+        > [data-slot="rich-text-area-editor"]
+        > [aria-invalid="true"]
+    ) {
+    border-color: var(--nk-color-danger);
   }
 }
