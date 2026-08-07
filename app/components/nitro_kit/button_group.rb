@@ -28,9 +28,9 @@ module NitroKit
 
       super(
         component: :button_group,
-        attributes: { id:, role: "group" },
+        attributes: { id:, role: "group", aria: { label: }.compact },
         html:,
-        aria: label ? aria.merge(label:) : aria,
+        aria:,
         data:,
         desperately_need_a_class:
       )

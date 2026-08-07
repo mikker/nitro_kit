@@ -56,6 +56,10 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
     ],
     "test/dummy/app/components/gallery/components/button_page.rb" => [
       GhostUse.new(
+        pattern: /id: "gallery-button-variant-ghost",\s+variant: :ghost/m,
+        reason: "ghost entry in the Button variant matrix"
+      ),
+      GhostUse.new(
         pattern: /id: "gallery-button-icon-only",\s+icon: :x,\s+variant: :ghost,/m,
         reason: "dedicated icon-only dismiss treatment in the Button showcase"
       )
@@ -72,7 +76,7 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
     ],
     "test/dummy/app/components/gallery/components/tooltip_page.rb" => [
       GhostUse.new(
-        pattern: /id: "gallery-tooltip-icon".*?tooltip\.trigger\(\s+variant: :ghost,/m,
+        pattern: /tooltip\.trigger\(\s+icon: :copy,\s+variant: :ghost,/m,
         reason: "icon-only copy control in the Tooltip showcase"
       )
     ],
@@ -113,7 +117,7 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
     end.reject { |_path, count| count.zero? }
 
     assert_equal RETAINED_GHOSTS.keys.sort, actual_by_file.keys.sort
-    assert_equal 17, actual_by_file.values.sum
+    assert_equal 18, actual_by_file.values.sum
 
     RETAINED_GHOSTS.each do |relative_path, uses|
       source = ROOT.join(relative_path).read

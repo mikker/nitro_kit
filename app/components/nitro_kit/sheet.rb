@@ -5,10 +5,10 @@ module NitroKit
     SIDES = %i[left right].freeze
     SIZES = %i[sm md lg].freeze
 
-    Trigger = Data.define(:text, :variant, :size, :icon, :icon_end, :label, :disabled, :html, :aria, :data, :content)
+    Trigger = Data.define(:text, :variant, :size, :icon, :icon_end, :label, :disabled, :html, :aria, :data, :css_class, :content)
     private_constant :Trigger
 
-    Panel = Data.define(:title, :description, :content)
+    Panel = Data.define(:title, :description, :html, :aria, :data, :css_class, :content)
     private_constant :Panel
 
     def initialize(
@@ -77,6 +77,7 @@ module NitroKit
       html: {},
       aria: {},
       data: {},
+      desperately_need_a_class: nil,
       &content
     )
       ensure_collecting!
@@ -93,12 +94,21 @@ module NitroKit
         html:,
         aria:,
         data:,
+        css_class: desperately_need_a_class,
         content:
       )
       nil
     end
 
-    def panel(title:, description: nil, &content)
+    def panel(
+      title:,
+      description: nil,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil,
+      &content
+    )
       ensure_collecting!
       raise ArgumentError, "Sheet accepts exactly one panel" if @panel
       unless title.is_a?(String) && title.present?
@@ -108,7 +118,7 @@ module NitroKit
         raise ArgumentError, "Sheet description: must be nil or a non-blank String"
       end
 
-      @panel = Panel.new(title:, description:, content:)
+      @panel = Panel.new(title:, description:, html:, aria:, data:, css_class: desperately_need_a_class, content:)
       nil
     end
 
@@ -134,9 +144,10 @@ module NitroKit
         icon_end: @trigger.icon_end,
         label: @trigger.label,
         disabled: @trigger.disabled,
-        html: command_attributes(@trigger.html, "show-modal", disabled: @trigger.disabled),
+        html: command_attributes(@trigger.html, "show-modal", commandfor: panel_id, disabled: @trigger.disabled),
         aria: @trigger.aria.merge(haspopup: "dialog"),
-        data: command_data(@trigger.data, "show-modal", disabled: @trigger.disabled)
+        data: command_data(@trigger.data, "show-modal", disabled: @trigger.disabled),
+        desperately_need_a_class: @trigger.css_class
       )
 
       render_in_slot(button, :trigger, &@trigger.content)
@@ -157,7 +168,11 @@ module NitroKit
               nk__dialog_target: "panel",
               action: "click->nk--dialog#dismiss cancel->nk--dialog#cancel close->nk--dialog#restoreFocus"
             }
-          }
+          },
+          html: @panel.html,
+          aria: @panel.aria,
+          data: @panel.data,
+          desperately_need_a_class: @panel.css_class
         )
       ) do
         render_close
@@ -176,25 +191,12 @@ module NitroKit
           label: @close_label,
           variant: :ghost,
           size: :sm,
-          html: command_attributes({}, "close"),
+          html: command_attributes({}, "close", commandfor: panel_id),
           data: command_data({}, "close")
         ),
         :close
       )
     end
-
-    def command_attributes(html, command, disabled: false)
-      unless html.is_a?(Hash)
-        raise ArgumentError, "html must be a Hash"
-      end
-      if html.keys.any? { |key| %w[command commandfor].include?(key.to_s.downcase) }
-        raise ArgumentError, "command and commandfor are owned by Sheet"
-      end
-
-      disabled ? html : html.merge(command:, commandfor: panel_id)
-    end
-
-    def command_data(data, command, disabled: false) = disabled ? data : data.merge(nk__dialog_command: command)
 
     def panel_id = "#{id}-panel"
     def title_id = "#{id}-title"

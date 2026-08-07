@@ -49,6 +49,51 @@ module Gallery
               )
             end
           end
+
+          example(
+            "Boundaries and states",
+            slug: "button-to-boundaries",
+            layout: :matrix,
+            description: "GET forms, disabled and loading submits, and the nested button_* boundaries that decorate the trigger instead of the form root."
+          ) do
+            sample("GET", slug: "get") do
+              render NitroKit::ButtonTo.new(
+                "View audit log",
+                href: "#audit-log",
+                method: :get,
+                id: "gallery-button-to-get"
+              )
+            end
+            sample("Disabled", slug: "disabled") do
+              render NitroKit::ButtonTo.new(
+                "Delete workspace",
+                href: "#delete-locked",
+                method: :delete,
+                id: "gallery-button-to-disabled",
+                variant: :destructive,
+                disabled: true
+              )
+            end
+            sample("Loading", slug: "loading") do
+              render NitroKit::ButtonTo.new(
+                "Archiving project",
+                href: "#archive-loading",
+                method: :patch,
+                id: "gallery-button-to-loading",
+                loading: true
+              )
+            end
+            sample("Nested button boundaries", slug: "nested-boundaries") do
+              render NitroKit::ButtonTo.new(
+                "Export data",
+                href: "#export-data",
+                id: "gallery-button-to-boundaries",
+                button_html: { title: "Runs in the background" },
+                button_aria: { keyshortcuts: "Meta+E" },
+                button_data: { turbo_submits_with: "Exporting…" }
+              )
+            end
+          end
         end
       end
     end

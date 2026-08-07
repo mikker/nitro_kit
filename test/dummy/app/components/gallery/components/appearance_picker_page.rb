@@ -49,9 +49,14 @@ module Gallery
             )
           end
 
-          example("Server-persisted preference", slug: "appearance-picker-preference", layout: :matrix) do
+          example(
+            "Server-persisted preference",
+            slug: "appearance-picker-preference",
+            layout: :matrix,
+            description: "preference: renders the server-saved choice without JavaScript; once JavaScript connects, every picker mirrors this document's one preference."
+          ) do
             NitroKit::AppearancePicker::PREFERENCES.each do |preference|
-              sample(preference.to_s.humanize, slug: preference.to_s) do
+              sample("Rendered with preference: :#{preference}", slug: preference.to_s) do
                 render NitroKit::AppearancePicker.new(
                   id: "gallery-appearance-preference-#{preference}",
                   label: "Saved appearance",

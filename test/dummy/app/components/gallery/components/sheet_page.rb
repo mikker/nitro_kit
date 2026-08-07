@@ -54,6 +54,39 @@ module Gallery
               end
             end
           end
+
+          example(
+            "Sizes, long content, and unavailable",
+            slug: "sheet-pressure",
+            layout: :row,
+            description: "A large sheet scrolls long content past its sticky close control with a custom close label; a disabled trigger keeps the panel unreachable."
+          ) do
+            render NitroKit::Sheet.new(
+              id: "gallery-sheet-long",
+              side: :right,
+              size: :lg,
+              close_label: "Close changelog"
+            ) do |sheet|
+              sheet.trigger("Full changelog")
+              sheet.panel(
+                title: "Release changelog",
+                description: "Every change since the previous production deploy."
+              ) do
+                12.times do |index|
+                  p do
+                    "Change #{index + 1}. Deploy #{1830 + index} refreshed the ingestion " \
+                      "pipeline, rotated its credentials, and re-ran the archived backfill " \
+                      "verification for every affected workspace."
+                  end
+                end
+              end
+            end
+
+            render NitroKit::Sheet.new(id: "gallery-sheet-disabled", side: :right, size: :sm) do |sheet|
+              sheet.trigger("Deployment details", disabled: true)
+              sheet.panel(title: "Deployment details")
+            end
+          end
         end
       end
     end

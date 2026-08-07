@@ -5,6 +5,8 @@
     align-items: stretch;
     max-inline-size: 100%;
     overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--nk-color-border) transparent;
     vertical-align: middle;
   }
 
@@ -16,38 +18,41 @@
   }
 
   :where(
-    [data-nk="button-group"]
-      > [data-slot="button-group-button"]:not(:first-child)
-  ) {
+      [data-nk="button-group"]
+        > [data-slot="button-group-button"]:not(:first-child)
+    ) {
     margin-inline-start: calc(var(--nk-border-width) * -1);
   }
 
   :where(
-    [data-nk="button-group"]
-      > [data-slot="button-group-button"]:not(:only-child)
-  ) {
+      [data-nk="button-group"]
+        > [data-slot="button-group-button"]:not(:only-child)
+    ) {
     border-radius: 0;
   }
 
   :where(
-    [data-nk="button-group"]
-      > [data-slot="button-group-button"]:first-child:not(:only-child)
-  ) {
+      [data-nk="button-group"]
+        > [data-slot="button-group-button"]:first-child:not(:only-child)
+    ) {
     border-start-start-radius: var(--_nk-button-radius);
     border-end-start-radius: var(--_nk-button-radius);
   }
 
   :where(
-    [data-nk="button-group"]
-      > [data-slot="button-group-button"]:last-child:not(:only-child)
-  ) {
+      [data-nk="button-group"]
+        > [data-slot="button-group-button"]:last-child:not(:only-child)
+    ) {
     border-start-end-radius: var(--_nk-button-radius);
     border-end-end-radius: var(--_nk-button-radius);
   }
 
   :where(
-    [data-nk="button-group"] > [data-slot="button-group-button"]:focus-visible
-  ) {
+      [data-nk="button-group"] > [data-slot="button-group-button"]:focus-visible
+    ) {
     z-index: 1;
+    /* The scroll container would clip an offset ring at its edges, so member
+       focus rings draw inside the member. */
+    outline-offset: calc(var(--nk-focus-offset) * -1);
   }
 }

@@ -36,6 +36,7 @@
 
   :where([data-nk="dialog"] [data-slot="dialog-description"]) {
     margin-block-start: calc(var(--nk-space) * 2);
+    margin-block-end: calc(var(--nk-space) * 4);
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
     line-height: var(--nk-leading-relaxed);
@@ -45,8 +46,10 @@
   /* The close control precedes the panel content and sticks to the top of the
      scrolling panel so long content never scrolls it out of reach. */
   :where(
-    [data-nk="dialog"] > [data-slot="dialog-panel"] > [data-slot="dialog-close"]
-  ) {
+      [data-nk="dialog"]
+        > [data-slot="dialog-panel"]
+        > [data-slot="dialog-close"]
+    ) {
     position: sticky;
     z-index: 1;
     float: inline-end;

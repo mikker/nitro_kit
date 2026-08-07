@@ -24,10 +24,31 @@ module Gallery
             layout: :matrix,
             density: :compact
           ) do
-            Gallery::Data.button_variants.each do |button|
-              sample(button.label, slug: button.slug) do
-                render_button(button, id: "gallery-button-variant-#{button.slug}")
-              end
+            sample("Default", slug: "default") do
+              render NitroKit::Button.new("Default", id: "gallery-button-variant-default")
+            end
+            sample("Primary", slug: "primary") do
+              render NitroKit::Button.new(
+                "Primary",
+                id: "gallery-button-variant-primary",
+                variant: :primary,
+                icon: :save
+              )
+            end
+            sample("Destructive", slug: "destructive") do
+              render NitroKit::Button.new(
+                "Destructive",
+                id: "gallery-button-variant-destructive",
+                variant: :destructive,
+                icon: :trash_2
+              )
+            end
+            sample("Ghost", slug: "ghost") do
+              render NitroKit::Button.new(
+                "Ghost",
+                id: "gallery-button-variant-ghost",
+                variant: :ghost
+              )
             end
           end
         end
@@ -105,7 +126,7 @@ module Gallery
               render NitroKit::Button.new(id: "gallery-button-avatar", size: :xs) do
                 render NitroKit::Avatar.new(
                   src: "/icon.svg",
-                  alt: "",
+                  decorative: true,
                   fallback: "NK",
                   size: :xs
                 )
@@ -116,7 +137,7 @@ module Gallery
               render NitroKit::Button.new(id: "gallery-button-avatar-default") do
                 render NitroKit::Avatar.new(
                   src: "/icon.svg",
-                  alt: "",
+                  decorative: true,
                   fallback: "NK"
                 )
                 plain "Open workspace"

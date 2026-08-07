@@ -2,7 +2,7 @@
 
 module NitroKit
   class Dialog < Component
-    Trigger = ::Data.define(:text, :variant, :size, :disabled, :html, :aria, :data, :css_class, :content)
+    Trigger = ::Data.define(:text, :variant, :size, :icon, :icon_end, :label, :disabled, :html, :aria, :data, :css_class, :content)
     private_constant :Trigger
 
     Panel = ::Data.define(:title, :description, :nonmodal, :html, :aria, :data, :css_class, :content)
@@ -61,6 +61,9 @@ module NitroKit
       text = nil,
       variant: :default,
       size: :md,
+      icon: nil,
+      icon_end: nil,
+      label: nil,
       disabled: false,
       html: {},
       aria: {},
@@ -75,6 +78,9 @@ module NitroKit
         text:,
         variant:,
         size:,
+        icon:,
+        icon_end:,
+        label:,
         disabled: validate_boolean!(:disabled, disabled),
         html:,
         aria:,
@@ -119,7 +125,7 @@ module NitroKit
     end
 
     def close_button(
-      label: I18n.t("nitro_kit.dialog.close"),
+      label: default_close_label,
       html: {},
       aria: {},
       data: {},
@@ -163,8 +169,11 @@ module NitroKit
         @trigger.text,
         variant: @trigger.variant,
         size: @trigger.size,
+        icon: @trigger.icon,
+        icon_end: @trigger.icon_end,
+        label: @trigger.label,
         disabled: @trigger.disabled,
-        html: with_command(@trigger.html, "show-modal", disabled: @trigger.disabled),
+        html: command_attributes(@trigger.html, "show-modal", commandfor: element_id(:panel), disabled: @trigger.disabled),
         aria: @trigger.aria.merge(haspopup: "dialog"),
         data: command_data(@trigger.data, "show-modal", disabled: @trigger.disabled),
         desperately_need_a_class: @trigger.css_class
@@ -225,7 +234,7 @@ module NitroKit
 
     def render_close_button
       declaration = @close_button || CloseButton.new(
-        label: I18n.t("nitro_kit.dialog.close"),
+        label: default_close_label,
         html: {},
         aria: {},
         data: {},
@@ -237,7 +246,7 @@ module NitroKit
           icon: :x,
           variant: :ghost,
           size: :sm,
-          html: with_command(declaration.html, "close"),
+          html: command_attributes(declaration.html, "close", commandfor: element_id(:panel)),
           aria: declaration.aria.merge(label: declaration.label),
           data: command_data(declaration.data, "close"),
           desperately_need_a_class: declaration.css_class
@@ -280,21 +289,8 @@ module NitroKit
       raise ArgumentError, "Dialog close button must be declared inside the panel block"
     end
 
-    def with_command(html, command, disabled: false)
-      unless html.is_a?(Hash)
-        raise ArgumentError, "html must be a Hash"
-      end
-
-      collision = html.keys.find { |key| %w[command commandfor].include?(key.to_s.downcase) }
-      if collision
-        raise ArgumentError, "#{collision}: is owned by Dialog"
-      end
-
-      disabled ? html : html.merge(command:, commandfor: element_id(:panel))
-    end
-
-    def command_data(data, command, disabled: false)
-      disabled ? data : data.merge(nk__dialog_command: command)
+    def default_close_label
+      I18n.t("nitro_kit.dialog.close")
     end
   end
 end

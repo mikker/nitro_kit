@@ -13,6 +13,7 @@ module Gallery
             render NitroKit::DangerZone.new(
               title: "Revoke all sessions",
               description: "Every browser and device will need to authenticate again.",
+              level: 4,
               id: "gallery-danger-zone-form"
             ) do |zone|
               zone.confirmation do
@@ -28,6 +29,7 @@ module Gallery
             render NitroKit::DangerZone.new(
               title: "Delete workspace",
               description: "Transfer workspace ownership before deletion becomes available.",
+              level: 4,
               id: "gallery-danger-zone-disabled"
             ) do |zone|
               zone.confirmation do
@@ -47,6 +49,7 @@ module Gallery
             render NitroKit::DangerZone.new(
               title: "Delete production credential",
               description: "Requests using this secret will fail immediately and the secret cannot be recovered.",
+              level: 4,
               id: "gallery-danger-zone-dialog"
             ) do |zone|
               zone.confirmation do
@@ -79,6 +82,7 @@ module Gallery
             render NitroKit::DangerZone.new(
               title: "Delete this project",
               description: "Deleting removes every task, comment, and attachment in this project.",
+              level: 4,
               id: "gallery-danger-zone-no-escape"
             ) do |zone|
               zone.confirmation do
@@ -97,6 +101,7 @@ module Gallery
               render NitroKit::DangerZone.new(
                 title: "Permanently delete International Research, Production, and Reliability Engineering",
                 description: "This removes every project, service credential, invoice attachment, audit event, pending invitation, and retained operational export for all regions. Regulatory archives outside this workspace are unaffected and must be managed separately.",
+                level: 4,
                 id: "gallery-danger-zone-long"
               ) do |zone|
                 zone.confirmation do

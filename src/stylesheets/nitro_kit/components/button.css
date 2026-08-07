@@ -52,10 +52,10 @@
   }
 
   :where(
-    [data-nk="button"] > [data-slot="button-icon-start"],
-    [data-nk="button"] > [data-slot="button-icon-end"],
-    [data-nk="button"] > [data-slot="button-spinner"]
-  ) {
+      [data-nk="button"] > [data-slot="button-icon-start"],
+      [data-nk="button"] > [data-slot="button-icon-end"],
+      [data-nk="button"] > [data-slot="button-spinner"]
+    ) {
     display: inline-flex;
     flex: none;
   }
@@ -74,13 +74,19 @@
     text-overflow: ellipsis;
   }
 
+  /* text-overflow never applies inside a flex container, so text-only labels
+     become blocks to keep a visible ellipsis under pressure. */
+  :where([data-nk="button"] > [data-slot="button-label"]:not(:has(*))) {
+    display: block;
+  }
+
   :where(
-    [data-nk="button"]:has(> [data-slot="button-icon-start"]),
-    [data-nk="button"]:has(> [data-slot="button-spinner"]),
-    [data-nk="button"]:has(
-      > [data-slot="button-submission-spinner"][data-state="visible"]
-    )
-  ) {
+      [data-nk="button"]:has(> [data-slot="button-icon-start"]),
+      [data-nk="button"]:has(> [data-slot="button-spinner"]),
+      [data-nk="button"]:has(
+          > [data-slot="button-submission-spinner"][data-state="visible"]
+        )
+    ) {
     padding-inline-start: var(--_nk-button-icon-padding);
   }
 
@@ -89,12 +95,12 @@
   }
 
   :where(
-    [data-nk="button"]:not(:has(> [data-slot="button-label"])):has(
-        > [data-slot="button-icon-start"],
-        > [data-slot="button-icon-end"],
-        > [data-slot="button-spinner"]
-      )
-  ) {
+      [data-nk="button"]:not(:has(> [data-slot="button-label"])):has(
+          > [data-slot="button-icon-start"],
+          > [data-slot="button-icon-end"],
+          > [data-slot="button-spinner"]
+        )
+    ) {
     inline-size: var(--_nk-button-height);
     padding-inline: 0;
   }
@@ -117,8 +123,8 @@
     --_nk-button-border-width: 0;
     --_nk-button-border: transparent;
     --_nk-button-border-bottom: transparent;
-    --_nk-button-shadow:
-      inset 0 1px var(--nk-color-danger), inset 0 2px oklch(1 0 0 / 0.15);
+    --_nk-button-shadow: inset 0 1px var(--nk-color-danger),
+      inset 0 2px oklch(1 0 0 / 0.15);
   }
 
   :where([data-nk="button"][data-variant="ghost"]) {
@@ -127,10 +133,7 @@
       oklch(0.274 0.006 286.033 / 0.05),
       oklch(1 0 0 / 0.15)
     );
-    --_nk-button-foreground: light-dark(
-      oklch(0.274 0.006 286.033),
-      oklch(1 0 0)
-    );
+    --_nk-button-foreground: var(--nk-color-foreground);
     --_nk-button-border-width: 0;
     --_nk-button-border: transparent;
     --_nk-button-border-bottom: transparent;
@@ -139,18 +142,18 @@
 
   @media (prefers-color-scheme: dark) {
     :where(
-      :root:not([data-theme])
-        [data-nk="button"]:is(
-          [data-variant="primary"],
-          [data-variant="destructive"]
-        )
-    ) {
+        :root:not([data-theme])
+          [data-nk="button"]:is(
+            [data-variant="primary"],
+            [data-variant="destructive"]
+          )
+      ) {
       --_nk-button-border-width: 0;
     }
 
     :where(
-      :root:not([data-theme]) [data-nk="button"][data-variant="destructive"]
-    ) {
+        :root:not([data-theme]) [data-nk="button"][data-variant="destructive"]
+      ) {
       --_nk-button-shadow: none;
     }
   }
@@ -224,12 +227,44 @@
   }
 
   :where(
-    [data-nk="button"]:disabled,
-    [data-nk="button"][aria-disabled="true"]
-  ) {
+      [data-nk="button"]:disabled,
+      [data-nk="button"][aria-disabled="true"]
+    ) {
     pointer-events: none;
     cursor: default;
     opacity: 0.75;
+  }
+
+  /* Dark surfaces need more than reduced opacity to read a saturated
+     destructive control as disabled. */
+  @media (prefers-color-scheme: dark) {
+    :where(
+        :root:not([data-theme])
+          [data-nk="button"][data-variant="destructive"]:is(
+            :disabled,
+            [aria-disabled="true"]
+          )
+      ) {
+      --_nk-button-background: color-mix(
+        in oklab,
+        var(--nk-color-danger) 40%,
+        var(--nk-color-surface)
+      );
+    }
+  }
+
+  :where(
+      [data-theme="dark"]
+        [data-nk="button"][data-variant="destructive"]:is(
+          :disabled,
+          [aria-disabled="true"]
+        )
+    ) {
+    --_nk-button-background: color-mix(
+      in oklab,
+      var(--nk-color-danger) 40%,
+      var(--nk-color-surface)
+    );
   }
 
   :where([data-nk="button"][aria-busy="true"] > [data-slot="button-spinner"]) {
@@ -237,9 +272,9 @@
   }
 
   :where(
-    [data-nk="button"]
-      > [data-slot="button-submission-spinner"][data-state="visible"]
-  ) {
+      [data-nk="button"]
+        > [data-slot="button-submission-spinner"][data-state="visible"]
+    ) {
     display: inline-flex;
     animation: nk-button-spin 1s linear infinite;
   }
@@ -252,21 +287,17 @@
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-      [data-nk="button"][aria-busy="true"] > [data-slot="button-spinner"],
-      [data-nk="button"]
-        > [data-slot="button-submission-spinner"][data-state="visible"]
-    ) {
+        [data-nk="button"][aria-busy="true"] > [data-slot="button-spinner"],
+        [data-nk="button"]
+          > [data-slot="button-submission-spinner"][data-state="visible"]
+      ) {
       animation: none;
     }
   }
 }
 
 @layer nitro-kit.compound {
-  :where(
-    [data-nk="button"]
-      > [data-slot="button-label"]
-      > [data-nk="avatar"]
-  ) {
+  :where([data-nk="button"] > [data-slot="button-label"] > [data-nk="avatar"]) {
     width: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size));
     height: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size));
     font-size: min(

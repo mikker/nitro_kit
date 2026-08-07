@@ -73,12 +73,32 @@
     animation: nk-sheet-enter var(--nk-duration-slow) var(--nk-ease);
   }
 
-  :where([data-nk="sheet"][data-side="left"] > [data-slot="sheet-panel"][open]) {
+  :where(
+      [data-nk="sheet"][data-side="left"] > [data-slot="sheet-panel"][open]
+    ) {
     --_nk-sheet-from: -1rem;
   }
 
-  :where([data-nk="sheet"][data-side="right"] > [data-slot="sheet-panel"][open]) {
+  :where(
+      [data-nk="sheet"][data-side="right"] > [data-slot="sheet-panel"][open]
+    ) {
     --_nk-sheet-from: 1rem;
+  }
+
+  /* Sides are logical, but translateX is physical; RTL flips the slide so the
+     panel still enters from its own edge. */
+  :where(
+      [data-nk="sheet"][data-side="left"]:dir(rtl)
+        > [data-slot="sheet-panel"][open]
+    ) {
+    --_nk-sheet-from: 1rem;
+  }
+
+  :where(
+      [data-nk="sheet"][data-side="right"]:dir(rtl)
+        > [data-slot="sheet-panel"][open]
+    ) {
+    --_nk-sheet-from: -1rem;
   }
 
   @keyframes nk-sheet-enter {

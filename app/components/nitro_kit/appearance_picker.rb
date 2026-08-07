@@ -20,7 +20,7 @@ module NitroKit
       data: {},
       desperately_need_a_class: nil
     )
-      @identifier = component_id(id)
+      @identifier = validate_id!("AppearancePicker id", id)
       @label = validate_label!(label)
       @presentation = validate_choice!(:presentation, presentation, PRESENTATIONS)
       @preference = validate_choice!(:preference, preference, PREFERENCES)
@@ -135,16 +135,6 @@ module NitroKit
 
     def option_id(preference)
       "#{identifier}-#{preference}"
-    end
-
-    # Private copy of the AppShell identifier contract. Extract a shared
-    # validator into Component once its owner lands.
-    def component_id(value)
-      return value if value.is_a?(String) && value.match?(/\A[A-Za-z0-9][A-Za-z0-9_-]*\z/)
-
-      raise ArgumentError,
-        "AppearancePicker id must be a String starting with a letter or digit and containing " \
-        "only letters, digits, hyphens, and underscores"
     end
 
     def validate_label!(value)

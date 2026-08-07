@@ -44,8 +44,8 @@
   }
 }
 
-@layer nitro-kit.state {
-  @media (max-width: 48rem) {
+@layer nitro-kit.compound {
+  @media (width < 48rem) {
     :where([data-nk="danger-zone"]) {
       grid-template-columns: minmax(0, 1fr);
       align-items: stretch;

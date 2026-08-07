@@ -2,11 +2,14 @@
 
 module NitroKit
   class DangerZone < Component
+    TITLE_LEVELS = (1..6).freeze
+
     Child = Data.define(:component, :content)
 
     def initialize(
       title: nil,
       description: nil,
+      level: 2,
       id: nil,
       html: {},
       aria: {},
@@ -15,6 +18,7 @@ module NitroKit
     )
       @title_content = content_from_keyword(:title, title)
       @description_content = content_from_keyword(:description, description)
+      @level = validate_choice!(:level, level, TITLE_LEVELS)
       @confirmation = nil
       @escape = nil
 
@@ -36,7 +40,7 @@ module NitroKit
 
       section(**root_attributes) do
         header(**slot_attributes(:header)) do
-          h2(**slot_attributes(:title)) { render_deferred_content(@title_content) }
+          public_send(:"h#{@level}", **slot_attributes(:title)) { render_deferred_content(@title_content) }
           p(**slot_attributes(:description)) { render_deferred_content(@description_content) }
         end
         div(**slot_attributes(:confirmation), &@confirmation)

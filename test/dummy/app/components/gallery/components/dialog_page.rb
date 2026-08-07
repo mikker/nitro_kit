@@ -79,14 +79,12 @@ module Gallery
         ) do
           example("Nonmodal and unavailable", slug: "dialog-state-combinations", layout: :matrix) do
             sample("Open nonmodal panel", slug: "nonmodal") do
-              render NitroKit::Dialog.new(id: "gallery-dialog-open") do |dialog|
+              render NitroKit::Dialog.new(id: "gallery-dialog-open", dismissible: false) do |dialog|
                 dialog.panel(
                   title: "Release notes",
-                  description: "This server-rendered panel is deliberately nonmodal.",
+                  description: "This server-rendered panel is deliberately nonmodal and stays open; dismissal would belong to a page action.",
                   nonmodal: true
-                ) do
-                  dialog.close_button
-                end
+                )
               end
             end
             sample("Required decision", slug: "required-decision") do

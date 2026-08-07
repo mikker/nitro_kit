@@ -48,6 +48,12 @@ export default class extends Controller {
         input.checked = input.value === preference;
       } else if (input.localName === "select") {
         input.value = preference;
+      } else if (input.dataset.appearancePreference) {
+        input.setAttribute("role", "menuitemradio");
+        input.setAttribute(
+          "aria-checked",
+          input.dataset.appearancePreference === preference,
+        );
       }
     });
     this.updateTriggerGlyph(preference);
