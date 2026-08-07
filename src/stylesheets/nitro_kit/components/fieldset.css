@@ -27,9 +27,7 @@
   }
 
   :where(
-      [data-nk="fieldset"]
-        > [data-slot="fieldset-fields"]
-        > [data-nk="button"]
+      [data-nk="fieldset"] > [data-slot="fieldset-fields"] > [data-nk="button"]
     ) {
     justify-self: start;
   }

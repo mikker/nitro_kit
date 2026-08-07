@@ -63,10 +63,10 @@
   }
 
   :where(
-    [data-nk="dropdown"]
-      [data-slot="dropdown-item"]
-      > [data-slot="dropdown-item-icon"]
-  ) {
+      [data-nk="dropdown"]
+        [data-slot="dropdown-item"]
+        > [data-slot="dropdown-item-icon"]
+    ) {
     display: inline-flex;
     flex: none;
     margin-inline-end: calc(var(--nk-space) * 2);
@@ -83,16 +83,17 @@
 
 @layer nitro-kit.variant {
   :where(
-    [data-nk="dropdown"] [data-slot="dropdown-item"][data-variant="destructive"]
-  ) {
+      [data-nk="dropdown"]
+        [data-slot="dropdown-item"][data-variant="destructive"]
+    ) {
     color: var(--nk-color-danger-content);
   }
 
   :where(
-    [data-nk="dropdown"]
-      [data-slot="dropdown-item"][data-variant="destructive"]
-      > [data-slot="dropdown-item-icon"]
-  ) {
+      [data-nk="dropdown"]
+        [data-slot="dropdown-item"][data-variant="destructive"]
+        > [data-slot="dropdown-item-icon"]
+    ) {
     color: inherit;
   }
 }
@@ -100,19 +101,22 @@
 @layer nitro-kit.state {
   @media (hover: hover) {
     :where(
-      [data-nk="dropdown"]
-        [data-slot="dropdown-item"]:hover:not(:disabled, [aria-disabled="true"])
-    ) {
+        [data-nk="dropdown"]
+          [data-slot="dropdown-item"]:hover:not(
+            :disabled,
+            [aria-disabled="true"]
+          )
+      ) {
       background: var(--nk-color-muted);
     }
 
     :where(
-      [data-nk="dropdown"]
-        [data-slot="dropdown-item"][data-variant="destructive"]:hover:not(
-          :disabled,
-          [aria-disabled="true"]
-        )
-    ) {
+        [data-nk="dropdown"]
+          [data-slot="dropdown-item"][data-variant="destructive"]:hover:not(
+            :disabled,
+            [aria-disabled="true"]
+          )
+      ) {
       color: var(--nk-color-danger-foreground);
       background: var(--nk-color-danger);
     }
@@ -124,9 +128,9 @@
   }
 
   :where(
-    [data-nk="dropdown"]
-      [data-slot="dropdown-item"]:is(:disabled, [aria-disabled="true"])
-  ) {
+      [data-nk="dropdown"]
+        [data-slot="dropdown-item"]:is(:disabled, [aria-disabled="true"])
+    ) {
     cursor: not-allowed;
     opacity: 0.6;
   }

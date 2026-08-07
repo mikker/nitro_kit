@@ -44,9 +44,9 @@
        the first row so their top edge aligns with the header instead of
        dropping beside the final line of supporting text. */
     :where(
-      [data-nk="page-header"]:has(> [data-slot="page-header-actions"])
-        > :not([data-slot="page-header-actions"])
-    ) {
+        [data-nk="page-header"]:has(> [data-slot="page-header-actions"])
+          > :not([data-slot="page-header-actions"])
+      ) {
       grid-column: 1;
     }
 

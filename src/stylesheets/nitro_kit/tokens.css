@@ -1,11 +1,9 @@
 @layer nitro-kit.tokens {
   :where(:root) {
-    --nk-font-sans:
-      ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    --nk-font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --nk-font-mono:
-      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-      "Courier New", monospace;
+    --nk-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+      "Liberation Mono", "Courier New", monospace;
 
     --nk-text-xs: 0.75rem;
     --nk-text-sm: 0.875rem;
@@ -45,10 +43,10 @@
     --nk-focus-offset: 2px;
 
     --nk-shadow-sm: 0 1px 2px oklch(0 0 0 / 0.08);
-    --nk-shadow-md:
-      0 4px 6px -1px oklch(0 0 0 / 0.1), 0 2px 4px -2px oklch(0 0 0 / 0.1);
-    --nk-shadow-lg:
-      0 10px 15px -3px oklch(0 0 0 / 0.12), 0 4px 6px -4px oklch(0 0 0 / 0.12);
+    --nk-shadow-md: 0 4px 6px -1px oklch(0 0 0 / 0.1),
+      0 2px 4px -2px oklch(0 0 0 / 0.1);
+    --nk-shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 0.12),
+      0 4px 6px -4px oklch(0 0 0 / 0.12);
 
     --nk-duration-fast: 100ms;
     --nk-duration-normal: 150ms;

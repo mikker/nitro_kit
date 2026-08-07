@@ -28,9 +28,9 @@
   }
 
   :where(
-    [data-nk="avatar"] > [data-slot="avatar-fallback"],
-    [data-nk="avatar"] > [data-slot="avatar-image"]
-  ) {
+      [data-nk="avatar"] > [data-slot="avatar-fallback"],
+      [data-nk="avatar"] > [data-slot="avatar-image"]
+    ) {
     grid-area: 1 / 1;
     width: 100%;
     height: 100%;

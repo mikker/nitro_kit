@@ -1,7 +1,7 @@
 @layer nitro-kit.base {
   :where(
-    [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
-  ) {
+      [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
+    ) {
     display: block;
     inline-size: 100%;
     min-block-size: var(--nk-control-height-md);

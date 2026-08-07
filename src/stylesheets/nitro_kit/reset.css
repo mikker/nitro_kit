@@ -97,10 +97,10 @@
   }
 
   :where(
-    button,
-    input:is([type="button"], [type="reset"], [type="submit"]),
-    label[for]
-  ),
+      button,
+      input:is([type="button"], [type="reset"], [type="submit"]),
+      label[for]
+    ),
   ::file-selector-button {
     cursor: pointer;
   }
@@ -144,11 +144,11 @@
   /* Only Nitro-owned lists lose their markers. Prose lists keep real markers,
      and `typeset` restores its own in the `nitro-kit.base` layer. */
   :where(
-    ol[data-nk],
-    ul[data-nk],
-    menu[data-nk],
-    [data-nk] :is(ol, ul, menu)[data-slot]
-  ) {
+      ol[data-nk],
+      ul[data-nk],
+      menu[data-nk],
+      [data-nk] :is(ol, ul, menu)[data-slot]
+    ) {
     list-style: none;
   }
 

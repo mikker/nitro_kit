@@ -7,17 +7,17 @@
   }
 
   :where(
-    [data-nk="radio-button-group"] > [data-slot="radio-button-group-legend"]
-  ) {
+      [data-nk="radio-button-group"] > [data-slot="radio-button-group-legend"]
+    ) {
     padding: 0;
     font-size: var(--nk-text-sm);
     font-weight: var(--nk-font-weight-semibold);
   }
 
   :where(
-    [data-nk="radio-button-group"]
-      > [data-slot="radio-button-group-description"]
-  ) {
+      [data-nk="radio-button-group"]
+        > [data-slot="radio-button-group-description"]
+    ) {
     margin-block-start: var(--nk-space);
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
@@ -25,34 +25,34 @@
   }
 
   :where(
-    [data-nk="radio-button-group"] > [data-slot="radio-button-group-choices"]
-  ) {
+      [data-nk="radio-button-group"] > [data-slot="radio-button-group-choices"]
+    ) {
     display: grid;
     gap: var(--nk-space);
     margin-block-start: calc(var(--nk-space) * 2);
   }
 
   :where(
-    [data-nk="radio-button-group"][data-presentation="list"][data-orientation="vertical"]
-      > [data-slot="radio-button-group-choices"]
-  ) {
+      [data-nk="radio-button-group"][data-presentation="list"][data-orientation="vertical"]
+        > [data-slot="radio-button-group-choices"]
+    ) {
     gap: 0;
   }
 
   :where(
-    [data-nk="radio-button-group"][data-orientation="horizontal"]
-      > [data-slot="radio-button-group-choices"]
-  ) {
+      [data-nk="radio-button-group"][data-orientation="horizontal"]
+        > [data-slot="radio-button-group-choices"]
+    ) {
     display: flex;
     flex-wrap: wrap;
     gap: calc(var(--nk-space) * 4);
   }
 
   :where(
-    [data-nk="radio-button-group"][data-presentation="cards"]
-      > [data-slot="radio-button-group-choices"]
-      > [data-slot="radio-button-group-choice"]
-  ) {
+      [data-nk="radio-button-group"][data-presentation="cards"]
+        > [data-slot="radio-button-group-choices"]
+        > [data-slot="radio-button-group-choice"]
+    ) {
     inline-size: 100%;
     padding: calc(var(--nk-space) * 3);
     background: var(--nk-color-surface);
@@ -61,9 +61,9 @@
   }
 
   :where(
-    [data-nk="radio-button-group"][data-presentation="segmented"]
-      > [data-slot="radio-button-group-choices"]
-  ) {
+      [data-nk="radio-button-group"][data-presentation="segmented"]
+        > [data-slot="radio-button-group-choices"]
+    ) {
     display: inline-flex;
     gap: 0;
     padding: var(--nk-space);
@@ -72,19 +72,19 @@
   }
 
   :where(
-    [data-nk="radio-button-group"][data-presentation="segmented"]
-      > [data-slot="radio-button-group-choices"]
-      > [data-slot="radio-button-group-choice"]
-  ) {
+      [data-nk="radio-button-group"][data-presentation="segmented"]
+        > [data-slot="radio-button-group-choices"]
+        > [data-slot="radio-button-group-choice"]
+    ) {
     min-inline-size: 0;
     padding-inline: calc(var(--nk-space) * 3);
     border-radius: calc(var(--nk-radius-md) - var(--nk-space));
   }
 
   :where(
-    [data-nk="radio-button-group"][data-presentation="segmented"]
-      [data-slot="radio-button-indicator"]
-  ) {
+      [data-nk="radio-button-group"][data-presentation="segmented"]
+        [data-slot="radio-button-indicator"]
+    ) {
     display: none;
   }
 
@@ -94,9 +94,9 @@
      centred between the segment's own paddings and makes the entire segment
      clickable. */
   :where(
-    [data-nk="radio-button-group"][data-presentation="segmented"]
-      [data-slot="radio-button-label"]
-  ) {
+      [data-nk="radio-button-group"][data-presentation="segmented"]
+        [data-slot="radio-button-label"]
+    ) {
     position: relative;
     display: flex;
     gap: 0;
@@ -106,9 +106,9 @@
   }
 
   :where(
-    [data-nk="radio-button-group"][data-presentation="segmented"]
-      [data-slot="radio-button-control"]
-  ) {
+      [data-nk="radio-button-group"][data-presentation="segmented"]
+        [data-slot="radio-button-control"]
+    ) {
     position: absolute;
     inset: 0;
     inline-size: 100%;
@@ -118,13 +118,13 @@
 
 @layer nitro-kit.state {
   :where(
-    [data-nk="radio-button-group"][data-presentation="cards"]
-      > [data-slot="radio-button-group-choices"]
-      > [data-slot="radio-button-group-choice"]:has(input:checked),
-    [data-nk="radio-button-group"][data-presentation="segmented"]
-      > [data-slot="radio-button-group-choices"]
-      > [data-slot="radio-button-group-choice"]:has(input:checked)
-  ) {
+      [data-nk="radio-button-group"][data-presentation="cards"]
+        > [data-slot="radio-button-group-choices"]
+        > [data-slot="radio-button-group-choice"]:has(input:checked),
+      [data-nk="radio-button-group"][data-presentation="segmented"]
+        > [data-slot="radio-button-group-choices"]
+        > [data-slot="radio-button-group-choice"]:has(input:checked)
+    ) {
     background: var(--nk-color-surface);
     border-color: var(--nk-color-primary);
     box-shadow: var(--nk-shadow-sm);
@@ -133,9 +133,9 @@
   /* The segmented indicator is hidden, so the focus ring belongs to the native
      radio that now covers the segment. */
   :where(
-    [data-nk="radio-button-group"][data-presentation="segmented"]
-      [data-slot="radio-button-control"]:focus-visible
-  ) {
+      [data-nk="radio-button-group"][data-presentation="segmented"]
+        [data-slot="radio-button-control"]:focus-visible
+    ) {
     border-radius: calc(var(--nk-radius-md) - var(--nk-space));
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: calc(var(--nk-focus-offset) * -1);

@@ -7,47 +7,47 @@
     min-inline-size: 0;
   }
 
-  :where(
-    [data-nk="control-group"]:has(> [data-nk="button"][data-size="lg"])
-  ) {
+  :where([data-nk="control-group"]:has(> [data-nk="button"][data-size="lg"])) {
     --_nk-control-group-height: var(--nk-control-height-lg);
   }
 
-  :where(
-    [data-nk="control-group"]:has(> [data-nk="button"][data-size="xl"])
-  ) {
+  :where([data-nk="control-group"]:has(> [data-nk="button"][data-size="xl"])) {
     --_nk-control-group-height: var(--nk-control-height-xl);
   }
 
   :where(
-    [data-nk="control-group"]
-      > :is(
-        [data-nk="input"],
-        [data-nk="select"],
-        [data-nk="button"],
-        span[data-slot="control-group-addon"]
-      )
-  ) {
+      [data-nk="control-group"]
+        > :is(
+          [data-nk="input"],
+          [data-nk="select"],
+          [data-nk="button"],
+          span[data-slot="control-group-addon"]
+        )
+    ) {
     position: relative;
     block-size: var(--_nk-control-group-height);
     min-block-size: var(--_nk-control-group-height);
   }
 
   :where(
-    [data-nk="control-group"]
-      > :is([data-nk="input"], [data-nk="select"], [data-nk="button"]):focus-within
-  ) {
+      [data-nk="control-group"]
+        > :is(
+          [data-nk="input"],
+          [data-nk="select"],
+          [data-nk="button"]
+        ):focus-within
+    ) {
     z-index: 1;
   }
 
   :where(
-    [data-nk="control-group"]
-      > :is(
-        [data-nk="input"],
-        [data-nk="button"],
-        span[data-slot="control-group-addon"]
-      )
-  ) {
+      [data-nk="control-group"]
+        > :is(
+          [data-nk="input"],
+          [data-nk="button"],
+          span[data-slot="control-group-addon"]
+        )
+    ) {
     border-radius: 0;
   }
 
@@ -59,59 +59,57 @@
   /* Safari positions its native date editor from the line box's top edge.
      Give the grouped editor the same explicit line-box treatment as a
      standalone date Input, using the compound control's resolved height. */
-  :where(
-    [data-nk="control-group"] > [data-nk="input"][type="date"]
-  ) {
+  :where([data-nk="control-group"] > [data-nk="input"][type="date"]) {
     line-height: calc(
       var(--_nk-control-group-height) - (var(--nk-border-width) * 2)
     );
   }
 
   :where(
-    [data-nk="control-group"]
-      > :is(
-        [data-nk="input"],
-        [data-nk="button"],
-        span[data-slot="control-group-addon"]
-      ):first-child
-  ) {
+      [data-nk="control-group"]
+        > :is(
+          [data-nk="input"],
+          [data-nk="button"],
+          span[data-slot="control-group-addon"]
+        ):first-child
+    ) {
     border-start-start-radius: var(--nk-radius-md);
     border-end-start-radius: var(--nk-radius-md);
   }
 
   :where(
-    [data-nk="control-group"]
-      > :is(
-        [data-nk="input"],
-        [data-nk="button"],
-        span[data-slot="control-group-addon"]
-      ):last-child
-  ) {
+      [data-nk="control-group"]
+        > :is(
+          [data-nk="input"],
+          [data-nk="button"],
+          span[data-slot="control-group-addon"]
+        ):last-child
+    ) {
     border-start-end-radius: var(--nk-radius-md);
     border-end-end-radius: var(--nk-radius-md);
   }
 
   :where(
-    [data-nk="control-group"]
-      > :is(
+      [data-nk="control-group"]
+        > :is(
           [data-nk="input"],
           [data-nk="select"],
           [data-nk="button"],
           span[data-slot="control-group-addon"]
         )
-      + :is(
-        [data-nk="input"],
-        [data-nk="select"],
-        [data-nk="button"],
-        span[data-slot="control-group-addon"]
-      )
-  ) {
+        + :is(
+          [data-nk="input"],
+          [data-nk="select"],
+          [data-nk="button"],
+          span[data-slot="control-group-addon"]
+        )
+    ) {
     margin-inline-start: calc(var(--nk-border-width) * -1);
   }
 
   :where(
-    [data-nk="control-group"] > :is([data-nk="input"], [data-nk="select"])
-  ) {
+      [data-nk="control-group"] > :is([data-nk="input"], [data-nk="select"])
+    ) {
     min-inline-size: 0;
     flex: 1 1 auto;
   }
@@ -133,16 +131,12 @@
     border: var(--nk-border-width) solid var(--nk-color-border);
   }
 
-  :where(
-    [data-nk="control-group"] > [data-nk="select"]:first-child > select
-  ) {
+  :where([data-nk="control-group"] > [data-nk="select"]:first-child > select) {
     border-start-start-radius: var(--nk-radius-md);
     border-end-start-radius: var(--nk-radius-md);
   }
 
-  :where(
-    [data-nk="control-group"] > [data-nk="select"]:last-child > select
-  ) {
+  :where([data-nk="control-group"] > [data-nk="select"]:last-child > select) {
     border-start-end-radius: var(--nk-radius-md);
     border-end-end-radius: var(--nk-radius-md);
   }

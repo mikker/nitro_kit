@@ -527,18 +527,18 @@ The following 85 variables are the complete public token set. Theme-independent 
 
 ### Shape, borders, and focus
 
-| Token               | Role                                |
-| ------------------- | ----------------------------------- |
-| `--nk-radius-xs`    | Extra-small corner radius.          |
-| `--nk-radius-sm`    | Small corner radius.                |
-| `--nk-radius-md`    | Default control corner radius.      |
-| `--nk-radius-lg`    | Large surface corner radius.        |
-| `--nk-radius-xl`    | Extra-large overlay corner radius.  |
-| `--nk-radius-full`  | Fully rounded pills and circles.    |
+| Token                | Role                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------------ |
+| `--nk-radius-xs`     | Extra-small corner radius.                                                                 |
+| `--nk-radius-sm`     | Small corner radius.                                                                       |
+| `--nk-radius-md`     | Default control corner radius.                                                             |
+| `--nk-radius-lg`     | Large surface corner radius.                                                               |
+| `--nk-radius-xl`     | Extra-large overlay corner radius.                                                         |
+| `--nk-radius-full`   | Fully rounded pills and circles.                                                           |
 | `--nk-button-radius` | Optional Button-only radius override; the default `initial` preserves size-specific radii. |
-| `--nk-border-width` | Default border and separator width. |
-| `--nk-focus-width`  | Focus-ring width.                   |
-| `--nk-focus-offset` | Focus-ring offset.                  |
+| `--nk-border-width`  | Default border and separator width.                                                        |
+| `--nk-focus-width`   | Focus-ring width.                                                                          |
+| `--nk-focus-offset`  | Focus-ring offset.                                                                         |
 
 ### Elevation and motion
 

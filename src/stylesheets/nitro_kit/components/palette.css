@@ -1,19 +1,19 @@
 @layer nitro-kit.variant {
   :where(
-    [data-nk="badge"][data-color="zinc"],
-    [data-nk="badge"][data-color="neutral"],
-    [data-nk="alert"][data-variant="default"]
-  ) {
+      [data-nk="badge"][data-color="zinc"],
+      [data-nk="badge"][data-color="neutral"],
+      [data-nk="alert"][data-variant="default"]
+    ) {
     --_nk-palette-light: oklch(37% 0.013 285.805);
     --_nk-palette-dark: oklch(92% 0.004 286.32);
     --_nk-palette-tint: oklch(70.5% 0.015 286.067);
   }
 
   :where(
-    [data-nk="badge"][data-color="red"],
-    [data-nk="badge"][data-color="danger"],
-    [data-nk="alert"][data-variant="error"]
-  ) {
+      [data-nk="badge"][data-color="red"],
+      [data-nk="badge"][data-color="danger"],
+      [data-nk="alert"][data-variant="error"]
+    ) {
     --_nk-palette-light: oklch(50.5% 0.213 27.518);
     --_nk-palette-dark: oklch(88.5% 0.062 18.334);
     --_nk-palette-tint: oklch(70.4% 0.191 22.216);
@@ -24,10 +24,10 @@
     --_nk-palette-tint: oklch(75% 0.183 55.934);
   }
   :where(
-    [data-nk="badge"][data-color="amber"],
-    [data-nk="badge"][data-color="warning"],
-    [data-nk="alert"][data-variant="warning"]
-  ) {
+      [data-nk="badge"][data-color="amber"],
+      [data-nk="badge"][data-color="warning"],
+      [data-nk="alert"][data-variant="warning"]
+    ) {
     --_nk-palette-light: oklch(55% 0.163 48.998);
     --_nk-palette-dark: oklch(92.4% 0.12 95.746);
     --_nk-palette-tint: oklch(82.8% 0.189 84.429);
@@ -43,10 +43,10 @@
     --_nk-palette-tint: oklch(84.1% 0.238 128.85);
   }
   :where(
-    [data-nk="badge"][data-color="green"],
-    [data-nk="badge"][data-color="success"],
-    [data-nk="alert"][data-variant="success"]
-  ) {
+      [data-nk="badge"][data-color="green"],
+      [data-nk="badge"][data-color="success"],
+      [data-nk="alert"][data-variant="success"]
+    ) {
     --_nk-palette-light: oklch(44.8% 0.119 151.328);
     --_nk-palette-dark: oklch(92.5% 0.084 155.995);
     --_nk-palette-tint: oklch(79.2% 0.209 151.711);
@@ -72,10 +72,10 @@
     --_nk-palette-tint: oklch(74.6% 0.16 232.661);
   }
   :where(
-    [data-nk="badge"][data-color="blue"],
-    [data-nk="badge"][data-color="info"],
-    [data-nk="alert"][data-variant="info"]
-  ) {
+      [data-nk="badge"][data-color="blue"],
+      [data-nk="badge"][data-color="info"],
+      [data-nk="alert"][data-variant="info"]
+    ) {
     --_nk-palette-light: oklch(42.4% 0.199 265.638);
     --_nk-palette-dark: oklch(88.2% 0.059 254.128);
     --_nk-palette-tint: oklch(70.7% 0.165 254.624);
