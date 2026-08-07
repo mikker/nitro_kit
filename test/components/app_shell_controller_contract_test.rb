@@ -24,7 +24,7 @@ class AppShellControllerContractTest < ActiveSupport::TestCase
   test "moves one navigation tree between the sidebar and dialog" do
     source = CONTROLLER.read
 
-    assert_includes source, '"(max-width: 48rem)"'
+    assert_includes source, '"(width < 48rem)"'
     assert_includes source, "window.matchMedia"
     assert_includes source, "container.append(this.navigationTarget)"
     refute_includes source, "cloneNode"

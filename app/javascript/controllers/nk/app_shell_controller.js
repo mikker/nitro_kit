@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus";
 
-const narrowViewport = "(max-width: 48rem)";
+const narrowViewport = "(width < 48rem)";
 
 export default class extends Controller {
   static targets = ["dialog", "navigation", "sidebar", "trigger"];
@@ -168,8 +168,8 @@ export default class extends Controller {
     const focusTarget = this.previouslyFocused?.isConnected
       ? this.previouslyFocused
       : this.hasTriggerTarget
-        ? this.triggerTarget
-        : null;
+      ? this.triggerTarget
+      : null;
 
     this.restoreNavigation();
     this.setState(false);

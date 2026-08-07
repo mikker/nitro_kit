@@ -2,7 +2,7 @@
 
 module NitroKit
   class SettingsLayout < Component
-    Item = ::Data.define(:text, :href, :icon, :current)
+    Item = ::Data.define(:text, :href, :icon, :current, :html, :aria, :data, :css_class)
 
     def initialize(id: nil, html: {}, aria: {}, data: {}, desperately_need_a_class: nil)
       @label = nil
@@ -42,7 +42,16 @@ module NitroKit
       nil
     end
 
-    def item(text, href:, icon: nil, current: false)
+    def item(
+      text,
+      href:,
+      icon: nil,
+      current: false,
+      html: {},
+      aria: {},
+      data: {},
+      desperately_need_a_class: nil
+    )
       ensure_phase!(:navigation, :item)
       text = validate_text!(:text, text)
       href = validate_text!(:href, href)
@@ -54,7 +63,7 @@ module NitroKit
       end
 
       @current_item = true if current
-      @items << Item.new(text:, href:, icon:, current:)
+      @items << Item.new(text:, href:, icon:, current:, html:, aria:, data:, css_class: desperately_need_a_class)
       nil
     end
 
@@ -107,7 +116,11 @@ module NitroKit
               href: item.href,
               aria: { current: item.current ? "page" : nil },
               data: { state: item.current ? "current" : "default" }
-            }
+            },
+            html: item.html,
+            aria: item.aria,
+            data: item.data,
+            desperately_need_a_class: item.css_class
           )
         ) do
           render_in_slot(item.icon, :item_icon) if item.icon

@@ -15,7 +15,7 @@ module Gallery
         example_section(
           "Content widths",
           slug: "container-sizes",
-          description: "Four existing content tokens provide centered maximum widths without arbitrary CSS values."
+          description: "Four existing content tokens provide centered maximum widths without arbitrary CSS values. The preview column is narrower than the lg and xl maximums, so those two clamp to the column here; widen the Responsive tab to see them diverge."
         ) do
           example("Every size", slug: "container-every-size", mode: :full_width) do
             render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch, id: "gallery-container-size-stack") do

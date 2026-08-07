@@ -27,12 +27,42 @@ class CssBundleTest < ActiveSupport::TestCase
 
     [
       ':where([data-nk="typeset"]) {',
-      ':where([data-nk="typeset"]) > :where(p, ul, ol, dl, blockquote, pre, figure, table, details, hr):not([data-nk], [data-typeset="off"]) {',
-      ':where([data-nk="typeset"]) > :where(h1, h2, h3, h4, h5, h6):not([data-nk], [data-typeset="off"]) {',
+      <<~CSS.strip,
+        :where([data-nk="typeset"])
+            > :where(p, ul, ol, dl, blockquote, pre, figure, table, details, hr):not(
+              [data-nk],
+              [data-typeset="off"]
+            ) {
+      CSS
+      <<~CSS.strip,
+        :where([data-nk="typeset"])
+            > :where(h1, h2, h3, h4, h5, h6):not([data-nk], [data-typeset="off"]) {
+      CSS
       ':where([data-nk="typeset"]) > pre:not([data-nk], [data-typeset="off"]) {',
       ':where([data-nk="typeset"]) > table:not([data-nk], [data-typeset="off"]) {',
-      ':where([data-nk="typeset"]) > :where(a:not([data-nk], [data-typeset="off"])):',
-      ':where([data-nk="typeset"]) > :where(p, h1, h2, h3, h4, h5, h6, ul, ol, dl, blockquote, figure, details):not([data-nk], [data-typeset="off"]) :where(a) {'
+      <<~CSS.strip,
+        :where([data-nk="typeset"])
+            > :where(a:not([data-nk], [data-typeset="off"])):
+      CSS
+      <<~CSS.strip
+        :where([data-nk="typeset"])
+            > :where(
+              p,
+              h1,
+              h2,
+              h3,
+              h4,
+              h5,
+              h6,
+              ul,
+              ol,
+              dl,
+              blockquote,
+              figure,
+              details
+            ):not([data-nk], [data-typeset="off"])
+            :where(a) {
+      CSS
     ].each { |selector| assert_includes css, selector }
     refute_includes css, ':where([data-nk="typeset"]) > :where(:not([data-nk], [data-typeset="off"])) {'
     assert_equal css, NitroKit::CssBundle.compile
@@ -40,8 +70,18 @@ class CssBundleTest < ActiveSupport::TestCase
 
   test "typeset fallback selectors are rooted and boundary-safe" do
     css = NitroKit::CssBundle.compile
-    assert_includes css, ':where([data-nk="typeset"]) > pre:not([data-nk], [data-typeset="off"]) > code {'
-    assert_includes css, ':where([data-nk="typeset"]) > table:not([data-nk], [data-typeset="off"]) > :where(thead, tbody, tfoot) > tr > :where(th, td) {'
+    assert_includes css, <<~CSS.strip
+      :where([data-nk="typeset"])
+          > pre:not([data-nk], [data-typeset="off"])
+          > code {
+    CSS
+    assert_includes css, <<~CSS.strip
+      :where([data-nk="typeset"])
+          > table:not([data-nk], [data-typeset="off"])
+          > :where(thead, tbody, tfoot)
+          > tr
+          > :where(th, td) {
+    CSS
     refute_includes css, ':where([data-nk="typeset"]) p {'
     refute_includes css, ':where([data-nk="typeset"]) h1 {'
   end

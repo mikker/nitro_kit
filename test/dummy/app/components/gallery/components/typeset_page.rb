@@ -155,8 +155,9 @@ module Gallery
                 card.title("Continue in the application")
                 card.body { render NitroKit::Button.new("Open workspace") }
               end
+              h3 { "A formatted heading inside the wrapper" }
               div(data: { typeset: "off" }, id: "gallery-typeset-opt-out") do
-                h3 { "Explicitly unformatted region" }
+                h3 { "The same heading level inside data-typeset=off loses its scale" }
               end
             end
           end

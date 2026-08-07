@@ -15,7 +15,7 @@ module Gallery
         example_section(
           "Mobile-first shorthand",
           slug: "flex-responsive",
-          description: "Each property accepts a base value followed by Tailwind breakpoint prefixes; omitted breakpoints inherit the previous value."
+          description: "Each property accepts a base value followed by the fixed sm md lg xl 2xl breakpoint prefixes; omitted breakpoints inherit the previous value."
         ) do
           example(
             "One layout, three arrangements",

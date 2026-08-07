@@ -117,7 +117,10 @@ module Gallery
       def render_shell_navigation(id:, current:, dense:, long:)
         render NitroKit::AppNavigation.new(label: "Primary workspace", id: "#{id}-navigation") do |navigation|
           navigation.header do
-            render NitroKit::Badge.new(dense ? "Live operations" : "Team plan", variant: :outline, size: :sm)
+            render NitroKit::Flex.new(dir: :row, gap: 2, align: :center, justify: :between) do
+              strong { long ? "International Analytical Engine Operations" : "Northstar" }
+              render NitroKit::Badge.new(dense ? "Live operations" : "Team plan", variant: :outline, size: :sm)
+            end
           end
           navigation.body do
             navigation.section(label: "Workspace") do

@@ -32,15 +32,15 @@ class AppShellCssTest < ActiveSupport::TestCase
     shell = SHELL.read
     controller = CONTROLLER.read
 
-    assert_includes shell, "@media (max-width: 48rem)"
-    assert_includes controller, 'const narrowViewport = "(max-width: 48rem)"'
+    assert_includes shell, "@media (width < 48rem)"
+    assert_includes controller, 'const narrowViewport = "(width < 48rem)"'
     assert_includes shell, '[data-nk="app-shell"][data-enhanced]'
     assert_includes shell, '> [data-slot="app-shell-dialog"][open]'
     assert_includes shell, '[data-slot="app-shell-dialog"])::backdrop'
     assert_includes shell, "animation: nk-app-shell-dialog-enter"
     refute_includes shell, '[data-slot="app-shell-backdrop"]'
 
-    unenhanced_mobile = shell.match(/@media \(max-width: 48rem\)(?<body>.*)@media \(prefers-reduced-motion/m)[:body]
+    unenhanced_mobile = shell.match(/@media \(width < 48rem\)(?<body>.*)@media \(prefers-reduced-motion/m)[:body]
     assert_includes unenhanced_mobile, '[data-nk="app-shell"] > [data-slot="app-shell-sidebar"]'
     assert_includes unenhanced_mobile, "position: static"
     assert_includes unenhanced_mobile, "display: none"
@@ -52,7 +52,7 @@ class AppShellCssTest < ActiveSupport::TestCase
 
     assert_includes shell, '[data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])'
     assert_includes shell, "> [data-nk=\"toolbar\"]"
-    assert_includes toolbar, "@media (max-width: 48rem)"
+    assert_includes toolbar, "@media (width < 48rem)"
     assert_includes toolbar, "flex-direction: column"
     assert_includes toolbar, "align-items: stretch"
     refute_includes toolbar, '> [data-slot="app-shell-header"]'
@@ -64,7 +64,7 @@ class AppShellCssTest < ActiveSupport::TestCase
     %w[header body footer section section-label item item-icon item-label item-badge divider spacer].each do |slot|
       assert_includes navigation, %(app-navigation-#{slot})
     end
-    assert_includes navigation, '[data-state="current"]'
+    assert_includes navigation, "[aria-current]"
     assert_includes navigation, "min-block-size: var(--nk-app-shell-topbar-height)"
     assert_includes navigation, "padding-inline: calc(var(--nk-space) * 6)"
     assert_includes navigation, "font-variant-numeric: tabular-nums"

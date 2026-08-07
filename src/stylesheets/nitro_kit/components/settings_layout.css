@@ -8,9 +8,9 @@
   }
 
   :where(
-    [data-nk="settings-layout"] > [data-slot="settings-layout-navigation"],
-    [data-nk="settings-layout"] > [data-slot="settings-layout-content"]
-  ) {
+      [data-nk="settings-layout"] > [data-slot="settings-layout-navigation"],
+      [data-nk="settings-layout"] > [data-slot="settings-layout-content"]
+    ) {
     min-width: 0;
   }
 
@@ -52,47 +52,50 @@
   /* Emphasis alone marks the current destination without adding a decorative
      edge or a filled block that would outweigh the content beside it. */
   :where(
-    [data-nk="settings-layout"]
-      [data-slot="settings-layout-item-link"][data-state="current"]
-  ) {
+      [data-nk="settings-layout"]
+        [data-slot="settings-layout-item-link"][data-state="current"]
+    ) {
     color: var(--nk-color-foreground);
     font-weight: var(--nk-font-weight-semibold);
   }
 
   :where(
-    [data-nk="settings-layout"]
-      [data-slot="settings-layout-item-link"][data-state="current"]
-      [data-slot="settings-layout-item-icon"]
-  ) {
+      [data-nk="settings-layout"]
+        [data-slot="settings-layout-item-link"][data-state="current"]
+        [data-slot="settings-layout-item-icon"]
+    ) {
     color: var(--nk-color-foreground);
   }
 
   @media (hover: hover) {
     :where(
-      [data-nk="settings-layout"] [data-slot="settings-layout-item-link"]:hover
-    ) {
+        [data-nk="settings-layout"]
+          [data-slot="settings-layout-item-link"]:hover
+      ) {
       color: var(--nk-color-foreground);
       background: color-mix(in oklab, var(--nk-color-muted) 60%, transparent);
     }
   }
 
   :where(
-    [data-nk="settings-layout"]
-      [data-slot="settings-layout-item-link"]:focus-visible
-  ) {
+      [data-nk="settings-layout"]
+        [data-slot="settings-layout-item-link"]:focus-visible
+    ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: calc(var(--nk-focus-offset) * -1);
   }
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-      [data-nk="settings-layout"] [data-slot="settings-layout-item-link"]
-    ) {
+        [data-nk="settings-layout"] [data-slot="settings-layout-item-link"]
+      ) {
       transition-duration: 0.01ms;
     }
   }
+}
 
-  @media (max-width: 48rem) {
+@layer nitro-kit.compound {
+  @media (width < 48rem) {
     :where([data-nk="settings-layout"]) {
       grid-template-columns: minmax(0, 1fr);
     }

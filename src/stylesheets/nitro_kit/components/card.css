@@ -53,13 +53,19 @@
     border-start-end-radius: calc(var(--nk-radius-lg) - var(--nk-border-width));
   }
 
+  :where([data-nk="card"] > [data-slot="card-full"]:last-child) {
+    margin-block-end: calc(var(--_nk-card-padding) * -1);
+    border-end-start-radius: calc(var(--nk-radius-lg) - var(--nk-border-width));
+    border-end-end-radius: calc(var(--nk-radius-lg) - var(--nk-border-width));
+  }
+
   /* Full-width media fills the card edge to edge, so the card owns the corner
      radius and the media drops its own. */
   :where(
-    [data-nk="card"]
-      > [data-slot="card-full"]
-      :is(img, [data-nk="progressive-image"])
-  ) {
+      [data-nk="card"]
+        > [data-slot="card-full"]
+        :is(img, [data-nk="progressive-image"])
+    ) {
     border-radius: 0;
   }
 

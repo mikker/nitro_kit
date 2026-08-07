@@ -26,10 +26,10 @@ class CardCssTest < ActiveSupport::TestCase
   test "full-width media drops its own corner radius" do
     rule = <<~CSS.strip
       :where(
-          [data-nk="card"]
-            > [data-slot="card-full"]
-            :is(img, [data-nk="progressive-image"])
-        ) {
+            [data-nk="card"]
+              > [data-slot="card-full"]
+              :is(img, [data-nk="progressive-image"])
+          ) {
           border-radius: 0;
         }
     CSS
