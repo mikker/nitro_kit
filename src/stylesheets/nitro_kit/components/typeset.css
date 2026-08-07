@@ -12,11 +12,16 @@
     overflow-wrap: break-word;
   }
 
-  :where([data-nk="typeset"]) > :where(p, ul, ol, dl, blockquote, pre, figure, table, details, hr):not([data-nk], [data-typeset="off"]) {
+  :where([data-nk="typeset"])
+    > :where(p, ul, ol, dl, blockquote, pre, figure, table, details, hr):not(
+      [data-nk],
+      [data-typeset="off"]
+    ) {
     margin-block: var(--nk-typeset-flow) 0;
   }
 
-  :where([data-nk="typeset"]) > :where(h1, h2, h3, h4, h5, h6):not([data-nk], [data-typeset="off"]) {
+  :where([data-nk="typeset"])
+    > :where(h1, h2, h3, h4, h5, h6):not([data-nk], [data-typeset="off"]) {
     margin-block: calc(var(--nk-typeset-flow) * 1.4) 0;
     font-family: var(--nk-typeset-font-heading);
     font-weight: var(--nk-font-weight-semibold);
@@ -24,13 +29,40 @@
     text-wrap: balance;
   }
 
-  :where([data-nk="typeset"]) > h1:not([data-nk], [data-typeset="off"]) { font-size: 2em; }
-  :where([data-nk="typeset"]) > h2:not([data-nk], [data-typeset="off"]) { font-size: 1.5em; }
-  :where([data-nk="typeset"]) > h3:not([data-nk], [data-typeset="off"]) { font-size: 1.25em; }
-  :where([data-nk="typeset"]) > h4:not([data-nk], [data-typeset="off"]) { font-size: 1.125em; }
-  :where([data-nk="typeset"]) > :where(h5, h6):not([data-nk], [data-typeset="off"]) { font-size: 1em; }
+  :where([data-nk="typeset"]) > h1:not([data-nk], [data-typeset="off"]) {
+    font-size: 2em;
+  }
+  :where([data-nk="typeset"]) > h2:not([data-nk], [data-typeset="off"]) {
+    font-size: 1.5em;
+  }
+  :where([data-nk="typeset"]) > h3:not([data-nk], [data-typeset="off"]) {
+    font-size: 1.25em;
+  }
+  :where([data-nk="typeset"]) > h4:not([data-nk], [data-typeset="off"]) {
+    font-size: 1.125em;
+  }
+  :where([data-nk="typeset"])
+    > :where(h5, h6):not([data-nk], [data-typeset="off"]) {
+    font-size: 1em;
+  }
   :where([data-nk="typeset"]) > :where(a:not([data-nk], [data-typeset="off"])),
-  :where([data-nk="typeset"]) > :where(p, h1, h2, h3, h4, h5, h6, ul, ol, dl, blockquote, figure, details):not([data-nk], [data-typeset="off"]) :where(a) {
+  :where([data-nk="typeset"])
+    > :where(
+      p,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      ul,
+      ol,
+      dl,
+      blockquote,
+      figure,
+      details
+    ):not([data-nk], [data-typeset="off"])
+    :where(a) {
     color: inherit;
     font-weight: var(--nk-font-weight-medium);
     text-decoration-line: underline;
@@ -39,9 +71,16 @@
     text-underline-offset: 0.15em;
   }
 
-  :where([data-nk="typeset"]) > :where(ul, ol):not([data-nk], [data-typeset="off"]) { padding-inline-start: 1.5em; }
-  :where([data-nk="typeset"]) > ul:not([data-nk], [data-typeset="off"]) { list-style-type: disc; }
-  :where([data-nk="typeset"]) > ol:not([data-nk], [data-typeset="off"]) { list-style-type: decimal; }
+  :where([data-nk="typeset"])
+    > :where(ul, ol):not([data-nk], [data-typeset="off"]) {
+    padding-inline-start: 1.5em;
+  }
+  :where([data-nk="typeset"]) > ul:not([data-nk], [data-typeset="off"]) {
+    list-style-type: disc;
+  }
+  :where([data-nk="typeset"]) > ol:not([data-nk], [data-typeset="off"]) {
+    list-style-type: decimal;
+  }
   :where([data-nk="typeset"]) > pre:not([data-nk], [data-typeset="off"]) {
     overflow-x: auto;
     padding: calc(var(--nk-space) * 4);
@@ -52,10 +91,35 @@
     background: var(--nk-color-muted);
     border-radius: var(--nk-radius-md);
   }
-  :where([data-nk="typeset"]) > pre:not([data-nk], [data-typeset="off"]) > code { font: inherit; }
-  :where([data-nk="typeset"]) > :not(pre, [data-nk], [data-typeset="off"]) > code { padding: 0.15em 0.35em; font-family: var(--nk-typeset-font-mono); font-size: 0.875em; background: var(--nk-color-muted); border-radius: var(--nk-radius-sm); }
-  :where([data-nk="typeset"]) > table:not([data-nk], [data-typeset="off"]) { width: 100%; border-collapse: collapse; font-size: 0.925em; }
-  :where([data-nk="typeset"]) > table:not([data-nk], [data-typeset="off"]) > :where(thead, tbody, tfoot) > tr > :where(th, td) { padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3); text-align: start; vertical-align: top; border-block-end: var(--nk-border-width) solid var(--nk-color-border); }
+  :where([data-nk="typeset"])
+    > pre:not([data-nk], [data-typeset="off"])
+    > code {
+    font: inherit;
+  }
+  :where([data-nk="typeset"])
+    > :not(pre, [data-nk], [data-typeset="off"])
+    > code {
+    padding: 0.15em 0.35em;
+    font-family: var(--nk-typeset-font-mono);
+    font-size: 0.875em;
+    background: var(--nk-color-muted);
+    border-radius: var(--nk-radius-sm);
+  }
+  :where([data-nk="typeset"]) > table:not([data-nk], [data-typeset="off"]) {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.925em;
+  }
+  :where([data-nk="typeset"])
+    > table:not([data-nk], [data-typeset="off"])
+    > :where(thead, tbody, tfoot)
+    > tr
+    > :where(th, td) {
+    padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
+    text-align: start;
+    vertical-align: top;
+    border-block-end: var(--nk-border-width) solid var(--nk-color-border);
+  }
 
   @scope ([data-nk="typeset"]) to (
     [data-nk]:not([data-nk="typeset"]),
@@ -230,8 +294,25 @@
 }
 
 @layer nitro-kit.state {
-  :where([data-nk="typeset"]) > :where(a:not([data-nk], [data-typeset="off"])):focus-visible,
-  :where([data-nk="typeset"]) > :where(p, h1, h2, h3, h4, h5, h6, ul, ol, dl, blockquote, figure, details):not([data-nk], [data-typeset="off"]) :where(a):focus-visible {
+  :where([data-nk="typeset"])
+    > :where(a:not([data-nk], [data-typeset="off"])):focus-visible,
+  :where([data-nk="typeset"])
+    > :where(
+      p,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6,
+      ul,
+      ol,
+      dl,
+      blockquote,
+      figure,
+      details
+    ):not([data-nk], [data-typeset="off"])
+    :where(a):focus-visible {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
     border-radius: var(--nk-radius-xs);

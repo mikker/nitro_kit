@@ -4,12 +4,12 @@ class ComboboxCssTest < ActiveSupport::TestCase
   test "active and selected option descriptions keep readable contrast" do
     selector = <<~CSS.strip
       [data-nk="combobox"]
-            > [data-slot="combobox-listbox"]
-            > [data-slot="combobox-option"]:is(
-              [data-active="true"],
-              [aria-selected="true"]
-            )
-            > [data-slot="combobox-option-description"]
+              > [data-slot="combobox-listbox"]
+              > [data-slot="combobox-option"]:is(
+                [data-active="true"],
+                [aria-selected="true"]
+              )
+              > [data-slot="combobox-option-description"]
     CSS
 
     assert_includes source_css, selector
