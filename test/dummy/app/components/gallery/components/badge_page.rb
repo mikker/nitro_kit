@@ -48,7 +48,7 @@ module Gallery
         example_section(
           "Content modes",
           slug: "badge-content",
-          description: "Scalar, block, numeric, nested icon, and long product labels use the same label slot."
+          description: "Scalar, block, numeric, nested icon, and long product labels use the same label slot. Badges keep their label on one line: when the parent is narrower than the label, the badge itself truncates it with an ellipsis."
         ) do
           example("Label content", slug: "badge-label-content", layout: :matrix) do
             sample("Scalar", slug: "scalar") do

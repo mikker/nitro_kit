@@ -365,7 +365,7 @@ class ContentBlocksTest < ActiveSupport::TestCase
     end
 
     assert_includes css, "font-variant-numeric: tabular-nums"
-    assert_includes css, "@media (max-width: 48rem)"
+    assert_includes css, "@media (width < 48rem)"
     refute_includes css, "transition: all"
   end
 

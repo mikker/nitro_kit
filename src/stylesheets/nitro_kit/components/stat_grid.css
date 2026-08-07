@@ -1,22 +1,23 @@
 @layer nitro-kit.base {
   :where([data-nk="stat-grid"]) {
+    inline-size: 100%;
     color: var(--nk-color-foreground);
   }
 
   :where(
-    [data-nk="stat-grid"]
-      > [data-slot="stat-grid-grid"]
-      > [data-slot="stat-grid-list"]
-  ) {
+      [data-nk="stat-grid"]
+        > [data-slot="stat-grid-grid"]
+        > [data-slot="stat-grid-list"]
+    ) {
     display: contents;
   }
 
   :where(
-    [data-nk="stat-grid"]
-      > [data-slot="stat-grid-grid"]
-      > [data-slot="stat-grid-list"]
-      > [data-slot="stat-grid-stat"]
-  ) {
+      [data-nk="stat-grid"]
+        > [data-slot="stat-grid-grid"]
+        > [data-slot="stat-grid-list"]
+        > [data-slot="stat-grid-stat"]
+    ) {
     display: grid;
     align-content: start;
     gap: calc(var(--nk-space) * 2);

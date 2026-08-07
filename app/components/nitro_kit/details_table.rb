@@ -43,8 +43,8 @@ module NitroKit
 
     attr_reader :record, :route_base
 
-    def view_template
-      yield self if block_given?
+    def view_template(&block)
+      collect_declarations(&block)
       raise ArgumentError, "DetailsTable requires at least one field" if @fields.empty?
 
       div(**root_attributes) do
@@ -65,6 +65,7 @@ module NitroKit
     end
 
     def field(attribute, label: nil, value: UNSET, &content)
+      ensure_collecting!
       attribute = validate_attribute!(attribute)
       if @fields.any? { |field| field.attribute.to_s == attribute.to_s }
         raise ArgumentError, "DetailsTable field keys must be unique: #{attribute.inspect}"
@@ -77,6 +78,21 @@ module NitroKit
     end
 
     private
+
+    def collect_declarations
+      return unless block_given?
+
+      @collecting = true
+      yield(self)
+    ensure
+      @collecting = false
+    end
+
+    def ensure_collecting!
+      return if @collecting
+
+      raise ArgumentError, "DetailsTable fields must be declared inside the render block"
+    end
 
     def render_field(field)
       @table.tr do
@@ -114,12 +130,7 @@ module NitroKit
 
     def render_string(value)
       if value.start_with?("https://", "http://")
-        a(
-          **slot_attributes(
-            :link,
-            attributes: { href: value, target: "_blank", rel: "noopener noreferrer" }
-          )
-        ) { plain(value) }
+        a(**slot_attributes(:link, attributes: { href: value })) { plain(value) }
       else
         plain(value)
       end

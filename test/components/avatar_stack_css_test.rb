@@ -4,13 +4,13 @@ class AvatarStackCssTest < ActiveSupport::TestCase
   test "stacked items paint their fill over an opaque surface underlay" do
     rule = <<~CSS.strip
       :where(
-          [data-nk="avatar-stack"] > [data-slot="avatar-stack-avatar"],
-          [data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]
-        ) {
+            [data-nk="avatar-stack"] > [data-slot="avatar-stack-avatar"],
+            [data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]
+          ) {
           --_nk-avatar-stack-fill: var(--nk-color-muted);
 
           flex: none;
-          margin-inline-start: calc(var(--nk-space) * -3);
+          margin-inline-start: var(--_nk-avatar-stack-overlap);
           background-color: var(--nk-color-surface);
           background-image: linear-gradient(
             var(--_nk-avatar-stack-fill),

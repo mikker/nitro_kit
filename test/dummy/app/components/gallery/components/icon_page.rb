@@ -18,15 +18,20 @@ module Gallery
           description: "The closed size scale keeps icon geometry predictable inside controls and content."
         ) do
           example("Size scale", slug: "icon-size-scale", layout: :matrix, density: :compact) do
-            Gallery::Data.icon_sizes.each do |icon|
-              sample(icon.label, slug: icon.slug) do
-                render NitroKit::Icon.new(
-                  icon.name,
-                  id: "gallery-icon-size-#{icon.slug}",
-                  size: icon.size,
-                  stroke_width: icon.stroke_width
-                )
-              end
+            sample("Extra small save icon", slug: "xs") do
+              render NitroKit::Icon.new(:save, id: "gallery-icon-size-xs", size: :xs)
+            end
+            sample("Small save icon", slug: "sm") do
+              render NitroKit::Icon.new(:save, id: "gallery-icon-size-sm", size: :sm)
+            end
+            sample("Medium save icon", slug: "md") do
+              render NitroKit::Icon.new(:save, id: "gallery-icon-size-md", size: :md)
+            end
+            sample("Large save icon", slug: "lg") do
+              render NitroKit::Icon.new(:save, id: "gallery-icon-size-lg", size: :lg)
+            end
+            sample("Extra large save icon", slug: "xl") do
+              render NitroKit::Icon.new(:save, id: "gallery-icon-size-xl", size: :xl)
             end
           end
         end

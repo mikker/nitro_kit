@@ -54,8 +54,7 @@ class DetailsTableTest < ActiveSupport::TestCase
 
     link = node.at_css("[data-slot='details-table-link']")
     assert_equal "https://example.test/ada", link["href"]
-    assert_equal "_blank", link["target"]
-    assert_equal "noopener noreferrer", link["rel"]
+    assert_nil link["target"]
     assert_empty node.css("[class], [style]")
   end
 

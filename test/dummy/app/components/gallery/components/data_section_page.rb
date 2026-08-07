@@ -90,7 +90,7 @@ module Gallery
       end
 
       def member_table(id:, count:)
-        NitroKit::Table.new(id:, table_aria: { label: "#{count} workspace members" })
+        NitroKit::Table.new(id:, table_aria: { label: "#{count} #{"workspace member".pluralize(count)}" })
       end
 
       def render_member_rows(table, count, long: false)

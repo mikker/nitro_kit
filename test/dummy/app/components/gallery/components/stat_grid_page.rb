@@ -32,12 +32,12 @@ module Gallery
 
           example("Dense records", slug: "stat-grid-dense", mode: :full_width, density: :compact) do
             render NitroKit::StatGrid.new(id: "gallery-stat-grid-dense") do |stats|
-              9.times do |index|
+              (1..9).each do |index|
                 stats.stat(
-                  key: "region-#{index + 1}",
-                  label: "Region #{index + 1}",
-                  value: ((index + 1) * 12_345).to_s,
-                  detail: index.even? ? "Healthy" : nil
+                  key: "region-#{index}",
+                  label: "Region #{index}",
+                  value: (index * 12_345).to_s,
+                  detail: index.odd? ? "Healthy" : nil
                 )
               end
             end

@@ -61,6 +61,7 @@ module NitroKit
       src: nil,
       alt: "",
       fallback: nil,
+      decorative: false,
       loading: "lazy",
       decoding: "async",
       id: nil,
@@ -75,6 +76,7 @@ module NitroKit
         src:,
         alt:,
         fallback:,
+        decorative:,
         size:,
         loading:,
         decoding:,
@@ -156,6 +158,7 @@ module NitroKit
       span(
         **slot_attributes(
           :overflow,
+          attributes: { role: "img" },
           html: declaration.html,
           aria: declaration.aria.merge(
             label: declaration.label || I18n.t("nitro_kit.avatar_stack.overflow", count: declaration.count)

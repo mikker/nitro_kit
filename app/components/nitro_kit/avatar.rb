@@ -9,6 +9,7 @@ module NitroKit
       alt: "",
       fallback: nil,
       size: :md,
+      decorative: false,
       loading: "lazy",
       decoding: "async",
       id: nil,
@@ -18,12 +19,16 @@ module NitroKit
       desperately_need_a_class: nil
     )
       raise ArgumentError, "alt must be a String" unless alt.is_a?(String)
+      @decorative = validate_boolean!(:decorative, decorative)
       unless fallback.nil? || fallback.is_a?(String)
         raise ArgumentError, "fallback must be a String or nil"
       end
 
       @src = src
       @alt = alt
+      if src? && alt.empty? && !@decorative
+        raise ArgumentError, "Avatar images require alt: text unless decorative: true"
+      end
       @fallback = fallback || initials_for(alt)
       @size = validate_choice!(:size, size, SIZES)
       root_aria = fallback_aria(aria)
@@ -49,7 +54,7 @@ module NitroKit
       }
     end
 
-    attr_reader :src, :alt, :fallback, :size
+    attr_reader :src, :alt, :fallback, :size, :decorative
 
     def view_template
       span(**root_attributes) do

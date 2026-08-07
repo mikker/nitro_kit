@@ -29,14 +29,14 @@ module Gallery
         example_section(
           "Images and fallbacks",
           slug: "avatar-content",
-          description: "Image, generated initials, custom long fallback, and anonymous states are explicit."
+          description: "Image, generated initials, custom long fallback, anonymous, and broken-image states are explicit."
         ) do
           example("Content modes", slug: "avatar-content-modes", layout: :matrix) do
             sample("Image", slug: "image") do
               render NitroKit::Avatar.new(
-                src: "/icon.svg",
-                alt: "Nitro Kit mark",
-                fallback: "NK",
+                src: "/gallery/avatars/ada.svg",
+                alt: "Ada Lovelace",
+                fallback: "AL",
                 size: :lg,
                 id: "gallery-avatar-image"
               )
@@ -59,6 +59,15 @@ module Gallery
             sample("Anonymous", slug: "anonymous") do
               render NitroKit::Avatar.new(size: :lg, id: "gallery-avatar-anonymous")
             end
+            sample("Broken image", slug: "broken-image") do
+              render NitroKit::Avatar.new(
+                src: "/gallery/avatars/missing.svg",
+                alt: "Katherine Johnson",
+                fallback: "KJ",
+                size: :lg,
+                id: "gallery-avatar-broken-image"
+              )
+            end
           end
         end
 
@@ -74,9 +83,9 @@ module Gallery
               id: "gallery-avatar-labelled-fallback"
             )
             render NitroKit::Avatar.new(
-              src: "/icon.svg",
-              alt: "Nitro Kit workspace",
-              fallback: "NK",
+              src: "/gallery/avatars/grace.svg",
+              alt: "Grace Hopper",
+              fallback: "GH",
               id: "gallery-avatar-labelled-image"
             )
           end

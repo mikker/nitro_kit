@@ -30,14 +30,14 @@ class GalleryDisplayTest < ActionDispatch::IntegrationTest
       assert_select "[data-nk='avatar'][data-size='#{size}']", minimum: 1
     end
 
-    assert_select "#gallery-avatar-image img[data-slot='avatar-image'][src='/icon.svg'][alt='Nitro Kit mark']"
-    assert_select "#gallery-avatar-image [data-slot='avatar-fallback'][aria-hidden='true']", text: "NK"
+    assert_select "#gallery-avatar-image img[data-slot='avatar-image'][src='/gallery/avatars/ada.svg'][alt='Ada Lovelace']"
+    assert_select "#gallery-avatar-image [data-slot='avatar-fallback'][aria-hidden='true']", text: "AL"
     assert_select "#gallery-avatar-generated[role='img'][aria-label='Alexandria Ocasio-Cortez']" do
       assert_select "[data-slot='avatar-fallback']", text: "AO"
     end
     assert_select "#gallery-avatar-long-fallback [data-slot='avatar-fallback']", text: "TEAM"
     assert_select "#gallery-avatar-anonymous:not([role]) [data-slot='avatar-fallback']", text: "?"
-    assert_select "#gallery-avatar-labelled-image img[alt='Nitro Kit workspace']"
+    assert_select "#gallery-avatar-labelled-image img[alt='Grace Hopper']"
   end
 
   test "avatar stack page covers every size overflow count mixed identity and labels" do
@@ -51,7 +51,7 @@ class GalleryDisplayTest < ActionDispatch::IntegrationTest
       )
     end
 
-    assert_select "#gallery-avatar-stack-overflow-one [data-slot='avatar-stack-overflow'][aria-label='1 more avatars']",
+    assert_select "#gallery-avatar-stack-overflow-one [data-slot='avatar-stack-overflow'][aria-label='1 more avatar']",
       text: "+1"
     assert_select "#gallery-avatar-stack-overflow-nine [data-slot='avatar-stack-overflow'][aria-label='9 more avatars']",
       text: "+9"

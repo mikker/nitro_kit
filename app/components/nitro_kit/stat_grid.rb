@@ -27,8 +27,8 @@ module NitroKit
       )
     end
 
-    def view_template
-      yield self if block_given?
+    def view_template(&block)
+      collect_declarations(&block)
       raise ArgumentError, "StatGrid requires at least one stat" if @stats.empty?
 
       div(**root_attributes) do
@@ -41,6 +41,7 @@ module NitroKit
     end
 
     def stat(key:, label:, value:, detail: nil)
+      ensure_collecting!
       key = normalize_identity(key, name: "stat key")
       raise ArgumentError, "StatGrid stat keys must be unique: #{key.inspect}" if @stats.any? { |stat| stat.key == key }
 
@@ -56,6 +57,21 @@ module NitroKit
     alias :html_dl :dl
 
     private
+
+    def collect_declarations
+      return unless block_given?
+
+      @collecting = true
+      yield(self)
+    ensure
+      @collecting = false
+    end
+
+    def ensure_collecting!
+      return if @collecting
+
+      raise ArgumentError, "StatGrid stats must be declared inside the render block"
+    end
 
     def render_stat(stat)
       div(**slot_attributes(:stat, attributes: { data: { key: stat.key } })) do

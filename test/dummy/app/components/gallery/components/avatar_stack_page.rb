@@ -79,9 +79,9 @@ module Gallery
               label: "Deployment reviewers"
             ) do |stack|
               stack.avatar(
-                src: "/icon.svg",
-                alt: "Nitro Kit workspace",
-                fallback: "NK",
+                src: "/gallery/avatars/grace.svg",
+                alt: "Grace Hopper",
+                fallback: "GH",
                 id: "gallery-avatar-stack-image"
               )
               stack.avatar(

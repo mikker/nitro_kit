@@ -12,7 +12,9 @@ en:
         dark: "Dark"
         system: "System"
     avatar_stack:
-      overflow: "%{count} more avatars"
+      overflow:
+        one: "%{count} more avatar"
+        other: "%{count} more avatars"
     combobox:
       invalid_selection: "Choose an option."
       no_results: "No options found."

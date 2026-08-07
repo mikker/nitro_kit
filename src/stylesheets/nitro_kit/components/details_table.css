@@ -5,7 +5,7 @@
   }
 
   :where([data-nk="details-table"] [data-slot="table-header"][scope="row"]) {
-    inline-size: clamp(8rem, 28%, 16rem);
+    inline-size: 40%;
     vertical-align: top;
   }
 
@@ -14,16 +14,16 @@
   }
 
   :where(
-    [data-nk="details-table"] [data-slot="details-table-number"],
-    [data-nk="details-table"] [data-slot="details-table-time"]
-  ) {
+      [data-nk="details-table"] [data-slot="details-table-number"],
+      [data-nk="details-table"] [data-slot="details-table-time"]
+    ) {
     font-variant-numeric: tabular-nums;
   }
 
   :where(
-    [data-nk="details-table"] [data-slot="details-table-link"],
-    [data-nk="details-table"] [data-slot="details-table-record"]
-  ) {
+      [data-nk="details-table"] [data-slot="details-table-link"],
+      [data-nk="details-table"] [data-slot="details-table-record"]
+    ) {
     color: var(--nk-color-info-content);
     text-decoration-line: underline;
     text-decoration-color: color-mix(in oklab, currentcolor 40%, transparent);
@@ -31,9 +31,9 @@
   }
 
   :where(
-    [data-nk="details-table"] [data-slot="details-table-link"]:hover,
-    [data-nk="details-table"] [data-slot="details-table-record"]:hover
-  ) {
+      [data-nk="details-table"] [data-slot="details-table-link"]:hover,
+      [data-nk="details-table"] [data-slot="details-table-record"]:hover
+    ) {
     text-decoration-color: currentcolor;
   }
 
@@ -44,10 +44,10 @@
   }
 }
 
-@media (max-width: 36rem) {
-  @layer nitro-kit.compound {
+@media (min-width: 40rem) {
+  @layer nitro-kit.base {
     :where([data-nk="details-table"] [data-slot="table-header"][scope="row"]) {
-      inline-size: 40%;
+      inline-size: clamp(8rem, 28%, 16rem);
     }
   }
 }

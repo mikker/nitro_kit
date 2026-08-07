@@ -31,7 +31,6 @@ module NitroKit
         component: :progressive_image,
         attributes: {
           id:,
-          aria: { busy: @attached ? true : nil },
           data: {
             state: @attached ? "loading" : "empty",
             controller: @attached ? "nk--progressive-image" : nil,

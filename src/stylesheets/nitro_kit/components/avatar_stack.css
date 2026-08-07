@@ -1,21 +1,35 @@
 @layer nitro-kit.compound {
   :where([data-nk="avatar-stack"]) {
+    --_nk-avatar-stack-overlap: calc(var(--nk-space) * -3);
+
     display: inline-flex;
     align-items: center;
     vertical-align: middle;
+  }
+
+  :where([data-nk="avatar-stack"][data-size="xs"]) {
+    --_nk-avatar-stack-overlap: calc(var(--nk-space) * -1.5);
+  }
+
+  :where([data-nk="avatar-stack"][data-size="sm"]) {
+    --_nk-avatar-stack-overlap: calc(var(--nk-space) * -2);
+  }
+
+  :where([data-nk="avatar-stack"][data-size="lg"]) {
+    --_nk-avatar-stack-overlap: calc(var(--nk-space) * -4);
   }
 
   /* Stacked items overlap the ring of the item behind them, so a translucent
      fill would let that ring show through. Each item paints its own fill as a
      background image over an opaque surface underlay. */
   :where(
-    [data-nk="avatar-stack"] > [data-slot="avatar-stack-avatar"],
-    [data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]
-  ) {
+      [data-nk="avatar-stack"] > [data-slot="avatar-stack-avatar"],
+      [data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]
+    ) {
     --_nk-avatar-stack-fill: var(--nk-color-muted);
 
     flex: none;
-    margin-inline-start: calc(var(--nk-space) * -3);
+    margin-inline-start: var(--_nk-avatar-stack-overlap);
     background-color: var(--nk-color-surface);
     background-image: linear-gradient(
       var(--_nk-avatar-stack-fill),
@@ -25,15 +39,18 @@
   }
 
   :where(
-    [data-nk="avatar-stack"] > [data-slot="avatar-stack-avatar"]:first-child,
-    [data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]:first-child
-  ) {
+      [data-nk="avatar-stack"] > [data-slot="avatar-stack-avatar"]:first-child,
+      [data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]:first-child
+    ) {
     margin-inline-start: 0;
   }
 
   :where([data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]) {
     --_nk-avatar-stack-fill: var(--nk-color-elevated);
 
+    /* Preceding avatars are positioned, so the overflow chip must be too or
+       their paint order covers its leading "+". */
+    position: relative;
     display: inline-grid;
     place-items: center;
     font-weight: var(--nk-font-weight-semibold);
@@ -43,36 +60,36 @@
   }
 
   :where(
-    [data-nk="avatar-stack"][data-size="xs"]
-      > [data-slot="avatar-stack-overflow"]
-  ) {
+      [data-nk="avatar-stack"][data-size="xs"]
+        > [data-slot="avatar-stack-overflow"]
+    ) {
     width: 1.5rem;
     height: 1.5rem;
     font-size: calc(var(--nk-text-xs) * 0.875);
   }
 
   :where(
-    [data-nk="avatar-stack"][data-size="sm"]
-      > [data-slot="avatar-stack-overflow"]
-  ) {
+      [data-nk="avatar-stack"][data-size="sm"]
+        > [data-slot="avatar-stack-overflow"]
+    ) {
     width: 2rem;
     height: 2rem;
     font-size: var(--nk-text-xs);
   }
 
   :where(
-    [data-nk="avatar-stack"][data-size="md"]
-      > [data-slot="avatar-stack-overflow"]
-  ) {
+      [data-nk="avatar-stack"][data-size="md"]
+        > [data-slot="avatar-stack-overflow"]
+    ) {
     width: 3rem;
     height: 3rem;
     font-size: var(--nk-text-sm);
   }
 
   :where(
-    [data-nk="avatar-stack"][data-size="lg"]
-      > [data-slot="avatar-stack-overflow"]
-  ) {
+      [data-nk="avatar-stack"][data-size="lg"]
+        > [data-slot="avatar-stack-overflow"]
+    ) {
     width: 4rem;
     height: 4rem;
     font-size: var(--nk-text-base);

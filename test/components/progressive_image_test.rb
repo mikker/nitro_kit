@@ -49,7 +49,7 @@ class ProgressiveImageTest < ActiveSupport::TestCase
     assert_equal "progressive-image", node["data-nk"]
     assert_equal "md", node["data-size"]
     assert_equal "loading", node["data-state"]
-    assert_equal "true", node["aria-busy"]
+    assert_nil node["aria-busy"]
     assert_equal "nk--progressive-image", node["data-controller"]
     assert_equal "turbo:before-cache@document->nk--progressive-image#prepareForCache", node["data-action"]
 

@@ -2,11 +2,13 @@
 
 module NitroKit
   class DataSection < Component
+    TITLE_LEVELS = (1..6).freeze
     Child = Data.define(:component, :content)
 
     def initialize(
       title: nil,
       description: nil,
+      level: 2,
       id: nil,
       html: {},
       aria: {},
@@ -15,12 +17,14 @@ module NitroKit
     )
       @title_content = content_from_keyword(:title, title)
       @description_content = content_from_keyword(:description, description)
+      @level = validate_choice!(:level, level, TITLE_LEVELS)
       @actions = nil
       @content = nil
+      @title_id = "#{id || "nk-data-section-#{SecureRandom.hex(4)}"}-title"
 
       super(
         component: :data_section,
-        attributes: { id: }.compact,
+        attributes: { id:, aria: { labelledby: @title_id } }.compact,
         html:,
         aria:,
         data:,
@@ -28,15 +32,17 @@ module NitroKit
       )
     end
 
-    def view_template
-      yield self if block_given?
+    def view_template(&block)
+      collect_declarations(&block)
       require_content!("DataSection", :title, @title_content)
       raise ArgumentError, "DataSection requires exactly one table or EmptyState" unless @content
 
       section(**root_attributes) do
         header(**slot_attributes(:header)) do
           div(**slot_attributes(:heading)) do
-            h2(**slot_attributes(:title)) { render_deferred_content(@title_content) }
+            public_send(:"h#{@level}", **slot_attributes(:title, attributes: { id: @title_id })) do
+              render_deferred_content(@title_content)
+            end
             if @description_content
               p(**slot_attributes(:description)) { render_deferred_content(@description_content) }
             end
@@ -48,6 +54,7 @@ module NitroKit
     end
 
     def title(text = nil, &block)
+      ensure_collecting!
       @title_content = declare_content(:title, @title_content, text, &block)
       nil
     end
@@ -60,6 +67,7 @@ module NitroKit
     alias :html_table :table
 
     def actions(component, &content)
+      ensure_collecting!
       unless component.is_a?(NitroKit::ButtonGroup) || component.is_a?(NitroKit::Button)
         raise ArgumentError, "DataSection actions must be a NitroKit::ButtonGroup or NitroKit::Button"
       end
@@ -70,6 +78,7 @@ module NitroKit
     end
 
     def table(component, &content)
+      ensure_collecting!
       unless table_component?(component)
         raise ArgumentError, "DataSection table must be a NitroKit::Table or NitroKit::DetailsTable"
       end
@@ -87,6 +96,21 @@ module NitroKit
     end
 
     private
+
+    def collect_declarations
+      return unless block_given?
+
+      @collecting = true
+      yield(self)
+    ensure
+      @collecting = false
+    end
+
+    def ensure_collecting!
+      return if @collecting
+
+      raise ArgumentError, "DataSection content must be declared inside the render block"
+    end
 
     def table_component?(component)
       component.is_a?(NitroKit::Table) || component.is_a?(NitroKit::DetailsTable)

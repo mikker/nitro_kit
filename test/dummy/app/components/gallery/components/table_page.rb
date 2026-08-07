@@ -228,6 +228,40 @@ module Gallery
         end
 
         example_section(
+          "Constrained width",
+          slug: "table-constrained",
+          description: "A table wider than its container scrolls horizontally inside a focusable region named by its caption."
+        ) do
+          example("Invoices in a small container", slug: "table-constrained-invoices", mode: :full_width) do
+            render NitroKit::Container.new(size: :sm, id: "gallery-table-constrained-container") do
+              render NitroKit::Table.new(id: "gallery-table-constrained") do |table|
+                table.caption("Invoice history in a constrained container")
+                table.thead do
+                  table.tr do
+                    table.th("Invoice")
+                    table.th("Issued")
+                    table.th("Status")
+                    table.th("Amount", align: :right)
+                    table.th("Action", align: :right)
+                  end
+                end
+                table.tbody do
+                  Gallery::Data.invoices.each do |invoice|
+                    table.tr do
+                      table.th(invoice.number, scope: :row)
+                      table.td(invoice.issued_on.iso8601)
+                      table.td(invoice.status.to_s.humanize)
+                      table.td(format_amount(invoice), align: :right)
+                      table.td("View", align: :right)
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
+
+        example_section(
           "Empty state",
           slug: "table-empty",
           description: "An empty collection remains a valid table with a caption, headers, and one spanning message."

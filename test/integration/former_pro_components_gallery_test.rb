@@ -28,7 +28,7 @@ class FormerProComponentsGalleryTest < ActionDispatch::IntegrationTest
     assert_select "[data-gallery='code-source']", count: 5
     assert_select "[data-gallery='code-source']", text: /NitroKit::ProgressiveImage\.new/
 
-    assert_select "#gallery-progressive-image-loaded[data-state='loading'][aria-busy='true']"
+    assert_select "#gallery-progressive-image-loaded[data-state='loading']:not([aria-busy])"
     assert_select "#gallery-progressive-image-loaded [data-slot='progressive-image-placeholder'][alt=''][aria-hidden='true']"
     assert_select "#gallery-progressive-image-loaded [data-slot='progressive-image-image'][alt='Abstract indigo workspace illustration']"
     assert_select "#gallery-progressive-image-loaded img:not([alt=''])", count: 1

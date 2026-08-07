@@ -28,6 +28,9 @@ module NitroKit
       desperately_need_a_class: nil
     )
       @sort = sort.nil? ? nil : normalize_sort_key(sort, name: "sort")
+      unless direction.nil? || direction.is_a?(Symbol) || direction.is_a?(String)
+        raise ArgumentError, "Table direction must be a Symbol or String"
+      end
       @direction = direction.nil? ? nil : validate_choice!(:direction, direction.to_sym, DIRECTIONS)
       unless @sort.nil? == @direction.nil?
         raise ArgumentError, "Table sort: and direction: must both be set or both be nil"
@@ -49,6 +52,7 @@ module NitroKit
         data: table_data
       )
       @caption = nil
+      @caption_id = "#{id || "nk-table-#{SecureRandom.hex(4)}"}-caption"
       @head = nil
       @bodies = []
       @sort_keys = []
@@ -61,7 +65,7 @@ module NitroKit
       yield self if block_given?
       @collecting_sections = false
 
-      div(**root_attributes) do
+      div(**scroll_region_attributes) do
         table(**@table_attributes) do
           render_caption if @caption
           render_section(:head, @head, :html_thead) if @head
@@ -141,6 +145,7 @@ module NitroKit
       ensure_rendering_row!(:th)
       raise ArgumentError, "Table th accepts text or a block, not both" if !text.nil? && block
       raise ArgumentError, "Table th href: requires sort:" if sort.nil? && !href.nil?
+      raise ArgumentError, "Table th sort: must be declared inside thead" if !sort.nil? && @rendering_section != :head
       alignment = validate_choice!(:align, align, ALIGNMENTS)
       scope = validate_choice!(:scope, scope, SCOPES)
       key = sort.nil? ? nil : declare_sort_header!(sort, href:)
@@ -235,10 +240,24 @@ module NitroKit
       raise ArgumentError, "Table #{name} must be a Symbol or non-blank String"
     end
 
+    # The wrapper scrolls horizontally, so keyboard users need it focusable and
+    # named. The caption is the only Nitro-owned name source, so the region is
+    # only exposed when one exists.
+    def scroll_region_attributes
+      return root_attributes unless @caption
+
+      root_attributes.merge(
+        tabindex: "0",
+        role: "region",
+        aria: root_attributes.fetch(:aria, {}).merge(labelledby: @caption_id)
+      )
+    end
+
     def render_caption
       html_caption(
         **slot_attributes(
           :caption,
+          attributes: { id: @caption_id },
           html: @caption.html,
           aria: @caption.aria,
           data: @caption.data,
@@ -258,10 +277,10 @@ module NitroKit
           desperately_need_a_class: section.css_class
         )
       ) do
-        @rendering_section = true
+        @rendering_section = slot
         render(section.content)
       ensure
-        @rendering_section = false
+        @rendering_section = nil
       end
     end
 
