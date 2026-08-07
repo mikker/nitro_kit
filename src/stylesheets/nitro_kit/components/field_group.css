@@ -4,6 +4,12 @@
     gap: calc(var(--nk-space) * 6);
   }
 
+  /* Buttons keep their intrinsic width instead of stretching to the grid
+     column, so a trailing submit stays left-aligned. */
+  :where([data-nk="field-group"] > [data-nk="button"]) {
+    justify-self: start;
+  }
+
   /* Whatever follows a group (another group, a submit control) keeps the same
      rhythm as the fields inside it, so a trailing error list never reads as
      attached to the next element. */

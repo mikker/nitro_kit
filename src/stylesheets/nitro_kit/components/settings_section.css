@@ -52,6 +52,15 @@
     gap: calc(var(--nk-space) * 5);
   }
 
+  :where(
+      [data-nk="settings-section"]
+        > [data-slot="settings-section-form"]
+        > form
+        > [data-nk="button"]
+    ) {
+    justify-self: start;
+  }
+
   :where([data-nk="settings-section"] + [data-nk="settings-section"]) {
     padding-block-start: calc(var(--nk-space) * 8);
     border-block-start: var(--nk-border-width) solid var(--nk-color-border);
