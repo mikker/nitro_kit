@@ -554,6 +554,13 @@
     min-width: 0;
   }
 
+  /* Contain deliberate horizontal pressure inside the canvas instead of
+     scrolling the whole document. Tooltip canvases stay visible because
+     tooltip panels are the one overlay that is not in the top layer. */
+  :where([data-gallery="example-canvas"]:not(:has([data-nk="tooltip"]))) {
+    overflow-x: clip;
+  }
+
   :where([data-gallery-navigation-preview]) {
     inline-size: min(100%, 19rem);
     min-block-size: 18rem;
@@ -607,7 +614,7 @@
   ) {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 1rem;
   }
 
@@ -626,7 +633,7 @@
       [data-gallery="example-canvas"]
   ) {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(10rem, 100%), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
     align-items: start;
     gap: 1.25rem;
   }

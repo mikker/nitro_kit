@@ -26,6 +26,7 @@ export default class extends Controller {
 
   connect() {
     this.width = null
+    this.requestedWidth = null
     this.maximum = 0
     this.fullWidth = this.element.dataset.galleryPreviewMode === "full-width"
     this.pointerId = null
@@ -71,6 +72,7 @@ export default class extends Controller {
   reset() {
     this.fullWidth = this.element.dataset.galleryPreviewMode === "full-width"
     this.setWidth(this.defaultWidth(), { preserveFullWidth: true })
+    this.requestedWidth = null
     this.presetTarget.value = ""
   }
 
@@ -127,7 +129,7 @@ export default class extends Controller {
     } else if (this.fullWidth) {
       this.width = maximum
     } else {
-      this.width = this.clamp(this.width)
+      this.width = this.clamp(this.requestedWidth ?? this.constrainedValue)
     }
 
     this.renderWidth()
@@ -140,7 +142,8 @@ export default class extends Controller {
   }
 
   setWidth(width, { preserveFullWidth = false } = {}) {
-    this.width = this.clamp(Math.round(width))
+    this.requestedWidth = Math.round(width)
+    this.width = this.clamp(this.requestedWidth)
     if (!preserveFullWidth) this.fullWidth = this.width === this.maximum
     this.renderWidth()
   }
