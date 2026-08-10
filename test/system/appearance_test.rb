@@ -11,8 +11,7 @@ class AppearanceSystemTest < ApplicationSystemTestCase
   test "explicit preference persists through reload and Turbo while every picker stays synchronized" do
     visit_without_saved_preference(gallery_component_path("appearance-picker"))
 
-    picker_count = all("[data-nk='appearance-picker']").size
-    assert_operator picker_count, :>=, 3
+    picker_count = appearance_picker_count
 
     find("label[for='gallery-appearance-default-dark']").click
     assert_document_appearance(preference: "dark", theme: "dark")
@@ -42,7 +41,7 @@ class AppearanceSystemTest < ApplicationSystemTestCase
 
     within("#gallery-navigation") { click_link("Appearance picker", exact: true) }
     assert_selector "#gallery-appearance-card-control"
-    reconnected_count = all("[data-nk='appearance-picker']").size
+    reconnected_count = appearance_picker_count
     assert_synchronized_pickers("light", count: reconnected_count)
 
     browser.navigate.refresh
@@ -120,7 +119,7 @@ class AppearanceSystemTest < ApplicationSystemTestCase
 
   test "storage events synchronize multiple pickers and repeated bootstrap execution remains singular" do
     visit_without_saved_preference(gallery_component_path("appearance-picker"))
-    picker_count = all("[data-nk='appearance-picker']").size
+    picker_count = appearance_picker_count
 
     execute_script(<<~JAVASCRIPT, STORAGE_KEY)
       window.localStorage.setItem(arguments[0], "dark");
@@ -236,6 +235,11 @@ class AppearanceSystemTest < ApplicationSystemTestCase
 
   def assert_document_appearance(preference:, theme:)
     assert_selector "html[data-theme-preference='#{preference}'][data-theme='#{theme}']"
+  end
+
+  def appearance_picker_count
+    assert_selector "[data-nk='appearance-picker']", minimum: 3
+    all("[data-nk='appearance-picker']").size
   end
 
   def assert_synchronized_pickers(preference, count:)
