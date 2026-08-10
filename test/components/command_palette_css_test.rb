@@ -17,8 +17,8 @@ class CommandPaletteCssTest < ActiveSupport::TestCase
     end
     assert_includes source_css, "@media (prefers-reduced-motion: reduce)"
     assert_includes source_css, '[data-nk="command-palette-results"]'
-    assert_includes source_css, "max-block-size: min(36rem, calc(100dvh - (var(--nk-space) * 8)))"
-    refute_includes source_css, "\n    block-size:"
+    assert_includes source_css, "block-size: min(36rem, calc(100dvh - (var(--nk-space) * 8)))"
+    refute_includes source_css, "max-block-size: min(36rem"
     refute_includes source_css, "transition: all"
   end
 

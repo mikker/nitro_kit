@@ -110,6 +110,7 @@ class ProgressiveControlsTest < ApplicationSystemTestCase
     visit path
     root = "#gallery-progressive-image-error"
 
+    execute_script("arguments[0].scrollIntoView({ block: 'center' })", find(root))
     assert_selector "#{root}[data-state='error']"
     image = find("#{root} [data-slot='progressive-image-image']", visible: :all)
     assert_equal "Unavailable workspace cover", image["alt"]

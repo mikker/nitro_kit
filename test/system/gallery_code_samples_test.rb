@@ -11,7 +11,7 @@ class GalleryCodeSamplesTest < ApplicationSystemTestCase
     code_sample = "#example-button-content-combinations-code"
     source = "#{code_sample} [data-gallery='code-source']"
 
-    assert_selector "#{code_panel}[hidden][aria-hidden='true']", visible: :all
+    assert_selector "#{code_panel}[hidden]:not([aria-hidden])", visible: :all
     find(code_tab).click
 
     assert_selector "#{code_tab}[aria-selected='true'][data-state='active']"

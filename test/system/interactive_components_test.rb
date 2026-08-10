@@ -252,22 +252,22 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
     execute_script("arguments[0].focus()", find(trigger))
 
     assert_focused trigger
-    assert_equal "visible", evaluate_script("getComputedStyle(arguments[0]).visibility", find(content, visible: :all))
+    wait_for_visibility(content, "visible")
 
     find(trigger).send_keys(:escape)
 
     assert_focused trigger
     assert_selector "#{root}[data-dismissed]"
-    assert_equal "hidden", evaluate_script("getComputedStyle(arguments[0]).visibility", find(content, visible: :all))
+    wait_for_visibility(content, "hidden")
 
     find("[data-gallery='brand']").hover
     execute_script("arguments[0].blur()", find(trigger))
     assert_selector "#{root}:not([data-dismissed])"
     find(trigger).hover
-    assert_equal "visible", evaluate_script("getComputedStyle(arguments[0]).visibility", find(content, visible: :all))
+    wait_for_visibility(content, "visible")
     find("[data-gallery='brand']").hover
 
-    assert_equal "hidden", evaluate_script("getComputedStyle(arguments[0]).visibility", find(content, visible: :all))
+    wait_for_visibility(content, "hidden")
     assert_no_severe_console_errors(context: path)
   end
 
@@ -441,6 +441,15 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
             document.querySelector(arguments[0]), arguments[1]
           ))
         JAVASCRIPT
+      end
+    end
+
+    def wait_for_visibility(selector, visibility)
+      wait_until do
+        evaluate_script(
+          "getComputedStyle(document.querySelector(arguments[0])).visibility",
+          selector
+        ) == visibility
       end
     end
 

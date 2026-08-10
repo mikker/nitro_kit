@@ -2673,7 +2673,7 @@
 
   :where([data-nk="command-palette"] > [data-slot="command-palette-panel"]) {
     inline-size: min(calc(100% - (var(--nk-space) * 8)), var(--nk-content-md));
-    max-block-size: min(36rem, calc(100dvh - (var(--nk-space) * 8)));
+    block-size: min(36rem, calc(100dvh - (var(--nk-space) * 8)));
     margin: auto;
     padding: 0;
     overflow: hidden;

@@ -113,7 +113,7 @@ class AppearanceSystemTest < ApplicationSystemTestCase
     JAVASCRIPT
 
     assert_selector "#{content}:not(:popover-open)", visible: :all
-    assert_document_appearance(preference: "system", theme: "light")
+    assert_document_appearance(preference: "system", theme: resolved_system_theme)
     assert_equal glyph_for("system"), trigger_glyph
     assert_no_severe_console_errors
   end
