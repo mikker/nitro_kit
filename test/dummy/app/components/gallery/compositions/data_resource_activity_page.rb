@@ -13,7 +13,7 @@ module Gallery
       def render_filters
         render NitroKit::SettingsSection.new(
           title: "Filter resource activity",
-          description: "The application combines free text, outcome, and resource identity into a normal GET form.",
+          description: "Find imports, synchronization, retention, and mutation events by resource or outcome.",
           id: "gallery-data-resource-activity-filters"
         ) do |section|
           section.form do
@@ -25,8 +25,8 @@ module Gallery
               builder: NitroKit::FormBuilder,
               id: "gallery-data-resource-activity-filter-form"
             ) do |form|
-              form.fieldset(legend: "Activity filters") do
-                form.group do
+              form.group do
+                render NitroKit::Grid.new(cols: "1 md:4", gap: 3, id: "gallery-data-resource-activity-filter-grid") do
                   form.field(
                     :query,
                     as: :search,
@@ -45,11 +45,10 @@ module Gallery
                     as: :select,
                     options: Gallery::Forms::ResourceActivityFilter::OUTCOMES.map { |outcome| [ outcome.humanize, outcome ] }
                   )
-                end
-              end
-              render NitroKit::Toolbar.new(id: "gallery-data-resource-activity-filter-toolbar") do |toolbar|
-                toolbar.trailing do
-                  form.submit("Filter activity", id: "gallery-data-resource-activity-filter-submit")
+                  render NitroKit::Flex.new(dir: :row, gap: 2, align: :end, justify: :end, wrap: :wrap) do
+                    render NitroKit::Button.new("Clear", href: flow_path(state: "recent"))
+                    form.submit("Filter activity", id: "gallery-data-resource-activity-filter-submit")
+                  end
                 end
               end
             end
@@ -70,8 +69,8 @@ module Gallery
           description: "Imports, synchronization, retention, and application mutations in newest-first order.",
           id: "gallery-data-resource-activity-results"
         ) do |section|
-          section.actions(NitroKit::ButtonGroup.new(label: "Resource activity actions")) do |actions|
-            actions.button("Export activity", href: "#export-resource-activity")
+          unless state == "error"
+            section.actions NitroKit::Button.new("Export activity", href: "#export-resource-activity")
           end
 
           if events.empty?
@@ -93,7 +92,10 @@ module Gallery
               )
             end
           else
-            section.table(NitroKit::Table.new(id: "gallery-data-resource-activity-table")) do |table|
+            section.table(NitroKit::Table.new(
+              id: "gallery-data-resource-activity-table",
+              table_aria: { label: "Filtered data resource activity" }
+            )) do |table|
               populate_activity_table(table)
             end
           end
@@ -227,7 +229,7 @@ module Gallery
       def state_description
         {
           "recent" => "Recent imports, synchronization, retention, and mutation events across resources.",
-          "filtered" => "Resource identity, outcome, and query filters compose into caller-owned lookup logic.",
+          "filtered" => "Resource, outcome, and text filters narrow the event history together.",
           "empty" => "A valid zero-result activity query renders an explicit EmptyState.",
           "error" => "An activity-service failure preserves filters and separates unavailable from empty.",
           "dense" => "Repeated events pressure the activity table and pagination without a density API.",

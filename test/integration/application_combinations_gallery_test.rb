@@ -71,13 +71,14 @@ class ApplicationCombinationsGalleryTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "#gallery-sidebar-application-populated" do
-      assert_select "[data-nk='appearance-picker']", count: 1
+      assert_select "[data-slot='app-navigation-footer'] [data-nk='appearance-picker'][data-presentation='dropdown']", count: 1
       assert_select "[data-nk='stat-grid'] [data-slot='stat-grid-stat']", count: 3
-      assert_select "[data-nk='table'][data-sort] tbody tr", count: 3
+      assert_select "[data-nk='data-section'] > [data-slot='data-section-table'][data-nk='table'][data-sort] tbody tr", count: 3
       assert_select "[data-nk='toast'] [data-slot='toast-item'][data-variant='success']", count: 1
     end
     assert_select "#gallery-sidebar-application-empty[data-theme='light']" do
-      assert_select "[data-nk='empty-state']", text: /No projects yet/
+      assert_select "> [data-slot='app-shell-main'] [data-nk='empty-state'][data-variant='default']", text: /No projects yet/
+      assert_select "[data-nk='data-section'] [data-nk='empty-state']", count: 0
       assert_select "form[enctype='multipart/form-data'] [data-nk='dropzone'][data-state='idle']", count: 1
       assert_select "input[type='file'][name='project_import[files][]']:not([data-direct-upload-url])", count: 1
     end
@@ -114,10 +115,16 @@ class ApplicationCombinationsGalleryTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "#gallery-hybrid-application-populated" do
       assert_select "[data-nk='appearance-picker']", count: 2
+      assert_select "[data-slot='app-navigation-footer'] [data-nk='appearance-picker'][data-presentation='dropdown']", count: 1
       assert_select "[data-nk='settings-layout']", count: 1
+      assert_select "[data-nk='settings-layout'] [data-nk='grid'][data-cols='1 md:2']", count: 1
       assert_select "[data-nk='progressive-image']", count: 1
       assert_select "[data-nk='details-table']", count: 1
-      assert_select "form#gallery-hybrid-application-profile-form [data-nk='fieldset']", count: 1
+      assert_select "form#gallery-hybrid-application-profile-form > [data-nk='field-group']" do
+        assert_select "> [data-nk='field']", count: 3
+        assert_select "> #gallery-hybrid-application-profile-submit[data-nk='button']", count: 1
+      end
+      assert_select "form#gallery-hybrid-application-profile-form [data-nk='fieldset']", count: 0
       assert_select "[data-nk='toast'] [data-slot='toast-item'][data-variant='success']", count: 1
     end
     assert_select "#gallery-hybrid-application-missing[data-theme='light']" do

@@ -52,10 +52,17 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
         get_flow(slug, state)
 
         assert_select "div[data-gallery='page'][data-gallery-page='#{slug}'][data-gallery-state='#{state}']"
-        assert_select "[data-gallery='composition-states'] a[aria-current='page']", count: 1, text: state.humanize
+        assert_select "[data-gallery='composition-states'] a[aria-current='page']",
+          count: 1,
+          text: state.tr("-", " ").humanize
         assert_select "#gallery-#{slug}-surface[data-gallery-composition='#{slug}'][data-gallery-composition-state='#{state}']"
-        assert_select "#gallery-#{slug}-header[data-nk='page-header'] > h1[data-slot='page-header-title']"
-        assert_select "#gallery-#{slug}-header [data-slot='page-header-actions'][data-nk='button-group'] [data-nk='button']", minimum: 1
+        heading_level = %w[account-security onboarding-branches].include?(slug) ? 4 : 1
+        assert_select "#gallery-#{slug}-header[data-nk='page-header'] > h#{heading_level}[data-slot='page-header-title']"
+        if slug == "onboarding-branches" && %w[choose-path complete mobile].include?(state)
+          assert_select "#gallery-onboarding-branches-header [data-slot='page-header-actions']", count: 0
+        else
+          assert_select "#gallery-#{slug}-header [data-slot='page-header-actions'][data-nk='button-group'] [data-nk='button']", minimum: 1
+        end
         assert_select "[data-gallery='example-canvas'] [data-nk='container']", minimum: 1
         assert_select "[data-gallery='example-canvas'] [data-nk='flex'][data-dir='col']", minimum: 1
         assert_select "[data-gallery='example-canvas'] [class]", count: 0
@@ -199,12 +206,13 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-onboarding-import-form input[type='file'][accept='.json,.zip']"
 
     get_flow("onboarding-branches", "skip-team")
-    assert_select "#gallery-onboarding-skipped-alert", text: /Team invitations skipped/
+    assert_select "#gallery-onboarding-skipped-state[data-nk='empty-state'][data-variant='borderless']", text: /Team invitations skipped/
     assert_select "#gallery-onboarding-skipped-card [data-nk='button']", count: 2
 
     get_flow("onboarding-branches", "integration")
-    assert_select "#gallery-onboarding-integrations-section[data-nk='data-section']"
-    assert_select "#gallery-onboarding-integrations-table tbody tr", count: 3
+    assert_select "#gallery-onboarding-integrations-section[data-nk='settings-section']"
+    assert_select "#gallery-onboarding-integrations-choices[data-nk='checkbox-group'] input[type='checkbox']", count: 3
+    assert_select "#gallery-onboarding-integrations-submit", text: "Continue to review"
 
     get_flow("onboarding-branches", "review-company")
     assert_select "#gallery-onboarding-review-table[data-nk='details-table'] tbody tr", count: 6

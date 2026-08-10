@@ -6,7 +6,7 @@ module Gallery
       private
 
       def page_template
-        render_composition_header(eyebrow: "Settings")
+        render_composition_header
 
         render Section.new(
           slug: "settings-screen",
@@ -15,7 +15,7 @@ module Gallery
         ) do
           render_example(
             slug: "settings-#{state}",
-            title: state.to_s.humanize,
+            title: humanize_state(state),
             description: state_description,
             mode: :full_width
           ) do
@@ -220,32 +220,33 @@ module Gallery
         ) do |section|
           section.table NitroKit::Table.new(
             id: "gallery-settings-sessions-table",
-            table_html: { id: "gallery-settings-sessions-table-element" }
+            table_html: { id: "gallery-settings-sessions-table-element" },
+            table_aria: { label: "Signed-in browser sessions" }
           ) do |table|
-              table.caption("Signed-in browser sessions")
-              table.thead do
-                table.tr do
-                  table.th("Browser")
-                  table.th("Location")
-                  table.th("Action", align: :right)
-                end
+            table.caption("Signed-in browser sessions")
+            table.thead do
+              table.tr do
+                table.th("Browser")
+                table.th("Location")
+                table.th("Action", align: :right)
               end
-              table.tbody do
-                [ [ "Safari 20 · current", "Copenhagen, Denmark" ], [ "Chrome 142", "London, United Kingdom" ] ].each_with_index do |(browser, location), index|
-                  table.tr do
-                    table.th(browser, scope: :row)
-                    table.td(location)
-                    table.td(align: :right) do
-                      render NitroKit::Button.new(
-                        index.zero? ? "Current session" : "Revoke",
-                        id: "gallery-settings-session-#{index + 1}-action",
-                        size: :sm,
-                        disabled: disabled || index.zero?
-                      )
-                    end
+            end
+            table.tbody do
+              [ [ "Safari 20 · current", "Copenhagen, Denmark" ], [ "Chrome 142", "London, United Kingdom" ] ].each_with_index do |(browser, location), index|
+                table.tr do
+                  table.th(browser, scope: :row)
+                  table.td(location)
+                  table.td(align: :right) do
+                    render NitroKit::Button.new(
+                      index.zero? ? "Current session" : "Revoke",
+                      id: "gallery-settings-session-#{index + 1}-action",
+                      size: :sm,
+                      disabled: disabled || index.zero?
+                    )
                   end
                 end
               end
+            end
           end
         end
       end
@@ -368,68 +369,66 @@ module Gallery
           alert.title("Slack connection expired")
           alert.description("Reconnect before workspace notifications can be delivered again.")
         end
-        render_integration_card(integration, description: integration.description)
+        render_integration_collection(long: false, integrations: [ integration ])
       end
 
-      def render_integration_collection(long:)
-        render NitroKit::Card.new(id: "gallery-settings-integrations-heading-card") do |card|
-          card.title("Connected services", level: 4)
-          card.body do
-            render NitroKit::Toolbar.new(id: "gallery-settings-integrations-heading-toolbar") do |toolbar|
-              toolbar.leading do
-                p do
-                  if long
-                    "Manage every external service that receives deployment activity, release metadata, workspace access " \
-                      "changes, billing notices, and customer-visible incident updates from this unusually long-named workspace."
-                  else
-                    "Manage connections used by deployments, errors, and team notifications."
+      def render_integration_collection(long:, integrations: Gallery::Data.integrations)
+        description = long ?
+          "Manage services that receive operational and billing events for this long-named workspace." :
+          "Manage connections used by deployments, errors, and team notifications."
+
+        render NitroKit::DataSection.new(
+          title: "Connected services",
+          description:,
+          id: "gallery-settings-integrations-heading-card"
+        ) do |section|
+          section.actions NitroKit::Button.new(
+            "Connect another service",
+            id: "gallery-settings-integrations-connect",
+            href: "#integration-catalog",
+            variant: :primary
+          )
+          section.table NitroKit::Table.new(
+            id: "gallery-settings-integrations-table",
+            table_aria: { label: "Connected services" }
+          ) do |table|
+            table.caption("Connected services")
+            table.thead do
+              table.tr do
+                table.th("Service")
+                table.th("Status")
+                table.th("Purpose")
+                table.th("Action", align: :right)
+              end
+            end
+            table.tbody do
+              integrations.each do |integration|
+                table.tr(html: { id: "gallery-settings-integration-#{integration.id}" }) do
+                  table.th(integration.name, scope: :row)
+                  table.td do
+                    render NitroKit::Badge.new(
+                      integration.status.to_s.humanize,
+                      id: "gallery-settings-integration-#{integration.id}-status",
+                      color: integration_color(integration.status),
+                      size: :sm
+                    )
+                  end
+                  table.td do
+                    plain integration.description
+                    plain " Delivery history remains available to workspace administrators." if long
+                  end
+                  table.td(align: :right) do
+                    render NitroKit::Button.new(
+                      integration.status == :available ? "Connect" : "Manage",
+                      id: "gallery-settings-integration-#{integration.id}-action",
+                      href: "#integration-#{integration.id}",
+                      size: :sm,
+                      variant: integration.status == :action_required ? :primary : :default
+                    )
                   end
                 end
               end
-              toolbar.trailing do
-                render NitroKit::Button.new(
-                  "Connect another service",
-                  id: "gallery-settings-integrations-connect",
-                  href: "#integration-catalog",
-                  variant: :primary
-                )
-              end
             end
-          end
-        end
-
-        Gallery::Data.integrations.each do |integration|
-          description = if long
-            "#{integration.description} This connection applies to Analytical Engines — Research and Production " \
-              "and preserves deterministic delivery history for every workspace administrator."
-          else
-            integration.description
-          end
-          render_integration_card(integration, description:)
-        end
-      end
-
-      def render_integration_card(integration, description:)
-        render NitroKit::Card.new(id: "gallery-settings-integration-#{integration.id}") do |card|
-          card.title(integration.name, level: 4)
-          card.body do
-            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              render NitroKit::Badge.new(
-                integration.status.to_s.humanize,
-                id: "gallery-settings-integration-#{integration.id}-status",
-                color: integration_color(integration.status),
-                size: :sm
-              )
-              p { description }
-            end
-          end
-          card.footer do
-            render NitroKit::Button.new(
-              integration.status == :available ? "Connect" : "Manage",
-              id: "gallery-settings-integration-#{integration.id}-action",
-              href: "#integration-#{integration.id}",
-              variant: integration.status == :action_required ? :primary : :default
-            )
           end
         end
       end

@@ -73,11 +73,11 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-integration-provider_sentry-action[href$='/integration-management/detail']", text: "View"
 
     get_flow("integration-management", "detail")
-    assert_select "#gallery-integration-detail-grid[data-nk='grid'][data-cols='1 sm:2 lg:3']" do
-      assert_select "> #gallery-integration-detail-card[data-nk='card']", count: 1
+    assert_select "#gallery-integration-detail-grid[data-nk='flex'][data-dir='col'][data-gap='6']" do
+      assert_select "> #gallery-integration-detail-card[data-nk='data-section']", count: 1
       assert_select "> #gallery-integration-configuration-section[data-nk='settings-section']", count: 1
     end
-    assert_select "[data-gallery='integration-detail-metadata'][data-nk='details-table'] tbody tr", count: 3
+    assert_select "[data-gallery='integration-detail-metadata'][data-nk='details-table'] tbody tr", count: 4
     assert_select "#gallery-integration-configuration-form input[type='hidden'][name$='[provider]'][value='sentry']"
     assert_select "#gallery-integration-configuration-form input[type='url'][value^='https://']"
 
@@ -134,7 +134,7 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
     get_flow("uploads", "error")
     assert_select "#gallery-uploads-error[data-variant='error']"
     assert_select "#gallery-uploads-form [data-nk='field'][data-state='invalid']", count: 2
-    assert_select "#gallery_forms_upload_submission_files[aria-invalid='true']" \
+    assert_select "#gallery_forms_upload_submission_files[type='file'][required][aria-invalid='true']" \
                   "[aria-describedby*='errors']:not([value])"
     assert_select "#gallery-upload-record-1-status[data-color='danger']", text: "Failed"
 
@@ -186,7 +186,7 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-changelog-latest-card", text: /2\.0\.0.*Typed application sections/m
     assert_select "#gallery-changelog-latest-prose[data-nk='typeset']", count: 1
     assert_select "#gallery-changelog-latest-card li", count: 3
-    assert_select "#gallery-changelog-table tbody tr", count: Gallery::OperationalData.changelog_entries.size
+    assert_select "#gallery-changelog-table tbody tr", count: Gallery::OperationalData.changelog_entries.size - 1
 
     get_flow("changelog", "archive")
     assert_select "#gallery-changelog-table tbody tr", count: Gallery::OperationalData.changelog_entries.size * 2

@@ -11,40 +11,22 @@ module Gallery
       end
 
       def render_filters
-        render NitroKit::SettingsSection.new(
-          title: "Filter audit history",
-          description: "Search, category, export policy, and pagination remain caller-owned query behavior.",
-          id: "gallery-activity-audit-filter-section"
-        ) do |section|
-          section.form do
-            form_with(
-              model: audit_filter,
-              scope: :audit,
-              url: flow_path(state: "filter"),
-              method: :get,
-              builder: NitroKit::FormBuilder,
-              id: "gallery-activity-audit-filter-form"
-            ) do |form|
-              form.fieldset(legend: "Audit filters") do
-                form.group do
-                  form.field(
-                    :query,
-                    as: :search,
-                    label: "Search activity",
-                    placeholder: "Actor, action, or subject",
-                    autocomplete: "off"
-                  )
-                  form.field(
-                    :category,
-                    as: :select,
-                    label: "Category",
-                    options: Gallery::Forms::AuditFilter::CATEGORIES.map { |category| [ category.humanize, category ] }
-                  )
-                end
-              end
-              render NitroKit::Toolbar.new(id: "gallery-activity-audit-filter-toolbar") do |toolbar|
-                toolbar.trailing do
-                  form.submit("Filter audit history", id: "gallery-activity-audit-filter-submit")
+        form_with(model: audit_filter, scope: :audit, url: flow_path(state: "filter"), method: :get, builder: NitroKit::FormBuilder, id: "gallery-activity-audit-filter-form") do |form|
+          form.fieldset(legend: "Filter audit history", html: { id: "gallery-activity-audit-filter-section" }) do
+            form.group do
+              render NitroKit::Grid.new(cols: "1 md:3", gap: 3) do
+                form.field(:query, as: :search, label: "Search activity", placeholder: "Actor, action, or subject", autocomplete: "off")
+                form.field(
+                  :category,
+                  as: :select,
+                  label: "Category",
+                  options: Gallery::Forms::AuditFilter::CATEGORIES.map { |category| [ category.humanize, category ] }
+                )
+                render NitroKit::Flex.new(dir: :row, gap: 2, align: :end, justify: :end, wrap: :wrap) do
+                  if audit_filter.query.present? || audit_filter.category != "all"
+                    render NitroKit::Button.new("Clear", href: flow_path(state: "normal"))
+                  end
+                  form.submit("Apply filters", id: "gallery-activity-audit-filter-submit")
                 end
               end
             end
@@ -66,16 +48,11 @@ module Gallery
           description: "Security, access, data, billing, and integration events ordered newest first.",
           id: "gallery-activity-audit-results"
         ) do |section|
-          section.actions(
-            NitroKit::ButtonGroup.new(id: "gallery-activity-audit-actions", label: "Audit history actions")
-          ) do |actions|
-            actions.button("Export CSV", href: "#audit-export")
-          end
-
           if events.empty?
             section.empty_state NitroKit::EmptyState.new(
               title: state == "error" ? "Audit history is temporarily unavailable" : "No audit events match these filters",
               description: state == "error" ? "Retry after the audit service reconnects." : "Clear the search or select another category.",
+              variant: :borderless,
               level: 3,
               id: "gallery-activity-audit-empty"
             ) do |empty|
@@ -189,12 +166,12 @@ module Gallery
 
       def state_description
         {
-          "normal" => "Recent audit events expose actor, action, subject, category, outcome, address, and time.",
-          "filter" => "A native GET form preserves a security query through caller-owned pagination links.",
-          "empty" => "A valid zero-result filter uses a typed EmptyState without implying service failure.",
-          "dense" => "Repeated audit records pressure table and pagination composition without a density API.",
-          "error" => "A service failure preserves filters and distinguishes unavailable history from an empty result.",
-          "mobile" => "The caller selects compact columns while Nitro owns narrow layout behavior."
+          "normal" => "Review who changed workspace access, data, billing, and integrations, newest first.",
+          "filter" => "One security-related event matches the current search and category.",
+          "empty" => "No billing events match this search. Try a broader term or another category.",
+          "dense" => "Review a longer period of workspace activity with the same filters and export path.",
+          "error" => "Audit history is temporarily unavailable, but your current filters have been preserved.",
+          "mobile" => "Recent actors, activity, and outcomes remain available on a narrow screen."
         }.fetch(state)
       end
     end

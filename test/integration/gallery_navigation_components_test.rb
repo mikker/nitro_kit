@@ -103,8 +103,8 @@ class GalleryNavigationComponentsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-pagination-bar-invoices-table tbody tr", count: Gallery::Data.invoices.size
   end
 
-  test "real settings states use the layout with toolbars only around form and collection actions" do
-    %w[profile security notifications integrations appearance].each do |state|
+  test "real settings states use toolbars for forms and section actions for collections" do
+    %w[profile security notifications appearance].each do |state|
       get gallery_composition_path(slug: "settings", state:)
 
       assert_response :success
@@ -114,6 +114,13 @@ class GalleryNavigationComponentsTest < ActionDispatch::IntegrationTest
       end
       assert_select "#gallery-settings-layout [data-slot='settings-layout-content'] [data-nk='toolbar']", minimum: 1
     end
+
+    get gallery_composition_path(slug: "settings", state: "integrations")
+
+    assert_response :success
+    assert_select "#gallery-settings-layout[data-nk='settings-layout']"
+    assert_select "#gallery-settings-integrations-heading-card[data-nk='data-section']"
+    assert_select "#gallery-settings-layout [data-slot='settings-layout-content'] [data-nk='toolbar']", count: 0
 
     get gallery_composition_path(slug: "settings", state: "integrations-empty")
 

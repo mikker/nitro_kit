@@ -78,7 +78,7 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-sign-in-submit[disabled][data-turbo-submits-with='Signing in…']", text: "Signing in…"
 
     get_flow("sign-in", "success")
-    assert_select "#gallery-sign-in-success[data-variant='success']"
+    assert_select "#gallery-sign-in-success", text: /secure session is ready/
     assert_select "#gallery-sign-in-continue[href='#workspace']", text: "Continue to workspace"
 
     get_flow("sign-in", "mobile")
@@ -108,7 +108,9 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
   test "email verification separates pending success expiration invalid tokens and long copy" do
     get_flow("email-verification", "pending")
     assert_select "#gallery-email-verification-form[data-turbo-frame='gallery-email-verification-frame']"
-    assert_select "#gallery-email-verification-status[data-color='info']", text: "Pending verification"
+    assert_select "#gallery-email-verification-form > [data-nk='input'][type='hidden']"
+    assert_select "#gallery-email-verification-form > [data-nk='field-group']", count: 1
+    assert_select "#gallery-email-verification-alert[data-variant='default']", text: /verification link/
 
     get_flow("email-verification", "verified")
     assert_select "#gallery-email-verification-alert[data-variant='success']"

@@ -17,7 +17,7 @@ module Gallery
       private
 
       def page_template
-        render_composition_header(eyebrow: "Billing")
+        render_composition_header
 
         render Section.new(
           slug: "billing-screen",
@@ -26,7 +26,7 @@ module Gallery
         ) do
           render_example(
             slug: "billing-#{state}",
-            title: state.humanize,
+            title: humanize_state(state),
             description: state_description,
             mode: :full_width
           ) do
@@ -73,11 +73,14 @@ module Gallery
       def render_plans
         render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch, id: "gallery-billing-plans-stack") do
           render NitroKit::Card.new(id: "gallery-billing-plan-summary") do |card|
-            card.title("Choose a plan", level: 4)
+            card.title("Team plan", level: 4)
             card.body do
               render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-                p { "Prices are billed monthly in US dollars. You can change plans without contacting support." }
-                render NitroKit::Badge.new("Current: Team", id: "gallery-billing-current-plan", color: :success, size: :sm)
+                render NitroKit::Flex.new(dir: :row, gap: 2, align: :center) do
+                  render NitroKit::Badge.new("Current plan", id: "gallery-billing-current-plan", color: :success, size: :sm)
+                end
+                p { "$49.00 per month · 18 active members · renews August 1, 2026" }
+                p { "Plans are billed monthly in US dollars and can be changed at any time." }
               end
             end
             card.divider
@@ -90,9 +93,12 @@ module Gallery
             end
           end
 
-          render NitroKit::Grid.new(cols: "1 sm:2 lg:3", id: "gallery-billing-plan-grid",
-          aria: { label: "Available plans" },
-          data: { gallery: "billing-plan-grid" }) do
+          render NitroKit::Grid.new(
+            cols: "1 sm:2 lg:3",
+            id: "gallery-billing-plan-grid",
+            aria: { label: "Available plans" },
+            data: { gallery: "billing-plan-grid" }
+          ) do
             Gallery::Data.plans.each do |plan|
               render NitroKit::Card.new(id: "gallery-billing-#{plan.id}") do |card|
                 card.title(plan.name, level: 5)
@@ -105,7 +111,9 @@ module Gallery
                       end
                     end
                     if plan.current
-                      render NitroKit::Badge.new("Current plan", id: "gallery-billing-#{plan.id}-badge", color: :success)
+                      render NitroKit::Flex.new(dir: :row, gap: 2, align: :center) do
+                        render NitroKit::Badge.new("Current plan", id: "gallery-billing-#{plan.id}-badge", color: :success)
+                      end
                     end
                   end
                 end
@@ -271,7 +279,10 @@ module Gallery
                 variant: :primary
               )
             end
-            section.table NitroKit::Table.new(id: "gallery-billing-invoice-table") do |table|
+            section.table NitroKit::Table.new(
+              id: "gallery-billing-invoice-table",
+              table_aria: { label: "Invoices for Analytical Engines — Research and Production" }
+            ) do |table|
               render_invoice_table(table)
             end
           end
@@ -359,7 +370,9 @@ module Gallery
           card.title("Invoice #{invoice.number}", level: 4)
           card.body do
             render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              render NitroKit::Badge.new("Paid", id: "gallery-billing-invoice-detail-status", color: :success)
+              render NitroKit::Flex.new(dir: :row, gap: 2, align: :center) do
+                render NitroKit::Badge.new("Paid", id: "gallery-billing-invoice-detail-status", color: :success)
+              end
               render NitroKit::DetailsTable.new(
                 invoice,
                 data: { gallery: "billing-invoice-metadata" }
@@ -556,7 +569,9 @@ module Gallery
           card.title("Team plan for Analytical Engines — Research and Production", level: 4)
           card.body do
             render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              render NitroKit::Badge.new("Active", id: "gallery-billing-mobile-status", color: :success)
+              render NitroKit::Flex.new(dir: :row, gap: 2, align: :center) do
+                render NitroKit::Badge.new("Active", id: "gallery-billing-mobile-status", color: :success)
+              end
               render NitroKit::DetailsTable.new(
                 billing_overview,
                 data: { gallery: "billing-mobile-summary" }
@@ -573,13 +588,13 @@ module Gallery
           card.footer do
             render NitroKit::ButtonGroup.new(id: "gallery-billing-mobile-actions", label: "Billing actions") do |group|
               group.button(
-                "Replace payment method",
+                "Payment method",
                 id: "gallery-billing-mobile-payment",
                 href: entry_path(entry, state: "payment-method"),
                 variant: :primary
               )
               group.button(
-                "View invoices",
+                "Invoices",
                 id: "gallery-billing-mobile-invoices",
                 href: entry_path(entry, state: "invoices")
               )

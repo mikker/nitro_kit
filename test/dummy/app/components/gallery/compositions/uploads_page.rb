@@ -16,15 +16,13 @@ module Gallery
       def render_header
         render NitroKit::PageHeader.new(
           title: upload_title,
-          eyebrow: "Data operations",
           description: state_description,
           id: "gallery-uploads-header"
         ) do |header|
           header.actions(
             NitroKit::ButtonGroup.new(id: "gallery-uploads-header-actions", label: "Upload navigation")
           ) do |actions|
-            actions.button("Import history", href: "#import-history")
-            actions.button("Upload files", href: entry_path(entry, state: "empty"), variant: :primary)
+            actions.button("Import history", href: "#import-history", icon: :history)
           end
         end
       end
@@ -35,8 +33,8 @@ module Gallery
         multiple = state.in?(%w[uploading multiple])
 
         render NitroKit::SettingsSection.new(
-          title: multiple ? "Upload data files" : "Upload a data file",
-          description: "The application owns accepted formats, limits, storage, scanning, processing, and retention.",
+          title: multiple ? "New multi-file import" : "New import",
+          description: "Choose the source files and where their records belong. Files are scanned before processing begins.",
           id: "gallery-uploads-settings-section"
         ) do |section|
           render_upload_status(section)
@@ -47,64 +45,34 @@ module Gallery
               builder: NitroKit::FormBuilder,
               id: "gallery-uploads-form"
             ) do |form|
-              form.fieldset(
-                legend: "Import source",
-                description: "CSV, NDJSON, JSON, or ZIP. Up to five files per submission."
-              ) do
-                form.group do
-                  form.field(
-                    :files,
-                    as: :file,
-                    label: multiple ? "Data files" : "Data file",
-                    description: "Files are submitted with native multipart form semantics.",
-                    accept: ".csv,.ndjson,.json,.zip,text/csv,application/json,application/zip",
-                    multiple:,
-                    required: true,
-                    disabled:
-                  )
-                  form.field(
-                    :destination,
-                    as: :select,
-                    label: "Destination",
-                    options: Gallery::Forms::UploadSubmission::DESTINATIONS.map do |destination|
-                      [ destination.humanize, destination ]
-                    end,
-                    prompt: "Choose a destination",
-                    required: true,
-                    disabled:
-                  )
-                  form.field(
-                    :note,
-                    as: :textarea,
-                    label: "Import note",
-                    description: "Optional context for workspace audit history.",
-                    disabled:,
-                    maxlength: 240
-                  )
-                  form.field(
-                    :overwrite,
-                    as: :checkbox,
-                    label: "Replace records with matching external IDs",
-                    description: "The application validates whether the selected destination permits replacement.",
-                    disabled:
-                  )
-                end
-              end
-              render NitroKit::Toolbar.new(id: "gallery-uploads-form-toolbar") do |toolbar|
-                toolbar.leading do
-                  render NitroKit::Badge.new(
-                    multiple ? "Up to 5 files" : "One file",
-                    color: :info,
-                    id: "gallery-uploads-file-limit"
-                  )
-                end
-                toolbar.trailing do
-                  form.submit(
-                    disabled ? "Uploading files…" : multiple ? "Upload selected files" : "Upload file",
-                    id: "gallery-uploads-submit",
-                    disabled:,
-                    data: { turbo_submits_with: "Uploading files…" }
-                  )
+              form.group do
+                render_upload_file_control(form, multiple:, disabled:)
+                form.field(
+                  :destination,
+                  as: :select,
+                  label: "Destination",
+                  options: Gallery::Forms::UploadSubmission::DESTINATIONS.map { |destination| [ destination.humanize, destination ] },
+                  prompt: "Choose a destination",
+                  required: true,
+                  disabled:
+                )
+                form.field(:note, as: :textarea, label: "Import note", description: "Optional context for workspace audit history.", disabled:, maxlength: 240)
+                form.field(
+                  :overwrite,
+                  as: :checkbox,
+                  label: "Replace records with matching external IDs",
+                  description: "Available only where the destination permits replacement.",
+                  disabled:
+                )
+                render NitroKit::Toolbar.new(id: "gallery-uploads-form-toolbar") do |toolbar|
+                  toolbar.trailing do
+                    form.submit(
+                      disabled ? "Uploading files…" : multiple ? "Upload selected files" : "Upload file",
+                      id: "gallery-uploads-submit",
+                      disabled:,
+                      data: { turbo_submits_with: "Uploading files…" }
+                    )
+                  end
                 end
               end
             end
@@ -112,22 +80,52 @@ module Gallery
         end
       end
 
+      def render_upload_file_control(form, multiple:, disabled:)
+        if state == "error"
+          form.field(
+            :files,
+            as: :file,
+            label: "Data file",
+            description: "Choose a CSV, NDJSON, JSON, or ZIP file under 250 MB.",
+            accept: ".csv,.ndjson,.json,.zip,text/csv,application/json,application/zip",
+            multiple:,
+            required: true,
+            disabled:
+          )
+        else
+          form.dropzone(
+            :files,
+            id: "gallery-uploads-dropzone",
+            label: multiple ? "Choose up to five data files" : "Choose a data file",
+            description: "CSV, NDJSON, JSON, or ZIP · 250 MB per file",
+            presentation: :minimal,
+            direct_upload: false,
+            accept: ".csv,.ndjson,.json,.zip,text/csv,application/json,application/zip",
+            multiple:,
+            max_files: multiple ? 5 : 1,
+            max_bytes: 262_144_000,
+            required: true,
+            disabled:
+          )
+        end
+      end
+
       def render_upload_status(section)
         case state
         when "uploading"
-          section.status NitroKit::Alert.new(id: "gallery-uploads-uploading") do |alert|
+          section.status NitroKit::Alert.new(variant: :info, live: :polite, id: "gallery-uploads-uploading") do |alert|
             alert.icon NitroKit::Icon.new(:upload, id: "gallery-uploads-uploading-icon")
             alert.title("Uploading three files")
             alert.description("42.8 MB of 119.1 MB transferred. Keep this page open until the application confirms receipt.")
           end
         when "complete"
-          section.status NitroKit::Alert.new(variant: :success, id: "gallery-uploads-complete") do |alert|
+          section.status NitroKit::Alert.new(variant: :success, live: :polite, id: "gallery-uploads-complete") do |alert|
             alert.icon NitroKit::Icon.new(:circle_check, id: "gallery-uploads-complete-icon")
             alert.title("Upload complete")
             alert.description("customer-accounts-2026-07-13.csv is stored and queued for validation.")
           end
         when "error"
-          section.status NitroKit::Alert.new(variant: :error, id: "gallery-uploads-error") do |alert|
+          section.status NitroKit::Alert.new(variant: :error, live: :assertive, id: "gallery-uploads-error") do |alert|
             alert.icon NitroKit::Icon.new(:circle_x, id: "gallery-uploads-error-icon")
             alert.title("Upload was not accepted")
             alert.description("Choose at least one supported file and a valid destination before retrying.")
@@ -150,7 +148,8 @@ module Gallery
           if upload_records.empty?
             section.empty_state NitroKit::EmptyState.new(
               title: "No uploads yet",
-              description: "Select a supported file above to create the first application-owned upload record.",
+              description: "Choose a supported file above to create your first import.",
+              variant: :borderless,
               level: 3,
               id: "gallery-uploads-empty"
             ) do |empty|
@@ -166,7 +165,7 @@ module Gallery
       end
 
       def populate_upload_table(table)
-        table.caption("Application-owned file upload records")
+        table.caption("Files in this import history")
         table.thead do
           table.tr do
             table.th("File")
@@ -278,23 +277,22 @@ module Gallery
 
       def upload_records_description
         state == "empty" ? "Completed and processing uploads will appear here." :
-          "Caller-owned records expose file identity, size, actor, and processing state."
+          "Follow each file from receipt through validation and processing."
       end
 
       def loading_state? = state == "uploading"
-      def composition_label = "File upload"
       def section_title = "Multipart upload operations"
       def section_description = "Empty, active, complete, rejected, multi-file, long-content, and narrow upload states."
 
       def state_description
         {
-          "empty" => "A ready multipart Rails form sits beside a meaningful zero-record state.",
-          "uploading" => "Every input is disabled while visible progress and queued records remain stable.",
-          "complete" => "The receipt identifies the accepted file and its next validation step.",
-          "error" => "Model errors preserve destination and note values without placing a value on the file input.",
-          "multiple" => "A native multiple file input and three deterministic records pressure the queue.",
-          "long" => "Long filenames and destination context wrap without truncation or custom classes.",
-          "mobile" => "Caller-owned compact table columns complement the narrow composition surface."
+          "empty" => "Import CSV, NDJSON, JSON, or ZIP data into a workspace destination.",
+          "uploading" => "Three files are transferring now. Keep this page open until receipt is confirmed.",
+          "complete" => "Your file is safely stored and waiting for validation.",
+          "error" => "The last file was rejected. Correct the source and destination before retrying.",
+          "multiple" => "Upload up to five related files in one audited submission.",
+          "long" => "Import a regulated archive with complete filenames and operational context.",
+          "mobile" => "Choose a file, destination, and import policy from any screen size."
         }.fetch(state)
       end
     end

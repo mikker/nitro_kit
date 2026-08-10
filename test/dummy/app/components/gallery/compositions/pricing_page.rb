@@ -59,7 +59,7 @@ module Gallery
             render NitroKit::Card.new(id: "gallery-pricing-plan-#{plan.id}") do |card|
               card.title(plan_name(plan), level: 2)
               card.body do
-                render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
+                render NitroKit::Flex.new(dir: :col, gap: 4, align: :start) do
                   render NitroKit::Badge.new("Recommended", color: :success) if plan.highlighted
                   strong { plan_price(plan) }
                   render NitroKit::Typeset.new do
@@ -83,7 +83,7 @@ module Gallery
       def render_comparison
         render NitroKit::DataSection.new(
           title: "Compare plans",
-          description: "Product limits and entitlements remain caller-owned pricing data.",
+          description: "Compare member limits, audit retention, and support across every plan.",
           id: "gallery-pricing-comparison"
         ) do |section|
           section.actions(NitroKit::ButtonGroup.new(label: "Plan comparison actions")) do |actions|
@@ -111,8 +111,9 @@ module Gallery
 
       def render_enterprise
         render NitroKit::Alert.new(id: "gallery-pricing-enterprise", variant: :default) do |alert|
+          alert.icon NitroKit::Icon.new(:building_2)
           alert.title("Enterprise agreements follow your procurement process")
-          alert.description("Annual invoicing, security review, tax documentation, and data residency are agreed by the application team.")
+          alert.description("We support annual invoicing, security review, tax documentation, and regional data residency.")
         end
       end
 
@@ -151,18 +152,17 @@ module Gallery
         gallery_composition_path(slug: "contact", state: "form")
       end
 
-      def composition_label = "Public pricing"
       def section_title = "Pricing and plan comparison"
       def section_description = "Monthly, annual, comparison, enterprise, long-content, and narrow pricing states."
 
       def state_description
         {
-          "monthly" => "Monthly prices, included capabilities, and plan actions stay explicit.",
-          "annual" => "Annual billing changes caller-owned amounts and cadence without changing component APIs.",
-          "comparison" => "A semantic table compares durable plan entitlements across the same public page.",
-          "enterprise" => "Procurement and security expectations remain product policy rather than component behavior.",
-          "long" => "Long plan and organization language wraps without custom classes or truncation.",
-          "mobile" => "The accepted grid owns narrow stacking while every plan remains available."
+          "monthly" => "Start free, grow with your team, and change or cancel at any time.",
+          "annual" => "Pay annually and receive two months of the Team or Scale plan at no extra cost.",
+          "comparison" => "Choose the member limits, audit retention, and support level that fit your workspace.",
+          "enterprise" => "Pair the Scale plan with procurement, security review, and regional data requirements.",
+          "long" => "Plans for distributed teams running regulated production systems across multiple regions.",
+          "mobile" => "Compare every plan and included capability from a narrow screen."
         }.fetch(state)
       end
     end

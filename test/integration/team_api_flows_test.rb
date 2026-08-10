@@ -160,7 +160,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-team-search-form[method='get'][data-turbo-frame='gallery-team-management-frame']" \
       "[data-turbo-action='replace']"
     assert_select "#gallery-team-search-query[type='search'][name='team[query]'][value='Grace']"
-    assert_select "#gallery-team-members-table caption", text: "1 workspace member"
+    assert_select "#gallery-team-members-section", text: /1 current membership/
     assert_select "#gallery-team-members-table tbody tr", count: 1, text: /Grace Hopper/
     assert_select "#gallery-team-invitations-empty", text: /No pending invitations match/
 
@@ -174,7 +174,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
 
     get_flow("team-management", "dense")
     assert_select "[data-gallery-composition='team-management']"
-    assert_select "#gallery-team-members-table caption", text: "8 workspace members"
+    assert_select "#gallery-team-members-section", text: /8 current memberships/
     assert_select "#gallery-team-members-table tbody tr", count: 8
     assert_select "#gallery-team-members-table", text: /hedy\.lamarr@example\.test/
     assert_select "#gallery-team-invitations-table tbody tr", count: 2
@@ -285,7 +285,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-api-credentials-table", text: /Finance reconciliation and revenue recognition export/
 
     get_flow("api-credentials", "dense")
-    assert_select "#gallery-api-credentials-table caption", text: "6 active API credentials"
+    assert_select "#gallery-api-credentials-section", text: /6 active credentials/
     assert_select "#gallery-api-credentials-table tbody tr", count: 6
 
     get_flow("api-credentials", "mobile")

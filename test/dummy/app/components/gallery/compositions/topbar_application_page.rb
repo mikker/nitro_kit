@@ -85,8 +85,10 @@ module Gallery
                     end
                     card.title(title, level: 3)
                     card.body do
-                      status_badge(status, id: "gallery-topbar-application-media-status-#{index + 1}")
-                      p { detail }
+                      render NitroKit::Flex.new(dir: :col, gap: 2, align: :start) do
+                        status_badge(status, id: "gallery-topbar-application-media-status-#{index + 1}")
+                        p { detail }
+                      end
                     end
                     card.footer do
                       render NitroKit::Dropdown.new(id: "gallery-topbar-application-menu-#{index + 1}") do |menu|

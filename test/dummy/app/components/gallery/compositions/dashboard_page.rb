@@ -4,7 +4,7 @@ module Gallery
       private
 
       def page_template
-        render_composition_header(eyebrow: "Workspace")
+        render_composition_header
 
         render Section.new(
           slug: "dashboard-screen",
@@ -13,7 +13,7 @@ module Gallery
         ) do
           render_example(
             slug: "dashboard-#{state}",
-            title: state.to_s.humanize,
+            title: humanize_state(state),
             description: state_description,
             mode: :full_width
           ) do
@@ -53,7 +53,6 @@ module Gallery
       def render_workspace_header(disabled:)
         render NitroKit::PageHeader.new(
           title: Gallery::Data.auth_identity.workspace,
-          eyebrow: "Team workspace",
           description: "Team plan · EU region · updated July 13, 2026 at 09:30 UTC",
           id: "gallery-dashboard-workspace-header"
         ) do |header|
@@ -142,12 +141,14 @@ module Gallery
           card.title("Active incident", level: 4)
           card.body do
             render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              render NitroKit::Badge.new(
-                "Investigating",
-                id: "gallery-dashboard-incident-status",
-                color: :danger,
-                size: :sm
-              )
+              render NitroKit::Flex.new(dir: :row, gap: 2, align: :center) do
+                render NitroKit::Badge.new(
+                  "Investigating",
+                  id: "gallery-dashboard-incident-status",
+                  color: :danger,
+                  size: :sm
+                )
+              end
               p { "Slack notification delivery · started July 13, 2026 at 09:12 UTC" }
             end
           end
@@ -168,18 +169,11 @@ module Gallery
           alert.description("Request volume, recent activity, and service health are loading.")
         end
         render_request_chart(:loading)
-        3.times do |index|
-          render NitroKit::Card.new(id: "gallery-dashboard-loading-card-#{index + 1}") do |card|
-            card.title("Loading summary #{index + 1}", level: 4)
-            card.body { "Current value unavailable" }
-          end
+        render NitroKit::StatGrid.new(id: "gallery-dashboard-loading-metrics") do |stats|
+          stats.stat(key: :members, label: "Active members", value: "—", detail: "Refreshing member totals")
+          stats.stat(key: :deployments, label: "Deployments this week", value: "—", detail: "Refreshing deployment totals")
+          stats.stat(key: :usage, label: "API requests", value: "—", detail: "Refreshing usage totals")
         end
-        render NitroKit::Button.new(
-          "Refreshing…",
-          id: "gallery-dashboard-loading-action",
-          disabled: true,
-          variant: :primary
-        )
       end
 
       def render_dense
@@ -203,23 +197,12 @@ module Gallery
           )
         end
         render_request_chart(:mobile)
-        render NitroKit::Card.new(id: "gallery-dashboard-mobile-card") do |card|
-          card.title("Recent production activity and workspace access changes", level: 4)
-          card.body do
-            ul do
-              Gallery::Data.activities.each do |activity|
-                li { "#{activity.actor.name} #{activity.action} #{activity.subject} at #{activity.occurred_at.iso8601}" }
-              end
-            end
-          end
-          card.footer do
-            render NitroKit::Button.new(
-              "Open complete activity history",
-              id: "gallery-dashboard-mobile-action",
-              href: "#activity"
-            )
-          end
-        end
+        render_activity_section(id: "gallery-dashboard-mobile-activity", activities: Gallery::Data.activities)
+        render NitroKit::Button.new(
+          "Open complete activity history",
+          id: "gallery-dashboard-mobile-action",
+          href: "#activity"
+        )
       end
 
       def render_metrics
@@ -232,7 +215,7 @@ module Gallery
 
       def render_request_chart(mode)
         render NitroKit::Card.new(id: "gallery-dashboard-request-chart-card") do |card|
-          card.title("API request volume", level: 4)
+          card.title("API request volume", level: 2)
           card.body { render_request_chart_figure(mode) }
 
           if mode == :error
@@ -336,7 +319,11 @@ module Gallery
           description: "Deployments, invitations, access changes, and billing events.",
           id: "#{id}-section"
         ) do |section|
-          section.table NitroKit::Table.new(id:, table_html: { id: "#{id}-element" }) do |table|
+          section.table NitroKit::Table.new(
+            id:,
+            table_html: { id: "#{id}-element" },
+            table_aria: { label: "Recent workspace activity" }
+          ) do |table|
             table.caption("Recent workspace activity")
             table.thead do
               table.tr do
@@ -362,7 +349,8 @@ module Gallery
         render NitroKit::DataSection.new(title: "Workspace members", id: "gallery-dashboard-dense-members-section") do |section|
           section.table NitroKit::Table.new(
             id: "gallery-dashboard-dense-members",
-            table_html: { id: "gallery-dashboard-dense-members-element" }
+            table_html: { id: "gallery-dashboard-dense-members-element" },
+            table_aria: { label: "Workspace members" }
           ) do |table|
             table.caption("Workspace members")
             table.thead do
@@ -396,7 +384,8 @@ module Gallery
         render NitroKit::DataSection.new(title: "Recent invoices", id: "gallery-dashboard-dense-invoices-section") do |section|
           section.table NitroKit::Table.new(
             id: "gallery-dashboard-dense-invoices",
-            table_html: { id: "gallery-dashboard-dense-invoices-element" }
+            table_html: { id: "gallery-dashboard-dense-invoices-element" },
+            table_aria: { label: "Recent invoices" }
           ) do |table|
             table.caption("Recent invoices")
             table.thead do
@@ -427,7 +416,8 @@ module Gallery
         ) do |section|
           section.table NitroKit::Table.new(
             id: "gallery-dashboard-integrations",
-            table_html: { id: "gallery-dashboard-integrations-element" }
+            table_html: { id: "gallery-dashboard-integrations-element" },
+            table_aria: { label: "Integration delivery status" }
           ) do |table|
             table.caption("Integration delivery status")
             table.thead do

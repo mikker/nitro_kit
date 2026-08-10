@@ -24,9 +24,9 @@ module Gallery
         empty = state == "empty"
 
         render NitroKit::StatGrid.new(id: "gallery-organization-overview-stats") do |stats|
-          stats.stat(key: :members, label: "Members", value: empty ? "0" : organization.member_count.to_fs(:delimited), detail: "Across 14 teams")
-          stats.stat(key: :resources, label: "Data resources", value: empty ? "0" : organization.resource_count.to_s, detail: "Six resource kinds")
-          stats.stat(key: :storage, label: "Storage", value: empty ? "0 GB" : "#{organization.storage_gb} GB", detail: "62% of allowance")
+          stats.stat(key: :members, label: "Members", value: empty ? "0" : organization.member_count.to_fs(:delimited), detail: empty ? "Invite the first member" : "Across 14 teams")
+          stats.stat(key: :resources, label: "Data resources", value: empty ? "0" : organization.resource_count.to_s, detail: empty ? "Create the first resource" : "Six resource kinds")
+          stats.stat(key: :storage, label: "Storage", value: empty ? "0 GB" : "#{organization.storage_gb} GB", detail: empty ? "No records stored" : "62% of allowance")
           if state == "dense"
             stats.stat(key: :regions, label: "Active regions", value: "4", detail: "No replication backlog")
             stats.stat(key: :requests, label: "Requests today", value: "1,284,320", detail: "99.98% successful")
@@ -73,7 +73,10 @@ module Gallery
       end
 
       def resource_table
-        NitroKit::Table.new(id: "gallery-organization-overview-resource-table")
+        NitroKit::Table.new(
+          id: "gallery-organization-overview-resource-table",
+          table_aria: { label: "Recently updated organization resources" }
+        )
       end
 
       def populate_resource_table(table)

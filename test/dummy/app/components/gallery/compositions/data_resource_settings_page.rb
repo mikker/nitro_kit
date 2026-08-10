@@ -33,7 +33,7 @@ module Gallery
 
         render NitroKit::SettingsSection.new(
           title: "Resource configuration",
-          description: "Identity, visibility, retention, and notifications remain application-owned values.",
+          description: "Manage the resource identity, visibility, retention, and failure notices.",
           id: "gallery-data-resource-settings-settings-section"
         ) do |section|
           render_form_status(section, form)
@@ -46,7 +46,7 @@ module Gallery
               id: "gallery-data-resource-settings-form"
             ) do |builder|
               builder.fieldset(
-                legend: "Resource configuration",
+                legend: "Identity and retention",
                 description: "Retention changes apply to new records after the next successful synchronization.",
                 disabled:,
                 html: { id: "gallery-data-resource-settings-fieldset" }
@@ -73,10 +73,6 @@ module Gallery
                     description: "Notify resource owners after imports or synchronization fail.",
                     disabled:
                   )
-                end
-              end
-              render NitroKit::Toolbar.new(id: "gallery-data-resource-settings-form-toolbar") do |toolbar|
-                toolbar.trailing do
                   builder.submit(
                     disabled ? "Administrator access required" : "Save resource",
                     id: "gallery-data-resource-settings-submit",
@@ -115,14 +111,17 @@ module Gallery
 
         render NitroKit::DataSection.new(
           title: "Resource access",
-          description: "The application policy resolves mutation and deletion decisions for this resource.",
+          description: "Review the permissions each organization role receives for this resource.",
           id: "gallery-data-resource-settings-access"
         ) do |section|
           section.actions(NitroKit::ButtonGroup.new(label: "Resource access actions")) do |actions|
             actions.button("Export access report", href: "#export-resource-access")
             actions.button("Add team", href: "#add-resource-team", variant: :primary)
           end
-          section.table(NitroKit::Table.new(id: "gallery-data-resource-settings-access-table")) do |table|
+          section.table(NitroKit::Table.new(
+            id: "gallery-data-resource-settings-access-table",
+            table_aria: { label: "Access decisions for #{resource.name}" }
+          )) do |table|
             table.caption("Access decisions for #{resource.name}")
             table.thead do
               table.tr do
@@ -264,7 +263,7 @@ module Gallery
           "success" => "A successful result leaves the editable resource settings in place.",
           "access" => "Application-owned policy decisions appear beside role-level resource access.",
           "danger" => "Archival requires explicit confirmation, policy permission, and a safe escape.",
-          "error" => "A viewer can inspect settings while the caller-owned policy disables mutation.",
+          "error" => "A viewer can inspect settings while administrator-only changes stay disabled.",
           "long" => "A long resource identity pressures headings, labels, fields, and actions.",
           "mobile" => "SettingsLayout and Toolbar own narrow stacking without a mobile API."
         }.fetch(state)

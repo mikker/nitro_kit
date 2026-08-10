@@ -29,53 +29,37 @@ module Gallery
       def render_header
         render NitroKit::PageHeader.new(
           title: help_title,
-          eyebrow: "Support and documentation",
           description: state_description,
           id: "gallery-help-center-header"
         ) do |header|
           header.actions(
             NitroKit::ButtonGroup.new(id: "gallery-help-center-header-actions", label: "Help center navigation")
           ) do |actions|
-            actions.button("Browse FAQ", href: entry_path(entry, state: "faq"))
-            actions.button("Contact support", href: entry_path(entry, state: "contact"), variant: :primary)
+            if state.in?(%w[contact contact-validation contact-sent])
+              actions.button("Browse help", href: entry_path(entry, state: "faq"), icon: :arrow_left)
+            else
+              actions.button("Contact support", href: entry_path(entry, state: "contact"), variant: :primary, icon: :messages_square)
+            end
           end
         end
       end
 
       def render_search
-        render NitroKit::SettingsSection.new(
-          title: "Search help",
-          description: "Documentation indexing, ranking, and category policy remain application behavior.",
-          id: "gallery-help-center-search-section"
-        ) do |section|
-          section.form do
-            form_with(
-              model: help_search,
-              scope: :help,
-              url: entry_path(entry, state: "search"),
-              method: :get,
-              builder: NitroKit::FormBuilder,
-              id: "gallery-help-center-search-form"
-            ) do |form|
-              form.fieldset(legend: "Help search") do
-                form.group do
-                  form.field(
-                    :query,
-                    as: :search,
-                    label: "Question or keyword",
-                    placeholder: "Search uploads, integrations, billing, or security",
-                    autocomplete: "off"
-                  )
-                  form.field(
-                    :category,
-                    as: :select,
-                    label: "Category",
-                    options: Gallery::Forms::HelpSearch::CATEGORIES.map { |category| [ category.humanize, category ] }
-                  )
-                end
-              end
-              render NitroKit::Toolbar.new(id: "gallery-help-center-search-toolbar") do |toolbar|
-                toolbar.trailing do
+        form_with(model: help_search, scope: :help, url: entry_path(entry, state: "search"), method: :get, builder: NitroKit::FormBuilder, id: "gallery-help-center-search-form") do |form|
+          form.fieldset(legend: "Search help articles", html: { id: "gallery-help-center-search-section" }) do
+            form.group do
+              render NitroKit::Grid.new(cols: "1 md:3", gap: 3) do
+                form.field(:query, as: :search, label: "Question or keyword", placeholder: "Uploads, integrations, billing, or security", autocomplete: "off")
+                form.field(
+                  :category,
+                  as: :select,
+                  label: "Category",
+                  options: Gallery::Forms::HelpSearch::CATEGORIES.map { |category| [ category.humanize, category ] }
+                )
+                render NitroKit::Flex.new(dir: :row, gap: 2, align: :end, justify: :end, wrap: :wrap) do
+                  if help_search.query.present? || help_search.category != "all"
+                    render NitroKit::Button.new("Clear", href: entry_path(entry, state: "faq"))
+                  end
                   form.submit("Search help", id: "gallery-help-center-search-submit")
                 end
               end
@@ -85,28 +69,23 @@ module Gallery
       end
 
       def render_faq
-        render NitroKit::Card.new(id: "gallery-help-center-faq-card") do |card|
-          card.title("Frequently asked questions", level: 2)
-          card.body do
-            render NitroKit::Accordion.new(id: "gallery-help-center-faq", mode: :single) do |accordion|
-              questions.each_with_index do |question, index|
-                accordion.item(
-                  question.id,
-                  title: faq_question(question, index),
-                  expanded: index.zero?
-                ) do
+        render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch, id: "gallery-help-center-faq-card") do
+          h2 { "Frequently asked questions" }
+          p { "Start with the questions teams ask most often." }
+          render NitroKit::Accordion.new(id: "gallery-help-center-faq", mode: :single) do |accordion|
+            questions.each_with_index do |question, index|
+              accordion.item(question.id, title: faq_question(question, index), expanded: index.zero?) do
+                render NitroKit::Typeset.new do
                   p { question.answer }
-                  small { "Category: #{question.category.to_s.humanize}" }
+                  p { small { "Category: #{question.category.to_s.humanize}" } }
                 end
               end
             end
           end
-          card.footer do
-            render NitroKit::Button.new(
-              "Ask another question",
-              href: entry_path(entry, state: "contact"),
-              id: "gallery-help-center-faq-contact"
-            )
+          render NitroKit::Toolbar.new do |toolbar|
+            toolbar.trailing do
+              render NitroKit::Button.new("Ask another question", href: entry_path(entry, state: "contact"), id: "gallery-help-center-faq-contact")
+            end
           end
         end
       end
@@ -114,7 +93,7 @@ module Gallery
       def render_search_results
         render NitroKit::DataSection.new(
           title: "Help results",
-          description: "Results reflect the current caller-owned query and category.",
+          description: "Articles matching the current keyword and category appear below.",
           id: "gallery-help-center-results-section"
         ) do |section|
           section.actions(
@@ -127,6 +106,7 @@ module Gallery
             section.empty_state NitroKit::EmptyState.new(
               title: "No help articles match this search",
               description: "Try another keyword or send the support team a detailed question.",
+              variant: :borderless,
               level: 3,
               id: "gallery-help-center-empty"
             ) do |empty|
@@ -174,8 +154,8 @@ module Gallery
         contact = help_contact(invalid:)
 
         render NitroKit::SettingsSection.new(
-          title: "Contact support",
-          description: "The application owns routing, attachments, service levels, delivery, and ticket persistence.",
+          title: "Send a support request",
+          description: "Share enough context for the support team to reproduce the issue. We usually reply within one business day.",
           id: "gallery-help-center-contact-section"
         ) do |section|
           if invalid
@@ -230,30 +210,19 @@ module Gallery
       end
 
       def render_contact_sent
-        render NitroKit::Card.new(id: "gallery-help-center-contact-sent-card") do |card|
-          card.title("Support request sent", level: 2)
-          card.body do
-            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              render NitroKit::Alert.new(variant: :success, id: "gallery-help-center-contact-sent") do |alert|
-                alert.icon NitroKit::Icon.new(:circle_check, id: "gallery-help-center-contact-sent-icon")
-                alert.title("Request SUP-2048 was created")
-                alert.description("A reply will be sent to ada@example.test within one business day.")
-              end
-              render NitroKit::DetailsTable.new(
-                support_request,
-                data: { gallery: "support-request-metadata" }
-              ) do |details|
-                details.fields(:category, :priority, :submitted)
-              end
-            end
+        render NitroKit::Flex.new(dir: :col, gap: 5, align: :stretch, id: "gallery-help-center-contact-sent-card") do
+          render NitroKit::Alert.new(variant: :success, live: :polite, id: "gallery-help-center-contact-sent") do |alert|
+            alert.icon NitroKit::Icon.new(:circle_check, id: "gallery-help-center-contact-sent-icon")
+            alert.title("Request SUP-2048 was created")
+            alert.description("A reply will be sent to ada@example.test within one business day.")
           end
-          card.footer do
-            render NitroKit::Button.new(
-              "Return to help center",
-              href: entry_path(entry, state: "faq"),
-              variant: :primary,
-              id: "gallery-help-center-contact-sent-return"
-            )
+          render NitroKit::DetailsTable.new(support_request, caption: "Support request summary", data: { gallery: "support-request-metadata" }) do |details|
+            details.fields(:category, :priority, :submitted)
+          end
+          render NitroKit::Toolbar.new do |toolbar|
+            toolbar.trailing do
+              render NitroKit::Button.new("Return to help center", href: entry_path(entry, state: "faq"), variant: :primary, id: "gallery-help-center-contact-sent-return")
+            end
           end
         end
       end
@@ -318,20 +287,19 @@ module Gallery
         "Help center"
       end
 
-      def composition_label = "Help and support"
       def section_title = "Help center, FAQ, and contact"
       def section_description = "FAQ, search, zero-result, support form, validation, outcome, long-content, and narrow states."
 
       def state_description
         {
-          "faq" => "Frequently asked questions use an accessible single-open disclosure collection.",
-          "search" => "A native GET form preserves a realistic help query and category in visible results.",
-          "empty" => "A valid zero-result query offers a direct support route without implying service failure.",
-          "contact" => "A real model-backed support form preserves labels, constraints, Rails names, and policy guidance.",
-          "contact-validation" => "Active Model errors connect invalid values to a durable status and native controls.",
-          "contact-sent" => "A deterministic outcome exposes ticket reference, category, priority, and response expectation.",
-          "long" => "Long workspace and FAQ copy pressure the same accepted composition without truncation.",
-          "mobile" => "A smaller FAQ set complements the narrow composition surface while retaining disclosure semantics."
+          "faq" => "Find practical answers for uploads, integrations, billing, and workspace security.",
+          "search" => "One data article matches “upload” in the current help collection.",
+          "empty" => "No billing article matches this search, but the support team can still help.",
+          "contact" => "Tell us what happened and where to send the reply.",
+          "contact-validation" => "A few details are missing or invalid. Your message has been preserved.",
+          "contact-sent" => "Your request is in the queue and a reply will arrive within one business day.",
+          "long" => "Find guidance for large research, production, reliability, and regulatory workspaces.",
+          "mobile" => "Search common questions and open complete answers from a narrow screen."
         }.fetch(state)
       end
     end

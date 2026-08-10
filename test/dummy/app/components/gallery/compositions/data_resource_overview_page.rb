@@ -14,7 +14,7 @@ module Gallery
       def render_search
         render NitroKit::SettingsSection.new(
           title: "Find data resources",
-          description: "Search terms and facets are ordinary caller-owned GET parameters.",
+          description: "Search by name, owner, or description, then narrow by status and kind.",
           id: "gallery-data-resource-overview-search"
         ) do |section|
           section.form do
@@ -26,8 +26,8 @@ module Gallery
               builder: NitroKit::FormBuilder,
               id: "gallery-data-resource-overview-search-form"
             ) do |form|
-              form.fieldset(legend: "Resource filters") do
-                form.group do
+              form.group do
+                render NitroKit::Grid.new(cols: "1 md:4", gap: 3, id: "gallery-data-resource-overview-filter-grid") do
                   form.field(
                     :query,
                     as: :search,
@@ -45,11 +45,10 @@ module Gallery
                     as: :select,
                     options: Gallery::Forms::ResourceSearch::KINDS.map { |kind| [ kind.humanize, kind ] }
                   )
-                end
-              end
-              render NitroKit::Toolbar.new(id: "gallery-data-resource-overview-search-toolbar") do |toolbar|
-                toolbar.trailing do
-                  form.submit("Filter resources", id: "gallery-data-resource-overview-search-submit")
+                  render NitroKit::Flex.new(dir: :row, gap: 2, align: :end, justify: :end, wrap: :wrap) do
+                    render NitroKit::Button.new("Clear", href: flow_path(state: "index"))
+                    form.submit("Filter resources", id: "gallery-data-resource-overview-search-submit")
+                  end
                 end
               end
             end
@@ -72,7 +71,7 @@ module Gallery
 
         render NitroKit::SettingsSection.new(
           title: "Bulk resource action",
-          description: "Selection and operation semantics belong to an application form object.",
+          description: "Select resources and review the operation before applying it.",
           id: "gallery-data-resource-overview-bulk"
         ) do |section|
           section.form do
@@ -83,46 +82,48 @@ module Gallery
               builder: NitroKit::FormBuilder,
               id: "gallery-data-resource-overview-bulk-form"
             ) do |form|
-              render NitroKit::CheckboxGroup.new(
-                id: "gallery-data-resource-overview-bulk-selection",
-                legend: "Resources to update",
-                description: "Read-only archives can be exported but cannot resume synchronization.",
-                name: "bulk_resources[resource_ids][]",
-                options: Gallery::ExpandedData.resources.map do |resource|
-                  NitroKit::Choice.new(
-                    label: "#{resource.name} — #{resource.owner}",
-                    value: resource.id,
-                    disabled: resource.status == :syncing
-                  )
-                end,
-                value: action.resource_ids,
-                disabled: !policy.bulk_resources?
-              )
-              form.field(
-                :action,
-                as: :select,
-                label: "Action",
-                options: [
-                  [ "Export records", "export" ],
-                  [ "Pause synchronization", "pause_sync" ],
-                  [ "Archive resources", "archive" ]
-                ],
-                required: true,
-                disabled: !policy.bulk_resources?
-              )
-              render NitroKit::Toolbar.new(id: "gallery-data-resource-overview-bulk-toolbar") do |toolbar|
-                toolbar.leading do
-                  render NitroKit::Button.new(
-                    "Cancel selection",
-                    href: flow_path(state: "index")
-                  )
-                end
-                toolbar.trailing do
-                  form.submit(
-                    "Review 2 selected resources",
-                    id: "gallery-data-resource-overview-bulk-submit",
-                    disabled: !policy.bulk_resources?
-                  )
+              form.group do
+                render NitroKit::CheckboxGroup.new(
+                  id: "gallery-data-resource-overview-bulk-selection",
+                  legend: "Resources to update",
+                  description: "Read-only archives can be exported but cannot resume synchronization.",
+                  name: "bulk_resources[resource_ids][]",
+                  options: Gallery::ExpandedData.resources.map do |resource|
+                    NitroKit::Choice.new(
+                      label: "#{resource.name} — #{resource.owner}",
+                      value: resource.id,
+                      disabled: resource.status == :syncing
+                    )
+                  end,
+                  value: action.resource_ids,
+                  disabled: !policy.bulk_resources?
+                )
+                form.field(
+                  :action,
+                  as: :select,
+                  label: "Action",
+                  options: [
+                    [ "Export records", "export" ],
+                    [ "Pause synchronization", "pause_sync" ],
+                    [ "Archive resources", "archive" ]
+                  ],
+                  required: true,
+                  disabled: !policy.bulk_resources?
+                )
+                render NitroKit::Toolbar.new(id: "gallery-data-resource-overview-bulk-toolbar") do |toolbar|
+                  toolbar.leading do
+                    render NitroKit::Button.new(
+                      "Cancel selection",
+                      href: flow_path(state: "index")
+                    )
+                  end
+                  toolbar.trailing do
+                    form.submit(
+                      "Review 2 selected resources",
+                      id: "gallery-data-resource-overview-bulk-submit",
+                      disabled: !policy.bulk_resources?
+                    )
+                  end
                 end
               end
             end
@@ -136,9 +137,11 @@ module Gallery
           description: results_description,
           id: "gallery-data-resource-overview-results"
         ) do |section|
-          section.actions(NitroKit::ButtonGroup.new(label: "Data resource actions")) do |actions|
-            actions.button("Bulk actions", href: flow_path(state: "bulk"))
-            actions.button("Create resource", href: "#create-resource", variant: :primary)
+          unless state == "error"
+            section.actions(NitroKit::ButtonGroup.new(label: "Data resource actions")) do |actions|
+              actions.button("Bulk actions", href: flow_path(state: "bulk")) unless resources.empty?
+              actions.button("Create resource", href: "#create-resource", variant: :primary)
+            end
           end
 
           if resources.empty?
@@ -160,7 +163,10 @@ module Gallery
               )
             end
           else
-            section.table(NitroKit::Table.new(id: "gallery-data-resource-overview-table")) do |table|
+            section.table(NitroKit::Table.new(
+              id: "gallery-data-resource-overview-table",
+              table_aria: { label: "Filtered organization data resources" }
+            )) do |table|
               populate_resource_table(table)
             end
           end
@@ -272,9 +278,9 @@ module Gallery
 
       def results_description
         return "The resource query failed before any records were returned." if state == "error"
-        return "No caller-owned records satisfy the current query and facets." if resources.empty?
+        return "No resources satisfy the current search and filters." if resources.empty?
 
-        "Searchable resources with caller-owned status, kind, owner, and record totals."
+        "Searchable resources with status, kind, owner, and record totals."
       end
 
       def policy
@@ -300,7 +306,7 @@ module Gallery
 
       def state_description
         {
-          "index" => "A searchable, paginated inventory of caller-owned organization resources.",
+          "index" => "A searchable, paginated inventory of organization resources.",
           "search" => "A resource query remains visible in the native GET form and result links.",
           "filtered" => "Status and kind facets narrow the resource collection programmatically.",
           "bulk" => "A policy-gated application form selects resources and an operation for review.",

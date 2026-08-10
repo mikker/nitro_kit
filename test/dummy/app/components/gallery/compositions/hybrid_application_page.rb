@@ -99,23 +99,24 @@ module Gallery
                 end
                 layout.content do
                   render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch) do
-                    render NitroKit::ProgressiveImage.new(
-                      attachment: demo_attachment,
-                      alt: "Abstract cover for Ada Lovelace's workspace profile",
-                      size: :sm,
-                      id: "gallery-hybrid-application-profile-image"
-                    )
+                    render NitroKit::Grid.new(cols: "1 md:2", gap: 4) do
+                      render NitroKit::ProgressiveImage.new(
+                        attachment: demo_attachment,
+                        alt: "Abstract cover for Ada Lovelace's workspace profile",
+                        size: :sm,
+                        id: "gallery-hybrid-application-profile-image"
+                      )
 
-                    render NitroKit::DetailsTable.new(
-                      PROFILE,
-                      id: "gallery-hybrid-application-profile-details"
-                    ) do |details|
-                      details.field(:name)
-                      details.field(:email)
-                      details.field(:role) do |role|
-                        render NitroKit::Badge.new(role.to_s.humanize, color: :success, size: :sm)
+                      render NitroKit::DetailsTable.new(
+                        PROFILE,
+                        label: "Account details",
+                        id: "gallery-hybrid-application-profile-details"
+                      ) do |details|
+                        details.field(:role) do |role|
+                          render NitroKit::Badge.new(role.to_s.humanize, color: :success, size: :sm)
+                        end
+                        details.fields(:joined_on, :last_seen)
                       end
-                      details.fields(:website, :joined_on, :last_seen)
                     end
 
                     render NitroKit::SettingsSection.new(
@@ -130,14 +131,12 @@ module Gallery
                           builder: NitroKit::FormBuilder,
                           id: "gallery-hybrid-application-profile-form"
                         ) do |form|
-                          form.fieldset(legend: "Profile details") do
-                            form.group do
-                              form.field(:name, label: "Name", value: PROFILE.name, required: true)
-                              form.field(:email, as: :email, label: "Email", value: PROFILE.email, required: true)
-                              form.field(:website, as: :url, label: "Website", value: PROFILE.website)
-                            end
+                          form.group do
+                            form.field(:name, label: "Name", value: PROFILE.name, required: true)
+                            form.field(:email, as: :email, label: "Email", value: PROFILE.email, required: true)
+                            form.field(:website, as: :url, label: "Website", value: PROFILE.website)
+                            form.submit("Save profile", id: "gallery-hybrid-application-profile-submit")
                           end
-                          form.submit("Save profile", id: "gallery-hybrid-application-profile-submit")
                         end
                       end
                     end
@@ -199,6 +198,7 @@ module Gallery
 
               render NitroKit::DetailsTable.new(
                 MISSING_PROFILE,
+                label: "Invitation details",
                 id: "gallery-hybrid-application-missing-details"
               ) do |details|
                 details.fields(:name, :email, :role, :website, :joined_on, :last_seen)
@@ -252,7 +252,7 @@ module Gallery
             render_application_main(size: :lg) do
               render NitroKit::PageHeader.new(
                 title: "Request production access",
-                description: "The request could not be submitted because its owner and justification are incomplete.",
+                description: "Review the incomplete request and ask a workspace owner to restore submission access.",
                 id: "gallery-hybrid-application-error-header"
               )
 
@@ -270,13 +270,6 @@ module Gallery
                 description: "Restricted fields remain visible so the failed request can be understood.",
                 id: "gallery-hybrid-application-access-section"
               ) do |section|
-                section.status NitroKit::Alert.new(
-                  variant: :warning,
-                  id: "gallery-hybrid-application-access-policy"
-                ) do |alert|
-                  alert.title("Submission is temporarily unavailable")
-                  alert.description("A workspace owner must restore your access before this form can be retried.")
-                end
                 section.form do
                   form_with(
                     scope: :access_request,

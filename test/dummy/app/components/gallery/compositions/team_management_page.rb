@@ -8,7 +8,7 @@ module Gallery
       private
 
       def page_template
-        render_composition_header(eyebrow: "Team operations")
+        render_composition_header
 
         render Section.new(
           slug: "team-management-screen",
@@ -17,7 +17,7 @@ module Gallery
         ) do
           render_example(
             slug: "team-management-#{state}",
-            title: state.to_s.humanize,
+            title: humanize_state(state),
             description: state_description,
             mode: :full_width
           ) do
@@ -79,7 +79,7 @@ module Gallery
       def render_member_section(members)
         render NitroKit::DataSection.new(
           title: state == "dense" ? "Large team inventory" : member_section_title,
-          description: "Current memberships, roles, join dates, and account actions.",
+          description: "#{members.length} current #{'membership'.pluralize(members.length)} with roles, join dates, and account actions.",
           id: "gallery-team-members-section"
         ) do |section|
           section.table NitroKit::Table.new(
@@ -238,7 +238,7 @@ module Gallery
         ) do
           render NitroKit::SettingsSection.new(
             title: "Search the team",
-            description: "The GET query replaces this stable team-management frame.",
+            description: "Find current members and pending invitations by name or email address.",
             id: "gallery-team-search-section"
           ) do |section|
             section.form do
@@ -361,8 +361,8 @@ module Gallery
         disabled = state == "loading"
 
         render NitroKit::SettingsSection.new(
-          title: "Invitation details",
-          description: "The application owns the invitation model, role policy, route, and Turbo frame.",
+          title: "Invite a teammate",
+          description: "Choose the access they need and add an optional note to the invitation email.",
           id: "gallery-team-invitation-section"
         ) do |section|
           if state == "invite-validation"
@@ -425,8 +425,8 @@ module Gallery
         )
 
         render NitroKit::SettingsSection.new(
-          title: "Role assignment",
-          description: "The submitted member ID and allowed roles remain application policy.",
+          title: "Change member role",
+          description: "Choose the access this member should have across the selected workspace.",
           id: "gallery-team-role-section"
         ) do |section|
           section.status NitroKit::Alert.new(id: "gallery-team-role-context") do |alert|

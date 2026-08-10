@@ -6,20 +6,26 @@ module Gallery
       private
 
       def render_scenario
-        render NitroKit::AuthShell.new(id: "gallery-account-security-shell") do
+        render NitroKit::AuthShell.new(
+          id: "gallery-account-security-shell",
+          aria: {
+            label: "Nitro account security",
+            busy: state == "loading" ? "true" : nil
+          }.compact
+        ) do
           render_header
 
           case state
           when "recovery-request", "recovery-validation", "loading" then render_recovery_request
-          when "recovery-sent" then render_message("Recovery email sent", "Use the link sent to ada@example.test within 30 minutes.", :mail_check, "Return to sign in")
+          when "recovery-sent" then render_message("Recovery email sent", "Use the link sent to ada@example.test within 30 minutes.", :mail_check, "Return to sign in", href: "#sign-in")
           when "reset" then render_password_reset
-          when "reset-expired" then render_message("Recovery link expired", "Request a new link. No password or session changed.", :clock_alert, "Request another link")
+          when "reset-expired" then render_message("Recovery link expired", "Request a new link. No password or session changed.", :clock_alert, "Request another link", href: entry_path(entry, state: "recovery-request"))
           when "account-locked" then render_locked
-          when "unlock-sent" then render_message("Unlock instructions sent", "The unlock link was sent without revealing whether other sessions remain active.", :mail_check, "Return to sign in")
+          when "unlock-sent" then render_message("Unlock instructions sent", "The unlock link was sent without revealing whether other sessions remain active.", :mail_check, "Return to sign in", href: "#sign-in")
           when "two-factor-challenge", "two-factor-invalid" then render_two_factor
           when "recovery-code", "recovery-code-invalid" then render_recovery_code
           when "trusted-device" then render_trusted_device
-          when "success" then render_message("Identity verified", "The account is unlocked and the current browser session is active.", :circle_check, "Continue to workspace")
+          when "success" then render_message("Identity verified", "The account is unlocked and the current browser session is active.", :circle_check, "Continue to workspace", href: "#workspace")
           when "long" then render_long
           when "mobile" then render_mobile
           end
@@ -28,13 +34,13 @@ module Gallery
 
       def render_header
         render NitroKit::PageHeader.new(
-          title: security_title,
-          eyebrow: "Account security",
+          title: "Secure your account",
           description: security_description,
+          level: 4,
           id: "gallery-account-security-header"
         ) do |header|
           header.actions NitroKit::ButtonGroup.new(label: "Security help", id: "gallery-account-security-help") do |actions|
-            actions.button("Get help", href: "#security-help")
+            actions.button("Get help", href: "mailto:support@example.test")
           end
         end
       end
@@ -45,7 +51,8 @@ module Gallery
 
         render NitroKit::SettingsSection.new(
           title: "Send recovery link",
-          description: "The application owns rate limits, account discovery protection, tokens, delivery, and expiry.",
+          description: "Enter your account email. The response stays the same whether or not an account exists.",
+          level: 5,
           id: "gallery-account-security-recovery-section"
         ) do |section|
           if invalid
@@ -87,7 +94,8 @@ module Gallery
       def render_password_reset
         render NitroKit::SettingsSection.new(
           title: "Choose a new password",
-          description: "Token validation, password rules, session revocation, and audit events remain application responsibilities.",
+          description: "Use 12 or more characters you do not use elsewhere.",
+          level: 5,
           id: "gallery-account-security-reset-section"
         ) do |section|
           section.status NitroKit::Alert.new(variant: :warning, id: "gallery-account-security-reset-warning") do |alert|
@@ -98,9 +106,9 @@ module Gallery
             form_with(url: "#password-reset", scope: :password_reset, builder: NitroKit::FormBuilder, id: "gallery-account-security-reset-form") do |form|
               form.hidden_field(:token, value: "reset_4F8M")
               form.group do
-                form.field(:password, as: :password, label: "New password", autocomplete: "new-password", required: true)
-                form.field(:password_confirmation, as: :password, label: "Confirm new password", autocomplete: "new-password", required: true)
-                form.submit("Reset password and revoke sessions", id: "gallery-account-security-reset-submit")
+                form.field(:password, as: :password, label: "New password", autocomplete: "new-password", value: nil, required: true)
+                form.field(:password_confirmation, as: :password, label: "Confirm new password", autocomplete: "new-password", value: nil, required: true)
+                form.submit("Reset password", id: "gallery-account-security-reset-submit")
               end
             end
           end
@@ -109,12 +117,11 @@ module Gallery
 
       def render_locked
         render NitroKit::Card.new(id: "gallery-account-security-locked-card") do |card|
-          card.title("Account temporarily locked")
+          card.title("Account temporarily locked", level: 5)
           card.body do
             render NitroKit::Alert.new(variant: :error, id: "gallery-account-security-locked-alert") do |alert|
               alert.icon NitroKit::Icon.new(:lock_keyhole)
-              alert.title("Too many unsuccessful sign-in attempts")
-              alert.description("Wait 15 minutes or request a signed unlock link. Existing sessions were not disclosed.")
+              alert.description("Too many sign-in attempts were rejected. Wait 15 minutes or request a signed unlock link.")
             end
           end
           card.footer do
@@ -131,7 +138,8 @@ module Gallery
 
         render NitroKit::SettingsSection.new(
           title: "Enter authentication code",
-          description: "Challenge generation, replay protection, attempt limits, and device trust remain application policy.",
+          description: "Enter the current six-digit code from your authenticator app.",
+          level: 5,
           id: "gallery-account-security-two-factor-section"
         ) do |section|
           if invalid
@@ -151,6 +159,8 @@ module Gallery
                   autocomplete: "one-time-code",
                   inputmode: "numeric",
                   pattern: "[0-9]{6}",
+                  minlength: 6,
+                  maxlength: 6,
                   required: true
                 )
                 form.submit("Verify identity", id: "gallery-account-security-two-factor-submit")
@@ -165,7 +175,8 @@ module Gallery
 
         render NitroKit::SettingsSection.new(
           title: "Use a recovery code",
-          description: "Recovery codes are single-use secrets. Consumption and replacement remain server-owned.",
+          description: "Enter one saved single-use code. A successful code cannot be used again.",
+          level: 5,
           id: "gallery-account-security-code-section"
         ) do |section|
           if invalid
@@ -195,7 +206,8 @@ module Gallery
       def render_trusted_device
         render NitroKit::SettingsSection.new(
           title: "Trust this browser",
-          description: "The application decides trust duration, cookie protection, revocation, and risk thresholds.",
+          description: "Skip authentication codes on this browser for the next 30 days.",
+          level: 5,
           id: "gallery-account-security-trust-section"
         ) do |section|
           section.status NitroKit::Alert.new(variant: :warning, id: "gallery-account-security-trust-warning") do |alert|
@@ -213,16 +225,21 @@ module Gallery
         end
       end
 
-      def render_message(title, description, icon, action)
-        render NitroKit::EmptyState.new(title:, description:, id: "gallery-account-security-message") do |empty|
+      def render_message(title, description, icon, action, href:)
+        render NitroKit::EmptyState.new(
+          title:,
+          description:,
+          level: 5,
+          id: "gallery-account-security-message"
+        ) do |empty|
           empty.icon NitroKit::Icon.new(icon)
-          empty.action NitroKit::Button.new(action, href: "#sign-in", variant: :primary, id: "gallery-account-security-message-action")
+          empty.action NitroKit::Button.new(action, href:, variant: :primary, id: "gallery-account-security-message-action")
         end
       end
 
       def render_long
         render NitroKit::Card.new(id: "gallery-account-security-long-card") do |card|
-          card.title("Recover International Research, Production, Reliability, and Regulatory Archive administrator access")
+          card.title("Recover International Research, Production, Reliability, and Regulatory Archive administrator access", level: 5)
           card.body do
             p do
               "The recovery request was initiated for ada.lovelace+international-research-production-reliability@example.test " \
@@ -230,14 +247,14 @@ module Gallery
             end
           end
           card.footer do
-            render NitroKit::Button.new("Continue with account-safe recovery", href: entry_path(entry, state: "recovery-request"), variant: :primary)
+            render NitroKit::Button.new("Continue recovery", href: entry_path(entry, state: "recovery-request"), variant: :primary)
           end
         end
       end
 
       def render_mobile
         render NitroKit::Card.new(id: "gallery-account-security-mobile-card") do |card|
-          card.title("Verify identity")
+          card.title("Verify identity", level: 5)
           card.body { "Use an authentication code or one saved recovery code on this narrow screen." }
           card.footer do
             render NitroKit::ButtonGroup.new(label: "Verification options") do |actions|
@@ -246,27 +263,6 @@ module Gallery
             end
           end
         end
-      end
-
-      def security_title
-        {
-          "recovery-request" => "Recover account",
-          "recovery-validation" => "Correct recovery request",
-          "recovery-sent" => "Check your email",
-          "reset" => "Reset password",
-          "reset-expired" => "Recovery link expired",
-          "account-locked" => "Account locked",
-          "unlock-sent" => "Unlock instructions sent",
-          "two-factor-challenge" => "Two-factor authentication",
-          "two-factor-invalid" => "Authentication code rejected",
-          "recovery-code" => "Use recovery code",
-          "recovery-code-invalid" => "Recovery code rejected",
-          "trusted-device" => "Device trust",
-          "loading" => "Requesting recovery",
-          "success" => "Identity verified",
-          "long" => "Recover administrator access",
-          "mobile" => "Verify identity"
-        }.fetch(state)
       end
 
       def security_description
@@ -290,10 +286,8 @@ module Gallery
         }.fetch(state)
       end
 
-      def composition_label = "Recovery and authentication"
       def section_title = "Account recovery, locks, and two-factor authentication"
       def section_description = "Discovery-safe recovery, token expiry, account locks, authenticators, recovery codes, trusted devices, and pressure states."
-      def state_description = security_description
     end
   end
 end

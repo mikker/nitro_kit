@@ -37,24 +37,26 @@ module Gallery
       def render_header
         render NitroKit::PageHeader.new(
           title: onboarding_title,
-          eyebrow: "Branched onboarding",
           description: onboarding_description,
+          level: 4,
           id: "gallery-onboarding-branches-header"
         ) do |header|
-          header.actions NitroKit::ButtonGroup.new(label: "Onboarding session", id: "gallery-onboarding-branches-session") do |actions|
-            actions.button("Save and exit", href: entry_path(entry, state: "resume"), disabled: state == "saving")
+          unless %w[choose-path complete mobile].include?(state)
+            header.actions NitroKit::ButtonGroup.new(label: "Onboarding session", id: "gallery-onboarding-branches-session") do |actions|
+              actions.button("Save and exit", href: entry_path(entry, state: "resume"), disabled: state == "saving")
+            end
           end
         end
       end
 
       def render_branch_context
-        render NitroKit::Toolbar.new(id: "gallery-onboarding-branches-context") do |toolbar|
-          toolbar.leading do
-            render NitroKit::Badge.new(branch_label, color: branch_color, size: :sm)
-          end
-          toolbar.trailing do
-            small { onboarding_position }
-          end
+        render NitroKit::Flex.new(dir: :row, gap: 2, align: :center) do
+          render NitroKit::Badge.new(
+            branch_label,
+            id: "gallery-onboarding-branches-context",
+            color: branch_color,
+            size: :sm
+          )
         end
       end
 
@@ -68,7 +70,7 @@ module Gallery
 
       def render_path_card(title, description, destination, icon)
         render NitroKit::Card.new(id: "gallery-onboarding-path-#{destination}") do |card|
-          card.title(title)
+          card.title(title, level: 5)
           card.body do
             render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Icon.new(icon)
@@ -79,7 +81,6 @@ module Gallery
             render NitroKit::Button.new(
               "Choose #{title.downcase}",
               href: entry_path(entry, state: destination),
-              variant: destination == "company" ? :primary : :default,
               id: "gallery-onboarding-path-#{destination}-action"
             )
           end
@@ -88,8 +89,9 @@ module Gallery
 
       def render_company_form(invalid: false, disabled: false)
         render NitroKit::SettingsSection.new(
-          title: "Company workspace",
-          description: "The application owns workspace availability, organization policy, persistence, and resume tokens.",
+          title: "Company details",
+          description: "Choose the shared identity, expected size, and primary data region for this workspace.",
+          level: 5,
           id: "gallery-onboarding-company-section"
         ) do |section|
           if invalid
@@ -148,8 +150,9 @@ module Gallery
 
       def render_solo_form
         render NitroKit::SettingsSection.new(
-          title: "Personal workspace",
-          description: "A solo branch omits team policy without inventing placeholder organization fields.",
+          title: "Personal details",
+          description: "Start with only the workspace identity and primary use you need today.",
+          level: 5,
           id: "gallery-onboarding-solo-section"
         ) do |section|
           section.form do
@@ -166,8 +169,9 @@ module Gallery
 
       def render_import_form
         render NitroKit::SettingsSection.new(
-          title: "Import workspace configuration",
-          description: "File parsing, size limits, signatures, validation, and imported policy remain application code.",
+          title: "Import configuration",
+          description: "Upload an export from a workspace you trust. You can review every imported setting before creation.",
+          level: 5,
           id: "gallery-onboarding-import-section"
         ) do |section|
           section.status NitroKit::Alert.new(variant: :warning, id: "gallery-onboarding-import-warning") do |alert|
@@ -177,7 +181,14 @@ module Gallery
           section.form do
             form_with(url: "#onboarding-import", scope: :workspace_import, builder: NitroKit::FormBuilder, id: "gallery-onboarding-import-form") do |form|
               form.group do
-                form.field(:archive, as: :file, label: "Workspace export", accept: ".json,.zip", required: true)
+                form.dropzone(
+                  :archive,
+                  label: "Workspace export",
+                  description: "Choose a JSON or ZIP export.",
+                  direct_upload: false,
+                  accept: ".json,.zip",
+                  required: true
+                )
                 form.field(:confirm, as: :checkbox, label: "I reviewed the source workspace before export", required: true)
                 form.submit("Validate import", id: "gallery-onboarding-import-submit")
               end
@@ -189,7 +200,8 @@ module Gallery
       def render_invitation_form
         render NitroKit::SettingsSection.new(
           title: "Invite teammates",
-          description: "Invitation limits, roles, email delivery, and authorization remain server-owned.",
+          description: "Add teammates now or skip this step and invite them after the workspace is ready.",
+          level: 5,
           id: "gallery-onboarding-invite-section"
         ) do |section|
           section.form do
@@ -206,46 +218,48 @@ module Gallery
 
       def render_skipped(title, description, destination)
         render NitroKit::Card.new(id: "gallery-onboarding-skipped-card") do |card|
-          card.title(title)
           card.body do
-            render NitroKit::Alert.new(id: "gallery-onboarding-skipped-alert") do |alert|
-              alert.title(title)
-              alert.description(description)
-            end
-          end
-          card.footer do
-            render NitroKit::ButtonGroup.new(label: "Skipped step actions") do |actions|
-              actions.button("Continue", href: entry_path(entry, state: destination), variant: :primary)
-              actions.button("Go back", href: entry_path(entry, state: state == "skip-team" ? "invite-team" : "integration"))
+            render NitroKit::EmptyState.new(
+              title:,
+              description:,
+              variant: :borderless,
+              level: 5,
+              id: "gallery-onboarding-skipped-state"
+            ) do |empty|
+              empty.icon NitroKit::Icon.new(:circle_check)
+              empty.action NitroKit::Button.new("Continue", href: entry_path(entry, state: destination), variant: :primary)
+              empty.action NitroKit::Button.new("Go back", href: entry_path(entry, state: state == "skip-team" ? "invite-team" : "integration"))
             end
           end
         end
       end
 
       def render_integration_choice
-        render NitroKit::DataSection.new(
+        render NitroKit::SettingsSection.new(
           title: "Delivery integrations",
-          description: "Choose integrations to configure after workspace creation, or continue without one.",
+          description: "Choose any integrations to configure after workspace creation, or continue without one.",
+          level: 5,
           id: "gallery-onboarding-integrations-section"
         ) do |section|
-          section.actions NitroKit::ButtonGroup.new(label: "Integration actions") do |actions|
-            actions.button("Skip integrations", href: entry_path(entry, state: "skip-integration"))
-          end
-          section.table NitroKit::Table.new(id: "gallery-onboarding-integrations-table") do |table|
-            table.caption("Available integration setup")
-            table.thead do
-              table.tr do
-                table.th("Integration")
-                table.th("Purpose")
-                table.th("Next step", align: :right)
-              end
-            end
-            table.tbody do
-              [ [ "GitHub", "Deployment and pull request activity" ], [ "Slack", "Incident and release notifications" ], [ "Webhook", "Application-owned delivery endpoint" ] ].each do |name, purpose|
-                table.tr do
-                  table.th(name, scope: :row)
-                  table.td(purpose)
-                  table.td("Configure after creation", align: :right)
+          section.form do
+            form_with(url: "#onboarding-integrations", scope: :integrations, builder: NitroKit::FormBuilder, id: "gallery-onboarding-integrations-form") do |form|
+              form.group do
+                render NitroKit::CheckboxGroup.new(
+                  legend: "Integrations to configure",
+                  description: "Credentials are added only after the workspace exists.",
+                  options: [
+                    { label: "GitHub", value: "github", description: "Repositories and deployments" },
+                    { label: "Slack", value: "slack", description: "Incidents and release notifications" },
+                    { label: "Webhook", value: "webhook", description: "An application-owned delivery endpoint" }
+                  ],
+                  name: "integrations[services]",
+                  value: [ "github" ],
+                  id: "gallery-onboarding-integrations-choices",
+                  presentation: :cards
+                )
+                render NitroKit::Flex.new(dir: :row, gap: 2, align: :center, wrap: :wrap) do
+                  form.submit("Continue to review", id: "gallery-onboarding-integrations-submit")
+                  render NitroKit::Button.new("Skip integrations", href: entry_path(entry, state: "skip-integration"))
                 end
               end
             end
@@ -257,8 +271,9 @@ module Gallery
         record = review_record(branch)
 
         render NitroKit::DataSection.new(
-          title: branch == :company ? "Review company workspace" : "Review personal workspace",
-          description: "The review is an application-owned summary; Nitro owns only section and table ordering.",
+          title: "Workspace summary",
+          description: "Confirm these choices before the workspace is created.",
+          level: 5,
           id: "gallery-onboarding-review-section"
         ) do |section|
           section.actions NitroKit::ButtonGroup.new(label: "Review actions") do |actions|
@@ -267,7 +282,7 @@ module Gallery
           end
           section.table NitroKit::DetailsTable.new(
             record,
-            caption: "Onboarding choices",
+            label: "Onboarding choices",
             id: "gallery-onboarding-review-table"
           ) do |details|
             details.fields(*record.class.members)
@@ -291,20 +306,26 @@ module Gallery
       end
 
       def render_complete
-        render NitroKit::EmptyState.new(
-          title: "Workspace ready",
-          description: "Analytical Engines was created. Invitations and integration setup continue independently.",
-          id: "gallery-onboarding-complete"
-        ) do |empty|
-          empty.icon NitroKit::Icon.new(:circle_check)
-          empty.action NitroKit::Button.new("Open workspace", href: "#workspace", variant: :primary, id: "gallery-onboarding-complete-action")
-          empty.action NitroKit::Button.new("Configure integrations", href: "#integrations")
+        render NitroKit::Card.new(id: "gallery-onboarding-complete-card") do |card|
+          card.body do
+            render NitroKit::EmptyState.new(
+              title: "Workspace ready",
+              description: "Analytical Engines was created. Invitations and integration setup continue independently.",
+              variant: :borderless,
+              level: 5,
+              id: "gallery-onboarding-complete"
+            ) do |empty|
+              empty.icon NitroKit::Icon.new(:circle_check)
+              empty.action NitroKit::Button.new("Open workspace", href: "#workspace", variant: :primary, id: "gallery-onboarding-complete-action")
+              empty.action NitroKit::Button.new("Configure integrations", href: "#integrations")
+            end
+          end
         end
       end
 
       def render_resume
         render NitroKit::Card.new(id: "gallery-onboarding-resume-card") do |card|
-          card.title("Resume saved onboarding")
+          card.title("Resume saved onboarding", level: 5)
           card.body do
             p { "Company branch · workspace details saved · team invitations not completed · saved July 13 at 10:48 UTC" }
           end
@@ -319,22 +340,26 @@ module Gallery
 
       def render_long
         render NitroKit::Card.new(id: "gallery-onboarding-long-card") do |card|
-          card.title("International Research, Production, Reliability, Regulatory Archive, and Customer Incident Coordination")
+          card.title("International Research, Production, Reliability, Regulatory Archive, and Customer Incident Coordination", level: 5)
           card.body do
             p { "118 expected members · European Union residency · 27 production environments · GitHub, Slack, and custom webhook setup deferred until administrator verification." }
           end
           card.footer do
-            render NitroKit::Button.new("Continue reviewing this company workspace", href: entry_path(entry, state: "review-company"), variant: :primary)
+            render NitroKit::Button.new("Continue review", href: entry_path(entry, state: "review-company"), variant: :primary)
           end
         end
       end
 
       def render_mobile
         render NitroKit::Card.new(id: "gallery-onboarding-mobile-card") do |card|
-          card.title("Choose setup path")
-          card.body { "Company, personal, and import branches remain separate on a narrow surface." }
-          card.footer do
-            render NitroKit::Button.new("Choose company workspace", href: entry_path(entry, state: "company"), variant: :primary, id: "gallery-onboarding-mobile-action")
+          card.title("Workspace type", level: 5)
+          card.body do
+            render NitroKit::Flex.new(dir: :col, gap: 3, align: :stretch) do
+              p { "Company, personal, and import setup stay separate on a narrow screen." }
+              render NitroKit::Button.new("Company workspace", href: entry_path(entry, state: "company"), id: "gallery-onboarding-mobile-action")
+              render NitroKit::Button.new("Personal workspace", href: entry_path(entry, state: "solo"))
+              render NitroKit::Button.new("Import configuration", href: entry_path(entry, state: "import"))
+            end
           end
         end
       end
@@ -351,28 +376,26 @@ module Gallery
         { "Personal branch" => :info, "Import branch" => :warning, "Choose branch" => :neutral }.fetch(branch_label, :success)
       end
 
-      def onboarding_position
+      def onboarding_title
         {
-          "choose-path" => "Path selection",
-          "company" => "Company details",
-          "solo" => "Personal details",
-          "import" => "Import validation",
-          "invite-team" => "Optional team step",
-          "skip-team" => "Team decision",
-          "integration" => "Optional integration step",
-          "skip-integration" => "Integration decision",
-          "review-company" => "Company review",
-          "review-solo" => "Personal review",
-          "validation" => "Company validation",
-          "saving" => "Saving company workspace",
-          "complete" => "Complete",
-          "resume" => "Saved session",
-          "long" => "Long company review",
-          "mobile" => "Narrow path selection"
+          "choose-path" => "Choose a setup path",
+          "company" => "Set up a company workspace",
+          "solo" => "Set up a personal workspace",
+          "import" => "Import a workspace configuration",
+          "invite-team" => "Build your team",
+          "skip-team" => "Continue without invitations",
+          "integration" => "Connect your tools",
+          "skip-integration" => "Continue without integrations",
+          "review-company" => "Review company workspace",
+          "review-solo" => "Review personal workspace",
+          "validation" => "Correct company details",
+          "saving" => "Creating company workspace",
+          "complete" => "Setup complete",
+          "resume" => "Resume workspace setup",
+          "long" => "Review company workspace",
+          "mobile" => "Choose a setup path"
         }.fetch(state)
       end
-
-      def onboarding_title = onboarding_position
 
       def onboarding_description
         {
@@ -395,10 +418,8 @@ module Gallery
         }.fetch(state)
       end
 
-      def composition_label = "Branched onboarding"
       def section_title = "Company, personal, and import onboarding branches"
       def section_description = "Branch choice, distinct forms, optional skips, review paths, resume state, validation, saving, and completion."
-      def state_description = onboarding_description
     end
   end
 end

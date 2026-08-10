@@ -4,7 +4,7 @@ module Gallery
       private
 
       def page_template
-        render_composition_header(eyebrow: composition_label)
+        render_composition_header
 
         render Section.new(
           slug: "#{entry.slug}-screen",
@@ -13,8 +13,7 @@ module Gallery
         ) do
           render_example(
             slug: "#{entry.slug}-#{state}",
-            title: state.to_s.humanize,
-            description: state_description,
+            title: "Complete screen",
             mode: :full_width,
             code: SourceCode.from_method(self.class.instance_method(:render_scenario))
           ) do
@@ -42,19 +41,11 @@ module Gallery
         %w[loading processing saving retrying].include?(state)
       end
 
-      def composition_label
-        raise NotImplementedError
-      end
-
       def section_title
         raise NotImplementedError
       end
 
       def section_description
-        raise NotImplementedError
-      end
-
-      def state_description
         raise NotImplementedError
       end
 

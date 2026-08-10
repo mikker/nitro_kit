@@ -29,7 +29,6 @@ module Gallery
       def render_header
         render NitroKit::PageHeader.new(
           title: webhook_title,
-          eyebrow: "API operations",
           description: webhook_description,
           id: "gallery-api-webhooks-header"
         ) do |header|
@@ -42,7 +41,7 @@ module Gallery
 
       def render_list(rows)
         render NitroKit::DataSection.new(
-          title: "Webhook endpoints",
+          title: "Configured endpoints",
           description: "Applications own endpoint authorization, event policy, secret storage, retry queues, and delivery persistence.",
           id: "gallery-api-webhooks-list-section"
         ) do |section|
@@ -64,8 +63,10 @@ module Gallery
               rows.each do |row|
                 table.tr do
                   table.th(scope: :row) do
-                    strong { row.fetch(:name) }
-                    small { row.fetch(:url) }
+                    render NitroKit::Flex.new(dir: :col, gap: 1, align: :start) do
+                      strong { row.fetch(:name) }
+                      small { row.fetch(:url) }
+                    end
                   end
                   table.td(row.fetch(:events))
                   table.td(row.fetch(:last_delivery))
@@ -243,43 +244,40 @@ module Gallery
       end
 
       def render_disabled
-        render NitroKit::Card.new(id: "gallery-api-webhooks-disabled-card") do |card|
-          card.title("Production events is disabled")
-          card.body do
-            render NitroKit::Alert.new(variant: :warning, id: "gallery-api-webhooks-disabled-alert") do |alert|
-              alert.title("No new deliveries will be queued")
-              alert.description("Existing delivery records and signing-secret rotation history remain available.")
-            end
-          end
-          card.footer do
-            render NitroKit::Button.new("Enable endpoint", href: "#enable", variant: :primary, id: "gallery-api-webhooks-enable")
-          end
+        render NitroKit::Alert.new(variant: :warning, id: "gallery-api-webhooks-disabled-alert") do |alert|
+          alert.icon NitroKit::Icon.new(:webhook)
+          alert.title("Production events is disabled")
+          alert.description("No new deliveries will be queued. Existing delivery records and signing-secret rotation history remain available.")
+        end
+        render NitroKit::ButtonGroup.new(label: "Endpoint availability") do |actions|
+          actions.button("Review delivery history", href: entry_path(entry, state: "detail"))
+          actions.button("Enable endpoint", href: "#enable", variant: :primary, id: "gallery-api-webhooks-enable")
         end
       end
 
       def render_signing_secret
-        render NitroKit::Card.new(id: "gallery-api-webhooks-secret-card") do |card|
-          card.title("Signing secret rotated")
-          card.body do
-            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              render NitroKit::Alert.new(variant: :warning, id: "gallery-api-webhooks-secret-warning") do |alert|
-                alert.title("Copy this secret now")
-                alert.description("The application displays the full value once and owns encrypted storage and rotation overlap.")
-              end
-              render NitroKit::Field.new(
-                nil,
-                :secret,
-                id: "gallery-api-webhooks-secret",
-                name: "webhook[secret]",
-                label: "New signing secret",
-                value: "whsec_7P3F9J2M4Q8R",
-                readonly: true,
-                autocomplete: "off"
-              )
-            end
-          end
-          card.footer do
-            render NitroKit::Button.new("Copy signing secret", id: "gallery-api-webhooks-copy-secret", data: { secret: "whsec_7P3F9J2M4Q8R" })
+        render NitroKit::Alert.new(variant: :warning, id: "gallery-api-webhooks-secret-warning") do |alert|
+          alert.icon NitroKit::Icon.new(:key_round)
+          alert.title("Copy this secret now")
+          alert.description("The application displays the full value once and owns encrypted storage and rotation overlap.")
+        end
+        render NitroKit::Flex.new(dir: :col, gap: 2, align: :stretch, id: "gallery-api-webhooks-secret-card") do
+          render NitroKit::Label.new("New signing secret", for: "gallery-api-webhooks-secret")
+          render NitroKit::ControlGroup.new(label: "New signing secret") do
+            render NitroKit::Input.new(
+              id: "gallery-api-webhooks-secret",
+              name: "webhook[secret]",
+              value: "whsec_7P3F9J2M4Q8R",
+              readonly: true,
+              autocomplete: "off",
+              aria: { label: "New signing secret" }
+            )
+            render NitroKit::Button.new(
+              "Copy",
+              id: "gallery-api-webhooks-copy-secret",
+              icon: :copy,
+              data: { secret: "whsec_7P3F9J2M4Q8R" }
+            )
           end
         end
       end
@@ -295,7 +293,7 @@ module Gallery
             end
           end
           card.footer do
-            render NitroKit::Button.new("Open complete endpoint and delivery history", href: entry_path(entry, state: "detail"), variant: :primary)
+            render NitroKit::Button.new("View endpoint history", href: entry_path(entry, state: "detail"), variant: :primary)
           end
         end
       end
@@ -305,7 +303,9 @@ module Gallery
           card.title("Production events")
           card.body do
             render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              render NitroKit::Badge.new("Failing", color: :danger)
+              render NitroKit::Flex.new(dir: :row, gap: 2, align: :center) do
+                render NitroKit::Badge.new("Failing", color: :danger)
+              end
               p { "https://api.example.test/hooks/nitro" }
               p { "Last response: HTTP 500 · attempt 3 scheduled" }
             end
@@ -373,10 +373,8 @@ module Gallery
         }.fetch(state)
       end
 
-      def composition_label = "API webhook operations"
       def section_title = "Webhook endpoints and delivery lifecycle"
       def section_description = "Endpoint inventory, creation, details, signing secrets, successful and failed attempts, retries, disabled state, and pressure cases."
-      def state_description = webhook_description
     end
   end
 end

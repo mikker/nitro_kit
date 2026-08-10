@@ -15,7 +15,7 @@ module Gallery
 
         render NitroKit::SettingsSection.new(
           title: "Filter team activity",
-          description: "Search terms and outcome filters remain caller-owned query state.",
+          description: "Find access, invitation, session, and policy events by member, action, or outcome.",
           id: "gallery-team-activity-filters"
         ) do |section|
           section.form do
@@ -27,8 +27,8 @@ module Gallery
               builder: NitroKit::FormBuilder,
               id: "gallery-team-activity-filter-form"
             ) do |form|
-              form.fieldset(legend: "Activity filters") do
-                form.group do
+              form.group do
+                render NitroKit::Grid.new(cols: "1 md:3", gap: 3, id: "gallery-team-activity-filter-grid") do
                   form.field(
                     :query,
                     as: :search,
@@ -40,11 +40,10 @@ module Gallery
                     as: :select,
                     options: Gallery::Forms::ActivityFilter::OUTCOMES.map { |outcome| [ outcome.humanize, outcome ] }
                   )
-                end
-              end
-              render NitroKit::Toolbar.new(id: "gallery-team-activity-filter-toolbar") do |toolbar|
-                toolbar.trailing do
-                  form.submit("Filter activity", id: "gallery-team-activity-filter-submit")
+                  render NitroKit::Flex.new(dir: :row, gap: 2, align: :end, justify: :end, wrap: :wrap) do
+                    render NitroKit::Button.new("Clear", href: flow_path(state: "recent"))
+                    form.submit("Filter activity", id: "gallery-team-activity-filter-submit")
+                  end
                 end
               end
             end
@@ -62,11 +61,11 @@ module Gallery
       def render_activity
         render NitroKit::DataSection.new(
           title: "Organization team activity",
-          description: "Access, invitation, session, and policy events in newest-first order.",
+          description: "Access, invitation, session, and policy events, newest first.",
           id: "gallery-team-activity-results"
         ) do |section|
-          section.actions(NitroKit::ButtonGroup.new(label: "Team activity actions")) do |actions|
-            actions.button("Export activity", href: "#export-team-activity")
+          unless state == "error"
+            section.actions NitroKit::Button.new("Export activity", href: "#export-team-activity")
           end
 
           if events.empty?
@@ -88,7 +87,10 @@ module Gallery
               )
             end
           else
-            section.table(NitroKit::Table.new(id: "gallery-team-activity-table")) do |table|
+            section.table(NitroKit::Table.new(
+              id: "gallery-team-activity-table",
+              table_aria: { label: "Filtered team activity events" }
+            )) do |table|
               populate_activity_table(table)
             end
           end
@@ -203,14 +205,14 @@ module Gallery
 
       def state_description
         {
-          "recent" => "Recent organization access and membership events with caller-owned pagination.",
+          "recent" => "Recent organization access and membership events with complete pagination.",
           "search" => "A realistic member search preserved in native GET form values and result links.",
           "filtered" => "Outcome filtering narrows the collection without teaching components query semantics.",
           "empty" => "A valid zero-result query uses the typed EmptyState content boundary.",
           "error" => "A recoverable audit-service failure preserves query controls and a retry route.",
           "dense" => "Repeated team events pressure tables and pagination without a density component option.",
           "long" => "Long organization policy copy wraps inside the same table and page sections.",
-          "mobile" => "A reduced caller-owned column set complements Nitro-owned narrow stacking."
+          "mobile" => "A focused column set keeps the event history readable on narrow screens."
         }.fetch(state)
       end
     end

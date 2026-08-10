@@ -10,13 +10,12 @@ module Gallery
 
         render Section.new(
           slug: "#{entry.slug}-screen",
-          title: entry.title,
+          title: "#{humanize_state(state)} screen",
           description: "Component-composed #{entry_category.title.downcase} coverage across realistic application states."
         ) do
           render_example(
             slug: "#{entry.slug}-#{state}",
-            title: state.humanize,
-            description: state_description,
+            title: "Complete screen",
             mode: :full_width,
             density: state == "dense" ? :compact : :comfortable,
             code: SourceCode.from_method(self.class.instance_method(:render_state))
@@ -31,8 +30,12 @@ module Gallery
               }.compact
             ) do
               render NitroKit::Container.new(size: :xl, id: "gallery-#{entry.slug}-container") do
-                render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch,
-                id: "gallery-#{entry.slug}-stack") do
+                render NitroKit::Flex.new(
+                  dir: :col,
+                  gap: 6,
+                  align: :stretch,
+                  id: "gallery-#{entry.slug}-stack"
+                ) do
                   render_page_header
                   render_state
                 end

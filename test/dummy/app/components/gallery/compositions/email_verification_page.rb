@@ -7,7 +7,7 @@ module Gallery
       private
 
       def page_template
-        render_composition_header(eyebrow: "Identity")
+        render_composition_header
 
         render Section.new(
           slug: "email-verification-screen",
@@ -16,7 +16,7 @@ module Gallery
         ) do
           render_example(
             slug: "email-verification-#{state}",
-            title: state.to_s.humanize,
+            title: humanize_state(state),
             description: state_description,
             mode: :full_width
           ) do
@@ -38,15 +38,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-email-verification-card") do |card|
           card.title(screen_title, level: 4)
           card.body do
-            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              render_status
-              render NitroKit::Badge.new(
-                badge_label,
-                id: "gallery-email-verification-status",
-                color: badge_color,
-                size: :sm
-              )
-            end
+            render_status
           end
           card.divider
           card.footer { render_action }
@@ -59,7 +51,6 @@ module Gallery
           variant: alert_variant
         ) do |alert|
           alert.icon(NitroKit::Icon.new(alert_icon, id: "gallery-email-verification-alert-icon"))
-          alert.title(alert_title)
           alert.description(alert_description)
         end
       end
@@ -88,17 +79,25 @@ module Gallery
             data: { turbo_frame: "gallery-email-verification-frame" }
           ) do |form|
             form.hidden_field(:token)
-            form.submit(
-              state == "expired" ? "Send a fresh link" : "Resend verification email",
-              id: "gallery-email-verification-resend",
-              data: { turbo_submits_with: "Sending…" }
-            )
+            form.group do
+              form.submit(
+                state == "expired" ? "Send a fresh link" : "Resend verification email",
+                id: "gallery-email-verification-resend",
+                data: { turbo_submits_with: "Sending…" }
+              )
+            end
           end
         end
       end
 
       def screen_title
-        state == "verified" ? "Email verified" : "Verify your email"
+        {
+          "pending" => "Check your inbox",
+          "verified" => "Email verified",
+          "expired" => "Request a new verification link",
+          "invalid-token" => "Verification link invalid",
+          "long-copy" => "Check your inbox"
+        }.fetch(state)
       end
 
       def alert_variant
@@ -119,16 +118,6 @@ module Gallery
         }.fetch(state)
       end
 
-      def alert_title
-        {
-          "pending" => "Check your inbox",
-          "verified" => "Your address is confirmed",
-          "expired" => "That verification link expired",
-          "invalid-token" => "That verification link is not valid",
-          "long-copy" => "Check every inbox and forwarding rule associated with this address"
-        }.fetch(state)
-      end
-
       def alert_description
         return invalid_token_message if state == "invalid-token"
 
@@ -145,26 +134,6 @@ module Gallery
       def invalid_token_message
         verification = Gallery::AuthFormExamples.email_verification(:invalid)
         "#{verification.errors.full_messages_for(:token).to_sentence}. The link may already have been used."
-      end
-
-      def badge_label
-        {
-          "pending" => "Pending verification",
-          "verified" => "Verified",
-          "expired" => "Expired",
-          "invalid-token" => "Invalid token",
-          "long-copy" => "Pending verification"
-        }.fetch(state)
-      end
-
-      def badge_color
-        {
-          "pending" => :info,
-          "verified" => :success,
-          "expired" => :warning,
-          "invalid-token" => :danger,
-          "long-copy" => :info
-        }.fetch(state)
       end
 
       def state_description

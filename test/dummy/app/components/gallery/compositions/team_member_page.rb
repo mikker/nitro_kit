@@ -17,35 +17,25 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-team-member-summary") do |card|
           card.body do
             render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              render NitroKit::Toolbar.new(id: "gallery-team-member-identity") do |toolbar|
-                toolbar.leading do
-                  render NitroKit::Avatar.new(
-                    src: member.avatar_url,
-                    alt: member.name,
-                    fallback: initials(member.name),
-                    size: :lg,
-                    id: "gallery-team-member-avatar"
-                  )
-                  h2 { member_name }
-                  render NitroKit::Badge.new(
-                    member.status.to_s.humanize,
-                    id: "gallery-team-member-status",
-                    color: member_status_color(member.status)
-                  )
-                end
-                toolbar.trailing do
-                  render NitroKit::Button.new(
-                    "Edit role",
-                    href: "#edit-member-role",
-                    disabled: !policy.manage_team?
-                  )
-                  render NitroKit::Button.new(
-                    "Remove member",
-                    href: "#remove-member",
-                    variant: :destructive,
-                    disabled: !policy.remove_member?(member)
-                  )
-                end
+              render NitroKit::Flex.new(
+                dir: "col sm:row",
+                gap: 3,
+                align: "start sm:center",
+                wrap: :wrap,
+                id: "gallery-team-member-identity"
+              ) do
+                render NitroKit::Avatar.new(
+                  src: member.avatar_url,
+                  alt: member.name,
+                  fallback: initials(member.name),
+                  size: :lg,
+                  id: "gallery-team-member-avatar"
+                )
+                render NitroKit::Badge.new(
+                  member.status.to_s.humanize,
+                  id: "gallery-team-member-status",
+                  color: member_status_color(member.status)
+                )
               end
               render NitroKit::DetailsTable.new(
                 member,
@@ -76,9 +66,9 @@ module Gallery
         invited = member.status == :invited
 
         render NitroKit::StatGrid.new(id: "gallery-team-member-stats") do |stats|
-          stats.stat(key: :sessions, label: "Active sessions", value: invited ? "0" : "2", detail: "Last verified 8 minutes ago")
-          stats.stat(key: :resources, label: "Resource access", value: invited ? "0" : "18", detail: "Across four teams")
-          stats.stat(key: :events, label: "Events this month", value: invited ? "0" : "47", detail: "No unresolved policy alerts")
+          stats.stat(key: :sessions, label: "Active sessions", value: invited ? "0" : "2", detail: invited ? "Invitation not accepted" : "Last verified 8 minutes ago")
+          stats.stat(key: :resources, label: "Resource access", value: invited ? "0" : "18", detail: invited ? "Access begins after acceptance" : "Across four teams")
+          stats.stat(key: :events, label: "Events this month", value: invited ? "0" : "47", detail: invited ? "No member activity yet" : "No unresolved policy alerts")
         end
       end
 
@@ -87,7 +77,7 @@ module Gallery
 
         render NitroKit::DataSection.new(
           title: "Recent member activity",
-          description: "Events remain tied to the caller-owned member identifier.",
+          description: "Access and policy events recorded for this member.",
           id: "gallery-team-member-activity"
         ) do |section|
           section.actions(NitroKit::ButtonGroup.new(label: "Member activity actions")) do |actions|
@@ -106,7 +96,10 @@ module Gallery
               empty.icon(NitroKit::Icon.new("history"))
             end
           else
-            section.table(NitroKit::Table.new(id: "gallery-team-member-activity-table")) do |table|
+            section.table(NitroKit::Table.new(
+              id: "gallery-team-member-activity-table",
+              table_aria: { label: "Recent activity for #{member.name}" }
+            )) do |table|
               table.caption("Recent activity for #{member.name}")
               table.thead do
                 table.tr do
@@ -136,15 +129,15 @@ module Gallery
       end
 
       def render_missing_member
-        render NitroKit::Alert.new(id: "gallery-team-member-error", variant: :error) do |alert|
-          alert.title(state == "error" ? "Member lookup failed" : "Member not found")
-          alert.description(
-            state == "error" ? "The directory service did not return a verified member record." : "This member may have left the organization or the link may be outdated."
-          )
+        if state == "error"
+          render NitroKit::Alert.new(id: "gallery-team-member-error", variant: :error) do |alert|
+            alert.title("Member lookup failed")
+            alert.description("The directory service did not return a verified member record.")
+          end
         end
         render NitroKit::DataSection.new(
           title: "Member detail",
-          description: "A missing record remains an explicit resource state.",
+          description: state == "error" ? "Member details cannot be verified right now." : "This member may have left the organization or the link may be outdated.",
           id: "gallery-team-member-missing"
         ) do |section|
           section.empty_state(
@@ -207,7 +200,14 @@ module Gallery
 
       def header_actions(actions)
         actions.button("Team activity", href: team_activity_path)
-        actions.button("Invite member", href: "#invite-member", variant: :primary)
+        return unless member
+
+        actions.button(
+          "Edit role",
+          href: "#edit-member-role",
+          variant: :primary,
+          disabled: !policy.manage_team?
+        )
       end
 
       def state_description

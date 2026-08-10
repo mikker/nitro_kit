@@ -37,8 +37,8 @@ module Gallery
         disabled = state.in?(%w[sending unavailable])
 
         render NitroKit::SettingsSection.new(
-          title: "Tell us about your application",
-          description: "Routing, response times, persistence, consent, and delivery remain application responsibilities.",
+          title: "Send an inquiry",
+          description: "Tell us what you are building, where you need help, and how to reach you.",
           id: "gallery-contact-settings-section"
         ) do |section|
           render_form_status(section, inquiry)
@@ -126,7 +126,7 @@ module Gallery
 
         render NitroKit::DataSection.new(
           title: "Inquiry summary",
-          description: "The application exposes the durable result instead of replacing it with a transient notification.",
+          description: "Keep this reference if you need to follow up before the sales team replies.",
           id: "gallery-contact-sent-summary"
         ) do |section|
           section.actions(NitroKit::ButtonGroup.new(label: "Contact result actions")) do |actions|
@@ -193,19 +193,18 @@ module Gallery
         state == "sending"
       end
 
-      def composition_label = "Public contact"
       def section_title = "Contact and inquiry delivery"
       def section_description = "Form, validation, submission, result, availability, long-content, and narrow states."
 
       def state_description
         {
-          "form" => "A real Active Model inquiry preserves Rails values, labels, names, constraints, and topic choices.",
-          "validation" => "Server validation keeps invalid caller values connected to accessible field errors.",
-          "sending" => "Every mutable control is disabled while the caller-owned route creates the inquiry.",
-          "sent" => "A durable result exposes reference, topic, reply address, and response expectation.",
-          "unavailable" => "A delivery outage disables mutation and presents an independent contact route.",
-          "long" => "Long names, addresses, organization identity, and inquiry copy wrap without custom styling.",
-          "mobile" => "The accepted field and toolbar layout own narrow stacking without a mobile API."
+          "form" => "Tell us about your Rails application and the kind of help your team needs.",
+          "validation" => "A few details need attention. Your company and message have been preserved.",
+          "sending" => "Your inquiry is being sent. Keep this page open for a moment.",
+          "sent" => "Your inquiry is in the queue and the sales team will reply within one business day.",
+          "unavailable" => "The form is temporarily unavailable, but you can still reach sales by email.",
+          "long" => "Talk with us about procurement, security, support, and data residency for a distributed team.",
+          "mobile" => "Share your application goals and contact details from any screen size."
         }.fetch(state)
       end
     end

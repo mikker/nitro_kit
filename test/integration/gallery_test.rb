@@ -79,12 +79,14 @@ class GalleryTest < ActionDispatch::IntegrationTest
   end
 
   test "current composition entry remains current on every state" do
-    get gallery_composition_path(slug: "settings", state: "appearance")
+    get gallery_composition_path(slug: "settings", state: "profile-validation")
 
     assert_response :success
     assert_select "#gallery-navigation a[href='/gallery/compositions/settings/profile'][aria-current='page']",
       text: "Workspace settings"
     assert_select "[data-gallery='navigation'] a[aria-current='page']", count: 1
+    assert_select "a[href='/gallery/compositions/settings/profile-validation']", text: "Profile validation"
+    assert_select "a", text: "Profile-validation", count: 0
   end
 
   test "gallery is the canonical dummy application root" do

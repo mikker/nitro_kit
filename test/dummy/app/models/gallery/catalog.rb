@@ -802,7 +802,7 @@ module Gallery
           choose-path company solo import invite-team skip-team integration skip-integration review-company review-solo
           validation saving complete resume long mobile
         ],
-        expected_roots: %w[page-header container flex button-group button]
+        expected_roots: %w[page-header container flex button]
       ),
       Entry.new(
         kind: :composition,

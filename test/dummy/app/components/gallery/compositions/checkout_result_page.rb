@@ -13,7 +13,7 @@ module Gallery
 
       def render_header
         render NitroKit::PageHeader.new(
-          title: "Checkout result",
+          title: "Order #{outcome.reference}",
           description: state_description,
           id: "gallery-checkout-result-page-header"
         ) do |header|
@@ -41,7 +41,7 @@ module Gallery
       def render_summary
         render NitroKit::DataSection.new(
           title: "Order summary",
-          description: "The application owns payment state, entitlement timing, references, amounts, and next steps.",
+          description: "Review the amount and the next step for this order.",
           id: "gallery-checkout-result-page-summary"
         ) do |section|
           section.actions(NitroKit::ButtonGroup.new(label: "Order summary actions")) do |actions|
@@ -49,7 +49,7 @@ module Gallery
           end
           section.table NitroKit::DetailsTable.new(
             outcome,
-            caption: "Caller-owned checkout outcome details",
+            caption: "Checkout outcome details",
             id: "gallery-checkout-result-page-table"
           ) do |details|
             details.fields(:reference, :amount, :next_step)
@@ -62,19 +62,18 @@ module Gallery
         @outcome ||= Gallery::PublicData.checkout_outcome(state)
       end
 
-      def composition_label = "Checkout result"
       def section_title = "Asynchronous and non-card checkout outcomes"
       def section_description = "Invoice, transfer, trial, account credit, manual review, and pressure states not duplicated by checkout."
 
       def state_description
         {
-          "invoice-issued" => "An approved net-terms order exposes invoice identity, due date, and activation timing.",
-          "bank-transfer-pending" => "An asynchronous transfer separates recorded order state from settled access.",
-          "trial-started" => "A zero-charge trial result identifies the end date without claiming a payment.",
-          "credit-applied" => "Account credit identifies the covered amount, card charge, and remaining balance.",
-          "manual-review" => "Manual tax and organization review keeps authorization distinct from captured payment.",
-          "long" => "Long procurement identity, amount, reference, and next-step copy wrap without truncation.",
-          "mobile" => "A concise transfer outcome retains complete reference and settlement semantics on a narrow surface."
+          "invoice-issued" => "Your net-30 invoice is ready. Access starts after payment is received.",
+          "bank-transfer-pending" => "The order is recorded and access starts after the transfer settles.",
+          "trial-started" => "Team features are active for 14 days and no payment method was charged.",
+          "credit-applied" => "Workspace credit covered the renewal without charging the saved card.",
+          "manual-review" => "The order is saved while billing operations verify tax and organization details.",
+          "long" => "The enterprise invoice is ready for procurement review and multi-region tax processing.",
+          "mobile" => "The transfer is pending. Use the order reference when sending payment."
         }.fetch(state)
       end
     end

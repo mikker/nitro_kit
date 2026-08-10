@@ -59,7 +59,7 @@ module Gallery
       private
 
       def page_template
-        render_composition_header(eyebrow: "Users")
+        render_composition_header
 
         render Section.new(
           slug: "users-screen",
@@ -68,7 +68,7 @@ module Gallery
         ) do
           render_example(
             slug: "users-#{state}",
-            title: state.humanize,
+            title: humanize_state(state),
             description: state_description,
             mode: :full_width
           ) do
@@ -115,10 +115,9 @@ module Gallery
       end
 
       def render_index
-        render NitroKit::Badge.new("128 total", id: "gallery-users-count", color: :info, size: :sm)
         render NitroKit::DataSection.new(
-          title: "Members of Analytical Engines — Research and Production",
-          description: "Workspace identities, access state, and membership history.",
+          title: "Workspace users",
+          description: "128 identities with access state and membership history for Analytical Engines — Research and Production.",
           id: "gallery-users-index-section"
         ) do |section|
           section.actions(
@@ -136,8 +135,16 @@ module Gallery
                 href: entry_path(entry, state: "bulk")
               )
           end
-          section.table NitroKit::Table.new(id: "gallery-users-index-table") do |table|
-            render_users_table_content(table, USERS, id: "gallery-users-index-table", caption: "All workspace users")
+          section.table NitroKit::Table.new(
+            id: "gallery-users-index-table",
+            table_aria: { label: "All workspace users" }
+          ) do |table|
+            render_users_table_content(
+              table,
+              USERS,
+              id: "gallery-users-index-table",
+              caption: "All workspace users"
+            )
           end
         end
         render_index_pagination
@@ -201,7 +208,10 @@ module Gallery
               href: entry_path(entry, state: "index")
             )
           end
-          section.table NitroKit::Table.new(id: "gallery-users-search-results") do |table|
+          section.table NitroKit::Table.new(
+            id: "gallery-users-search-results",
+            table_aria: { label: "Active user search results, page 3" }
+          ) do |table|
             render_users_table_content(
               table,
               results,

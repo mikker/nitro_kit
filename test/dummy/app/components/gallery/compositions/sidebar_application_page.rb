@@ -57,7 +57,8 @@ module Gallery
             render_application_navigation(
               id: "gallery-sidebar-application-populated-navigation",
               current: :overview,
-              context: "Production"
+              context: "Production",
+              appearance_picker_id: "gallery-sidebar-application-appearance"
             )
           end
           shell.topbar do
@@ -80,39 +81,44 @@ module Gallery
                 end
               end
 
-              appearance_picker("gallery-sidebar-application-appearance", label: "Workspace appearance")
-
               render NitroKit::StatGrid.new(id: "gallery-sidebar-application-stats") do |stats|
                 stats.stat(key: :workspaces, label: "Workspaces", value: "18", detail: "16 healthy")
                 stats.stat(key: :deployments, label: "Deployments today", value: "42", detail: "All checks complete")
                 stats.stat(key: :incidents, label: "Open incidents", value: "2", detail: "Both assigned")
               end
 
-              render NitroKit::Table.new(
-                sort: :started,
-                direction: :desc,
-                id: "gallery-sidebar-application-incidents"
-              ) do |table|
-                table.caption("Active production incidents")
-                table.thead do
-                  table.tr do
-                    table.th(sort: :service, href: "?sort=service-asc")
-                    table.th(sort: :region, href: "?sort=region-asc")
-                    table.th(sort: :status, href: "?sort=status-asc")
-                    table.th(sort: :started, href: "?sort=started-asc", align: :right)
-                  end
-                end
-                table.tbody do
-                  [
-                    [ "Workspace synchronization", "eu-central", :waiting, "18:42" ],
-                    [ "Audit export", "us-east", :healthy, "17:08" ],
-                    [ "Invoice delivery", "global", :queued, "15:31" ]
-                  ].each_with_index do |(service, region, status, started), index|
+              render NitroKit::DataSection.new(
+                title: "Active incidents",
+                description: "Production events that still need an owner or a final verification.",
+                id: "gallery-sidebar-application-incidents-section"
+              ) do |section|
+                section.table NitroKit::Table.new(
+                  sort: :started,
+                  direction: :desc,
+                  id: "gallery-sidebar-application-incidents",
+                  table_aria: { label: "Active production incidents" }
+                ) do |table|
+                  table.caption("Active production incidents")
+                  table.thead do
                     table.tr do
-                      table.th(service, scope: :row)
-                      table.td(region)
-                      table.td { status_badge(status, id: "gallery-sidebar-application-status-#{index + 1}") }
-                      table.td(started, align: :right)
+                      table.th(sort: :service, href: "?sort=service-asc")
+                      table.th(sort: :region, href: "?sort=region-asc")
+                      table.th(sort: :status, href: "?sort=status-asc")
+                      table.th(sort: :started, href: "?sort=started-asc", align: :right)
+                    end
+                  end
+                  table.tbody do
+                    [
+                      [ "Workspace synchronization", "eu-central", :waiting, "18:42" ],
+                      [ "Audit export", "us-east", :healthy, "17:08" ],
+                      [ "Invoice delivery", "global", :queued, "15:31" ]
+                    ].each_with_index do |(service, region, status, started), index|
+                      table.tr do
+                        table.th(service, scope: :row)
+                        table.td(region)
+                        table.td { status_badge(status, id: "gallery-sidebar-application-status-#{index + 1}") }
+                        table.td(started, align: :right)
+                      end
                     end
                   end
                 end
@@ -160,22 +166,13 @@ module Gallery
                 id: "gallery-sidebar-application-empty-header"
               )
 
-              render NitroKit::DataSection.new(
-                title: "Workspace projects",
-                description: "Projects appear after their first successful import.",
-                id: "gallery-sidebar-application-empty-section"
-              ) do |section|
-                section.empty_state(
-                  NitroKit::EmptyState.new(
-                    title: "No projects yet",
-                    description: "Create a project manually or import a small evidence bundle.",
-                    level: 3,
-                    id: "gallery-sidebar-application-empty-state"
-                  )
-                ) do |empty|
-                  empty.icon NitroKit::Icon.new(:folder)
-                  empty.action NitroKit::Button.new("Create project", href: "#create-project", variant: :primary)
-                end
+              render NitroKit::EmptyState.new(
+                title: "No projects yet",
+                description: "Create a project manually or import a small evidence bundle.",
+                id: "gallery-sidebar-application-empty-state"
+              ) do |empty|
+                empty.icon NitroKit::Icon.new(:folder)
+                empty.action NitroKit::Button.new("Create project", href: "#create-project", variant: :primary)
               end
 
               render NitroKit::SettingsSection.new(
@@ -251,19 +248,22 @@ module Gallery
 
               render NitroKit::DetailsTable.new(
                 INCIDENT,
+                label: "Incident details",
                 id: "gallery-sidebar-application-error-details"
               ) do |details|
                 details.fields(:service, :region, :owner, :started_at, :last_update)
               end
 
-              render NitroKit::Dialog.new(id: "gallery-sidebar-application-diagnostics") do |dialog|
-                dialog.trigger("Review diagnostics", variant: :primary)
-                dialog.panel(
-                  title: "Regional diagnostics",
-                  description: "The service is reachable, but the replication checkpoint is 14 minutes behind."
-                ) do
-                  render NitroKit::Badge.new("Read only", color: :warning, size: :sm)
-                  dialog.close_button(label: "Close diagnostics")
+              render NitroKit::Flex.new(dir: :row, gap: 2, align: :center) do
+                render NitroKit::Dialog.new(id: "gallery-sidebar-application-diagnostics") do |dialog|
+                  dialog.trigger("Review diagnostics")
+                  dialog.panel(
+                    title: "Regional diagnostics",
+                    description: "The service is reachable, but the replication checkpoint is 14 minutes behind."
+                  ) do
+                    render NitroKit::Badge.new("Read only", color: :warning, size: :sm)
+                    dialog.close_button(label: "Close diagnostics")
+                  end
                 end
               end
             end

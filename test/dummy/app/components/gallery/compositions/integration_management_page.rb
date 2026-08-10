@@ -25,7 +25,6 @@ module Gallery
       def render_header
         render NitroKit::PageHeader.new(
           title: integration_title,
-          eyebrow: "Workspace integrations",
           description: state_description,
           id: "gallery-integration-management-header"
         ) do |header|
@@ -34,17 +33,27 @@ module Gallery
               id: "gallery-integration-management-header-actions",
               label: "Integration navigation"
             )
-          ) do |actions|
-            actions.button("Browse catalog", href: entry_path(entry, state: "catalog"))
-            actions.button("Connected services", href: entry_path(entry, state: "connected"), variant: :primary)
-          end
+          ) { |actions| render_header_actions(actions) }
+        end
+      end
+
+      def render_header_actions(actions)
+        case state
+        when "catalog", "mobile"
+          actions.button("Connected services", href: entry_path(entry, state: "connected"))
+        when "detail"
+          actions.button("Back to catalog", href: entry_path(entry, state: "catalog"), icon: :arrow_left)
+        when "connected"
+          actions.button("Connect another service", href: entry_path(entry, state: "catalog"), variant: :primary, icon: :plus)
+        when "config-error"
+          actions.button("Connected services", href: entry_path(entry, state: "connected"), icon: :arrow_left)
         end
       end
 
       def render_catalog
         render NitroKit::DataSection.new(
-          title: "Integration catalog",
-          description: "Application-owned provider records expose availability and connection state.",
+          title: "Available integrations",
+          description: "Connect the services your team already uses for source control, incidents, communication, and billing.",
           id: "gallery-integration-catalog-section"
         ) do |section|
           section.actions(
@@ -98,29 +107,27 @@ module Gallery
       def render_provider_detail
         provider = providers.fetch(2)
 
-        render NitroKit::Grid.new(cols: "1 sm:2 lg:3", id: "gallery-integration-detail-grid") do
-          render NitroKit::Card.new(id: "gallery-integration-detail-card") do |card|
-            card.title(provider.name, level: 2)
-            card.body do
-              render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-                render NitroKit::Badge.new("Available", color: :info, id: "gallery-integration-detail-status")
-                p { provider.summary }
-                render NitroKit::DetailsTable.new(
-                  provider,
-                  data: { gallery: "integration-detail-metadata" }
-                ) do |details|
-                  details.field(:category) { |category| plain category.to_s.humanize }
-                  details.field(:authorization, value: "Workspace owner approval required")
-                  details.field(:data_shared, value: "Release names, deployment references, and error identifiers")
-                end
-              end
-            end
-            card.footer do
-              render NitroKit::Button.new(
-                "Read provider documentation",
-                href: provider.documentation_url,
-                id: "gallery-integration-detail-documentation"
-              )
+        render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch, id: "gallery-integration-detail-grid") do
+          render NitroKit::DataSection.new(
+            title: "Before you connect",
+            description: provider.summary,
+            id: "gallery-integration-detail-card"
+          ) do |section|
+            section.actions NitroKit::Button.new(
+              "Provider documentation",
+              href: provider.documentation_url,
+              icon_end: :external_link,
+              id: "gallery-integration-detail-documentation"
+            )
+            section.table NitroKit::DetailsTable.new(
+              provider,
+              caption: "Sentry connection details",
+              data: { gallery: "integration-detail-metadata" }
+            ) do |details|
+              details.field(:status, value: "Available")
+              details.field(:category) { |category| plain category.to_s.humanize }
+              details.field(:authorization, value: "Workspace owner approval required")
+              details.field(:data_shared, value: "Release names, deployment references, and error identifiers")
             end
           end
           render_configuration(invalid: false)
@@ -132,7 +139,7 @@ module Gallery
 
         render NitroKit::SettingsSection.new(
           title: invalid ? "Repair Slack configuration" : "Configure Sentry",
-          description: "The application owns authorization, destinations, event policy, and persistence.",
+          description: invalid ? "Update the delivery destination and webhook settings to resume notifications." : "Choose where incident events should be delivered after authorization.",
           id: "gallery-integration-configuration-section"
         ) do |section|
           if invalid
@@ -152,36 +159,32 @@ module Gallery
               id: "gallery-integration-configuration-form"
             ) do |form|
               form.hidden_field(:provider)
-              form.fieldset(
-                legend: "Delivery configuration",
-                description: "Provider credentials remain encrypted application data."
-              ) do
-                form.group do
-                  form.field(:destination, label: "Destination", placeholder: "#production-incidents", required: true)
-                  form.field(
-                    :webhook_url,
-                    as: :url,
-                    label: "Webhook URL",
-                    autocomplete: "url",
-                    required: true
-                  )
-                  form.field(
-                    :event,
-                    as: :select,
-                    label: "Event type",
-                    options: Gallery::Forms::IntegrationConfiguration::EVENTS.map { |event| [ event.humanize, event ] },
-                    prompt: "Choose an event",
-                    required: true
-                  )
-                end
-              end
-              render NitroKit::Toolbar.new(id: "gallery-integration-configuration-toolbar") do |toolbar|
-                toolbar.trailing do
-                  form.submit(
-                    invalid ? "Retry configuration" : "Connect Sentry",
-                    id: "gallery-integration-configuration-submit",
-                    data: { turbo_submits_with: "Saving configuration…" }
-                  )
+              form.group do
+                form.field(:destination, label: "Destination", placeholder: "#production-incidents", required: true)
+                form.field(
+                  :webhook_url,
+                  as: :url,
+                  label: "Webhook URL",
+                  autocomplete: "url",
+                  description: "Credentials are encrypted before they are stored.",
+                  required: true
+                )
+                form.field(
+                  :event,
+                  as: :select,
+                  label: "Event type",
+                  options: Gallery::Forms::IntegrationConfiguration::EVENTS.map { |event| [ event.humanize, event ] },
+                  prompt: "Choose an event",
+                  required: true
+                )
+                render NitroKit::Toolbar.new(id: "gallery-integration-configuration-toolbar") do |toolbar|
+                  toolbar.trailing do
+                    form.submit(
+                      invalid ? "Retry configuration" : "Connect Sentry",
+                      id: "gallery-integration-configuration-submit",
+                      data: { turbo_submits_with: "Saving configuration…" }
+                    )
+                  end
                 end
               end
             end
@@ -199,7 +202,7 @@ module Gallery
         end
         render NitroKit::DataSection.new(
           title: "Connected services",
-          description: "Authorization and connection timestamps remain application-owned records.",
+          description: "Review active authorizations and repair connections that need attention.",
           id: "gallery-integration-connected-section"
         ) do |section|
           section.actions(
@@ -270,25 +273,24 @@ module Gallery
 
       def integration_title
         {
-          "catalog" => "Integration catalog",
-          "detail" => "Sentry integration",
+          "catalog" => "Connect your tools",
+          "detail" => "Connect Sentry",
           "connected" => "Connected integrations",
           "config-error" => "Repair Slack integration",
           "mobile" => "Integrations"
         }.fetch(state)
       end
 
-      def composition_label = "Integration management"
       def section_title = "Workspace integration operations"
       def section_description = "Provider discovery, detail, connection records, configuration recovery, and narrow catalog pressure."
 
       def state_description
         {
-          "catalog" => "Provider records expose categories and connection state with explicit application routes.",
-          "detail" => "Provider capability and data-sharing context sit beside a real configuration form.",
-          "connected" => "A durable outcome and connected inventory distinguish authorization from availability.",
-          "config-error" => "Model errors preserve the failed configuration while explaining a recoverable provider state.",
-          "mobile" => "The caller selects compact catalog columns for a narrow viewport."
+          "catalog" => "Bring source control, incident, communication, and billing events into one workspace.",
+          "detail" => "Review what Sentry can access, then choose which incidents should reach your team.",
+          "connected" => "Your workspace has two active connections, and one needs updated delivery settings.",
+          "config-error" => "Slack is still authorized, but its notification destination needs to be repaired.",
+          "mobile" => "Browse available services and see connection health at a glance."
         }.fetch(state)
       end
     end

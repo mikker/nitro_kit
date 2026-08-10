@@ -33,21 +33,16 @@ module Gallery
       end
 
       def render_features
-        render NitroKit::Grid.new(cols: "1 sm:2 lg:3", id: "gallery-features-grid") do
+        render NitroKit::Grid.new(cols: "1 md:2", gap: 5, id: "gallery-features-grid") do
           selected_features.each_with_index do |feature, index|
             render NitroKit::Card.new(id: "gallery-feature-#{feature.id}") do |card|
               card.title(feature_title(feature, index), level: 2)
               card.body do
-                render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
+                render NitroKit::Flex.new(dir: :col, gap: 3, align: :start) do
+                  render NitroKit::Icon.new(feature_icon(feature.category), size: :lg)
                   render NitroKit::Badge.new(feature.category.to_s.humanize, color: feature_color(feature.category))
                   p { feature.description }
                 end
-              end
-              card.footer do
-                render NitroKit::Button.new(
-                  "Learn about #{feature.title.downcase}",
-                  href: "#feature-#{feature.id}"
-                )
               end
             end
           end
@@ -80,6 +75,10 @@ module Gallery
         { foundation: :info, automation: :success, security: :warning, collaboration: :neutral }.fetch(category)
       end
 
+      def feature_icon(category)
+        { foundation: :blocks, automation: :workflow, security: :shield_check, collaboration: :users }.fetch(category)
+      end
+
       def features_title
         return "A complete interface foundation for distributed Rails teams with regulated international operations" if state == "long"
 
@@ -90,18 +89,17 @@ module Gallery
         gallery_composition_path(slug: "pricing", state: "monthly")
       end
 
-      def composition_label = "Public features"
       def section_title = "Product capabilities"
       def section_description = "Overview, security, automation, collaboration, long-content, and narrow feature states."
 
       def state_description
         {
-          "overview" => "The complete product vocabulary is grouped as caller-owned public feature data.",
-          "security" => "Security-focused content uses the same cards and layouts without a product-specific component.",
-          "automation" => "Rails forms and Hotwire behavior remain visible as concrete automation capabilities.",
-          "collaboration" => "Application ownership stays central when agents and engineers share one component vocabulary.",
-          "long" => "Long product language wraps through the same restrained public hierarchy.",
-          "mobile" => "A focused subset complements the narrow composition surface without a mobile component API."
+          "overview" => "Build application foundations, Rails-native workflows, accessible interactions, and shared team conventions.",
+          "security" => "Keep interface state and accessibility contracts visible in stable, inspectable markup.",
+          "automation" => "Use ordinary Rails forms and focused Hotwire behavior instead of replacing the framework.",
+          "collaboration" => "Give engineers and coding agents one typed vocabulary for composing product interfaces.",
+          "long" => "A complete interface foundation for distributed teams operating regulated production systems.",
+          "mobile" => "Core product capabilities remain clear and readable on a narrow screen."
         }.fetch(state)
       end
     end

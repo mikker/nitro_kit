@@ -160,11 +160,15 @@ module Gallery
     def composition_destinations
       entry.states.map do |candidate|
         {
-          label: candidate.humanize,
+          label: humanize_state(candidate),
           href: entry_path(entry, state: candidate),
           current: candidate == state
         }
       end
+    end
+
+    def humanize_state(value)
+      value.to_s.tr("-", " ").humanize
     end
 
     def normalize_example_slug(value)

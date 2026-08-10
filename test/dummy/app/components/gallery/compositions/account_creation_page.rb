@@ -7,7 +7,7 @@ module Gallery
       private
 
       def page_template
-        render_composition_header(eyebrow: "Registration")
+        render_composition_header
 
         render Section.new(
           slug: "account-creation-screen",
@@ -16,13 +16,16 @@ module Gallery
         ) do
           render_example(
             slug: "account-creation-#{state}",
-            title: state.to_s.humanize,
+            title: humanize_state(state),
             description: state_description,
             mode: :full_width
           ) do
             render NitroKit::AuthShell.new(
               id: "gallery-account-creation-shell",
-              aria: { label: "Nitro account creation" },
+              aria: {
+                label: "Nitro account creation",
+                busy: state == "loading" ? "true" : nil
+              }.compact,
               data: {
                 gallery: "composition-surface",
                 gallery_composition: "account-creation",
@@ -138,7 +141,6 @@ module Gallery
       def render_success
         render NitroKit::Alert.new(id: "gallery-account-creation-success", variant: :success) do |alert|
           alert.icon(NitroKit::Icon.new(:circle_check, id: "gallery-account-creation-success-icon"))
-          alert.title("Your account is ready")
           alert.description("Verify #{Gallery::Data.auth_identity.email} to continue to workspace setup.")
         end
       end

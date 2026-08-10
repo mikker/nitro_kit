@@ -28,6 +28,7 @@ module Gallery
 
       def render_announcement
         render NitroKit::Alert.new(variant: :success, id: "gallery-landing-announcement") do |alert|
+          alert.icon NitroKit::Icon.new(:sparkles)
           alert.title("Nitro Kit 2.0 is available")
           alert.description("The agent-native release adds typed layouts, application sections, and static themeable CSS.")
         end
@@ -35,9 +36,9 @@ module Gallery
 
       def render_results
         render NitroKit::StatGrid.new(id: "gallery-landing-results") do |stats|
-          stats.stat(key: :components, label: "Typed components", value: "36", detail: "Direct Phlex APIs")
-          stats.stat(key: :helpers, label: "Template helpers", value: "0", detail: "Rails helpers still welcome")
-          stats.stat(key: :themes, label: "Theme variables", value: "85", detail: "Light and dark ready")
+          stats.stat(key: :components, label: "Stock components", value: "40", detail: "Typed, direct Phlex APIs")
+          stats.stat(key: :layouts, label: "Layout primitives", value: "3", detail: "Flex, Grid, and Container")
+          stats.stat(key: :classes, label: "Required CSS classes", value: "0", detail: "Self-describing data contracts")
         end
       end
 
@@ -46,12 +47,11 @@ module Gallery
           landing_features.each do |feature|
             render NitroKit::Card.new(id: "gallery-landing-feature-#{feature.id}") do |card|
               card.title(feature.title, level: 2)
-              card.body { p { feature.description } }
-              card.footer do
-                render NitroKit::Button.new(
-                  "Explore #{feature.title.downcase}",
-                  href: features_path
-                )
+              card.body do
+                render NitroKit::Flex.new(dir: :col, gap: 3, align: :start) do
+                  render NitroKit::Icon.new(landing_feature_icon(feature.id), size: :lg)
+                  p { feature.description }
+                end
               end
             end
           end
@@ -61,7 +61,7 @@ module Gallery
       def render_customer_proof
         render NitroKit::DataSection.new(
           title: "Built with application teams",
-          description: "Fixed example outcomes demonstrate public proof without putting marketing claims into Nitro components.",
+          description: "Teams use the same typed vocabulary across engineers, coding agents, and production Rails code.",
           id: "gallery-landing-proof"
         ) do |section|
           section.actions(NitroKit::ButtonGroup.new(label: "Customer proof actions")) do |actions|
@@ -94,6 +94,15 @@ module Gallery
         state == "mobile" ? features.first(2) : features
       end
 
+      def landing_feature_icon(id)
+        {
+          "typed-components" => :blocks,
+          "static-css" => :paintbrush,
+          "rails-forms" => :list_checks,
+          "accessible-contracts" => :badge_check
+        }.fetch(id, :sparkles)
+      end
+
       def landing_title
         return "Build verifiable Rails interfaces for International Research, Production, Reliability Engineering, and Customer Operations" if state == "long"
 
@@ -108,17 +117,16 @@ module Gallery
         gallery_composition_path(slug: "features", state: "overview")
       end
 
-      def composition_label = "Public landing"
       def section_title = "Product landing page"
       def section_description = "Default, announcement, customer proof, long-content, and narrow public states."
 
       def state_description
         {
-          "default" => "A restrained public introduction combines product promise, evidence, and direct next steps.",
-          "announcement" => "A release notice stays secondary to the primary product hierarchy.",
-          "customer-proof" => "Caller-owned customer outcomes add evidence without introducing testimonial components.",
-          "long" => "A long product promise and action copy wrap through the same accepted layouts.",
-          "mobile" => "A reduced feature set keeps the public hierarchy useful on a narrow surface."
+          "default" => "Compose polished Rails interfaces from typed Ruby components that agents can inspect and engineers can trust.",
+          "announcement" => "Nitro Kit 2.0 brings typed layouts, application sections, and static themeable CSS.",
+          "customer-proof" => "See how application teams use one component vocabulary across people, agents, and production Rails code.",
+          "long" => "Build verifiable interfaces for large research, production, reliability, and customer operations teams.",
+          "mobile" => "Build readable, accessible product flows that stay useful on every screen."
         }.fetch(state)
       end
     end

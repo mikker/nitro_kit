@@ -6,7 +6,7 @@ module Gallery
       def render_scenario
         workspace_surface do
           render_header
-          render_release_summary if entries.any?
+          render_release_summary if featured_release
           render_changelog
         end
       end
@@ -14,31 +14,35 @@ module Gallery
       def render_header
         render NitroKit::PageHeader.new(
           title: changelog_title,
-          eyebrow: "Nitro Kit releases",
           description: state_description,
           id: "gallery-changelog-header"
         ) do |header|
           header.actions(
             NitroKit::ButtonGroup.new(id: "gallery-changelog-header-actions", label: "Changelog navigation")
           ) do |actions|
-            actions.button("Latest release", href: entry_path(entry, state: "latest"), variant: :primary)
-            actions.button("Release archive", href: entry_path(entry, state: "archive"))
+            if state.in?(%w[archive empty])
+              actions.button("Latest release", href: entry_path(entry, state: "latest"), icon: :arrow_left)
+            else
+              actions.button("Release archive", href: entry_path(entry, state: "archive"), icon: :history)
+            end
           end
         end
       end
 
       def render_release_summary
-        latest = entries.first
+        latest = featured_release
 
         render NitroKit::Card.new(id: "gallery-changelog-latest-card") do |card|
           card.title("#{latest.version} · #{release_title(latest)}", level: 2)
           card.body do
             render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              render NitroKit::Badge.new(
-                "Released #{latest.released_on.to_fs(:long)}",
-                color: :success,
-                id: "gallery-changelog-latest-status"
-              )
+              render NitroKit::Flex.new(dir: :row, gap: 2, align: :center) do
+                render NitroKit::Badge.new(
+                  "Released #{latest.released_on.to_fs(:long)}",
+                  color: :success,
+                  id: "gallery-changelog-latest-status"
+                )
+              end
               render NitroKit::Typeset.new(id: "gallery-changelog-latest-prose") do
                 p { latest.summary }
                 ul do
@@ -59,8 +63,8 @@ module Gallery
 
       def render_changelog
         render NitroKit::DataSection.new(
-          title: state == "archive" ? "Release archive" : "Release history",
-          description: "Version identity, release dates, and summaries are caller-owned documentation records.",
+          title: state == "archive" ? "Release archive" : "Earlier releases",
+          description: state == "archive" ? "Browse every published release and its change count." : "Review previous releases and the work included in each version.",
           id: "gallery-changelog-section"
         ) do |section|
           section.actions(
@@ -69,10 +73,11 @@ module Gallery
             actions.button("Subscribe to releases", href: "#release-feed")
           end
 
-          if entries.empty?
+          if history_entries.empty?
             section.empty_state NitroKit::EmptyState.new(
               title: "No archived releases",
               description: "Published releases will appear here after the application records them.",
+              variant: :borderless,
               level: 3,
               id: "gallery-changelog-empty"
             ) do |empty|
@@ -98,7 +103,7 @@ module Gallery
           end
         end
         table.tbody do
-          entries.each_with_index do |release, index|
+          history_entries.each do |release|
             table.tr do
               table.th(release.version, scope: :row)
               table.td(release.released_on.to_fs(:long)) unless state == "mobile"
@@ -122,6 +127,16 @@ module Gallery
         end
       end
 
+      def featured_release
+        return if state.in?(%w[archive empty])
+
+        entries.first
+      end
+
+      def history_entries
+        featured_release ? entries.drop(1) : entries
+      end
+
       def release_title(release)
         return release.title unless state == "long" && release == entries.first
 
@@ -135,17 +150,16 @@ module Gallery
         "Nitro Kit changelog"
       end
 
-      def composition_label = "Changelog"
       def section_title = "Product release history"
       def section_description = "Latest, archive, empty, long-content, and narrow documentation states."
 
       def state_description
         {
-          "latest" => "The newest version, changes, migration route, and release history remain explicit.",
-          "archive" => "Repeated deterministic release records pressure a complete historical table.",
-          "empty" => "An unpublished archive distinguishes no records from a loading or service error.",
-          "long" => "Long release titles and summaries wrap without truncation or custom styling.",
-          "mobile" => "Caller-owned compact release columns complement the narrow composition surface."
+          "latest" => "See what changed in the newest release and find migration notes before upgrading.",
+          "archive" => "Browse the complete release history, ordered from newest to oldest.",
+          "empty" => "No releases have been archived yet. The latest release remains available.",
+          "long" => "Review a release spanning typed sections for large, distributed application teams.",
+          "mobile" => "Read the latest changes and earlier version summaries on a narrow screen."
         }.fetch(state)
       end
     end

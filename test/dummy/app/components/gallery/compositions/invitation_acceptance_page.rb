@@ -7,7 +7,7 @@ module Gallery
       private
 
       def page_template
-        render_composition_header(eyebrow: "Invitation")
+        render_composition_header
 
         render Section.new(
           slug: "invitation-acceptance-screen",
@@ -16,13 +16,16 @@ module Gallery
         ) do
           render_example(
             slug: "invitation-acceptance-#{state}",
-            title: state.to_s.humanize,
+            title: humanize_state(state),
             description: state_description,
             mode: :full_width
           ) do
             render NitroKit::AuthShell.new(
               id: "gallery-invitation-shell",
-              aria: { label: "Nitro invitation acceptance" },
+              aria: {
+                label: "Nitro invitation acceptance",
+                busy: state == "loading" ? "true" : nil
+              }.compact,
               data: {
                 gallery: "composition-surface",
                 gallery_composition: "invitation-acceptance",
@@ -42,9 +45,7 @@ module Gallery
           card.title(card_title, level: 4)
           card.body do
             render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              p do
-                "#{identity.inviter} invited #{identity.email} to join as #{identity.invited_role.downcase}."
-              end
+              render_invitation_context(identity)
 
               case state
               when "accepted"
@@ -57,17 +58,28 @@ module Gallery
               end
             end
           end
-          card.divider
-          card.footer do
-            render NitroKit::Badge.new(
-              identity.invited_role,
-              id: "gallery-invitation-role",
-              color: :info,
-              size: :sm
-            )
-            small { "Invited #{identity.invited_at.utc.strftime("%B %-d, %Y at %H:%M UTC")}" }
-            render_recovery_action if %w[accepted expired invalid-token].include?(state)
+          if %w[accepted expired invalid-token].include?(state)
+            card.divider
+            card.footer { render_recovery_action }
           end
+        end
+      end
+
+      def render_invitation_context(identity)
+        p { "#{identity.inviter} invited #{identity.email} to this workspace." }
+        render NitroKit::Flex.new(
+          dir: "col sm:row",
+          gap: 2,
+          align: "start sm:center",
+          wrap: :wrap
+        ) do
+          render NitroKit::Badge.new(
+            identity.invited_role,
+            id: "gallery-invitation-role",
+            color: :info,
+            size: :sm
+          )
+          small { "Invited #{identity.invited_at.utc.strftime("%B %-d, %Y at %H:%M UTC")}" }
         end
       end
 
@@ -128,8 +140,7 @@ module Gallery
       def render_accepted
         render NitroKit::Alert.new(id: "gallery-invitation-accepted", variant: :success) do |alert|
           alert.icon(NitroKit::Icon.new(:circle_check, id: "gallery-invitation-accepted-icon"))
-          alert.title("Invitation accepted")
-          alert.description("Your administrator access is ready. You can continue to workspace onboarding.")
+          alert.description("Your administrator access is ready. Continue to workspace onboarding when you are ready.")
         end
       end
 
@@ -141,8 +152,12 @@ module Gallery
           id: "gallery-invitation-token-error",
           variant: state == "expired" ? :warning : :error
         ) do |alert|
-          alert.icon(NitroKit::Icon.new(:circle_x, id: "gallery-invitation-token-error-icon"))
-          alert.title(state == "expired" ? "This invitation expired" : "This invitation is not valid")
+          alert.icon(
+            NitroKit::Icon.new(
+              state == "expired" ? :clock_alert : :circle_x,
+              id: "gallery-invitation-token-error-icon"
+            )
+          )
           alert.description(invitation.errors.full_messages_for(:token).to_sentence)
         end
       end
@@ -151,19 +166,21 @@ module Gallery
         text, href, variant = if state == "accepted"
           [ "Start onboarding", onboarding_path, :primary ]
         else
-          [ "Ask for a new invitation", "mailto:ada@example.test", :default ]
+          [ "Ask for a new invitation", "mailto:ada@example.test", nil ]
         end
 
         render NitroKit::Button.new(
           text,
           id: "gallery-invitation-recovery",
           href:,
-          variant:
+          **{ variant: }.compact
         )
       end
 
       def card_title
-        return "You joined #{Gallery::Data.auth_identity.workspace}" if state == "accepted"
+        return "Invitation accepted" if state == "accepted"
+        return "Invitation expired" if state == "expired"
+        return "Invitation not valid" if state == "invalid-token"
 
         "Join #{Gallery::Data.auth_identity.workspace}"
       end

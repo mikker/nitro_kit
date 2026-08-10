@@ -7,7 +7,7 @@ module Gallery
       private
 
       def page_template
-        render_composition_header(eyebrow: "Authentication")
+        render_composition_header
 
         render Section.new(
           slug: "sign-in-screen",
@@ -16,13 +16,16 @@ module Gallery
         ) do
           render_example(
             slug: "sign-in-#{state}",
-            title: state.to_s.humanize,
+            title: humanize_state(state),
             description: state_description,
             mode: :full_width
           ) do
             render NitroKit::AuthShell.new(
               id: "gallery-sign-in-shell",
-              aria: { label: "Nitro account sign in" },
+              aria: {
+                label: "Nitro account sign in",
+                busy: state == "loading" ? "true" : nil
+              }.compact,
               data: {
                 gallery: "composition-surface",
                 gallery_composition: "sign-in",
@@ -93,7 +96,6 @@ module Gallery
               :password,
               as: :password,
               label: "Password",
-              description: "Use at least 12 characters.",
               autocomplete: "current-password",
               required: true,
               disabled:,
@@ -127,13 +129,10 @@ module Gallery
       end
 
       def render_success
-        render NitroKit::Alert.new(id: "gallery-sign-in-success", variant: :success) do |alert|
-          alert.icon(NitroKit::Icon.new(:circle_check, id: "gallery-sign-in-success-icon"))
-          alert.title("Sign-in complete")
-          alert.description("Your session is ready for Analytical Engines — Research and Production.")
+        p(id: "gallery-sign-in-success") do
+          "Your secure session is ready for Analytical Engines — Research and Production."
         end
       end
-
 
       def state_description
         {

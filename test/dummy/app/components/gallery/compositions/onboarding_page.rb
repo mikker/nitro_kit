@@ -7,7 +7,7 @@ module Gallery
       private
 
       def page_template
-        render_composition_header(eyebrow: "Onboarding")
+        render_composition_header
 
         render Section.new(
           slug: "onboarding-screen",
@@ -16,13 +16,16 @@ module Gallery
         ) do
           render_example(
             slug: "onboarding-#{state}",
-            title: state.to_s.humanize,
+            title: humanize_state(state),
             description: state_description,
             mode: :full_width
           ) do
             render NitroKit::AuthShell.new(
               id: "gallery-onboarding-shell",
-              aria: { label: "Nitro workspace onboarding" },
+              aria: {
+                label: "Nitro workspace onboarding",
+                busy: state == "loading" ? "true" : nil
+              }.compact,
               data: {
                 gallery: "composition-surface",
                 gallery_composition: "onboarding",
@@ -64,14 +67,16 @@ module Gallery
       end
 
       def render_progress
-        render NitroKit::Badge.new(
-          progress_label,
-          id: "gallery-onboarding-progress",
-          color: state == "complete" ? :success : :info,
-          size: :sm
-        )
-
         return if %w[complete resume].include?(state)
+
+        render NitroKit::Flex.new(dir: :row, gap: 2, align: :center) do
+          render NitroKit::Badge.new(
+            progress_label,
+            id: "gallery-onboarding-progress",
+            color: :info,
+            size: :sm
+          )
+        end
 
         ol(data: { gallery: "composition-progress" }, aria: { label: "Onboarding progress" }) do
           Gallery::Data.onboarding_steps.each do |step|
@@ -220,7 +225,6 @@ module Gallery
       def render_complete
         render NitroKit::Alert.new(id: "gallery-onboarding-complete", variant: :success) do |alert|
           alert.icon(NitroKit::Icon.new(:party_popper, id: "gallery-onboarding-complete-icon"))
-          alert.title("Workspace ready")
           alert.description do
             "#{Gallery::Data.auth_identity.workspace} is ready with two pending invitations and GitHub connected."
           end
@@ -230,7 +234,6 @@ module Gallery
       def render_resume
         render NitroKit::Alert.new(id: "gallery-onboarding-resume", variant: :warning) do |alert|
           alert.icon(NitroKit::Icon.new(:clock_3, id: "gallery-onboarding-resume-icon"))
-          alert.title("Continue where you stopped")
           alert.description("Workspace details and team invitations were saved on July 13, 2026 at 09:15 UTC.")
         end
       end
@@ -282,7 +285,7 @@ module Gallery
       end
 
       def screen_title
-        return "Onboarding complete" if state == "complete"
+        return "Workspace ready" if state == "complete"
         return "Resume workspace setup" if state == "resume"
 
         current_step.title

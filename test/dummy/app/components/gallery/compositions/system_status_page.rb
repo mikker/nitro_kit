@@ -52,15 +52,12 @@ module Gallery
       def render_context
         render NitroKit::DataSection.new(
           title: "Request context",
-          description: "HTTP responses, incident references, retry policy, and support routes remain application-owned.",
+          description: "Keep this reference when contacting support or checking incident updates.",
           id: "gallery-system-status-context"
         ) do |section|
-          section.actions(NitroKit::ButtonGroup.new(label: "Request context actions")) do |actions|
-            actions.button("Copy reference", type: :button, data: { reference: status.reference })
-          end
           section.table NitroKit::DetailsTable.new(
             status,
-            caption: "Caller-owned system response context",
+            caption: "System response details",
             id: "gallery-system-status-table"
           ) do |details|
             details.field(:code, label: "Status")
@@ -75,22 +72,21 @@ module Gallery
         @status ||= Gallery::PublicData.system_status(state)
       end
 
-      def composition_label = "System response"
       def section_title = "Errors, availability, and recovery"
       def section_description = "HTTP failures, maintenance, connectivity, rate limits, degradation, and pressure states."
 
       def state_description
         {
-          "403" => "An authenticated user sees the policy decision and a safe route away from forbidden content.",
-          "404" => "A missing route explains uncertainty without claiming the underlying resource was deleted.",
-          "422" => "A conflicting application state remains distinct from field-level validation or a server failure.",
-          "500" => "An unexpected failure exposes a support reference and explicitly avoids claiming a successful mutation.",
-          "maintenance" => "Scheduled downtime identifies protected data, expected recovery, and an update route.",
-          "offline" => "Browser connectivity failure preserves local values and offers an explicit retry.",
-          "rate-limited" => "Caller-owned retry timing and API documentation accompany a 429 response.",
-          "degraded" => "Partial service availability keeps healthy operations distinct from recovering dependencies.",
-          "long" => "Long organization, action, and reference copy wraps without custom styling or truncation.",
-          "mobile" => "The same recovery anatomy remains concise on the narrow composition surface."
+          "403" => "Your account is signed in, but it does not have permission to open this page.",
+          "404" => "The address may be outdated, or the page may have moved.",
+          "422" => "The requested change conflicts with the workspace’s current state.",
+          "500" => "The failure was recorded and no submitted data was intentionally changed.",
+          "maintenance" => "Workspace writes are paused during a scheduled database upgrade.",
+          "offline" => "Reconnect to the internet, then retry without losing the values on this page.",
+          "rate-limited" => "This client has reached its temporary request limit. Try again in 42 seconds.",
+          "degraded" => "Core workspace access is available while webhook delivery and exports recover.",
+          "long" => "The complete organization workspace could not be loaded, but the request was preserved.",
+          "mobile" => "The page could not be found. Check the address or return home."
         }.fetch(state)
       end
     end

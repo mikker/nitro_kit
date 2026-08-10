@@ -71,7 +71,7 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
                   "[aria-label='Available plans']"
     assert_select "[data-gallery='billing-plan-grid'] [data-nk='card']", count: 3
     assert_select "[data-gallery='billing-plan-grid'] [data-nk='typeset']", count: 3
-    assert_select "#gallery-billing-current-plan[data-color='success']", text: "Current: Team"
+    assert_select "#gallery-billing-current-plan[data-color='success']", text: "Current plan"
     assert_select "#gallery-billing-plan_team-badge", text: "Current plan"
     assert_select "#gallery-billing-plan_team-choose[aria-disabled='true']", text: "Manage Team plan"
     assert_select "#gallery-billing-plan_business-choose[href='#choose-plan_business']", text: "Choose Business"
@@ -121,8 +121,9 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-billing-invoices-stack > #gallery-billing-invoices-card + " \
                   "#gallery-billing-invoice-pagination-bar[data-nk='pagination-bar']",
       count: 1
-    assert_select "#gallery-billing-invoice-table table" do
-      assert_select "caption", text: /Invoices for Analytical Engines/
+    assert_select "#gallery-billing-invoice-table[role='region'][tabindex='0'] table" do
+      assert_select "[aria-label='Invoices for Analytical Engines — Research and Production']"
+      assert_select "caption", text: "Invoices for Analytical Engines — Research and Production"
       assert_select "thead th[scope='col']", count: 5
       assert_select "tbody tr", count: Gallery::Data.invoices.size
       assert_select "tbody th[scope='row']", count: Gallery::Data.invoices.size
@@ -208,7 +209,8 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
       assert_select "[data-nk='table']", count: 1
     end
     assert_select "#gallery-users-index-section + #gallery-users-index-pagination-bar[data-nk='pagination-bar']", count: 1
-    assert_select "#gallery-users-index-table table" do
+    assert_select "#gallery-users-index-table[role='region'][tabindex='0'] table" do
+      assert_select "[aria-label='All workspace users']"
       assert_select "caption", text: "All workspace users"
       assert_select "thead th[scope='col']", count: 6
       assert_select "tbody tr", count: Gallery::Compositions::UsersPage::USERS.size

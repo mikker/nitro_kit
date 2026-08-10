@@ -129,8 +129,7 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-dashboard-surface[aria-busy='true']"
     assert_select "#gallery-dashboard-workspace-status[data-color='info']", text: "Loading"
     assert_select "#gallery-dashboard-workspace-actions [data-nk='button'][disabled]", count: 2
-    assert_select "[id^='gallery-dashboard-loading-card-'][data-nk='card']", count: 3
-    assert_select "#gallery-dashboard-loading-action[disabled]", text: "Refreshing…"
+    assert_select "#gallery-dashboard-loading-metrics[data-nk='stat-grid'] [data-slot='stat-grid-stat']", count: 3
 
     get_flow("dashboard", "dense")
 
@@ -143,7 +142,7 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
 
     assert_select "#gallery-dashboard-surface[data-gallery-mobile='true']"
     assert_select "#gallery-dashboard-mobile-alert", text: /deliberately long workspace name/
-    assert_select "#gallery-dashboard-mobile-card li", count: Gallery::Data.activities.size
+    assert_select "#gallery-dashboard-mobile-activity tbody tr", count: Gallery::Data.activities.size
     assert_select "#gallery-dashboard-mobile-action[href='#activity']", text: /complete activity history/
   end
 
@@ -153,7 +152,7 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
 
       assert_select "#gallery-settings-surface[data-gallery-composition-state='#{state}']"
       assert_select "nav[aria-label='Workspace settings states'] [data-nk='button'][aria-current='page']",
-        text: state.humanize
+        text: state.tr("-", " ").humanize
       assert_select "#gallery-settings-layout nav[data-slot='settings-layout-navigation'][aria-label='Settings sections']" do
         assert_select "ul[data-slot='settings-layout-items'] > li[data-slot='settings-layout-item']", count: 5
         assert_select "a[data-slot='settings-layout-item-link'][aria-current='page']", count: 1
@@ -263,8 +262,8 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
     get_flow("settings", "integrations")
 
     assert_select "#gallery-settings-integrations-heading-card"
-    assert_select "[id^='gallery-settings-integration-int_'][data-nk='card']", count: Gallery::Data.integrations.size
-    assert_select "[id^='gallery-settings-integration-int_'][data-nk='badge']", count: Gallery::Data.integrations.size
+    assert_select "#gallery-settings-integrations-table tbody tr", count: Gallery::Data.integrations.size
+    assert_select "[id^='gallery-settings-integration-int_'] [data-nk='badge']", count: Gallery::Data.integrations.size
     assert_select "#gallery-settings-integration-int_slack-status[data-color='danger']", text: "Action required"
 
     get_flow("settings", "integrations-empty")
@@ -282,9 +281,9 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-settings-integration-int_slack-action[href='#integration-int_slack']", text: "Manage"
 
     get_flow("settings", "long-content")
-    assert_select "#gallery-settings-integrations-heading-card", text: /customer-visible incident updates/
-    assert_select "[id^='gallery-settings-integration-int_'][data-nk='card']", count: Gallery::Data.integrations.size
-    assert_select "#gallery-settings-integration-int_github", text: /preserves deterministic delivery history/
+    assert_select "#gallery-settings-integrations-heading-card", text: /long-named workspace/
+    assert_select "#gallery-settings-integrations-table tbody tr", count: Gallery::Data.integrations.size
+    assert_select "#gallery-settings-integration-int_github", text: /Delivery history remains available/
   end
 
   test "appearance settings preserve native choice relationships and loading state" do

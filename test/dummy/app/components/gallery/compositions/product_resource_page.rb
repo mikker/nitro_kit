@@ -25,7 +25,7 @@ module Gallery
             gallery_mobile: state == "narrow" ? "true" : nil
           }.compact
         ) do |shell|
-          shell.brand { strong { "Northstar Commerce" } }
+          shell.brand { strong { "Northstar" } }
           shell.navigation { render_product_navigation }
           shell.topbar { render_product_toolbar }
           shell.main do
@@ -92,13 +92,13 @@ module Gallery
             type: :submit,
             form: PRODUCT_FORM_ID,
             variant: :primary,
-            disabled: true,
             id: "gallery-product-resource-save",
+            disabled: true,
             data: { turbo_submits_with: "Saving…" }
           )
         elsif INDEX_STATES.include?(state)
           render NitroKit::Button.new(
-            "New product",
+            "New",
             href: flow_path(state: "new"),
             variant: :primary,
             id: "gallery-product-resource-new"
@@ -139,21 +139,10 @@ module Gallery
             align: :stretch,
             id: "gallery-product-resource-query-stack"
           ) do
-            render_query_notice
             render_product_filters
             render_product_results
             render_product_pagination if paginated_results?
           end
-        end
-      end
-
-      def render_query_notice
-        render NitroKit::Alert.new(
-          id: "gallery-product-resource-static-note",
-          variant: :info
-        ) do |alert|
-          alert.title("Deterministic gallery routes")
-          alert.description("Filters, sorting, and pages link to fixed server-rendered states; a host application supplies the query object and HTTP persistence.")
         end
       end
 
@@ -346,7 +335,7 @@ module Gallery
 
         render NitroKit::SettingsSection.new(
           title: state.start_with?("new") ? "Product details" : "Edit product details",
-          description: "Rails owns submitted values and validation; the route toolbar owns the single primary submit.",
+          description: "Keep catalog identity, price, inventory, status, and customer-facing details current.",
           id: "gallery-product-resource-settings-section"
         ) do |section|
           if validation_state?
@@ -357,14 +346,6 @@ module Gallery
             ) do |alert|
               alert.title("Product details need attention")
               alert.description(form.errors.full_messages.to_sentence)
-            end
-          else
-            section.status NitroKit::Alert.new(
-              id: "gallery-product-resource-form-preview",
-              variant: :info
-            ) do |alert|
-              alert.title("Static gallery form")
-              alert.description("The disabled toolbar submit demonstrates native form association without pretending to persist a product.")
             end
           end
           section.form do
@@ -426,7 +407,7 @@ module Gallery
               dialog.trigger("Review deletion", variant: :destructive)
               dialog.panel(
                 title: "Delete #{product.name}?",
-                description: "This static gallery form demonstrates the request boundary; no product is changed."
+                description: "This permanently removes the product after dependent orders and authorization are verified."
               ) do
                 form_with(
                   scope: :product_deletion,
@@ -686,7 +667,7 @@ module Gallery
       end
 
       def results_description
-        return "No caller-owned product satisfies the current name, SKU, and status query." if products.empty?
+        return "No product satisfies the current name, SKU, and status filters." if products.empty?
         return "One active product matches “Sensor” across name, SKU, and description." if state == "filtered"
         return "Page two preserves the active GET query, sort, and browser history." if state == "paginated"
 
@@ -709,9 +690,8 @@ module Gallery
         Kernel.format("$%.2f", cents / 100.0)
       end
 
-      def composition_label = "Product resource composition"
       def section_title = "Product administration"
-      def section_description = "One deterministic gallery surface demonstrates query, form, detail, lifecycle, deletion, and narrow-shell states."
+      def section_description = "A complete product workflow spanning search, forms, details, lifecycle history, deletion, and narrow screens."
 
       def state_description
         {

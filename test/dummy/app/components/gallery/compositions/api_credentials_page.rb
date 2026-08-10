@@ -7,7 +7,7 @@ module Gallery
       private
 
       def page_template
-        render_composition_header(eyebrow: "API credential")
+        render_composition_header
 
         render Section.new(
           slug: "api-credentials-screen",
@@ -16,7 +16,7 @@ module Gallery
         ) do
           render_example(
             slug: "api-credentials-#{state}",
-            title: state.to_s.humanize,
+            title: humanize_state(state),
             description: state_description,
             mode: :full_width
           ) do
@@ -61,7 +61,7 @@ module Gallery
       def render_key_section(keys)
         render NitroKit::DataSection.new(
           title: state == "dense" ? "Credential inventory" : "Active credentials",
-          description: "Credential scope, recency, creation time, and labelled lifecycle actions.",
+          description: "#{keys.length} active #{'credential'.pluralize(keys.length)} with scope, recency, creation time, and lifecycle actions.",
           id: "gallery-api-credentials-section"
         ) do |section|
           section.actions(
@@ -84,8 +84,8 @@ module Gallery
       end
 
       def render_key_table_content(table, keys)
-          table.caption("#{keys.length} active API credentials")
-          table.thead do
+        table.caption("#{keys.length} active API credentials")
+        table.thead do
             table.tr do
               table.th("Credential")
               table.th("Access")
@@ -167,8 +167,8 @@ module Gallery
         disabled = state == "loading"
 
         render NitroKit::SettingsSection.new(
-          title: "Credential details",
-          description: "The application owns credential scope, expiration policy, persistence, and delivery.",
+          title: "Create an API credential",
+          description: "Limit each credential to the access and lifetime its application needs.",
           id: "gallery-api-credential-section"
         ) do |section|
           if state == "validation"

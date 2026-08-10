@@ -78,30 +78,39 @@ module Gallery
         appearance_picker_id: nil
       )
         render NitroKit::AppNavigation.new(id:, label: "#{context} navigation") do |navigation|
-          navigation.header do
-            render NitroKit::Badge.new(context, variant: :outline, size: :sm)
-            appearance_picker(appearance_picker_id, label: "Navigation appearance") if appearance_picker_id
-          end
           navigation.body do
-            navigation.section(label: "Workspace") do
+            if compact
               navigation.item("Overview", href: "#overview", icon: :house, current: current == :overview)
               navigation.item("Projects", href: "#projects", icon: :folder, badge: 12, current: current == :projects)
               navigation.item("People", href: "#people", icon: :users, current: current == :people)
-            end
-            unless compact
+              navigation.item("Settings", href: "#settings", icon: :settings, current: current == :settings)
+            else
+              navigation.section(label: "Workspace") do
+                navigation.item("Overview", href: "#overview", icon: :house, current: current == :overview)
+                navigation.item("Projects", href: "#projects", icon: :folder, badge: 12, current: current == :projects)
+                navigation.item("People", href: "#people", icon: :users, current: current == :people)
+              end
               navigation.section(label: "Operate") do
                 navigation.item("Deployments", href: "#deployments", icon: :rocket, current: current == :deployments)
                 navigation.item("Incidents", href: "#incidents", icon: :siren, badge: dense ? 8 : 2, current: current == :incidents)
                 navigation.item("Audit log", href: "#audit-log", icon: :scroll_text, current: current == :audit)
               end
+              navigation.spacer
+              navigation.item("Settings", href: "#settings", icon: :settings, current: current == :settings)
             end
-            navigation.spacer
-            navigation.divider
-            navigation.item("Settings", href: "#settings", icon: :settings, current: current == :settings)
           end
           unless compact
             navigation.footer do
-              render NitroKit::Button.new("Help", href: "#help", size: :sm, icon: :circle_help)
+              render NitroKit::Flex.new(dir: :row, gap: 2, align: :center, justify: :between) do
+                render NitroKit::Button.new("Help", href: "#help", size: :sm, icon: :circle_help)
+                if appearance_picker_id
+                  appearance_picker(
+                    appearance_picker_id,
+                    label: "Navigation appearance",
+                    presentation: :dropdown
+                  )
+                end
+              end
             end
           end
         end
@@ -119,8 +128,8 @@ module Gallery
         DemoAttachment.new
       end
 
-      def appearance_picker(id, label: "Appearance")
-        render NitroKit::AppearancePicker.new(id:, label:)
+      def appearance_picker(id, label: "Appearance", presentation: :segmented)
+        render NitroKit::AppearancePicker.new(id:, label:, presentation:)
       end
 
       def status_badge(status, id: nil)

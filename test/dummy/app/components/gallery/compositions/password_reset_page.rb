@@ -7,7 +7,7 @@ module Gallery
       private
 
       def page_template
-        render_composition_header(eyebrow: "Recovery")
+        render_composition_header
 
         render Section.new(
           slug: "password-reset-screen",
@@ -16,13 +16,16 @@ module Gallery
         ) do
           render_example(
             slug: "password-reset-#{state}",
-            title: state.to_s.humanize,
+            title: humanize_state(state),
             description: state_description,
             mode: :full_width
           ) do
             render NitroKit::AuthShell.new(
               id: "gallery-password-reset-shell",
-              aria: { label: "Nitro password recovery" },
+              aria: {
+                label: "Nitro password recovery",
+                busy: state == "loading" ? "true" : nil
+              }.compact,
               data: { gallery: "composition-surface", gallery_composition: "password-reset" }
             ) do
               turbo_frame_tag("gallery-password-reset-frame") { render_screen }
@@ -45,6 +48,7 @@ module Gallery
                 render_update_form
               else
                 render_request_error if state == "validation"
+                p { "Enter the email attached to your account. We will send a link that expires after 30 minutes." }
                 render_request_form
               end
             end
@@ -73,7 +77,6 @@ module Gallery
           data: { turbo_frame: "gallery-password-reset-frame" }
         ) do |form|
           form.group do
-            p { "Enter the email attached to your account. We will send a link that expires after 30 minutes." }
             form.field(
               :email,
               as: :email,
@@ -140,7 +143,7 @@ module Gallery
       def render_sent
         render NitroKit::Alert.new(id: "gallery-password-reset-sent", variant: :success) do |alert|
           alert.icon(NitroKit::Icon.new(:mail_check, id: "gallery-password-reset-sent-icon"))
-          alert.title("Check your inbox")
+          alert.title("Recovery email sent")
           alert.description do
             "We sent a recovery link to #{Gallery::Data.auth_identity.email}. " \
               "For security, the page looks the same even when an account does not exist."
@@ -162,9 +165,9 @@ module Gallery
         {
           "request" => "Reset your password",
           "validation" => "Reset your password",
-          "sent" => "Email sent",
+          "sent" => "Check your inbox",
           "update" => "Choose a new password",
-          "expired" => "Link expired",
+          "expired" => "Request a new reset link",
           "loading" => "Reset your password"
         }.fetch(state)
       end
@@ -179,7 +182,6 @@ module Gallery
           "loading" => "The address and submit action are disabled while Turbo submits."
         }.fetch(state)
       end
-
 
       def sign_in_path
         entry_path(Gallery::Catalog.fetch!(kind: :composition, slug: "sign-in"))

@@ -59,7 +59,9 @@ class ProductResourceFlowTest < ActionDispatch::IntegrationTest
           assert_select "> [data-nk='container']", count: 0
         end
       end
-      assert_select "[data-gallery='composition-states'] a[aria-current='page']", text: state.humanize, count: 1
+      assert_select "[data-gallery='composition-states'] a[aria-current='page']",
+        text: state.tr("-", " ").humanize,
+        count: 1
       assert_select "[data-gallery='example-canvas'] [class]", count: 0
       assert_select "[data-gallery='example-canvas'] [style]", count: 0
 
@@ -72,7 +74,6 @@ class ProductResourceFlowTest < ActionDispatch::IntegrationTest
     get_flow("index")
 
     assert_select "turbo-frame#gallery-product-resource-query[data-turbo-action='advance']" do
-      assert_select "#gallery-product-resource-static-note[data-variant='info']", text: /fixed server-rendered states/
       assert_select "#gallery-product-resource-filters[method='get']" \
         "[action='/gallery/compositions/product-resource/filtered']" \
         "[data-turbo-frame='gallery-product-resource-query'][data-turbo-action='replace']"
@@ -121,7 +122,6 @@ class ProductResourceFlowTest < ActionDispatch::IntegrationTest
     get_flow("new")
     assert_toolbar_submit("Create product")
     assert_select "#gallery-product-resource-save[disabled]"
-    assert_select "#gallery-product-resource-form-preview[data-variant='info']", text: /Static gallery form/
     assert_select "#gallery-product-resource-form[method='post'][action='#product-form-demo']"
     assert_select "#gallery-product-resource-form button[type='submit']", count: 0
     assert_select "#product_status option[value='draft'][selected]"

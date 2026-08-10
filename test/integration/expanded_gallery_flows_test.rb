@@ -134,14 +134,15 @@ class ExpandedGalleryFlowsTest < ActionDispatch::IntegrationTest
 
   test "team member detail covers lifecycle activity policy and missing records" do
     get_flow("team-member", "active")
-    assert_select "#gallery-team-member-summary[data-nk='card']", text: /Grace Hopper/
+    assert_select "#gallery-team-member-header [data-slot='page-header-title']", text: /Grace Hopper/
+    assert_select "#gallery-team-member-summary[data-nk='card']"
     assert_select "#gallery-team-member-metadata[data-nk='details-table']" do
       assert_select "table[aria-label='Team member metadata'] tbody tr", count: 4
       assert_select "tbody", text: /Analytical Engines — Research and Production/
     end
     assert_select "#gallery-team-member-stats [data-slot='stat-grid-stat']", count: 3
     assert_select "#gallery-team-member-activity-table tbody tr", count: 1
-    assert_select "#gallery-team-member-identity [data-variant='destructive'][href='#remove-member']"
+    assert_select "#gallery-team-member-header-actions [data-nk='button']", count: 2
 
     get_flow("team-member", "invited")
     assert_select "#gallery-team-member-status[data-color='info']", text: "Invited"
@@ -149,13 +150,13 @@ class ExpandedGalleryFlowsTest < ActionDispatch::IntegrationTest
 
     get_flow("team-member", "suspended")
     assert_select "#gallery-team-member-status[data-color='danger']", text: "Suspended"
-    assert_select "#gallery-team-member-identity [data-nk='button'][aria-disabled='true']:not([href])", count: 2
+    assert_select "#gallery-team-member-header-actions [data-nk='button'][aria-disabled='true']:not([href])", count: 1
 
     get_flow("team-member", "activity")
     assert_select "#gallery-team-member-activity-table tbody tr", count: 2
 
     get_flow("team-member", "empty")
-    assert_select "#gallery-team-member-error", text: /Member not found/
+    assert_select "#gallery-team-member-error", count: 0
     assert_select "#gallery-team-member-empty", text: /No member matches/
 
     get_flow("team-member", "error")
