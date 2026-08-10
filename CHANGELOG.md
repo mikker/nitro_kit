@@ -2,19 +2,22 @@
 
 ## Unreleased
 
-### Fixed
-
-- Stack AppShell toolbar actions below the title on narrow screens instead of
-  clipping child-route titles when a Back affordance and several actions share
-  the header.
-
-## 2.0.0.pre.1
+## 2.0.0.alpha.3
 
 ### Added
 
 - Add a dated browser verification matrix with full Chrome coverage, focused
   Firefox and macOS Safari lanes, and explicit Android, iOS, and near-floor
   release checks.
+- Add `--nk-button-radius` so applications can preserve a button-specific shape without changing inputs and surfaces.
+- Add structured JSON output to `nitro_kit:doctor` for migration automation.
+
+### Changed
+
+- Accept Rails-style nested and conditional class values through `desperately_need_a_class:`, normalizing retained external-integration hooks without manual string formatting, while directing migrations to review every use and aim for zero.
+- Make migration diagnostics surface usages of application-owned button treatments and provable 2.0 Table/Button runtime contract errors, and require semantic theme translation plus wide and narrow browser comparison.
+- Recognize explicit Stimulus controller registration used by JavaScript bundlers.
+- Explain the purpose and limits of generated host-integration smoke tests in each generated file.
 
 ### Documentation
 
@@ -33,27 +36,13 @@
 - Keep Dialog, Sheet, and CommandPalette controls working when Invoker Commands
   are unavailable while preserving the native declarative path and consistent
   focus restoration in Safari.
+- Stack AppShell toolbar actions below the title on narrow screens instead of
+  clipping child-route titles when a Back affordance and several actions share
+  the header.
 - Restore Dropdown outside-tap dismissal on affected Mobile Safari Popover
   implementations and keep its reduced placement inside the viewport.
 - Provide readable Typeset styling in Firefox versions without CSS `@scope`.
 - Keep settled progressive images visible when Turbo restores a cached page.
-
-## 2.0.0.alpha.3
-
-### Added
-
-- Add `--nk-button-radius` so applications can preserve a button-specific shape without changing inputs and surfaces.
-- Add structured JSON output to `nitro_kit:doctor` for migration automation.
-
-### Changed
-
-- Accept Rails-style nested and conditional class values through `desperately_need_a_class:`, normalizing retained external-integration hooks without manual string formatting, while directing migrations to review every use and aim for zero.
-- Make migration diagnostics surface usages of application-owned button treatments and provable 2.0 Table/Button runtime contract errors, and require semantic theme translation plus wide and narrow browser comparison.
-- Recognize explicit Stimulus controller registration used by JavaScript bundlers.
-- Explain the purpose and limits of generated host-integration smoke tests in each generated file.
-
-### Fixed
-
 - Keep arbitrary multi-element Button content aligned inside the label slot.
 - Keep the command palette at a stable height while filtering destinations.
 - Use a neutral elevated surface instead of the primary accent for tooltips.
