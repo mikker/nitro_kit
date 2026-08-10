@@ -24,7 +24,7 @@
     > :where(h1, h2, h3, h4, h5, h6):not([data-nk], [data-typeset="off"]) {
     margin-block: calc(var(--nk-typeset-flow) * 1.4) 0;
     font-family: var(--nk-typeset-font-heading);
-    font-weight: var(--nk-font-weight-semibold);
+    font-weight: var(--nk-font-weight-bold);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
@@ -140,7 +140,7 @@
     :where(h1, h2, h3, h4, h5, h6) {
       margin-block: calc(var(--nk-typeset-flow) * 1.4) 0;
       font-family: var(--nk-typeset-font-heading);
-      font-weight: var(--nk-font-weight-semibold);
+      font-weight: var(--nk-font-weight-bold);
       line-height: var(--nk-leading-tight);
       text-wrap: balance;
     }

@@ -10,10 +10,10 @@
     justify-self: start;
   }
 
-  /* Whatever follows a group (another group, a submit control) keeps the same
-     rhythm as the fields inside it, so a trailing error list never reads as
-     attached to the next element. */
-  :where([data-nk="field-group"] + *) {
+  /* A group keeps the same rhythm at either boundary as the fields inside it,
+     so introductory copy and trailing actions never read as attached to the
+     nearest control. */
+  :where(* + [data-nk="field-group"], [data-nk="field-group"] + *) {
     margin-block-start: calc(var(--nk-space) * 6);
   }
 }

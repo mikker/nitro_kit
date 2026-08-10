@@ -21,7 +21,7 @@
   :where([data-nk="empty-state"] > [data-slot="empty-state-title"]) {
     max-inline-size: var(--nk-content-md);
     font-size: var(--nk-text-lg);
-    font-weight: var(--nk-font-weight-semibold);
+    font-weight: var(--nk-font-weight-bold);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }

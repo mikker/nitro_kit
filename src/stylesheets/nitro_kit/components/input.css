@@ -36,6 +36,13 @@
     padding-inline-start: 0;
   }
 
+  /* Password masking glyphs come from the user agent and are not guaranteed
+     to exist in a consumer's subsetted brand font. Keep them on a complete
+     platform font stack so they cannot render as missing-glyph boxes. */
+  :where([data-nk="input"][type="password"]) {
+    font-family: ui-sans-serif, system-ui, sans-serif;
+  }
+
   :where([data-nk="input"][type="file"])::file-selector-button {
     min-block-size: calc(
       var(--nk-control-height-md) - (var(--nk-border-width) * 2)

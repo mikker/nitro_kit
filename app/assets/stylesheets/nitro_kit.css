@@ -2174,7 +2174,7 @@
 
   :where([data-nk="card"] > [data-slot="card-title"]) {
     font-size: var(--nk-text-lg);
-    font-weight: var(--nk-font-weight-semibold);
+    font-weight: var(--nk-font-weight-bold);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
@@ -3079,7 +3079,7 @@
 
   :where([data-nk="danger-zone"] [data-slot="danger-zone-title"]) {
     font-size: var(--nk-text-xl);
-    font-weight: var(--nk-font-weight-semibold);
+    font-weight: var(--nk-font-weight-bold);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
@@ -3131,7 +3131,7 @@
 
   :where([data-nk="data-section"] [data-slot="data-section-title"]) {
     font-size: var(--nk-text-xl);
-    font-weight: var(--nk-font-weight-semibold);
+    font-weight: var(--nk-font-weight-bold);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
@@ -3237,7 +3237,7 @@
 
   :where([data-nk="dialog"] [data-slot="dialog-title"]) {
     font-size: var(--nk-text-lg);
-    font-weight: var(--nk-font-weight-semibold);
+    font-weight: var(--nk-font-weight-bold);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
@@ -3717,7 +3717,7 @@
   :where([data-nk="empty-state"] > [data-slot="empty-state-title"]) {
     max-inline-size: var(--nk-content-md);
     font-size: var(--nk-text-lg);
-    font-weight: var(--nk-font-weight-semibold);
+    font-weight: var(--nk-font-weight-bold);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
@@ -3846,10 +3846,10 @@
     justify-self: start;
   }
 
-  /* Whatever follows a group (another group, a submit control) keeps the same
-     rhythm as the fields inside it, so a trailing error list never reads as
-     attached to the next element. */
-  :where([data-nk="field-group"] + *) {
+  /* A group keeps the same rhythm at either boundary as the fields inside it,
+     so introductory copy and trailing actions never read as attached to the
+     nearest control. */
+  :where(* + [data-nk="field-group"], [data-nk="field-group"] + *) {
     margin-block-start: calc(var(--nk-space) * 6);
   }
 }
@@ -4722,6 +4722,13 @@
 
   :where([data-nk="input"][type="file"]) {
     padding-inline-start: 0;
+  }
+
+  /* Password masking glyphs come from the user agent and are not guaranteed
+     to exist in a consumer's subsetted brand font. Keep them on a complete
+     platform font stack so they cannot render as missing-glyph boxes. */
+  :where([data-nk="input"][type="password"]) {
+    font-family: ui-sans-serif, system-ui, sans-serif;
   }
 
   :where([data-nk="input"][type="file"])::file-selector-button {
@@ -6210,7 +6217,7 @@
 
   :where([data-nk="settings-section"] [data-slot="settings-section-title"]) {
     font-size: var(--nk-text-xl);
-    font-weight: var(--nk-font-weight-semibold);
+    font-weight: var(--nk-font-weight-bold);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
@@ -6333,7 +6340,7 @@
   :where([data-nk="sheet"] [data-slot="sheet-title"]) {
     padding-inline-end: calc(var(--nk-space) * 10);
     font-size: var(--nk-text-lg);
-    font-weight: var(--nk-font-weight-semibold);
+    font-weight: var(--nk-font-weight-bold);
     line-height: var(--nk-leading-tight);
   }
 
@@ -7275,7 +7282,7 @@
     > :where(h1, h2, h3, h4, h5, h6):not([data-nk], [data-typeset="off"]) {
     margin-block: calc(var(--nk-typeset-flow) * 1.4) 0;
     font-family: var(--nk-typeset-font-heading);
-    font-weight: var(--nk-font-weight-semibold);
+    font-weight: var(--nk-font-weight-bold);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
@@ -7391,7 +7398,7 @@
     :where(h1, h2, h3, h4, h5, h6) {
       margin-block: calc(var(--nk-typeset-flow) * 1.4) 0;
       font-family: var(--nk-typeset-font-heading);
-      font-weight: var(--nk-font-weight-semibold);
+      font-weight: var(--nk-font-weight-bold);
       line-height: var(--nk-leading-tight);
       text-wrap: balance;
     }

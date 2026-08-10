@@ -24,7 +24,7 @@
 
   :where([data-nk="danger-zone"] [data-slot="danger-zone-title"]) {
     font-size: var(--nk-text-xl);
-    font-weight: var(--nk-font-weight-semibold);
+    font-weight: var(--nk-font-weight-bold);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
