@@ -68,6 +68,10 @@ export default class extends Controller {
     this.openTimer = setTimeout(() => this.#prepareOpenPanel(), 0);
   }
 
+  guardOpen(event) {
+    if (event.command === "show-modal" && !this.canOpen) event.preventDefault();
+  }
+
   shortcut(event) {
     if (
       event.defaultPrevented ||
