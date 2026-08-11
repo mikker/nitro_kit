@@ -5,7 +5,7 @@ module NitroKit
     alias_method :html_header, :header
     alias_method :html_footer, :footer
 
-    Item = ::Data.define(:text, :href, :icon, :badge, :current, :html, :aria, :data, :css_class)
+    Item = ::Data.define(:text, :href, :icon, :icon_end, :badge, :current, :html, :aria, :data, :css_class)
     Section = ::Data.define(:label, :entries)
     Entry = ::Data.define(:kind)
 
@@ -106,6 +106,7 @@ module NitroKit
       text,
       href:,
       icon: nil,
+      icon_end: nil,
       badge: nil,
       badge_color: :neutral,
       current: false,
@@ -118,6 +119,7 @@ module NitroKit
       text = validate_text!(:text, text)
       href = validate_text!(:href, href)
       icon = item_icon(icon)
+      icon_end = item_icon(icon_end, name: :icon_end)
       badge = item_badge(badge, badge_color)
       current = validate_boolean!(:current, current)
 
@@ -130,6 +132,7 @@ module NitroKit
         text:,
         href:,
         icon:,
+        icon_end:,
         badge:,
         current:,
         html:,
@@ -234,6 +237,7 @@ module NitroKit
           render_in_slot(entry.icon, :item_icon) if entry.icon
           span(**slot_attributes(:item_label)) { plain(entry.text) }
           render_in_slot(entry.badge, :item_badge) if entry.badge
+          render_in_slot(entry.icon_end, :item_icon_end) if entry.icon_end
         end
       end
     end
@@ -277,10 +281,10 @@ module NitroKit
       validate_text!(name, value)
     end
 
-    def item_icon(value)
+    def item_icon(value, name: :icon)
       return if value.nil?
       unless (value.is_a?(String) || value.is_a?(Symbol)) && !value.to_s.strip.empty?
-        raise ArgumentError, "icon must be a non-blank String or Symbol"
+        raise ArgumentError, "#{name} must be a non-blank String or Symbol"
       end
 
       Icon.new(value, size: :sm)

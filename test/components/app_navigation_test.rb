@@ -129,13 +129,14 @@ class AppNavigationTest < ActiveSupport::TestCase
     node = render_navigation do |navigation|
       navigation.body do
         navigation.item("Dashboard", href: "/dashboard", icon: "house", current: true)
-        navigation.item("Inbox", href: "/inbox", badge: "9")
+        navigation.item("Inbox", href: "/inbox", badge: "9", icon_end: :arrow_up_right)
       end
     end
 
     current, inbox = node.css("[data-slot='app-navigation-item-link']")
     icon = current.at_css("[data-slot='app-navigation-item-icon']")
     badge = inbox.at_css("[data-slot='app-navigation-item-badge']")
+    icon_end = inbox.at_css("[data-slot='app-navigation-item-icon-end']")
 
     assert_nil current["data-state"]
     assert_equal "page", current["aria-current"]
@@ -148,6 +149,8 @@ class AppNavigationTest < ActiveSupport::TestCase
     assert_equal "sm", badge["data-size"]
     assert_equal "neutral", badge["data-color"]
     assert_equal "9", badge.text
+    assert_equal "icon", icon_end["data-nk"]
+    assert_equal "true", icon_end["aria-hidden"]
   end
 
   test "requires an explicit body with at least one item" do
@@ -222,6 +225,8 @@ class AppNavigationTest < ActiveSupport::TestCase
       ->(navigation) { navigation.item("One", href: " ") },
       ->(navigation) { navigation.item("One", href: "/one", icon: "") },
       ->(navigation) { navigation.item("One", href: "/one", icon: Object.new) },
+      ->(navigation) { navigation.item("One", href: "/one", icon_end: "") },
+      ->(navigation) { navigation.item("One", href: "/one", icon_end: Object.new) },
       ->(navigation) { navigation.item("One", href: "/one", badge: " ") },
       ->(navigation) { navigation.item("One", href: "/one", badge: Object.new) },
       ->(navigation) { navigation.item("One", href: "/one", badge: true) },

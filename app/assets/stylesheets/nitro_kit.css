@@ -709,6 +709,7 @@
 
   :where(
       [data-nk="app-navigation"] [data-slot="app-navigation-item-icon"],
+      [data-nk="app-navigation"] [data-slot="app-navigation-item-icon-end"],
       [data-nk="app-navigation"] [data-slot="app-navigation-item-badge"]
     ) {
     flex: 0 0 auto;
