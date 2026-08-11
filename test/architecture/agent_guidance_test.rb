@@ -74,6 +74,25 @@ class AgentGuidanceTest < ActiveSupport::TestCase
     end
   end
 
+  test "application guidance prefers full-stack Phlex only for greenfield applications" do
+    guidance = [
+      ROOT.join("docs/agent_guide.md"),
+      ROOT.join("docs/initialization_prompt.md"),
+      PLUGIN_ROOT.join("skills/nitro-kit-rails/SKILL.md"),
+      PLUGIN_ROOT.join("skills/nitro-kit-ui/SKILL.md")
+    ]
+
+    guidance.each do |path|
+      instructions = path.read
+
+      assert_includes instructions, "bin/rails generate phlex:install"
+      assert_includes instructions, "application layout"
+      assert_match(/reusable\s+UI/, instructions)
+      assert_match(/established application/, instructions)
+      assert_match(/application-wide\s+migration is explicitly authorized/, instructions)
+    end
+  end
+
   test "installation and migration docs use the current RubyGems prerelease" do
     [ "README.md", "docs/rails_integration.md", "docs/migration_1_to_2.md" ].each do |name|
       guidance = ROOT.join(name).read

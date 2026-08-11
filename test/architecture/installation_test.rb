@@ -45,6 +45,11 @@ class InstallationTest < ActiveSupport::TestCase
       assert_includes contents, "Before"
       assert_includes contents, "After"
       assert_includes contents, "This application uses Nitro Kit 2.x"
+      assert_includes contents, "bin/rails generate phlex:install"
+      assert_includes contents, "application layout, route views, and reusable UI"
+      assert_includes contents, "capitalized Kit methods"
+      assert_includes contents, "use `.new` only when another API requires a component object"
+      assert_includes contents, "application-wide migration is explicitly authorized"
       refute_includes contents, "stale"
       assert_equal 1, contents.scan(NitroKit::Installation::AGENTS_START).size
     end

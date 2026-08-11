@@ -31,19 +31,26 @@ If the gem is not installed, say that the skill requires Nitro Kit and follow th
 
 ## Build the interface
 
-1. Reuse the highest-level Nitro block that matches the page region, then compose components inside it.
-2. Include `NitroKit` once in the application's base Phlex component and use capitalized Kit methods such as `Button(...)` and `Card(...)`. Use `.new` only when another API needs a component object. Keep product-specific components under the application's namespace, commonly `UI::*`.
-3. Use `NitroKit::FormBuilder` explicitly with Rails `form_with` for model-backed forms.
-4. Keep routes, authorization, records, query policy, DOM IDs, Turbo boundaries, and response semantics in the application.
-5. Translate the application's semantic theme into documented `--nk-*` properties instead of choosing similar raw palette values. Use `--nk-button-radius` when Button shape intentionally differs from inputs and surfaces.
-6. Verify closed options and required compound declarations before rendering.
-7. For authenticated CRUD, prefer a hybrid `AppShell` with a `Toolbar` that
+1. In a greenfield application, run `bin/rails generate phlex:install` and use
+   Phlex for the application layout, route-level `Views::*`, and reusable UI.
+   Do not add ERB wrappers whose only purpose is to render Phlex. In an
+   established application with meaningful view conventions, preserve them
+   and introduce Phlex and Nitro Kit only at the requested boundary unless an
+   application-wide migration is explicitly authorized. Determine this from
+   the existing view architecture, not the Rails version or apparent age.
+2. Reuse the highest-level Nitro block that matches the page region, then compose components inside it.
+3. Include `NitroKit` once in the application's base Phlex component and use capitalized Kit methods such as `Button(...)` and `Card(...)`. Use `.new` only when another API needs a component object. Keep product-specific components under the application's namespace, commonly `UI::*`.
+4. Use `NitroKit::FormBuilder` explicitly with Rails `form_with` for model-backed forms.
+5. Keep routes, authorization, records, query policy, DOM IDs, Turbo boundaries, and response semantics in the application.
+6. Translate the application's semantic theme into documented `--nk-*` properties instead of choosing similar raw palette values. Use `--nk-button-radius` when Button shape intentionally differs from inputs and surfaces.
+7. Verify closed options and required compound declarations before rendering.
+8. For authenticated CRUD, prefer a hybrid `AppShell` with a `Toolbar` that
    owns the route's single `h1` and basic actions. The shell main region owns
    one content gutter. Do not repeat that heading in `PageHeader`, or wrap each
    table, form, and detail region in another Card. At narrow widths, preserve
    the full title and persistent actions by stacking the trailing actions below
    the title rather than clipping either region.
-8. For team administration and account settings, read
+9. For team administration and account settings, read
    `docs/patterns/application_foundation.md`. Put Settings after an
    `AppNavigation` spacer and use `SettingsLayout` with plain `SettingsSection`
    regions instead of a stack of Cards.

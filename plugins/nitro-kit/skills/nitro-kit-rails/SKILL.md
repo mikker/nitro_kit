@@ -29,6 +29,13 @@ contract as a substitute for the installed API.
 
 ## Follow the application grammar
 
+- In a greenfield application, run `bin/rails generate phlex:install` and use
+  Phlex for the application layout, route-level views, and reusable UI. Render
+  `Views::*` objects from controllers instead of creating ERB wrappers around
+  Phlex. In an established application, preserve its view architecture and
+  introduce Phlex only at the requested boundary unless an application-wide
+  migration is explicitly authorized. Judge this from existing view code, not
+  the Rails version or apparent age.
 - Scope tenant data through `Current.team` or `Current.account`; record
   `Current.user` as the actor.
 - Put domain behavior on the model before introducing another abstraction.

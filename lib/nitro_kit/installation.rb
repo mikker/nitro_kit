@@ -23,10 +23,18 @@ module NitroKit
       Each skill resolves the installed gem with `bundle show nitro_kit` and reads
       its version-matched documentation.
 
+      In a greenfield application, run `bin/rails generate phlex:install` and use
+      Phlex for the application layout, route views, and reusable UI. In an
+      established application, preserve its existing view architecture and
+      introduce Phlex and Nitro Kit only at the requested boundary unless an
+      application-wide migration is explicitly authorized.
+
       Do not use Nitro Kit 1.x APIs, `nk_*` helpers, copied Nitro components, or
-      application-owned `controllers/nk`. Compose the installed Phlex Kit and keep
-      routes, records, authorization, queries, DOM IDs, and server responses in the
-      application.
+      application-owned `controllers/nk`. Include `NitroKit` once in the base Phlex
+      component and prefer capitalized Kit methods such as `Button(...)` and
+      `Card(...)`; use `.new` only when another API requires a component object.
+      Keep routes, records, authorization, queries, DOM IDs, and server responses
+      in the application.
 
       During migration, replace an existing form control only when Nitro Kit 2 has
       a genuine semantic and behavioral equivalent. Otherwise preserve the control

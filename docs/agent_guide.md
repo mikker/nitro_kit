@@ -31,6 +31,28 @@ Read this guide from that directory, then consult only the reference needed for 
 
 The installed component source is the final authority for constructor and compound-method details. This guide describes Nitro Kit 2.x. Do not use an API remembered from Nitro Kit 1.x or another installed version.
 
+## Choose the application view architecture deliberately
+
+In a greenfield application, install Phlex before building the interface:
+
+```sh
+bin/rails generate phlex:install
+```
+
+Use Phlex as the primary view layer: keep the application layout, route-level
+views, and reusable UI in Phlex rather than adding ERB wrappers whose only job
+is to render a component. Render route-level `Views::*` objects from
+controllers and keep shared product UI in the application's component
+namespace.
+
+An established application is one that already has meaningful views and layout
+conventions, regardless of its Rails version or chronological age. Preserve
+that architecture. Introduce Phlex and Nitro Kit at the requested boundary and
+expand them incrementally; do not convert the application layout or unrelated
+views unless an application-wide migration is explicitly authorized. When an
+application is already Phlex-first, continue using Phlex for new layouts and
+route views.
+
 ## Select the highest-level matching component
 
 Prefer the component that owns the whole region, then compose smaller components inside it.
