@@ -442,6 +442,23 @@ class InstallationTest < ActiveSupport::TestCase
     end
   end
 
+  test "doctor ignores runtime contracts hidden behind forwarded blocks" do
+    Dir.mktmpdir do |directory|
+      root = Pathname.new(directory)
+      write_file(root, "app/components/forwarded_blocks.rb", <<~RUBY)
+        render NitroKit::Table.new, &table_block
+        render NitroKit::Dropdown.new, &dropdown_block
+        render NitroKit::Sheet.new, &sheet_block
+      RUBY
+
+      check = NitroKit::Installation.new(root).checks.index_by(&:label)
+        .fetch("Migration: 2.0 runtime contract errors")
+
+      assert_equal :pass, check.status
+      assert_equal "migrated: none found", check.detail
+    end
+  end
+
   test "doctor recognizes explicit Stimulus registration used by bundlers" do
     Dir.mktmpdir do |directory|
       root = Pathname.new(directory)

@@ -141,13 +141,13 @@ module NitroKit
 
         def inspect_table(node)
           constructor = positional_arguments(node).first
-          return unless node.name == :render && table_constructor?(constructor) && node.block
+          return unless node.name == :render && table_constructor?(constructor)
 
-          parameter = node.block.parameters&.parameters&.requireds&.first
-          return unless parameter.is_a?(Prism::RequiredParameterNode)
-          return if parameter.name == :table
+          receiver_name = required_block_parameter_name(node)
+          return unless receiver_name
+          return if receiver_name == :table
 
-          visitor = TableCompoundVisitor.new(parameter.name)
+          visitor = TableCompoundVisitor.new(receiver_name)
           visitor.visit(node.block.body) if node.block.body
           issues.concat(visitor.issues)
         end
@@ -166,12 +166,19 @@ module NitroKit
           component = constructor.receiver.full_name.delete_prefix("NitroKit::")
           return unless %w[Dropdown Sheet].include?(component)
 
-          parameter = node.block.parameters&.parameters&.requireds&.first
-          return unless parameter.is_a?(Prism::RequiredParameterNode)
+          receiver_name = required_block_parameter_name(node)
+          return unless receiver_name
 
-          visitor = IconTriggerVisitor.new(parameter.name, component)
+          visitor = IconTriggerVisitor.new(receiver_name, component)
           visitor.visit(node.block.body) if node.block.body
           issues.concat(visitor.issues)
+        end
+
+        def required_block_parameter_name(node)
+          return unless node.block.is_a?(Prism::BlockNode)
+
+          parameter = node.block.parameters&.parameters&.requireds&.first
+          parameter.name if parameter.is_a?(Prism::RequiredParameterNode)
         end
 
         def table_constructor?(node)
