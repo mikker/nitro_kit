@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Added
+
+- Add system-wide CSS convention tests covering the spacing scale, literal
+  lengths, type and shadow scales, partial opacity, reduced-motion guards, hover
+  guards, and the spelling of the destructive semantic. Existing violations are
+  recorded in an explicit allowlist so the rules block new drift immediately
+  while the current set is retired deliberately.
+
 ## 2.0.0.alpha.3
 
 ### Added
