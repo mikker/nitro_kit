@@ -13,6 +13,9 @@
   familiar palette, bounded to an imperceptible perceptual distance per value.
   The customization guide documents every step and ships neutral-swap and
   accent recipes.
+- Add `--nk-white` and `--nk-black`. The surface, foreground, and overlay
+  roles that used raw white and black resolve through them, so warm-paper and
+  true-black themes are two overrides.
 - Add the public tint palette: `--nk-palette-*` roles for all twenty-two
   badge colors — the five semantic families and the seventeen decorative hues —
   so `Badge`'s colors are themeable like every other part of the system. Each

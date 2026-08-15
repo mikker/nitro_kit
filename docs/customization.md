@@ -623,6 +623,14 @@ accents and markers, and 700-950 are content colors. Scale steps are
 appearance independent; the semantic roles above sample different steps per
 appearance.
 
+White and black anchor the poles. Overriding them retints every pure-white
+surface and every overlay, for warm-paper or true-black themes:
+
+| Token | Value |
+| ----- | ----- |
+| `--nk-white` | `#fff` |
+| `--nk-black` | `#000` |
+
 The default theme is zinc: `--nk-color-foreground` is `--nk-zinc-900`,
 `--nk-color-border` is `--nk-zinc-200`, and so on. Swapping the neutral or the
 accent means re-pointing roles at another family, not inventing values:

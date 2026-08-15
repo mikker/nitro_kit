@@ -67,6 +67,10 @@
     --nk-app-shell-sidebar-width: 16rem;
     --nk-app-shell-topbar-height: 3.5rem;
 
+    /* The poles of every scale. */
+    --nk-white: #fff;
+    --nk-black: #000;
+
     /* The color scales. Every family ships all eleven steps, appearance
        independent; the appearance blocks below sample them. 50-200 are tints
        and surfaces, 400-600 accents and markers, 700-950 content.
@@ -372,8 +376,8 @@
   :where(:root, [data-theme="light"]) {
     color-scheme: light;
 
-    --nk-color-canvas: color-mix(in oklab, var(--nk-zinc-50) 47%, white);
-    --nk-color-surface: oklch(1 0 0);
+    --nk-color-canvas: color-mix(in oklab, var(--nk-zinc-50) 47%, var(--nk-white));
+    --nk-color-surface: var(--nk-white);
     --nk-color-elevated: var(--nk-zinc-50);
     --nk-color-foreground: var(--nk-zinc-900);
     --nk-color-muted: var(--nk-zinc-100);
@@ -381,7 +385,7 @@
     --nk-color-border: var(--nk-zinc-200);
     --nk-color-focus: var(--nk-blue-600);
     --nk-color-primary: var(--nk-zinc-800);
-    --nk-color-primary-foreground: oklch(1 0 0);
+    --nk-color-primary-foreground: var(--nk-white);
     --nk-color-neutral: var(--nk-zinc-500);
     --nk-color-neutral-content: var(--nk-zinc-700);
     --nk-color-info: var(--nk-blue-600);
@@ -391,9 +395,9 @@
     --nk-color-warning: var(--nk-yellow-600);
     --nk-color-warning-content: var(--nk-yellow-900);
     --nk-color-danger: var(--nk-red-600);
-    --nk-color-danger-foreground: oklch(1 0 0);
+    --nk-color-danger-foreground: var(--nk-white);
     --nk-color-danger-content: var(--nk-red-800);
-    --nk-color-overlay: oklch(0 0 0 / 0.5);
+    --nk-color-overlay: color-mix(in oklab, var(--nk-black) 50%, transparent);
 
     --nk-palette-neutral-content: var(--nk-zinc-700);
 
@@ -435,7 +439,7 @@
       --nk-color-muted-foreground: var(--nk-zinc-400);
       --nk-color-border: var(--nk-zinc-700);
       --nk-color-focus: var(--nk-blue-700);
-      --nk-color-primary: oklch(1 0 0);
+      --nk-color-primary: var(--nk-white);
       --nk-color-primary-foreground: var(--nk-zinc-800);
       --nk-color-neutral: var(--nk-zinc-400);
       --nk-color-neutral-content: var(--nk-zinc-200);
@@ -448,7 +452,7 @@
       --nk-color-danger: var(--nk-red-600);
       --nk-color-danger-foreground: var(--nk-zinc-50);
       --nk-color-danger-content: var(--nk-red-400);
-      --nk-color-overlay: oklch(0 0 0 / 0.65);
+      --nk-color-overlay: color-mix(in oklab, var(--nk-black) 65%, transparent);
 
       --nk-palette-neutral-content: var(--nk-zinc-200);
 
@@ -490,7 +494,7 @@
     --nk-color-muted-foreground: var(--nk-zinc-400);
     --nk-color-border: var(--nk-zinc-700);
     --nk-color-focus: var(--nk-blue-700);
-    --nk-color-primary: oklch(1 0 0);
+    --nk-color-primary: var(--nk-white);
     --nk-color-primary-foreground: var(--nk-zinc-800);
     --nk-color-neutral: var(--nk-zinc-400);
     --nk-color-neutral-content: var(--nk-zinc-200);
@@ -503,7 +507,7 @@
     --nk-color-danger: var(--nk-red-600);
     --nk-color-danger-foreground: var(--nk-zinc-50);
     --nk-color-danger-content: var(--nk-red-400);
-    --nk-color-overlay: oklch(0 0 0 / 0.65);
+    --nk-color-overlay: color-mix(in oklab, var(--nk-black) 65%, transparent);
 
     --nk-palette-neutral-content: var(--nk-zinc-200);
 
