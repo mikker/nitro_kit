@@ -387,7 +387,7 @@
   :where(:root, [data-theme="light"]) {
     color-scheme: light;
 
-    --nk-color-canvas: oklch(0.993 0 0);
+    --nk-color-canvas: color-mix(in oklab, var(--nk-zinc-50) 47%, white);
     --nk-color-surface: oklch(1 0 0);
     --nk-color-elevated: var(--nk-zinc-50);
     --nk-color-foreground: var(--nk-zinc-900);
@@ -443,7 +443,7 @@
       color-scheme: dark;
 
       --nk-color-canvas: var(--nk-zinc-950);
-      --nk-color-surface: oklch(0.178 0.006 285.885);
+      --nk-color-surface: color-mix(in oklab, var(--nk-zinc-950) 45%, var(--nk-zinc-900));
       --nk-color-elevated: var(--nk-zinc-900);
       --nk-color-foreground: var(--nk-zinc-100);
       --nk-color-muted: var(--nk-zinc-800);
@@ -498,7 +498,7 @@
     color-scheme: dark;
 
     --nk-color-canvas: var(--nk-zinc-950);
-    --nk-color-surface: oklch(0.178 0.006 285.885);
+    --nk-color-surface: color-mix(in oklab, var(--nk-zinc-950) 45%, var(--nk-zinc-900));
     --nk-color-elevated: var(--nk-zinc-900);
     --nk-color-foreground: var(--nk-zinc-100);
     --nk-color-muted: var(--nk-zinc-800);

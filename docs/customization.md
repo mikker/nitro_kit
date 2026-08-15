@@ -644,6 +644,7 @@ accent means re-pointing roles at another family, not inventing values:
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
     --nk-color-canvas: var(--nk-slate-950);
+    --nk-color-surface: color-mix(in oklab, var(--nk-slate-950) 45%, var(--nk-slate-900));
     --nk-color-elevated: var(--nk-slate-900);
     --nk-color-foreground: var(--nk-slate-100);
     --nk-color-muted: var(--nk-slate-800);
@@ -657,6 +658,7 @@ accent means re-pointing roles at another family, not inventing values:
 
 [data-theme="dark"] {
   --nk-color-canvas: var(--nk-slate-950);
+  --nk-color-surface: color-mix(in oklab, var(--nk-slate-950) 45%, var(--nk-slate-900));
   --nk-color-elevated: var(--nk-slate-900);
   --nk-color-foreground: var(--nk-slate-100);
   --nk-color-muted: var(--nk-slate-800);
