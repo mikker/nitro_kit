@@ -13,7 +13,7 @@ module NitroKit
     # labelling where meaning is not the point.
     SEMANTIC_COLORS = %i[neutral info success warning danger].freeze
     PALETTE_COLORS = %i[
-      zinc red orange amber yellow lime green emerald teal cyan sky blue indigo
+      red orange amber yellow lime green emerald teal cyan sky blue indigo
       violet purple fuchsia pink rose
     ].freeze
     COLORS = (PALETTE_COLORS + SEMANTIC_COLORS).freeze

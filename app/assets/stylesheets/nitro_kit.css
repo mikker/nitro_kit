@@ -365,8 +365,6 @@
     --nk-palette-success: var(--nk-green-400);
     --nk-palette-warning: var(--nk-amber-400);
     --nk-palette-danger: var(--nk-red-400);
-
-    --nk-palette-zinc: var(--nk-zinc-400);
     --nk-palette-red: var(--nk-red-400);
     --nk-palette-orange: var(--nk-orange-400);
     --nk-palette-amber: var(--nk-amber-400);
@@ -421,9 +419,6 @@
     --nk-palette-warning-content: var(--nk-amber-800);
 
     --nk-palette-danger-content: var(--nk-red-700);
-
-
-    --nk-palette-zinc-content: var(--nk-zinc-700);
     --nk-palette-red-content: var(--nk-red-700);
     --nk-palette-orange-content: var(--nk-orange-800);
     --nk-palette-amber-content: var(--nk-amber-800);
@@ -479,9 +474,6 @@
       --nk-palette-warning-content: var(--nk-amber-200);
 
       --nk-palette-danger-content: var(--nk-red-200);
-
-
-      --nk-palette-zinc-content: var(--nk-zinc-200);
       --nk-palette-red-content: var(--nk-red-200);
       --nk-palette-orange-content: var(--nk-orange-200);
       --nk-palette-amber-content: var(--nk-amber-200);
@@ -537,9 +529,6 @@
     --nk-palette-warning-content: var(--nk-amber-200);
 
     --nk-palette-danger-content: var(--nk-red-200);
-
-
-    --nk-palette-zinc-content: var(--nk-zinc-200);
     --nk-palette-red-content: var(--nk-red-200);
     --nk-palette-orange-content: var(--nk-orange-200);
     --nk-palette-amber-content: var(--nk-amber-200);
@@ -5939,11 +5928,6 @@
      follow `--nk-palette-*` and stay put when an application rethemes its
      semantic families. `red` and `danger` are deliberately different: one is
      a color, the other is whatever destructive currently means. */
-  :where([data-nk="badge"][data-color="zinc"]) {
-    --_nk-semantic-accent: var(--nk-palette-zinc);
-    --_nk-semantic-content: var(--nk-palette-zinc-content);
-  }
-
   :where([data-nk="badge"][data-color="red"]) {
     --_nk-semantic-accent: var(--nk-palette-red);
     --_nk-semantic-content: var(--nk-palette-red-content);

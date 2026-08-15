@@ -5,9 +5,9 @@ class BadgeTest < ActiveSupport::TestCase
     assert_predicate NitroKit::Badge::VARIANTS, :frozen?
     assert_predicate NitroKit::Badge::SIZES, :frozen?
     assert_predicate NitroKit::Badge::COLORS, :frozen?
-    assert_equal 23, NitroKit::Badge::COLORS.size
+    assert_equal 22, NitroKit::Badge::COLORS.size
     assert_equal %i[neutral info success warning danger], NitroKit::Badge::SEMANTIC_COLORS
-    assert_equal 18, NitroKit::Badge::PALETTE_COLORS.size
+    assert_equal 17, NitroKit::Badge::PALETTE_COLORS.size
     assert_empty NitroKit::Badge::SEMANTIC_COLORS & NitroKit::Badge::PALETTE_COLORS
 
     NitroKit::Badge::VARIANTS.product(NitroKit::Badge::SIZES, NitroKit::Badge::COLORS).each do |variant, size, color|
@@ -112,7 +112,7 @@ class BadgeTest < ActiveSupport::TestCase
       "src/stylesheets/nitro_kit/components/palette.css"
     ).read
 
-    { danger: :red, success: :green, warning: :amber, neutral: :zinc }.each do |semantic, hue|
+    { danger: :red, success: :green, warning: :amber }.each do |semantic, hue|
       assert_includes css, "--_nk-semantic-accent: var(--nk-palette-#{semantic})"
       assert_includes css, "--_nk-semantic-accent: var(--nk-palette-#{hue})"
     end

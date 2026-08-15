@@ -154,7 +154,7 @@ class SemanticPaletteTest < ApplicationSystemTestCase
         };
 
         return Object.entries({
-          neutral: "zinc", info: "blue", success: "green",
+          info: "blue", success: "green",
           warning: "amber", danger: "red"
         }).map(([semantic, hue]) =>
           [semantic, hue, read(semantic), read(hue)].join(" | ")

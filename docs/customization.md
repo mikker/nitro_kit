@@ -1058,7 +1058,7 @@ Values mirror `src/stylesheets/nitro_kit/tokens.css`, which is authoritative.
 ### Tint palette
 
 `Badge` carries two color vocabularies on one `color:` option. The semantic
-families answer "what does this mean"; the eighteen decorative hues answer
+families answer "what does this mean"; the seventeen decorative hues answer
 "which color is this", for categorical labelling where meaning is not the
 point. Both resolve through `--nk-palette-*` tint roles.
 
@@ -1083,8 +1083,6 @@ per appearance so labels stay readable in both.
 | `--nk-palette-warning-content`         | Warning status content on that tint.   |
 | `--nk-palette-danger`                  | Danger status tint; defaults to red.   |
 | `--nk-palette-danger-content`          | Danger status content on that tint.    |
-| `--nk-palette-zinc`                    | Zinc tint and marker.                  |
-| `--nk-palette-zinc-content`            | Zinc content on that tint.         |
 | `--nk-palette-red`                     | Red tint and marker.                   |
 | `--nk-palette-red-content`             | Red content on that tint.          |
 | `--nk-palette-orange`                  | Orange tint and marker.                |

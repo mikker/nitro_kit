@@ -13,8 +13,8 @@
   familiar palette, bounded to an imperceptible perceptual distance per value.
   The customization guide documents every step and ships neutral-swap and
   accent recipes.
-- Add the public tint palette: `--nk-palette-*` roles for all twenty-three
-  badge colors — the five semantic families and the eighteen decorative hues —
+- Add the public tint palette: `--nk-palette-*` roles for all twenty-two
+  badge colors — the five semantic families and the seventeen decorative hues —
   so `Badge`'s colors are themeable like every other part of the system. Each
   resolves to a scale step: the 400 tint with a 700-800 foreground in light and
   the 200 foreground in dark. Semantic families default to the same steps as
@@ -26,6 +26,10 @@
 
 - Remove `Alert::VARIANT_PALETTE`. Alert variants resolve through the shared
   semantic palette instead of mapping to hue families.
+- Remove `zinc` from `Badge`'s color vocabulary; use `neutral`, which renders
+  the same by default and follows an application's neutral theme. A gray badge
+  frozen to one gray family had no categorical job the semantic name does not
+  do better.
 - Change `Badge`'s default color from `:zinc` to `:neutral`. Both render the
   same way; the semantic name is now the default because it follows an
   application's theme.

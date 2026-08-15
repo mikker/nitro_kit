@@ -93,11 +93,6 @@
      follow `--nk-palette-*` and stay put when an application rethemes its
      semantic families. `red` and `danger` are deliberately different: one is
      a color, the other is whatever destructive currently means. */
-  :where([data-nk="badge"][data-color="zinc"]) {
-    --_nk-semantic-accent: var(--nk-palette-zinc);
-    --_nk-semantic-content: var(--nk-palette-zinc-content);
-  }
-
   :where([data-nk="badge"][data-color="red"]) {
     --_nk-semantic-accent: var(--nk-palette-red);
     --_nk-semantic-content: var(--nk-palette-red-content);
