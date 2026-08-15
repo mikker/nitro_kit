@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     resource(:destructive_action, only: :destroy)
     resources(:command_palette_results, only: :index)
     get("previews/:kind/:slug/:example" => "previews#show", as: :preview)
+    resources(:foundations, only: :show, param: :slug)
     resources(:components, only: :show, param: :slug)
     resources(:upload_submissions, only: :create)
     get("compositions/:slug(/:state)" => "compositions#show", :as => :composition)

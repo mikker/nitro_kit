@@ -92,6 +92,57 @@ class GalleryDisplayTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "colors page covers every public scale step pole and tint palette role" do
+    get gallery_foundation_path("colors")
+    assert_response :success
+
+    assert_select "#gallery-color-attribution[data-nk='alert'][data-variant='info']" do
+      assert_select "[data-slot='alert-title']", text: "Palette provenance"
+      assert_select "[data-slot='alert-description']", text: /harmonized derivations of the Tailwind CSS v4 palette/
+    end
+
+    families = Gallery::Foundations::ColorsPage::NEUTRAL_FAMILIES +
+      Gallery::Foundations::ColorsPage::COLOR_FAMILIES
+    families.each do |family|
+      assert_select "[data-gallery='color-scale'][data-gallery-color-family='#{family}']" do
+        Gallery::Foundations::ColorsPage::STEPS.each do |step|
+          token = "--nk-#{family}-#{step}"
+          assert_select "[data-gallery='color-swatch'][data-gallery-color-token='#{token}']", count: 1
+        end
+      end
+    end
+
+    %w[--nk-white --nk-black].each do |token|
+      assert_select "[data-gallery='color-swatch'][data-gallery-color-token='#{token}']", count: 1
+    end
+    NitroKit::Badge::COLORS.each do |color|
+      assert_select "#gallery-color-palette-#{color}[data-nk='badge'][data-color='#{color}']", count: 1
+    end
+  end
+
+  test "spacing and sizing page covers every gap dimension and breakpoint" do
+    get gallery_foundation_path("spacing-sizing")
+    assert_response :success
+
+    assert_select "#gallery-spacing-alignment[data-nk='alert'][data-variant='info']" do
+      assert_select "[data-slot='alert-title']", text: "Tailwind alignment"
+      assert_select "[data-slot='alert-description']", text: /matching Tailwind CSS v4’s --spacing/
+    end
+
+    Gallery::Foundations::SpacingSizingPage::SPACING_STEPS.each do |step|
+      assert_select "[data-gallery='measure'][data-gallery-measure='space-#{step}']", count: 1
+    end
+    Gallery::Foundations::SpacingSizingPage::CONTROL_HEIGHTS.each_key do |size|
+      assert_select "[data-gallery='measure'][data-gallery-measure='control-#{size}']", count: 1
+    end
+    Gallery::Foundations::SpacingSizingPage::CONTENT_WIDTHS.each_key do |size|
+      assert_select "[data-gallery='measure'][data-gallery-measure='content-#{size}']", count: 1
+    end
+    Gallery::Foundations::SpacingSizingPage::BREAKPOINTS.each_key do |name|
+      assert_select "[data-gallery='measure'][data-gallery-measure='breakpoint-#{name}']", count: 1
+    end
+  end
+
   test "icon page covers every size and both meaningful and decorative semantics" do
     get_component("icon")
 

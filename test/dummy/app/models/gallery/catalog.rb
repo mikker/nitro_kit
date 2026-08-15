@@ -1,6 +1,6 @@
 module Gallery
   module Catalog
-    KINDS = %i[home component composition].freeze
+    KINDS = %i[home foundation component composition].freeze
 
     # `subcategory` groups components in the sidebar; it is nil for every other
     # kind.
@@ -35,6 +35,24 @@ module Gallery
         page: Gallery::Home,
         states: [],
         expected_roots: []
+      ),
+      Entry.new(
+        kind: :foundation,
+        slug: "colors",
+        title: "Colors",
+        description: "Public color scales and shared tint roles for building and theming Nitro Kit interfaces.",
+        page: Gallery::Foundations::ColorsPage,
+        states: [],
+        expected_roots: %w[badge]
+      ),
+      Entry.new(
+        kind: :foundation,
+        slug: "spacing-sizing",
+        title: "Spacing & sizing",
+        description: "The shared spacing unit, control heights, content widths, and responsive boundaries.",
+        page: Gallery::Foundations::SpacingSizingPage,
+        states: [],
+        expected_roots: %w[badge]
       ),
       Entry.new(
         kind: :component,
@@ -1010,6 +1028,19 @@ module Gallery
 
     COLLECTIONS = [
       Collection.new(
+        kind: :foundation,
+        title: "Foundations",
+        description: "Public design tokens that ground every Nitro Kit component.",
+        categories: [
+          Category.new(
+            slug: "theme",
+            title: "Theme",
+            description: "Appearance-independent scales and semantic theme roles.",
+            entries: pick_entries.call(:foundation, "colors", "spacing-sizing")
+          )
+        ].freeze
+      ),
+      Collection.new(
         kind: :component,
         title: "Components",
         description: "Every gem-owned component, exhaustively permuted.",
@@ -1171,6 +1202,8 @@ module Gallery
       case entry.kind
       when :home
         routes.gallery_root_path
+      when :foundation
+        routes.gallery_foundation_path(entry.slug)
       when :component
         routes.gallery_component_path(entry.slug)
       when :composition

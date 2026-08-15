@@ -65,7 +65,8 @@ class GalleryCatalogTest < ActionDispatch::IntegrationTest
 
   def nitro_owned(selector)
     document.css(selector).reject do |node|
-      node.ancestors(APPLICATION_OWNED_SLOTS).any?
+      %w[color-chip measure-bar].include?(node["data-gallery"]) ||
+        node.ancestors(APPLICATION_OWNED_SLOTS).any?
     end.map { |node| node.name }
   end
 

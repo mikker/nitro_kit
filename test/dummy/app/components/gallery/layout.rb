@@ -131,7 +131,7 @@ module Gallery
     end
 
     def navigation_match(entry)
-      return "exact:#{entry_path(entry)}" if entry.kind == :component
+      return "exact:#{entry_path(entry)}" unless entry.kind == :composition
 
       "prefix:/gallery/compositions/#{entry.slug}/"
     end
