@@ -216,7 +216,7 @@ class SemanticPaletteTest < ApplicationSystemTestCase
 
     before.zip(after).each_with_index do |(was, now), index|
       refute_equal was, now,
-        "Component #{index} ignored the --nk-color-success override"
+        "Component #{index} ignored the --nk-palette-success override"
     end
 
     assert_no_severe_console_errors

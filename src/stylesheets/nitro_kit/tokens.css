@@ -76,8 +76,8 @@
        fits through the source ramp, bounded to an imperceptible distance
        (OKLab delta E <= 0.01 per value) and never more saturated outside sRGB
        than the source. */
-    --nk-slate-50: oklch(97.7% 0.004 247.3);
-    --nk-slate-100: oklch(97.5% 0.006 249.8);
+    --nk-slate-50: oklch(98.4% 0.004 247.3);
+    --nk-slate-100: oklch(96.8% 0.006 249.8);
     --nk-slate-200: oklch(93.6% 0.013 252.5);
     --nk-slate-300: oklch(85.9% 0.023 254.2);
     --nk-slate-400: oklch(71.2% 0.038 255.7);
@@ -88,8 +88,8 @@
     --nk-slate-900: oklch(20.6% 0.042 263.3);
     --nk-slate-950: oklch(12.9% 0.042 265.8);
 
-    --nk-gray-50: oklch(97.8% 0.002 250.4);
-    --nk-gray-100: oklch(97.6% 0.002 260.5);
+    --nk-gray-50: oklch(98.5% 0.002 250.4);
+    --nk-gray-100: oklch(96.7% 0.002 260.5);
     --nk-gray-200: oklch(93.6% 0.005 264.1);
     --nk-gray-300: oklch(86.2% 0.011 259.5);
     --nk-gray-400: oklch(71.4% 0.02 261.5);
@@ -100,8 +100,8 @@
     --nk-gray-900: oklch(20.7% 0.033 261.5);
     --nk-gray-950: oklch(13% 0.028 262.7);
 
-    --nk-zinc-50: oklch(97.8% 0 none);
-    --nk-zinc-100: oklch(97.6% 0.001 286.4);
+    --nk-zinc-50: oklch(98.5% 0 none);
+    --nk-zinc-100: oklch(96.7% 0.001 286.4);
     --nk-zinc-200: oklch(93% 0.003 286.3);
     --nk-zinc-300: oklch(86.1% 0.007 286.3);
     --nk-zinc-400: oklch(71.4% 0.013 286.1);
@@ -112,8 +112,8 @@
     --nk-zinc-900: oklch(20.8% 0.005 285.9);
     --nk-zinc-950: oklch(14% 0.005 285.8);
 
-    --nk-neutral-50: oklch(97.9% 0 none);
-    --nk-neutral-100: oklch(97.8% 0 none);
+    --nk-neutral-50: oklch(98.5% 0 none);
+    --nk-neutral-100: oklch(97% 0 none);
     --nk-neutral-200: oklch(93.2% 0 none);
     --nk-neutral-300: oklch(86% 0 none);
     --nk-neutral-400: oklch(71.6% 0 none);
@@ -124,8 +124,8 @@
     --nk-neutral-900: oklch(20.7% 0 none);
     --nk-neutral-950: oklch(14.3% 0 none);
 
-    --nk-stone-50: oklch(97.9% 0.001 114.2);
-    --nk-stone-100: oklch(97.8% 0.001 85.2);
+    --nk-stone-50: oklch(98.5% 0.001 114.2);
+    --nk-stone-100: oklch(97% 0.001 85.2);
     --nk-stone-200: oklch(93.3% 0.003 64.5);
     --nk-stone-300: oklch(85.9% 0.005 52.4);
     --nk-stone-400: oklch(71.5% 0.01 56.1);

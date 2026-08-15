@@ -482,7 +482,7 @@ Use `@theme inline` when a Tailwind theme variable references another custom pro
 
 ## Public token reference
 
-The following 85 variables are the complete public token set. Theme-independent tokens are declared on `:root`. Appearance tokens have light, dark, and system-fallback values. Derived tokens have defaults expressed in terms of other public tokens and remain overrideable.
+The following variables are the complete public token set. Theme-independent tokens are declared on `:root`. Appearance tokens have light, dark, and system-fallback values. Derived tokens have defaults expressed in terms of other public tokens and remain overrideable.
 
 ### Typography
 
@@ -706,8 +706,8 @@ Values mirror `src/stylesheets/nitro_kit/tokens.css`, which is authoritative.
   
 | Token | Value |
 | ----- | ----- |
-| `--nk-slate-50` | `oklch(97.7% 0.004 247.3)` |
-| `--nk-slate-100` | `oklch(97.5% 0.006 249.8)` |
+| `--nk-slate-50` | `oklch(98.4% 0.004 247.3)` |
+| `--nk-slate-100` | `oklch(96.8% 0.006 249.8)` |
 | `--nk-slate-200` | `oklch(93.6% 0.013 252.5)` |
 | `--nk-slate-300` | `oklch(85.9% 0.023 254.2)` |
 | `--nk-slate-400` | `oklch(71.2% 0.038 255.7)` |
@@ -722,8 +722,8 @@ Values mirror `src/stylesheets/nitro_kit/tokens.css`, which is authoritative.
   
 | Token | Value |
 | ----- | ----- |
-| `--nk-gray-50` | `oklch(97.8% 0.002 250.4)` |
-| `--nk-gray-100` | `oklch(97.6% 0.002 260.5)` |
+| `--nk-gray-50` | `oklch(98.5% 0.002 250.4)` |
+| `--nk-gray-100` | `oklch(96.7% 0.002 260.5)` |
 | `--nk-gray-200` | `oklch(93.6% 0.005 264.1)` |
 | `--nk-gray-300` | `oklch(86.2% 0.011 259.5)` |
 | `--nk-gray-400` | `oklch(71.4% 0.02 261.5)` |
@@ -738,8 +738,8 @@ Values mirror `src/stylesheets/nitro_kit/tokens.css`, which is authoritative.
   
 | Token | Value |
 | ----- | ----- |
-| `--nk-zinc-50` | `oklch(97.8% 0 none)` |
-| `--nk-zinc-100` | `oklch(97.6% 0.001 286.4)` |
+| `--nk-zinc-50` | `oklch(98.5% 0 none)` |
+| `--nk-zinc-100` | `oklch(96.7% 0.001 286.4)` |
 | `--nk-zinc-200` | `oklch(93% 0.003 286.3)` |
 | `--nk-zinc-300` | `oklch(86.1% 0.007 286.3)` |
 | `--nk-zinc-400` | `oklch(71.4% 0.013 286.1)` |
@@ -754,8 +754,8 @@ Values mirror `src/stylesheets/nitro_kit/tokens.css`, which is authoritative.
   
 | Token | Value |
 | ----- | ----- |
-| `--nk-neutral-50` | `oklch(97.9% 0 none)` |
-| `--nk-neutral-100` | `oklch(97.8% 0 none)` |
+| `--nk-neutral-50` | `oklch(98.5% 0 none)` |
+| `--nk-neutral-100` | `oklch(97% 0 none)` |
 | `--nk-neutral-200` | `oklch(93.2% 0 none)` |
 | `--nk-neutral-300` | `oklch(86% 0 none)` |
 | `--nk-neutral-400` | `oklch(71.6% 0 none)` |
@@ -770,8 +770,8 @@ Values mirror `src/stylesheets/nitro_kit/tokens.css`, which is authoritative.
   
 | Token | Value |
 | ----- | ----- |
-| `--nk-stone-50` | `oklch(97.9% 0.001 114.2)` |
-| `--nk-stone-100` | `oklch(97.8% 0.001 85.2)` |
+| `--nk-stone-50` | `oklch(98.5% 0.001 114.2)` |
+| `--nk-stone-100` | `oklch(97% 0.001 85.2)` |
 | `--nk-stone-200` | `oklch(93.3% 0.003 64.5)` |
 | `--nk-stone-300` | `oklch(85.9% 0.005 52.4)` |
 | `--nk-stone-400` | `oklch(71.5% 0.01 56.1)` |

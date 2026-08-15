@@ -36,10 +36,11 @@
   one shared palette. Badge colors were previously hardcoded in private
   `--_nk-*` variables, which are not a theme API, so badge color was the one
   thing in the library an application could not rebrand.
-- Separate `Badge`'s two color axes. Semantic families follow `--nk-color-*` and
-  move with an application's brand; decorative hues follow `--nk-palette-*` and
-  stay the color they name. `red` and `danger` previously resolved to identical
-  CSS and are now independently themeable.
+- Separate `Badge`'s two color axes. Semantic families follow the
+  `--nk-palette-{family}` tint roles and move with an application's brand;
+  decorative hues follow the `--nk-palette-{hue}` roles and stay the color they
+  name. `red` and `danger` previously resolved to identical CSS and are now
+  independently themeable.
 
 ### Fixed
 
