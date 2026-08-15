@@ -599,6 +599,443 @@ paired `-content` token carries the foreground, so change both to keep contrast
 in hand. Components tint at their own strength — a Badge reads more strongly
 than an Alert — but they never disagree about the hue.
 
+### Color scales
+
+Every color in the system samples these scales. The five neutral families —
+slate, gray, zinc, neutral, and stone — and the seventeen chromatic families
+each ship all eleven steps. Steps 50-200 are tints and surfaces, 400-600 are
+accents and markers, and 700-950 are content colors. Scale steps are
+appearance independent; the semantic roles above sample different steps per
+appearance.
+
+The default theme is zinc: `--nk-color-foreground` is `--nk-zinc-900`,
+`--nk-color-border` is `--nk-zinc-200`, and so on. Swapping the neutral or the
+accent means re-pointing roles at another family, not inventing values:
+
+```css
+/* A cooler, slate-based neutral in both appearances. */
+:root,
+[data-theme="light"] {
+  --nk-color-foreground: var(--nk-slate-900);
+  --nk-color-muted: var(--nk-slate-100);
+  --nk-color-muted-foreground: var(--nk-slate-500);
+  --nk-color-border: var(--nk-slate-200);
+  --nk-color-neutral: var(--nk-slate-500);
+  --nk-color-neutral-content: var(--nk-slate-700);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --nk-color-canvas: var(--nk-slate-950);
+    --nk-color-elevated: var(--nk-slate-900);
+    --nk-color-foreground: var(--nk-slate-100);
+    --nk-color-muted: var(--nk-slate-800);
+    --nk-color-muted-foreground: var(--nk-slate-400);
+    --nk-color-border: var(--nk-slate-700);
+    --nk-color-neutral: var(--nk-slate-400);
+    --nk-color-neutral-content: var(--nk-slate-200);
+  }
+}
+
+[data-theme="dark"] {
+  --nk-color-canvas: var(--nk-slate-950);
+  --nk-color-elevated: var(--nk-slate-900);
+  --nk-color-foreground: var(--nk-slate-100);
+  --nk-color-muted: var(--nk-slate-800);
+  --nk-color-muted-foreground: var(--nk-slate-400);
+  --nk-color-border: var(--nk-slate-700);
+  --nk-color-neutral: var(--nk-slate-400);
+  --nk-color-neutral-content: var(--nk-slate-200);
+}
+```
+
+A neutral swap is most visible in dark appearance, where canvas and surfaces
+sit on the 800-950 steps and the families genuinely diverge — slate carries
+many times the chroma of zinc there. In light appearance the default canvas
+and surface are near-white customs with no family identity, so the swap shows
+only in borders, muted fills, and text. For a light canvas that follows the
+family too, add `--nk-color-canvas: var(--nk-slate-50)`.
+
+An accent works the same way through the primary role:
+
+```css
+:root,
+[data-theme="light"] {
+  --nk-color-primary: var(--nk-indigo-600);
+  --nk-color-primary-foreground: white;
+  --nk-color-focus: var(--nk-indigo-600);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --nk-color-primary: var(--nk-indigo-500);
+    --nk-color-primary-foreground: var(--nk-indigo-50);
+    --nk-color-focus: var(--nk-indigo-500);
+  }
+}
+
+[data-theme="dark"] {
+  --nk-color-primary: var(--nk-indigo-500);
+  --nk-color-primary-foreground: var(--nk-indigo-50);
+  --nk-color-focus: var(--nk-indigo-500);
+}
+```
+
+Values mirror `src/stylesheets/nitro_kit/tokens.css`, which is authoritative.
+
+#### Slate
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-slate-50` | `oklch(97.7% 0.004 247.3)` |
+| `--nk-slate-100` | `oklch(97.5% 0.006 249.8)` |
+| `--nk-slate-200` | `oklch(93.6% 0.013 252.5)` |
+| `--nk-slate-300` | `oklch(85.9% 0.023 254.2)` |
+| `--nk-slate-400` | `oklch(71.2% 0.038 255.7)` |
+| `--nk-slate-500` | `oklch(55.7% 0.045 257.6)` |
+| `--nk-slate-600` | `oklch(45% 0.045 257.1)` |
+| `--nk-slate-700` | `oklch(36.4% 0.043 257.5)` |
+| `--nk-slate-800` | `oklch(28.5% 0.042 260.9)` |
+| `--nk-slate-900` | `oklch(20.6% 0.042 263.3)` |
+| `--nk-slate-950` | `oklch(12.9% 0.042 265.8)` |
+  
+#### Gray
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-gray-50` | `oklch(97.8% 0.002 250.4)` |
+| `--nk-gray-100` | `oklch(97.6% 0.002 260.5)` |
+| `--nk-gray-200` | `oklch(93.6% 0.005 264.1)` |
+| `--nk-gray-300` | `oklch(86.2% 0.011 259.5)` |
+| `--nk-gray-400` | `oklch(71.4% 0.02 261.5)` |
+| `--nk-gray-500` | `oklch(55.6% 0.027 261.6)` |
+| `--nk-gray-600` | `oklch(44.9% 0.031 260.0)` |
+| `--nk-gray-700` | `oklch(36.4% 0.033 256.9)` |
+| `--nk-gray-800` | `oklch(28.6% 0.034 260.1)` |
+| `--nk-gray-900` | `oklch(20.7% 0.033 261.5)` |
+| `--nk-gray-950` | `oklch(13% 0.028 262.7)` |
+  
+#### Zinc
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-zinc-50` | `oklch(97.8% 0 none)` |
+| `--nk-zinc-100` | `oklch(97.6% 0.001 286.4)` |
+| `--nk-zinc-200` | `oklch(93% 0.003 286.3)` |
+| `--nk-zinc-300` | `oklch(86.1% 0.007 286.3)` |
+| `--nk-zinc-400` | `oklch(71.4% 0.013 286.1)` |
+| `--nk-zinc-500` | `oklch(55.5% 0.017 285.9)` |
+| `--nk-zinc-600` | `oklch(44.7% 0.016 285.8)` |
+| `--nk-zinc-700` | `oklch(36% 0.012 285.9)` |
+| `--nk-zinc-800` | `oklch(28.2% 0.008 285.9)` |
+| `--nk-zinc-900` | `oklch(20.8% 0.005 285.9)` |
+| `--nk-zinc-950` | `oklch(14% 0.005 285.8)` |
+  
+#### Neutral
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-neutral-50` | `oklch(97.9% 0 none)` |
+| `--nk-neutral-100` | `oklch(97.8% 0 none)` |
+| `--nk-neutral-200` | `oklch(93.2% 0 none)` |
+| `--nk-neutral-300` | `oklch(86% 0 none)` |
+| `--nk-neutral-400` | `oklch(71.6% 0 none)` |
+| `--nk-neutral-500` | `oklch(55.7% 0 none)` |
+| `--nk-neutral-600` | `oklch(44.7% 0 none)` |
+| `--nk-neutral-700` | `oklch(36.1% 0 none)` |
+| `--nk-neutral-800` | `oklch(27.8% 0 none)` |
+| `--nk-neutral-900` | `oklch(20.7% 0 none)` |
+| `--nk-neutral-950` | `oklch(14.3% 0 none)` |
+  
+#### Stone
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-stone-50` | `oklch(97.9% 0.001 114.2)` |
+| `--nk-stone-100` | `oklch(97.8% 0.001 85.2)` |
+| `--nk-stone-200` | `oklch(93.3% 0.003 64.5)` |
+| `--nk-stone-300` | `oklch(85.9% 0.005 52.4)` |
+| `--nk-stone-400` | `oklch(71.5% 0.01 56.1)` |
+| `--nk-stone-500` | `oklch(55.7% 0.012 62.1)` |
+| `--nk-stone-600` | `oklch(45% 0.012 71.1)` |
+| `--nk-stone-700` | `oklch(36.4% 0.01 62.3)` |
+| `--nk-stone-800` | `oklch(27.8% 0.007 44.5)` |
+| `--nk-stone-900` | `oklch(21.1% 0.006 46.3)` |
+| `--nk-stone-950` | `oklch(14.7% 0.004 51.8)` |
+  
+#### Red
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-red-50` | `oklch(97% 0.013 17.5)` |
+| `--nk-red-100` | `oklch(93.9% 0.029 17.5)` |
+| `--nk-red-200` | `oklch(88.4% 0.061 18.3)` |
+| `--nk-red-300` | `oklch(80.2% 0.113 19.7)` |
+| `--nk-red-400` | `oklch(71% 0.183 22.3)` |
+| `--nk-red-500` | `oklch(63.6% 0.237 25.3)` |
+| `--nk-red-600` | `oklch(57.5% 0.235 27.3)` |
+| `--nk-red-700` | `oklch(50.7% 0.207 27.6)` |
+| `--nk-red-800` | `oklch(45.3% 0.178 26.7)` |
+| `--nk-red-900` | `oklch(38.6% 0.14 25.9)` |
+| `--nk-red-950` | `oklch(26.8% 0.093 25.8)` |
+  
+#### Orange
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-orange-50` | `oklch(98.1% 0.015 73.9)` |
+| `--nk-orange-100` | `oklch(95.2% 0.038 74.5)` |
+| `--nk-orange-200` | `oklch(90.3% 0.075 71.7)` |
+| `--nk-orange-300` | `oklch(83% 0.124 65.1)` |
+| `--nk-orange-400` | `oklch(75.3% 0.173 56.1)` |
+| `--nk-orange-500` | `oklch(70.5% 0.203 47.6)` |
+| `--nk-orange-600` | `oklch(64.6% 0.212 41.1)` |
+| `--nk-orange-700` | `oklch(55.3% 0.185 38.4)` |
+| `--nk-orange-800` | `oklch(48% 0.158 37.7)` |
+| `--nk-orange-900` | `oklch(39.8% 0.122 37.7)` |
+| `--nk-orange-950` | `oklch(27.6% 0.079 36.7)` |
+  
+#### Amber
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-amber-50` | `oklch(98.8% 0.016 94.9)` |
+| `--nk-amber-100` | `oklch(96% 0.069 96.5)` |
+| `--nk-amber-200` | `oklch(92.4% 0.118 95.3)` |
+| `--nk-amber-300` | `oklch(87.9% 0.167 92.1)` |
+| `--nk-amber-400` | `oklch(82.8% 0.179 84.4)` |
+| `--nk-amber-500` | `oklch(76.9% 0.178 70.1)` |
+| `--nk-amber-600` | `oklch(66.6% 0.169 58.3)` |
+| `--nk-amber-700` | `oklch(55.5% 0.153 49.1)` |
+| `--nk-amber-800` | `oklch(48.1% 0.135 46.1)` |
+| `--nk-amber-900` | `oklch(40.4% 0.112 45.4)` |
+| `--nk-amber-950` | `oklch(28.9% 0.077 46.2)` |
+  
+#### Yellow
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-yellow-50` | `oklch(98.7% 0.021 102.2)` |
+| `--nk-yellow-100` | `oklch(97.3% 0.071 103.1)` |
+| `--nk-yellow-200` | `oklch(94.5% 0.13 101.7)` |
+| `--nk-yellow-300` | `oklch(90.4% 0.175 97.8)` |
+| `--nk-yellow-400` | `oklch(85.2% 0.189 91.9)` |
+| `--nk-yellow-500` | `oklch(79.5% 0.174 86.0)` |
+| `--nk-yellow-600` | `oklch(68.1% 0.152 75.8)` |
+| `--nk-yellow-700` | `oklch(55.6% 0.125 66.6)` |
+| `--nk-yellow-800` | `oklch(48.3% 0.111 61.5)` |
+| `--nk-yellow-900` | `oklch(41.1% 0.094 57.5)` |
+| `--nk-yellow-950` | `oklch(29.6% 0.067 54.1)` |
+  
+#### Lime
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-lime-50` | `oklch(98.6% 0.026 120.7)` |
+| `--nk-lime-100` | `oklch(96.8% 0.076 122.4)` |
+| `--nk-lime-200` | `oklch(93.8% 0.129 124.4)` |
+| `--nk-lime-300` | `oklch(89.7% 0.195 126.6)` |
+| `--nk-lime-400` | `oklch(84.1% 0.228 128.9)` |
+| `--nk-lime-500` | `oklch(76.8% 0.223 130.8)` |
+| `--nk-lime-600` | `oklch(64.8% 0.19 131.7)` |
+| `--nk-lime-700` | `oklch(53.5% 0.147 131.5)` |
+| `--nk-lime-800` | `oklch(46.2% 0.125 131.0)` |
+| `--nk-lime-900` | `oklch(39.5% 0.1 131.1)` |
+| `--nk-lime-950` | `oklch(28.4% 0.073 132.0)` |
+  
+#### Green
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-green-50` | `oklch(98.1% 0.017 155.9)` |
+| `--nk-green-100` | `oklch(96.3% 0.046 156.6)` |
+| `--nk-green-200` | `oklch(92.6% 0.088 156.1)` |
+| `--nk-green-300` | `oklch(86.7% 0.151 154.3)` |
+| `--nk-green-400` | `oklch(79.8% 0.204 151.8)` |
+| `--nk-green-500` | `oklch(72.3% 0.209 149.6)` |
+| `--nk-green-600` | `oklch(62.7% 0.184 149.2)` |
+| `--nk-green-700` | `oklch(52.9% 0.145 150.0)` |
+| `--nk-green-800` | `oklch(45.6% 0.121 151.4)` |
+| `--nk-green-900` | `oklch(38.3% 0.094 152.4)` |
+| `--nk-green-950` | `oklch(27.6% 0.066 153.1)` |
+  
+#### Emerald
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-emerald-50` | `oklch(97.9% 0.019 165.4)` |
+| `--nk-emerald-100` | `oklch(95% 0.056 164.5)` |
+| `--nk-emerald-200` | `oklch(90.6% 0.095 164.0)` |
+| `--nk-emerald-300` | `oklch(84.2% 0.143 164.5)` |
+| `--nk-emerald-400` | `oklch(76.7% 0.167 163.3)` |
+| `--nk-emerald-500` | `oklch(69.6% 0.16 162.5)` |
+| `--nk-emerald-600` | `oklch(59.6% 0.135 163.2)` |
+| `--nk-emerald-700` | `oklch(50.8% 0.108 165.5)` |
+| `--nk-emerald-800` | `oklch(44% 0.09 167.0)` |
+| `--nk-emerald-900` | `oklch(36.9% 0.074 169.2)` |
+| `--nk-emerald-950` | `oklch(27.1% 0.052 172.3)` |
+  
+#### Teal
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-teal-50` | `oklch(98.3% 0.011 180.8)` |
+| `--nk-teal-100` | `oklch(95.5% 0.057 180.5)` |
+| `--nk-teal-200` | `oklch(91.1% 0.097 180.6)` |
+| `--nk-teal-300` | `oklch(85.2% 0.136 181.0)` |
+| `--nk-teal-400` | `oklch(77.8% 0.142 181.9)` |
+| `--nk-teal-500` | `oklch(70.3% 0.13 182.5)` |
+| `--nk-teal-600` | `oklch(60.1% 0.108 184.6)` |
+| `--nk-teal-700` | `oklch(51% 0.089 186.6)` |
+| `--nk-teal-800` | `oklch(44.5% 0.077 187.6)` |
+| `--nk-teal-900` | `oklch(37.6% 0.062 189.0)` |
+| `--nk-teal-950` | `oklch(28.6% 0.047 192.0)` |
+  
+#### Cyan
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-cyan-50` | `oklch(98.3% 0.017 201.2)` |
+| `--nk-cyan-100` | `oklch(95.8% 0.045 202.8)` |
+| `--nk-cyan-200` | `oklch(91.8% 0.083 205.0)` |
+| `--nk-cyan-300` | `oklch(86.2% 0.126 207.5)` |
+| `--nk-cyan-400` | `oklch(78.9% 0.144 211.5)` |
+| `--nk-cyan-500` | `oklch(71.5% 0.133 215.3)` |
+| `--nk-cyan-600` | `oklch(61% 0.116 221.6)` |
+| `--nk-cyan-700` | `oklch(52% 0.097 223.4)` |
+| `--nk-cyan-800` | `oklch(45.5% 0.085 224.7)` |
+| `--nk-cyan-900` | `oklch(38.8% 0.07 227.1)` |
+| `--nk-cyan-950` | `oklch(30.9% 0.056 229.8)` |
+  
+#### Sky
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-sky-50` | `oklch(97.8% 0.011 237.7)` |
+| `--nk-sky-100` | `oklch(94.9% 0.026 234.2)` |
+| `--nk-sky-200` | `oklch(90% 0.059 232.1)` |
+| `--nk-sky-300` | `oklch(82.7% 0.108 230.2)` |
+| `--nk-sky-400` | `oklch(75.3% 0.153 232.8)` |
+| `--nk-sky-500` | `oklch(68.5% 0.159 237.3)` |
+| `--nk-sky-600` | `oklch(58.8% 0.148 242.0)` |
+| `--nk-sky-700` | `oklch(50.1% 0.124 242.7)` |
+| `--nk-sky-800` | `oklch(44.5% 0.104 241.2)` |
+| `--nk-sky-900` | `oklch(38.1% 0.089 241.3)` |
+| `--nk-sky-950` | `oklch(30.1% 0.067 242.7)` |
+  
+#### Blue
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-blue-50` | `oklch(96.8% 0.015 255.3)` |
+| `--nk-blue-100` | `oklch(93.6% 0.03 254.3)` |
+| `--nk-blue-200` | `oklch(88.2% 0.059 253.8)` |
+| `--nk-blue-300` | `oklch(80.4% 0.101 252.6)` |
+| `--nk-blue-400` | `oklch(70.9% 0.155 254.7)` |
+| `--nk-blue-500` | `oklch(62.1% 0.205 259.4)` |
+| `--nk-blue-600` | `oklch(54.9% 0.244 262.8)` |
+| `--nk-blue-700` | `oklch(48.4% 0.239 264.6)` |
+| `--nk-blue-800` | `oklch(43.2% 0.201 265.2)` |
+| `--nk-blue-900` | `oklch(37% 0.15 266.0)` |
+| `--nk-blue-950` | `oklch(28.8% 0.087 267.6)` |
+  
+#### Indigo
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-indigo-50` | `oklch(96.2% 0.018 272.3)` |
+| `--nk-indigo-100` | `oklch(93% 0.033 272.8)` |
+| `--nk-indigo-200` | `oklch(87% 0.063 273.7)` |
+| `--nk-indigo-300` | `oklch(78% 0.112 275.2)` |
+| `--nk-indigo-400` | `oklch(67.6% 0.173 276.7)` |
+| `--nk-indigo-500` | `oklch(58.4% 0.23 277.2)` |
+| `--nk-indigo-600` | `oklch(51.4% 0.257 277.0)` |
+| `--nk-indigo-700` | `oklch(45.3% 0.241 277.0)` |
+| `--nk-indigo-800` | `oklch(40.7% 0.196 277.4)` |
+| `--nk-indigo-900` | `oklch(34.9% 0.146 278.8)` |
+| `--nk-indigo-950` | `oklch(26.4% 0.088 281.2)` |
+  
+#### Violet
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-violet-50` | `oklch(96.8% 0.016 294.0)` |
+| `--nk-violet-100` | `oklch(94.5% 0.027 293.9)` |
+| `--nk-violet-200` | `oklch(89.2% 0.058 293.8)` |
+| `--nk-violet-300` | `oklch(80.8% 0.106 293.4)` |
+| `--nk-violet-400` | `oklch(70.3% 0.173 293.4)` |
+| `--nk-violet-500` | `oklch(60.6% 0.24 292.7)` |
+| `--nk-violet-600` | `oklch(54.2% 0.279 292.7)` |
+| `--nk-violet-700` | `oklch(48.8% 0.269 292.7)` |
+| `--nk-violet-800` | `oklch(43.8% 0.234 293.2)` |
+| `--nk-violet-900` | `oklch(37.1% 0.192 292.8)` |
+| `--nk-violet-950` | `oklch(28.8% 0.139 291.6)` |
+  
+#### Purple
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-purple-50` | `oklch(97.4% 0.014 308.2)` |
+| `--nk-purple-100` | `oklch(95.2% 0.029 307.4)` |
+| `--nk-purple-200` | `oklch(90.1% 0.061 306.7)` |
+| `--nk-purple-300` | `oklch(82.1% 0.114 306.3)` |
+| `--nk-purple-400` | `oklch(71.4% 0.193 305.5)` |
+| `--nk-purple-500` | `oklch(62.7% 0.255 303.9)` |
+| `--nk-purple-600` | `oklch(55.7% 0.286 302.3)` |
+| `--nk-purple-700` | `oklch(49.6% 0.261 302.2)` |
+| `--nk-purple-800` | `oklch(44.1% 0.22 303.7)` |
+| `--nk-purple-900` | `oklch(37.3% 0.182 304.0)` |
+| `--nk-purple-950` | `oklch(29.5% 0.145 303.3)` |
+  
+#### Fuchsia
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-fuchsia-50` | `oklch(97.7% 0.017 319.8)` |
+| `--nk-fuchsia-100` | `oklch(95.2% 0.035 319.4)` |
+| `--nk-fuchsia-200` | `oklch(90.3% 0.075 319.7)` |
+| `--nk-fuchsia-300` | `oklch(82.9% 0.143 321.2)` |
+| `--nk-fuchsia-400` | `oklch(74.3% 0.228 322.1)` |
+| `--nk-fuchsia-500` | `oklch(66.5% 0.291 322.3)` |
+| `--nk-fuchsia-600` | `oklch(59.1% 0.283 322.9)` |
+| `--nk-fuchsia-700` | `oklch(51.8% 0.243 323.8)` |
+| `--nk-fuchsia-800` | `oklch(45.9% 0.211 324.8)` |
+| `--nk-fuchsia-900` | `oklch(39.1% 0.171 325.5)` |
+| `--nk-fuchsia-950` | `oklch(30.1% 0.135 325.7)` |
+  
+#### Pink
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-pink-50` | `oklch(97.1% 0.015 343.1)` |
+| `--nk-pink-100` | `oklch(94.9% 0.027 342.4)` |
+| `--nk-pink-200` | `oklch(89.9% 0.062 343.3)` |
+| `--nk-pink-300` | `oklch(81.7% 0.125 346.0)` |
+| `--nk-pink-400` | `oklch(72.6% 0.196 349.7)` |
+| `--nk-pink-500` | `oklch(65.2% 0.242 354.8)` |
+| `--nk-pink-600` | `oklch(59.2% 0.239 0.2)` |
+| `--nk-pink-700` | `oklch(52.5% 0.213 3.9)` |
+| `--nk-pink-800` | `oklch(46.8% 0.188 3.7)` |
+| `--nk-pink-900` | `oklch(39.8% 0.152 3.1)` |
+| `--nk-pink-950` | `oklch(29.3% 0.109 3.2)` |
+  
+#### Rose
+  
+| Token | Value |
+| ----- | ----- |
+| `--nk-rose-50` | `oklch(96.9% 0.015 12.9)` |
+| `--nk-rose-100` | `oklch(94.2% 0.027 11.4)` |
+| `--nk-rose-200` | `oklch(89% 0.058 10.9)` |
+| `--nk-rose-300` | `oklch(80.7% 0.112 11.2)` |
+| `--nk-rose-400` | `oklch(71.3% 0.184 13.5)` |
+| `--nk-rose-500` | `oklch(64.5% 0.244 16.2)` |
+| `--nk-rose-600` | `oklch(58.6% 0.243 17.6)` |
+| `--nk-rose-700` | `oklch(51.4% 0.212 16.9)` |
+| `--nk-rose-800` | `oklch(46.4% 0.185 13.4)` |
+| `--nk-rose-900` | `oklch(40% 0.157 10.9)` |
+| `--nk-rose-950` | `oklch(28.1% 0.107 11.4)` |
+
+
 ### Decorative palette
 
 `Badge` carries two color axes on one `color:` option. The semantic families

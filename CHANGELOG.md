@@ -4,10 +4,20 @@
 
 ### Added
 
-- Add the public decorative palette: `--nk-palette-{hue}` and
+- Add the full color scales as public tokens: `--nk-{family}-{50..950}` for all
+  twenty-two families — the five neutrals slate, gray, zinc, neutral, and stone,
+  plus seventeen chromatic hues. Every semantic role and badge color samples
+  these scales, so swapping the neutral or the accent means re-pointing roles at
+  another family rather than inventing values. Scale values are Nitro's own
+  harmonized ramps: smooth lightness, chroma, and hue curves fitted through the
+  familiar palette, bounded to an imperceptible perceptual distance per value.
+  The customization guide documents every step and ships neutral-swap and
+  accent recipes.
+- Add the public decorative palette roles: `--nk-palette-{hue}` and
   `--nk-palette-{hue}-content` for all eighteen hues, so `Badge`'s categorical
-  colors are themeable like every other part of the system. Each tint is
-  appearance independent and its paired foreground resolves per appearance.
+  colors are themeable like every other part of the system. Each resolves to a
+  scale step: the 400 tint with a 700-800 foreground in light and the 200
+  foreground in dark.
 
 ### Breaking changes
 
