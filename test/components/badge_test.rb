@@ -6,8 +6,9 @@ class BadgeTest < ActiveSupport::TestCase
     assert_predicate NitroKit::Badge::SIZES, :frozen?
     assert_predicate NitroKit::Badge::COLORS, :frozen?
     assert_equal 23, NitroKit::Badge::COLORS.size
-    assert_includes NitroKit::Badge::COLORS, :zinc
-    assert_includes NitroKit::Badge::COLORS, :rose
+    assert_equal %i[neutral info success warning danger], NitroKit::Badge::SEMANTIC_COLORS
+    assert_equal 18, NitroKit::Badge::PALETTE_COLORS.size
+    assert_empty NitroKit::Badge::SEMANTIC_COLORS & NitroKit::Badge::PALETTE_COLORS
 
     NitroKit::Badge::VARIANTS.product(NitroKit::Badge::SIZES, NitroKit::Badge::COLORS).each do |variant, size, color|
       node = render_node(NitroKit::Badge.new("Status", variant:, size:, color:))
@@ -83,25 +84,54 @@ class BadgeTest < ActiveSupport::TestCase
     assert_equal "class", node["data-nk-escape"]
   end
 
-  test "ships the complete Tailwind color palette" do
+  test "resolves every color to public tokens so applications can retheme them" do
     css = NitroKit::Engine.root.join(
       "src/stylesheets/nitro_kit/components/palette.css"
     ).read
 
-    NitroKit::Badge::COLORS.first(18).each do |color|
+    NitroKit::Badge::SEMANTIC_COLORS.each do |color|
       assert_includes css, %(data-color="#{color}")
+      assert_includes css, "--_nk-semantic-accent: var(--nk-color-#{color})"
+      assert_includes css, "--_nk-semantic-content: var(--nk-color-#{color}-content)"
+    end
+
+    NitroKit::Badge::PALETTE_COLORS.each do |color|
+      assert_includes css, %(data-color="#{color}")
+      assert_includes css, "--_nk-semantic-accent: var(--nk-palette-#{color})"
+      assert_includes css, "--_nk-semantic-content: var(--nk-palette-#{color}-content)"
+    end
+
+    refute_match(/oklch\(/, css, "Badge colors must come from tokens, not literal values")
+  end
+
+  # `red` and `danger` used to resolve to identical CSS, so the two spellings
+  # were indistinguishable. They are now separate systems: a semantic family
+  # follows the application's brand, a hue stays the color it names.
+  test "keeps semantic families and decorative hues independently themeable" do
+    css = NitroKit::Engine.root.join(
+      "src/stylesheets/nitro_kit/components/palette.css"
+    ).read
+
+    { danger: :red, success: :green, warning: :amber, neutral: :zinc }.each do |semantic, hue|
+      assert_includes css, "--_nk-semantic-accent: var(--nk-color-#{semantic})"
+      assert_includes css, "--_nk-semantic-accent: var(--nk-palette-#{hue})"
+    end
+
+    tokens = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/tokens.css").read
+    NitroKit::Badge::PALETTE_COLORS.each do |hue|
+      assert_includes tokens, "--nk-palette-#{hue}:"
+      assert_includes tokens, "--nk-palette-#{hue}-content:"
     end
   end
 
-  test "keeps warning badges dark enough on their light tint" do
+  test "pairs each tint with its own readable foreground" do
     css = NitroKit::Engine.root.join(
-      "src/stylesheets/nitro_kit/components/palette.css"
+      "src/stylesheets/nitro_kit/components/badge.css"
     ).read
 
-    assert_match(
-      /data-color="warning"[^}]+--_nk-palette-light: oklch\(55% 0\.163 48\.998\)/m,
-      css
-    )
+    assert_includes css, "color: var(--_nk-semantic-content)"
+    assert_includes css, "var(--_nk-semantic-accent) var(--_nk-badge-tint-strength)"
+    refute_includes css, "--_nk-palette-"
   end
 
   private

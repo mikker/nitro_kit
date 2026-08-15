@@ -582,6 +582,76 @@ The following 85 variables are the complete public token set. Theme-independent 
 | `--nk-color-danger-content`     | Error and destructive status content.                                  |
 | `--nk-color-overlay`            | Modal and drawer backdrop.                                             |
 
+The five status families — neutral, info, success, warning, and danger — are the
+complete semantic palette. `Badge`, `Alert`, and `Toast::Item` all resolve their
+colors from these tokens, so overriding one family moves every component that
+uses it:
+
+```css
+:root {
+  --nk-color-success: oklch(0.68 0.16 155);
+  --nk-color-success-content: oklch(0.36 0.09 155);
+}
+```
+
+That single override retints successful badges, alerts, and toasts together. The
+paired `-content` token carries the foreground, so change both to keep contrast
+in hand. Components tint at their own strength — a Badge reads more strongly
+than an Alert — but they never disagree about the hue.
+
+### Decorative palette
+
+`Badge` carries two color axes on one `color:` option. The semantic families
+above answer "what does this mean"; these eighteen hues answer "which color is
+this", for categorical labelling where meaning is not the point.
+
+The distinction is deliberate: `color: :danger` follows `--nk-color-danger` and
+moves when an application rethemes its destructive color, while `color: :red`
+follows `--nk-palette-red` and stays red. Retheme a hue to fit a brand, or
+leave the set alone and use it as shipped.
+
+Each tint is appearance independent; the paired `-content` foreground resolves
+per appearance so labels stay readable in both.
+
+| Token | Role |
+| ----- | ---- |
+| `--nk-palette-zinc`                    | Zinc tint and marker.                  |
+| `--nk-palette-zinc-content`            | Zinc content on that tint.         |
+| `--nk-palette-red`                     | Red tint and marker.                   |
+| `--nk-palette-red-content`             | Red content on that tint.          |
+| `--nk-palette-orange`                  | Orange tint and marker.                |
+| `--nk-palette-orange-content`          | Orange content on that tint.       |
+| `--nk-palette-amber`                   | Amber tint and marker.                 |
+| `--nk-palette-amber-content`           | Amber content on that tint.        |
+| `--nk-palette-yellow`                  | Yellow tint and marker.                |
+| `--nk-palette-yellow-content`          | Yellow content on that tint.       |
+| `--nk-palette-lime`                    | Lime tint and marker.                  |
+| `--nk-palette-lime-content`            | Lime content on that tint.         |
+| `--nk-palette-green`                   | Green tint and marker.                 |
+| `--nk-palette-green-content`           | Green content on that tint.        |
+| `--nk-palette-emerald`                 | Emerald tint and marker.               |
+| `--nk-palette-emerald-content`         | Emerald content on that tint.      |
+| `--nk-palette-teal`                    | Teal tint and marker.                  |
+| `--nk-palette-teal-content`            | Teal content on that tint.         |
+| `--nk-palette-cyan`                    | Cyan tint and marker.                  |
+| `--nk-palette-cyan-content`            | Cyan content on that tint.         |
+| `--nk-palette-sky`                     | Sky tint and marker.                   |
+| `--nk-palette-sky-content`             | Sky content on that tint.          |
+| `--nk-palette-blue`                    | Blue tint and marker.                  |
+| `--nk-palette-blue-content`            | Blue content on that tint.         |
+| `--nk-palette-indigo`                  | Indigo tint and marker.                |
+| `--nk-palette-indigo-content`          | Indigo content on that tint.       |
+| `--nk-palette-violet`                  | Violet tint and marker.                |
+| `--nk-palette-violet-content`          | Violet content on that tint.       |
+| `--nk-palette-purple`                  | Purple tint and marker.                |
+| `--nk-palette-purple-content`          | Purple content on that tint.       |
+| `--nk-palette-fuchsia`                 | Fuchsia tint and marker.               |
+| `--nk-palette-fuchsia-content`         | Fuchsia content on that tint.      |
+| `--nk-palette-pink`                    | Pink tint and marker.                  |
+| `--nk-palette-pink-content`            | Pink content on that tint.         |
+| `--nk-palette-rose`                    | Rose tint and marker.                  |
+| `--nk-palette-rose-content`            | Rose content on that tint.         |
+
 ### Default button colors
 
 | Token                                  | Role                                    |

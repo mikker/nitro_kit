@@ -17,10 +17,10 @@ class AlertTest < ActiveSupport::TestCase
     end
   end
 
-  test "drives its own palette without borrowing the Badge color axis" do
-    assert_predicate NitroKit::Alert::VARIANT_PALETTE, :frozen?
-    assert_equal NitroKit::Alert::VARIANTS, NitroKit::Alert::VARIANT_PALETTE.keys
+  test "takes its colors from the shared semantic palette, not a private one" do
     refute NitroKit::Alert.const_defined?(:COLORS, false)
+    refute NitroKit::Alert.const_defined?(:VARIANT_PALETTE, false),
+      "Alert no longer maps variants to hue families; the palette resolves them from tokens"
 
     css = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/palette.css").read
     NitroKit::Alert::VARIANTS.each do |variant|
@@ -30,6 +30,33 @@ class AlertTest < ActiveSupport::TestCase
     alert_css = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/alert.css").read
     assert_includes alert_css, %([data-nk="alert"][data-variant])
     refute_includes alert_css, "data-color"
+    refute_includes alert_css, "--_nk-palette-"
+    refute_match(/oklch\(/, alert_css)
+  end
+
+  # The defect this replaces: Alert resolved its colors from a private hardcoded
+  # palette while Toast resolved the same variant names from `--nk-color-*`, so
+  # one "success" rendered as two different greens and rethemeing moved only one
+  # of them.
+  test "renders identically to a Toast of the same variant" do
+    palette = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/palette.css").read
+    alert_css = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/alert.css").read
+    toast_css = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/toast.css").read
+
+    assert_equal NitroKit::Toast::Item::VARIANTS, NitroKit::Alert::VARIANTS
+
+    NitroKit::Alert::VARIANTS.each do |variant|
+      assert_includes palette, %([data-nk="alert"][data-variant="#{variant}"])
+      assert_includes palette, %([data-nk="toast-item"][data-variant="#{variant}"])
+    end
+
+    %w[surface border content].each do |part|
+      assert_includes alert_css, "var(--_nk-semantic-#{part})"
+      assert_includes toast_css, "var(--_nk-semantic-#{part})"
+    end
+
+    refute_match(/oklch\(/, toast_css)
+    refute_includes toast_css, "var(--nk-color-info)"
   end
 
   test "accepts constructor text and matching compound declarations" do

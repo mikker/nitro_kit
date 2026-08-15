@@ -2,6 +2,42 @@
 
 ## Unreleased
 
+### Added
+
+- Add the public decorative palette: `--nk-palette-{hue}` and
+  `--nk-palette-{hue}-content` for all eighteen hues, so `Badge`'s categorical
+  colors are themeable like every other part of the system. Each tint is
+  appearance independent and its paired foreground resolves per appearance.
+
+### Breaking changes
+
+- Remove `Alert::VARIANT_PALETTE`. Alert variants resolve through the shared
+  semantic palette instead of mapping to hue families.
+- Change `Badge`'s default color from `:zinc` to `:neutral`. Both render the
+  same way; the semantic name is now the default because it follows an
+  application's theme.
+
+### Changed
+
+- Resolve `Badge`, `Alert`, and `Toast::Item` colors from public tokens through
+  one shared palette. Badge colors were previously hardcoded in private
+  `--_nk-*` variables, which are not a theme API, so badge color was the one
+  thing in the library an application could not rebrand.
+- Separate `Badge`'s two color axes. Semantic families follow `--nk-color-*` and
+  move with an application's brand; decorative hues follow `--nk-palette-*` and
+  stay the color they name. `red` and `danger` previously resolved to identical
+  CSS and are now independently themeable.
+
+### Fixed
+
+- Render an `Alert` and a `Toast::Item` of the same variant identically. Both
+  declare the same variant vocabulary but resolved it from different sources, so
+  one "success" appeared as two different greens and rethemeing a semantic token
+  moved only the toast.
+- Raise the orange badge foreground so it clears WCAG AA against its own tint.
+  It rendered at 4.31:1 in light appearance. Every semantic family and hue is
+  now asserted at 4.5:1 or better in both appearances.
+
 ## 2.0.0.alpha.3
 
 ### Added

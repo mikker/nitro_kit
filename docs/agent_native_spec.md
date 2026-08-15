@@ -184,7 +184,7 @@ These components do not synchronize browser state into redundant `data-state` or
 
 `variant:` and `size:` on a component root are its identity axes, emitted as `data-variant` and `data-size` by the base component. A slot may carry its own owned `data-variant` when the slot has variant identity of its own: `Toast::Item` is a nested component with its own root variant, and Dropdown `item` is a plain element that takes `slot_attributes(:item, variant:)`, the base component's owned slot-variant channel. Caller `data: { variant: }` stays reserved in both cases.
 
-Each component has exactly one variant axis. `Alert` variants are `default info success warning error`, the same vocabulary as `Toast::Item`, and the tint comes from the Alert-owned `VARIANT_PALETTE`; there is no `color:` option on Alert. `Badge` keeps a separate `color:` palette axis alongside its `default outline` variants, and that palette is Badge's alone.
+Each component has exactly one variant axis. `Alert` variants are `default info success warning error`, the same vocabulary as `Toast::Item`, and both resolve their tint from the shared semantic palette so the same variant renders identically in either component; there is no `color:` option on Alert. `Badge` keeps a `color:` axis alongside its `default outline` variants, carrying the same semantic families `neutral info success warning danger`. Every family resolves to the public `--nk-color-*` tokens rather than a component-private hue.
 
 `Button` icons are `icon:` and `icon_end:`, matching the `button-icon` and `button-icon-end` slots. There is no `icon_right:`.
 

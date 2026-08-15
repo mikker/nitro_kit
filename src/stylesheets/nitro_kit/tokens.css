@@ -66,6 +66,27 @@
 
     --nk-app-shell-sidebar-width: 16rem;
     --nk-app-shell-topbar-height: 3.5rem;
+
+    /* Decorative palette. Appearance independent; the paired
+       `-content` foreground resolves per appearance below. */
+    --nk-palette-zinc: oklch(70.5% 0.015 286.067);
+    --nk-palette-red: oklch(70.4% 0.191 22.216);
+    --nk-palette-orange: oklch(75% 0.183 55.934);
+    --nk-palette-amber: oklch(82.8% 0.189 84.429);
+    --nk-palette-yellow: oklch(85.2% 0.199 91.936);
+    --nk-palette-lime: oklch(84.1% 0.238 128.85);
+    --nk-palette-green: oklch(79.2% 0.209 151.711);
+    --nk-palette-emerald: oklch(76.5% 0.177 163.223);
+    --nk-palette-teal: oklch(77.7% 0.152 181.912);
+    --nk-palette-cyan: oklch(78.9% 0.154 211.53);
+    --nk-palette-sky: oklch(74.6% 0.16 232.661);
+    --nk-palette-blue: oklch(70.7% 0.165 254.624);
+    --nk-palette-indigo: oklch(67.3% 0.182 276.935);
+    --nk-palette-violet: oklch(70.2% 0.183 293.541);
+    --nk-palette-purple: oklch(71.4% 0.203 305.504);
+    --nk-palette-fuchsia: oklch(74% 0.238 322.16);
+    --nk-palette-pink: oklch(71.8% 0.202 349.761);
+    --nk-palette-rose: oklch(71.2% 0.194 13.428);
   }
 
   :where(:root, [data-theme="light"]) {
@@ -93,6 +114,25 @@
     --nk-color-danger-foreground: oklch(1 0 0);
     --nk-color-danger-content: oklch(0.444 0.177 26.899);
     --nk-color-overlay: oklch(0 0 0 / 0.5);
+
+    --nk-palette-zinc-content: oklch(37% 0.013 285.805);
+    --nk-palette-red-content: oklch(50.5% 0.213 27.518);
+    --nk-palette-orange-content: oklch(51% 0.195 38.402);
+    --nk-palette-amber-content: oklch(55% 0.163 48.998);
+    --nk-palette-yellow-content: oklch(47.6% 0.114 61.907);
+    --nk-palette-lime-content: oklch(45.3% 0.124 130.933);
+    --nk-palette-green-content: oklch(44.8% 0.119 151.328);
+    --nk-palette-emerald-content: oklch(43.2% 0.095 166.913);
+    --nk-palette-teal-content: oklch(43.7% 0.078 188.216);
+    --nk-palette-cyan-content: oklch(45% 0.085 224.283);
+    --nk-palette-sky-content: oklch(44.3% 0.11 240.79);
+    --nk-palette-blue-content: oklch(42.4% 0.199 265.638);
+    --nk-palette-indigo-content: oklch(45.7% 0.24 277.023);
+    --nk-palette-violet-content: oklch(49.1% 0.27 292.581);
+    --nk-palette-purple-content: oklch(49.6% 0.265 301.924);
+    --nk-palette-fuchsia-content: oklch(51.8% 0.253 323.949);
+    --nk-palette-pink-content: oklch(52.5% 0.223 3.958);
+    --nk-palette-rose-content: oklch(51.4% 0.222 16.935);
   }
 
   @media (prefers-color-scheme: dark) {
@@ -121,6 +161,25 @@
       --nk-color-danger-foreground: oklch(0.985 0 0);
       --nk-color-danger-content: oklch(0.704 0.191 22.216);
       --nk-color-overlay: oklch(0 0 0 / 0.65);
+
+      --nk-palette-zinc-content: oklch(92% 0.004 286.32);
+      --nk-palette-red-content: oklch(88.5% 0.062 18.334);
+      --nk-palette-orange-content: oklch(90.1% 0.076 70.697);
+      --nk-palette-amber-content: oklch(92.4% 0.12 95.746);
+      --nk-palette-yellow-content: oklch(94.5% 0.129 101.54);
+      --nk-palette-lime-content: oklch(93.8% 0.127 124.321);
+      --nk-palette-green-content: oklch(92.5% 0.084 155.995);
+      --nk-palette-emerald-content: oklch(90.5% 0.093 164.15);
+      --nk-palette-teal-content: oklch(91% 0.096 180.426);
+      --nk-palette-cyan-content: oklch(91.7% 0.08 205.041);
+      --nk-palette-sky-content: oklch(90.1% 0.058 230.902);
+      --nk-palette-blue-content: oklch(88.2% 0.059 254.128);
+      --nk-palette-indigo-content: oklch(87% 0.065 274.039);
+      --nk-palette-violet-content: oklch(89.4% 0.057 293.283);
+      --nk-palette-purple-content: oklch(90.2% 0.063 306.703);
+      --nk-palette-fuchsia-content: oklch(90.3% 0.076 319.62);
+      --nk-palette-pink-content: oklch(89.9% 0.061 343.231);
+      --nk-palette-rose-content: oklch(89.2% 0.058 10.001);
     }
   }
 
@@ -149,6 +208,25 @@
     --nk-color-danger-foreground: oklch(0.985 0 0);
     --nk-color-danger-content: oklch(0.704 0.191 22.216);
     --nk-color-overlay: oklch(0 0 0 / 0.65);
+
+    --nk-palette-zinc-content: oklch(92% 0.004 286.32);
+    --nk-palette-red-content: oklch(88.5% 0.062 18.334);
+    --nk-palette-orange-content: oklch(90.1% 0.076 70.697);
+    --nk-palette-amber-content: oklch(92.4% 0.12 95.746);
+    --nk-palette-yellow-content: oklch(94.5% 0.129 101.54);
+    --nk-palette-lime-content: oklch(93.8% 0.127 124.321);
+    --nk-palette-green-content: oklch(92.5% 0.084 155.995);
+    --nk-palette-emerald-content: oklch(90.5% 0.093 164.15);
+    --nk-palette-teal-content: oklch(91% 0.096 180.426);
+    --nk-palette-cyan-content: oklch(91.7% 0.08 205.041);
+    --nk-palette-sky-content: oklch(90.1% 0.058 230.902);
+    --nk-palette-blue-content: oklch(88.2% 0.059 254.128);
+    --nk-palette-indigo-content: oklch(87% 0.065 274.039);
+    --nk-palette-violet-content: oklch(89.4% 0.057 293.283);
+    --nk-palette-purple-content: oklch(90.2% 0.063 306.703);
+    --nk-palette-fuchsia-content: oklch(90.3% 0.076 319.62);
+    --nk-palette-pink-content: oklch(89.9% 0.061 343.231);
+    --nk-palette-rose-content: oklch(89.2% 0.058 10.001);
   }
 
   :where(:root, [data-theme]) {
