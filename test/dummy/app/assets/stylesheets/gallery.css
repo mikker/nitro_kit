@@ -638,6 +638,16 @@
     gap: 1.25rem;
   }
 
+  /* Compact matrices survey many small samples at once. Inside the 40rem
+     constrained canvas the 20rem boundary-state tracks fit only one column,
+     so dense grids such as the badge color matrix keep the narrow tracks. */
+  :where(
+    [data-gallery="example"][data-gallery-layout="matrix"][data-gallery-density="compact"]
+      [data-gallery="example-canvas"]
+  ) {
+    grid-template-columns: repeat(auto-fit, minmax(min(10rem, 100%), 1fr));
+  }
+
   :where(
     [data-gallery="example"][data-gallery-density="compact"]
       [data-gallery="example-canvas"]
