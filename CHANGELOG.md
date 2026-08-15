@@ -13,11 +13,14 @@
   familiar palette, bounded to an imperceptible perceptual distance per value.
   The customization guide documents every step and ships neutral-swap and
   accent recipes.
-- Add the public decorative palette roles: `--nk-palette-{hue}` and
-  `--nk-palette-{hue}-content` for all eighteen hues, so `Badge`'s categorical
-  colors are themeable like every other part of the system. Each resolves to a
-  scale step: the 400 tint with a 700-800 foreground in light and the 200
-  foreground in dark.
+- Add the public tint palette: `--nk-palette-*` roles for all twenty-three
+  badge colors — the five semantic families and the eighteen decorative hues —
+  so `Badge`'s colors are themeable like every other part of the system. Each
+  resolves to a scale step: the 400 tint with a 700-800 foreground in light and
+  the 200 foreground in dark. Semantic families default to the same steps as
+  their hue families, so an `info` badge renders exactly like a `blue` badge
+  and a `warning` alert is amber in both appearances, until a theme separates
+  them.
 
 ### Breaking changes
 

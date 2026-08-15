@@ -340,8 +340,17 @@
     --nk-rose-900: oklch(40% 0.157 10.9);
     --nk-rose-950: oklch(28.1% 0.107 11.4);
 
-    /* Decorative palette. Appearance independent; the paired
-       `-content` foreground resolves per appearance below. */
+    /* The tint axis shared by Badge, Alert, and Toast. Semantic families
+       default to the same steps as their hue families, so `info` renders
+       exactly like `blue`; override --nk-palette-{semantic} to retheme the
+       tints without moving the raw hues, and --nk-color-{semantic} to move
+       fills and markers. Decorative hues stay the color they name. */
+    --nk-palette-neutral: var(--nk-zinc-400);
+    --nk-palette-info: var(--nk-blue-400);
+    --nk-palette-success: var(--nk-green-400);
+    --nk-palette-warning: var(--nk-amber-400);
+    --nk-palette-danger: var(--nk-red-400);
+
     --nk-palette-zinc: var(--nk-zinc-400);
     --nk-palette-red: var(--nk-red-400);
     --nk-palette-orange: var(--nk-orange-400);
@@ -387,6 +396,17 @@
     --nk-color-danger-foreground: oklch(1 0 0);
     --nk-color-danger-content: var(--nk-red-800);
     --nk-color-overlay: oklch(0 0 0 / 0.5);
+
+    --nk-palette-neutral-content: var(--nk-zinc-700);
+
+    --nk-palette-info-content: var(--nk-blue-800);
+
+    --nk-palette-success-content: var(--nk-green-800);
+
+    --nk-palette-warning-content: var(--nk-amber-800);
+
+    --nk-palette-danger-content: var(--nk-red-700);
+
 
     --nk-palette-zinc-content: var(--nk-zinc-700);
     --nk-palette-red-content: var(--nk-red-700);
@@ -435,6 +455,17 @@
       --nk-color-danger-content: var(--nk-red-400);
       --nk-color-overlay: oklch(0 0 0 / 0.65);
 
+      --nk-palette-neutral-content: var(--nk-zinc-200);
+
+      --nk-palette-info-content: var(--nk-blue-200);
+
+      --nk-palette-success-content: var(--nk-green-200);
+
+      --nk-palette-warning-content: var(--nk-amber-200);
+
+      --nk-palette-danger-content: var(--nk-red-200);
+
+
       --nk-palette-zinc-content: var(--nk-zinc-200);
       --nk-palette-red-content: var(--nk-red-200);
       --nk-palette-orange-content: var(--nk-orange-200);
@@ -481,6 +512,17 @@
     --nk-color-danger-foreground: var(--nk-zinc-50);
     --nk-color-danger-content: var(--nk-red-400);
     --nk-color-overlay: oklch(0 0 0 / 0.65);
+
+    --nk-palette-neutral-content: var(--nk-zinc-200);
+
+    --nk-palette-info-content: var(--nk-blue-200);
+
+    --nk-palette-success-content: var(--nk-green-200);
+
+    --nk-palette-warning-content: var(--nk-amber-200);
+
+    --nk-palette-danger-content: var(--nk-red-200);
+
 
     --nk-palette-zinc-content: var(--nk-zinc-200);
     --nk-palette-red-content: var(--nk-red-200);

@@ -582,22 +582,37 @@ The following 85 variables are the complete public token set. Theme-independent 
 | `--nk-color-danger-content`     | Error and destructive status content.                                  |
 | `--nk-color-overlay`            | Modal and drawer backdrop.                                             |
 
-The five status families — neutral, info, success, warning, and danger — are the
-complete semantic palette. `Badge`, `Alert`, and `Toast::Item` all resolve their
-colors from these tokens, so overriding one family moves every component that
-uses it:
+The five status families — neutral, info, success, warning, and danger — carry
+two roles each. `--nk-color-{family}` is the fill axis: strong marks, icons, and
+fills such as the destructive Button or an upload marker. The tint axis
+`--nk-palette-{family}` drives the soft surfaces of `Badge`, `Alert`, and
+`Toast::Item`, and defaults to the same scale steps as the matching hue family,
+so an `info` badge renders exactly like a `blue` badge out of the box:
 
 ```css
 :root {
-  --nk-color-success: oklch(0.68 0.16 155);
-  --nk-color-success-content: oklch(0.36 0.09 155);
+  --nk-palette-success: var(--nk-teal-400);
+}
+:root,
+[data-theme="light"] {
+  --nk-palette-success-content: var(--nk-teal-800);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --nk-palette-success-content: var(--nk-teal-200);
+  }
+}
+[data-theme="dark"] {
+  --nk-palette-success-content: var(--nk-teal-200);
 }
 ```
 
-That single override retints successful badges, alerts, and toasts together. The
-paired `-content` token carries the foreground, so change both to keep contrast
-in hand. Components tint at their own strength — a Badge reads more strongly
-than an Alert — but they never disagree about the hue.
+That override retints successful badges, alerts, and toasts together — and only
+them; a decorative `green` badge stays green, and success fills elsewhere keep
+following `--nk-color-success`. The paired `-content` role carries the
+foreground, so change both to keep contrast in hand. Components tint at their
+own strength — a Badge reads more strongly than an Alert — but they never
+disagree about the hue.
 
 ### Color scales
 
@@ -622,6 +637,8 @@ accent means re-pointing roles at another family, not inventing values:
   --nk-color-border: var(--nk-slate-200);
   --nk-color-neutral: var(--nk-slate-500);
   --nk-color-neutral-content: var(--nk-slate-700);
+  --nk-palette-neutral: var(--nk-slate-400);
+  --nk-palette-neutral-content: var(--nk-slate-700);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -634,6 +651,7 @@ accent means re-pointing roles at another family, not inventing values:
     --nk-color-border: var(--nk-slate-700);
     --nk-color-neutral: var(--nk-slate-400);
     --nk-color-neutral-content: var(--nk-slate-200);
+    --nk-palette-neutral-content: var(--nk-slate-200);
   }
 }
 
@@ -646,6 +664,7 @@ accent means re-pointing roles at another family, not inventing values:
   --nk-color-border: var(--nk-slate-700);
   --nk-color-neutral: var(--nk-slate-400);
   --nk-color-neutral-content: var(--nk-slate-200);
+  --nk-palette-neutral-content: var(--nk-slate-200);
 }
 ```
 
@@ -1036,22 +1055,34 @@ Values mirror `src/stylesheets/nitro_kit/tokens.css`, which is authoritative.
 | `--nk-rose-950` | `oklch(28.1% 0.107 11.4)` |
 
 
-### Decorative palette
+### Tint palette
 
-`Badge` carries two color axes on one `color:` option. The semantic families
-above answer "what does this mean"; these eighteen hues answer "which color is
-this", for categorical labelling where meaning is not the point.
+`Badge` carries two color vocabularies on one `color:` option. The semantic
+families answer "what does this mean"; the eighteen decorative hues answer
+"which color is this", for categorical labelling where meaning is not the
+point. Both resolve through `--nk-palette-*` tint roles.
 
-The distinction is deliberate: `color: :danger` follows `--nk-color-danger` and
-moves when an application rethemes its destructive color, while `color: :red`
-follows `--nk-palette-red` and stays red. Retheme a hue to fit a brand, or
-leave the set alone and use it as shipped.
+The distinction is deliberate: `color: :danger` follows `--nk-palette-danger`
+and moves when an application rethemes its destructive tint, while `color:
+:red` follows `--nk-palette-red` and stays red. By default the two agree —
+each semantic family samples the same scale steps as its hue family, so
+`danger` and `red` render identically until a theme separates them.
 
 Each tint is appearance independent; the paired `-content` foreground resolves
 per appearance so labels stay readable in both.
 
 | Token | Role |
 | ----- | ---- |
+| `--nk-palette-neutral`                 | Neutral status tint; defaults to zinc. |
+| `--nk-palette-neutral-content`         | Neutral status content on that tint.   |
+| `--nk-palette-info`                    | Info status tint; defaults to blue.    |
+| `--nk-palette-info-content`            | Info status content on that tint.      |
+| `--nk-palette-success`                 | Success status tint; defaults to green. |
+| `--nk-palette-success-content`         | Success status content on that tint.   |
+| `--nk-palette-warning`                 | Warning status tint; defaults to amber. |
+| `--nk-palette-warning-content`         | Warning status content on that tint.   |
+| `--nk-palette-danger`                  | Danger status tint; defaults to red.   |
+| `--nk-palette-danger-content`          | Danger status content on that tint.    |
 | `--nk-palette-zinc`                    | Zinc tint and marker.                  |
 | `--nk-palette-zinc-content`            | Zinc content on that tint.         |
 | `--nk-palette-red`                     | Red tint and marker.                   |

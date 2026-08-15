@@ -1,10 +1,11 @@
 /* The semantic palette shared by Badge, Alert, and Toast.
  *
- * Every semantic family resolves to the public `--nk-color-*` tokens, which are
- * already appearance-aware, so a component never restates a hue and an
- * application that rethemes a semantic colour moves all three components at
- * once. `-content` carries the paired foreground; the base token carries the
- * accent a component tints with.
+ * Every family resolves through the public `--nk-palette-*` tint axis, which
+ * samples the color scales and is already appearance-aware, so a component
+ * never restates a hue. Semantic families default to the same steps as their
+ * hue families -- `info` renders exactly like `blue` -- and an application
+ * that rethemes a tint role moves all three components at once. `-content`
+ * carries the paired foreground; the base role carries the tinting accent.
  *
  * Alert and Toast are the same kind of thing — a status message — so they also
  * share one tinted surface and border. Only the components that own a different
@@ -16,8 +17,8 @@
       [data-nk="alert"][data-variant="default"],
       [data-nk="toast-item"][data-variant="default"]
     ) {
-    --_nk-semantic-accent: var(--nk-color-neutral);
-    --_nk-semantic-content: var(--nk-color-neutral-content);
+    --_nk-semantic-accent: var(--nk-palette-neutral);
+    --_nk-semantic-content: var(--nk-palette-neutral-content);
   }
 
   :where(
@@ -25,8 +26,8 @@
       [data-nk="alert"][data-variant="info"],
       [data-nk="toast-item"][data-variant="info"]
     ) {
-    --_nk-semantic-accent: var(--nk-color-info);
-    --_nk-semantic-content: var(--nk-color-info-content);
+    --_nk-semantic-accent: var(--nk-palette-info);
+    --_nk-semantic-content: var(--nk-palette-info-content);
   }
 
   :where(
@@ -34,8 +35,8 @@
       [data-nk="alert"][data-variant="success"],
       [data-nk="toast-item"][data-variant="success"]
     ) {
-    --_nk-semantic-accent: var(--nk-color-success);
-    --_nk-semantic-content: var(--nk-color-success-content);
+    --_nk-semantic-accent: var(--nk-palette-success);
+    --_nk-semantic-content: var(--nk-palette-success-content);
   }
 
   :where(
@@ -43,8 +44,8 @@
       [data-nk="alert"][data-variant="warning"],
       [data-nk="toast-item"][data-variant="warning"]
     ) {
-    --_nk-semantic-accent: var(--nk-color-warning);
-    --_nk-semantic-content: var(--nk-color-warning-content);
+    --_nk-semantic-accent: var(--nk-palette-warning);
+    --_nk-semantic-content: var(--nk-palette-warning-content);
   }
 
   /* Badge already says `danger`; Alert and Toast still say `error`. One
@@ -55,8 +56,8 @@
       [data-nk="alert"][data-variant="error"],
       [data-nk="toast-item"][data-variant="error"]
     ) {
-    --_nk-semantic-accent: var(--nk-color-danger);
-    --_nk-semantic-content: var(--nk-color-danger-content);
+    --_nk-semantic-accent: var(--nk-palette-danger);
+    --_nk-semantic-content: var(--nk-palette-danger-content);
   }
 
   /* The shared status treatment. Defined once so Alert and Toast cannot drift

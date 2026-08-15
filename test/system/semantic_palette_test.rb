@@ -134,7 +134,45 @@ class SemanticPaletteTest < ApplicationSystemTestCase
     assert_no_severe_console_errors
   end
 
-  test "rethemeing one semantic token moves badge, alert, and toast together" do
+  # Each semantic family defaults to the exact steps of its hue family, so the
+  # two vocabularies agree out of the box: `info` is `blue`, `danger` is `red`,
+  # and rethemeing one does not disturb the other.
+  test "each semantic badge renders identically to its hue family" do
+    visit gallery_component_path("badge")
+
+    pairs = evaluate_script(<<~JAVASCRIPT)
+      (() => {
+        const read = (color) => {
+          const node = document.createElement("span");
+          node.dataset.nk = "badge";
+          node.dataset.color = color;
+          document.body.appendChild(node);
+          const style = getComputedStyle(node);
+          const value = [style.backgroundColor, style.color].join(" / ");
+          node.remove();
+          return value;
+        };
+
+        return Object.entries({
+          neutral: "zinc", info: "blue", success: "green",
+          warning: "amber", danger: "red"
+        }).map(([semantic, hue]) =>
+          [semantic, hue, read(semantic), read(hue)].join(" | ")
+        );
+      })()
+    JAVASCRIPT
+
+    pairs.each do |row|
+      semantic, hue, semantic_colors, hue_colors = row.split(" | ")
+
+      assert_equal hue_colors, semantic_colors,
+        "a #{semantic} badge should render exactly like a #{hue} badge"
+    end
+
+    assert_no_severe_console_errors
+  end
+
+  test "rethemeing one tint role moves badge, alert, and toast together" do
     visit gallery_component_path("badge")
 
     computed = evaluate_script(<<~JAVASCRIPT)
@@ -153,17 +191,25 @@ class SemanticPaletteTest < ApplicationSystemTestCase
         const badge = build("badge", "color", "success");
         const alert = build("alert", "variant", "success");
         const toast = build("toast-item", "variant", "success");
+        const untouched = build("badge", "color", "green");
         const read = () => [badge, alert, toast].map(
           (node) => getComputedStyle(node).backgroundColor
         );
 
         const before = read();
-        wrapper.style.setProperty("--nk-color-success", "rgb(0, 128, 0)");
+        const greenBefore = getComputedStyle(untouched).backgroundColor;
+        wrapper.style.setProperty("--nk-palette-success", "rgb(0, 128, 0)");
         const after = read();
+        const greenAfter = getComputedStyle(untouched).backgroundColor;
 
-        return { before, after };
+        return { before, after, green: [greenBefore, greenAfter] };
       })()
     JAVASCRIPT
+
+    green_before, green_after = computed.fetch("green")
+
+    assert_equal green_before, green_after,
+      "rethemeing the semantic tint must not move the raw green hue"
 
     before = computed.fetch("before")
     after = computed.fetch("after")

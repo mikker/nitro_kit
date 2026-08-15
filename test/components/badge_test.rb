@@ -91,8 +91,8 @@ class BadgeTest < ActiveSupport::TestCase
 
     NitroKit::Badge::SEMANTIC_COLORS.each do |color|
       assert_includes css, %(data-color="#{color}")
-      assert_includes css, "--_nk-semantic-accent: var(--nk-color-#{color})"
-      assert_includes css, "--_nk-semantic-content: var(--nk-color-#{color}-content)"
+      assert_includes css, "--_nk-semantic-accent: var(--nk-palette-#{color})"
+      assert_includes css, "--_nk-semantic-content: var(--nk-palette-#{color}-content)"
     end
 
     NitroKit::Badge::PALETTE_COLORS.each do |color|
@@ -113,7 +113,7 @@ class BadgeTest < ActiveSupport::TestCase
     ).read
 
     { danger: :red, success: :green, warning: :amber, neutral: :zinc }.each do |semantic, hue|
-      assert_includes css, "--_nk-semantic-accent: var(--nk-color-#{semantic})"
+      assert_includes css, "--_nk-semantic-accent: var(--nk-palette-#{semantic})"
       assert_includes css, "--_nk-semantic-accent: var(--nk-palette-#{hue})"
     end
 
