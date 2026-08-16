@@ -8,8 +8,8 @@
 
   :where([data-nk="fieldset"] > [data-slot="fieldset-legend"]) {
     padding: 0;
-    font-size: var(--nk-text-lg);
-    font-weight: var(--nk-font-weight-semibold);
+    font-size: var(--nk-title-surface-size);
+    font-weight: var(--nk-title-surface-weight);
     line-height: var(--nk-leading-tight);
   }
 

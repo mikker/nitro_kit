@@ -14,8 +14,8 @@
 
   :where([data-nk="page-header"] > [data-slot="page-header-title"]) {
     max-width: var(--nk-content-lg);
-    font-size: var(--nk-text-2xl);
-    font-weight: var(--nk-font-weight-bold);
+    font-size: var(--nk-title-page-size);
+    font-weight: var(--nk-title-page-weight);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }

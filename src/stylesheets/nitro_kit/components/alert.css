@@ -19,8 +19,8 @@
   }
 
   :where([data-nk="alert"] > [data-slot="alert-title"]) {
-    font-size: var(--nk-text-base);
-    font-weight: var(--nk-font-weight-semibold);
+    font-size: var(--nk-title-compact-size);
+    font-weight: var(--nk-title-compact-weight);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
