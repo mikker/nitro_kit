@@ -57,6 +57,10 @@
   name. `red` and `danger` previously resolved to identical CSS and are now
   independently themeable.
 
+- Soften the toast shadow from the dialog tier to the floating-element tier,
+  matching dropdowns and comboboxes. It carried the strongest shadow in the
+  system on a card-radius surface, fitting no rung of the elevation ladder.
+
 ### Fixed
 
 - Render an `Alert` and a `Toast::Item` of the same variant identically. Both

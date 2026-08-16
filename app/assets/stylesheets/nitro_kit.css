@@ -7415,7 +7415,7 @@
     background: var(--_nk-toast-background);
     border: var(--nk-border-width) solid var(--_nk-toast-border);
     border-radius: var(--nk-radius-lg);
-    box-shadow: var(--nk-shadow-lg);
+    box-shadow: var(--nk-shadow-md);
     transition:
       opacity var(--nk-duration-normal) var(--nk-ease),
       transform var(--nk-duration-normal) var(--nk-ease);
