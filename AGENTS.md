@@ -18,6 +18,8 @@ mise exec -- rake nitro_kit:css:check
 
 The dummy app runs on port 3031 with `mise exec -- bin/dev`.
 
+Run `mise exec -- bin/format` before committing.
+
 ## Ownership
 
 Nitro Kit owns and versions component Ruby, rendered `data-nk` contracts, CSS, Stimulus behavior, layout primitives, blocks, and examples. Applications customize documented `--nk-*` properties and compose Nitro components into their own namespaces.

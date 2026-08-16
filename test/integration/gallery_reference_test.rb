@@ -48,7 +48,7 @@ class GalleryReferenceTest < ActionDispatch::IntegrationTest
     assert_response :success
 
     rules = css_select("[data-gallery-reference='system-rules'] [data-gallery='reference-rules'] li")
-    assert_equal 12, rules.size
+    assert_equal Gallery::AgentRules.rules.size, rules.size
 
     text = rules.map(&:text).join(" ")
 
@@ -63,6 +63,21 @@ class GalleryReferenceTest < ActionDispatch::IntegrationTest
     end
     assert_includes text, "RESERVED_DATA_ATTRIBUTES"
     assert_includes text, "desperately_need_a_class:"
+  end
+
+  test "the system rules are clearly marked and collapsed for people" do
+    get gallery_component_path("button")
+
+    assert_response :success
+
+    assert_select "[data-gallery-reference='system-rules']" do
+      assert_select "h2", text: "System rules for coding agents"
+      assert_select "[data-gallery='reference-header'] p", text: /Humans can usually skip this section/
+      assert_select "details[data-gallery='reference-details']:not([open])", count: 1 do
+        assert_select "summary", text: "View agent instructions"
+        assert_select "[data-gallery='reference-rules'] li", count: Gallery::AgentRules.rules.size
+      end
+    end
   end
 
   test "contract content is rendered, not summarized" do

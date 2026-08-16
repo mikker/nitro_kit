@@ -3,14 +3,15 @@ module Gallery
   # examples. It deliberately renders outside every example canvas, so the
   # canvas assertions and extracted example source stay untouched.
   class Reference < Primitive
-    def initialize(slug:, title:, source:, description: nil)
+    def initialize(slug:, title:, source:, description: nil, collapsible: false)
       @slug = normalize_slug(slug)
       @title = validate_text!(:title, title)
       @source = validate_text!(:source, source)
       @description = validate_text!(:description, description, optional: true)
+      @collapsible = collapsible
     end
 
-    attr_reader :slug, :title, :source, :description
+    attr_reader :slug, :title, :source, :description, :collapsible
 
     def view_template(&block)
       section(
@@ -27,7 +28,14 @@ module Gallery
           p(data: { gallery: "reference-source" }) { code { source } }
         end
 
-        yield if block
+        if collapsible
+          details(data: { gallery: "reference-details" }) do
+            summary { "View agent instructions" }
+            yield if block
+          end
+        else
+          yield if block
+        end
       end
     end
 
