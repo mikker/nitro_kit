@@ -4,16 +4,6 @@ module NitroKit
   class Alert < Component
     VARIANTS = %i[default info success warning error].freeze
 
-    # The palette family each semantic variant borrows in `palette.css`.
-    # Alert owns this mapping; it is not the Badge color axis.
-    VARIANT_PALETTE = {
-      default: :zinc,
-      info: :blue,
-      success: :green,
-      warning: :amber,
-      error: :red
-    }.freeze
-
     LIVE_MODES = %i[off polite assertive].freeze
 
     Child = ::Data.define(:component, :content)

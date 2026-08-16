@@ -92,6 +92,7 @@
 
   :where(
     [data-gallery="page-header"],
+    [data-gallery="foundation-header"],
     [data-gallery="component-header"],
     [data-gallery="composition-header"]
   ) > [data-slot="page-header-title"] {
@@ -115,6 +116,102 @@
   :where([data-gallery="empty"]) {
     margin: 0;
     color: color-mix(in srgb, currentColor 62%, transparent);
+  }
+
+  :where([data-gallery="color-scale"]) {
+    display: grid;
+    gap: 0.75rem;
+    min-width: 0;
+    margin: 0;
+  }
+
+  :where([data-gallery="color-scale"] figcaption) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+  }
+
+  :where([data-gallery="color-scale"] figcaption code) {
+    color: color-mix(in srgb, currentColor 62%, transparent);
+    font-size: var(--nk-text-xs);
+  }
+
+  :where([data-gallery="color-swatches"]) {
+    display: grid;
+    grid-template-columns: repeat(11, minmax(3rem, 1fr));
+    min-width: max-content;
+  }
+
+  :where([data-gallery="color-swatch"]) {
+    display: grid;
+    gap: 0.4rem;
+    min-width: 3rem;
+    text-align: center;
+  }
+
+  :where([data-gallery="color-chip"]) {
+    display: block;
+    min-height: 4rem;
+    background: var(--gallery-color);
+    border: var(--nk-border-width) solid color-mix(in oklab, currentColor 16%, transparent);
+  }
+
+  :where([data-gallery="color-swatch"] code) {
+    font-size: var(--nk-text-xs);
+  }
+
+  :where(
+    [data-gallery="example"][data-gallery-example="color-poles"]
+      [data-gallery="color-swatch"]
+  ) {
+    min-width: 8rem;
+  }
+
+  :where([data-gallery="measure-list"]) {
+    display: grid;
+    gap: 1.25rem;
+    min-width: 0;
+  }
+
+  :where([data-gallery="measure"]) {
+    display: grid;
+    gap: 0.6rem;
+    min-width: 0;
+  }
+
+  :where([data-gallery="measure-label"]) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+  }
+
+  :where([data-gallery="measure-track"]) {
+    display: flex;
+    align-items: end;
+    min-height: 1rem;
+  }
+
+  :where([data-gallery="measure-bar"]) {
+    display: block;
+    width: var(--gallery-measure);
+    min-width: 1px;
+    height: 1rem;
+    background: var(--nk-color-primary);
+    border-radius: var(--nk-radius-xs);
+  }
+
+  :where([data-gallery-measure-axis="height"] [data-gallery="measure-track"]) {
+    min-height: 4rem;
+  }
+
+  :where([data-gallery-measure-axis="height"] [data-gallery="measure-bar"]) {
+    width: 8rem;
+    height: var(--gallery-measure);
+    min-height: 1px;
   }
 
   :where([data-gallery="section"]) {
@@ -636,6 +733,16 @@
     grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
     align-items: start;
     gap: 1.25rem;
+  }
+
+  /* Compact matrices survey many small samples at once. Inside the 40rem
+     constrained canvas the 20rem boundary-state tracks fit only one column,
+     so dense grids such as the badge color matrix keep the narrow tracks. */
+  :where(
+    [data-gallery="example"][data-gallery-layout="matrix"][data-gallery-density="compact"]
+      [data-gallery="example-canvas"]
+  ) {
+    grid-template-columns: repeat(auto-fit, minmax(min(10rem, 100%), 1fr));
   }
 
   :where(

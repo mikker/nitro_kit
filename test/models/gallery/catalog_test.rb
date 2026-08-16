@@ -4,7 +4,9 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
   test "catalog starts with home and exposes one nested navigation tree" do
     assert_equal "home", Gallery::Catalog.home.slug
     assert_equal Gallery::Home, Gallery::Catalog.home.page
-    assert_equal %i[component composition], Gallery::Catalog.collections.map(&:kind)
+    assert_equal %i[foundation component composition], Gallery::Catalog.collections.map(&:kind)
+    assert_equal %w[theme], Gallery::Catalog.collection!(:foundation).categories.map(&:slug)
+    assert_equal %w[colors spacing-sizing], Gallery::Catalog.entries(kind: :foundation).map(&:slug)
     assert_equal(
       %w[layout navigation forms data feedback actions],
       Gallery::Catalog.collection!(:component).categories.map(&:slug)
@@ -46,6 +48,9 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
       assert_includes known, component.subcategory, component.slug
     end
     assert_nil Gallery::Catalog.home.subcategory
+    Gallery::Catalog.entries(kind: :foundation).each do |foundation|
+      assert_nil foundation.subcategory, foundation.slug
+    end
     Gallery::Catalog.entries(kind: :composition).each do |composition|
       assert_nil composition.subcategory, composition.slug
     end
@@ -57,6 +62,7 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
     assert_equal Gallery::Catalog.entries.drop(1), nested_entries
     assert_equal nested_entries.uniq, nested_entries
     assert_equal "Forms", Gallery::Catalog.category!(kind: :component, slug: "forms").title
+    assert_equal "Theme", Gallery::Catalog.category!(kind: :foundation, slug: "theme").title
     assert_equal(
       "Layout",
       Gallery::Catalog.category_for(Gallery::Catalog.fetch!(kind: :component, slug: "page-header")).title
@@ -80,6 +86,14 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
     end
   end
 
+  test "foundation entries declare a page and stable examples" do
+    Gallery::Catalog.entries(kind: :foundation).each do |foundation|
+      assert foundation.page < Gallery::FoundationPage
+      assert_empty foundation.states
+      assert_predicate foundation.expected_roots, :any?
+    end
+  end
+
   test "composition entries declare deterministic states or one complete application showcase" do
     Gallery::Catalog.entries(kind: :composition).each do |composition|
       assert composition.page < Gallery::Page
@@ -98,6 +112,7 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
     routes = Rails.application.routes.url_helpers
 
     assert_equal "/gallery", Gallery::Catalog.path_for(Gallery::Catalog.home, routes:)
+    assert_equal "/gallery/foundations/colors", Gallery::Catalog.path_for(entry(:foundation, "colors"), routes:)
     assert_equal "/gallery/components/button", Gallery::Catalog.path_for(entry(:component, "button"), routes:)
     assert_equal "/gallery/components/page-header", Gallery::Catalog.path_for(entry(:component, "page-header"), routes:)
     assert_equal(

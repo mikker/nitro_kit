@@ -1,6 +1,5 @@
 @layer nitro-kit.base {
   :where([data-nk="badge"]) {
-    --_nk-badge-color: var(--_nk-palette-light);
     --_nk-badge-tint-strength: 20%;
 
     display: inline-flex;
@@ -8,12 +7,12 @@
     max-width: 100%;
     font-weight: var(--nk-font-weight-medium);
     line-height: var(--nk-leading-tight);
-    color: var(--_nk-badge-color);
+    color: var(--_nk-semantic-content);
     white-space: nowrap;
     vertical-align: middle;
     background-color: color-mix(
       in oklab,
-      var(--_nk-palette-tint) var(--_nk-badge-tint-strength),
+      var(--_nk-semantic-accent) var(--_nk-badge-tint-strength),
       transparent
     );
     border: var(--nk-border-width) solid transparent;
@@ -31,17 +30,22 @@
 @layer nitro-kit.variant {
   :where([data-nk="badge"][data-variant="outline"]) {
     background-color: transparent;
-    border-color: color-mix(in oklab, var(--_nk-palette-tint) 50%, transparent);
+    border-color: color-mix(
+      in oklab,
+      var(--_nk-semantic-accent) 50%,
+      transparent
+    );
   }
 
+  /* Only the tint strength changes with appearance. The colours themselves come
+     from the `--nk-palette-*` roles, whose `-content` half already resolves per
+     appearance. */
   :where([data-theme="dark"] [data-nk="badge"]) {
-    --_nk-badge-color: var(--_nk-palette-dark);
     --_nk-badge-tint-strength: 40%;
   }
 
   @media (prefers-color-scheme: dark) {
     :where(:root:not([data-theme]) [data-nk="badge"]) {
-      --_nk-badge-color: var(--_nk-palette-dark);
       --_nk-badge-tint-strength: 40%;
     }
   }

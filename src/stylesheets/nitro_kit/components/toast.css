@@ -66,60 +66,13 @@
 }
 
 @layer nitro-kit.variant {
-  :where([data-nk="toast-item"][data-variant="info"]) {
-    --_nk-toast-background: color-mix(
-      in oklab,
-      var(--nk-color-info) 10%,
-      var(--nk-color-surface)
-    );
-    --_nk-toast-foreground: var(--nk-color-info-content);
-    --_nk-toast-border: color-mix(
-      in oklab,
-      var(--nk-color-info) 45%,
-      transparent
-    );
-  }
-
-  :where([data-nk="toast-item"][data-variant="success"]) {
-    --_nk-toast-background: color-mix(
-      in oklab,
-      var(--nk-color-success) 10%,
-      var(--nk-color-surface)
-    );
-    --_nk-toast-foreground: var(--nk-color-success-content);
-    --_nk-toast-border: color-mix(
-      in oklab,
-      var(--nk-color-success) 45%,
-      transparent
-    );
-  }
-
-  :where([data-nk="toast-item"][data-variant="warning"]) {
-    --_nk-toast-background: color-mix(
-      in oklab,
-      var(--nk-color-warning) 10%,
-      var(--nk-color-surface)
-    );
-    --_nk-toast-foreground: var(--nk-color-warning-content);
-    --_nk-toast-border: color-mix(
-      in oklab,
-      var(--nk-color-warning) 45%,
-      transparent
-    );
-  }
-
-  :where([data-nk="toast-item"][data-variant="error"]) {
-    --_nk-toast-background: color-mix(
-      in oklab,
-      var(--nk-color-danger) 10%,
-      var(--nk-color-surface)
-    );
-    --_nk-toast-foreground: var(--nk-color-danger-content);
-    --_nk-toast-border: color-mix(
-      in oklab,
-      var(--nk-color-danger) 45%,
-      transparent
-    );
+  /* Colour, tint strength, and appearance switching all come from the shared
+     semantic palette, so a Toast and an Alert of the same variant render
+     identically. */
+  :where([data-nk="toast-item"][data-variant]) {
+    --_nk-toast-background: var(--_nk-semantic-surface);
+    --_nk-toast-border: var(--_nk-semantic-border);
+    --_nk-toast-foreground: var(--_nk-semantic-content);
   }
 }
 

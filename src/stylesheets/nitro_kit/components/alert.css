@@ -3,7 +3,6 @@
     --_nk-alert-background: var(--nk-color-surface);
     --_nk-alert-border: var(--nk-color-border);
     --_nk-alert-foreground: var(--nk-color-foreground);
-    --_nk-alert-tint-strength: 12%;
 
     position: relative;
     display: grid;
@@ -54,29 +53,12 @@
 }
 
 @layer nitro-kit.variant {
+  /* Colour, tint strength, and appearance switching all come from the shared
+     semantic palette, so an Alert and a Toast of the same variant render
+     identically. */
   :where([data-nk="alert"][data-variant]) {
-    --_nk-alert-background: color-mix(
-      in oklab,
-      var(--_nk-palette-tint) var(--_nk-alert-tint-strength),
-      transparent
-    );
-    --_nk-alert-border: color-mix(
-      in oklab,
-      var(--_nk-palette-tint) 45%,
-      transparent
-    );
-    --_nk-alert-foreground: var(--_nk-palette-light);
-  }
-
-  :where([data-theme="dark"] [data-nk="alert"][data-variant]) {
-    --_nk-alert-foreground: var(--_nk-palette-dark);
-    --_nk-alert-tint-strength: 20%;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :where(:root:not([data-theme]) [data-nk="alert"][data-variant]) {
-      --_nk-alert-foreground: var(--_nk-palette-dark);
-      --_nk-alert-tint-strength: 20%;
-    }
+    --_nk-alert-background: var(--_nk-semantic-surface);
+    --_nk-alert-border: var(--_nk-semantic-border);
+    --_nk-alert-foreground: var(--_nk-semantic-content);
   }
 }
