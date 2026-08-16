@@ -169,6 +169,86 @@
     min-width: 8rem;
   }
 
+  :where([data-gallery="title-specimen"]) {
+    display: grid;
+    gap: 0.4rem;
+    min-width: 0;
+    margin: 0;
+  }
+  
+  :where([data-gallery="title-specimen"] figcaption) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem 1rem;
+  }
+  
+  :where([data-gallery="title-specimen"] figcaption code),
+  :where([data-gallery="title-specimen"] small) {
+    color: color-mix(in srgb, currentColor 62%, transparent);
+    font-size: var(--nk-text-xs);
+  }
+  
+  :where([data-gallery="title-specimen"] [data-gallery="title-specimen-text"]) {
+    margin: 0;
+    line-height: var(--nk-leading-tight);
+  }
+  
+  :where([data-gallery-title-role="page"] [data-gallery="title-specimen-text"]) {
+    font-size: var(--nk-title-page-size);
+    font-weight: var(--nk-title-page-weight);
+  }
+  
+  :where([data-gallery-title-role="section"] [data-gallery="title-specimen-text"]) {
+    font-size: var(--nk-title-section-size);
+    font-weight: var(--nk-title-section-weight);
+  }
+  
+  :where([data-gallery-title-role="surface"] [data-gallery="title-specimen-text"]) {
+    font-size: var(--nk-title-surface-size);
+    font-weight: var(--nk-title-surface-weight);
+  }
+  
+  :where([data-gallery-title-role="compact"] [data-gallery="title-specimen-text"]) {
+    font-size: var(--nk-title-compact-size);
+    font-weight: var(--nk-title-compact-weight);
+  }
+  
+  :where([data-gallery="type-chip"]) {
+    margin: 0;
+    font-family: var(--gallery-type-font, var(--nk-font-sans));
+    font-size: var(--gallery-type-size, var(--nk-text-base));
+    font-weight: var(--gallery-type-weight, var(--nk-font-weight-normal));
+    line-height: var(--gallery-type-leading, var(--nk-leading-normal));
+  }
+
+  :where([data-gallery="depth"]) {
+    display: grid;
+    gap: 0.75rem;
+    min-width: 0;
+    margin: 0;
+  }
+  
+  :where([data-gallery="depth-chip"]) {
+    display: block;
+    min-height: 4rem;
+    background: var(--nk-color-surface);
+    border: var(--nk-border-width) solid var(--nk-color-border);
+    border-radius: var(--nk-radius-lg);
+    box-shadow: var(--gallery-shadow);
+  }
+  
+  :where([data-gallery="depth"] figcaption) {
+    display: grid;
+    gap: 0.15rem;
+  }
+  
+  :where([data-gallery="depth"] figcaption code),
+  :where([data-gallery="depth"] figcaption small) {
+    color: color-mix(in srgb, currentColor 62%, transparent);
+    font-size: var(--nk-text-xs);
+  }
+
   :where([data-gallery="measure-list"]) {
     display: grid;
     gap: 1.25rem;

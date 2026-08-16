@@ -160,4 +160,37 @@ class GalleryDisplayTest < ActionDispatch::IntegrationTest
     get gallery_component_path(slug)
     assert_response :success
   end
+  test "typography page covers the type scale weights leading and title roles" do
+    get gallery_foundation_path("typography")
+
+    assert_response :success
+    %w[xs sm base lg xl 2xl].each do |size|
+      assert_select "[data-gallery='type-chip'][style='--gallery-type-size: var(--nk-text-#{size})']", count: 1
+    end
+    %w[normal medium semibold bold].each do |weight|
+      assert_select "[data-gallery='type-chip'][style='--gallery-type-weight: var(--nk-font-weight-#{weight})']", count: 1
+    end
+    %w[tight normal relaxed].each do |leading|
+      assert_select "[data-gallery='type-chip'][style='--gallery-type-leading: var(--nk-leading-#{leading})']", count: 1
+    end
+    %w[page section surface compact].each do |role|
+      assert_select "[data-gallery='title-specimen'][data-gallery-title-role='#{role}']", count: 1 do
+        assert_select "code", text: "--nk-title-#{role}-size"
+      end
+    end
+    assert_select "#gallery-typography-card[data-nk='card']" do
+      assert_select "[data-slot='card-title']", text: "Quarterly invoices"
+    end
+  end
+
+  test "effects page covers every shadow step and the disabled pair" do
+    get gallery_foundation_path("effects")
+
+    assert_response :success
+    %w[xs sm md lg].each do |step|
+      assert_select "[data-gallery='depth-chip'][style='--gallery-shadow: var(--nk-shadow-#{step})']", count: 1
+    end
+    assert_select "#gallery-foundation-enabled[data-nk='button']"
+    assert_select "#gallery-foundation-disabled[data-nk='button'][disabled]"
+  end
 end

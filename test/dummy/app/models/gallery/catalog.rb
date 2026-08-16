@@ -55,6 +55,24 @@ module Gallery
         expected_roots: %w[badge]
       ),
       Entry.new(
+        kind: :foundation,
+        slug: "typography",
+        title: "Typography",
+        description: "The type scale, weights, leading, and the four title roles every owned title samples.",
+        page: Gallery::Foundations::TypographyPage,
+        states: [],
+        expected_roots: %w[card]
+      ),
+      Entry.new(
+        kind: :foundation,
+        slug: "effects",
+        title: "Effects",
+        description: "The shadow ladder and the shared disabled treatment.",
+        page: Gallery::Foundations::EffectsPage,
+        states: [],
+        expected_roots: %w[button]
+      ),
+      Entry.new(
         kind: :component,
         subcategory: :actions,
         slug: "button",
@@ -1036,7 +1054,7 @@ module Gallery
             slug: "theme",
             title: "Theme",
             description: "Appearance-independent scales and semantic theme roles.",
-            entries: pick_entries.call(:foundation, "colors", "spacing-sizing")
+            entries: pick_entries.call(:foundation, "colors", "spacing-sizing", "typography", "effects")
           )
         ].freeze
       ),
