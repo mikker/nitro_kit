@@ -38,7 +38,10 @@
     inline-size: var(--_nk-alert-icon-size);
     block-size: var(--_nk-alert-icon-size);
     margin-block-start: calc(
-      (var(--nk-title-compact-size) * var(--nk-leading-tight) - var(--_nk-alert-icon-size)) / 2
+      (
+          var(--nk-title-compact-size) * var(--nk-leading-tight) -
+            var(--_nk-alert-icon-size)
+        ) / 2
     );
   }
 

@@ -78,7 +78,8 @@
 
   /* Dark appearances need a stronger tint to separate the surface from the
      page behind it. */
-  :where([data-theme="dark"]) :where([data-nk="alert"], [data-nk="toast-item"]) {
+  :where([data-theme="dark"])
+    :where([data-nk="alert"], [data-nk="toast-item"]) {
     --_nk-semantic-tint: 20%;
   }
 

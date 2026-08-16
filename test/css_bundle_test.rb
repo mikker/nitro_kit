@@ -151,6 +151,6 @@ class CssBundleTest < ActiveSupport::TestCase
 
     body.scan(/(?<name>color-scheme|--nk-color-[a-z-]+):\s*(?<value>[^;]+);/)
       .to_h
-      .transform_values(&:strip)
+      .transform_values { |value| value.gsub(/\s+/, " ").strip }
   end
 end
