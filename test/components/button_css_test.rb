@@ -12,7 +12,7 @@ class ButtonCssTest < ActiveSupport::TestCase
     assert_includes tokens_css, "--nk-button-radius: initial"
     assert_includes css, "--_nk-button-font-size: var(--nk-text-sm)"
     assert_includes css, "--_nk-button-line-height: 1.25rem"
-    assert_includes css, "--_nk-button-shadow: 0 1px 2px 0 oklch(0 0 0 / 0.05)"
+    assert_includes css, "--_nk-button-shadow: var(--nk-shadow-xs)"
     assert_includes css, "--_nk-button-background: var(--nk-button-default-background)"
     assert_includes css, "--_nk-button-foreground: var(--nk-button-default-foreground)"
     assert_includes css, "--_nk-button-border: var(--nk-button-default-border)"
@@ -51,11 +51,11 @@ class ButtonCssTest < ActiveSupport::TestCase
   test "matches Flux primary destructive and ghost treatments" do
     css = button_css
 
-    assert_includes css, "--_nk-button-shadow: inset 0 1px oklch(1 0 0 / 0.2)"
+    assert_includes css, "--_nk-button-shadow: inset 0 1px\n      color-mix(in oklab, var(--nk-white) 20%, transparent)"
     assert_includes css, "--_nk-button-background: var(--nk-color-danger)"
     assert_includes css, "--_nk-button-hover-background: var(--nk-color-danger-hover)"
-    assert_includes css, "oklch(0.274 0.006 286.033 / 0.05)"
-    assert_includes css, "oklch(1 0 0 / 0.15)"
+    assert_includes css, "color-mix(in oklab, var(--nk-zinc-800) 5%, transparent)"
+    assert_includes css, "color-mix(in oklab, var(--nk-white) 15%, transparent)"
     assert_includes tokens_css, "--nk-color-danger: var(--nk-red-600)"
     assert_match(/--nk-red-600: oklch\([^)]+\)/, tokens_css)
     assert_includes tokens_css, "oklch(0.54 0.237 25.331)"
@@ -70,7 +70,7 @@ class ButtonCssTest < ActiveSupport::TestCase
     assert_includes css, ':not(:has(> [data-slot="button-label"])):has('
     assert_includes css, '> [data-slot="button-icon-start"]'
     assert_includes css, '> [data-slot="button-icon-end"]'
-    assert_includes css, "opacity: 0.75"
+    assert_includes css, "opacity: var(--nk-disabled-opacity)"
     refute_includes css, "scale("
     refute_includes css, "transition:"
   end

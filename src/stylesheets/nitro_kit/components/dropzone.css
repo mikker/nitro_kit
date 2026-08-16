@@ -157,7 +157,7 @@
 
   :where([data-nk="dropzone"][data-state="disabled"]) {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--nk-disabled-opacity);
   }
 
   :where(

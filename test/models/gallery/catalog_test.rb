@@ -6,7 +6,7 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
     assert_equal Gallery::Home, Gallery::Catalog.home.page
     assert_equal %i[foundation component composition], Gallery::Catalog.collections.map(&:kind)
     assert_equal %w[theme], Gallery::Catalog.collection!(:foundation).categories.map(&:slug)
-    assert_equal %w[colors spacing-sizing], Gallery::Catalog.entries(kind: :foundation).map(&:slug)
+    assert_equal %w[colors spacing-sizing typography effects], Gallery::Catalog.entries(kind: :foundation).map(&:slug)
     assert_equal(
       %w[layout navigation forms data feedback actions],
       Gallery::Catalog.collection!(:component).categories.map(&:slug)

@@ -19,8 +19,8 @@
   }
 
   :where([data-nk="data-section"] [data-slot="data-section-title"]) {
-    font-size: var(--nk-text-xl);
-    font-weight: var(--nk-font-weight-bold);
+    font-size: var(--nk-title-section-size);
+    font-weight: var(--nk-title-section-weight);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }

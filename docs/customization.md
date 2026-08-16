@@ -503,6 +503,14 @@ The following variables are the complete public token set. Theme-independent tok
 | `--nk-font-weight-medium`   | Medium text weight.                |
 | `--nk-font-weight-semibold` | Semibold text weight.              |
 | `--nk-font-weight-bold`     | Bold text weight.                  |
+| `--nk-title-page-size`          | Page title size; the one top-level heading.                           |
+| `--nk-title-page-weight`        | Page title weight.                                                     |
+| `--nk-title-section-size`       | Section title size: data, settings, and danger sections.              |
+| `--nk-title-section-weight`     | Section title weight.                                                  |
+| `--nk-title-surface-size`       | Surface title size: cards, dialogs, sheets, empty states, fieldsets.  |
+| `--nk-title-surface-weight`     | Surface title weight.                                                  |
+| `--nk-title-compact-size`       | Compact title size: legends, alert and toast titles.                  |
+| `--nk-title-compact-weight`     | Compact title weight.                                                  |
 | `--nk-typeset-font-body`    | Typeset body font family.          |
 | `--nk-typeset-font-heading` | Typeset heading font family.       |
 | `--nk-typeset-font-mono`    | Typeset code font family.          |
@@ -539,11 +547,13 @@ The following variables are the complete public token set. Theme-independent tok
 | `--nk-border-width`  | Default border and separator width.                                                        |
 | `--nk-focus-width`   | Focus-ring width.                                                                          |
 | `--nk-focus-offset`  | Focus-ring offset.                                                                         |
+| `--nk-disabled-opacity`         | Opacity of disabled controls and options.                              |
 
 ### Elevation and motion
 
 | Token                  | Role                                  |
 | ---------------------- | ------------------------------------- |
+| `--nk-shadow-xs`                | Raised control shadow, such as the default Button.                    |
 | `--nk-shadow-sm`       | Low surface elevation.                |
 | `--nk-shadow-md`       | Medium floating elevation.            |
 | `--nk-shadow-lg`       | High overlay elevation.               |

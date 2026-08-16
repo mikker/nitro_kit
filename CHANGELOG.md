@@ -24,6 +24,14 @@
   their hue families, so an `info` badge renders exactly like a `blue` badge
   and a `warning` alert is amber in both appearances, until a theme separates
   them.
+- Add the title scale: `--nk-title-{page,section,surface,compact}-{size,weight}`.
+  Every owned title and legend resolves through one of four roles instead of
+  fifteen components choosing among six sizes and two weights. Fieldset
+  legends join the other surface titles at bold, and Alert titles match
+  Toast titles, which the shared status palette already made visual twins.
+- Add `--nk-disabled-opacity` and `--nk-shadow-xs`, and resolve every
+  disabled control and Button's raised shadow through them. Disabled state
+  was four different opacities; Button drew its shadows by hand.
 
 ### Breaking changes
 
@@ -48,6 +56,10 @@
   decorative hues follow the `--nk-palette-{hue}` roles and stay the color they
   name. `red` and `danger` previously resolved to identical CSS and are now
   independently themeable.
+
+- Soften the toast shadow from the dialog tier to the floating-element tier,
+  matching dropdowns and comboboxes. It carried the strongest shadow in the
+  system on a card-radius surface, fitting no rung of the elevation ladder.
 
 ### Fixed
 

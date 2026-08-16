@@ -15,8 +15,8 @@
   }
 
   :where([data-nk="card"] > [data-slot="card-title"]) {
-    font-size: var(--nk-text-lg);
-    font-weight: var(--nk-font-weight-bold);
+    font-size: var(--nk-title-surface-size);
+    font-weight: var(--nk-title-surface-weight);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }

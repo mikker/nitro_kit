@@ -52,8 +52,8 @@
 
   :where([data-nk="sheet"] [data-slot="sheet-title"]) {
     padding-inline-end: calc(var(--nk-space) * 10);
-    font-size: var(--nk-text-lg);
-    font-weight: var(--nk-font-weight-bold);
+    font-size: var(--nk-title-surface-size);
+    font-weight: var(--nk-title-surface-weight);
     line-height: var(--nk-leading-tight);
   }
 

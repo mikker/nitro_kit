@@ -38,6 +38,19 @@
     --nk-typeset-leading: 1.75;
     --nk-typeset-flow: 1.25em;
 
+    /* The title scale. Four roles cover every owned title and legend: page
+       for the one page heading, section for full-width section headers,
+       surface for cards, dialogs, sheets, empty states, and fieldsets, and
+       compact for control-group legends and status titles. */
+    --nk-title-page-size: var(--nk-text-2xl);
+    --nk-title-page-weight: var(--nk-font-weight-bold);
+    --nk-title-section-size: var(--nk-text-xl);
+    --nk-title-section-weight: var(--nk-font-weight-bold);
+    --nk-title-surface-size: var(--nk-text-lg);
+    --nk-title-surface-weight: var(--nk-font-weight-bold);
+    --nk-title-compact-size: var(--nk-text-sm);
+    --nk-title-compact-weight: var(--nk-font-weight-semibold);
+
     --nk-font-weight-normal: 400;
     --nk-font-weight-medium: 500;
     --nk-font-weight-semibold: 600;
@@ -56,12 +69,14 @@
     --nk-border-width: 1px;
     --nk-focus-width: 2px;
     --nk-focus-offset: 2px;
+    --nk-disabled-opacity: 0.6;
 
-    --nk-shadow-sm: 0 1px 2px oklch(0 0 0 / 0.08);
-    --nk-shadow-md: 0 4px 6px -1px oklch(0 0 0 / 0.1),
-      0 2px 4px -2px oklch(0 0 0 / 0.1);
-    --nk-shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 0.12),
-      0 4px 6px -4px oklch(0 0 0 / 0.12);
+    --nk-shadow-xs: 0 1px 2px 0 color-mix(in oklab, var(--nk-black) 5%, transparent);
+    --nk-shadow-sm: 0 1px 2px color-mix(in oklab, var(--nk-black) 8%, transparent);
+    --nk-shadow-md: 0 4px 6px -1px color-mix(in oklab, var(--nk-black) 10%, transparent),
+      0 2px 4px -2px color-mix(in oklab, var(--nk-black) 10%, transparent);
+    --nk-shadow-lg: 0 10px 15px -3px color-mix(in oklab, var(--nk-black) 12%, transparent),
+      0 4px 6px -4px color-mix(in oklab, var(--nk-black) 12%, transparent);
 
     --nk-duration-fast: 100ms;
     --nk-duration-normal: 150ms;
@@ -926,8 +941,8 @@
   }
 
   :where([data-nk="alert"] > [data-slot="alert-title"]) {
-    font-size: var(--nk-text-base);
-    font-weight: var(--nk-font-weight-semibold);
+    font-size: var(--nk-title-compact-size);
+    font-weight: var(--nk-title-compact-weight);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
@@ -936,11 +951,17 @@
     grid-template-columns: auto minmax(0, 1fr);
   }
 
+  /* Centered on the title first line, whatever size the title role
+     resolves to, instead of a hand-tuned nudge for one size. */
   :where([data-nk="alert"] > [data-slot="alert-icon"]) {
+    --_nk-alert-icon-size: 1.25rem;
+
     grid-row: 1 / -1;
-    inline-size: 1.25rem;
-    block-size: 1.25rem;
-    margin-block-start: 0.0625rem;
+    inline-size: var(--_nk-alert-icon-size);
+    block-size: var(--_nk-alert-icon-size);
+    margin-block-start: calc(
+      (var(--nk-title-compact-size) * var(--nk-leading-tight) - var(--_nk-alert-icon-size)) / 2
+    );
   }
 
   :where(
@@ -1752,8 +1773,8 @@
       [data-nk="appearance-picker"] > [data-slot="appearance-picker-legend"]
     ) {
     padding: 0;
-    font-size: var(--nk-text-sm);
-    font-weight: var(--nk-font-weight-semibold);
+    font-size: var(--nk-title-compact-size);
+    font-weight: var(--nk-title-compact-weight);
   }
 
   :where(
@@ -2164,7 +2185,7 @@
       ),
       var(--nk-button-default-border)
     );
-    --_nk-button-shadow: 0 1px 2px 0 oklch(0 0 0 / 0.05);
+    --_nk-button-shadow: var(--nk-shadow-xs);
 
     position: relative;
     display: inline-flex;
@@ -2258,7 +2279,8 @@
     --_nk-button-foreground: var(--nk-color-primary-foreground);
     --_nk-button-border: light-dark(oklch(0 0 0 / 0.1), transparent);
     --_nk-button-border-bottom: var(--_nk-button-border);
-    --_nk-button-shadow: inset 0 1px oklch(1 0 0 / 0.2);
+    --_nk-button-shadow: inset 0 1px
+      color-mix(in oklab, var(--nk-white) 20%, transparent);
   }
 
   :where([data-nk="button"][data-variant="destructive"]) {
@@ -2269,14 +2291,14 @@
     --_nk-button-border: transparent;
     --_nk-button-border-bottom: transparent;
     --_nk-button-shadow: inset 0 1px var(--nk-color-danger),
-      inset 0 2px oklch(1 0 0 / 0.15);
+      inset 0 2px color-mix(in oklab, var(--nk-white) 15%, transparent);
   }
 
   :where([data-nk="button"][data-variant="ghost"]) {
     --_nk-button-background: transparent;
     --_nk-button-hover-background: light-dark(
-      oklch(0.274 0.006 286.033 / 0.05),
-      oklch(1 0 0 / 0.15)
+      color-mix(in oklab, var(--nk-zinc-800) 5%, transparent),
+      color-mix(in oklab, var(--nk-white) 15%, transparent)
     );
     --_nk-button-foreground: var(--nk-color-foreground);
     --_nk-button-border-width: 0;
@@ -2377,7 +2399,7 @@
     ) {
     pointer-events: none;
     cursor: default;
-    opacity: 0.75;
+    opacity: var(--nk-disabled-opacity);
   }
 
   /* Dark surfaces need more than reduced opacity to read a saturated
@@ -2538,8 +2560,8 @@
   }
 
   :where([data-nk="card"] > [data-slot="card-title"]) {
-    font-size: var(--nk-text-lg);
-    font-weight: var(--nk-font-weight-bold);
+    font-size: var(--nk-title-surface-size);
+    font-weight: var(--nk-title-surface-weight);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
@@ -2746,7 +2768,7 @@
 
   :where([data-nk="checkbox"][data-disabled="true"]) {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--nk-disabled-opacity);
   }
 
   /* A server-rendered error describes the value that was submitted. Once the
@@ -2775,8 +2797,8 @@
 
   :where([data-nk="checkbox-group"] > [data-slot="checkbox-group-legend"]) {
     padding: 0;
-    font-size: var(--nk-text-sm);
-    font-weight: var(--nk-font-weight-semibold);
+    font-size: var(--nk-title-compact-size);
+    font-weight: var(--nk-title-compact-weight);
   }
 
   :where(
@@ -2960,7 +2982,7 @@
       [data-nk="combobox"] [data-slot="combobox-option"][aria-disabled="true"]
     ) {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--nk-disabled-opacity);
   }
 
   :where(
@@ -3443,8 +3465,8 @@
   }
 
   :where([data-nk="danger-zone"] [data-slot="danger-zone-title"]) {
-    font-size: var(--nk-text-xl);
-    font-weight: var(--nk-font-weight-bold);
+    font-size: var(--nk-title-section-size);
+    font-weight: var(--nk-title-section-weight);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
@@ -3495,8 +3517,8 @@
   }
 
   :where([data-nk="data-section"] [data-slot="data-section-title"]) {
-    font-size: var(--nk-text-xl);
-    font-weight: var(--nk-font-weight-bold);
+    font-size: var(--nk-title-section-size);
+    font-weight: var(--nk-title-section-weight);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
@@ -3601,8 +3623,8 @@
   }
 
   :where([data-nk="dialog"] [data-slot="dialog-title"]) {
-    font-size: var(--nk-text-lg);
-    font-weight: var(--nk-font-weight-bold);
+    font-size: var(--nk-title-surface-size);
+    font-weight: var(--nk-title-surface-weight);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
@@ -3790,7 +3812,7 @@
         [data-slot="dropdown-item"]:is(:disabled, [aria-disabled="true"])
     ) {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--nk-disabled-opacity);
   }
 
   :where([data-nk="dropdown"] > [data-slot="dropdown-content"]:popover-open) {
@@ -3975,7 +3997,7 @@
 
   :where([data-nk="dropzone"][data-state="disabled"]) {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--nk-disabled-opacity);
   }
 
   :where(
@@ -4081,8 +4103,8 @@
 
   :where([data-nk="empty-state"] > [data-slot="empty-state-title"]) {
     max-inline-size: var(--nk-content-md);
-    font-size: var(--nk-text-lg);
-    font-weight: var(--nk-font-weight-bold);
+    font-size: var(--nk-title-surface-size);
+    font-weight: var(--nk-title-surface-weight);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
@@ -4230,8 +4252,8 @@
 
   :where([data-nk="fieldset"] > [data-slot="fieldset-legend"]) {
     padding: 0;
-    font-size: var(--nk-text-lg);
-    font-weight: var(--nk-font-weight-semibold);
+    font-size: var(--nk-title-surface-size);
+    font-weight: var(--nk-title-surface-weight);
     line-height: var(--nk-leading-tight);
   }
 
@@ -5131,7 +5153,7 @@
 
   :where([data-nk="input"]:disabled) {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--nk-disabled-opacity);
   }
 
   :where([data-nk="input"][aria-invalid="true"]) {
@@ -5609,8 +5631,8 @@
 
   :where([data-nk="page-header"] > [data-slot="page-header-title"]) {
     max-width: var(--nk-content-lg);
-    font-size: var(--nk-text-2xl);
-    font-weight: var(--nk-font-weight-bold);
+    font-size: var(--nk-title-page-size);
+    font-weight: var(--nk-title-page-weight);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
@@ -6261,7 +6283,7 @@
 
   :where([data-nk="radio-button"][data-disabled="true"]) {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--nk-disabled-opacity);
   }
 
   /* The server error describes the submitted value. Once the user picks a
@@ -6290,8 +6312,8 @@
       [data-nk="radio-button-group"] > [data-slot="radio-button-group-legend"]
     ) {
     padding: 0;
-    font-size: var(--nk-text-sm);
-    font-weight: var(--nk-font-weight-semibold);
+    font-size: var(--nk-title-compact-size);
+    font-weight: var(--nk-title-compact-weight);
   }
 
   :where(
@@ -6515,7 +6537,7 @@
 
   :where([data-nk="select"] > [data-slot="select-control"]:disabled) {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--nk-disabled-opacity);
   }
 
   :where(
@@ -6648,8 +6670,8 @@
   }
 
   :where([data-nk="settings-section"] [data-slot="settings-section-title"]) {
-    font-size: var(--nk-text-xl);
-    font-weight: var(--nk-font-weight-bold);
+    font-size: var(--nk-title-section-size);
+    font-weight: var(--nk-title-section-weight);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
@@ -6771,8 +6793,8 @@
 
   :where([data-nk="sheet"] [data-slot="sheet-title"]) {
     padding-inline-end: calc(var(--nk-space) * 10);
-    font-size: var(--nk-text-lg);
-    font-weight: var(--nk-font-weight-bold);
+    font-size: var(--nk-title-surface-size);
+    font-weight: var(--nk-title-surface-weight);
     line-height: var(--nk-leading-tight);
   }
 
@@ -7023,7 +7045,7 @@
 
   :where([data-nk="switch"][data-disabled="true"]) {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--nk-disabled-opacity);
   }
 
   /* The server error describes the submitted value. Once the user toggles the
@@ -7304,7 +7326,7 @@
     ) {
     color: var(--nk-color-muted-foreground);
     cursor: not-allowed;
-    opacity: 0.55;
+    opacity: var(--nk-disabled-opacity);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -7349,7 +7371,7 @@
 
   :where([data-nk="textarea"]:disabled) {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--nk-disabled-opacity);
   }
 
   :where([data-nk="textarea"][aria-invalid="true"]) {
@@ -7393,7 +7415,7 @@
     background: var(--_nk-toast-background);
     border: var(--nk-border-width) solid var(--_nk-toast-border);
     border-radius: var(--nk-radius-lg);
-    box-shadow: var(--nk-shadow-lg);
+    box-shadow: var(--nk-shadow-md);
     transition:
       opacity var(--nk-duration-normal) var(--nk-ease),
       transform var(--nk-duration-normal) var(--nk-ease);
@@ -7407,8 +7429,8 @@
   }
 
   :where([data-nk="toast-item"] [data-slot="toast-item-title"]) {
-    font-size: var(--nk-text-sm);
-    font-weight: var(--nk-font-weight-semibold);
+    font-size: var(--nk-title-compact-size);
+    font-weight: var(--nk-title-compact-weight);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }

@@ -129,7 +129,7 @@
     ) {
     color: var(--nk-color-muted-foreground);
     cursor: not-allowed;
-    opacity: 0.55;
+    opacity: var(--nk-disabled-opacity);
   }
 
   @media (prefers-reduced-motion: reduce) {

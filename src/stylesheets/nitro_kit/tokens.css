@@ -23,6 +23,19 @@
     --nk-typeset-leading: 1.75;
     --nk-typeset-flow: 1.25em;
 
+    /* The title scale. Four roles cover every owned title and legend: page
+       for the one page heading, section for full-width section headers,
+       surface for cards, dialogs, sheets, empty states, and fieldsets, and
+       compact for control-group legends and status titles. */
+    --nk-title-page-size: var(--nk-text-2xl);
+    --nk-title-page-weight: var(--nk-font-weight-bold);
+    --nk-title-section-size: var(--nk-text-xl);
+    --nk-title-section-weight: var(--nk-font-weight-bold);
+    --nk-title-surface-size: var(--nk-text-lg);
+    --nk-title-surface-weight: var(--nk-font-weight-bold);
+    --nk-title-compact-size: var(--nk-text-sm);
+    --nk-title-compact-weight: var(--nk-font-weight-semibold);
+
     --nk-font-weight-normal: 400;
     --nk-font-weight-medium: 500;
     --nk-font-weight-semibold: 600;
@@ -41,12 +54,14 @@
     --nk-border-width: 1px;
     --nk-focus-width: 2px;
     --nk-focus-offset: 2px;
+    --nk-disabled-opacity: 0.6;
 
-    --nk-shadow-sm: 0 1px 2px oklch(0 0 0 / 0.08);
-    --nk-shadow-md: 0 4px 6px -1px oklch(0 0 0 / 0.1),
-      0 2px 4px -2px oklch(0 0 0 / 0.1);
-    --nk-shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 0.12),
-      0 4px 6px -4px oklch(0 0 0 / 0.12);
+    --nk-shadow-xs: 0 1px 2px 0 color-mix(in oklab, var(--nk-black) 5%, transparent);
+    --nk-shadow-sm: 0 1px 2px color-mix(in oklab, var(--nk-black) 8%, transparent);
+    --nk-shadow-md: 0 4px 6px -1px color-mix(in oklab, var(--nk-black) 10%, transparent),
+      0 2px 4px -2px color-mix(in oklab, var(--nk-black) 10%, transparent);
+    --nk-shadow-lg: 0 10px 15px -3px color-mix(in oklab, var(--nk-black) 12%, transparent),
+      0 4px 6px -4px color-mix(in oklab, var(--nk-black) 12%, transparent);
 
     --nk-duration-fast: 100ms;
     --nk-duration-normal: 150ms;

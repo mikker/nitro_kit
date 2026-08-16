@@ -19,8 +19,8 @@
   }
 
   :where([data-nk="alert"] > [data-slot="alert-title"]) {
-    font-size: var(--nk-text-base);
-    font-weight: var(--nk-font-weight-semibold);
+    font-size: var(--nk-title-compact-size);
+    font-weight: var(--nk-title-compact-weight);
     line-height: var(--nk-leading-tight);
     text-wrap: balance;
   }
@@ -29,11 +29,17 @@
     grid-template-columns: auto minmax(0, 1fr);
   }
 
+  /* Centered on the title first line, whatever size the title role
+     resolves to, instead of a hand-tuned nudge for one size. */
   :where([data-nk="alert"] > [data-slot="alert-icon"]) {
+    --_nk-alert-icon-size: 1.25rem;
+
     grid-row: 1 / -1;
-    inline-size: 1.25rem;
-    block-size: 1.25rem;
-    margin-block-start: 0.0625rem;
+    inline-size: var(--_nk-alert-icon-size);
+    block-size: var(--_nk-alert-icon-size);
+    margin-block-start: calc(
+      (var(--nk-title-compact-size) * var(--nk-leading-tight) - var(--_nk-alert-icon-size)) / 2
+    );
   }
 
   :where(
