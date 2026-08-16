@@ -539,11 +539,13 @@ The following variables are the complete public token set. Theme-independent tok
 | `--nk-border-width`  | Default border and separator width.                                                        |
 | `--nk-focus-width`   | Focus-ring width.                                                                          |
 | `--nk-focus-offset`  | Focus-ring offset.                                                                         |
+| `--nk-disabled-opacity`         | Opacity of disabled controls and options.                              |
 
 ### Elevation and motion
 
 | Token                  | Role                                  |
 | ---------------------- | ------------------------------------- |
+| `--nk-shadow-xs`                | Raised control shadow, such as the default Button.                    |
 | `--nk-shadow-sm`       | Low surface elevation.                |
 | `--nk-shadow-md`       | Medium floating elevation.            |
 | `--nk-shadow-lg`       | High overlay elevation.               |

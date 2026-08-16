@@ -56,12 +56,14 @@
     --nk-border-width: 1px;
     --nk-focus-width: 2px;
     --nk-focus-offset: 2px;
+    --nk-disabled-opacity: 0.6;
 
-    --nk-shadow-sm: 0 1px 2px oklch(0 0 0 / 0.08);
-    --nk-shadow-md: 0 4px 6px -1px oklch(0 0 0 / 0.1),
-      0 2px 4px -2px oklch(0 0 0 / 0.1);
-    --nk-shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 0.12),
-      0 4px 6px -4px oklch(0 0 0 / 0.12);
+    --nk-shadow-xs: 0 1px 2px 0 color-mix(in oklab, var(--nk-black) 5%, transparent);
+    --nk-shadow-sm: 0 1px 2px color-mix(in oklab, var(--nk-black) 8%, transparent);
+    --nk-shadow-md: 0 4px 6px -1px color-mix(in oklab, var(--nk-black) 10%, transparent),
+      0 2px 4px -2px color-mix(in oklab, var(--nk-black) 10%, transparent);
+    --nk-shadow-lg: 0 10px 15px -3px color-mix(in oklab, var(--nk-black) 12%, transparent),
+      0 4px 6px -4px color-mix(in oklab, var(--nk-black) 12%, transparent);
 
     --nk-duration-fast: 100ms;
     --nk-duration-normal: 150ms;
@@ -2164,7 +2166,7 @@
       ),
       var(--nk-button-default-border)
     );
-    --_nk-button-shadow: 0 1px 2px 0 oklch(0 0 0 / 0.05);
+    --_nk-button-shadow: var(--nk-shadow-xs);
 
     position: relative;
     display: inline-flex;
@@ -2258,7 +2260,8 @@
     --_nk-button-foreground: var(--nk-color-primary-foreground);
     --_nk-button-border: light-dark(oklch(0 0 0 / 0.1), transparent);
     --_nk-button-border-bottom: var(--_nk-button-border);
-    --_nk-button-shadow: inset 0 1px oklch(1 0 0 / 0.2);
+    --_nk-button-shadow: inset 0 1px
+      color-mix(in oklab, var(--nk-white) 20%, transparent);
   }
 
   :where([data-nk="button"][data-variant="destructive"]) {
@@ -2269,14 +2272,14 @@
     --_nk-button-border: transparent;
     --_nk-button-border-bottom: transparent;
     --_nk-button-shadow: inset 0 1px var(--nk-color-danger),
-      inset 0 2px oklch(1 0 0 / 0.15);
+      inset 0 2px color-mix(in oklab, var(--nk-white) 15%, transparent);
   }
 
   :where([data-nk="button"][data-variant="ghost"]) {
     --_nk-button-background: transparent;
     --_nk-button-hover-background: light-dark(
-      oklch(0.274 0.006 286.033 / 0.05),
-      oklch(1 0 0 / 0.15)
+      color-mix(in oklab, var(--nk-zinc-800) 5%, transparent),
+      color-mix(in oklab, var(--nk-white) 15%, transparent)
     );
     --_nk-button-foreground: var(--nk-color-foreground);
     --_nk-button-border-width: 0;
@@ -2377,7 +2380,7 @@
     ) {
     pointer-events: none;
     cursor: default;
-    opacity: 0.75;
+    opacity: var(--nk-disabled-opacity);
   }
 
   /* Dark surfaces need more than reduced opacity to read a saturated
@@ -2746,7 +2749,7 @@
 
   :where([data-nk="checkbox"][data-disabled="true"]) {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--nk-disabled-opacity);
   }
 
   /* A server-rendered error describes the value that was submitted. Once the
@@ -2960,7 +2963,7 @@
       [data-nk="combobox"] [data-slot="combobox-option"][aria-disabled="true"]
     ) {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--nk-disabled-opacity);
   }
 
   :where(
@@ -3790,7 +3793,7 @@
         [data-slot="dropdown-item"]:is(:disabled, [aria-disabled="true"])
     ) {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--nk-disabled-opacity);
   }
 
   :where([data-nk="dropdown"] > [data-slot="dropdown-content"]:popover-open) {
@@ -3975,7 +3978,7 @@
 
   :where([data-nk="dropzone"][data-state="disabled"]) {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--nk-disabled-opacity);
   }
 
   :where(
@@ -5131,7 +5134,7 @@
 
   :where([data-nk="input"]:disabled) {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--nk-disabled-opacity);
   }
 
   :where([data-nk="input"][aria-invalid="true"]) {
@@ -6261,7 +6264,7 @@
 
   :where([data-nk="radio-button"][data-disabled="true"]) {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--nk-disabled-opacity);
   }
 
   /* The server error describes the submitted value. Once the user picks a
@@ -6515,7 +6518,7 @@
 
   :where([data-nk="select"] > [data-slot="select-control"]:disabled) {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--nk-disabled-opacity);
   }
 
   :where(
@@ -7023,7 +7026,7 @@
 
   :where([data-nk="switch"][data-disabled="true"]) {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--nk-disabled-opacity);
   }
 
   /* The server error describes the submitted value. Once the user toggles the
@@ -7304,7 +7307,7 @@
     ) {
     color: var(--nk-color-muted-foreground);
     cursor: not-allowed;
-    opacity: 0.55;
+    opacity: var(--nk-disabled-opacity);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -7349,7 +7352,7 @@
 
   :where([data-nk="textarea"]:disabled) {
     cursor: not-allowed;
-    opacity: 0.6;
+    opacity: var(--nk-disabled-opacity);
   }
 
   :where([data-nk="textarea"][aria-invalid="true"]) {

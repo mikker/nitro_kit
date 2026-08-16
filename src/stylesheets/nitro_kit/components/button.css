@@ -19,7 +19,7 @@
       ),
       var(--nk-button-default-border)
     );
-    --_nk-button-shadow: 0 1px 2px 0 oklch(0 0 0 / 0.05);
+    --_nk-button-shadow: var(--nk-shadow-xs);
 
     position: relative;
     display: inline-flex;
@@ -113,7 +113,8 @@
     --_nk-button-foreground: var(--nk-color-primary-foreground);
     --_nk-button-border: light-dark(oklch(0 0 0 / 0.1), transparent);
     --_nk-button-border-bottom: var(--_nk-button-border);
-    --_nk-button-shadow: inset 0 1px oklch(1 0 0 / 0.2);
+    --_nk-button-shadow: inset 0 1px
+      color-mix(in oklab, var(--nk-white) 20%, transparent);
   }
 
   :where([data-nk="button"][data-variant="destructive"]) {
@@ -124,14 +125,14 @@
     --_nk-button-border: transparent;
     --_nk-button-border-bottom: transparent;
     --_nk-button-shadow: inset 0 1px var(--nk-color-danger),
-      inset 0 2px oklch(1 0 0 / 0.15);
+      inset 0 2px color-mix(in oklab, var(--nk-white) 15%, transparent);
   }
 
   :where([data-nk="button"][data-variant="ghost"]) {
     --_nk-button-background: transparent;
     --_nk-button-hover-background: light-dark(
-      oklch(0.274 0.006 286.033 / 0.05),
-      oklch(1 0 0 / 0.15)
+      color-mix(in oklab, var(--nk-zinc-800) 5%, transparent),
+      color-mix(in oklab, var(--nk-white) 15%, transparent)
     );
     --_nk-button-foreground: var(--nk-color-foreground);
     --_nk-button-border-width: 0;
@@ -232,7 +233,7 @@
     ) {
     pointer-events: none;
     cursor: default;
-    opacity: 0.75;
+    opacity: var(--nk-disabled-opacity);
   }
 
   /* Dark surfaces need more than reduced opacity to read a saturated

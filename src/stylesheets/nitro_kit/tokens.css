@@ -41,12 +41,14 @@
     --nk-border-width: 1px;
     --nk-focus-width: 2px;
     --nk-focus-offset: 2px;
+    --nk-disabled-opacity: 0.6;
 
-    --nk-shadow-sm: 0 1px 2px oklch(0 0 0 / 0.08);
-    --nk-shadow-md: 0 4px 6px -1px oklch(0 0 0 / 0.1),
-      0 2px 4px -2px oklch(0 0 0 / 0.1);
-    --nk-shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 0.12),
-      0 4px 6px -4px oklch(0 0 0 / 0.12);
+    --nk-shadow-xs: 0 1px 2px 0 color-mix(in oklab, var(--nk-black) 5%, transparent);
+    --nk-shadow-sm: 0 1px 2px color-mix(in oklab, var(--nk-black) 8%, transparent);
+    --nk-shadow-md: 0 4px 6px -1px color-mix(in oklab, var(--nk-black) 10%, transparent),
+      0 2px 4px -2px color-mix(in oklab, var(--nk-black) 10%, transparent);
+    --nk-shadow-lg: 0 10px 15px -3px color-mix(in oklab, var(--nk-black) 12%, transparent),
+      0 4px 6px -4px color-mix(in oklab, var(--nk-black) 12%, transparent);
 
     --nk-duration-fast: 100ms;
     --nk-duration-normal: 150ms;
