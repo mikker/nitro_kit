@@ -715,6 +715,29 @@
     gap: 1rem;
   }
 
+  /* Stack canvases stretch broad children like PageHeader and Field.
+     Intrinsic atoms keep their own width, matching the layout-sizing
+     taxonomy, including triggers that join the canvas flex through a
+     display: contents overlay root. */
+  :where(
+    [data-gallery="example"][data-gallery-layout="stack"]
+      [data-gallery="example-canvas"]
+      > :is(
+        [data-nk="button"],
+        [data-nk="button-group"],
+        [data-nk="badge"],
+        [data-nk="avatar"],
+        [data-nk="avatar-stack"],
+        [data-nk="switch"]
+      ),
+    [data-gallery="example"][data-gallery-layout="stack"]
+      [data-gallery="example-canvas"]
+      > :is([data-nk="dialog"], [data-nk="sheet"], [data-nk="button-to"])
+      > [data-nk="button"]
+  ) {
+    align-self: flex-start;
+  }
+
   :where(
     [data-gallery="example"][data-gallery-layout="row"]
       [data-gallery="example-canvas"]
