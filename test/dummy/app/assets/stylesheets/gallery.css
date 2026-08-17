@@ -751,9 +751,14 @@
 
   /* Contain deliberate horizontal pressure inside the canvas instead of
      scrolling the whole document. Tooltip canvases stay visible because
-     tooltip panels are the one overlay that is not in the top layer. */
+     tooltip panels are the one overlay that is not in the top layer.
+     Focus rings draw outside a control, so the clip keeps a margin for
+     them where the engine supports it; Safari shows a ring trimmed at the
+     canvas edges until it ships overflow-clip-margin. */
   :where([data-gallery="example-canvas"]:not(:has([data-nk="tooltip"]))) {
     overflow-x: clip;
+    /* Focus width plus offset; engines accept only literal lengths here. */
+    overflow-clip-margin: 4px;
   }
 
   :where([data-gallery-navigation-preview]) {
