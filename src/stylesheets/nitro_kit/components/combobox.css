@@ -142,7 +142,7 @@
   @keyframes nk-combobox-enter {
     from {
       opacity: 0;
-      transform: translateY(-0.25rem);
+      transform: translateY(calc(var(--nk-space) * -1));
     }
     to {
       opacity: 1;

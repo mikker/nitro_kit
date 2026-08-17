@@ -1,13 +1,27 @@
 @layer nitro-kit.base {
+  /* Four declared inputs; everything else derives. The block heights ride the
+     control ramp, the track is the block plus the handle's travel, and the
+     handle inset is whatever centers it inside the bordered track. */
   :where([data-nk="switch"]) {
-    --_nk-switch-track-size: 2.5rem;
+    --_nk-switch-block-size: var(--nk-control-height-xs);
+    --_nk-switch-handle-size: calc(var(--nk-space) * 4);
+    --_nk-switch-travel: calc(var(--nk-space) * 4);
+    --_nk-switch-track-size: calc(
+      var(--_nk-switch-block-size) + var(--_nk-switch-travel)
+    );
+    --_nk-switch-pad: calc(
+      (var(--_nk-switch-block-size) - var(--_nk-switch-handle-size)) / 2 -
+        var(--nk-border-width)
+    );
 
     display: inline-grid;
     color: var(--nk-color-foreground);
   }
 
   :where([data-nk="switch"][data-size="lg"]) {
-    --_nk-switch-track-size: 3.25rem;
+    --_nk-switch-block-size: var(--nk-control-height-sm);
+    --_nk-switch-handle-size: calc(var(--nk-space) * 6);
+    --_nk-switch-travel: calc(var(--nk-space) * 5);
   }
 
   :where([data-nk="switch"] > [data-slot="switch-label"]) {
@@ -29,7 +43,7 @@
   :where([data-nk="switch"] [data-slot="switch-control"]) {
     z-index: 1;
     inline-size: var(--_nk-switch-track-size);
-    block-size: 1.5rem;
+    block-size: var(--_nk-switch-block-size);
     margin: 0;
     cursor: pointer;
     appearance: none;
@@ -40,8 +54,8 @@
     display: flex;
     align-items: center;
     inline-size: var(--_nk-switch-track-size);
-    block-size: 1.5rem;
-    padding: 0.1875rem;
+    block-size: var(--_nk-switch-block-size);
+    padding: var(--_nk-switch-pad);
     pointer-events: none;
     background: var(--nk-color-muted);
     border: var(--nk-border-width) solid var(--nk-color-border);
@@ -51,25 +65,13 @@
       border-color var(--nk-duration-normal) var(--nk-ease);
   }
 
-  :where(
-    [data-nk="switch"][data-size="lg"] [data-slot="switch-control"],
-    [data-nk="switch"][data-size="lg"] [data-slot="switch-track"]
-  ) {
-    block-size: 2rem;
-  }
-
   :where([data-nk="switch"] [data-slot="switch-handle"]) {
-    inline-size: 1rem;
-    block-size: 1rem;
+    inline-size: var(--_nk-switch-handle-size);
+    block-size: var(--_nk-switch-handle-size);
     background: var(--nk-color-surface);
     border-radius: var(--nk-radius-full);
     box-shadow: var(--nk-shadow-sm);
     transition: transform var(--nk-duration-normal) var(--nk-ease);
-  }
-
-  :where([data-nk="switch"][data-size="lg"] [data-slot="switch-handle"]) {
-    inline-size: 1.5rem;
-    block-size: 1.5rem;
   }
 
   :where([data-nk="switch"] [data-slot="switch-label-text"]) {
@@ -106,16 +108,7 @@
       + [data-slot="switch-track"]
       > [data-slot="switch-handle"]
   ) {
-    transform: translateX(1rem);
-  }
-
-  :where(
-    [data-nk="switch"][data-size="lg"]
-      [data-slot="switch-control"]:checked
-      + [data-slot="switch-track"]
-      > [data-slot="switch-handle"]
-  ) {
-    transform: translateX(1.25rem);
+    transform: translateX(var(--_nk-switch-travel));
   }
 
   :where(

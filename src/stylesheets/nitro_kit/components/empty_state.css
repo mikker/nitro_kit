@@ -13,8 +13,8 @@
   }
 
   :where([data-nk="empty-state"] > [data-slot="empty-state-icon"]) {
-    inline-size: 2rem;
-    block-size: 2rem;
+    inline-size: calc(var(--nk-space) * 8);
+    block-size: calc(var(--nk-space) * 8);
     color: var(--nk-color-muted-foreground);
   }
 

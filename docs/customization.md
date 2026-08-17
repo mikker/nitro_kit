@@ -530,6 +530,15 @@ The following variables are the complete public token set. Theme-independent tok
 | `--nk-control-height-xl`      | Extra-large control height.                                     |
 | `--nk-choice-size-md`         | Checkbox and radio box size.                                    |
 | `--nk-choice-size-lg`         | Large checkbox and radio box size.                              |
+| `--nk-icon-size-xs`           | Extra-small Icon size.                                          |
+| `--nk-icon-size-sm`           | Small Icon size.                                                |
+| `--nk-icon-size-md`           | Default Icon size; also sizes owned status icons.               |
+| `--nk-icon-size-lg`           | Large Icon size.                                                |
+| `--nk-icon-size-xl`           | Extra-large Icon size.                                          |
+| `--nk-avatar-size-xs`         | Extra-small Avatar size.                                        |
+| `--nk-avatar-size-sm`         | Small Avatar size.                                              |
+| `--nk-avatar-size-md`         | Default Avatar size.                                            |
+| `--nk-avatar-size-lg`         | Large Avatar size.                                              |
 | `--nk-control-padding-inline` | Inline padding shared by buttons and data-entry controls.       |
 | `--nk-content-sm`             | Small Container maximum width.                                  |
 | `--nk-content-md`             | Medium Container maximum width.                                 |

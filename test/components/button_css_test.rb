@@ -79,22 +79,24 @@ class ButtonCssTest < ActiveSupport::TestCase
     css = button_css
 
     {
-      xs: "1rem",
-      sm: "1.25rem",
-      md: "1.5rem",
-      lg: "1.75rem",
-      xl: "2rem"
-    }.each do |size, avatar_size|
+      xs: 4,
+      sm: 5,
+      md: 6,
+      lg: 7,
+      xl: 8
+    }.each do |size, step|
       assert_match(
-        /\[data-size="#{size}"\]\)\s*\{[^}]*--_nk-button-avatar-size: #{avatar_size};/m,
+        /\[data-size="#{size}"\]\)\s*\{[^}]*--_nk-button-avatar-size: calc\(var\(--nk-space\) \* #{step}\);/m,
         css
       )
     end
 
     assert_includes css, "width: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size))"
     assert_includes css, "height: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size))"
-    assert_includes avatar_css, "--_nk-avatar-size: 1.5rem"
-    assert_includes avatar_css, "--_nk-avatar-size: 3rem"
+    assert_includes avatar_css, "--_nk-avatar-size: var(--nk-avatar-size-xs)"
+    assert_includes avatar_css, "--_nk-avatar-size: var(--nk-avatar-size-md)"
+    assert_includes tokens_css, "--nk-avatar-size-xs: 1.5rem"
+    assert_includes tokens_css, "--nk-avatar-size-md: 3rem"
   end
 
   test "spins the owned loading slot and respects reduced motion" do

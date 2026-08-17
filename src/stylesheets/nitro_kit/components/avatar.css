@@ -60,22 +60,22 @@
 
 @layer nitro-kit.size {
   :where([data-nk="avatar"][data-size="xs"]) {
-    --_nk-avatar-size: 1.5rem;
+    --_nk-avatar-size: var(--nk-avatar-size-xs);
     --_nk-avatar-font-size: calc(var(--nk-text-xs) * 0.875);
   }
 
   :where([data-nk="avatar"][data-size="sm"]) {
-    --_nk-avatar-size: 2rem;
+    --_nk-avatar-size: var(--nk-avatar-size-sm);
     --_nk-avatar-font-size: var(--nk-text-xs);
   }
 
   :where([data-nk="avatar"][data-size="md"]) {
-    --_nk-avatar-size: 3rem;
+    --_nk-avatar-size: var(--nk-avatar-size-md);
     --_nk-avatar-font-size: var(--nk-text-sm);
   }
 
   :where([data-nk="avatar"][data-size="lg"]) {
-    --_nk-avatar-size: 4rem;
+    --_nk-avatar-size: var(--nk-avatar-size-lg);
     --_nk-avatar-font-size: var(--nk-text-lg);
   }
 }

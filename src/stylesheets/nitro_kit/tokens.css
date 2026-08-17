@@ -85,6 +85,17 @@
     --nk-choice-size-md: 1.125rem;
     --nk-choice-size-lg: 1.5rem;
 
+    --nk-icon-size-xs: 0.75rem;
+    --nk-icon-size-sm: 1rem;
+    --nk-icon-size-md: 1.25rem;
+    --nk-icon-size-lg: 1.75rem;
+    --nk-icon-size-xl: 2.25rem;
+
+    --nk-avatar-size-xs: 1.5rem;
+    --nk-avatar-size-sm: 2rem;
+    --nk-avatar-size-md: 3rem;
+    --nk-avatar-size-lg: 4rem;
+
     --nk-content-sm: 24rem;
     --nk-content-md: 32rem;
     --nk-content-lg: 48rem;

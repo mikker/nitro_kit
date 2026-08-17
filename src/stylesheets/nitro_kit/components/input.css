@@ -69,6 +69,14 @@
       font-size: var(--nk-text-base);
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(
+      [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
+    ) {
+      transition-duration: 0.01ms;
+    }
+  }
 }
 
 @layer nitro-kit.state {

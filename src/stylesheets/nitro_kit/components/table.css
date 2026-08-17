@@ -52,9 +52,14 @@
     text-decoration: none;
   }
 
+  /* Half-strength through the color channel rather than opacity, so the
+     dimming is one declaration and never cascades into descendants. */
   :where([data-nk="table"] [data-slot="table-sort-indicator"]) {
-    color: var(--nk-color-muted-foreground);
-    opacity: 0.5;
+    color: color-mix(
+      in oklab,
+      var(--nk-color-muted-foreground) 50%,
+      transparent
+    );
   }
 }
 
@@ -80,7 +85,6 @@
         [data-slot="table-sort-indicator"]
     ) {
     color: var(--nk-color-primary);
-    opacity: 1;
   }
 
   @media (hover: hover) {
@@ -93,7 +97,7 @@
           [data-slot="table-sort"]:hover
           [data-slot="table-sort-indicator"]
       ) {
-      opacity: 1;
+      color: var(--nk-color-muted-foreground);
     }
   }
 

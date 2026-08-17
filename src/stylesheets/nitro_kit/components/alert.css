@@ -32,7 +32,7 @@
   /* Centered on the title first line, whatever size the title role
      resolves to, instead of a hand-tuned nudge for one size. */
   :where([data-nk="alert"] > [data-slot="alert-icon"]) {
-    --_nk-alert-icon-size: 1.25rem;
+    --_nk-alert-icon-size: var(--nk-icon-size-md);
 
     grid-row: 1 / -1;
     inline-size: var(--_nk-alert-icon-size);

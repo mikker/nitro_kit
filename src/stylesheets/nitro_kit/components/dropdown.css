@@ -142,7 +142,7 @@
   @keyframes nk-dropdown-enter {
     from {
       opacity: 0;
-      transform: translateY(-0.25rem) scale(0.98);
+      transform: translateY(calc(var(--nk-space) * -1)) scale(0.98);
     }
     to {
       opacity: 1;

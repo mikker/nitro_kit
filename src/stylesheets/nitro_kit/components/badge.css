@@ -64,7 +64,7 @@
 
 @layer nitro-kit.size {
   :where([data-nk="badge"][data-size="xs"]) {
-    padding: 0 calc(var(--nk-space) * 1.25);
+    padding: 0 var(--nk-space);
     font-size: var(--nk-text-xs);
   }
 
