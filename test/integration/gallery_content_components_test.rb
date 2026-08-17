@@ -77,7 +77,7 @@ class GalleryContentComponentsTest < ActionDispatch::IntegrationTest
 
     assert_select "#gallery-settings-section-minimal > [data-slot='settings-section-form'] > form", count: 1
     assert_select "#gallery-settings-section-validation" do
-      assert_select "> [data-slot='settings-section-status'][data-nk='alert'][data-variant='error']"
+      assert_select "> [data-slot='settings-section-status'][data-nk='alert'][data-variant='destructive']"
       assert_select "> [data-slot='settings-section-form'] > form#gallery-settings-section-validation-form"
     end
     assert_select "#gallery-settings-section-success > [data-slot='settings-section-status'][data-variant='success']"

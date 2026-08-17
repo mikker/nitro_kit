@@ -103,14 +103,14 @@ class AppNavigationTest < ActiveSupport::TestCase
   test "items expose the badge color vocabulary" do
     node = render_navigation do |navigation|
       navigation.body do
-        navigation.item("Incidents", href: "/incidents", badge: 3, badge_color: :danger)
+        navigation.item("Incidents", href: "/incidents", badge: 3, badge_color: :destructive)
         navigation.item("Inbox", href: "/inbox", badge: "9")
       end
     end
 
-    danger, neutral = node.css("[data-slot='app-navigation-item-badge']")
+    destructive, neutral = node.css("[data-slot='app-navigation-item-badge']")
 
-    assert_equal "danger", danger["data-color"]
+    assert_equal "destructive", destructive["data-color"]
     assert_equal "neutral", neutral["data-color"]
 
     assert_match(/Unknown color/, assert_raises(ArgumentError) do
@@ -120,7 +120,7 @@ class AppNavigationTest < ActiveSupport::TestCase
     end.message)
     assert_match(/badge_color requires a badge/, assert_raises(ArgumentError) do
       render_navigation do |navigation|
-        navigation.body { navigation.item("One", href: "/one", badge_color: :danger) }
+        navigation.body { navigation.item("One", href: "/one", badge_color: :destructive) }
       end
     end.message)
   end

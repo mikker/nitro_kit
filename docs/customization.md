@@ -199,7 +199,7 @@ Treat related tokens as a system:
 - Density changes should coordinate `--nk-space` with all five control-height tokens. Changing one component's internal gap is not a public theme contract.
 - Font changes normally set `--nk-font-sans`; set `--nk-font-mono`, text sizes, line heights, or weights only when the whole type system calls for it.
 
-Check foreground pairs and focus indicators for contrast in both appearances. The semantic names describe use, not a fixed hue: `danger` can be a project-appropriate destructive color, but it should remain recognizably destructive everywhere it appears.
+Check foreground pairs and focus indicators for contrast in both appearances. The semantic names describe use, not a fixed hue: `destructive` can be a project-appropriate red, but it should remain recognizably destructive everywhere it appears.
 
 ## Theme customizer
 
@@ -567,35 +567,35 @@ The following variables are the complete public token set. Theme-independent tok
 
 ### Semantic colors
 
-| Token                           | Role                                                                   |
-| ------------------------------- | ---------------------------------------------------------------------- |
-| `--nk-color-canvas`             | Page canvas and overscroll; light zinc uses a zinc-25-like near-white. |
-| `--nk-color-surface`            | Default component surface.                                             |
-| `--nk-color-surface-hover`      | Derived interactive surface hover.                                     |
-| `--nk-color-elevated`           | Raised or inset-neutral surface.                                       |
-| `--nk-color-foreground`         | Primary text and icon color.                                           |
-| `--nk-color-muted`              | Quiet fill.                                                            |
-| `--nk-color-muted-foreground`   | Secondary text and icon color.                                         |
-| `--nk-color-border`             | Borders and separators.                                                |
-| `--nk-color-focus`              | Focus indicator.                                                       |
-| `--nk-color-primary`            | Primary action and selected-state fill.                                |
-| `--nk-color-primary-hover`      | Derived primary interaction hover.                                     |
-| `--nk-color-primary-foreground` | Content placed on primary fill.                                        |
-| `--nk-color-neutral`            | Neutral status fill or marker.                                         |
-| `--nk-color-neutral-content`    | Strong neutral status content.                                         |
-| `--nk-color-info`               | Informational status fill or marker.                                   |
-| `--nk-color-info-content`       | Informational status content.                                          |
-| `--nk-color-success`            | Successful status fill or marker.                                      |
-| `--nk-color-success-content`    | Successful status content.                                             |
-| `--nk-color-warning`            | Warning status fill or marker.                                         |
-| `--nk-color-warning-content`    | Warning status content.                                                |
-| `--nk-color-danger`             | Destructive action and error fill.                                     |
-| `--nk-color-danger-hover`       | Derived destructive interaction hover.                                 |
-| `--nk-color-danger-foreground`  | Content placed on destructive fill.                                    |
-| `--nk-color-danger-content`     | Error and destructive status content.                                  |
-| `--nk-color-overlay`            | Modal and drawer backdrop.                                             |
+| Token                               | Role                                                                   |
+| ----------------------------------- | ---------------------------------------------------------------------- |
+| `--nk-color-canvas`                 | Page canvas and overscroll; light zinc uses a zinc-25-like near-white. |
+| `--nk-color-surface`                | Default component surface.                                             |
+| `--nk-color-surface-hover`          | Derived interactive surface hover.                                     |
+| `--nk-color-elevated`               | Raised or inset-neutral surface.                                       |
+| `--nk-color-foreground`             | Primary text and icon color.                                           |
+| `--nk-color-muted`                  | Quiet fill.                                                            |
+| `--nk-color-muted-foreground`       | Secondary text and icon color.                                         |
+| `--nk-color-border`                 | Borders and separators.                                                |
+| `--nk-color-focus`                  | Focus indicator.                                                       |
+| `--nk-color-primary`                | Primary action and selected-state fill.                                |
+| `--nk-color-primary-hover`          | Derived primary interaction hover.                                     |
+| `--nk-color-primary-foreground`     | Content placed on primary fill.                                        |
+| `--nk-color-neutral`                | Neutral status fill or marker.                                         |
+| `--nk-color-neutral-content`        | Strong neutral status content.                                         |
+| `--nk-color-info`                   | Informational status fill or marker.                                   |
+| `--nk-color-info-content`           | Informational status content.                                          |
+| `--nk-color-success`                | Successful status fill or marker.                                      |
+| `--nk-color-success-content`        | Successful status content.                                             |
+| `--nk-color-warning`                | Warning status fill or marker.                                         |
+| `--nk-color-warning-content`        | Warning status content.                                                |
+| `--nk-color-destructive`            | Destructive action and error fill.                                     |
+| `--nk-color-destructive-hover`      | Derived destructive interaction hover.                                 |
+| `--nk-color-destructive-foreground` | Content placed on destructive fill.                                    |
+| `--nk-color-destructive-content`    | Error and destructive status content.                                  |
+| `--nk-color-overlay`                | Modal and drawer backdrop.                                             |
 
-The five status families — neutral, info, success, warning, and danger — carry
+The five status families — neutral, info, success, warning, and destructive — carry
 two roles each. `--nk-color-{family}` is the fill axis: strong marks, icons, and
 fills such as the destructive Button or an upload marker. The tint axis
 `--nk-palette-{family}` drives the soft surfaces of `Badge`, `Alert`, and
@@ -1092,61 +1092,61 @@ families answer "what does this mean"; the seventeen decorative hues answer
 "which color is this", for categorical labelling where meaning is not the
 point. Both resolve through `--nk-palette-*` tint roles.
 
-The distinction is deliberate: `color: :danger` follows `--nk-palette-danger`
+The distinction is deliberate: `color: :destructive` follows `--nk-palette-destructive`
 and moves when an application rethemes its destructive tint, while `color:
 :red` follows `--nk-palette-red` and stays red. By default the two agree —
 each semantic family samples the same scale steps as its hue family, so
-`danger` and `red` render identically until a theme separates them.
+`destructive` and `red` render identically until a theme separates them.
 
 Each tint is appearance independent; the paired `-content` foreground resolves
 per appearance so labels stay readable in both.
 
-| Token                          | Role                                    |
-| ------------------------------ | --------------------------------------- |
-| `--nk-palette-neutral`         | Neutral status tint; defaults to zinc.  |
-| `--nk-palette-neutral-content` | Neutral status content on that tint.    |
-| `--nk-palette-info`            | Info status tint; defaults to blue.     |
-| `--nk-palette-info-content`    | Info status content on that tint.       |
-| `--nk-palette-success`         | Success status tint; defaults to green. |
-| `--nk-palette-success-content` | Success status content on that tint.    |
-| `--nk-palette-warning`         | Warning status tint; defaults to amber. |
-| `--nk-palette-warning-content` | Warning status content on that tint.    |
-| `--nk-palette-danger`          | Danger status tint; defaults to red.    |
-| `--nk-palette-danger-content`  | Danger status content on that tint.     |
-| `--nk-palette-red`             | Red tint and marker.                    |
-| `--nk-palette-red-content`     | Red content on that tint.               |
-| `--nk-palette-orange`          | Orange tint and marker.                 |
-| `--nk-palette-orange-content`  | Orange content on that tint.            |
-| `--nk-palette-amber`           | Amber tint and marker.                  |
-| `--nk-palette-amber-content`   | Amber content on that tint.             |
-| `--nk-palette-yellow`          | Yellow tint and marker.                 |
-| `--nk-palette-yellow-content`  | Yellow content on that tint.            |
-| `--nk-palette-lime`            | Lime tint and marker.                   |
-| `--nk-palette-lime-content`    | Lime content on that tint.              |
-| `--nk-palette-green`           | Green tint and marker.                  |
-| `--nk-palette-green-content`   | Green content on that tint.             |
-| `--nk-palette-emerald`         | Emerald tint and marker.                |
-| `--nk-palette-emerald-content` | Emerald content on that tint.           |
-| `--nk-palette-teal`            | Teal tint and marker.                   |
-| `--nk-palette-teal-content`    | Teal content on that tint.              |
-| `--nk-palette-cyan`            | Cyan tint and marker.                   |
-| `--nk-palette-cyan-content`    | Cyan content on that tint.              |
-| `--nk-palette-sky`             | Sky tint and marker.                    |
-| `--nk-palette-sky-content`     | Sky content on that tint.               |
-| `--nk-palette-blue`            | Blue tint and marker.                   |
-| `--nk-palette-blue-content`    | Blue content on that tint.              |
-| `--nk-palette-indigo`          | Indigo tint and marker.                 |
-| `--nk-palette-indigo-content`  | Indigo content on that tint.            |
-| `--nk-palette-violet`          | Violet tint and marker.                 |
-| `--nk-palette-violet-content`  | Violet content on that tint.            |
-| `--nk-palette-purple`          | Purple tint and marker.                 |
-| `--nk-palette-purple-content`  | Purple content on that tint.            |
-| `--nk-palette-fuchsia`         | Fuchsia tint and marker.                |
-| `--nk-palette-fuchsia-content` | Fuchsia content on that tint.           |
-| `--nk-palette-pink`            | Pink tint and marker.                   |
-| `--nk-palette-pink-content`    | Pink content on that tint.              |
-| `--nk-palette-rose`            | Rose tint and marker.                   |
-| `--nk-palette-rose-content`    | Rose content on that tint.              |
+| Token                              | Role                                      |
+| ---------------------------------- | ----------------------------------------- |
+| `--nk-palette-neutral`             | Neutral status tint; defaults to zinc.    |
+| `--nk-palette-neutral-content`     | Neutral status content on that tint.      |
+| `--nk-palette-info`                | Info status tint; defaults to blue.       |
+| `--nk-palette-info-content`        | Info status content on that tint.         |
+| `--nk-palette-success`             | Success status tint; defaults to green.   |
+| `--nk-palette-success-content`     | Success status content on that tint.      |
+| `--nk-palette-warning`             | Warning status tint; defaults to amber.   |
+| `--nk-palette-warning-content`     | Warning status content on that tint.      |
+| `--nk-palette-destructive`         | Destructive status tint; defaults to red. |
+| `--nk-palette-destructive-content` | Destructive status content on that tint.  |
+| `--nk-palette-red`                 | Red tint and marker.                      |
+| `--nk-palette-red-content`         | Red content on that tint.                 |
+| `--nk-palette-orange`              | Orange tint and marker.                   |
+| `--nk-palette-orange-content`      | Orange content on that tint.              |
+| `--nk-palette-amber`               | Amber tint and marker.                    |
+| `--nk-palette-amber-content`       | Amber content on that tint.               |
+| `--nk-palette-yellow`              | Yellow tint and marker.                   |
+| `--nk-palette-yellow-content`      | Yellow content on that tint.              |
+| `--nk-palette-lime`                | Lime tint and marker.                     |
+| `--nk-palette-lime-content`        | Lime content on that tint.                |
+| `--nk-palette-green`               | Green tint and marker.                    |
+| `--nk-palette-green-content`       | Green content on that tint.               |
+| `--nk-palette-emerald`             | Emerald tint and marker.                  |
+| `--nk-palette-emerald-content`     | Emerald content on that tint.             |
+| `--nk-palette-teal`                | Teal tint and marker.                     |
+| `--nk-palette-teal-content`        | Teal content on that tint.                |
+| `--nk-palette-cyan`                | Cyan tint and marker.                     |
+| `--nk-palette-cyan-content`        | Cyan content on that tint.                |
+| `--nk-palette-sky`                 | Sky tint and marker.                      |
+| `--nk-palette-sky-content`         | Sky content on that tint.                 |
+| `--nk-palette-blue`                | Blue tint and marker.                     |
+| `--nk-palette-blue-content`        | Blue content on that tint.                |
+| `--nk-palette-indigo`              | Indigo tint and marker.                   |
+| `--nk-palette-indigo-content`      | Indigo content on that tint.              |
+| `--nk-palette-violet`              | Violet tint and marker.                   |
+| `--nk-palette-violet-content`      | Violet content on that tint.              |
+| `--nk-palette-purple`              | Purple tint and marker.                   |
+| `--nk-palette-purple-content`      | Purple content on that tint.              |
+| `--nk-palette-fuchsia`             | Fuchsia tint and marker.                  |
+| `--nk-palette-fuchsia-content`     | Fuchsia content on that tint.             |
+| `--nk-palette-pink`                | Pink tint and marker.                     |
+| `--nk-palette-pink-content`        | Pink content on that tint.                |
+| `--nk-palette-rose`                | Rose tint and marker.                     |
+| `--nk-palette-rose-content`        | Rose content on that tint.                |
 
 ### Default button colors
 

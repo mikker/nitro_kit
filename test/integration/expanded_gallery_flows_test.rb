@@ -67,7 +67,7 @@ class ExpandedGalleryFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-organization-overview-resource-table", count: 0
 
     get_flow("organization-overview", "error")
-    assert_select "#gallery-organization-overview-error[data-variant='error']", text: /temporarily unavailable/
+    assert_select "#gallery-organization-overview-error[data-variant='destructive']", text: /temporarily unavailable/
     assert_select "#gallery-organization-overview-empty", text: /could not be loaded/
 
     get_flow("organization-overview", "dense")
@@ -88,7 +88,7 @@ class ExpandedGalleryFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#organization_security_notifications[role='switch'][checked]"
 
     get_flow("organization-settings", "validation")
-    assert_select "#gallery-organization-settings-validation[data-variant='error']", text: /Slug/
+    assert_select "#gallery-organization-settings-validation[data-variant='destructive']", text: /Slug/
     assert_select "#organization_slug[aria-invalid='true'][value='Not a valid slug']"
 
     get_flow("organization-settings", "success")
@@ -122,7 +122,7 @@ class ExpandedGalleryFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-team-activity-empty[data-nk='empty-state']", text: /No team activity matches/
 
     get_flow("team-activity", "error")
-    assert_select "#gallery-team-activity-error[data-variant='error']"
+    assert_select "#gallery-team-activity-error[data-variant='destructive']"
     assert_select "#gallery-team-activity-empty", text: /temporarily unavailable/
 
     get_flow("team-activity", "dense")
@@ -149,7 +149,7 @@ class ExpandedGalleryFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-team-member-activity-empty", text: /Activity begins after/
 
     get_flow("team-member", "suspended")
-    assert_select "#gallery-team-member-status[data-color='danger']", text: "Suspended"
+    assert_select "#gallery-team-member-status[data-color='destructive']", text: "Suspended"
     assert_select "#gallery-team-member-header-actions [data-nk='button'][aria-disabled='true']:not([href])", count: 1
 
     get_flow("team-member", "activity")
@@ -187,7 +187,7 @@ class ExpandedGalleryFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-data-resource-overview-empty", text: /No resources match/
 
     get_flow("data-resource-overview", "error")
-    assert_select "#gallery-data-resource-overview-error[data-variant='error']"
+    assert_select "#gallery-data-resource-overview-error[data-variant='destructive']"
     assert_select "#gallery-data-resource-overview-empty", text: /catalog is unavailable/
 
     get_flow("data-resource-overview", "dense")
@@ -209,7 +209,7 @@ class ExpandedGalleryFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-data-resource-activity-empty", text: /No resource activity matches/
 
     get_flow("data-resource-activity", "error")
-    assert_select "#gallery-data-resource-activity-error[data-variant='error']"
+    assert_select "#gallery-data-resource-activity-error[data-variant='destructive']"
     assert_select "#gallery-data-resource-activity-empty", text: /temporarily unavailable/
 
     get_flow("data-resource-activity", "dense")
@@ -227,7 +227,7 @@ class ExpandedGalleryFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#resource_notify_failures[role='switch'][checked]"
 
     get_flow("data-resource-settings", "validation")
-    assert_select "#gallery-data-resource-settings-validation[data-variant='error']", text: /Name/
+    assert_select "#gallery-data-resource-settings-validation[data-variant='destructive']", text: /Name/
     assert_select "#resource_name[aria-invalid='true'][value='']"
 
     get_flow("data-resource-settings", "success")

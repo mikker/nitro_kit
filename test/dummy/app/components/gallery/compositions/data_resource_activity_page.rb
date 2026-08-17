@@ -57,7 +57,7 @@ module Gallery
       end
 
       def render_error
-        render NitroKit::Alert.new(id: "gallery-data-resource-activity-error", variant: :error) do |alert|
+        render NitroKit::Alert.new(id: "gallery-data-resource-activity-error", variant: :destructive) do |alert|
           alert.title("Resource activity could not be loaded")
           alert.description("The current query and resource selection remain available for a retry.")
         end

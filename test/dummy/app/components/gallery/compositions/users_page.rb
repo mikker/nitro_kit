@@ -297,7 +297,7 @@ module Gallery
           card.title("Users could not be loaded", level: 4)
           card.body do
             render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              render NitroKit::Alert.new(id: "gallery-users-error", variant: :error) do |alert|
+              render NitroKit::Alert.new(id: "gallery-users-error", variant: :destructive) do |alert|
                 alert.icon(NitroKit::Icon.new(:circle_x, id: "gallery-users-error-icon"))
                 alert.title("The directory service did not respond")
                 alert.description("No user data was changed. Retry now or return to workspace settings.")
@@ -734,7 +734,7 @@ module Gallery
       end
 
       def user_status_color(status)
-        { active: :success, invited: :info, suspended: :danger }.fetch(status)
+        { active: :success, invited: :info, suspended: :destructive }.fetch(status)
       end
     end
   end

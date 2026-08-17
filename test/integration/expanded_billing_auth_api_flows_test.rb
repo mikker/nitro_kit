@@ -115,7 +115,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
     end
 
     get_flow("checkout", "validation")
-    assert_select "#gallery-checkout-payment-error[data-slot='settings-section-status'][data-variant='error']"
+    assert_select "#gallery-checkout-payment-error[data-slot='settings-section-status'][data-variant='destructive']"
     assert_select "#gallery-checkout-payment-form [data-nk='field'][data-state='invalid']", count: 5
 
     get_flow("checkout", "processing")
@@ -130,7 +130,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
 
     get_flow("checkout", "failed")
     assert_select "#gallery-checkout-failed-section[data-nk='settings-section']"
-    assert_select "#gallery-checkout-failed-alert[data-variant='error']", text: /declined/
+    assert_select "#gallery-checkout-failed-alert[data-variant='destructive']", text: /declined/
     assert_select "#gallery-checkout-retry-form", count: 1
 
     get_flow("checkout", "requires-action")
@@ -156,7 +156,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
     end
 
     get_flow("account-security", "recovery-validation")
-    assert_select "#gallery-account-security-recovery-error[data-variant='error']", text: /no account information was disclosed/i
+    assert_select "#gallery-account-security-recovery-error[data-variant='destructive']", text: /no account information was disclosed/i
     assert_select "#gallery-account-security-recovery-form [data-state='invalid']", count: 1
 
     get_flow("account-security", "loading")
@@ -171,15 +171,15 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-account-security-message[data-nk='empty-state']", text: /No password or session changed/
 
     get_flow("account-security", "account-locked")
-    assert_select "#gallery-account-security-locked-alert[data-variant='error']", text: /15 minutes/
+    assert_select "#gallery-account-security-locked-alert[data-variant='destructive']", text: /15 minutes/
     assert_select "#gallery-account-security-unlock[href$='/account-security/unlock-sent']"
 
     get_flow("account-security", "two-factor-invalid")
-    assert_select "#gallery-account-security-two-factor-error[data-variant='error']", text: /One attempt remains/
+    assert_select "#gallery-account-security-two-factor-error[data-variant='destructive']", text: /One attempt remains/
     assert_select "#gallery-account-security-two-factor-form input[autocomplete='one-time-code'][pattern='[0-9]{6}'][aria-invalid='true']"
 
     get_flow("account-security", "recovery-code-invalid")
-    assert_select "#gallery-account-security-code-error[data-variant='error']", text: /already used/
+    assert_select "#gallery-account-security-code-error[data-variant='destructive']", text: /already used/
     assert_select "#gallery-account-security-code-form [data-state='invalid']", count: 1
 
     get_flow("account-security", "trusted-device")
@@ -222,7 +222,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-onboarding-review-table[data-nk='details-table'] tbody tr", count: 4
 
     get_flow("onboarding-branches", "validation")
-    assert_select "#gallery-onboarding-company-error[data-variant='error']"
+    assert_select "#gallery-onboarding-company-error[data-variant='destructive']"
     assert_select "#gallery-onboarding-company-form [data-state='invalid']", count: 3
 
     get_flow("onboarding-branches", "saving")
@@ -240,7 +240,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
     get_flow("api-webhooks", "list")
     assert_select "#gallery-api-webhooks-list-section[data-nk='data-section']"
     assert_select "#gallery-api-webhooks-table table[aria-label='Webhook endpoints'] tbody tr", count: 3
-    assert_select "#gallery-api-webhook-production-status[data-color='danger']", text: "Failing"
+    assert_select "#gallery-api-webhook-production-status[data-color='destructive']", text: "Failing"
 
     get_flow("api-webhooks", "empty")
     assert_select "#gallery-api-webhooks-empty-section[data-nk='data-section']"
@@ -257,7 +257,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-api-webhooks-form [data-nk='checkbox-group'] input[type='checkbox']", count: 4
 
     get_flow("api-webhooks", "validation")
-    assert_select "#gallery-api-webhooks-form-error[data-variant='error']"
+    assert_select "#gallery-api-webhooks-form-error[data-variant='destructive']"
     assert_select "#gallery-api-webhooks-form [data-state='invalid']", count: 2
     assert_select "#gallery-api-webhooks-events[aria-invalid='true']"
 
@@ -270,7 +270,7 @@ class ExpandedBillingAuthApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-api-webhooks-deliveries-table tbody tr", count: 1
 
     get_flow("api-webhooks", "delivery-failed")
-    assert_select "#gallery-api-webhooks-delivery-alert[data-variant='error']", text: /HTTP 500/
+    assert_select "#gallery-api-webhooks-delivery-alert[data-variant='destructive']", text: /HTTP 500/
     assert_select "#gallery-api-webhooks-deliveries-table tbody tr", count: 3
 
     get_flow("api-webhooks", "retrying")

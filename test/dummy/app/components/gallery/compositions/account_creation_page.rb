@@ -121,7 +121,7 @@ module Gallery
       end
 
       def render_validation_summary
-        render NitroKit::Alert.new(id: "gallery-account-creation-validation", variant: :error) do |alert|
+        render NitroKit::Alert.new(id: "gallery-account-creation-validation", variant: :destructive) do |alert|
           alert.title("Your account is not ready yet")
           alert.description("Correct the identity, email, password, and consent fields below.")
         end

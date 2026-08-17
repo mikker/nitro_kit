@@ -69,7 +69,7 @@ module Gallery
           id: "gallery-checkout-payment-section"
         ) do |section|
           if invalid
-            section.status NitroKit::Alert.new(variant: :error, live: :assertive, id: "gallery-checkout-payment-error") do |alert|
+            section.status NitroKit::Alert.new(variant: :destructive, live: :assertive, id: "gallery-checkout-payment-error") do |alert|
               alert.title("Payment details need attention")
               alert.description("Correct the highlighted fields before trying the payment again.")
             end
@@ -145,7 +145,7 @@ module Gallery
           description: "Use another card or confirm the billing details with your card issuer.",
           id: "gallery-checkout-failed-section"
         ) do |section|
-          section.status NitroKit::Alert.new(variant: :error, live: :assertive, id: "gallery-checkout-failed-alert") do |alert|
+          section.status NitroKit::Alert.new(variant: :destructive, live: :assertive, id: "gallery-checkout-failed-alert") do |alert|
             alert.title("Card was declined")
             alert.description("No charge was made and your current plan is unchanged.")
           end

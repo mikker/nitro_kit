@@ -52,11 +52,11 @@ class ButtonCssTest < ActiveSupport::TestCase
     css = button_css
 
     assert_includes css, "--_nk-button-shadow: inset 0 1px\n      color-mix(in oklab, var(--nk-white) 20%, transparent)"
-    assert_includes css, "--_nk-button-background: var(--nk-color-danger)"
-    assert_includes css, "--_nk-button-hover-background: var(--nk-color-danger-hover)"
+    assert_includes css, "--_nk-button-background: var(--nk-color-destructive)"
+    assert_includes css, "--_nk-button-hover-background: var(--nk-color-destructive-hover)"
     assert_includes css, "color-mix(in oklab, var(--nk-zinc-800) 5%, transparent)"
     assert_includes css, "color-mix(in oklab, var(--nk-white) 15%, transparent)"
-    assert_includes tokens_css, "--nk-color-danger: var(--nk-red-600)"
+    assert_includes tokens_css, "--nk-color-destructive: var(--nk-red-600)"
     assert_match(/--nk-red-600: oklch\([^)]+\)/, tokens_css)
     assert_includes tokens_css, "oklch(0.54 0.237 25.331)"
     assert_includes tokens_css, "oklch(0.59 0.237 25.331)"

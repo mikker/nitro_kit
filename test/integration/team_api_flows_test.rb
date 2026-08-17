@@ -196,7 +196,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "textarea[name='gallery_forms_team_invitation[message]']", text: /release planning/
 
     get_flow("team-management", "invite-validation")
-    assert_select "#gallery-team-invitation-error[data-variant='error']"
+    assert_select "#gallery-team-invitation-error[data-variant='destructive']"
     assert_select "#gallery-team-invitation-section > #gallery-team-invitation-error[data-slot='settings-section-status']"
     assert_select "#gallery-team-invitation-form [data-nk='field'][data-state='invalid']", count: 3
     assert_select "#gallery-team-invitation-form [aria-invalid='true']", count: 3
@@ -216,7 +216,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
 
     get_flow("team-management", "last-owner-validation")
     assert_select "#gallery-team-last-owner-section[data-nk='settings-section']" do
-      assert_select "> #gallery-team-last-owner-error[data-slot='settings-section-status'][data-variant='error']"
+      assert_select "> #gallery-team-last-owner-error[data-slot='settings-section-status'][data-variant='destructive']"
       assert_select "> [data-slot='settings-section-form'] > #gallery-team-last-owner-form", count: 1
     end
     assert_select "#gallery-team-last-owner-error[role='alert']", text: /server rejected this change/i
@@ -242,7 +242,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-team-removed[data-variant='success']", text: /sessions were revoked/
 
     get_flow("team-management", "error")
-    assert_select "#gallery-team-error[data-variant='error']", text: /No access changed/
+    assert_select "#gallery-team-error[data-variant='destructive']", text: /No access changed/
   end
 
   test "last-owner protection is a server-side form-model validation" do
@@ -304,7 +304,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "select[name='gallery_forms_api_key[expires_in_days]'][required] option", count: 4
 
     get_flow("api-credentials", "validation")
-    assert_select "#gallery-api-credential-validation[data-variant='error']"
+    assert_select "#gallery-api-credential-validation[data-variant='destructive']"
     assert_select "#gallery-api-credential-section > #gallery-api-credential-validation[data-slot='settings-section-status']"
     assert_select "#gallery-api-credential-form [data-nk='field'][data-state='invalid']", count: 3
     assert_select "#gallery-api-credential-form [aria-invalid='true']", count: 3
@@ -340,7 +340,7 @@ class TeamApiFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-api-credentials-footer-replace[href$='/api-credentials/create']"
 
     get_flow("api-credentials", "error")
-    assert_select "#gallery-api-credential-error[data-variant='error']", text: /still active/
+    assert_select "#gallery-api-credential-error[data-variant='destructive']", text: /still active/
     assert_select "#gallery-api-credentials-footer-retry[href$='/api-credentials/revoke-confirmation']"
   end
 

@@ -18,7 +18,7 @@
 
   :where([data-nk="field"] > [data-slot="field-error"]) {
     padding: 0;
-    color: var(--nk-color-danger-content);
+    color: var(--nk-color-destructive-content);
     font-size: var(--nk-text-sm);
     list-style: none;
   }
@@ -78,6 +78,6 @@
       [data-nk="field"][data-state="invalid"]
         > [data-slot="field-control"][data-nk="input"]
     ) {
-    border-color: var(--nk-color-danger);
+    border-color: var(--nk-color-destructive);
   }
 }

@@ -144,7 +144,7 @@ module Gallery
           id: "gallery-billing-payment-card"
         ) do |section|
           if invalid
-            section.status NitroKit::Alert.new(id: "gallery-billing-payment-validation", variant: :error) do |alert|
+            section.status NitroKit::Alert.new(id: "gallery-billing-payment-validation", variant: :destructive) do |alert|
               alert.title("Payment method was not saved")
               alert.description(payment_method.errors.full_messages.to_sentence)
             end
@@ -468,7 +468,7 @@ module Gallery
             render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch,
             id: "gallery-billing-cancellation-confirmation") do
               if invalid
-                render NitroKit::Alert.new(id: "gallery-billing-cancellation-validation", variant: :error) do |alert|
+                render NitroKit::Alert.new(id: "gallery-billing-cancellation-validation", variant: :destructive) do |alert|
                   alert.title("Confirm the cancellation details")
                   alert.description(cancellation.errors.full_messages.to_sentence)
                 end

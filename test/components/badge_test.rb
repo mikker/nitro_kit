@@ -6,7 +6,7 @@ class BadgeTest < ActiveSupport::TestCase
     assert_predicate NitroKit::Badge::SIZES, :frozen?
     assert_predicate NitroKit::Badge::COLORS, :frozen?
     assert_equal 22, NitroKit::Badge::COLORS.size
-    assert_equal %i[neutral info success warning danger], NitroKit::Badge::SEMANTIC_COLORS
+    assert_equal %i[neutral info success warning destructive], NitroKit::Badge::SEMANTIC_COLORS
     assert_equal 17, NitroKit::Badge::PALETTE_COLORS.size
     assert_empty NitroKit::Badge::SEMANTIC_COLORS & NitroKit::Badge::PALETTE_COLORS
 
@@ -104,7 +104,7 @@ class BadgeTest < ActiveSupport::TestCase
     refute_match(/oklch\(/, css, "Badge colors must come from tokens, not literal values")
   end
 
-  # `red` and `danger` used to resolve to identical CSS, so the two spellings
+  # `red` and `destructive` used to resolve to identical CSS, so the two spellings
   # were indistinguishable. They are now separate systems: a semantic family
   # follows the application's brand, a hue stays the color it names.
   test "keeps semantic families and decorative hues independently themeable" do
@@ -112,7 +112,7 @@ class BadgeTest < ActiveSupport::TestCase
       "src/stylesheets/nitro_kit/components/palette.css"
     ).read
 
-    { danger: :red, success: :green, warning: :amber }.each do |semantic, hue|
+    { destructive: :red, success: :green, warning: :amber }.each do |semantic, hue|
       assert_includes css, "--_nk-semantic-accent: var(--nk-palette-#{semantic})"
       assert_includes css, "--_nk-semantic-accent: var(--nk-palette-#{hue})"
     end

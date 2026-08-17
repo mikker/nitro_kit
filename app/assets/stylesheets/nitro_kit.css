@@ -394,7 +394,7 @@
     --nk-palette-info: var(--nk-blue-400);
     --nk-palette-success: var(--nk-green-400);
     --nk-palette-warning: var(--nk-amber-400);
-    --nk-palette-danger: var(--nk-red-400);
+    --nk-palette-destructive: var(--nk-red-400);
 
     --nk-palette-red: var(--nk-red-400);
     --nk-palette-orange: var(--nk-orange-400);
@@ -440,16 +440,16 @@
     --nk-color-success-content: var(--nk-green-900);
     --nk-color-warning: var(--nk-yellow-600);
     --nk-color-warning-content: var(--nk-yellow-900);
-    --nk-color-danger: var(--nk-red-600);
-    --nk-color-danger-foreground: var(--nk-white);
-    --nk-color-danger-content: var(--nk-red-800);
+    --nk-color-destructive: var(--nk-red-600);
+    --nk-color-destructive-foreground: var(--nk-white);
+    --nk-color-destructive-content: var(--nk-red-800);
     --nk-color-overlay: color-mix(in oklab, var(--nk-black) 50%, transparent);
 
     --nk-palette-neutral-content: var(--nk-zinc-700);
     --nk-palette-info-content: var(--nk-blue-800);
     --nk-palette-success-content: var(--nk-green-800);
     --nk-palette-warning-content: var(--nk-amber-800);
-    --nk-palette-danger-content: var(--nk-red-700);
+    --nk-palette-destructive-content: var(--nk-red-700);
 
     --nk-palette-red-content: var(--nk-red-700);
     --nk-palette-orange-content: var(--nk-orange-800);
@@ -496,16 +496,16 @@
       --nk-color-success-content: var(--nk-green-200);
       --nk-color-warning: var(--nk-amber-400);
       --nk-color-warning-content: var(--nk-yellow-200);
-      --nk-color-danger: var(--nk-red-600);
-      --nk-color-danger-foreground: var(--nk-zinc-50);
-      --nk-color-danger-content: var(--nk-red-400);
+      --nk-color-destructive: var(--nk-red-600);
+      --nk-color-destructive-foreground: var(--nk-zinc-50);
+      --nk-color-destructive-content: var(--nk-red-400);
       --nk-color-overlay: color-mix(in oklab, var(--nk-black) 65%, transparent);
 
       --nk-palette-neutral-content: var(--nk-zinc-200);
       --nk-palette-info-content: var(--nk-blue-200);
       --nk-palette-success-content: var(--nk-green-200);
       --nk-palette-warning-content: var(--nk-amber-200);
-      --nk-palette-danger-content: var(--nk-red-200);
+      --nk-palette-destructive-content: var(--nk-red-200);
 
       --nk-palette-red-content: var(--nk-red-200);
       --nk-palette-orange-content: var(--nk-orange-200);
@@ -552,16 +552,16 @@
     --nk-color-success-content: var(--nk-green-200);
     --nk-color-warning: var(--nk-amber-400);
     --nk-color-warning-content: var(--nk-yellow-200);
-    --nk-color-danger: var(--nk-red-600);
-    --nk-color-danger-foreground: var(--nk-zinc-50);
-    --nk-color-danger-content: var(--nk-red-400);
+    --nk-color-destructive: var(--nk-red-600);
+    --nk-color-destructive-foreground: var(--nk-zinc-50);
+    --nk-color-destructive-content: var(--nk-red-400);
     --nk-color-overlay: color-mix(in oklab, var(--nk-black) 65%, transparent);
 
     --nk-palette-neutral-content: var(--nk-zinc-200);
     --nk-palette-info-content: var(--nk-blue-200);
     --nk-palette-success-content: var(--nk-green-200);
     --nk-palette-warning-content: var(--nk-amber-200);
-    --nk-palette-danger-content: var(--nk-red-200);
+    --nk-palette-destructive-content: var(--nk-red-200);
 
     --nk-palette-red-content: var(--nk-red-200);
     --nk-palette-orange-content: var(--nk-orange-200);
@@ -614,7 +614,7 @@
       var(--nk-color-primary),
       transparent 10%
     );
-    --nk-color-danger-hover: light-dark(
+    --nk-color-destructive-hover: light-dark(
       oklch(0.54 0.237 25.331),
       oklch(0.59 0.237 25.331)
     );
@@ -2318,14 +2318,14 @@
   }
 
   :where([data-nk="button"][data-variant="destructive"]) {
-    --_nk-button-background: var(--nk-color-danger);
-    --_nk-button-hover-background: var(--nk-color-danger-hover);
-    --_nk-button-foreground: var(--nk-color-danger-foreground);
+    --_nk-button-background: var(--nk-color-destructive);
+    --_nk-button-hover-background: var(--nk-color-destructive-hover);
+    --_nk-button-foreground: var(--nk-color-destructive-foreground);
     --_nk-button-border-width: 0;
     --_nk-button-border: transparent;
     --_nk-button-border-bottom: transparent;
     --_nk-button-shadow:
-      inset 0 1px var(--nk-color-danger),
+      inset 0 1px var(--nk-color-destructive),
       inset 0 2px color-mix(in oklab, var(--nk-white) 15%, transparent);
   }
 
@@ -2345,17 +2345,12 @@
   @media (prefers-color-scheme: dark) {
     :where(
       :root:not([data-theme])
-        [data-nk="button"]:is(
-          [data-variant="primary"],
-          [data-variant="destructive"]
-        )
+        [data-nk="button"]:is([data-variant="primary"], [data-variant="destructive"])
     ) {
       --_nk-button-border-width: 0;
     }
 
-    :where(
-      :root:not([data-theme]) [data-nk="button"][data-variant="destructive"]
-    ) {
+    :where(:root:not([data-theme]) [data-nk="button"][data-variant="destructive"]) {
       --_nk-button-shadow: none;
     }
   }
@@ -2447,7 +2442,7 @@
     ) {
       --_nk-button-background: color-mix(
         in oklab,
-        var(--nk-color-danger) 40%,
+        var(--nk-color-destructive) 40%,
         var(--nk-color-surface)
       );
     }
@@ -2462,7 +2457,7 @@
   ) {
     --_nk-button-background: color-mix(
       in oklab,
-      var(--nk-color-danger) 40%,
+      var(--nk-color-destructive) 40%,
       var(--nk-color-surface)
     );
   }
@@ -2783,7 +2778,7 @@
 
   /* A server-rendered error describes the value that was submitted. Once the
      user has interacted with the control and it satisfies its own constraints,
-     that error is stale, so the danger border stands down and the native
+     that error is stale, so the destructive border stands down and the native
      checked treatment takes over again. `:user-valid` never matches before the
      user touches the control, so an untouched invalid checkbox keeps its
      border. */
@@ -2792,7 +2787,7 @@
       [data-slot="checkbox-control"][aria-invalid="true"]:not(:user-valid)
       + [data-slot="checkbox-indicator"]
   ) {
-    border-color: var(--nk-color-danger);
+    border-color: var(--nk-color-destructive);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -3463,14 +3458,14 @@
     align-items: end;
     gap: calc(var(--nk-space) * 5);
     padding: calc(var(--nk-space) * 6);
-    color: var(--nk-color-danger-content);
+    color: var(--nk-color-destructive-content);
     background: color-mix(
       in oklab,
-      var(--nk-color-danger) 8%,
+      var(--nk-color-destructive) 8%,
       var(--nk-color-surface)
     );
     border: var(--nk-border-width) solid
-      color-mix(in oklab, var(--nk-color-danger) 50%, transparent);
+      color-mix(in oklab, var(--nk-color-destructive) 50%, transparent);
     border-radius: var(--nk-radius-lg);
   }
 
@@ -3782,7 +3777,7 @@
       [data-nk="dropdown"]
         [data-slot="dropdown-item"][data-variant="destructive"]
     ) {
-    color: var(--nk-color-danger-content);
+    color: var(--nk-color-destructive-content);
   }
 
   :where(
@@ -3813,8 +3808,8 @@
             [aria-disabled="true"]
           )
       ) {
-      color: var(--nk-color-danger-foreground);
-      background: var(--nk-color-danger);
+      color: var(--nk-color-destructive-foreground);
+      background: var(--nk-color-destructive);
     }
   }
 
@@ -4008,7 +4003,7 @@
   }
 
   :where([data-nk="dropzone"][data-state="error"]) {
-    border-color: var(--nk-color-danger);
+    border-color: var(--nk-color-destructive);
   }
 
   :where([data-nk="dropzone"][data-state="disabled"]) {
@@ -4042,7 +4037,7 @@
   }
 
   :where([data-nk="dropzone"] > [data-slot="dropzone-error"]) {
-    color: var(--nk-color-danger-content);
+    color: var(--nk-color-destructive-content);
     font-size: var(--nk-text-sm);
   }
 }
@@ -4172,7 +4167,7 @@
 
   :where([data-nk="field"] > [data-slot="field-error"]) {
     padding: 0;
-    color: var(--nk-color-danger-content);
+    color: var(--nk-color-destructive-content);
     font-size: var(--nk-text-sm);
     list-style: none;
   }
@@ -4232,7 +4227,7 @@
       [data-nk="field"][data-state="invalid"]
         > [data-slot="field-control"][data-nk="input"]
     ) {
-    border-color: var(--nk-color-danger);
+    border-color: var(--nk-color-destructive);
   }
 }
 
@@ -5187,7 +5182,7 @@
   }
 
   :where([data-nk="input"][aria-invalid="true"]) {
-    border-color: var(--nk-color-danger);
+    border-color: var(--nk-color-destructive);
   }
 }
 
@@ -5931,16 +5926,16 @@
     --_nk-semantic-content: var(--nk-palette-warning-content);
   }
 
-  /* Badge already says `danger`; Alert and Toast still say `error`. One
-     spelling is the next piece of work, and this is the only place both
-     appear. */
+  /* Action components and Alert say `destructive`; Toast announces `error`.
+     Both spellings resolve to the destructive family, and this is the only
+     place they meet. */
   :where(
-      [data-nk="badge"][data-color="danger"],
-      [data-nk="alert"][data-variant="error"],
+      [data-nk="badge"][data-color="destructive"],
+      [data-nk="alert"][data-variant="destructive"],
       [data-nk="toast-item"][data-variant="error"]
     ) {
-    --_nk-semantic-accent: var(--nk-palette-danger);
-    --_nk-semantic-content: var(--nk-palette-danger-content);
+    --_nk-semantic-accent: var(--nk-palette-destructive);
+    --_nk-semantic-content: var(--nk-palette-destructive-content);
   }
 
   /* The shared status treatment. Defined once so Alert and Toast cannot drift
@@ -5975,7 +5970,7 @@
 
   /* The decorative hues. These name a color rather than a meaning, so they
      follow `--nk-palette-*` and stay put when an application rethemes its
-     semantic families. `red` and `danger` are deliberately different: one is
+     semantic families. `red` and `destructive` are deliberately different: one is
      a color, the other is whatever destructive currently means. */
   :where([data-nk="badge"][data-color="red"]) {
     --_nk-semantic-accent: var(--nk-palette-red);
@@ -6308,14 +6303,14 @@
 
   /* The server error describes the submitted value. Once the user picks a
      value that satisfies the control's own constraints the error is stale, so
-     the danger border stands down. `:user-valid` never matches before the user
+     the destructive border stands down. `:user-valid` never matches before the user
      touches the control, so an untouched invalid radio keeps its border. */
   :where(
     [data-nk="radio-button"]
       [data-slot="radio-button-control"][aria-invalid="true"]:not(:user-valid)
       + [data-slot="radio-button-indicator"]
   ) {
-    border-color: var(--nk-color-danger);
+    border-color: var(--nk-color-destructive);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -6504,7 +6499,7 @@
         > [data-slot="rich-text-area-editor"]
         > [aria-invalid="true"]
     ) {
-    border-color: var(--nk-color-danger);
+    border-color: var(--nk-color-destructive);
   }
 }
 
@@ -6578,7 +6573,7 @@
   :where(
     [data-nk="select"] > [data-slot="select-control"][aria-invalid="true"]
   ) {
-    border-color: var(--nk-color-danger);
+    border-color: var(--nk-color-destructive);
   }
 }
 
@@ -7086,14 +7081,14 @@
 
   /* The server error describes the submitted value. Once the user toggles the
      control and it satisfies its own constraints the error is stale, so the
-     danger border stands down. `:user-valid` never matches before the user
+     destructive border stands down. `:user-valid` never matches before the user
      touches the control, so an untouched invalid switch keeps its border. */
   :where(
     [data-nk="switch"]
       [data-slot="switch-control"][aria-invalid="true"]:not(:user-valid)
       + [data-slot="switch-track"]
   ) {
-    border-color: var(--nk-color-danger);
+    border-color: var(--nk-color-destructive);
   }
 }
 
@@ -7420,7 +7415,7 @@
   }
 
   :where([data-nk="textarea"][aria-invalid="true"]) {
-    border-color: var(--nk-color-danger);
+    border-color: var(--nk-color-destructive);
   }
 }
 

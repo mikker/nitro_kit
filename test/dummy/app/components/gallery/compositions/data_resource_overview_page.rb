@@ -57,7 +57,7 @@ module Gallery
       end
 
       def render_error
-        render NitroKit::Alert.new(id: "gallery-data-resource-overview-error", variant: :error) do |alert|
+        render NitroKit::Alert.new(id: "gallery-data-resource-overview-error", variant: :destructive) do |alert|
           alert.title("Data resources could not be loaded")
           alert.description("The current search remains visible while the catalog service reconnects.")
         end

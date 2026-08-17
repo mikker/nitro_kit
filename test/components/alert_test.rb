@@ -3,7 +3,8 @@ require "test_helper"
 class AlertTest < ActiveSupport::TestCase
   test "renders every variant as owned component data" do
     assert_predicate NitroKit::Alert::VARIANTS, :frozen?
-    assert_equal NitroKit::Toast::Item::VARIANTS, NitroKit::Alert::VARIANTS
+    assert_equal %i[default info success warning destructive], NitroKit::Alert::VARIANTS
+    assert_equal %i[default info success warning error], NitroKit::Toast::Item::VARIANTS
 
     NitroKit::Alert::VARIANTS.each do |variant|
       node = render_node(NitroKit::Alert.new(variant:))
@@ -43,10 +44,10 @@ class AlertTest < ActiveSupport::TestCase
     alert_css = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/alert.css").read
     toast_css = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/toast.css").read
 
-    assert_equal NitroKit::Toast::Item::VARIANTS, NitroKit::Alert::VARIANTS
-
     NitroKit::Alert::VARIANTS.each do |variant|
       assert_includes palette, %([data-nk="alert"][data-variant="#{variant}"])
+    end
+    NitroKit::Toast::Item::VARIANTS.each do |variant|
       assert_includes palette, %([data-nk="toast-item"][data-variant="#{variant}"])
     end
 

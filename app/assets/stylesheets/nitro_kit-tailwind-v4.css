@@ -19,9 +19,9 @@
     --color-ring: var(--nk-color-focus);
     --color-primary: var(--nk-color-primary);
     --color-primary-foreground: var(--nk-color-primary-foreground);
-    --color-destructive: var(--nk-color-danger);
-    --color-destructive-content: var(--nk-color-danger-content);
-    --color-destructive-foreground: var(--nk-color-danger-foreground);
+    --color-destructive: var(--nk-color-destructive);
+    --color-destructive-content: var(--nk-color-destructive-content);
+    --color-destructive-foreground: var(--nk-color-destructive-foreground);
 
     --radius-sm: var(--nk-radius-sm);
     --radius-md: var(--nk-radius-md);

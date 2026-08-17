@@ -199,7 +199,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-auth-shell-validation-card") do |card|
           card.title("Sign in to Nitro", level: 4)
           card.body do
-            render NitroKit::Alert.new(id: "gallery-auth-shell-validation-alert", variant: :error) do |alert|
+            render NitroKit::Alert.new(id: "gallery-auth-shell-validation-alert", variant: :destructive) do |alert|
               alert.title("We could not sign you in")
               alert.description("Correct both fields below and try again.")
             end

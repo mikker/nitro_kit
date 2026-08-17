@@ -1,11 +1,13 @@
 require "application_system_test_case"
 
-# Alert and Toast::Item share one variant vocabulary. Before the semantic palette
-# they resolved it from two different sources — Alert from a private hardcoded
-# hue, Toast from `--nk-color-*` — so the same variant rendered as two different
-# colors and rethemeing a semantic token moved only one of them.
+# Alert and Toast::Item share one set of status families. Before the semantic
+# palette they resolved them from two different sources — Alert from a private
+# hardcoded hue, Toast from `--nk-color-*` — so the same family rendered as two
+# different colors and rethemeing a semantic token moved only one of them. The
+# failure family carries two spellings: Alert says `destructive`, Toast says
+# `error`, and both must resolve identically.
 class SemanticPaletteTest < ApplicationSystemTestCase
-  test "an alert and a toast of the same variant resolve to the same colors" do
+  test "an alert and a toast of the same family resolve to the same colors" do
     visit gallery_component_path("alert")
 
     computed = evaluate_script(<<~JAVASCRIPT)
@@ -25,11 +27,17 @@ class SemanticPaletteTest < ApplicationSystemTestCase
           return value;
         };
 
-        return ["default", "info", "success", "warning", "error"].map(
-          (variant) => [
-            variant,
-            read("alert", variant),
-            read("toast-item", variant)
+        return [
+          ["default", "default"],
+          ["info", "info"],
+          ["success", "success"],
+          ["warning", "warning"],
+          ["destructive", "error"]
+        ].map(
+          ([alertVariant, toastVariant]) => [
+            alertVariant + "/" + toastVariant,
+            read("alert", alertVariant),
+            read("toast-item", toastVariant)
           ].join(" | ")
         );
       })()
@@ -135,7 +143,7 @@ class SemanticPaletteTest < ApplicationSystemTestCase
   end
 
   # Each semantic family defaults to the exact steps of its hue family, so the
-  # two vocabularies agree out of the box: `info` is `blue`, `danger` is `red`,
+  # two vocabularies agree out of the box: `info` is `blue`, `destructive` is `red`,
   # and rethemeing one does not disturb the other.
   test "each semantic badge renders identically to its hue family" do
     visit gallery_component_path("badge")
@@ -155,7 +163,7 @@ class SemanticPaletteTest < ApplicationSystemTestCase
 
         return Object.entries({
           info: "blue", success: "green",
-          warning: "amber", danger: "red"
+          warning: "amber", destructive: "red"
         }).map(([semantic, hue]) =>
           [semantic, hue, read(semantic), read(hue)].join(" | ")
         );

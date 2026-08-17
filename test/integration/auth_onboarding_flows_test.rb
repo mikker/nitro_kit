@@ -69,7 +69,7 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
     get_flow("sign-in", "invalid")
     assert_select "turbo-frame#gallery-sign-in-frame form#gallery-sign-in-form"
     assert_select "#gallery-sign-in-form > [data-nk='field-group']", count: 1
-    assert_select "#gallery-sign-in-error[data-nk='alert'][data-variant='error']"
+    assert_select "#gallery-sign-in-error[data-nk='alert'][data-variant='destructive']"
     assert_select "input[type='email'][aria-invalid='true'][aria-describedby*='errors']"
     assert_select "input[type='password'][value]", count: 0
 
@@ -87,7 +87,7 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
 
   test "password reset preserves hidden tokens new-password semantics and recoverable expiration" do
     get_flow("password-reset", "validation")
-    assert_select "#gallery-password-reset-error[data-variant='error']"
+    assert_select "#gallery-password-reset-error[data-variant='destructive']"
     assert_select "#gallery-password-reset-request-form > [data-nk='field-group']", count: 1
     assert_select "input[type='email'][aria-invalid='true']"
 
@@ -121,7 +121,7 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-email-verification-resend", text: "Send a fresh link"
 
     get_flow("email-verification", "invalid-token")
-    assert_select "#gallery-email-verification-alert[data-variant='error']", text: /invalid/
+    assert_select "#gallery-email-verification-alert[data-variant='destructive']", text: /invalid/
     assert_select "#gallery-email-verification-support[href='mailto:support@example.test']"
 
     get_flow("email-verification", "long-copy")
@@ -136,7 +136,7 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-invitation-card", text: /Analytical Engines — Research and Production/
 
     get_flow("invitation-acceptance", "validation")
-    assert_select "#gallery-invitation-validation[data-variant='error']"
+    assert_select "#gallery-invitation-validation[data-variant='destructive']"
     assert_select "#gallery-invitation-form [data-nk='field'][data-state='invalid']", minimum: 3
 
     get_flow("invitation-acceptance", "loading")
@@ -156,7 +156,7 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
   test "account creation covers consent validation privacy loading and verification handoff" do
     get_flow("account-creation", "validation")
     assert_select "#gallery-account-creation-form > [data-nk='field-group']", count: 1
-    assert_select "#gallery-account-creation-validation[data-variant='error']"
+    assert_select "#gallery-account-creation-validation[data-variant='destructive']"
     assert_select "#gallery-account-creation-form [data-nk='field'][data-state='invalid']", minimum: 4
 
     get_flow("account-creation", "loading")
@@ -182,7 +182,7 @@ class AuthOnboardingFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-onboarding-workspace-form select[name*='[team_size]']"
 
     get_flow("onboarding", "workspace-validation")
-    assert_select "#gallery-onboarding-validation[data-variant='error']"
+    assert_select "#gallery-onboarding-validation[data-variant='destructive']"
     assert_select "#gallery-onboarding-workspace-form [data-nk='field'][data-state='invalid']", minimum: 2
 
     get_flow("onboarding", "team")

@@ -6,7 +6,7 @@ Rails flash is the server-side feedback contract. Render it once in the applicat
 
 - Render `NitroKit::Toast::FlashMessages` once in the application layout; Rails
   flash stays the single server-side feedback contract.
-- `notice` maps to the default presentation, `alert` and `error` to error, and
+- `notice` maps to the default presentation, `alert` and `error` to the `error` item, and
   `success`, `warning`, and `info` to their matching variants.
 - Every toast item is Turbo-temporary so a cached page never replays old
   feedback, while the region itself survives and stays addressable.
@@ -41,7 +41,7 @@ redirect_to projects_path, status: :see_other, notice: "Project created"
 redirect_to billing_path, status: :see_other, alert: "Payment method was declined"
 ```
 
-`notice` maps to the default presentation, `alert` and `error` to error, and `success`, `warning`, and `info` to their matching variants. Every toast item is Turbo-temporary so a cached page does not replay old feedback, dismissible or not. The region itself survives, so `#{toast id}-list` stays addressable.
+`notice` maps to the default presentation, `alert` and `error` to the `error` item, and `success`, `warning`, and `info` to their matching variants. Every toast item is Turbo-temporary so a cached page does not replay old feedback, dismissible or not. The region itself survives, so `#{toast id}-list` stays addressable.
 
 Use `flash.now` only when rendering in the current request:
 

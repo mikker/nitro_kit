@@ -134,14 +134,14 @@
 
   /* The server error describes the submitted value. Once the user toggles the
      control and it satisfies its own constraints the error is stale, so the
-     danger border stands down. `:user-valid` never matches before the user
+     destructive border stands down. `:user-valid` never matches before the user
      touches the control, so an untouched invalid switch keeps its border. */
   :where(
     [data-nk="switch"]
       [data-slot="switch-control"][aria-invalid="true"]:not(:user-valid)
       + [data-slot="switch-track"]
   ) {
-    border-color: var(--nk-color-danger);
+    border-color: var(--nk-color-destructive);
   }
 }
 

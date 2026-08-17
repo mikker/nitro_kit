@@ -5,14 +5,14 @@
     align-items: end;
     gap: calc(var(--nk-space) * 5);
     padding: calc(var(--nk-space) * 6);
-    color: var(--nk-color-danger-content);
+    color: var(--nk-color-destructive-content);
     background: color-mix(
       in oklab,
-      var(--nk-color-danger) 8%,
+      var(--nk-color-destructive) 8%,
       var(--nk-color-surface)
     );
     border: var(--nk-border-width) solid
-      color-mix(in oklab, var(--nk-color-danger) 50%, transparent);
+      color-mix(in oklab, var(--nk-color-destructive) 50%, transparent);
     border-radius: var(--nk-radius-lg);
   }
 

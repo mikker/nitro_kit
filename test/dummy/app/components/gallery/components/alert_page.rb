@@ -95,7 +95,7 @@ module Gallery
             sample("Assertive", slug: "assertive") do
               render NitroKit::Alert.new(
                 id: "gallery-alert-live-assertive",
-                variant: :error,
+                variant: :destructive,
                 live: :assertive,
                 title: "Connection lost",
                 description: "Changes stopped saving; check the network before continuing."
@@ -110,7 +110,7 @@ module Gallery
           description: "Operational messages remain readable when product copy is specific and multi-line."
         ) do
           example("Detailed incident", slug: "alert-detailed-incident") do
-            render NitroKit::Alert.new(id: "gallery-alert-long", variant: :error) do |alert|
+            render NitroKit::Alert.new(id: "gallery-alert-long", variant: :destructive) do |alert|
               alert.icon(NitroKit::Icon.new(:circle_x, id: "gallery-alert-long-icon"))
               alert.title("Production deployment could not complete after the database migration timed out")
               alert.description do

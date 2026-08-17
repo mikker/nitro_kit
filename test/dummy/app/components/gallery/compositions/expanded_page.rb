@@ -77,7 +77,7 @@ module Gallery
           success: :success,
           pending: :info,
           warning: :warning,
-          blocked: :danger
+          blocked: :destructive
         }.fetch(outcome, :neutral)
       end
 

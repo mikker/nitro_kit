@@ -89,7 +89,7 @@ module Gallery
       def render_form_status(section, form)
         case state
         when "validation"
-          section.status(NitroKit::Alert.new(variant: :error, id: "gallery-data-resource-settings-validation")) do |alert|
+          section.status(NitroKit::Alert.new(variant: :destructive, id: "gallery-data-resource-settings-validation")) do |alert|
             alert.title("Resource settings need attention")
             alert.description(form.errors.full_messages.to_sentence)
           end

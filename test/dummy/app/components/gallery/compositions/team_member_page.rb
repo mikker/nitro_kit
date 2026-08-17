@@ -130,7 +130,7 @@ module Gallery
 
       def render_missing_member
         if state == "error"
-          render NitroKit::Alert.new(id: "gallery-team-member-error", variant: :error) do |alert|
+          render NitroKit::Alert.new(id: "gallery-team-member-error", variant: :destructive) do |alert|
             alert.title("Member lookup failed")
             alert.description("The directory service did not return a verified member record.")
           end
@@ -179,7 +179,7 @@ module Gallery
       end
 
       def member_status_color(status)
-        { active: :success, invited: :info, suspended: :danger }.fetch(status, :neutral)
+        { active: :success, invited: :info, suspended: :destructive }.fetch(status, :neutral)
       end
 
       def policy

@@ -48,16 +48,16 @@
     --_nk-semantic-content: var(--nk-palette-warning-content);
   }
 
-  /* Badge already says `danger`; Alert and Toast still say `error`. One
-     spelling is the next piece of work, and this is the only place both
-     appear. */
+  /* Action components and Alert say `destructive`; Toast announces `error`.
+     Both spellings resolve to the destructive family, and this is the only
+     place they meet. */
   :where(
-      [data-nk="badge"][data-color="danger"],
-      [data-nk="alert"][data-variant="error"],
+      [data-nk="badge"][data-color="destructive"],
+      [data-nk="alert"][data-variant="destructive"],
       [data-nk="toast-item"][data-variant="error"]
     ) {
-    --_nk-semantic-accent: var(--nk-palette-danger);
-    --_nk-semantic-content: var(--nk-palette-danger-content);
+    --_nk-semantic-accent: var(--nk-palette-destructive);
+    --_nk-semantic-content: var(--nk-palette-destructive-content);
   }
 
   /* The shared status treatment. Defined once so Alert and Toast cannot drift
@@ -92,7 +92,7 @@
 
   /* The decorative hues. These name a color rather than a meaning, so they
      follow `--nk-palette-*` and stay put when an application rethemes its
-     semantic families. `red` and `danger` are deliberately different: one is
+     semantic families. `red` and `destructive` are deliberately different: one is
      a color, the other is whatever destructive currently means. */
   :where([data-nk="badge"][data-color="red"]) {
     --_nk-semantic-accent: var(--nk-palette-red);

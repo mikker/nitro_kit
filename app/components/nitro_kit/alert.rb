@@ -2,7 +2,7 @@
 
 module NitroKit
   class Alert < Component
-    VARIANTS = %i[default info success warning error].freeze
+    VARIANTS = %i[default info success warning destructive].freeze
 
     LIVE_MODES = %i[off polite assertive].freeze
 

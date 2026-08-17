@@ -366,7 +366,7 @@ module Gallery
           id: "gallery-team-invitation-section"
         ) do |section|
           if state == "invite-validation"
-            section.status NitroKit::Alert.new(id: "gallery-team-invitation-error", variant: :error) do |alert|
+            section.status NitroKit::Alert.new(id: "gallery-team-invitation-error", variant: :destructive) do |alert|
               alert.title("The invitation could not be sent")
               alert.description("Correct the email, role, and message fields below.")
             end
@@ -480,7 +480,7 @@ module Gallery
         ) do |section|
           section.status NitroKit::Alert.new(
             id: "gallery-team-last-owner-error",
-            variant: :error,
+            variant: :destructive,
             live: :assertive
           ) do |alert|
             alert.title("#{membership.name} is the last owner")
@@ -584,7 +584,7 @@ module Gallery
 
       def render_error
         render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch, id: "gallery-team-error-stack") do
-          render NitroKit::Alert.new(id: "gallery-team-error", variant: :error) do |alert|
+          render NitroKit::Alert.new(id: "gallery-team-error", variant: :destructive) do |alert|
             alert.icon(NitroKit::Icon.new(:circle_x, id: "gallery-team-error-icon"))
             alert.title("The team could not be updated")
             alert.description("No access changed. Refresh the member list before trying the operation again.")

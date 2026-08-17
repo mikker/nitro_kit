@@ -129,7 +129,7 @@ class ProductResourceFlowTest < ActionDispatch::IntegrationTest
 
     get_flow("new-validation")
     assert_toolbar_submit("Create product")
-    assert_select "#gallery-product-resource-form-error[role='alert'][data-variant='error']"
+    assert_select "#gallery-product-resource-form-error[role='alert'][data-variant='destructive']"
     assert_select "#gallery-product-resource-form [data-nk='field'][data-state='invalid']", count: 5
     assert_select "#product_name[aria-invalid='true'][value='']"
     assert_select "#product_sku[aria-invalid='true'][value='telemetry']"
@@ -149,7 +149,7 @@ class ProductResourceFlowTest < ActionDispatch::IntegrationTest
 
     get_flow("edit-validation")
     assert_toolbar_submit("Save product")
-    assert_select "#gallery-product-resource-form-error[data-variant='error']"
+    assert_select "#gallery-product-resource-form-error[data-variant='destructive']"
     assert_select "#product_sku[aria-invalid='true'][value='TEL-1']"
     assert_select "#product_price[aria-invalid='true'][value='-29.0']"
     assert_select "#gallery-product-resource-danger-zone[data-nk='danger-zone']"

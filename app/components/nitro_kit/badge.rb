@@ -7,11 +7,11 @@ module NitroKit
     # Two axes on one option, both public and both themeable.
     #
     # The semantic families follow the `--nk-palette-{family}` tint roles, so
-    # they move with an application's brand: retheme `--nk-palette-danger` and
-    # every `danger` badge follows. The decorative hues follow the
+    # they move with an application's brand: retheme `--nk-palette-destructive` and
+    # every `destructive` badge follows. The decorative hues follow the
     # `--nk-palette-{hue}` roles and stay the color they name, for categorical
     # labelling where meaning is not the point.
-    SEMANTIC_COLORS = %i[neutral info success warning danger].freeze
+    SEMANTIC_COLORS = %i[neutral info success warning destructive].freeze
     PALETTE_COLORS = %i[
       red orange amber yellow lime green emerald teal cyan sky blue indigo
       violet purple fuchsia pink rose

@@ -257,7 +257,7 @@ module Gallery
               )
 
               render NitroKit::Alert.new(
-                variant: :error,
+                variant: :destructive,
                 id: "gallery-hybrid-application-error-alert"
               ) do |alert|
                 alert.icon NitroKit::Icon.new(:triangle_alert)

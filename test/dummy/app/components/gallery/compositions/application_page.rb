@@ -138,7 +138,7 @@ module Gallery
           active: :success,
           queued: :info,
           waiting: :warning,
-          failed: :danger,
+          failed: :destructive,
           missing: :neutral
         }.fetch(status)
 

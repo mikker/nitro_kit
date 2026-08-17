@@ -93,7 +93,7 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
     assert_select "input[name*='[postal_code]'][autocomplete='postal-code']"
 
     get_flow("billing", "payment-validation")
-    assert_select "#gallery-billing-payment-validation[data-slot='settings-section-status'][data-variant='error']",
+    assert_select "#gallery-billing-payment-validation[data-slot='settings-section-status'][data-variant='destructive']",
       text: /Card number must be 16 digits/
     assert_select "#gallery-billing-payment-form [data-nk='field'][data-state='invalid']", count: 5
     assert_select "#gallery-billing-payment-form input[aria-invalid='true'][aria-describedby*='errors']", count: 5
@@ -180,7 +180,7 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-billing-cancellation-keep[href$='/billing/plans']"
 
     get_flow("billing", "cancellation-validation")
-    assert_select "#gallery-billing-cancellation-validation[data-variant='error']", text: /Confirmed must be accepted/
+    assert_select "#gallery-billing-cancellation-validation[data-variant='destructive']", text: /Confirmed must be accepted/
     assert_select "#gallery-billing-cancellation-form [data-nk='field'][data-state='invalid']", count: 3
 
     get_flow("billing", "cancellation-loading")
@@ -217,7 +217,7 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
       assert_select "tbody th[scope='row']", count: Gallery::Compositions::UsersPage::USERS.size
       assert_select "[data-nk='avatar']", count: Gallery::Compositions::UsersPage::USERS.size
     end
-    assert_select "#gallery-users-index-table-mem_annie-status[data-color='danger']", text: "Suspended"
+    assert_select "#gallery-users-index-table-mem_annie-status[data-color='destructive']", text: "Suspended"
     assert_select "#gallery-users-index-summary", text: "Showing 1–8 of 128 workspace users"
     assert_select "#gallery-users-index-pagination[data-nk='pagination'][aria-label='Workspace user pages']" do
       assert_select "#gallery-users-index-pagination-previous[aria-disabled='true'][tabindex='-1']:not([href])"
@@ -289,7 +289,7 @@ class GalleryBillingUsersTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-users-loading-table tbody tr", count: 3
 
     get_flow("users", "error")
-    assert_select "#gallery-users-error[data-variant='error']", text: /No user data was changed/
+    assert_select "#gallery-users-error[data-variant='destructive']", text: /No user data was changed/
     assert_select "#gallery-users-error-card", text: /users_read_timeout_2026_07_13_0917/
     assert_select "#gallery-users-retry[href$='/users/index']", text: "Retry"
   end

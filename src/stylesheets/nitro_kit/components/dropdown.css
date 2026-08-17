@@ -86,7 +86,7 @@
       [data-nk="dropdown"]
         [data-slot="dropdown-item"][data-variant="destructive"]
     ) {
-    color: var(--nk-color-danger-content);
+    color: var(--nk-color-destructive-content);
   }
 
   :where(
@@ -117,8 +117,8 @@
             [aria-disabled="true"]
           )
       ) {
-      color: var(--nk-color-danger-foreground);
-      background: var(--nk-color-danger);
+      color: var(--nk-color-destructive-foreground);
+      background: var(--nk-color-destructive);
     }
   }
 

@@ -152,7 +152,7 @@
   }
 
   :where([data-nk="dropzone"][data-state="error"]) {
-    border-color: var(--nk-color-danger);
+    border-color: var(--nk-color-destructive);
   }
 
   :where([data-nk="dropzone"][data-state="disabled"]) {
@@ -186,7 +186,7 @@
   }
 
   :where([data-nk="dropzone"] > [data-slot="dropzone-error"]) {
-    color: var(--nk-color-danger-content);
+    color: var(--nk-color-destructive-content);
     font-size: var(--nk-text-sm);
   }
 }

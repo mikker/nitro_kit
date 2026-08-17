@@ -172,7 +172,7 @@ module Gallery
           id: "gallery-api-credential-section"
         ) do |section|
           if state == "validation"
-            section.status NitroKit::Alert.new(id: "gallery-api-credential-validation", variant: :error) do |alert|
+            section.status NitroKit::Alert.new(id: "gallery-api-credential-validation", variant: :destructive) do |alert|
               alert.title("The credential could not be created")
               alert.description("Name the credential and choose supported access and expiration values.")
             end
@@ -341,7 +341,7 @@ module Gallery
         issue = Gallery::Data.failed_api_key_issue
 
         render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch, id: "gallery-api-credential-error-stack") do
-          render NitroKit::Alert.new(id: "gallery-api-credential-error", variant: :error) do |alert|
+          render NitroKit::Alert.new(id: "gallery-api-credential-error", variant: :destructive) do |alert|
             alert.icon(NitroKit::Icon.new(:circle_x, id: "gallery-api-credential-error-icon"))
             alert.title("#{issue.key.name} is still active")
             alert.description("#{issue.message} No credential or access state changed.")
