@@ -303,6 +303,8 @@ Variants assign private values and generic state consumes them:
 
 Never target an unqualified `[data-slot]`. Never use `transition: all`.
 
+Interaction treatments respond to capability, not viewport width: hover effects sit under `@media (hover: hover)` and pointer-sized adjustments under `@media (pointer: coarse)`. Data-entry controls and the default Button read at `--nk-text-sm` on fine pointers and `--nk-text-base` on coarse ones, because iOS Safari zooms the viewport when a focused control computes below 16px. Width is the wrong axis for this: a tablet is wide and still zooms.
+
 ## Tokens and themes
 
 Public `--nk-*` variables cover themeable decisions: semantic colors, paired foregrounds, typography, spacing, radii, control dimensions, shadows, borders, motion, and content widths.

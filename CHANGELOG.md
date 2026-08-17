@@ -4,6 +4,13 @@
 
 ### Added
 
+- Add `--nk-choice-size-{md,lg}` and derive every checkbox and radio
+  dimension from them: box, glyph proportions, description indent, and the
+  native input sizes. The two sizes are one rule apart, the large radio dot
+  finally scales with its control, and both indicators share one guarded
+  transition.
+- Add `--nk-control-padding-inline`. Buttons, inputs, selects, and textareas
+  share one inline padding instead of two nearby values.
 - Add the full color scales as public tokens: `--nk-{family}-{50..950}` for all
   twenty-two families — the five neutrals slate, gray, zinc, neutral, and stone,
   plus seventeen chromatic hues. Every semantic role and badge color samples
@@ -47,6 +54,14 @@
 
 ### Changed
 
+- Read data-entry controls and the default Button at `--nk-text-sm` on fine
+  pointers and `--nk-text-base` on coarse ones, where iOS Safari zooms a
+  focused control below 16px. The pair stays matched in both modes; Select
+  and Textarea follow the same rules instead of inheriting the page font.
+- Even the control height ramp: `--nk-control-height-sm` is the 2rem small
+  Button already rendered, and Button consumes the token, so the theme
+  customizer's density exports reach small buttons instead of being
+  silently ignored.
 - Resolve `Badge`, `Alert`, and `Toast::Item` colors from public tokens through
   one shared palette. Badge colors were previously hardcoded in private
   `--_nk-*` variables, which are not a theme API, so badge color was the one

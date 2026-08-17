@@ -1,9 +1,11 @@
 @layer nitro-kit.tokens {
   :where(:root) {
-    --nk-font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    --nk-font-sans:
+      ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --nk-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-      "Liberation Mono", "Courier New", monospace;
+    --nk-font-mono:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+      "Courier New", monospace;
 
     --nk-text-xs: 0.75rem;
     --nk-text-sm: 0.875rem;
@@ -60,9 +62,11 @@
       color-mix(in oklab, var(--nk-black) 5%, transparent);
     --nk-shadow-sm: 0 1px 2px
       color-mix(in oklab, var(--nk-black) 8%, transparent);
-    --nk-shadow-md: 0 4px 6px -1px color-mix(in oklab, var(--nk-black) 10%, transparent),
+    --nk-shadow-md:
+      0 4px 6px -1px color-mix(in oklab, var(--nk-black) 10%, transparent),
       0 2px 4px -2px color-mix(in oklab, var(--nk-black) 10%, transparent);
-    --nk-shadow-lg: 0 10px 15px -3px color-mix(in oklab, var(--nk-black) 12%, transparent),
+    --nk-shadow-lg:
+      0 10px 15px -3px color-mix(in oklab, var(--nk-black) 12%, transparent),
       0 4px 6px -4px color-mix(in oklab, var(--nk-black) 12%, transparent);
 
     --nk-duration-fast: 100ms;
@@ -71,10 +75,15 @@
     --nk-ease: cubic-bezier(0.4, 0, 0.2, 1);
 
     --nk-control-height-xs: 1.5rem;
-    --nk-control-height-sm: 1.75rem;
+    --nk-control-height-sm: 2rem;
     --nk-control-height-md: 2.5rem;
     --nk-control-height-lg: 2.75rem;
     --nk-control-height-xl: 3.5rem;
+
+    --nk-control-padding-inline: calc(var(--nk-space) * 3);
+
+    --nk-choice-size-md: 1.125rem;
+    --nk-choice-size-lg: 1.5rem;
 
     --nk-content-sm: 24rem;
     --nk-content-md: 32rem;

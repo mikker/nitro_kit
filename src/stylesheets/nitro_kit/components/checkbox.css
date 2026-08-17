@@ -1,39 +1,36 @@
 @layer nitro-kit.base {
+  /* Every box dimension derives from one choice size, so the two sizes are one
+     rule apart and the glyph keeps its proportions at either. The check stroke
+     is two border widths and its optical nudge is one, at every size. */
   :where([data-nk="checkbox"]) {
+    --_nk-choice-size: var(--nk-choice-size-md);
+
     display: inline-grid;
     min-inline-size: var(--nk-control-height-md);
     min-block-size: var(--nk-control-height-md);
     color: var(--nk-color-foreground);
   }
 
+  :where([data-nk="checkbox"][data-size="lg"]) {
+    --_nk-choice-size: var(--nk-choice-size-lg);
+  }
+
   :where([data-nk="checkbox"] > [data-slot="checkbox-label"]) {
     display: grid;
-    grid-template-columns: 1.125rem minmax(0, 1fr);
+    grid-template-columns: var(--_nk-choice-size) minmax(0, 1fr);
     gap: calc(var(--nk-space) * 2);
     align-items: center;
     min-block-size: var(--nk-control-height-md);
     cursor: pointer;
   }
 
-  :where([data-nk="checkbox"][data-size="lg"] > [data-slot="checkbox-label"]) {
-    grid-template-columns: 1.5rem minmax(0, 1fr);
-  }
-
   :where(
-      [data-nk="checkbox"] [data-slot="checkbox-control"],
-      [data-nk="checkbox"] [data-slot="checkbox-indicator"]
-    ) {
+    [data-nk="checkbox"] [data-slot="checkbox-control"],
+    [data-nk="checkbox"] [data-slot="checkbox-indicator"]
+  ) {
     grid-area: 1 / 1;
-    inline-size: 1.125rem;
-    block-size: 1.125rem;
-  }
-
-  :where(
-      [data-nk="checkbox"][data-size="lg"] [data-slot="checkbox-control"],
-      [data-nk="checkbox"][data-size="lg"] [data-slot="checkbox-indicator"]
-    ) {
-    inline-size: 1.5rem;
-    block-size: 1.5rem;
+    inline-size: var(--_nk-choice-size);
+    block-size: var(--_nk-choice-size);
   }
 
   :where([data-nk="checkbox"] [data-slot="checkbox-control"]) {
@@ -58,20 +55,13 @@
   }
 
   :where([data-nk="checkbox"] [data-slot="checkbox-indicator"])::after {
-    inline-size: 0.5rem;
-    block-size: 0.3rem;
+    inline-size: calc(var(--_nk-choice-size) * 0.44);
+    block-size: calc(var(--_nk-choice-size) * 0.27);
     content: "";
-    border-block-end: 0.125rem solid currentcolor;
-    border-inline-start: 0.125rem solid currentcolor;
+    border-block-end: calc(var(--nk-border-width) * 2) solid currentcolor;
+    border-inline-start: calc(var(--nk-border-width) * 2) solid currentcolor;
     opacity: 0;
-    transform: translateY(-0.0625rem) rotate(-45deg);
-  }
-
-  :where(
-      [data-nk="checkbox"][data-size="lg"] [data-slot="checkbox-indicator"]
-    )::after {
-    inline-size: 0.625rem;
-    block-size: 0.375rem;
+    transform: translateY(calc(var(--nk-border-width) * -1)) rotate(-45deg);
   }
 
   :where([data-nk="checkbox"] [data-slot="checkbox-label-text"]) {
@@ -82,63 +72,50 @@
   :where([data-nk="checkbox"] > [data-slot="checkbox-description"]) {
     display: block;
     margin-block-start: var(--nk-space);
-    padding-inline-start: calc(1.125rem + (var(--nk-space) * 2));
+    padding-inline-start: calc(var(--_nk-choice-size) + (var(--nk-space) * 2));
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
     text-wrap: pretty;
-  }
-
-  :where(
-      [data-nk="checkbox"][data-size="lg"] > [data-slot="checkbox-description"]
-    ) {
-    padding-inline-start: calc(1.5rem + (var(--nk-space) * 2));
   }
 }
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="checkbox"]
-        [data-slot="checkbox-control"]:checked
-        + [data-slot="checkbox-indicator"],
-      [data-nk="checkbox"][data-state="indeterminate"]
-        [data-slot="checkbox-indicator"]
-    ) {
+    [data-nk="checkbox"]
+      [data-slot="checkbox-control"]:checked
+      + [data-slot="checkbox-indicator"],
+    [data-nk="checkbox"][data-state="indeterminate"]
+      [data-slot="checkbox-indicator"]
+  ) {
     background: var(--nk-color-primary);
     border-color: var(--nk-color-primary);
   }
 
   :where(
-      [data-nk="checkbox"]
-        [data-slot="checkbox-control"]:checked
-        + [data-slot="checkbox-indicator"]
-    )::after {
+    [data-nk="checkbox"]
+      [data-slot="checkbox-control"]:checked
+      + [data-slot="checkbox-indicator"]
+  )::after {
     opacity: 1;
   }
 
   :where(
-      [data-nk="checkbox"][data-state="indeterminate"]
-        [data-slot="checkbox-indicator"]
-    )::after {
-    inline-size: 0.55rem;
+    [data-nk="checkbox"][data-state="indeterminate"]
+      [data-slot="checkbox-indicator"]
+  )::after {
+    inline-size: calc(var(--_nk-choice-size) * 0.49);
     block-size: 0;
-    border-block-end: 0.125rem solid currentcolor;
+    border-block-end: calc(var(--nk-border-width) * 2) solid currentcolor;
     border-inline-start: 0;
     opacity: 1;
     transform: none;
   }
 
   :where(
-      [data-nk="checkbox"][data-size="lg"][data-state="indeterminate"]
-        [data-slot="checkbox-indicator"]
-    )::after {
-    inline-size: 0.7rem;
-  }
-
-  :where(
-      [data-nk="checkbox"]
-        [data-slot="checkbox-control"]:focus-visible
-        + [data-slot="checkbox-indicator"]
-    ) {
+    [data-nk="checkbox"]
+      [data-slot="checkbox-control"]:focus-visible
+      + [data-slot="checkbox-indicator"]
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -155,10 +132,16 @@
      user touches the control, so an untouched invalid checkbox keeps its
      border. */
   :where(
-      [data-nk="checkbox"]
-        [data-slot="checkbox-control"][aria-invalid="true"]:not(:user-valid)
-        + [data-slot="checkbox-indicator"]
-    ) {
+    [data-nk="checkbox"]
+      [data-slot="checkbox-control"][aria-invalid="true"]:not(:user-valid)
+      + [data-slot="checkbox-indicator"]
+  ) {
     border-color: var(--nk-color-danger);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where([data-nk="checkbox"] [data-slot="checkbox-indicator"]) {
+      transition-duration: 0.01ms;
+    }
   }
 }

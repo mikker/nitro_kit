@@ -173,7 +173,7 @@ module Gallery
             end
           end
 
-          example("Every wrap mode", slug: "flex-every-wrap", layout: :stack, mode: :full_width) do
+          example("Every wrap mode", slug: "flex-every-wrap", layout: :stack, mode: :full_width, scroll: true) do
             %w[nowrap wrap wrap-reverse].each do |wrap|
               sample(wrap.humanize, slug: wrap) do
                 render NitroKit::Container.new(size: :sm) do

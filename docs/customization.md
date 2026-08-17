@@ -520,18 +520,21 @@ The following variables are the complete public token set. Theme-independent tok
 
 ### Spacing and dimensions
 
-| Token                    | Role                                                            |
-| ------------------------ | --------------------------------------------------------------- |
-| `--nk-space`             | Base spacing unit multiplied throughout components and layouts. |
-| `--nk-control-height-xs` | Extra-small control height.                                     |
-| `--nk-control-height-sm` | Small control height.                                           |
-| `--nk-control-height-md` | Default control height.                                         |
-| `--nk-control-height-lg` | Large control height.                                           |
-| `--nk-control-height-xl` | Extra-large control height.                                     |
-| `--nk-content-sm`        | Small Container maximum width.                                  |
-| `--nk-content-md`        | Medium Container maximum width.                                 |
-| `--nk-content-lg`        | Large Container maximum width.                                  |
-| `--nk-content-xl`        | Extra-large Container maximum width.                            |
+| Token                         | Role                                                            |
+| ----------------------------- | --------------------------------------------------------------- |
+| `--nk-space`                  | Base spacing unit multiplied throughout components and layouts. |
+| `--nk-control-height-xs`      | Extra-small control height.                                     |
+| `--nk-control-height-sm`      | Small control height.                                           |
+| `--nk-control-height-md`      | Default control height.                                         |
+| `--nk-control-height-lg`      | Large control height.                                           |
+| `--nk-control-height-xl`      | Extra-large control height.                                     |
+| `--nk-choice-size-md`         | Checkbox and radio box size.                                    |
+| `--nk-choice-size-lg`         | Large checkbox and radio box size.                              |
+| `--nk-control-padding-inline` | Inline padding shared by buttons and data-entry controls.       |
+| `--nk-content-sm`             | Small Container maximum width.                                  |
+| `--nk-content-md`             | Medium Container maximum width.                                 |
+| `--nk-content-lg`             | Large Container maximum width.                                  |
+| `--nk-content-xl`             | Extra-large Container maximum width.                            |
 
 ### Shape, borders, and focus
 
