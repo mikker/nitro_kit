@@ -7,11 +7,11 @@ class ButtonCssTest < ActiveSupport::TestCase
     css = button_css
 
     assert_includes css, "--_nk-button-height: var(--nk-control-height-md)"
-    assert_includes css, "--_nk-button-padding: calc(var(--nk-space) * 4)"
+    assert_includes css, "--_nk-button-padding: var(--nk-control-padding-inline)"
     assert_includes css, "--_nk-button-radius: var(--nk-button-radius, var(--nk-radius-lg))"
     assert_includes tokens_css, "--nk-button-radius: initial"
     assert_includes css, "--_nk-button-font-size: var(--nk-text-sm)"
-    assert_includes css, "--_nk-button-line-height: 1.25rem"
+    assert_includes css, "--_nk-button-line-height: var(--nk-leading-normal)"
     assert_includes css, "--_nk-button-shadow: var(--nk-shadow-xs)"
     assert_includes css, "--_nk-button-background: var(--nk-button-default-background)"
     assert_includes css, "--_nk-button-foreground: var(--nk-button-default-foreground)"
@@ -65,7 +65,7 @@ class ButtonCssTest < ActiveSupport::TestCase
   test "matches Flux compact sizes icon padding and disabled state" do
     css = button_css
 
-    assert_includes css, "--_nk-button-height: calc(var(--nk-space) * 8)"
+    assert_includes css, "--_nk-button-height: var(--nk-control-height-sm)"
     assert_includes css, "--_nk-button-height: var(--nk-control-height-xs)"
     assert_includes css, ':not(:has(> [data-slot="button-label"])):has('
     assert_includes css, '> [data-slot="button-icon-start"]'

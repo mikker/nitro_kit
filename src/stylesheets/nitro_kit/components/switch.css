@@ -1,7 +1,13 @@
 @layer nitro-kit.base {
   :where([data-nk="switch"]) {
+    --_nk-switch-track-size: 2.5rem;
+
     display: inline-grid;
     color: var(--nk-color-foreground);
+  }
+
+  :where([data-nk="switch"][data-size="lg"]) {
+    --_nk-switch-track-size: 3.25rem;
   }
 
   :where([data-nk="switch"] > [data-slot="switch-label"]) {
@@ -14,15 +20,15 @@
   }
 
   :where(
-      [data-nk="switch"] [data-slot="switch-control"],
-      [data-nk="switch"] [data-slot="switch-track"]
-    ) {
+    [data-nk="switch"] [data-slot="switch-control"],
+    [data-nk="switch"] [data-slot="switch-track"]
+  ) {
     grid-area: 1 / 1;
   }
 
   :where([data-nk="switch"] [data-slot="switch-control"]) {
     z-index: 1;
-    inline-size: 2.5rem;
+    inline-size: var(--_nk-switch-track-size);
     block-size: 1.5rem;
     margin: 0;
     cursor: pointer;
@@ -33,7 +39,7 @@
   :where([data-nk="switch"] [data-slot="switch-track"]) {
     display: flex;
     align-items: center;
-    inline-size: 2.5rem;
+    inline-size: var(--_nk-switch-track-size);
     block-size: 1.5rem;
     padding: 0.1875rem;
     pointer-events: none;
@@ -46,10 +52,9 @@
   }
 
   :where(
-      [data-nk="switch"][data-size="lg"] [data-slot="switch-control"],
-      [data-nk="switch"][data-size="lg"] [data-slot="switch-track"]
-    ) {
-    inline-size: 3.25rem;
+    [data-nk="switch"][data-size="lg"] [data-slot="switch-control"],
+    [data-nk="switch"][data-size="lg"] [data-slot="switch-track"]
+  ) {
     block-size: 2rem;
   }
 
@@ -75,53 +80,49 @@
   :where([data-nk="switch"] > [data-slot="switch-description"]) {
     display: block;
     margin-block-start: var(--nk-space);
-    padding-inline-start: calc(2.5rem + (var(--nk-space) * 3));
+    padding-inline-start: calc(
+      var(--_nk-switch-track-size) + (var(--nk-space) * 3)
+    );
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
     font-weight: var(--nk-font-weight-normal);
     text-wrap: pretty;
   }
-
-  :where(
-      [data-nk="switch"][data-size="lg"] > [data-slot="switch-description"]
-    ) {
-    padding-inline-start: calc(3.25rem + (var(--nk-space) * 3));
-  }
 }
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="switch"]
-        [data-slot="switch-control"]:checked
-        + [data-slot="switch-track"]
-    ) {
+    [data-nk="switch"]
+      [data-slot="switch-control"]:checked
+      + [data-slot="switch-track"]
+  ) {
     background: var(--nk-color-primary);
     border-color: var(--nk-color-primary);
   }
 
   :where(
-      [data-nk="switch"]
-        [data-slot="switch-control"]:checked
-        + [data-slot="switch-track"]
-        > [data-slot="switch-handle"]
-    ) {
+    [data-nk="switch"]
+      [data-slot="switch-control"]:checked
+      + [data-slot="switch-track"]
+      > [data-slot="switch-handle"]
+  ) {
     transform: translateX(1rem);
   }
 
   :where(
-      [data-nk="switch"][data-size="lg"]
-        [data-slot="switch-control"]:checked
-        + [data-slot="switch-track"]
-        > [data-slot="switch-handle"]
-    ) {
+    [data-nk="switch"][data-size="lg"]
+      [data-slot="switch-control"]:checked
+      + [data-slot="switch-track"]
+      > [data-slot="switch-handle"]
+  ) {
     transform: translateX(1.25rem);
   }
 
   :where(
-      [data-nk="switch"]
-        [data-slot="switch-control"]:focus-visible
-        + [data-slot="switch-track"]
-    ) {
+    [data-nk="switch"]
+      [data-slot="switch-control"]:focus-visible
+      + [data-slot="switch-track"]
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -136,10 +137,10 @@
      danger border stands down. `:user-valid` never matches before the user
      touches the control, so an untouched invalid switch keeps its border. */
   :where(
-      [data-nk="switch"]
-        [data-slot="switch-control"][aria-invalid="true"]:not(:user-valid)
-        + [data-slot="switch-track"]
-    ) {
+    [data-nk="switch"]
+      [data-slot="switch-control"][aria-invalid="true"]:not(:user-valid)
+      + [data-slot="switch-track"]
+  ) {
     border-color: var(--nk-color-danger);
   }
 }
@@ -147,9 +148,9 @@
 @media (prefers-reduced-motion: reduce) {
   @layer nitro-kit.base {
     :where(
-        [data-nk="switch"] [data-slot="switch-track"],
-        [data-nk="switch"] [data-slot="switch-handle"]
-      ) {
+      [data-nk="switch"] [data-slot="switch-track"],
+      [data-nk="switch"] [data-slot="switch-handle"]
+    ) {
       transition-duration: 0.01ms;
     }
   }

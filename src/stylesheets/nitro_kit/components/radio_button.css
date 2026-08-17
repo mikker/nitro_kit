@@ -1,14 +1,24 @@
 @layer nitro-kit.base {
+  /* Every dimension derives from one choice size, matching Checkbox: the two
+     sizes are one rule apart and the dot keeps its proportion at either. The
+     dot previously stayed at its medium size inside a large radio; deriving it
+     scales it with the control. */
   :where([data-nk="radio-button"]) {
+    --_nk-choice-size: var(--nk-choice-size-md);
+
     display: inline-grid;
     min-inline-size: var(--nk-control-height-md);
     min-block-size: var(--nk-control-height-md);
     color: var(--nk-color-foreground);
   }
 
+  :where([data-nk="radio-button"][data-size="lg"]) {
+    --_nk-choice-size: var(--nk-choice-size-lg);
+  }
+
   :where([data-nk="radio-button"] > [data-slot="radio-button-label"]) {
     display: grid;
-    grid-template-columns: 1.125rem minmax(0, 1fr);
+    grid-template-columns: var(--_nk-choice-size) minmax(0, 1fr);
     gap: calc(var(--nk-space) * 2);
     align-items: center;
     min-block-size: var(--nk-control-height-md);
@@ -16,29 +26,12 @@
   }
 
   :where(
-      [data-nk="radio-button"][data-size="lg"]
-        > [data-slot="radio-button-label"]
-    ) {
-    grid-template-columns: 1.5rem minmax(0, 1fr);
-  }
-
-  :where(
-      [data-nk="radio-button"] [data-slot="radio-button-control"],
-      [data-nk="radio-button"] [data-slot="radio-button-indicator"]
-    ) {
+    [data-nk="radio-button"] [data-slot="radio-button-control"],
+    [data-nk="radio-button"] [data-slot="radio-button-indicator"]
+  ) {
     grid-area: 1 / 1;
-    inline-size: 1.125rem;
-    block-size: 1.125rem;
-  }
-
-  :where(
-      [data-nk="radio-button"][data-size="lg"]
-        [data-slot="radio-button-control"],
-      [data-nk="radio-button"][data-size="lg"]
-        [data-slot="radio-button-indicator"]
-    ) {
-    inline-size: 1.5rem;
-    block-size: 1.5rem;
+    inline-size: var(--_nk-choice-size);
+    block-size: var(--_nk-choice-size);
   }
 
   :where([data-nk="radio-button"] [data-slot="radio-button-control"]) {
@@ -56,11 +49,14 @@
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
     border-radius: var(--nk-radius-full);
+    transition:
+      background-color var(--nk-duration-fast) var(--nk-ease),
+      border-color var(--nk-duration-fast) var(--nk-ease);
   }
 
   :where([data-nk="radio-button"] [data-slot="radio-button-indicator"])::after {
-    inline-size: 0.5rem;
-    block-size: 0.5rem;
+    inline-size: calc(var(--_nk-choice-size) * 0.44);
+    block-size: calc(var(--_nk-choice-size) * 0.44);
     content: "";
     background: var(--nk-color-primary);
     border-radius: inherit;
@@ -75,42 +71,35 @@
   :where([data-nk="radio-button"] > [data-slot="radio-button-description"]) {
     display: block;
     margin-block-start: var(--nk-space);
-    padding-inline-start: calc(1.125rem + (var(--nk-space) * 2));
+    padding-inline-start: calc(var(--_nk-choice-size) + (var(--nk-space) * 2));
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
     text-wrap: pretty;
-  }
-
-  :where(
-      [data-nk="radio-button"][data-size="lg"]
-        > [data-slot="radio-button-description"]
-    ) {
-    padding-inline-start: calc(1.5rem + (var(--nk-space) * 2));
   }
 }
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="radio-button"]
-        [data-slot="radio-button-control"]:checked
-        + [data-slot="radio-button-indicator"]
-    ) {
+    [data-nk="radio-button"]
+      [data-slot="radio-button-control"]:checked
+      + [data-slot="radio-button-indicator"]
+  ) {
     border-color: var(--nk-color-primary);
   }
 
   :where(
-      [data-nk="radio-button"]
-        [data-slot="radio-button-control"]:checked
-        + [data-slot="radio-button-indicator"]
-    )::after {
+    [data-nk="radio-button"]
+      [data-slot="radio-button-control"]:checked
+      + [data-slot="radio-button-indicator"]
+  )::after {
     opacity: 1;
   }
 
   :where(
-      [data-nk="radio-button"]
-        [data-slot="radio-button-control"]:focus-visible
-        + [data-slot="radio-button-indicator"]
-    ) {
+    [data-nk="radio-button"]
+      [data-slot="radio-button-control"]:focus-visible
+      + [data-slot="radio-button-indicator"]
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -125,10 +114,16 @@
      the danger border stands down. `:user-valid` never matches before the user
      touches the control, so an untouched invalid radio keeps its border. */
   :where(
-      [data-nk="radio-button"]
-        [data-slot="radio-button-control"][aria-invalid="true"]:not(:user-valid)
-        + [data-slot="radio-button-indicator"]
-    ) {
+    [data-nk="radio-button"]
+      [data-slot="radio-button-control"][aria-invalid="true"]:not(:user-valid)
+      + [data-slot="radio-button-indicator"]
+  ) {
     border-color: var(--nk-color-danger);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where([data-nk="radio-button"] [data-slot="radio-button-indicator"]) {
+      transition-duration: 0.01ms;
+    }
   }
 }
