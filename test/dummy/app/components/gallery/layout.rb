@@ -98,7 +98,8 @@ module Gallery
             collection.categories.each do |category|
               navigation.section(
                 label: section_label(collection, category),
-                collapsible: true
+                collapsible: true,
+                expanded: section_expanded?(collection, category)
               ) do
                 category.entries.each do |entry|
                   navigation.item(
@@ -129,6 +130,12 @@ module Gallery
     # collections read as their group names alone.
     def section_label(collection, category)
       collection.categories.one? ? collection.title : category.title
+    end
+
+    # Composition groups start collapsed; the group holding the current page
+    # always starts open so navigation never lands somewhere invisible.
+    def section_expanded?(collection, category)
+      collection.kind != :composition || category.entries.any? { |entry| current_entry?(entry) }
     end
 
     def current_entry?(entry)

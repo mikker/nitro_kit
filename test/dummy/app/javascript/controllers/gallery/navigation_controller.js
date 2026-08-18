@@ -15,35 +15,38 @@ export default class extends Controller {
     this.element.galleryScrollTop = this.body.scrollTop
   }
 
-  // Collapsed groups persist per tab; the group holding the current page
-  // always reopens so navigation never lands somewhere invisible.
+  // Toggled groups persist per tab; untouched groups keep the server's
+  // default, and the group holding the current page always starts open so
+  // navigation never lands somewhere invisible.
   restoreSections() {
-    let collapsed = []
+    let stored = {}
     try {
-      collapsed = JSON.parse(
-        sessionStorage.getItem("gallery-collapsed-sections") || "[]",
-      )
+      stored = JSON.parse(sessionStorage.getItem("gallery-sections") || "{}")
     } catch {
-      collapsed = []
+      stored = {}
     }
 
     for (const details of this.disclosures) {
       const label = this.sectionLabel(details)
-      const holdsCurrent = Boolean(details.querySelector("[aria-current]"))
-      details.open = holdsCurrent || !collapsed.includes(label)
+      if (label in stored) details.open = stored[label]
+      if (details.querySelector("[aria-current]")) details.open = true
     }
   }
 
-  rememberSections = () => {
-    const collapsed = this.disclosures
-      .filter((details) => !details.open)
-      .map((details) => this.sectionLabel(details))
+  rememberSections = (event) => {
+    const details = event.target
+    if (details.dataset.slot !== "app-navigation-section-disclosure") return
+
+    let stored = {}
+    try {
+      stored = JSON.parse(sessionStorage.getItem("gallery-sections") || "{}")
+    } catch {
+      stored = {}
+    }
+    stored[this.sectionLabel(details)] = details.open
 
     try {
-      sessionStorage.setItem(
-        "gallery-collapsed-sections",
-        JSON.stringify(collapsed),
-      )
+      sessionStorage.setItem("gallery-sections", JSON.stringify(stored))
     } catch {
       // Private browsing without storage keeps working, without persistence.
     }

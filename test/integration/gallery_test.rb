@@ -57,8 +57,17 @@ class GalleryTest < ActionDispatch::IntegrationTest
     end
 
     assert_equal sections.size,
-      navigation.css("details[data-slot='app-navigation-section-disclosure'][open]").size,
-      "every sidebar section is collapsible and starts open"
+      navigation.css("details[data-slot='app-navigation-section-disclosure']").size,
+      "every sidebar section is collapsible"
+    composition_labels = Gallery::Catalog.collection!(:composition).categories.map(&:title)
+    navigation.css("details[data-slot='app-navigation-section-disclosure']").each do |details|
+      label = details.at_css("[data-slot='app-navigation-section-label']").text.strip
+      if composition_labels.include?(label)
+        refute details.key?("open"), "#{label} starts collapsed"
+      else
+        assert details.key?("open"), "#{label} starts open"
+      end
+    end
     assert_select "[data-gallery='navigation'] a", text: "Blocks", count: 0
     assert_select "[data-gallery='navigation'] a", text: "Flows", count: 0
   end
