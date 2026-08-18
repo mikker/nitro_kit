@@ -621,4 +621,15 @@
     --nk-app-shell-sidebar-accent-foreground: var(--nk-color-foreground);
     --nk-app-shell-border: var(--nk-color-border);
   }
+
+  /* Touch guidance asks for a 44px minimum target, so the default control
+     height adopts the large step on coarse pointers. Every consumer follows —
+     buttons, inputs, selects, menu rows, and the choice controls' hit areas —
+     matching the pointer text contract. Explicit smaller and larger sizes
+     keep their own scale. */
+  @media (pointer: coarse) {
+    :where(:root) {
+      --nk-control-height-md: var(--nk-control-height-lg);
+    }
+  }
 }

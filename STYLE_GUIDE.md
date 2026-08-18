@@ -303,7 +303,15 @@ Variants assign private values and generic state consumes them:
 
 Never target an unqualified `[data-slot]`. Never use `transition: all`.
 
-Interaction treatments respond to capability, not viewport width: hover effects sit under `@media (hover: hover)` and pointer-sized adjustments under `@media (pointer: coarse)`. Data-entry controls and the default Button read at `--nk-text-sm` on fine pointers and `--nk-text-base` on coarse ones, because iOS Safari zooms the viewport when a focused control computes below 16px. Width is the wrong axis for this: a tablet is wide and still zooms.
+Interaction treatments respond to capability, not viewport width: hover effects sit under `@media (hover: hover)` and pointer-sized adjustments under `@media (pointer: coarse)`. Data-entry controls and the default Button read at `--nk-text-sm` on fine pointers and `--nk-text-base` on coarse ones, because iOS Safari zooms the viewport when a focused control computes below 16px. On the same axis, `--nk-control-height-md` adopts the large step on coarse pointers so the default control meets the 44px touch target. Width is the wrong axis for either: a tablet is wide and still zooms.
+
+Spacing multipliers on `--nk-space` come from the step set `0.5 1 1.5 2 2.5 3 4 5 6 7 8 10 12 16 24`. Panel and overlay maximums are viewport policy and stay literal rem values; everything a component owns rides a token or a step.
+
+`z-index` has four tiers and no other values: `1`–`3` layer parts inside one component, `10`–`30` layer application-shell chrome, `50` lifts the floating overlays that are not top-layer elements, and `100` is the system tier for the toast column and the skip link. Native dialogs and popovers rely on the top layer instead of a z-index. An element that carries a z-index inside a component must also make its component a stacking context (`isolation: isolate`), or the index leaks into sibling components.
+
+Translucency is mixed in `oklab`, never applied through `opacity`, so dimming cannot cascade into descendants; `opacity` is reserved for `--nk-disabled-opacity` and animating whole overlays. The mixing percentages are a fixed vocabulary: hairline rings and quiet borders mix `10%` of the foreground or black pole, hover washes mix `5%` in light and `15%` of white in dark, inset bevel highlights mix `15–20%` of white, status surfaces tint `12%` in light and `20%` in dark, status borders carry `45%` of their accent, and de-emphasized fills mix `40–65%` toward the surface. A new value in this list is a design decision, not a rounding choice.
+
+Motion uses the one easing curve `--nk-ease` in both directions, deliberately: enter and exit stay interruptible and reversible, and a dedicated accelerate/decelerate pair is a future decision to make once, globally, not per component. Durations come from the three `--nk-duration-*` steps, and every transition and animation stands down under `prefers-reduced-motion`.
 
 ## Tokens and themes
 
