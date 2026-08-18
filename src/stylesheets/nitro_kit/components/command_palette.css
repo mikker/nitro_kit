@@ -3,12 +3,17 @@
     inline-size: 100%;
   }
 
+  /* The trigger reads as the search input it opens: Input's plain border,
+     radius, and surface instead of Button's raised treatment. */
   :where([data-nk="command-palette"] > [data-slot="command-palette-trigger"]) {
     justify-content: start;
     inline-size: 100%;
     color: var(--nk-color-muted-foreground);
     font-weight: var(--nk-font-weight-normal);
     background: var(--nk-color-surface);
+    border-color: var(--nk-color-border);
+    border-block-end-color: var(--nk-color-border);
+    border-radius: var(--nk-radius-md);
     box-shadow: none;
   }
 
@@ -30,6 +35,17 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  /* The chip floats at the trigger's end with the same inset on its top,
+     end, and bottom sides, so the trigger's text padding stands down. */
+  :where(
+      [data-nk="command-palette"]
+        > [data-slot="command-palette-trigger"]:has(
+          [data-slot="command-palette-shortcut"]
+        )
+    ) {
+    padding-inline-end: calc(var(--nk-space) * 2 - var(--nk-border-width));
   }
 
   :where([data-nk="command-palette"] [data-slot="command-palette-shortcut"]) {
