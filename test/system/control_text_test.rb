@@ -23,7 +23,7 @@ class ControlTextTest < ApplicationSystemTestCase
     visit gallery_component_path("input")
 
     heights = evaluate_script(height_script)
-    assert_equal "40/40/40", heights, "fine pointers keep the 40px default"
+    assert_equal "36/36/36", heights, "fine pointers keep the 36px default"
 
     browser.execute_cdp("Emulation.setTouchEmulationEnabled", enabled: true, maxTouchPoints: 5)
     heights = evaluate_script(height_script)

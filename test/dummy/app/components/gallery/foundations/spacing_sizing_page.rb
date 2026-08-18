@@ -5,7 +5,7 @@ module Gallery
       CONTROL_HEIGHTS = {
         xs: [ "1.5rem", "24px" ],
         sm: [ "2rem", "32px" ],
-        md: [ "2.5rem", "40px" ],
+        md: [ "2.25rem", "36px" ],
         lg: [ "2.75rem", "44px" ],
         xl: [ "3.5rem", "56px" ]
       }.freeze

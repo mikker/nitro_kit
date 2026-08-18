@@ -82,6 +82,10 @@
 
 ### Changed
 
+- Lower the default control height from 40px to 36px:
+  `--nk-control-height-md` is now `2.25rem`, so medium buttons, inputs,
+  selects, menu rows, and the choice controls' hit areas tighten together.
+  Coarse pointers still adopt the 44px large step.
 - Meet the 44px touch target on coarse pointers: `--nk-control-height-md`
   adopts the large step there, so default buttons, inputs, selects, menu
   rows, and the choice controls' hit areas all reach 44px on touch screens
