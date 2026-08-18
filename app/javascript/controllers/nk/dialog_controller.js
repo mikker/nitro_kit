@@ -21,6 +21,10 @@ export default class extends Controller {
 
     const panel = this.#commandPanel(invoker);
     if (!panel) return;
+    if (command === "show-modal" && !this.#canShowModal(invoker, panel)) {
+      event.preventDefault();
+      return;
+    }
     if (command === "show-modal") this.returnFocus = invoker;
     if (this.#nativeRelationshipRuns(invoker, panel, command)) return;
 
@@ -73,5 +77,12 @@ export default class extends Controller {
 
   #nativeRelationshipRuns(invoker, panel, command) {
     return invoker.commandForElement === panel && invoker.command === command;
+  }
+
+  #canShowModal(invoker, panel) {
+    if (panel.open) return false;
+
+    const activeModal = document.querySelector("dialog:modal");
+    return !activeModal || activeModal.contains(invoker);
   }
 }
