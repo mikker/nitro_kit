@@ -21,7 +21,7 @@ class GalleryAppShellTest < ActionDispatch::IntegrationTest
     get gallery_component_path("app-navigation")
 
     assert_response :success
-    assert_select "[data-gallery='example-canvas'] [data-nk='app-navigation']", count: 6 do |navigations|
+    assert_select "[data-gallery='example-canvas'] [data-nk='app-navigation']", count: 7 do |navigations|
       navigations.each do |navigation|
         assert_equal 1, navigation.xpath("./*[@data-slot='app-navigation-body']").count
         assert_operator navigation.css("[data-slot='app-navigation-item']").count, :>=, 1

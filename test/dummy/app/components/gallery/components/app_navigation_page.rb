@@ -95,6 +95,30 @@ module Gallery
               end
             end
           end
+
+          example(
+            "Collapsible groups",
+            slug: "app-navigation-collapsible",
+            mode: :full_width,
+            description: "Collapsible sections disclose through native details and summary; open state lives on the open attribute and needs no JavaScript."
+          ) do
+            render NitroKit::AppNavigation.new(
+              id: "gallery-app-navigation-collapsible",
+              label: "Collapsible destinations",
+              data: { gallery_navigation_preview: "collapsible" }
+            ) do |navigation|
+              navigation.body do
+                navigation.section(label: "Plan", collapsible: true) do
+                  navigation.item("Roadmap", href: "#collapsible-roadmap", icon: :map)
+                  navigation.item("Milestones", href: "#collapsible-milestones", icon: :flag, current: true)
+                end
+                navigation.section(label: "Archive", collapsible: true, expanded: false) do
+                  navigation.item("Exports", href: "#collapsible-exports", icon: :archive)
+                  navigation.item("Retired projects", href: "#collapsible-retired", icon: :folder)
+                end
+              end
+            end
+          end
         end
 
         example_section(

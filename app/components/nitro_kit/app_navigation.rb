@@ -6,7 +6,7 @@ module NitroKit
     alias_method :html_footer, :footer
 
     Item = ::Data.define(:text, :href, :icon, :icon_end, :badge, :current, :html, :aria, :data, :css_class)
-    Section = ::Data.define(:label, :entries)
+    Section = ::Data.define(:label, :entries, :collapsible, :expanded)
     Entry = ::Data.define(:kind)
 
     def initialize(
@@ -78,9 +78,15 @@ module NitroKit
       nil
     end
 
-    def section(label: nil, &content)
+    def section(label: nil, collapsible: false, expanded: true, &content)
       ensure_phase!(:body, :section)
       raise ArgumentError, "AppNavigation section requires a block" unless content
+
+      collapsible = validate_boolean!(:collapsible, collapsible)
+      expanded = validate_boolean!(:expanded, expanded)
+      if collapsible && label.nil?
+        raise ArgumentError, "AppNavigation collapsible section requires a label"
+      end
 
       entries = []
       previous_entries = @entry_target
@@ -94,7 +100,12 @@ module NitroKit
         unless entries.any?(Item)
           raise ArgumentError, "AppNavigation section requires at least one item"
         end
-        previous_entries << Section.new(label: validate_optional_text!(:label, label), entries:)
+        previous_entries << Section.new(
+          label: validate_optional_text!(:label, label),
+          entries:,
+          collapsible:,
+          expanded:
+        )
         nil
       ensure
         @entry_target = previous_entries
@@ -208,10 +219,48 @@ module NitroKit
 
     def render_section(entry)
       li(**slot_attributes(:section)) do
-        span(**slot_attributes(:section_label)) { plain(entry.label) } if entry.label
-        ul(**slot_attributes(:section_list, attributes: section_list_attributes(entry))) do
-          entry.entries.each { |child| render_entry(child) }
+        if entry.collapsible
+          details(
+            **slot_attributes(:section_disclosure, attributes: { open: entry.expanded })
+          ) do
+            summary(**slot_attributes(:section_label)) do
+              plain(entry.label)
+              section_chevron
+            end
+            render_section_list(entry)
+          end
+        else
+          span(**slot_attributes(:section_label)) { plain(entry.label) } if entry.label
+          render_section_list(entry)
         end
+      end
+    end
+
+    def render_section_list(entry)
+      ul(**slot_attributes(:section_list, attributes: section_list_attributes(entry))) do
+        entry.entries.each { |child| render_entry(child) }
+      end
+    end
+
+    def section_chevron
+      svg(
+        **slot_attributes(
+          :section_icon,
+          attributes: {
+            viewbox: "0 0 16 16",
+            width: 16,
+            height: 16,
+            fill: "none",
+            stroke: "currentColor",
+            stroke_width: 1.5,
+            stroke_linecap: "round",
+            stroke_linejoin: "round",
+            focusable: "false",
+            aria: { hidden: true }
+          }
+        )
+      ) do |svg|
+        svg.path(d: "m4 6 4 4 4-4")
       end
     end
 

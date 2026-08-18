@@ -65,6 +65,50 @@
     line-height: var(--nk-leading-tight);
   }
 
+  :where(
+      [data-nk="app-navigation"]
+        summary[data-slot="app-navigation-section-label"]
+    ) {
+    display: flex;
+    gap: var(--nk-space);
+    align-items: center;
+    list-style: none;
+    user-select: none;
+    cursor: pointer;
+  }
+
+  :where(
+      [data-nk="app-navigation"]
+        summary[data-slot="app-navigation-section-label"]::-webkit-details-marker
+    ) {
+    display: none;
+  }
+
+  :where(
+      [data-nk="app-navigation"] [data-slot="app-navigation-section-icon"]
+    ) {
+    flex: none;
+    inline-size: var(--nk-icon-size-xs);
+    block-size: var(--nk-icon-size-xs);
+    transition: transform var(--nk-duration-fast) var(--nk-ease);
+  }
+
+  :where(
+      [data-nk="app-navigation"]
+        [data-slot="app-navigation-section-disclosure"]:not([open])
+        [data-slot="app-navigation-section-icon"]
+    ) {
+    transform: rotate(-90deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(
+        [data-nk="app-navigation"] [data-slot="app-navigation-section-icon"]
+      ) {
+      transition-duration: 0.01ms;
+    }
+  }
+
   :where([data-nk="app-navigation"] [data-slot="app-navigation-item"]) {
     flex: 0 0 auto;
     min-inline-size: 0;

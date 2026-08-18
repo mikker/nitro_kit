@@ -4,6 +4,10 @@
 
 ### Added
 
+- Add collapsible `AppNavigation` sections: `section(label:, collapsible:
+  true, expanded:)` renders native `details` and `summary` with an owned
+  chevron, so groups disclose without JavaScript and open state stays on
+  the native `open` attribute. Collapsible sections require a label.
 - Assert the stylesheet conventions as tests. Spacing steps, geometry
   through tokens, the type and shadow scales, themeable opacity, guarded
   motion and hover, the four z-index tiers, and the destructive spellings
