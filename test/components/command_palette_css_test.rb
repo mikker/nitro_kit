@@ -17,8 +17,10 @@ class CommandPaletteCssTest < ActiveSupport::TestCase
     end
     assert_includes source_css, "@media (prefers-reduced-motion: reduce)"
     assert_includes source_css, '[data-nk="command-palette-results"]'
-    assert_includes source_css, "block-size: min(36rem, calc(100dvh - (var(--nk-space) * 8)))"
-    refute_includes source_css, "max-block-size: min(36rem"
+    assert_includes source_css, "max-block-size: min(36rem, calc(100dvh - (var(--nk-space) * 8)))"
+    assert_includes source_css, "margin-block: 12dvh auto"
+    refute_match(/(?<!max-)block-size: min\(36rem/, source_css,
+      "the panel hugs its results below the cap instead of holding a fixed height")
     refute_includes source_css, "transition: all"
   end
 
