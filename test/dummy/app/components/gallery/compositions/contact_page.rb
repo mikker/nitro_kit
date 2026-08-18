@@ -100,7 +100,7 @@ module Gallery
       def render_form_status(section, inquiry)
         case state
         when "validation"
-          section.status(NitroKit::Alert.new(variant: :error, id: "gallery-contact-validation")) do |alert|
+          section.status(NitroKit::Alert.new(variant: :destructive, id: "gallery-contact-validation")) do |alert|
             alert.title("Your inquiry needs attention")
             alert.description(inquiry.errors.full_messages.to_sentence)
           end

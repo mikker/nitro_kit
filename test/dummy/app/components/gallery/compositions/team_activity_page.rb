@@ -52,7 +52,7 @@ module Gallery
       end
 
       def render_error
-        render NitroKit::Alert.new(id: "gallery-team-activity-error", variant: :error) do |alert|
+        render NitroKit::Alert.new(id: "gallery-team-activity-error", variant: :destructive) do |alert|
           alert.title("Team activity could not be loaded")
           alert.description("The query is still visible. Retry without losing the selected outcome filter.")
         end

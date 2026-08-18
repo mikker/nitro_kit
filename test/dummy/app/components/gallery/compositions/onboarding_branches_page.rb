@@ -95,7 +95,7 @@ module Gallery
           id: "gallery-onboarding-company-section"
         ) do |section|
           if invalid
-            section.status NitroKit::Alert.new(variant: :error, id: "gallery-onboarding-company-error") do |alert|
+            section.status NitroKit::Alert.new(variant: :destructive, id: "gallery-onboarding-company-error") do |alert|
               alert.title("Workspace details were not saved")
               alert.description("Name the workspace, choose an allowed size, and accept the organization terms.")
             end

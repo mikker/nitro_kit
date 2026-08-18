@@ -121,7 +121,7 @@ module Gallery
       end
 
       def render_error
-        render NitroKit::Alert.new(id: "gallery-sign-in-error", variant: :error) do |alert|
+        render NitroKit::Alert.new(id: "gallery-sign-in-error", variant: :destructive) do |alert|
           alert.icon(NitroKit::Icon.new(:circle_x, id: "gallery-sign-in-error-icon"))
           alert.title("We could not sign you in")
           alert.description("Check the email and password below, then try again.")

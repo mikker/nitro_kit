@@ -341,10 +341,10 @@ module Gallery
         icon: :triangle_alert
       ),
       AlertExample.new(
-        slug: "error",
+        slug: "destructive",
         title: "Deployment failed",
         description: "The production release stopped during database migration.",
-        variant: :error,
+        variant: :destructive,
         icon: :circle_x
       )
     ].freeze

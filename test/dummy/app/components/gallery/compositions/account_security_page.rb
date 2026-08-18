@@ -56,7 +56,7 @@ module Gallery
           id: "gallery-account-security-recovery-section"
         ) do |section|
           if invalid
-            section.status NitroKit::Alert.new(variant: :error, id: "gallery-account-security-recovery-error") do |alert|
+            section.status NitroKit::Alert.new(variant: :destructive, id: "gallery-account-security-recovery-error") do |alert|
               alert.title("Enter a valid email address")
               alert.description("Recovery was not requested and no account information was disclosed.")
             end
@@ -119,7 +119,7 @@ module Gallery
         render NitroKit::Card.new(id: "gallery-account-security-locked-card") do |card|
           card.title("Account temporarily locked", level: 5)
           card.body do
-            render NitroKit::Alert.new(variant: :error, id: "gallery-account-security-locked-alert") do |alert|
+            render NitroKit::Alert.new(variant: :destructive, id: "gallery-account-security-locked-alert") do |alert|
               alert.icon NitroKit::Icon.new(:lock_keyhole)
               alert.description("Too many sign-in attempts were rejected. Wait 15 minutes or request a signed unlock link.")
             end
@@ -143,7 +143,7 @@ module Gallery
           id: "gallery-account-security-two-factor-section"
         ) do |section|
           if invalid
-            section.status NitroKit::Alert.new(variant: :error, id: "gallery-account-security-two-factor-error") do |alert|
+            section.status NitroKit::Alert.new(variant: :destructive, id: "gallery-account-security-two-factor-error") do |alert|
               alert.title("Code was not accepted")
               alert.description("Enter the current six-digit code. One attempt remains before another temporary lock.")
             end
@@ -180,7 +180,7 @@ module Gallery
           id: "gallery-account-security-code-section"
         ) do |section|
           if invalid
-            section.status NitroKit::Alert.new(variant: :error, id: "gallery-account-security-code-error") do |alert|
+            section.status NitroKit::Alert.new(variant: :destructive, id: "gallery-account-security-code-error") do |alert|
               alert.title("Recovery code is invalid or already used")
               alert.description("No sign-in occurred. Try another saved code or contact an administrator.")
             end

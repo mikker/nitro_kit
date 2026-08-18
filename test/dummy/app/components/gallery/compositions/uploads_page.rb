@@ -125,7 +125,7 @@ module Gallery
             alert.description("customer-accounts-2026-07-13.csv is stored and queued for validation.")
           end
         when "error"
-          section.status NitroKit::Alert.new(variant: :error, live: :assertive, id: "gallery-uploads-error") do |alert|
+          section.status NitroKit::Alert.new(variant: :destructive, live: :assertive, id: "gallery-uploads-error") do |alert|
             alert.icon NitroKit::Icon.new(:circle_x, id: "gallery-uploads-error-icon")
             alert.title("Upload was not accepted")
             alert.description("Choose at least one supported file and a valid destination before retrying.")
@@ -256,7 +256,7 @@ module Gallery
       end
 
       def upload_status_color(status)
-        { complete: :success, processing: :info, queued: :neutral, failed: :danger }.fetch(status)
+        { complete: :success, processing: :info, queued: :neutral, failed: :destructive }.fetch(status)
       end
 
       def upload_title

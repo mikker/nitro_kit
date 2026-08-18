@@ -134,7 +134,7 @@ module Gallery
       end
 
       def render_request_error
-        render NitroKit::Alert.new(id: "gallery-password-reset-error", variant: :error) do |alert|
+        render NitroKit::Alert.new(id: "gallery-password-reset-error", variant: :destructive) do |alert|
           alert.title("Enter a valid email address")
           alert.description("The reset link cannot be delivered until the address is corrected.")
         end

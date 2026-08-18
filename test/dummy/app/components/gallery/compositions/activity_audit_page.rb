@@ -35,7 +35,7 @@ module Gallery
       end
 
       def render_error
-        render NitroKit::Alert.new(id: "gallery-activity-audit-error", variant: :error) do |alert|
+        render NitroKit::Alert.new(id: "gallery-activity-audit-error", variant: :destructive) do |alert|
           alert.icon NitroKit::Icon.new(:circle_x, id: "gallery-activity-audit-error-icon")
           alert.title("Audit history could not be loaded")
           alert.description("The current filters remain visible. No export or audit record was changed.")

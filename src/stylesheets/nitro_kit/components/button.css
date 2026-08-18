@@ -126,14 +126,14 @@
   }
 
   :where([data-nk="button"][data-variant="destructive"]) {
-    --_nk-button-background: var(--nk-color-danger);
-    --_nk-button-hover-background: var(--nk-color-danger-hover);
-    --_nk-button-foreground: var(--nk-color-danger-foreground);
+    --_nk-button-background: var(--nk-color-destructive);
+    --_nk-button-hover-background: var(--nk-color-destructive-hover);
+    --_nk-button-foreground: var(--nk-color-destructive-foreground);
     --_nk-button-border-width: 0;
     --_nk-button-border: transparent;
     --_nk-button-border-bottom: transparent;
     --_nk-button-shadow:
-      inset 0 1px var(--nk-color-danger),
+      inset 0 1px var(--nk-color-destructive),
       inset 0 2px color-mix(in oklab, var(--nk-white) 15%, transparent);
   }
 
@@ -153,17 +153,12 @@
   @media (prefers-color-scheme: dark) {
     :where(
       :root:not([data-theme])
-        [data-nk="button"]:is(
-          [data-variant="primary"],
-          [data-variant="destructive"]
-        )
+        [data-nk="button"]:is([data-variant="primary"], [data-variant="destructive"])
     ) {
       --_nk-button-border-width: 0;
     }
 
-    :where(
-      :root:not([data-theme]) [data-nk="button"][data-variant="destructive"]
-    ) {
+    :where(:root:not([data-theme]) [data-nk="button"][data-variant="destructive"]) {
       --_nk-button-shadow: none;
     }
   }
@@ -255,7 +250,7 @@
     ) {
       --_nk-button-background: color-mix(
         in oklab,
-        var(--nk-color-danger) 40%,
+        var(--nk-color-destructive) 40%,
         var(--nk-color-surface)
       );
     }
@@ -270,7 +265,7 @@
   ) {
     --_nk-button-background: color-mix(
       in oklab,
-      var(--nk-color-danger) 40%,
+      var(--nk-color-destructive) 40%,
       var(--nk-color-surface)
     );
   }

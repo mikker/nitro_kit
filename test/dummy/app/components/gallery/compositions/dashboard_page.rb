@@ -131,7 +131,7 @@ module Gallery
       end
 
       def render_degraded
-        render NitroKit::Alert.new(id: "gallery-dashboard-degraded-alert", variant: :error) do |alert|
+        render NitroKit::Alert.new(id: "gallery-dashboard-degraded-alert", variant: :destructive) do |alert|
           alert.title("Webhook delivery is degraded")
           alert.description("Eight Slack deliveries have failed since 09:12 UTC. Deployments are not affected.")
         end
@@ -145,7 +145,7 @@ module Gallery
                 render NitroKit::Badge.new(
                   "Investigating",
                   id: "gallery-dashboard-incident-status",
-                  color: :danger,
+                  color: :destructive,
                   size: :sm
                 )
               end
@@ -249,7 +249,7 @@ module Gallery
               alert.description("The chart frame remains available while 24 hourly request totals are fetched.")
             end
           when :error
-            render NitroKit::Alert.new(id: "gallery-dashboard-request-chart-error", variant: :error) do |alert|
+            render NitroKit::Alert.new(id: "gallery-dashboard-request-chart-error", variant: :destructive) do |alert|
               alert.title("Request volume is unavailable")
               alert.description("No usage data was changed. Retry the chart without reloading the incident records.")
             end
@@ -446,7 +446,7 @@ module Gallery
       end
 
       def workspace_status_color
-        { "degraded" => :danger, "loading" => :info }.fetch(state, :success)
+        { "degraded" => :destructive, "loading" => :info }.fetch(state, :success)
       end
 
 

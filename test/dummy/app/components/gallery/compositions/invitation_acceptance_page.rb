@@ -131,7 +131,7 @@ module Gallery
       end
 
       def render_validation_summary
-        render NitroKit::Alert.new(id: "gallery-invitation-validation", variant: :error) do |alert|
+        render NitroKit::Alert.new(id: "gallery-invitation-validation", variant: :destructive) do |alert|
           alert.title("Complete the highlighted details")
           alert.description("Your name, a secure password, and acceptance of the access policy are required.")
         end
@@ -150,7 +150,7 @@ module Gallery
 
         render NitroKit::Alert.new(
           id: "gallery-invitation-token-error",
-          variant: state == "expired" ? :warning : :error
+          variant: state == "expired" ? :warning : :destructive
         ) do |alert|
           alert.icon(
             NitroKit::Icon.new(

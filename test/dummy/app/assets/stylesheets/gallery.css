@@ -693,7 +693,7 @@
 
   :where([data-gallery="code-sample"][data-gallery-code-state="error"])
     :where([data-gallery-code-status]) {
-    color: var(--nk-color-danger-content);
+    color: var(--nk-color-destructive-content);
   }
 
   :where([data-gallery="code-source"]) {

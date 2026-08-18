@@ -13,7 +13,7 @@ module Gallery
       def render_status
         return unless state == "error"
 
-        render NitroKit::Alert.new(id: "gallery-organization-overview-error", variant: :error) do |alert|
+        render NitroKit::Alert.new(id: "gallery-organization-overview-error", variant: :destructive) do |alert|
           alert.title("Organization resource totals are temporarily unavailable")
           alert.description("The last verified organization identity remains visible while regional totals are retried.")
         end

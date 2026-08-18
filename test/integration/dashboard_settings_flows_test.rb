@@ -94,7 +94,7 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
     get_flow("dashboard", "degraded")
 
     assert_select "#gallery-dashboard-request-chart[data-gallery-chart-state='error']"
-    assert_select "#gallery-dashboard-request-chart-error[data-variant='error']", text: /No usage data was changed/
+    assert_select "#gallery-dashboard-request-chart-error[data-variant='destructive']", text: /No usage data was changed/
     assert_select "#gallery-dashboard-request-chart-retry[href='#request-volume']", text: "Retry request chart"
 
     get_flow("dashboard", "dense")
@@ -113,10 +113,10 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
   test "dashboard degraded state exposes incident impact records and recovery" do
     get_flow("dashboard", "degraded")
 
-    assert_select "#gallery-dashboard-workspace-status[data-color='danger']", text: "Degraded"
-    assert_select "#gallery-dashboard-degraded-alert[data-variant='error']", text: /Eight Slack deliveries/
+    assert_select "#gallery-dashboard-workspace-status[data-color='destructive']", text: "Degraded"
+    assert_select "#gallery-dashboard-degraded-alert[data-variant='destructive']", text: /Eight Slack deliveries/
     assert_select "#gallery-dashboard-incident-card" do
-      assert_select "#gallery-dashboard-incident-status[data-color='danger']", text: "Investigating"
+      assert_select "#gallery-dashboard-incident-status[data-color='destructive']", text: "Investigating"
       assert_select "#gallery-dashboard-retry-deliveries[type='button']", text: "Retry failed deliveries"
     end
     assert_select "#gallery-dashboard-integrations tbody tr", count: Gallery::Data.integrations.size
@@ -186,7 +186,7 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
     get_flow("settings", "profile-validation")
 
     assert_select "#gallery-settings-profile-section > " \
-                  "#gallery-settings-profile-error[data-slot='settings-section-status'][data-variant='error']",
+                  "#gallery-settings-profile-error[data-slot='settings-section-status'][data-variant='destructive']",
       text: /Email is invalid/
     assert_select "#gallery-settings-profile-form [data-nk='field'][data-state='invalid']", count: 4
     assert_select "#profile_email[aria-invalid='true'][aria-describedby='profile_email-errors']"
@@ -264,7 +264,7 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-settings-integrations-heading-card"
     assert_select "#gallery-settings-integrations-table tbody tr", count: Gallery::Data.integrations.size
     assert_select "[id^='gallery-settings-integration-int_'] [data-nk='badge']", count: Gallery::Data.integrations.size
-    assert_select "#gallery-settings-integration-int_slack-status[data-color='danger']", text: "Action required"
+    assert_select "#gallery-settings-integration-int_slack-status[data-color='destructive']", text: "Action required"
 
     get_flow("settings", "integrations-empty")
     assert_select "#gallery-settings-integrations-empty-section[data-nk='data-section']" do
@@ -276,7 +276,7 @@ class DashboardSettingsFlowsTest < ActionDispatch::IntegrationTest
     assert_select "[id^='gallery-settings-integration-int_']", count: 0
 
     get_flow("settings", "integrations-error")
-    assert_select "#gallery-settings-integrations-error[data-variant='error']", text: /connection expired/
+    assert_select "#gallery-settings-integrations-error[data-variant='destructive']", text: /connection expired/
     assert_select "#gallery-settings-integration-int_slack"
     assert_select "#gallery-settings-integration-int_slack-action[href='#integration-int_slack']", text: "Manage"
 

@@ -159,7 +159,7 @@ module Gallery
           id: "gallery-help-center-contact-section"
         ) do |section|
           if invalid
-            section.status NitroKit::Alert.new(variant: :error, id: "gallery-help-center-contact-error") do |alert|
+            section.status NitroKit::Alert.new(variant: :destructive, id: "gallery-help-center-contact-error") do |alert|
               alert.title("Your support request needs attention")
               alert.description("Provide a valid email, category, subject, and a message of at least 20 characters.")
             end

@@ -69,7 +69,7 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
       assert_select "[data-nk='table']", count: 1
     end
     assert_select "#gallery-integration-catalog-table tbody tr", count: 4
-    assert_select "#gallery-integration-provider_slack-status[data-color='danger']", text: "Configuration error"
+    assert_select "#gallery-integration-provider_slack-status[data-color='destructive']", text: "Configuration error"
     assert_select "#gallery-integration-provider_sentry-action[href$='/integration-management/detail']", text: "View"
 
     get_flow("integration-management", "detail")
@@ -89,7 +89,7 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-integration-connected-table tbody tr", count: 2
 
     get_flow("integration-management", "config-error")
-    assert_select "#gallery-integration-configuration-error[data-slot='settings-section-status'][data-variant='error']"
+    assert_select "#gallery-integration-configuration-error[data-slot='settings-section-status'][data-variant='destructive']"
     assert_select "#gallery-integration-configuration-form [data-nk='field'][data-state='invalid']", count: 3
     assert_select "input[name$='[webhook_url]'][value='http://expired.example.test'][aria-invalid='true']"
     assert_select "select[name$='[event]'] option[value='everything'][selected]", count: 0
@@ -132,11 +132,11 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-uploads-records-table tbody tr", count: 1
 
     get_flow("uploads", "error")
-    assert_select "#gallery-uploads-error[data-variant='error']"
+    assert_select "#gallery-uploads-error[data-variant='destructive']"
     assert_select "#gallery-uploads-form [data-nk='field'][data-state='invalid']", count: 2
     assert_select "#gallery_forms_upload_submission_files[type='file'][required][aria-invalid='true']" \
                   "[aria-describedby*='errors']:not([value])"
-    assert_select "#gallery-upload-record-1-status[data-color='danger']", text: "Failed"
+    assert_select "#gallery-upload-record-1-status[data-color='destructive']", text: "Failed"
 
     get_flow("uploads", "multiple")
     assert_select "#gallery-uploads-form input[type='file'][multiple]" \
@@ -172,7 +172,7 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-activity-audit-table tbody tr", count: Gallery::OperationalData.audit_events.size * 3
 
     get_flow("activity-audit", "error")
-    assert_select "#gallery-activity-audit-error[data-variant='error']", text: /No export or audit record was changed/
+    assert_select "#gallery-activity-audit-error[data-variant='destructive']", text: /No export or audit record was changed/
     assert_select "#gallery-activity-audit-empty", text: /temporarily unavailable/
 
     get_flow("activity-audit", "mobile")
@@ -231,7 +231,7 @@ class OperationalGalleryFlowsTest < ActionDispatch::IntegrationTest
     end
 
     get_flow("help-center", "contact-validation")
-    assert_select "#gallery-help-center-contact-error[data-slot='settings-section-status'][data-variant='error']"
+    assert_select "#gallery-help-center-contact-error[data-slot='settings-section-status'][data-variant='destructive']"
     assert_select "#gallery-help-center-contact-form [data-nk='field'][data-state='invalid']", count: 4
 
     get_flow("help-center", "contact-sent")

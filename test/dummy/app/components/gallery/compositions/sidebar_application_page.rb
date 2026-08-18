@@ -238,7 +238,7 @@ module Gallery
               )
 
               render NitroKit::Alert.new(
-                variant: :error,
+                variant: :destructive,
                 id: "gallery-sidebar-application-error-alert"
               ) do |alert|
                 alert.icon NitroKit::Icon.new(:circle_x)

@@ -129,7 +129,7 @@ module Gallery
           id: "gallery-api-webhooks-settings-section"
         ) do |section|
           if invalid
-            section.status NitroKit::Alert.new(variant: :error, id: "gallery-api-webhooks-form-error") do |alert|
+            section.status NitroKit::Alert.new(variant: :destructive, id: "gallery-api-webhooks-form-error") do |alert|
               alert.title("Endpoint was not created")
               alert.description("Use an HTTPS URL, choose at least one allowed event, and provide a recognizable endpoint name.")
             end
@@ -183,7 +183,7 @@ module Gallery
       end
 
       def render_delivery(kind)
-        variant = { success: :success, failed: :error, retrying: :warning }.fetch(kind)
+        variant = { success: :success, failed: :destructive, retrying: :warning }.fetch(kind)
         title = { success: "Delivery accepted", failed: "Delivery failed", retrying: "Delivery retry scheduled" }.fetch(kind)
         description = {
           success: "The endpoint returned HTTP 202 in 184 ms.",
@@ -304,7 +304,7 @@ module Gallery
           card.body do
             render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Flex.new(dir: :row, gap: 2, align: :center) do
-                render NitroKit::Badge.new("Failing", color: :danger)
+                render NitroKit::Badge.new("Failing", color: :destructive)
               end
               p { "https://api.example.test/hooks/nitro" }
               p { "Last response: HTTP 500 · attempt 3 scheduled" }
@@ -332,7 +332,7 @@ module Gallery
       end
 
       def webhook_status_color(status)
-        { healthy: :success, failing: :danger, disabled: :neutral }.fetch(status)
+        { healthy: :success, failing: :destructive, disabled: :neutral }.fetch(status)
       end
 
       def webhook_title

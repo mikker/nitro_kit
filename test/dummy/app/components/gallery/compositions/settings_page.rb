@@ -74,7 +74,7 @@ module Gallery
           id: "gallery-settings-profile-section"
         ) do |section|
           if state == "profile-validation"
-            section.status NitroKit::Alert.new(id: "gallery-settings-profile-error", variant: :error) do |alert|
+            section.status NitroKit::Alert.new(id: "gallery-settings-profile-error", variant: :destructive) do |alert|
               alert.title("Profile needs attention")
               alert.description(profile.errors.full_messages.to_sentence)
             end
@@ -365,7 +365,7 @@ module Gallery
       def render_integration_error
         integration = Gallery::Data.integrations.fetch(1)
 
-        render NitroKit::Alert.new(id: "gallery-settings-integrations-error", variant: :error) do |alert|
+        render NitroKit::Alert.new(id: "gallery-settings-integrations-error", variant: :destructive) do |alert|
           alert.title("Slack connection expired")
           alert.description("Reconnect before workspace notifications can be delivered again.")
         end
@@ -538,7 +538,7 @@ module Gallery
       end
 
       def integration_color(status)
-        { connected: :success, action_required: :danger, available: :neutral }.fetch(status)
+        { connected: :success, action_required: :destructive, available: :neutral }.fetch(status)
       end
 
 

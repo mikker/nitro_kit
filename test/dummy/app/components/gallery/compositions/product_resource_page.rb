@@ -341,7 +341,7 @@ module Gallery
           if validation_state?
             section.status NitroKit::Alert.new(
               id: "gallery-product-resource-form-error",
-              variant: :error,
+              variant: :destructive,
               live: :assertive
             ) do |alert|
               alert.title("Product details need attention")

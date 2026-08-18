@@ -66,7 +66,7 @@ class GalleryAuthShellTest < ActionDispatch::IntegrationTest
     end
 
     assert_select "turbo-frame#gallery-auth-shell-frame > #gallery-auth-shell-turbo[data-nk='auth-shell']"
-    assert_select "#gallery-auth-shell-validation-alert[data-variant='error']"
+    assert_select "#gallery-auth-shell-validation-alert[data-variant='destructive']"
     assert_select "#gallery-auth-shell-validation-form > [data-nk='field-group']", count: 1
     assert_select "#gallery-auth-shell-validation-form [data-nk='field'][data-state='invalid']", minimum: 2
     assert_select "#gallery-auth-shell-success-alert[data-variant='success']"

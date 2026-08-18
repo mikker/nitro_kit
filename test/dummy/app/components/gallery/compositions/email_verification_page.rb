@@ -102,7 +102,7 @@ module Gallery
 
       def alert_variant
         return :success if state == "verified"
-        return :error if state == "invalid-token"
+        return :destructive if state == "invalid-token"
         return :warning if state == "expired"
 
         :default

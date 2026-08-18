@@ -83,7 +83,7 @@ class ApplicationCombinationsGalleryTest < ActionDispatch::IntegrationTest
       assert_select "input[type='file'][name='project_import[files][]']:not([data-direct-upload-url])", count: 1
     end
     assert_select "#gallery-sidebar-application-error[data-theme='dark']" do
-      assert_select "[data-nk='alert'][data-variant='error']", count: 1
+      assert_select "[data-nk='alert'][data-variant='destructive']", count: 1
       assert_select "[data-nk='details-table'] [data-slot='details-table-empty']", count: 2
       assert_select "[data-nk='dialog']", count: 1
     end
@@ -134,7 +134,7 @@ class ApplicationCombinationsGalleryTest < ActionDispatch::IntegrationTest
       assert_select "[data-slot='page-header-description']", count: 0
     end
     assert_select "#gallery-hybrid-application-error[data-theme='dark']" do
-      assert_select "[data-nk='alert'][data-variant='error']", count: 1
+      assert_select "[data-nk='alert'][data-variant='destructive']", count: 1
       assert_select "[data-nk='fieldset'][disabled]", count: 1
       assert_select "[data-nk='field'][data-state='invalid']", count: 2
       assert_select "#gallery-hybrid-application-access-submit[disabled]", count: 1

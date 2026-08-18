@@ -239,7 +239,7 @@ module Gallery
       end
 
       def render_validation_summary(onboarding)
-        render NitroKit::Alert.new(id: "gallery-onboarding-validation", variant: :error) do |alert|
+        render NitroKit::Alert.new(id: "gallery-onboarding-validation", variant: :destructive) do |alert|
           alert.title("Workspace details need attention")
           alert.description(onboarding.errors.full_messages.to_sentence)
         end

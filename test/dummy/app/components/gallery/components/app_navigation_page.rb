@@ -174,7 +174,7 @@ module Gallery
                   href: "#item-attributes-incidents",
                   icon: :siren,
                   badge: 3,
-                  badge_color: :danger,
+                  badge_color: :destructive,
                   current: true,
                   data: { turbo_frame: "gallery-content" }
                 )

@@ -45,7 +45,7 @@ APIs or examples.
    through `html:`, `aria:`, or `data:`, explicitly name icon-only Buttons and
    triggers, and give custom `form.field` blocks explicit labels.
 10. Translate the application's existing semantic theme into documented public
-    `--nk-*` tokens. Preserve primary, focus, danger, neutral, font, density, and
+    `--nk-*` tokens. Preserve primary, focus, destructive, neutral, font, density, and
     radius decisions rather than selecting visually similar raw palette values.
     Use `--nk-button-radius` when buttons intentionally have a different shape
     from inputs and surfaces.

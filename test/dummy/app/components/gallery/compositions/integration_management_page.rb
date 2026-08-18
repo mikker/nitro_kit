@@ -144,7 +144,7 @@ module Gallery
         ) do |section|
           if invalid
             section.status NitroKit::Alert.new(
-              variant: :error,
+              variant: :destructive,
               id: "gallery-integration-configuration-error"
             ) do |alert|
               alert.title("Notifications cannot be delivered")
@@ -268,7 +268,7 @@ module Gallery
       end
 
       def provider_status_color(status)
-        { available: :info, connected: :success, configuration_error: :danger }.fetch(status)
+        { available: :info, connected: :success, configuration_error: :destructive }.fetch(status)
       end
 
       def integration_title

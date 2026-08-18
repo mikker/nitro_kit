@@ -23,7 +23,7 @@ module Gallery
               description: "Public details shown to workspace members.",
               id: "gallery-settings-section-validation"
             ) do |section|
-              section.status NitroKit::Alert.new(variant: :error, id: "gallery-settings-section-validation-status") do |alert|
+              section.status NitroKit::Alert.new(variant: :destructive, id: "gallery-settings-section-validation-status") do |alert|
                 alert.title("Profile was not saved")
                 alert.description("Correct the highlighted name and email fields.")
               end

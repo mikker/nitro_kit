@@ -30,7 +30,7 @@ rather than a moving Git branch.
 3. Record behavior that must survive: native element, submitted method and
    parameters, Turbo target, accessible name and description, focus behavior,
    narrow-screen presentation, empty/error state, and visual density.
-4. Inventory the existing semantic primary, focus, danger, neutral, font,
+4. Inventory the existing semantic primary, focus, destructive, neutral, font,
    density, and radius decisions. Translate those roles to public `--nk-*`
    tokens rather than choosing similar raw palette values. Record separately
    when buttons use a distinct shape from inputs and surfaces.

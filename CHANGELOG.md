@@ -42,6 +42,15 @@
 
 ### Breaking changes
 
+- Settle the destructive vocabulary on two deliberate spellings. Actions and
+  Alert say `destructive`: Button and Dropdown items keep their variant,
+  and Alert renames its `:error` variant to `:destructive`. Toast items
+  keep `:error`, the announcement spelling, and both resolve to the same
+  tint family in the shared palette. Badge and AppNavigation rename their
+  `danger` semantic color to `destructive`, and the tokens follow:
+  `--nk-color-danger*` becomes `--nk-color-destructive*` and
+  `--nk-palette-danger*` becomes `--nk-palette-destructive*`. Form and
+  field error semantics are unchanged.
 - Remove `Alert::VARIANT_PALETTE`. Alert variants resolve through the shared
   semantic palette instead of mapping to hue families.
 - Remove `zinc` from `Badge`'s color vocabulary; use `neutral`, which renders

@@ -31,6 +31,6 @@
         > [data-slot="rich-text-area-editor"]
         > [aria-invalid="true"]
     ) {
-    border-color: var(--nk-color-danger);
+    border-color: var(--nk-color-destructive);
   }
 }

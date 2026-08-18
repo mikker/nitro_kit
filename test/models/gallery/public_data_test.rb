@@ -19,7 +19,7 @@ class Gallery::PublicDataTest < ActiveSupport::TestCase
     assert_equal "403", Gallery::PublicData.system_status("403").code
     assert_equal "429", Gallery::PublicData.system_status("rate-limited").code
     assert_equal "42 seconds", Gallery::PublicData.system_status("rate-limited").retry_after
-    assert_equal :error, Gallery::PublicData.system_status("500").variant
+    assert_equal :destructive, Gallery::PublicData.system_status("500").variant
     assert_equal :warning, Gallery::PublicData.system_status("degraded").variant
     assert_raises(KeyError) { Gallery::PublicData.system_status("invented") }
   end

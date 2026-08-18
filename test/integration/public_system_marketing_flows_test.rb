@@ -177,7 +177,7 @@ class PublicSystemMarketingFlowsTest < ActionDispatch::IntegrationTest
     end
 
     get_flow("contact", "validation")
-    assert_select "#gallery-contact-validation[data-variant='error']"
+    assert_select "#gallery-contact-validation[data-variant='destructive']"
     assert_select "#gallery-contact-form [data-nk='field'][data-state='invalid']", count: 4
     assert_select "#contact_email[aria-invalid='true'][value='invalid']"
 

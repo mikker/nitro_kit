@@ -96,6 +96,6 @@
   }
 
   :where([data-nk="input"][aria-invalid="true"]) {
-    border-color: var(--nk-color-danger);
+    border-color: var(--nk-color-destructive);
   }
 }
