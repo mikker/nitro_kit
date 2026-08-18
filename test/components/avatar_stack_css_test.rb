@@ -21,11 +21,16 @@ class AvatarStackCssTest < ActiveSupport::TestCase
     assert_includes source_css, rule
   end
 
-  test "the overflow indicator declares a fill instead of its own background" do
+  test "the overflow indicator dresses like the avatar fallbacks" do
     rule = ':where([data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"])'
 
+    refute_match(
+      /#{Regexp.escape(rule)}\s*\{[^}]*--_nk-avatar-stack-fill:/,
+      source_css,
+      "the chip inherits the shared fallback fill rather than overriding it"
+    )
     assert_match(
-      /#{Regexp.escape(rule)}\s*\{[^}]*--_nk-avatar-stack-fill: var\(--nk-color-elevated\);/,
+      /#{Regexp.escape(rule)}\s*\{[^}]*border: var\(--nk-border-width\) solid\s*color-mix\(in oklab, var\(--nk-color-foreground\) 10%, transparent\);/m,
       source_css
     )
     refute_match(/#{Regexp.escape(rule)}\s*\{[^}]*background-color:/, source_css)

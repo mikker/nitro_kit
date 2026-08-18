@@ -45,9 +45,9 @@
     margin-inline-start: 0;
   }
 
+  /* The chip is one of the heads: same fill as the avatar fallbacks and the
+     same hairline ring, drawn as a real border since nothing overlaps it. */
   :where([data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]) {
-    --_nk-avatar-stack-fill: var(--nk-color-elevated);
-
     /* Preceding avatars are positioned, so the overflow chip must be too or
        their paint order covers its leading "+". */
     position: relative;
@@ -56,6 +56,8 @@
     font-weight: var(--nk-font-weight-semibold);
     line-height: 1;
     color: var(--nk-color-muted-foreground);
+    border: var(--nk-border-width) solid
+      color-mix(in oklab, var(--nk-color-foreground) 10%, transparent);
     border-radius: var(--nk-radius-full);
   }
 

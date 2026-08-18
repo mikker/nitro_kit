@@ -95,6 +95,9 @@
 - Dim Table's sort indicator through the color channel instead of a raw
   `opacity`, and guard the remaining control transitions and the
   DetailsTable hover for reduced motion and touch.
+- Dress the AvatarStack overflow chip as one of the heads: the same neutral
+  fill as the avatar fallbacks and the same hairline ring, instead of an
+  elevated fill with no ring.
 - Read data-entry controls and the default Button at `--nk-text-sm` on fine
   pointers and `--nk-text-base` on coarse ones, where iOS Safari zooms a
   focused control below 16px. The pair stays matched in both modes; Select
