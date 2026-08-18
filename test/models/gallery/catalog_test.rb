@@ -8,7 +8,7 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
     assert_equal %w[theme], Gallery::Catalog.collection!(:foundation).categories.map(&:slug)
     assert_equal %w[colors typography spacing-sizing effects], Gallery::Catalog.entries(kind: :foundation).map(&:slug)
     assert_equal(
-      %w[primitives forms overlays feedback data navigation layout application],
+      %w[actions forms overlays feedback data navigation layout application],
       Gallery::Catalog.collection!(:component).categories.map(&:slug)
     )
     assert_equal %w[
@@ -17,14 +17,14 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
     ], Gallery::Catalog.collection!(:composition).categories.map(&:slug)
     assert_equal(
       {
-        "primitives" => %w[avatar avatar-stack badge button button-group button-to icon],
+        "actions" => %w[button button-group button-to],
         "forms" => %w[
           appearance-picker checkbox checkbox-group combobox control-group dropzone field field-group fieldset input
           label radio-button radio-button-group rich-text-area select switch textarea
         ],
         "overlays" => %w[command-palette dialog dropdown sheet tooltip],
         "feedback" => %w[alert empty-state toast],
-        "data" => %w[accordion details-table progressive-image stat-grid table typeset],
+        "data" => %w[accordion avatar avatar-stack badge details-table icon progressive-image stat-grid table typeset],
         "navigation" => %w[pagination pagination-bar tabs toolbar],
         "layout" => %w[card container flex grid],
         "application" => %w[

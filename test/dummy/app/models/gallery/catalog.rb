@@ -74,7 +74,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :primitives,
+        subcategory: :actions,
         slug: "button",
         title: "Button",
         description: "Native buttons and links with typed variants, sizes, and icons.",
@@ -84,7 +84,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :primitives,
+        subcategory: :actions,
         slug: "button-to",
         title: "Button to",
         description: "A Rails method form with one typed submit Button and layout-transparent form root.",
@@ -94,7 +94,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :primitives,
+        subcategory: :data,
         slug: "icon",
         title: "Icon",
         description: "Lucide icons with decorative and labelled semantics.",
@@ -104,7 +104,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :primitives,
+        subcategory: :actions,
         slug: "button-group",
         title: "Button group",
         description: "One labelled action group containing typed Button children.",
@@ -404,7 +404,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :primitives,
+        subcategory: :data,
         slug: "avatar",
         title: "Avatar",
         description: "Images and accessible initial fallbacks at predictable sizes.",
@@ -424,7 +424,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :primitives,
+        subcategory: :data,
         slug: "avatar-stack",
         title: "Avatar stack",
         description: "A labelled group of consistently sized avatars with overflow state.",
@@ -434,7 +434,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :primitives,
+        subcategory: :data,
         slug: "badge",
         title: "Badge",
         description: "Compact status labels with typed color, variant, and size.",
@@ -1034,14 +1034,14 @@ module Gallery
     end
 
     # Component subcategories, in sidebar order. Every component entry declares
-    # exactly one of these slugs. Primitives lead, roles follow, and the
+    # exactly one of these slugs. Actions lead, roles follow, and the
     # application chrome closes the list.
     SUBCATEGORIES = [
-      [ :primitives, "Primitives", "Buttons, icons, badges, and identity." ],
+      [ :actions, "Actions", "Buttons and grouped actions." ],
       [ :forms, "Forms", "Controls, fields, and form structure." ],
       [ :overlays, "Overlays", "Dialogs, sheets, menus, and floating surfaces." ],
       [ :feedback, "Feedback", "Status, guidance, and empty results." ],
-      [ :data, "Data display", "Tables, records, media, and prose." ],
+      [ :data, "Data display", "Tables, records, media, identity, and prose." ],
       [ :navigation, "Navigation", "Tabs, toolbars, and pagination." ],
       [ :layout, "Layout", "Flex, grid, and content structure." ],
       [ :application, "Application", "Shells, sections, and page chrome." ]
