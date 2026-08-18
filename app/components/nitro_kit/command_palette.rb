@@ -254,6 +254,7 @@ module NitroKit
               nk__dialog_target: "panel",
               nk__command_palette_target: "panel",
               action: [
+                "command->nk--command-palette#guardOpen",
                 "click->nk--dialog#dismiss",
                 "cancel->nk--dialog#cancel",
                 "close->nk--dialog#restoreFocus",

@@ -22,8 +22,6 @@ export default class extends Controller {
     this.connected = true;
     this.restoreFocus = true;
     this.loadedQuery = this.inputTarget.value;
-    this.triggerTarget.removeAttribute("command");
-    this.triggerTarget.removeAttribute("commandfor");
     this.searchTarget.hidden = false;
     this.element.dataset.enhanced = "true";
   }
@@ -53,8 +51,6 @@ export default class extends Controller {
       });
     if (empty) empty.hidden = true;
     if (status) status.textContent = "";
-    trigger?.setAttribute("command", "show-modal");
-    trigger?.setAttribute("commandfor", panel.id);
     if (search) search.hidden = true;
     delete this.element.dataset.enhanced;
   }
@@ -70,6 +66,10 @@ export default class extends Controller {
     this.restoreFocus = true;
     clearTimeout(this.openTimer);
     this.openTimer = setTimeout(() => this.#prepareOpenPanel(), 0);
+  }
+
+  guardOpen(event) {
+    if (event.command === "show-modal" && !this.canOpen) event.preventDefault();
   }
 
   shortcut(event) {

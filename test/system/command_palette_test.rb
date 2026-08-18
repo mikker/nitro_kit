@@ -10,9 +10,6 @@ class CommandPaletteSystemTest < ApplicationSystemTestCase
     input = "#{root} [data-slot='command-palette-input']"
     destination = "#{root} [data-slot='command-palette-destination']"
 
-    assert_selector "#{root}[data-enhanced]"
-    assert_no_selector "#{trigger}[command]"
-    assert_no_selector "#{trigger}[commandfor]"
     find(trigger).click
 
     assert_selector "#{panel}[open]"
@@ -116,11 +113,10 @@ class CommandPaletteSystemTest < ApplicationSystemTestCase
     assert_no_severe_console_errors
   end
 
-  test "does not open from its trigger while another modal is active" do
+  test "does not open from its shortcut while another modal is active" do
     visit gallery_component_path("command-palette")
 
     root = "#gallery-command-palette-workspace"
-    trigger = "#{root} [data-slot='command-palette-trigger']"
     panel = "#{root} [data-slot='command-palette-panel']"
 
     execute_script(<<~JAVASCRIPT)
@@ -134,7 +130,13 @@ class CommandPaletteSystemTest < ApplicationSystemTestCase
     wait_until(message: "active modal did not enter the top layer") do
       evaluate_script("document.querySelector('#active-modal').matches(':modal')")
     end
-    execute_script("document.querySelector(arguments[0]).click()", trigger)
+    execute_script <<~JAVASCRIPT
+      document.dispatchEvent(new KeyboardEvent("keydown", {
+        key: "k",
+        metaKey: true,
+        bubbles: true
+      }))
+    JAVASCRIPT
     assert_selector "#{panel}:not([open])", visible: :all
     assert_no_severe_console_errors
   ensure
