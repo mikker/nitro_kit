@@ -86,6 +86,14 @@
 
 ### Changed
 
+- Align the default radius at `--nk-radius-lg` (8px): inputs, selects,
+  textareas, the rich text editor, navigation rows, pagination links,
+  dropzone, grouped choice frames, and the segmented appearance picker now
+  share Button's radius instead of sitting one step smaller. Nested pieces
+  are concentric — inner radius is the container's minus its padding — so
+  segmented options, dropdown items, combobox options, and command palette
+  destinations sit flush inside their containers. Buttons' smaller sizes
+  keep their own ramp; badges, tooltips, and chips keep their compact radii.
 - Lower the default control height from 40px to 36px:
   `--nk-control-height-md` is now `2.25rem`, so medium buttons, inputs,
   selects, menu rows, and the choice controls' hit areas tighten together.

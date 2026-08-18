@@ -1123,7 +1123,7 @@
     list-style: none;
     user-select: none;
     cursor: pointer;
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);
@@ -1176,7 +1176,7 @@
     font-weight: var(--nk-font-weight-medium);
     line-height: var(--nk-leading-tight);
     text-decoration: none;
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);
@@ -1298,7 +1298,7 @@
     color: var(--nk-color-primary-foreground);
     text-decoration: none;
     background: var(--nk-color-primary);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     transform: translateY(calc(-100% - (var(--nk-space) * 4)));
     transition: transform var(--nk-duration-fast) var(--nk-ease);
@@ -1353,7 +1353,7 @@
     cursor: pointer;
     background: transparent;
     border: 0;
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     transition:
       background-color var(--nk-duration-fast) var(--nk-ease),
       scale var(--nk-duration-fast) var(--nk-ease);
@@ -1932,7 +1932,7 @@
     gap: 0;
     padding: var(--nk-space);
     background: var(--nk-color-muted);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 
   :where([data-nk="appearance-picker"] [data-slot="appearance-picker-option"]) {
@@ -1962,7 +1962,7 @@
     flex: 1 1 0;
     justify-content: center;
     padding-inline: calc(var(--nk-space) * 3);
-    border-radius: calc(var(--nk-radius-md) - var(--nk-space));
+    border-radius: calc(var(--nk-radius-lg) - var(--nk-space));
   }
 
   :where(
@@ -1986,7 +1986,7 @@
     font: inherit;
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 }
 
@@ -2961,7 +2961,7 @@
     padding: calc(var(--nk-space) * 3);
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 }
 
@@ -3048,7 +3048,7 @@
     font-size: var(--nk-text-sm);
     line-height: var(--nk-leading-normal);
     cursor: pointer;
-    border-radius: var(--nk-radius-md);
+    border-radius: calc(var(--nk-radius-lg) - var(--nk-space));
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);
@@ -3152,7 +3152,7 @@
     background: var(--nk-color-surface);
     border-color: var(--nk-color-border);
     border-block-end-color: var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     box-shadow: none;
   }
 
@@ -3349,7 +3349,7 @@
     font-size: var(--nk-text-sm);
     line-height: var(--nk-leading-normal);
     text-decoration: none;
-    border-radius: var(--nk-radius-md);
+    border-radius: calc(var(--nk-radius-xl) - var(--nk-space) * 2);
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);
@@ -3555,8 +3555,8 @@
           span[data-slot="control-group-addon"]
         ):first-child
     ) {
-    border-start-start-radius: var(--nk-radius-md);
-    border-end-start-radius: var(--nk-radius-md);
+    border-start-start-radius: var(--nk-radius-lg);
+    border-end-start-radius: var(--nk-radius-lg);
   }
 
   :where(
@@ -3567,8 +3567,8 @@
           span[data-slot="control-group-addon"]
         ):last-child
     ) {
-    border-start-end-radius: var(--nk-radius-md);
-    border-end-end-radius: var(--nk-radius-md);
+    border-start-end-radius: var(--nk-radius-lg);
+    border-end-end-radius: var(--nk-radius-lg);
   }
 
   :where(
@@ -3614,13 +3614,13 @@
   }
 
   :where([data-nk="control-group"] > [data-nk="select"]:first-child > select) {
-    border-start-start-radius: var(--nk-radius-md);
-    border-end-start-radius: var(--nk-radius-md);
+    border-start-start-radius: var(--nk-radius-lg);
+    border-end-start-radius: var(--nk-radius-lg);
   }
 
   :where([data-nk="control-group"] > [data-nk="select"]:last-child > select) {
-    border-start-end-radius: var(--nk-radius-md);
-    border-end-end-radius: var(--nk-radius-md);
+    border-start-end-radius: var(--nk-radius-lg);
+    border-end-end-radius: var(--nk-radius-lg);
   }
 }
 
@@ -3923,7 +3923,7 @@
     cursor: pointer;
     background: transparent;
     border: 0;
-    border-radius: var(--nk-radius-md);
+    border-radius: calc(var(--nk-radius-lg) - var(--nk-space));
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);
@@ -4068,7 +4068,7 @@
     color: var(--nk-color-foreground);
     background: var(--nk-color-canvas);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 
   :where(
@@ -4117,7 +4117,7 @@
     padding: calc(var(--nk-space) * 2);
     background: var(--nk-color-canvas);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 
   :where([data-nk="dropzone"] [data-slot="dropzone-preview-image"]) {
@@ -5272,7 +5272,7 @@
     font-size: var(--nk-text-sm);
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     transition:
       border-color var(--nk-duration-normal) var(--nk-ease),
       box-shadow var(--nk-duration-normal) var(--nk-ease);
@@ -5991,7 +5991,7 @@
     font-size: var(--nk-text-sm);
     font-weight: var(--nk-font-weight-medium);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 
   :where(
@@ -6564,7 +6564,7 @@
     padding: calc(var(--nk-space) * 3);
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 
   :where(
@@ -6575,7 +6575,7 @@
     gap: 0;
     padding: var(--nk-space);
     background: var(--nk-color-muted);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 
   :where(
@@ -6585,7 +6585,7 @@
     ) {
     min-inline-size: 0;
     padding-inline: calc(var(--nk-space) * 3);
-    border-radius: calc(var(--nk-radius-md) - var(--nk-space));
+    border-radius: calc(var(--nk-radius-lg) - var(--nk-space));
   }
 
   :where(
@@ -6643,7 +6643,7 @@
       [data-nk="radio-button-group"][data-presentation="segmented"]
         [data-slot="radio-button-control"]:focus-visible
     ) {
-    border-radius: calc(var(--nk-radius-md) - var(--nk-space));
+    border-radius: calc(var(--nk-radius-lg) - var(--nk-space));
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: calc(var(--nk-focus-offset) * -1);
   }
@@ -6664,7 +6664,7 @@
     --lexxy-color-ink-lightest: var(--nk-color-muted);
     --lexxy-color-selected: var(--nk-color-muted);
     --lexxy-color-selected-hover: var(--nk-color-border);
-    --lexxy-radius: var(--nk-radius-md);
+    --lexxy-radius: var(--nk-radius-lg);
     display: block;
     inline-size: 100%;
   }
@@ -6707,7 +6707,7 @@
     appearance: none;
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     transition:
       border-color var(--nk-duration-normal) var(--nk-ease),
       box-shadow var(--nk-duration-normal) var(--nk-ease);
@@ -6807,7 +6807,7 @@
     font-weight: var(--nk-font-weight-medium);
     line-height: var(--nk-leading-tight);
     text-decoration: none;
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);
@@ -7578,7 +7578,7 @@
     resize: vertical;
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     transition:
       border-color var(--nk-duration-normal) var(--nk-ease),
       box-shadow var(--nk-duration-normal) var(--nk-ease);

@@ -81,7 +81,7 @@
     list-style: none;
     user-select: none;
     cursor: pointer;
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);
@@ -134,7 +134,7 @@
     font-weight: var(--nk-font-weight-medium);
     line-height: var(--nk-leading-tight);
     text-decoration: none;
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);

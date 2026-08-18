@@ -13,7 +13,7 @@
     background: var(--nk-color-surface);
     border-color: var(--nk-color-border);
     border-block-end-color: var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     box-shadow: none;
   }
 
@@ -210,7 +210,7 @@
     font-size: var(--nk-text-sm);
     line-height: var(--nk-leading-normal);
     text-decoration: none;
-    border-radius: var(--nk-radius-md);
+    border-radius: calc(var(--nk-radius-xl) - var(--nk-space) * 2);
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);

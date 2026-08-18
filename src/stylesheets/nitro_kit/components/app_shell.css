@@ -24,7 +24,7 @@
     color: var(--nk-color-primary-foreground);
     text-decoration: none;
     background: var(--nk-color-primary);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     transform: translateY(calc(-100% - (var(--nk-space) * 4)));
     transition: transform var(--nk-duration-fast) var(--nk-ease);
@@ -79,7 +79,7 @@
     cursor: pointer;
     background: transparent;
     border: 0;
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     transition:
       background-color var(--nk-duration-fast) var(--nk-ease),
       scale var(--nk-duration-fast) var(--nk-ease);

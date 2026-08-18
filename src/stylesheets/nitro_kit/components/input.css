@@ -10,7 +10,7 @@
     font-size: var(--nk-text-sm);
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     transition:
       border-color var(--nk-duration-normal) var(--nk-ease),
       box-shadow var(--nk-duration-normal) var(--nk-ease);

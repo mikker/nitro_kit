@@ -102,7 +102,7 @@
     font-size: var(--nk-text-sm);
     font-weight: var(--nk-font-weight-medium);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 
   :where(

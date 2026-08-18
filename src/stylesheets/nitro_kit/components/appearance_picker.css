@@ -48,7 +48,7 @@
     gap: 0;
     padding: var(--nk-space);
     background: var(--nk-color-muted);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 
   :where([data-nk="appearance-picker"] [data-slot="appearance-picker-option"]) {
@@ -78,7 +78,7 @@
     flex: 1 1 0;
     justify-content: center;
     padding-inline: calc(var(--nk-space) * 3);
-    border-radius: calc(var(--nk-radius-md) - var(--nk-space));
+    border-radius: calc(var(--nk-radius-lg) - var(--nk-space));
   }
 
   :where(
@@ -102,7 +102,7 @@
     font: inherit;
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 }
 

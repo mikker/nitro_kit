@@ -56,7 +56,7 @@
     cursor: pointer;
     background: transparent;
     border: 0;
-    border-radius: var(--nk-radius-md);
+    border-radius: calc(var(--nk-radius-lg) - var(--nk-space));
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);

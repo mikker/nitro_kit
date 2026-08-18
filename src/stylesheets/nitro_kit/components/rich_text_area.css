@@ -12,7 +12,7 @@
     --lexxy-color-ink-lightest: var(--nk-color-muted);
     --lexxy-color-selected: var(--nk-color-muted);
     --lexxy-color-selected-hover: var(--nk-color-border);
-    --lexxy-radius: var(--nk-radius-md);
+    --lexxy-radius: var(--nk-radius-lg);
     display: block;
     inline-size: 100%;
   }
