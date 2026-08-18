@@ -301,8 +301,8 @@
 
 @layer nitro-kit.compound {
   :where([data-nk="button"] > [data-slot="button-label"] > [data-nk="avatar"]) {
-    width: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size));
-    height: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size));
+    inline-size: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size));
+    block-size: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size));
     font-size: min(
       var(--_nk-avatar-font-size),
       var(--_nk-button-avatar-font-size)

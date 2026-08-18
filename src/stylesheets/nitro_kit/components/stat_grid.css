@@ -21,7 +21,7 @@
     display: grid;
     align-content: start;
     gap: calc(var(--nk-space) * 2);
-    min-height: 100%;
+    min-block-size: 100%;
     padding: calc(var(--nk-space) * 5);
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);

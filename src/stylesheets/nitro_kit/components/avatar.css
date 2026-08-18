@@ -4,8 +4,8 @@
     display: inline-grid;
     flex: none;
     place-items: center;
-    width: var(--_nk-avatar-size);
-    height: var(--_nk-avatar-size);
+    inline-size: var(--_nk-avatar-size);
+    block-size: var(--_nk-avatar-size);
     overflow: hidden;
     font-size: var(--_nk-avatar-font-size);
     font-weight: var(--nk-font-weight-medium);
@@ -32,8 +32,8 @@
       [data-nk="avatar"] > [data-slot="avatar-image"]
     ) {
     grid-area: 1 / 1;
-    width: 100%;
-    height: 100%;
+    inline-size: 100%;
+    block-size: 100%;
     border-radius: inherit;
   }
 

@@ -29,8 +29,8 @@
 
   :where([data-nk="combobox"] > [data-slot="combobox-status"]) {
     position: absolute;
-    width: 1px;
-    height: 1px;
+    inline-size: 1px;
+    block-size: 1px;
     padding: 0;
     margin: -1px;
     overflow: hidden;
@@ -44,7 +44,7 @@
     position: fixed;
     z-index: 50;
     inline-size: max(var(--_nk-combobox-width, 12rem), 12rem);
-    max-inline-size: min(28rem, calc(100vw - (var(--nk-space) * 8)));
+    max-inline-size: min(28rem, calc(100% - (var(--nk-space) * 8)));
     max-block-size: 15rem;
     margin-block: var(--nk-space);
     padding: var(--nk-space);

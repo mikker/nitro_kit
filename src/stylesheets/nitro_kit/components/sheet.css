@@ -7,7 +7,7 @@
     position: fixed;
     inset-block: 0;
     max-block-size: none;
-    height: 100dvh;
+    block-size: 100dvh;
     margin-block: 0;
     padding: calc(var(--nk-space) * 6);
     overflow: auto;
@@ -28,15 +28,15 @@
   }
 
   :where([data-nk="sheet"][data-size="sm"] > [data-slot="sheet-panel"]) {
-    width: min(calc(100% - (var(--nk-space) * 8)), 20rem);
+    inline-size: min(calc(100% - (var(--nk-space) * 8)), 20rem);
   }
 
   :where([data-nk="sheet"][data-size="md"] > [data-slot="sheet-panel"]) {
-    width: min(calc(100% - (var(--nk-space) * 8)), 28rem);
+    inline-size: min(calc(100% - (var(--nk-space) * 8)), 28rem);
   }
 
   :where([data-nk="sheet"][data-size="lg"] > [data-slot="sheet-panel"]) {
-    width: min(calc(100% - (var(--nk-space) * 8)), 40rem);
+    inline-size: min(calc(100% - (var(--nk-space) * 8)), 40rem);
   }
 
   :where([data-nk="sheet"] > [data-slot="sheet-panel"])::backdrop {

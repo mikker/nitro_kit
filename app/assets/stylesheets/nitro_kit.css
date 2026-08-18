@@ -660,7 +660,7 @@
   /* Nitro-owned boxes never establish a min-content floor, so long slot
      content shrinks instead of overflowing its flex or grid parent. */
   :where([data-nk], [data-nk] [data-slot]) {
-    min-width: 0;
+    min-inline-size: 0;
   }
 
   :where(html, :host) {
@@ -760,7 +760,7 @@
   }
 
   :where(input)::-webkit-date-and-time-value {
-    min-height: 1lh;
+    min-block-size: 1lh;
     text-align: inherit;
   }
 
@@ -775,7 +775,7 @@
 
   :where(input)::-webkit-inner-spin-button,
   :where(input)::-webkit-outer-spin-button {
-    height: auto;
+    block-size: auto;
   }
 
   :where(input):-moz-ui-invalid {
@@ -805,12 +805,12 @@
   }
 
   :where(img, video) {
-    max-width: 100%;
-    height: auto;
+    max-inline-size: 100%;
+    block-size: auto;
   }
 
   :where(hr) {
-    height: 0;
+    block-size: 0;
     color: inherit;
     border-top-width: var(--nk-border-width);
   }
@@ -853,8 +853,8 @@
         > [data-slot="accordion-trigger"]
     ) {
     display: flex;
-    width: 100%;
-    min-height: var(--nk-control-height-lg);
+    inline-size: 100%;
+    min-block-size: var(--nk-control-height-lg);
     align-items: center;
     justify-content: space-between;
     gap: calc(var(--nk-space) * 3);
@@ -893,8 +893,8 @@
         > [data-slot="accordion-icon"]
     ) {
     flex: none;
-    width: var(--nk-icon-size-sm);
-    height: var(--nk-icon-size-sm);
+    inline-size: var(--nk-icon-size-sm);
+    block-size: var(--nk-icon-size-sm);
     color: var(--nk-color-muted-foreground);
     transition:
       color var(--nk-duration-fast) var(--nk-ease),
@@ -1732,7 +1732,7 @@
       flex-direction: column;
       inline-size: min(
         var(--nk-app-shell-sidebar-width),
-        calc(100vw - (var(--nk-space) * 12))
+        calc(100% - (var(--nk-space) * 12))
       );
       max-inline-size: 100%;
       block-size: 100vh;
@@ -1929,8 +1929,8 @@
 /* Source: src/stylesheets/nitro_kit/components/auth_shell.css */
 @layer nitro-kit.base {
   :where([data-nk="auth-shell"]) {
-    width: 100%;
-    min-width: 0;
+    inline-size: 100%;
+    min-inline-size: 0;
     padding-block: calc(var(--nk-space) * 8);
     padding-inline: calc(var(--nk-space) * 4);
   }
@@ -1943,8 +1943,8 @@
     display: inline-grid;
     flex: none;
     place-items: center;
-    width: var(--_nk-avatar-size);
-    height: var(--_nk-avatar-size);
+    inline-size: var(--_nk-avatar-size);
+    block-size: var(--_nk-avatar-size);
     overflow: hidden;
     font-size: var(--_nk-avatar-font-size);
     font-weight: var(--nk-font-weight-medium);
@@ -1971,8 +1971,8 @@
       [data-nk="avatar"] > [data-slot="avatar-image"]
     ) {
     grid-area: 1 / 1;
-    width: 100%;
-    height: 100%;
+    inline-size: 100%;
+    block-size: 100%;
     border-radius: inherit;
   }
 
@@ -2085,8 +2085,8 @@
       [data-nk="avatar-stack"][data-size="xs"]
         > [data-slot="avatar-stack-overflow"]
     ) {
-    width: var(--nk-avatar-size-xs);
-    height: var(--nk-avatar-size-xs);
+    inline-size: var(--nk-avatar-size-xs);
+    block-size: var(--nk-avatar-size-xs);
     font-size: calc(var(--nk-text-xs) * 0.875);
   }
 
@@ -2094,8 +2094,8 @@
       [data-nk="avatar-stack"][data-size="sm"]
         > [data-slot="avatar-stack-overflow"]
     ) {
-    width: var(--nk-avatar-size-sm);
-    height: var(--nk-avatar-size-sm);
+    inline-size: var(--nk-avatar-size-sm);
+    block-size: var(--nk-avatar-size-sm);
     font-size: var(--nk-text-xs);
   }
 
@@ -2103,8 +2103,8 @@
       [data-nk="avatar-stack"][data-size="md"]
         > [data-slot="avatar-stack-overflow"]
     ) {
-    width: var(--nk-avatar-size-md);
-    height: var(--nk-avatar-size-md);
+    inline-size: var(--nk-avatar-size-md);
+    block-size: var(--nk-avatar-size-md);
     font-size: var(--nk-text-sm);
   }
 
@@ -2112,8 +2112,8 @@
       [data-nk="avatar-stack"][data-size="lg"]
         > [data-slot="avatar-stack-overflow"]
     ) {
-    width: var(--nk-avatar-size-lg);
-    height: var(--nk-avatar-size-lg);
+    inline-size: var(--nk-avatar-size-lg);
+    block-size: var(--nk-avatar-size-lg);
     font-size: var(--nk-text-base);
   }
 }
@@ -2125,7 +2125,7 @@
 
     display: inline-flex;
     align-items: center;
-    max-width: 100%;
+    max-inline-size: 100%;
     font-weight: var(--nk-font-weight-medium);
     line-height: var(--nk-leading-tight);
     color: var(--_nk-semantic-content);
@@ -2141,7 +2141,7 @@
   }
 
   :where([data-nk="badge"] > [data-slot="badge-label"]) {
-    min-width: 0;
+    min-inline-size: 0;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -2504,8 +2504,8 @@
 
 @layer nitro-kit.compound {
   :where([data-nk="button"] > [data-slot="button-label"] > [data-nk="avatar"]) {
-    width: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size));
-    height: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size));
+    inline-size: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size));
+    block-size: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size));
     font-size: min(
       var(--_nk-avatar-font-size),
       var(--_nk-button-avatar-font-size)
@@ -2903,8 +2903,8 @@
 
   :where([data-nk="combobox"] > [data-slot="combobox-status"]) {
     position: absolute;
-    width: 1px;
-    height: 1px;
+    inline-size: 1px;
+    block-size: 1px;
     padding: 0;
     margin: -1px;
     overflow: hidden;
@@ -2918,7 +2918,7 @@
     position: fixed;
     z-index: 50;
     inline-size: max(var(--_nk-combobox-width, 12rem), 12rem);
-    max-inline-size: min(28rem, calc(100vw - (var(--nk-space) * 8)));
+    max-inline-size: min(28rem, calc(100% - (var(--nk-space) * 8)));
     max-block-size: 15rem;
     margin-block: var(--nk-space);
     padding: var(--nk-space);
@@ -3104,8 +3104,8 @@
       [data-nk="command-palette"] [data-slot="command-palette-status"]
     ) {
     position: absolute;
-    width: 1px;
-    height: 1px;
+    inline-size: 1px;
+    block-size: 1px;
     padding: 0;
     margin: -1px;
     overflow: hidden;
@@ -3292,27 +3292,27 @@
 /* Source: src/stylesheets/nitro_kit/components/container.css */
 @layer nitro-kit.base {
   :where([data-nk="container"]) {
-    width: 100%;
-    min-width: 0;
+    inline-size: 100%;
+    min-inline-size: 0;
     margin-inline: auto;
   }
 }
 
 @layer nitro-kit.size {
   :where([data-nk="container"][data-size="sm"]) {
-    max-width: var(--nk-content-sm);
+    max-inline-size: var(--nk-content-sm);
   }
 
   :where([data-nk="container"][data-size="md"]) {
-    max-width: var(--nk-content-md);
+    max-inline-size: var(--nk-content-md);
   }
 
   :where([data-nk="container"][data-size="lg"]) {
-    max-width: var(--nk-content-lg);
+    max-inline-size: var(--nk-content-lg);
   }
 
   :where([data-nk="container"][data-size="xl"]) {
-    max-width: var(--nk-content-xl);
+    max-inline-size: var(--nk-content-xl);
   }
 }
 
@@ -3371,7 +3371,7 @@
   }
 
   :where([data-nk="control-group"] > [data-nk="select"] > select) {
-    height: 100%;
+    block-size: 100%;
     border-radius: 0;
   }
 
@@ -3494,7 +3494,7 @@
   }
 
   :where([data-nk="danger-zone"] [data-slot="danger-zone-description"]) {
-    max-width: var(--nk-content-lg);
+    max-inline-size: var(--nk-content-lg);
     font-size: var(--nk-text-sm);
     line-height: var(--nk-leading-relaxed);
     text-wrap: pretty;
@@ -3546,7 +3546,7 @@
   }
 
   :where([data-nk="data-section"] [data-slot="data-section-description"]) {
-    max-width: var(--nk-content-lg);
+    max-inline-size: var(--nk-content-lg);
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
     line-height: var(--nk-leading-relaxed);
@@ -3555,7 +3555,7 @@
 
   :where([data-nk="data-section"] > [data-slot="data-section-table"]),
   :where([data-nk="data-section"] > [data-slot="data-section-empty-state"]) {
-    width: 100%;
+    inline-size: 100%;
   }
 }
 
@@ -3713,7 +3713,7 @@
     z-index: 50;
     display: none;
     min-inline-size: 12rem;
-    max-inline-size: min(24rem, calc(100vw - (var(--nk-space) * 8)));
+    max-inline-size: min(24rem, calc(100% - (var(--nk-space) * 8)));
     max-block-size: min(24rem, calc(100dvh - (var(--nk-space) * 8)));
     inset: var(--nk-space);
     inset: var(--_nk-overlay-top, var(--nk-space)) auto auto
@@ -4305,7 +4305,7 @@
 @layer nitro-kit.base {
   :where([data-nk="flex"]) {
     display: flex;
-    min-width: 0;
+    min-inline-size: 0;
     flex-direction: var(--_nk-flex-direction);
     flex-wrap: var(--_nk-flex-wrap);
     gap: var(--_nk-layout-gap);
@@ -4762,7 +4762,7 @@
 @layer nitro-kit.base {
   :where([data-nk="grid"]) {
     display: grid;
-    min-width: 0;
+    min-inline-size: 0;
     grid-template-columns: repeat(var(--_nk-grid-columns), minmax(0, 1fr));
     gap: var(--_nk-layout-gap);
   }
@@ -5676,7 +5676,7 @@
   }
 
   :where([data-nk="page-header"] > [data-slot="page-header-title"]) {
-    max-width: var(--nk-content-lg);
+    max-inline-size: var(--nk-content-lg);
     font-size: var(--nk-title-page-size);
     font-weight: var(--nk-title-page-weight);
     line-height: var(--nk-leading-tight);
@@ -5684,7 +5684,7 @@
   }
 
   :where([data-nk="page-header"] > [data-slot="page-header-description"]) {
-    max-width: var(--nk-content-lg);
+    max-inline-size: var(--nk-content-lg);
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
     line-height: var(--nk-leading-relaxed);
@@ -5758,8 +5758,8 @@
         > [data-slot="pagination-ellipsis-label"]
     ) {
     position: absolute;
-    width: 1px;
-    height: 1px;
+    inline-size: 1px;
+    block-size: 1px;
     padding: 0;
     margin: -1px;
     overflow: hidden;
@@ -5857,7 +5857,7 @@
 @layer nitro-kit.base {
   :where([data-nk="pagination-bar"]) {
     display: flex;
-    min-width: 0;
+    min-inline-size: 0;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
@@ -5865,7 +5865,7 @@
   }
 
   :where([data-nk="pagination-bar"] > [data-slot="pagination-bar-summary"]) {
-    min-width: 0;
+    min-inline-size: 0;
     margin: 0;
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
@@ -6612,25 +6612,25 @@
     grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr);
     gap: calc(var(--nk-space) * 6);
     align-items: start;
-    min-width: 0;
+    min-inline-size: 0;
   }
 
   :where(
       [data-nk="settings-layout"] > [data-slot="settings-layout-navigation"],
       [data-nk="settings-layout"] > [data-slot="settings-layout-content"]
     ) {
-    min-width: 0;
+    min-inline-size: 0;
   }
 
   :where([data-nk="settings-layout"] [data-slot="settings-layout-items"]) {
     display: flex;
     flex-direction: column;
     gap: var(--nk-space);
-    min-width: 0;
+    min-inline-size: 0;
   }
 
   :where([data-nk="settings-layout"] [data-slot="settings-layout-item"]) {
-    min-width: 0;
+    min-inline-size: 0;
   }
 
   :where([data-nk="settings-layout"] [data-slot="settings-layout-item-link"]) {
@@ -6806,7 +6806,7 @@
     position: fixed;
     inset-block: 0;
     max-block-size: none;
-    height: 100dvh;
+    block-size: 100dvh;
     margin-block: 0;
     padding: calc(var(--nk-space) * 6);
     overflow: auto;
@@ -6827,15 +6827,15 @@
   }
 
   :where([data-nk="sheet"][data-size="sm"] > [data-slot="sheet-panel"]) {
-    width: min(calc(100% - (var(--nk-space) * 8)), 20rem);
+    inline-size: min(calc(100% - (var(--nk-space) * 8)), 20rem);
   }
 
   :where([data-nk="sheet"][data-size="md"] > [data-slot="sheet-panel"]) {
-    width: min(calc(100% - (var(--nk-space) * 8)), 28rem);
+    inline-size: min(calc(100% - (var(--nk-space) * 8)), 28rem);
   }
 
   :where([data-nk="sheet"][data-size="lg"] > [data-slot="sheet-panel"]) {
-    width: min(calc(100% - (var(--nk-space) * 8)), 40rem);
+    inline-size: min(calc(100% - (var(--nk-space) * 8)), 40rem);
   }
 
   :where([data-nk="sheet"] > [data-slot="sheet-panel"])::backdrop {
@@ -6942,7 +6942,7 @@
     display: grid;
     align-content: start;
     gap: calc(var(--nk-space) * 2);
-    min-height: 100%;
+    min-block-size: 100%;
     padding: calc(var(--nk-space) * 5);
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
@@ -7469,7 +7469,7 @@
     inset-block-end: calc(var(--nk-space) * 5);
     display: flex;
     flex-direction: column;
-    inline-size: min(26rem, calc(100vw - (var(--nk-space) * 10)));
+    inline-size: min(26rem, calc(100% - (var(--nk-space) * 10)));
     gap: calc(var(--nk-space) * 3);
     margin: 0;
     padding: 0;
@@ -7557,7 +7557,7 @@
 @layer nitro-kit.base {
   :where([data-nk="toolbar"]) {
     display: flex;
-    min-width: 0;
+    min-inline-size: 0;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
@@ -7569,7 +7569,7 @@
       [data-nk="toolbar"] > [data-slot="toolbar-trailing"]
     ) {
     display: flex;
-    min-width: 0;
+    min-inline-size: 0;
     /* Regions never exceed the toolbar, so nested content such as a
        scrolling ButtonGroup receives real width pressure when stacked. */
     max-inline-size: 100%;
@@ -7619,6 +7619,10 @@
     position: absolute;
     z-index: 50;
     inline-size: max-content;
+    /* Absolutely positioned inside its wrapper, so a percentage would resolve
+       against the trigger, not the viewport. 100vw can overshoot by a classic
+       scrollbar's width, but only below a 22.5rem viewport, where scrollbars
+       overlay. The fixed overlays use 100% of the initial containing block. */
     max-inline-size: min(20rem, calc(100vw - (var(--nk-space) * 8)));
     padding: calc(var(--nk-space) * 1.5) calc(var(--nk-space) * 2.5);
     color: var(--nk-color-foreground);
@@ -7848,7 +7852,7 @@
     border-radius: var(--nk-radius-sm);
   }
   :where([data-nk="typeset"]) > table:not([data-nk], [data-typeset="off"]) {
-    width: 100%;
+    inline-size: 100%;
     border-collapse: collapse;
     font-size: 0.925em;
   }
@@ -7992,7 +7996,7 @@
     }
 
     table {
-      width: 100%;
+      inline-size: 100%;
       border-collapse: collapse;
       font-size: 0.925em;
     }
@@ -8009,8 +8013,8 @@
     }
 
     :where(img, video, svg) {
-      max-width: 100%;
-      height: auto;
+      max-inline-size: 100%;
+      block-size: auto;
       border-radius: var(--nk-radius-md);
     }
 

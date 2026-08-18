@@ -542,7 +542,7 @@
       flex-direction: column;
       inline-size: min(
         var(--nk-app-shell-sidebar-width),
-        calc(100vw - (var(--nk-space) * 12))
+        calc(100% - (var(--nk-space) * 12))
       );
       max-inline-size: 100%;
       block-size: 100vh;

@@ -1,7 +1,7 @@
 @layer nitro-kit.base {
   :where([data-nk="toolbar"]) {
     display: flex;
-    min-width: 0;
+    min-inline-size: 0;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
@@ -13,7 +13,7 @@
       [data-nk="toolbar"] > [data-slot="toolbar-trailing"]
     ) {
     display: flex;
-    min-width: 0;
+    min-inline-size: 0;
     /* Regions never exceed the toolbar, so nested content such as a
        scrolling ButtonGroup receives real width pressure when stacked. */
     max-inline-size: 100%;

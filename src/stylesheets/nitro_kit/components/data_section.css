@@ -26,7 +26,7 @@
   }
 
   :where([data-nk="data-section"] [data-slot="data-section-description"]) {
-    max-width: var(--nk-content-lg);
+    max-inline-size: var(--nk-content-lg);
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
     line-height: var(--nk-leading-relaxed);
@@ -35,6 +35,6 @@
 
   :where([data-nk="data-section"] > [data-slot="data-section-table"]),
   :where([data-nk="data-section"] > [data-slot="data-section-empty-state"]) {
-    width: 100%;
+    inline-size: 100%;
   }
 }

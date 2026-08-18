@@ -10,7 +10,7 @@
     inset-block-end: calc(var(--nk-space) * 5);
     display: flex;
     flex-direction: column;
-    inline-size: min(26rem, calc(100vw - (var(--nk-space) * 10)));
+    inline-size: min(26rem, calc(100% - (var(--nk-space) * 10)));
     gap: calc(var(--nk-space) * 3);
     margin: 0;
     padding: 0;

@@ -4,6 +4,14 @@
 
 ### Added
 
+- Add `--nk-icon-size-{xs,sm,md,lg,xl}` and `--nk-avatar-size-{xs,sm,md,lg}`.
+  The Icon and Avatar ladders were literals repeated across five files;
+  AvatarStack duplicated the entire avatar ladder. Alert's status icon and
+  Accordion's chevron now resolve through the icon axis, so an application
+  retheming icon sizes moves every owned glyph with them.
+- Document the size vocabularies: one contract table of the six size ramps
+  and why each stops where it does, so a caller can predict which sizes a
+  component accepts without trying them.
 - Add `--nk-choice-size-{md,lg}` and derive every checkbox and radio
   dimension from them: box, glyph proportions, description indent, and the
   native input sizes. The two sizes are one rule apart, the large radio dot
@@ -63,6 +71,30 @@
 
 ### Changed
 
+- Derive the remaining owned geometry from the token system. Switch is now
+  four declared inputs — block heights ride the control ramp, the track is
+  the block plus the handle's travel — so density presets finally reach
+  switches, and Textarea's minimum height rides `--nk-space`. The
+  AppearancePicker control resolves through `--nk-choice-size-md` and the
+  Accordion trigger through `--nk-control-height-lg`, the values they
+  already rendered. Every dimension was verified pixel-identical.
+- Widen the Select chevron gutter from 36px to 40px. The gutter is now
+  derived — inline padding, icon, inline padding — so the chevron sits
+  symmetrically instead of at an arbitrary offset.
+- Tighten extra-small Badge inline padding from 5px to 4px, making the
+  badge padding ramp an even 4/6/8.
+- Size fixed overlays with `100%` instead of `100vw`. Dropdown menus, the
+  combobox listbox, the toast column, and the app shell drawer capped
+  themselves against `100vw`, which includes the scrollbar, so classic
+  scrollbars pushed them past the visible viewport. Percentages resolve
+  against the initial containing block, which excludes it. Tooltip keeps
+  `100vw` deliberately and documents why.
+- Finish the logical-property pass: the remaining physical `width`,
+  `height`, and `min-/max-` declarations now use their logical forms, so
+  every component behaves in vertical writing modes.
+- Dim Table's sort indicator through the color channel instead of a raw
+  `opacity`, and guard the remaining control transitions and the
+  DetailsTable hover for reduced motion and touch.
 - Read data-entry controls and the default Button at `--nk-text-sm` on fine
   pointers and `--nk-text-base` on coarse ones, where iOS Safari zooms a
   focused control below 16px. The pair stays matched in both modes; Select

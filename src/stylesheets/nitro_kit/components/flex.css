@@ -1,7 +1,7 @@
 @layer nitro-kit.base {
   :where([data-nk="flex"]) {
     display: flex;
-    min-width: 0;
+    min-inline-size: 0;
     flex-direction: var(--_nk-flex-direction);
     flex-wrap: var(--_nk-flex-wrap);
     gap: var(--_nk-layout-gap);

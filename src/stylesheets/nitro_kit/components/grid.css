@@ -1,7 +1,7 @@
 @layer nitro-kit.base {
   :where([data-nk="grid"]) {
     display: grid;
-    min-width: 0;
+    min-inline-size: 0;
     grid-template-columns: repeat(var(--_nk-grid-columns), minmax(0, 1fr));
     gap: var(--_nk-layout-gap);
   }

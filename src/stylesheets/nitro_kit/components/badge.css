@@ -4,7 +4,7 @@
 
     display: inline-flex;
     align-items: center;
-    max-width: 100%;
+    max-inline-size: 100%;
     font-weight: var(--nk-font-weight-medium);
     line-height: var(--nk-leading-tight);
     color: var(--_nk-semantic-content);
@@ -20,7 +20,7 @@
   }
 
   :where([data-nk="badge"] > [data-slot="badge-label"]) {
-    min-width: 0;
+    min-inline-size: 0;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;

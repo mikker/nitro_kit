@@ -91,8 +91,8 @@ class ButtonCssTest < ActiveSupport::TestCase
       )
     end
 
-    assert_includes css, "width: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size))"
-    assert_includes css, "height: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size))"
+    assert_includes css, "inline-size: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size))"
+    assert_includes css, "block-size: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size))"
     assert_includes avatar_css, "--_nk-avatar-size: var(--nk-avatar-size-xs)"
     assert_includes avatar_css, "--_nk-avatar-size: var(--nk-avatar-size-md)"
     assert_includes tokens_css, "--nk-avatar-size-xs: 1.5rem"
