@@ -38,7 +38,6 @@ class CommandPaletteTest < ActiveSupport::TestCase
     assert_equal "dialog", panel.name
     assert_equal "workspace-search-panel", panel["id"]
     assert_equal "any", panel["closedby"]
-    assert_includes panel["data-action"], "command->nk--command-palette#guardOpen"
     assert_equal "close", node.at_css("[data-slot='command-palette-close']")["data-nk--dialog-command"]
     assert_equal "workspace-search-title", panel["aria-labelledby"]
     assert_equal "Search workspace", panel.at_css("[data-slot='command-palette-title']").text

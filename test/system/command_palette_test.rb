@@ -10,6 +10,8 @@ class CommandPaletteSystemTest < ApplicationSystemTestCase
     input = "#{root} [data-slot='command-palette-input']"
     destination = "#{root} [data-slot='command-palette-destination']"
 
+    assert_selector "#{root}[data-enhanced]"
+    assert_no_selector "#{trigger}[command]"
     find(trigger).click
 
     assert_selector "#{panel}[open]"
