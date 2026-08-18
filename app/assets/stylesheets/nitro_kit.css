@@ -1940,6 +1940,10 @@
 @layer nitro-kit.base {
   :where([data-nk="avatar"]) {
     position: relative;
+    /* The ring below carries a z-index, so without a stacking context it
+       would paint above overlapping siblings — in a stack, every ring showed
+       through the avatar covering it. Isolation keeps each avatar atomic. */
+    isolation: isolate;
     display: inline-grid;
     flex: none;
     place-items: center;

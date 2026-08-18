@@ -119,6 +119,12 @@
 
 ### Fixed
 
+- Stop Avatar rings from painting through overlapping stack siblings. The
+  ring pseudo-element carries a z-index but the avatar root was not a
+  stacking context, so in an AvatarStack every ring floated above every
+  neighboring avatar's fill and the stack looked translucent. Avatars are
+  now isolated, so each one paints atomically and covers the ring beneath
+  it.
 - Render an `Alert` and a `Toast::Item` of the same variant identically. Both
   declare the same variant vocabulary but resolved it from different sources, so
   one "success" appeared as two different greens and rethemeing a semantic token
