@@ -86,6 +86,11 @@
 
 ### Changed
 
+- Render every owned glyph through the Icon component. Accordion, Select,
+  Combobox, and AppNavigation drew their chevrons as hand-approximated SVG
+  paths; they now render the real Lucide `chevron-down` at the same sizes,
+  so one icon set covers the whole library and the glyphs ride the
+  `--nk-icon-size-*` axis.
 - Default Dropzone to the `minimal` presentation: the drop target is the
   only visible affordance, and the native file input stays focusable,
   named, and operable underneath — file selection and keyboard flows are
