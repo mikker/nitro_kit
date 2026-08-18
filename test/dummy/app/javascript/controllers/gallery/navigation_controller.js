@@ -52,6 +52,15 @@ export default class extends Controller {
     }
   }
 
+  // The nav element is turbo-permanent, so Turbo visits reach sync() without
+  // reconnecting; the section holding the new current page must open here too.
+  reveal(link) {
+    const details = link.closest(
+      "details[data-slot='app-navigation-section-disclosure']",
+    )
+    if (details) details.open = true
+  }
+
   sectionLabel(details) {
     return details
       .querySelector("summary[data-slot='app-navigation-section-label']")
@@ -79,6 +88,7 @@ export default class extends Controller {
       link.dataset.state = current ? "current" : "default"
       if (current) {
         link.setAttribute("aria-current", "page")
+        this.reveal(link)
       } else {
         link.removeAttribute("aria-current")
       }
