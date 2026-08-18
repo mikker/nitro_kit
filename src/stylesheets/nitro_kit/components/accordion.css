@@ -18,8 +18,8 @@
         > [data-slot="accordion-trigger"]
     ) {
     display: flex;
-    width: 100%;
-    min-height: 2.75rem;
+    inline-size: 100%;
+    min-block-size: var(--nk-control-height-lg);
     align-items: center;
     justify-content: space-between;
     gap: calc(var(--nk-space) * 3);
@@ -58,8 +58,8 @@
         > [data-slot="accordion-icon"]
     ) {
     flex: none;
-    width: 1rem;
-    height: 1rem;
+    inline-size: var(--nk-icon-size-sm);
+    block-size: var(--nk-icon-size-sm);
     color: var(--nk-color-muted-foreground);
     transition:
       color var(--nk-duration-fast) var(--nk-ease),

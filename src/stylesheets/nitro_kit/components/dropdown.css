@@ -9,7 +9,7 @@
     z-index: 50;
     display: none;
     min-inline-size: 12rem;
-    max-inline-size: min(24rem, calc(100vw - (var(--nk-space) * 8)));
+    max-inline-size: min(24rem, calc(100% - (var(--nk-space) * 8)));
     max-block-size: min(24rem, calc(100dvh - (var(--nk-space) * 8)));
     inset: var(--nk-space);
     inset: var(--_nk-overlay-top, var(--nk-space)) auto auto
@@ -142,7 +142,7 @@
   @keyframes nk-dropdown-enter {
     from {
       opacity: 0;
-      transform: translateY(-0.25rem) scale(0.98);
+      transform: translateY(calc(var(--nk-space) * -1)) scale(0.98);
     }
     to {
       opacity: 1;

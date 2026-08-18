@@ -19,7 +19,43 @@ class ControlTextTest < ApplicationSystemTestCase
     browser.execute_cdp("Emulation.setTouchEmulationEnabled", enabled: false)
   end
 
+  test "default controls meet the 44px touch target on coarse pointers" do
+    visit gallery_component_path("input")
+
+    heights = evaluate_script(height_script)
+    assert_equal "40/40/40", heights, "fine pointers keep the 40px default"
+
+    browser.execute_cdp("Emulation.setTouchEmulationEnabled", enabled: true, maxTouchPoints: 5)
+    heights = evaluate_script(height_script)
+    assert_equal "44/44/44", heights, "coarse pointers adopt the large step"
+  ensure
+    browser.execute_cdp("Emulation.setTouchEmulationEnabled", enabled: false)
+  end
+
   private
+
+  def height_script
+    <<~JAVASCRIPT
+      (() => {
+        const probe = document.createElement("div");
+        probe.innerHTML = [
+          '<input data-nk="input" type="text">',
+          '<div data-nk="select"><select data-slot="select-control"></select></div>',
+          '<button data-nk="button" data-size="md">Save</button>'
+        ].join("");
+        document.body.appendChild(probe);
+        const height = (selector) =>
+          Math.round(probe.querySelector(selector).getBoundingClientRect().height);
+        const result = [
+          height('[data-nk="input"]'),
+          height('[data-slot="select-control"]'),
+          height('[data-nk="button"]')
+        ].join("/");
+        probe.remove();
+        return result;
+      })()
+    JAVASCRIPT
+  end
 
   def measure_script
     <<~JAVASCRIPT

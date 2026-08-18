@@ -85,6 +85,17 @@
     --nk-choice-size-md: 1.125rem;
     --nk-choice-size-lg: 1.5rem;
 
+    --nk-icon-size-xs: 0.75rem;
+    --nk-icon-size-sm: 1rem;
+    --nk-icon-size-md: 1.25rem;
+    --nk-icon-size-lg: 1.75rem;
+    --nk-icon-size-xl: 2.25rem;
+
+    --nk-avatar-size-xs: 1.5rem;
+    --nk-avatar-size-sm: 2rem;
+    --nk-avatar-size-md: 3rem;
+    --nk-avatar-size-lg: 4rem;
+
     --nk-content-sm: 24rem;
     --nk-content-md: 32rem;
     --nk-content-lg: 48rem;
@@ -609,5 +620,16 @@
     --nk-app-shell-sidebar-accent: var(--nk-color-muted);
     --nk-app-shell-sidebar-accent-foreground: var(--nk-color-foreground);
     --nk-app-shell-border: var(--nk-color-border);
+  }
+
+  /* Touch guidance asks for a 44px minimum target, so the default control
+     height adopts the large step on coarse pointers. Every consumer follows —
+     buttons, inputs, selects, menu rows, and the choice controls' hit areas —
+     matching the pointer text contract. Explicit smaller and larger sizes
+     keep their own scale. */
+  @media (pointer: coarse) {
+    :where(:root) {
+      --nk-control-height-md: var(--nk-control-height-lg);
+    }
   }
 }

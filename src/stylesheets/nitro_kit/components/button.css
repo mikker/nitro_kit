@@ -119,7 +119,10 @@
     --_nk-button-background: var(--nk-color-primary);
     --_nk-button-hover-background: var(--nk-color-primary-hover);
     --_nk-button-foreground: var(--nk-color-primary-foreground);
-    --_nk-button-border: light-dark(oklch(0 0 0 / 0.1), transparent);
+    --_nk-button-border: light-dark(
+      color-mix(in oklab, var(--nk-black) 10%, transparent),
+      transparent
+    );
     --_nk-button-border-bottom: var(--_nk-button-border);
     --_nk-button-shadow: inset 0 1px
       color-mix(in oklab, var(--nk-white) 20%, transparent);
@@ -179,7 +182,7 @@
     --_nk-button-icon-padding: var(--nk-space);
     --_nk-button-radius: var(--nk-button-radius, var(--nk-radius-md));
     --_nk-button-font-size: var(--nk-text-xs);
-    --_nk-button-avatar-size: 1rem;
+    --_nk-button-avatar-size: calc(var(--nk-space) * 4);
     --_nk-button-avatar-font-size: calc(var(--nk-text-xs) * 0.75);
   }
 
@@ -188,12 +191,12 @@
     --_nk-button-padding: calc(var(--nk-space) * 3);
     --_nk-button-icon-padding: calc(var(--nk-space) * 2);
     --_nk-button-radius: var(--nk-button-radius, var(--nk-radius-md));
-    --_nk-button-avatar-size: 1.25rem;
+    --_nk-button-avatar-size: calc(var(--nk-space) * 5);
     --_nk-button-avatar-font-size: calc(var(--nk-text-xs) * 0.875);
   }
 
   :where([data-nk="button"][data-size="md"]) {
-    --_nk-button-avatar-size: 1.5rem;
+    --_nk-button-avatar-size: calc(var(--nk-space) * 6);
     --_nk-button-avatar-font-size: calc(var(--nk-text-xs) * 0.875);
   }
 
@@ -201,7 +204,7 @@
     --_nk-button-height: var(--nk-control-height-lg);
     --_nk-button-padding: calc(var(--nk-space) * 5);
     --_nk-button-icon-padding: calc(var(--nk-space) * 4);
-    --_nk-button-avatar-size: 1.75rem;
+    --_nk-button-avatar-size: calc(var(--nk-space) * 7);
     --_nk-button-avatar-font-size: var(--nk-text-xs);
   }
 
@@ -211,7 +214,7 @@
     --_nk-button-icon-padding: calc(var(--nk-space) * 7);
     --_nk-button-radius: var(--nk-button-radius, var(--nk-radius-xl));
     --_nk-button-font-size: var(--nk-text-base);
-    --_nk-button-avatar-size: 2rem;
+    --_nk-button-avatar-size: calc(var(--nk-space) * 8);
     --_nk-button-avatar-font-size: var(--nk-text-xs);
     gap: calc(var(--nk-space) * 4);
   }
@@ -301,8 +304,8 @@
 
 @layer nitro-kit.compound {
   :where([data-nk="button"] > [data-slot="button-label"] > [data-nk="avatar"]) {
-    width: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size));
-    height: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size));
+    inline-size: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size));
+    block-size: min(var(--_nk-avatar-size), var(--_nk-button-avatar-size));
     font-size: min(
       var(--_nk-avatar-font-size),
       var(--_nk-button-avatar-font-size)

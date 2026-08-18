@@ -97,8 +97,8 @@ class AuthShellTest < ActiveSupport::TestCase
 
     assert_includes css, "Source: src/stylesheets/nitro_kit/components/auth_shell.css"
     assert_includes source, ':where([data-nk="auth-shell"])'
-    assert_includes source, "width: 100%"
-    assert_includes source, "min-width: 0"
+    assert_includes source, "inline-size: 100%"
+    assert_includes source, "min-inline-size: 0"
     assert_includes source, "padding-block: calc(var(--nk-space) * 8)"
     assert_includes source, "padding-inline: calc(var(--nk-space) * 4)"
     refute_includes source, "max-width"

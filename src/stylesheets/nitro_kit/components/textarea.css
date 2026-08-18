@@ -2,7 +2,7 @@
   :where([data-nk="textarea"]) {
     display: block;
     inline-size: 100%;
-    min-block-size: 6rem;
+    min-block-size: calc(var(--nk-space) * 24);
     padding-block: calc(var(--nk-space) * 2);
     padding-inline: var(--nk-control-padding-inline);
     color: var(--nk-color-foreground);
@@ -22,6 +22,12 @@
   @media (pointer: coarse) {
     :where([data-nk="textarea"]) {
       font-size: var(--nk-text-base);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where([data-nk="textarea"]) {
+      transition-duration: 0.01ms;
     }
   }
 }

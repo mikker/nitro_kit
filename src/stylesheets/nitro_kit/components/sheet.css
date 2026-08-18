@@ -7,7 +7,7 @@
     position: fixed;
     inset-block: 0;
     max-block-size: none;
-    height: 100dvh;
+    block-size: 100dvh;
     margin-block: 0;
     padding: calc(var(--nk-space) * 6);
     overflow: auto;
@@ -28,15 +28,15 @@
   }
 
   :where([data-nk="sheet"][data-size="sm"] > [data-slot="sheet-panel"]) {
-    width: min(calc(100% - (var(--nk-space) * 8)), 20rem);
+    inline-size: min(calc(100% - (var(--nk-space) * 8)), 20rem);
   }
 
   :where([data-nk="sheet"][data-size="md"] > [data-slot="sheet-panel"]) {
-    width: min(calc(100% - (var(--nk-space) * 8)), 28rem);
+    inline-size: min(calc(100% - (var(--nk-space) * 8)), 28rem);
   }
 
   :where([data-nk="sheet"][data-size="lg"] > [data-slot="sheet-panel"]) {
-    width: min(calc(100% - (var(--nk-space) * 8)), 40rem);
+    inline-size: min(calc(100% - (var(--nk-space) * 8)), 40rem);
   }
 
   :where([data-nk="sheet"] > [data-slot="sheet-panel"])::backdrop {
@@ -76,13 +76,13 @@
   :where(
       [data-nk="sheet"][data-side="left"] > [data-slot="sheet-panel"][open]
     ) {
-    --_nk-sheet-from: -1rem;
+    --_nk-sheet-from: calc(var(--nk-space) * -4);
   }
 
   :where(
       [data-nk="sheet"][data-side="right"] > [data-slot="sheet-panel"][open]
     ) {
-    --_nk-sheet-from: 1rem;
+    --_nk-sheet-from: calc(var(--nk-space) * 4);
   }
 
   /* Sides are logical, but translateX is physical; RTL flips the slide so the
@@ -91,14 +91,14 @@
       [data-nk="sheet"][data-side="left"]:dir(rtl)
         > [data-slot="sheet-panel"][open]
     ) {
-    --_nk-sheet-from: 1rem;
+    --_nk-sheet-from: calc(var(--nk-space) * 4);
   }
 
   :where(
       [data-nk="sheet"][data-side="right"]:dir(rtl)
         > [data-slot="sheet-panel"][open]
     ) {
-    --_nk-sheet-from: -1rem;
+    --_nk-sheet-from: calc(var(--nk-space) * -4);
   }
 
   @keyframes nk-sheet-enter {

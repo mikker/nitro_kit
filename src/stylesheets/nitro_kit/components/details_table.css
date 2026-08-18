@@ -30,11 +30,13 @@
     text-underline-offset: 0.16em;
   }
 
-  :where(
-      [data-nk="details-table"] [data-slot="details-table-link"]:hover,
-      [data-nk="details-table"] [data-slot="details-table-record"]:hover
-    ) {
-    text-decoration-color: currentcolor;
+  @media (hover: hover) {
+    :where(
+        [data-nk="details-table"] [data-slot="details-table-link"]:hover,
+        [data-nk="details-table"] [data-slot="details-table-record"]:hover
+      ) {
+      text-decoration-color: currentcolor;
+    }
   }
 
   :where([data-nk="details-table"] [data-slot="details-table-file"]) {

@@ -95,8 +95,8 @@
 
   :where([data-nk="dropzone"] [data-slot="dropzone-preview-image"]) {
     grid-row: span 2;
-    inline-size: 3rem;
-    block-size: 3rem;
+    inline-size: calc(var(--nk-space) * 12);
+    block-size: calc(var(--nk-space) * 12);
     object-fit: cover;
     border-radius: var(--nk-radius-sm);
   }

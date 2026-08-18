@@ -20,6 +20,19 @@ Every default string a person can read or hear comes from the engine-loaded `nit
 
 `variant:` and `size:` on a root are the component's identity axes and are emitted only by the base component. A slot carries its own `data-variant` only when it has variant identity of its own — `Toast::Item` through the nested-component root channel, Dropdown items through `slot_attributes(:item, variant:)`. Caller `data: { variant: }` is reserved in both cases.
 
+### Size vocabularies
+
+`md` is the default everywhere a component has one — only `Container` requires an explicit size, because a content measure is a real decision. Each ramp extends only as far as the component has a distinct job for the step; there are no aspirational sizes. Passing a size outside a component's ramp raises with the valid set.
+
+| Ramp             | Components                          | Why it stops there                                                                                                |
+| ---------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `xs sm md lg xl` | `Button`, `Icon`                    | Actions and glyphs span the full range, from dense toolbars to marketing heroes.                                  |
+| `xs sm md lg`    | `Avatar`, `AvatarStack`             | Identity reads from a list row up to a profile header; nothing needs a poster-sized avatar.                       |
+| `xs sm md`       | `Badge`                             | A badge is compact by definition; a large badge would be a Button or an Alert.                                    |
+| `sm md lg xl`    | `Container`                         | Content measures, resolved from the `--nk-content-*` tokens.                                                      |
+| `sm md lg`       | `Sheet`, `ProgressiveImage`         | Panel and media footprints.                                                                                       |
+| `md lg`          | `Checkbox`, `RadioButton`, `Switch` | Selection controls have one comfortable size and one emphasized size, resolved from the choice and control ramps. |
+
 ## Atoms and components
 
 ### Actions, display, and navigation

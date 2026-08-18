@@ -8,6 +8,10 @@
     position: absolute;
     z-index: 50;
     inline-size: max-content;
+    /* Absolutely positioned inside its wrapper, so a percentage would resolve
+       against the trigger, not the viewport. 100vw can overshoot by a classic
+       scrollbar's width, but only below a 22.5rem viewport, where scrollbars
+       overlay. The fixed overlays use 100% of the initial containing block. */
     max-inline-size: min(20rem, calc(100vw - (var(--nk-space) * 8)));
     padding: calc(var(--nk-space) * 1.5) calc(var(--nk-space) * 2.5);
     color: var(--nk-color-foreground);

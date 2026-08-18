@@ -52,7 +52,7 @@
   }
 
   :where([data-nk="control-group"] > [data-nk="select"] > select) {
-    height: 100%;
+    block-size: 100%;
     border-radius: 0;
   }
 

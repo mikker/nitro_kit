@@ -53,8 +53,8 @@
   :where(
       [data-nk="appearance-picker"] [data-slot="appearance-picker-control"]
     ) {
-    inline-size: 1.125rem;
-    block-size: 1.125rem;
+    inline-size: var(--nk-choice-size-md);
+    block-size: var(--nk-choice-size-md);
     margin: 0;
     accent-color: var(--nk-color-primary);
     cursor: pointer;

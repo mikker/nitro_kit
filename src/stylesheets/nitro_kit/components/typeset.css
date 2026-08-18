@@ -106,7 +106,7 @@
     border-radius: var(--nk-radius-sm);
   }
   :where([data-nk="typeset"]) > table:not([data-nk], [data-typeset="off"]) {
-    width: 100%;
+    inline-size: 100%;
     border-collapse: collapse;
     font-size: 0.925em;
   }
@@ -250,7 +250,7 @@
     }
 
     table {
-      width: 100%;
+      inline-size: 100%;
       border-collapse: collapse;
       font-size: 0.925em;
     }
@@ -267,8 +267,8 @@
     }
 
     :where(img, video, svg) {
-      max-width: 100%;
-      height: auto;
+      max-inline-size: 100%;
+      block-size: auto;
       border-radius: var(--nk-radius-md);
     }
 
