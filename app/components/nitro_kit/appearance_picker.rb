@@ -35,6 +35,9 @@ module NitroKit
         component: :appearance_picker,
         attributes: {
           id: @identifier,
+          # Browsers give legends special layout, so a hidden label omits the
+          # element entirely and the fieldset keeps its name through ARIA.
+          aria: @label_visible ? {} : { label: @label },
           data: {
             controller: "nk--appearance",
             presentation: @presentation,
@@ -56,14 +59,7 @@ module NitroKit
       return render_dropdown if @presentation == :dropdown
 
       fieldset(**root_attributes) do
-        # A hidden label keeps the group's accessible name; only the visible
-        # caption goes.
-        legend(
-          **slot_attributes(
-            :legend,
-            attributes: @label_visible ? {} : { data: { state: "hidden" } }
-          )
-        ) { plain(@label) }
+        legend(**slot_attributes(:legend)) { plain(@label) } if @label_visible
         div(**slot_attributes(:options)) do
           PREFERENCES.each { |preference| render_option(preference) }
         end

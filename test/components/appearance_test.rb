@@ -132,14 +132,14 @@ class AppearanceTest < ActiveSupport::TestCase
     node = render_node(
       NitroKit::AppearancePicker.new(id: "footer-appearance", label_visible: false)
     )
-    legend = node.at_css("[data-slot='appearance-picker-legend']")
 
-    assert_equal "legend", legend.name
-    assert_equal "hidden", legend["data-state"]
-    assert_equal I18n.t("nitro_kit.appearance_picker.label"), legend.text
+    assert_nil node.at_css("[data-slot='appearance-picker-legend']"),
+      "browsers give legends special layout, so a hidden label renders none"
+    assert_equal I18n.t("nitro_kit.appearance_picker.label"), node["aria-label"]
 
     visible = render_node(NitroKit::AppearancePicker.new(id: "visible-appearance"))
-    refute visible.at_css("[data-slot='appearance-picker-legend']").key?("data-state")
+    assert_equal "legend", visible.at_css("[data-slot='appearance-picker-legend']").name
+    refute visible.key?("aria-label")
 
     assert_raises(ArgumentError) do
       NitroKit::AppearancePicker.new(id: "appearance", label_visible: :no)

@@ -1898,34 +1898,20 @@
     font-weight: var(--nk-title-compact-weight);
   }
 
-  :where(
-      [data-nk="appearance-picker"]
-        > [data-slot="appearance-picker-legend"][data-state="hidden"]
-    ) {
-    position: absolute;
-    inline-size: 1px;
-    block-size: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    white-space: nowrap;
-    clip-path: inset(50%);
-  }
-
-  :where(
-      [data-nk="appearance-picker"]
-        > [data-slot="appearance-picker-legend"][data-state="hidden"]
-        + [data-slot="appearance-picker-options"]
-    ) {
-    margin-block-start: 0;
-  }
-
+  /* The gap below the label exists only when there is a label. */
   :where(
       [data-nk="appearance-picker"] > [data-slot="appearance-picker-options"]
     ) {
     display: flex;
     flex-wrap: wrap;
     gap: calc(var(--nk-space) * 3);
+  }
+
+  :where(
+      [data-nk="appearance-picker"]
+        > [data-slot="appearance-picker-legend"]
+        + [data-slot="appearance-picker-options"]
+    ) {
     margin-block-start: calc(var(--nk-space) * 2);
   }
 
