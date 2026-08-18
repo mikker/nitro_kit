@@ -372,8 +372,18 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
     timed_item = "#gallery-toast-timed [data-nk='toast-item']"
     timed_dismiss = "#{timed_item} [data-slot='toast-item-dismiss']"
 
-    # The timed sample starts counting down as soon as its controller connects,
-    # so focus has to be the first interaction on the page.
+    execute_script <<~JAVASCRIPT
+      window.__toastReplayLoaded = false
+      document.querySelector("#gallery-toast-timed-frame").addEventListener(
+        "turbo:frame-load",
+        () => window.__toastReplayLoaded = true,
+        { once: true }
+      )
+    JAVASCRIPT
+    find("#gallery-toast-timed-replay").click
+    wait_until(message: "Timed toast did not replay") do
+      evaluate_script("window.__toastReplayLoaded")
+    end
     execute_script("arguments[0].focus()", find(timed_dismiss))
 
     assert_focused timed_dismiss
