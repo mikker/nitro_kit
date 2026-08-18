@@ -8,9 +8,11 @@ class ProgressiveSelectionControllerContractTest < ActiveSupport::TestCase
 
     assert_includes source, 'this.element.dataset.enhanced = "true"'
     assert_includes source, "if (!this.enhanced) return"
-    assert_includes source, "panel.hidden = !active"
+    assert_includes source, 'panel.setAttribute("hidden", tab?.disabled ? "" : "until-found")'
+    assert_includes source, 'panel.removeAttribute("hidden")'
     assert_includes source, "panel.hidden = false"
     assert_includes source, 'panel.removeAttribute("aria-hidden")'
+    assert_includes source, "reveal(event)"
     assert_includes source, "panelTargetConnected()"
     assert_includes source, "tabTargetConnected()"
   end

@@ -15,7 +15,7 @@ module Gallery
         example_section(
           "Workspace settings",
           slug: "tabs-settings",
-          description: "Each declaration owns its panel; all panels remain readable until Stimulus enhances the APG tab behavior."
+          description: "Each declaration owns its panel; all panels remain readable until Stimulus enhances the APG tab behavior, and inactive content remains available to find in page."
         ) do
           example("Settings sections", slug: "tabs-settings-sections") do
             render NitroKit::Tabs.new(

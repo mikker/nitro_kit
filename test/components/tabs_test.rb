@@ -32,6 +32,7 @@ class TabsComponentTest < ActiveSupport::TestCase
     assert_equal "0", tab_nodes.last["tabindex"]
     assert_equal "settings-billing-details-panel", panels.last["id"]
     assert_equal "settings-billing-details-tab", panels.last["aria-labelledby"]
+    assert_equal "beforematch->nk--tabs#reveal", panels.last["data-action"]
     assert_nil panels.last["aria-hidden"]
     refute panels.last.key?("hidden")
     assert_nil panels.last["tabindex"]

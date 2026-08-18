@@ -22,6 +22,19 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
     assert_no_severe_console_errors(context: path)
   end
 
+  test "accordion reveals a closed item when navigating to its content" do
+    path = visit_component("accordion")
+    content = "#gallery-accordion-billing-currency-content"
+
+    assert_selector "#gallery-accordion-billing [data-key='currency']:not([open])", visible: :all
+
+    execute_script("window.location.hash = arguments[0].slice(1)", content)
+
+    assert_selector "#gallery-accordion-billing [data-key='currency'][open]"
+    assert_selector content, visible: true
+    assert_no_severe_console_errors(context: path)
+  end
+
   test "tabs support automatic and manual keyboard activation while skipping disabled tabs" do
     path = visit_component("tabs")
 
@@ -48,6 +61,20 @@ class InteractiveComponentsTest < ApplicationSystemTestCase
     assert_focused "#gallery-tabs-vertical-manual-notifications-tab"
     assert_selector "#gallery-tabs-vertical-manual-notifications-tab[aria-selected='true']"
     assert_selector "#gallery-tabs-vertical-manual-notifications-panel[aria-hidden='false']:not([hidden])"
+    assert_no_severe_console_errors(context: path)
+  end
+
+  test "tabs reveal an inactive panel when find in page matches its content" do
+    path = visit_component("tabs")
+    panel = "#gallery-tabs-settings-billing-panel"
+
+    assert_selector "#{panel}[hidden='until-found']", visible: :all
+    assert_equal 0, evaluate_script("document.querySelector('#{panel}').offsetHeight")
+
+    execute_script("window.location.hash = arguments[0].slice(1)", panel)
+
+    assert_selector "#gallery-tabs-settings-billing-tab[aria-selected='true'][tabindex='0']"
+    assert_selector "#{panel}[aria-hidden='false']:not([hidden])"
     assert_no_severe_console_errors(context: path)
   end
 

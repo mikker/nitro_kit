@@ -42,6 +42,14 @@ export default class extends Controller {
     }
   }
 
+  reveal(event) {
+    const tab = this.tabTargets.find(
+      (candidate) => candidate.dataset.key === event.currentTarget.dataset.key,
+    );
+
+    if (tab && !tab.disabled) this.activeValue = tab.dataset.key;
+  }
+
   navigate(event) {
     const rightToLeft = getComputedStyle(this.element).direction === "rtl";
     const directionKeys =
@@ -143,11 +151,15 @@ export default class extends Controller {
 
     this.panelTargets.forEach((panel) => {
       const active = panel.dataset.key === value;
+      const tab = this.tabTargets.find(
+        (candidate) => candidate.dataset.key === panel.dataset.key,
+      );
 
-      panel.hidden = !active;
       if (active) {
+        panel.removeAttribute("hidden");
         panel.setAttribute("aria-hidden", "false");
       } else {
+        panel.setAttribute("hidden", tab?.disabled ? "" : "until-found");
         panel.removeAttribute("aria-hidden");
       }
       panel.dataset.state = active ? "active" : "inactive";

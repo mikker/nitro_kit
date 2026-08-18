@@ -37,6 +37,12 @@
     padding-block: calc(var(--nk-space) * 4);
     line-height: var(--nk-leading-normal);
   }
+
+  :where(
+      [data-nk="tabs"] > [data-slot="tabs-panel"][hidden="until-found"]
+    ) {
+    padding-block: 0;
+  }
 }
 
 @layer nitro-kit.variant {

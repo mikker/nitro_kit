@@ -112,7 +112,7 @@ JavaScript.
 | Dropzone                                                   | Full                                                               | Its labelled native file input and ordinary form submission work; drag preview, policy feedback, progress, and direct upload are absent.                                                                                            |
 | RichTextArea                                               | Unavailable unless the host editor provides its own fallback       | Nitro wraps trusted host-editor markup and does not manufacture a plain-text control. The host editor owns its JavaScript and fallback contract.                                                                                    |
 | ProgressiveImage                                           | Reduced                                                            | The native image loads and retains its accessible alternative; decode/load state and the visible error fallback are not enhanced.                                                                                                   |
-| Tabs                                                       | Reduced                                                            | Every panel and its heading control remain visible and reachable; single-panel selection and APG keyboard behavior are absent.                                                                                                      |
+| Tabs                                                       | Reduced                                                            | Every panel and its heading control remain visible and reachable; single-panel selection, find-in-page activation, and APG keyboard behavior are absent.                                                                            |
 | Toast                                                      | Reduced                                                            | Server-rendered flash content and live-region semantics remain; timed and manual dismissal are absent.                                                                                                                              |
 | Tooltip                                                    | Reduced                                                            | CSS hover and focus disclosure remain; Escape dismissal is absent.                                                                                                                                                                  |
 
@@ -126,9 +126,11 @@ full descendant parity.
 
 Accordion always keeps native `details` and `summary` as the disclosure
 authority. Its no-JavaScript baseline is full for opening and closing each
-item. In `single` mode, a shared `name` is the browser-native exclusive-group
-mechanism: browsers that support named details provide the full one-open-item
-behavior without a Nitro controller.
+item. Find-in-page and fragment navigation use the browser's native ancestor
+revealing behavior to open matching closed items. In `single` mode, a shared
+`name` is the browser-native exclusive-group mechanism: browsers that support
+named details provide the full one-open-item behavior without a Nitro
+controller.
 
 The short Firefox gap before Firefox 130, including Firefox 128 ESR, has a
 reduced `single` baseline: each disclosure still opens and closes normally,

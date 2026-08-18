@@ -140,6 +140,7 @@ module NitroKit
             data: {
               key: tab.key,
               state: active ? "active" : "inactive",
+              action: "beforematch->nk--tabs#reveal",
               nk__tabs_target: "panel"
             }
           }
