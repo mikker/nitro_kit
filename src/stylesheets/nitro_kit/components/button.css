@@ -119,7 +119,10 @@
     --_nk-button-background: var(--nk-color-primary);
     --_nk-button-hover-background: var(--nk-color-primary-hover);
     --_nk-button-foreground: var(--nk-color-primary-foreground);
-    --_nk-button-border: light-dark(oklch(0 0 0 / 0.1), transparent);
+    --_nk-button-border: light-dark(
+      color-mix(in oklab, var(--nk-black) 10%, transparent),
+      transparent
+    );
     --_nk-button-border-bottom: var(--_nk-button-border);
     --_nk-button-shadow: inset 0 1px
       color-mix(in oklab, var(--nk-white) 20%, transparent);
