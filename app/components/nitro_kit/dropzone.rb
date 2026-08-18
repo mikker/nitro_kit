@@ -44,7 +44,7 @@ module NitroKit
       name:,
       label: I18n.t("nitro_kit.dropzone.label"),
       description: nil,
-      presentation: :input,
+      presentation: :minimal,
       direct_upload: true,
       multiple: false,
       accept: nil,

@@ -86,6 +86,11 @@
 
 ### Changed
 
+- Default Dropzone to the `minimal` presentation: the drop target is the
+  only visible affordance, and the native file input stays focusable,
+  named, and operable underneath — file selection and keyboard flows are
+  unchanged. `presentation: :input` still shows the native control beside
+  the drop target.
 - Align the default radius at `--nk-radius-lg` (8px): inputs, selects,
   textareas, the rich text editor, navigation rows, pagination links,
   dropzone, grouped choice frames, and the segmented appearance picker now
