@@ -150,7 +150,7 @@ class GalleryDisplayTest < ActionDispatch::IntegrationTest
       assert_select "[data-nk='icon'][data-size='#{size}']", minimum: 1
     end
 
-    assert_select "#gallery-icon-meaningful[role='img'][aria-label='Deployment succeeded'][aria-hidden='false']"
+    assert_select "#gallery-icon-meaningful[role='img'][aria-label='Trending this week'][aria-hidden='false']"
     assert_select "#gallery-icon-decorative[aria-hidden='true']:not([role])"
   end
 

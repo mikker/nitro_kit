@@ -19,19 +19,19 @@ module Gallery
         ) do
           example("Size scale", slug: "icon-size-scale", layout: :matrix, density: :compact) do
             sample("Extra small save icon", slug: "xs") do
-              render NitroKit::Icon.new(:save, id: "gallery-icon-size-xs", size: :xs)
+              render NitroKit::Icon.new(:flame, id: "gallery-icon-size-xs", size: :xs)
             end
             sample("Small save icon", slug: "sm") do
-              render NitroKit::Icon.new(:save, id: "gallery-icon-size-sm", size: :sm)
+              render NitroKit::Icon.new(:flame, id: "gallery-icon-size-sm", size: :sm)
             end
             sample("Medium save icon", slug: "md") do
-              render NitroKit::Icon.new(:save, id: "gallery-icon-size-md", size: :md)
+              render NitroKit::Icon.new(:flame, id: "gallery-icon-size-md", size: :md)
             end
             sample("Large save icon", slug: "lg") do
-              render NitroKit::Icon.new(:save, id: "gallery-icon-size-lg", size: :lg)
+              render NitroKit::Icon.new(:flame, id: "gallery-icon-size-lg", size: :lg)
             end
             sample("Extra large save icon", slug: "xl") do
-              render NitroKit::Icon.new(:save, id: "gallery-icon-size-xl", size: :xl)
+              render NitroKit::Icon.new(:flame, id: "gallery-icon-size-xl", size: :xl)
             end
           end
         end
@@ -44,14 +44,14 @@ module Gallery
           example("Meaningful and decorative", slug: "icon-meaning", layout: :matrix) do
             sample("Meaningful", slug: "meaningful") do
               render NitroKit::Icon.new(
-                :circle_check,
+                :flame,
                 id: "gallery-icon-meaningful",
                 size: :lg,
-                label: "Deployment succeeded"
+                label: "Trending this week"
               )
             end
             sample("Decorative", slug: "decorative") do
-              render NitroKit::Icon.new(:arrow_right, id: "gallery-icon-decorative", size: :lg)
+              render NitroKit::Icon.new(:flame, id: "gallery-icon-decorative", size: :lg)
             end
           end
         end
@@ -59,26 +59,26 @@ module Gallery
         example_section(
           "Stroke and glyphs",
           slug: "icon-glyphs",
-          description: "A small representative set demonstrates name normalization and deliberate stroke weight."
+          description: "One glyph across the stroke range shows the weight decision on its own."
         ) do
           example("Interface glyphs", slug: "icon-interface-glyphs", layout: :row) do
             render NitroKit::Icon.new(
-              :save,
+              :flame,
               id: "gallery-icon-save-thin",
               stroke_width: 1,
-              label: "Save"
+              label: "Thin stroke"
             )
             render NitroKit::Icon.new(
-              :settings,
+              :flame,
               id: "gallery-icon-settings",
               stroke_width: 1.5,
-              label: "Settings"
+              label: "Default stroke"
             )
             render NitroKit::Icon.new(
-              :triangle_alert,
+              :flame,
               id: "gallery-icon-warning-bold",
               stroke_width: 2,
-              label: "Warning"
+              label: "Bold stroke"
             )
           end
         end
