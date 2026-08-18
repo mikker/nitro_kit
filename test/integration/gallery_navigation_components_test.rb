@@ -7,7 +7,7 @@ class GalleryNavigationComponentsTest < ActionDispatch::IntegrationTest
     entries = SLUGS.map { |slug| Gallery::Catalog.fetch!(kind: :component, slug:) }
 
     assert_equal SLUGS, entries.map(&:slug)
-    assert_equal %i[layout navigation navigation], entries.map(&:subcategory)
+    assert_equal %i[application navigation navigation], entries.map(&:subcategory)
     assert_equal(
       SLUGS.map { |slug| "/gallery/components/#{slug}" },
       entries.map { |entry| Gallery::Catalog.path_for(entry, routes: Rails.application.routes.url_helpers) }

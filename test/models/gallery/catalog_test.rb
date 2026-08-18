@@ -6,9 +6,9 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
     assert_equal Gallery::Home, Gallery::Catalog.home.page
     assert_equal %i[foundation component composition], Gallery::Catalog.collections.map(&:kind)
     assert_equal %w[theme], Gallery::Catalog.collection!(:foundation).categories.map(&:slug)
-    assert_equal %w[colors spacing-sizing typography effects], Gallery::Catalog.entries(kind: :foundation).map(&:slug)
+    assert_equal %w[colors typography spacing-sizing effects], Gallery::Catalog.entries(kind: :foundation).map(&:slug)
     assert_equal(
-      %w[layout navigation forms data feedback actions],
+      %w[primitives forms overlays feedback data navigation layout application],
       Gallery::Catalog.collection!(:component).categories.map(&:slug)
     )
     assert_equal %w[
@@ -17,15 +17,19 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
     ], Gallery::Catalog.collection!(:composition).categories.map(&:slug)
     assert_equal(
       {
-        "layout" => %w[accordion app-shell auth-shell card container flex grid page-header settings-layout typeset],
-        "navigation" => %w[app-navigation command-palette pagination pagination-bar tabs toolbar],
+        "primitives" => %w[avatar avatar-stack badge button button-group button-to icon],
         "forms" => %w[
-          checkbox checkbox-group combobox control-group dropzone field field-group fieldset settings-section input label
-          radio-button radio-button-group rich-text-area select switch textarea
+          appearance-picker checkbox checkbox-group combobox control-group dropzone field field-group fieldset input
+          label radio-button radio-button-group rich-text-area select switch textarea
         ],
-        "data" => %w[avatar avatar-stack badge data-section details-table icon progressive-image stat-grid table],
-        "feedback" => %w[alert empty-state toast tooltip],
-        "actions" => %w[appearance-picker button button-group button-to danger-zone dialog dropdown sheet]
+        "overlays" => %w[command-palette dialog dropdown sheet tooltip],
+        "feedback" => %w[alert empty-state toast],
+        "data" => %w[accordion details-table progressive-image stat-grid table typeset],
+        "navigation" => %w[pagination pagination-bar tabs toolbar],
+        "layout" => %w[card container flex grid],
+        "application" => %w[
+          app-navigation app-shell auth-shell danger-zone data-section settings-section page-header settings-layout
+        ]
       },
       Gallery::Catalog.collection!(:component).categories.to_h { |category| [ category.slug, category.entries.map(&:slug) ] }
     )
@@ -59,12 +63,12 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
   test "collections partition every entry once and reject typo category names" do
     nested_entries = Gallery::Catalog.collections.flat_map(&:entries)
 
-    assert_equal Gallery::Catalog.entries.drop(1), nested_entries
+    assert_equal Gallery::Catalog.entries.drop(1).sort_by(&:slug), nested_entries.sort_by(&:slug)
     assert_equal nested_entries.uniq, nested_entries
     assert_equal "Forms", Gallery::Catalog.category!(kind: :component, slug: "forms").title
     assert_equal "Theme", Gallery::Catalog.category!(kind: :foundation, slug: "theme").title
     assert_equal(
-      "Layout",
+      "Application",
       Gallery::Catalog.category_for(Gallery::Catalog.fetch!(kind: :component, slug: "page-header")).title
     )
     landing = Gallery::Catalog.fetch!(kind: :composition, slug: "landing")

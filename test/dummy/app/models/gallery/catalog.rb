@@ -74,7 +74,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :actions,
+        subcategory: :primitives,
         slug: "button",
         title: "Button",
         description: "Native buttons and links with typed variants, sizes, and icons.",
@@ -84,7 +84,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :actions,
+        subcategory: :primitives,
         slug: "button-to",
         title: "Button to",
         description: "A Rails method form with one typed submit Button and layout-transparent form root.",
@@ -94,7 +94,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :data,
+        subcategory: :primitives,
         slug: "icon",
         title: "Icon",
         description: "Lucide icons with decorative and labelled semantics.",
@@ -104,7 +104,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :actions,
+        subcategory: :primitives,
         slug: "button-group",
         title: "Button group",
         description: "One labelled action group containing typed Button children.",
@@ -124,7 +124,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :navigation,
+        subcategory: :application,
         slug: "app-navigation",
         title: "Application navigation",
         description: "A labelled application destination tree with explicit body anatomy, current state, icons, badges, sections, and flexible spacing.",
@@ -134,7 +134,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :navigation,
+        subcategory: :overlays,
         slug: "command-palette",
         title: "Command palette",
         description: "A Command-K destination search with a native dialog and link baseline.",
@@ -294,7 +294,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :actions,
+        subcategory: :forms,
         slug: "appearance-picker",
         title: "Appearance picker",
         description: "Native light, dark, and system preferences synchronized through one document runtime.",
@@ -324,7 +324,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :actions,
+        subcategory: :overlays,
         slug: "dialog",
         title: "Dialog",
         description: "A native dialog with Nitro-owned trigger, state, and accessible relationships.",
@@ -334,7 +334,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :actions,
+        subcategory: :overlays,
         slug: "sheet",
         title: "Sheet",
         description: "A native modal side panel for narrow navigation and contextual details.",
@@ -344,7 +344,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :actions,
+        subcategory: :overlays,
         slug: "dropdown",
         title: "Dropdown",
         description: "Native popover menus with typed triggers, entries, placement, and keyboard state.",
@@ -354,7 +354,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :feedback,
+        subcategory: :overlays,
         slug: "tooltip",
         title: "Tooltip",
         description: "Contextual descriptions for Buttons, links, mutation forms, and compound focusable triggers.",
@@ -404,7 +404,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :data,
+        subcategory: :primitives,
         slug: "avatar",
         title: "Avatar",
         description: "Images and accessible initial fallbacks at predictable sizes.",
@@ -424,7 +424,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :data,
+        subcategory: :primitives,
         slug: "avatar-stack",
         title: "Avatar stack",
         description: "A labelled group of consistently sized avatars with overflow state.",
@@ -434,7 +434,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :data,
+        subcategory: :primitives,
         slug: "badge",
         title: "Badge",
         description: "Compact status labels with typed color, variant, and size.",
@@ -444,7 +444,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :layout,
+        subcategory: :data,
         slug: "accordion",
         title: "Accordion",
         description: "Keyed disclosure sections with native buttons and visible state.",
@@ -494,7 +494,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :layout,
+        subcategory: :data,
         slug: "typeset",
         title: "Typeset",
         description: "Theme-aware reading rhythm for semantic HTML and rendered rich content.",
@@ -504,7 +504,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :layout,
+        subcategory: :application,
         slug: "auth-shell",
         title: "Authentication shell",
         description: "A semantic narrow page landmark that owns gutters and layout while applications own every visible authentication region.",
@@ -514,7 +514,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :layout,
+        subcategory: :application,
         slug: "app-shell",
         title: "Application shell",
         description: "Sidebar, topbar, and hybrid application frames that reflow one AppNavigation tree through an accessible narrow drawer.",
@@ -524,7 +524,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :layout,
+        subcategory: :application,
         slug: "settings-layout",
         title: "Settings layout",
         description: "A labelled settings navigation beside one neutral content region with a Nitro-owned narrow stack.",
@@ -554,7 +554,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :layout,
+        subcategory: :application,
         slug: "page-header",
         title: "Page header",
         description: "A fixed page-level heading sequence with optional context and one typed action group.",
@@ -574,7 +574,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :data,
+        subcategory: :application,
         slug: "data-section",
         title: "Data section",
         description: "An owned section heading around exactly one caller-populated Table or typed EmptyState.",
@@ -584,7 +584,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :forms,
+        subcategory: :application,
         slug: "settings-section",
         title: "Form section",
         description: "A section frame for one complete caller-owned Rails form and an optional typed status.",
@@ -594,7 +594,7 @@ module Gallery
       ),
       Entry.new(
         kind: :component,
-        subcategory: :actions,
+        subcategory: :application,
         slug: "danger-zone",
         title: "Danger zone",
         description: "Impact anatomy around a caller-owned confirmation composition and explicit safe escape.",
@@ -1034,14 +1034,17 @@ module Gallery
     end
 
     # Component subcategories, in sidebar order. Every component entry declares
-    # exactly one of these slugs.
+    # exactly one of these slugs. Primitives lead, roles follow, and the
+    # application chrome closes the list.
     SUBCATEGORIES = [
-      [ :layout, "Layout", "Page frames, shells, and content structure." ],
-      [ :navigation, "Navigation", "Destination trees, tabs, toolbars, and pagination." ],
+      [ :primitives, "Primitives", "Buttons, icons, badges, and identity." ],
       [ :forms, "Forms", "Controls, fields, and form structure." ],
-      [ :data, "Data display", "Tables, records, media, and identity." ],
+      [ :overlays, "Overlays", "Dialogs, sheets, menus, and floating surfaces." ],
       [ :feedback, "Feedback", "Status, guidance, and empty results." ],
-      [ :actions, "Actions", "Buttons, menus, overlays, and destructive intent." ]
+      [ :data, "Data display", "Tables, records, media, and prose." ],
+      [ :navigation, "Navigation", "Tabs, toolbars, and pagination." ],
+      [ :layout, "Layout", "Flex, grid, and content structure." ],
+      [ :application, "Application", "Shells, sections, and page chrome." ]
     ].freeze
 
     COLLECTIONS = [
@@ -1054,7 +1057,7 @@ module Gallery
             slug: "theme",
             title: "Theme",
             description: "Appearance-independent scales and semantic theme roles.",
-            entries: pick_entries.call(:foundation, "colors", "spacing-sizing", "typography", "effects")
+            entries: pick_entries.call(:foundation, "colors", "typography", "spacing-sizing", "effects")
           )
         ].freeze
       ),

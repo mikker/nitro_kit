@@ -36,18 +36,29 @@ class GalleryTest < ActionDispatch::IntegrationTest
     sections = navigation.css("[data-slot='app-navigation-section']")
     labels = sections.map { |section| section.at_css("[data-slot='app-navigation-section-label']").text }
 
-    assert_equal Gallery::Catalog.collections.flat_map { |collection|
-      collection.categories.map { |category| "#{collection.title} · #{category.title}" }
-    }, labels
+    expected_labels = Gallery::Catalog.collections.flat_map do |collection|
+      if collection.categories.one?
+        [ collection.title ]
+      else
+        collection.categories.map(&:title)
+      end
+    end
+    assert_equal expected_labels, labels.map(&:strip)
+
     Gallery::Catalog.collections.each do |collection|
+      collection_labels = collection.categories.one? ? [ collection.title ] : collection.categories.map(&:title)
       collection_sections = sections.select do |section|
-        section.at_css("[data-slot='app-navigation-section-label']").text.start_with?("#{collection.title} · ")
+        collection_labels.include?(section.at_css("[data-slot='app-navigation-section-label']").text.strip)
       end
       assert_equal collection.entries.map(&:title),
         collection_sections.flat_map { |section|
           section.css("[data-slot='app-navigation-item-label']").map(&:text)
         }
     end
+
+    assert_equal sections.size,
+      navigation.css("details[data-slot='app-navigation-section-disclosure'][open]").size,
+      "every sidebar section is collapsible and starts open"
     assert_select "[data-gallery='navigation'] a", text: "Blocks", count: 0
     assert_select "[data-gallery='navigation'] a", text: "Flows", count: 0
   end

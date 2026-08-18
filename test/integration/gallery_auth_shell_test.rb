@@ -9,7 +9,7 @@ class GalleryAuthShellTest < ActionDispatch::IntegrationTest
   test "catalog exposes the evidence-backed auth shell without speculative shells" do
     entry = Gallery::Catalog.fetch!(kind: :component, slug: "auth-shell")
 
-    assert_equal "Layout", Gallery::Catalog.category_for(entry).title
+    assert_equal "Application", Gallery::Catalog.category_for(entry).title
     assert_equal "/gallery/components/auth-shell", Gallery::Catalog.path_for(entry, routes: Rails.application.routes.url_helpers)
     shell_slugs = Gallery::Catalog.entries(kind: :component).map(&:slug)
     assert_includes shell_slugs, "app-shell"

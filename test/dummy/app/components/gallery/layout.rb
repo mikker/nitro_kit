@@ -96,7 +96,10 @@ module Gallery
           Gallery::Catalog.collections.each do |collection|
             navigation.divider
             collection.categories.each do |category|
-              navigation.section(label: "#{collection.title} · #{category.title}") do
+              navigation.section(
+                label: section_label(collection, category),
+                collapsible: true
+              ) do
                 category.entries.each do |entry|
                   navigation.item(
                     entry.title,
@@ -119,6 +122,12 @@ module Gallery
           end
         end
       end
+    end
+
+    # Single-category collections read as one group; multi-category
+    # collections read as their group names alone.
+    def section_label(collection, category)
+      collection.categories.one? ? collection.title : category.title
     end
 
     def current_entry?(entry)

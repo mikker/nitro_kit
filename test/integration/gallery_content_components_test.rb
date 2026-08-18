@@ -8,7 +8,7 @@ class GalleryContentComponentsTest < ActionDispatch::IntegrationTest
 
     assert_equal SLUGS, entries.map(&:slug)
     assert_equal(
-      %i[layout data data forms actions feedback],
+      %i[application data application application application feedback],
       entries.map(&:subcategory)
     )
     assert_equal(
