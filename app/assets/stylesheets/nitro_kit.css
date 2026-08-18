@@ -3374,6 +3374,25 @@
   }
 }
 
+@layer nitro-kit.compound {
+  /* The search strip is the field: the icon sits inside it and the nested
+     Input drops its own chrome, so the row reads as one input bounded by
+     the hairline below. The caret is the focus indicator, matching every
+     command palette — a ring on a borderless strip would show permanently,
+     because text inputs are always focus-visible. */
+  :where([data-nk="command-palette"] [data-slot="command-palette-input"]) {
+    background: transparent;
+    border-color: transparent;
+  }
+
+  :where(
+      [data-nk="command-palette"]
+        [data-slot="command-palette-input"]:focus-visible
+    ) {
+    outline: none;
+  }
+}
+
 @layer nitro-kit.state {
   @media (hover: hover) {
     :where(
