@@ -4,6 +4,13 @@
 
 ### Added
 
+- Assert the stylesheet conventions as tests. Spacing steps, geometry
+  through tokens, the type and shadow scales, themeable opacity, guarded
+  motion and hover, the four z-index tiers, and the destructive spellings
+  are now nine architecture tests with no allowlist, so a new violation
+  fails instead of accumulating. The conventions themselves are documented
+  in the style guide: the spacing step set, the z-index tiers, the
+  color-mix percentage vocabulary, and the single deliberate easing curve.
 - Add `--nk-icon-size-{xs,sm,md,lg,xl}` and `--nk-avatar-size-{xs,sm,md,lg}`.
   The Icon and Avatar ladders were literals repeated across five files;
   AvatarStack duplicated the entire avatar ladder. Alert's status icon and
@@ -71,6 +78,12 @@
 
 ### Changed
 
+- Meet the 44px touch target on coarse pointers: `--nk-control-height-md`
+  adopts the large step there, so default buttons, inputs, selects, menu
+  rows, and the choice controls' hit areas all reach 44px on touch screens
+  while explicit smaller and larger sizes keep their own scale. This pairs
+  with the existing pointer text contract and is asserted by the same
+  touch-emulation system test.
 - Derive the remaining owned geometry from the token system. Switch is now
   four declared inputs — block heights ride the control ramp, the track is
   the block plus the handle's travel — so density presets finally reach
