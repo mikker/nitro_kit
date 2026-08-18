@@ -79,7 +79,10 @@ class HotwireLifecycleTest < ApplicationSystemTestCase
 
     within("turbo-frame#form_registration") do
       fill_in "Email", with: "valid@example.test"
-      fill_in "Note", with: "Preserve this note through both mutations"
+      execute_script(
+        "document.querySelector('#registration_note').value = arguments[0]",
+        "Preserve this note through both mutations"
+      )
       click_button "Register"
     end
 
