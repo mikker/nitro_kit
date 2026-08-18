@@ -12,6 +12,7 @@ class CommandPaletteSystemTest < ApplicationSystemTestCase
 
     assert_selector "#{root}[data-enhanced]"
     assert_no_selector "#{trigger}[command]"
+    assert_no_selector "#{trigger}[commandfor]"
     find(trigger).click
 
     assert_selector "#{panel}[open]"
