@@ -48,9 +48,16 @@
     color: inherit;
   }
 
+  :where([data-gallery="brand-row"]) {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
   :where([data-gallery="brand"]) {
-    display: grid;
-    gap: 0.25rem;
     color: inherit;
     font-size: 1.1rem;
     font-weight: 650;
@@ -58,10 +65,9 @@
     text-decoration: none;
   }
 
-  :where([data-gallery="brand"] small) {
-    color: color-mix(in srgb, currentColor 62%, transparent);
-    font-size: var(--nk-text-xs);
-    font-weight: var(--nk-font-weight-normal);
+  :where([data-gallery="brand-version"]) {
+    flex: none;
+    text-decoration: none;
   }
 
   :where(

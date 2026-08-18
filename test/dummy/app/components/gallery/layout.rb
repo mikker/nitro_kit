@@ -47,9 +47,23 @@ module Gallery
     private
 
     def gallery_brand
-      a(href: gallery_root_path, data: { gallery: "brand" }) do
-        strong { "Nitro Kit" }
-        small { "2.0 gallery" }
+      div(data: { gallery: "brand-row" }) do
+        a(href: gallery_root_path, data: { gallery: "brand" }) do
+          strong { "Nitro Kit" }
+        end
+        a(
+          href: "https://github.com/mikker/nitro_kit/releases",
+          target: "_blank",
+          rel: "noopener",
+          aria: { label: "Nitro Kit #{NitroKit::VERSION} — releases on GitHub" },
+          data: { gallery: "brand-version" }
+        ) do
+          render NitroKit::Badge.new(
+            "v#{NitroKit::VERSION}",
+            id: "gallery-version-badge",
+            size: :sm
+          )
+        end
       end
     end
 
