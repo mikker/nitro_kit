@@ -86,6 +86,9 @@
 
 ### Changed
 
+- Quiet the dark-mode borders one step, from `--nk-zinc-700` to
+  `--nk-zinc-800`, so dark surfaces read as soft fills instead of outlined
+  boxes.
 - Render every owned glyph through the Icon component. Accordion, Select,
   Combobox, and AppNavigation drew their chevrons as hand-approximated SVG
   paths; they now render the real Lucide `chevron-down` at the same sizes,

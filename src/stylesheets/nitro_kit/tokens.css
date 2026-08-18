@@ -480,7 +480,7 @@
       --nk-color-foreground: var(--nk-zinc-100);
       --nk-color-muted: var(--nk-zinc-800);
       --nk-color-muted-foreground: var(--nk-zinc-400);
-      --nk-color-border: var(--nk-zinc-700);
+      --nk-color-border: var(--nk-zinc-800);
       --nk-color-focus: var(--nk-blue-700);
       --nk-color-primary: var(--nk-white);
       --nk-color-primary-foreground: var(--nk-zinc-800);
@@ -536,7 +536,7 @@
     --nk-color-foreground: var(--nk-zinc-100);
     --nk-color-muted: var(--nk-zinc-800);
     --nk-color-muted-foreground: var(--nk-zinc-400);
-    --nk-color-border: var(--nk-zinc-700);
+    --nk-color-border: var(--nk-zinc-800);
     --nk-color-focus: var(--nk-blue-700);
     --nk-color-primary: var(--nk-white);
     --nk-color-primary-foreground: var(--nk-zinc-800);
