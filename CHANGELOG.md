@@ -4,6 +4,10 @@
 
 ### Added
 
+- Add `label_visible: false` to `AppearancePicker`'s segmented presentation:
+  the legend hides visually while the fieldset keeps its accessible name,
+  and the segmented row now fills its container like every other control,
+  with the segments sharing the width equally.
 - Add collapsible `AppNavigation` sections: `section(label:, collapsible:
   true, expanded:)` renders native `details` and `summary` with an owned
   chevron, so groups disclose without JavaScript and open state stays on

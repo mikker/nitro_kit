@@ -117,7 +117,8 @@ module Gallery
           div(data: { gallery: "theme-switcher" }) do
             render NitroKit::AppearancePicker.new(
               id: "gallery-appearance",
-              label: "Appearance"
+              label: "Appearance",
+              label_visible: false
             )
           end
         end

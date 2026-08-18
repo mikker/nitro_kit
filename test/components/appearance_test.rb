@@ -128,6 +128,31 @@ class AppearanceTest < ActiveSupport::TestCase
     end
   end
 
+  test "picker hides the label visually while keeping the group name" do
+    node = render_node(
+      NitroKit::AppearancePicker.new(id: "footer-appearance", label_visible: false)
+    )
+    legend = node.at_css("[data-slot='appearance-picker-legend']")
+
+    assert_equal "legend", legend.name
+    assert_equal "hidden", legend["data-state"]
+    assert_equal I18n.t("nitro_kit.appearance_picker.label"), legend.text
+
+    visible = render_node(NitroKit::AppearancePicker.new(id: "visible-appearance"))
+    refute visible.at_css("[data-slot='appearance-picker-legend']").key?("data-state")
+
+    assert_raises(ArgumentError) do
+      NitroKit::AppearancePicker.new(id: "appearance", label_visible: :no)
+    end
+    assert_raises(ArgumentError, match: /segmented/) do
+      NitroKit::AppearancePicker.new(
+        id: "appearance",
+        label_visible: false,
+        presentation: :select
+      )
+    end
+  end
+
   test "picker renders radio and select presentations" do
     radios = render_node(
       NitroKit::AppearancePicker.new(
