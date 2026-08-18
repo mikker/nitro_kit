@@ -13,7 +13,7 @@ module Gallery
 
       def component_template
         example_section(
-          "Account questions",
+          "Anatomy",
           slug: "accordion-account",
           description: "Native details and summary elements work without JavaScript; single mode uses browser-native named grouping and keeps stable keyed IDs."
         ) do

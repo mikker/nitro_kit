@@ -67,7 +67,7 @@ module Gallery
         kind: :foundation,
         slug: "effects",
         title: "Effects",
-        description: "The shadow ladder and the shared disabled treatment.",
+        description: "Radius, elevation, motion, and the shared disabled treatment.",
         page: Gallery::Foundations::EffectsPage,
         states: [],
         expected_roots: %w[button]
