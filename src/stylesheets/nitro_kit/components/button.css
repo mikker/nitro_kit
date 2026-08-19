@@ -105,11 +105,18 @@
     padding-inline: 0;
   }
 
-  /* Follows the Input pointer guard so the pair stays matched on touch.
-     Explicit smaller and larger sizes keep their own scale. */
+  /* Touch guidance wants a 44px minimum target. The rendered button keeps
+     its size; an invisible extension expands the tappable area to the large
+     control step on coarse pointers. */
   @media (pointer: coarse) {
-    :where([data-nk="button"][data-size="md"]) {
-      --_nk-button-font-size: var(--nk-text-base);
+    :where([data-nk="button"])::after {
+      position: absolute;
+      inset-block-start: 50%;
+      inset-inline-start: 50%;
+      inline-size: max(100%, var(--nk-control-height-lg));
+      block-size: max(100%, var(--nk-control-height-lg));
+      content: "";
+      translate: -50% -50%;
     }
   }
 }
