@@ -1,33 +1,52 @@
 require "application_system_test_case"
 
-# Data-entry controls and the default Button read at the same size on either
-# pointer: --nk-text-sm on fine pointers, --nk-text-base on coarse ones, where
-# iOS Safari would zoom a focused control below 16px. Chromium emulates the
-# media feature; real-device iOS behavior is covered by the manual release
-# check in docs/browser_support.md.
+# Data-entry controls read --nk-text-base below the md breakpoint, where a
+# focused control under 16px would zoom the viewport, and --nk-text-sm from
+# md up. Buttons read --nk-text-sm at every width.
 class ControlTextTest < ApplicationSystemTestCase
-  test "controls and buttons read at one size per pointer" do
+  test "control text keys to the width axis" do
     visit gallery_component_path("input")
+    original = current_window.size
 
     sizes = evaluate_script(measure_script)
-    assert_equal "14/14/14/14", sizes, "fine pointers read at --nk-text-sm"
+    assert_equal "14/14/14/14", sizes, "wide viewports read at --nk-text-sm"
 
-    browser.execute_cdp("Emulation.setTouchEmulationEnabled", enabled: true, maxTouchPoints: 5)
+    current_window.resize_to(600, 900)
     sizes = evaluate_script(measure_script)
-    assert_equal "16/16/16/16", sizes, "coarse pointers read at --nk-text-base"
+    assert_equal "16/16/16/14", sizes,
+      "narrow viewports read data-entry controls at --nk-text-base"
   ensure
-    browser.execute_cdp("Emulation.setTouchEmulationEnabled", enabled: false)
+    current_window.resize_to(*original) if original
   end
 
-  test "default controls meet the 44px touch target on coarse pointers" do
+  test "buttons keep their size and grow only their touch target on coarse pointers" do
     visit gallery_component_path("input")
 
     heights = evaluate_script(height_script)
-    assert_equal "36/36/36", heights, "fine pointers keep the 36px default"
+    assert_equal "36/36/36", heights, "fine pointers render the 36px default"
 
     browser.execute_cdp("Emulation.setTouchEmulationEnabled", enabled: true, maxTouchPoints: 5)
     heights = evaluate_script(height_script)
-    assert_equal "44/44/44", heights, "coarse pointers adopt the large step"
+    assert_equal "36/36/36", heights, "coarse pointers keep the rendered size"
+
+    hit = evaluate_script(<<~JAVASCRIPT)
+      (() => {
+        const probe = document.createElement("div");
+        probe.style.cssText = "position: fixed; inset-block-start: 100px; inset-inline-start: 100px; padding: 40px;";
+        probe.innerHTML = '<button data-nk="button" data-size="md">Save</button>';
+        document.body.appendChild(probe);
+        const button = probe.querySelector("button");
+        const rect = button.getBoundingClientRect();
+        const below = document.elementFromPoint(
+          rect.left + rect.width / 2,
+          rect.bottom + 3
+        );
+        probe.remove();
+        return below === button ? "extended" : "not-extended";
+      })()
+    JAVASCRIPT
+    assert_equal "extended", hit,
+      "a tap just outside the rendered button still lands on it"
   ensure
     browser.execute_cdp("Emulation.setTouchEmulationEnabled", enabled: false)
   end
