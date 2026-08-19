@@ -75,7 +75,7 @@ module Gallery
         example_section(
           "Control heights",
           slug: "control-heights",
-          description: "Five Nitro-specific tokens keep interactive controls aligned across component families, sharing one inline padding. On coarse pointers the default adopts the large step, so every default control meets the 44px touch target."
+          description: "Five Nitro-specific tokens keep interactive controls aligned across component families, sharing one inline padding. On coarse pointers, buttons extend an invisible touch target to the large step, so taps meet the 44px minimum while the rendered size stays put."
         ) do
           example("Every control height", slug: "control-height-scale", mode: :full_width) do
             div(role: "list", data: { gallery: "measure-list" }) do

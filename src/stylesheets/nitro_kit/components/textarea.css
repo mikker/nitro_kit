@@ -7,7 +7,7 @@
     padding-inline: var(--nk-control-padding-inline);
     color: var(--nk-color-foreground);
     font: inherit;
-    font-size: var(--nk-text-sm);
+    font-size: var(--nk-text-base);
     line-height: var(--nk-leading-normal);
     resize: vertical;
     background: var(--nk-color-surface);
@@ -18,10 +18,10 @@
       box-shadow var(--nk-duration-normal) var(--nk-ease);
   }
 
-  /* Matches the Input pointer guard. */
-  @media (pointer: coarse) {
+  /* Matches the Input width split. */
+  @media (min-width: 48rem) {
     :where([data-nk="textarea"]) {
-      font-size: var(--nk-text-base);
+      font-size: var(--nk-text-sm);
     }
   }
 

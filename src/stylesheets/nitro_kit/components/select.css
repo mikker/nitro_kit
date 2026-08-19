@@ -13,7 +13,7 @@
       calc(var(--nk-control-padding-inline) * 2 + var(--nk-space) * 4);
     color: inherit;
     font: inherit;
-    font-size: var(--nk-text-sm);
+    font-size: var(--nk-text-base);
     appearance: none;
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
@@ -46,10 +46,10 @@
     appearance: auto;
   }
 
-  /* Matches the Input pointer guard. */
-  @media (pointer: coarse) {
+  /* Matches the Input width split. */
+  @media (min-width: 48rem) {
     :where([data-nk="select"] > [data-slot="select-control"]) {
-      font-size: var(--nk-text-base);
+      font-size: var(--nk-text-sm);
     }
   }
 
