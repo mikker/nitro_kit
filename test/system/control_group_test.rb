@@ -4,12 +4,12 @@ class ControlGroupSystemTest < ApplicationSystemTestCase
   test "groups preserve large buttons and stretch smaller controls including dates to match" do
     visit gallery_component_path("control-group")
 
-    assert_group_heights "#gallery-control-group-size-sm", group: 40, input: 40, button: 40
+    assert_group_heights "#gallery-control-group-size-sm", group: 36, input: 36, button: 36
     assert_group_heights "#gallery-control-group-size-lg", group: 44, select: 44, addon: 44, button: 44
     date_group = "#gallery-control-group-date"
     assert_equal "date", find("#{date_group} > [data-nk='input']")[:type]
-    assert_group_heights date_group, group: 40, input: 40, addon: 40, button: 40
-    assert_in_delta 38, date_line_height(date_group), 0.01
+    assert_group_heights date_group, group: 36, input: 36, addon: 36, button: 36
+    assert_in_delta 34, date_line_height(date_group), 0.01
     assert_no_severe_console_errors(context: "ControlGroup intrinsic heights")
   end
 

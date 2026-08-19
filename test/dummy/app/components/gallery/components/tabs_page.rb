@@ -13,7 +13,7 @@ module Gallery
 
       def component_template
         example_section(
-          "Workspace settings",
+          "Anatomy",
           slug: "tabs-settings",
           description: "Each declaration owns its panel; all panels remain readable until Stimulus enhances the APG tab behavior, and inactive content remains available to find in page."
         ) do

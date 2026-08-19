@@ -153,6 +153,63 @@ class AppNavigationTest < ActiveSupport::TestCase
     assert_equal "true", icon_end["aria-hidden"]
   end
 
+  test "collapsible sections disclose natively and keep the section list" do
+    node = render_navigation do |navigation|
+      navigation.body do
+        navigation.section(label: "Manage", collapsible: true) do
+          navigation.item("Projects", href: "/projects")
+        end
+        navigation.section(label: "Archive", collapsible: true, expanded: false) do
+          navigation.item("Exports", href: "/exports")
+        end
+        navigation.section(label: "Plain") do
+          navigation.item("Help", href: "/help")
+        end
+      end
+    end
+
+    disclosures = node.css("[data-slot='app-navigation-section-disclosure']")
+    assert_equal %w[details details], disclosures.map(&:name)
+    assert disclosures.first.key?("open")
+    refute disclosures.last.key?("open")
+
+    summary = disclosures.first.at_css("summary[data-slot='app-navigation-section-label']")
+    assert_equal "Manage", summary.text.strip
+    assert_equal "svg", summary.at_css("[data-slot='app-navigation-section-icon']").name
+    assert_equal "true", summary.at_css("svg")["aria-hidden"]
+    assert disclosures.all? { |details| details.at_css("ul[data-slot='app-navigation-section-list']") }
+
+    plain = node.css("[data-slot='app-navigation-section']").last
+    assert_nil plain.at_css("details")
+    assert_equal "span", plain.at_css("[data-slot='app-navigation-section-label']").name
+  end
+
+  test "collapsible sections validate their options" do
+    assert_raises(ArgumentError, match: /requires a label/) do
+      render_navigation do |navigation|
+        navigation.body do
+          navigation.section(collapsible: true) { navigation.item("A", href: "/a") }
+        end
+      end
+    end
+
+    assert_raises(ArgumentError) do
+      render_navigation do |navigation|
+        navigation.body do
+          navigation.section(label: "A", collapsible: :yes) { navigation.item("A", href: "/a") }
+        end
+      end
+    end
+
+    assert_raises(ArgumentError) do
+      render_navigation do |navigation|
+        navigation.body do
+          navigation.section(label: "A", collapsible: true, expanded: "open") { navigation.item("A", href: "/a") }
+        end
+      end
+    end
+  end
+
   test "requires an explicit body with at least one item" do
     assert_match(/declaration block/, assert_raises(ArgumentError) do
       NitroKit::AppNavigation.new(label: "Primary").call

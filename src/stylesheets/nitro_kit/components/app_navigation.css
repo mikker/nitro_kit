@@ -65,6 +65,60 @@
     line-height: var(--nk-leading-tight);
   }
 
+  /* A collapsible label is a row like the items around it: same height,
+     same inline padding, symmetric block margins, and the same hover
+     treatment, so the disclosure target is as easy to hit as a destination. */
+  :where(
+      [data-nk="app-navigation"]
+        summary[data-slot="app-navigation-section-label"]
+    ) {
+    display: flex;
+    gap: var(--nk-space);
+    align-items: center;
+    min-block-size: var(--nk-control-height-md);
+    margin: var(--nk-space) 0;
+    padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
+    list-style: none;
+    user-select: none;
+    cursor: pointer;
+    border-radius: var(--nk-radius-lg);
+    transition:
+      color var(--nk-duration-normal) var(--nk-ease),
+      background-color var(--nk-duration-normal) var(--nk-ease);
+  }
+
+  :where(
+      [data-nk="app-navigation"]
+        summary[data-slot="app-navigation-section-label"]::-webkit-details-marker
+    ) {
+    display: none;
+  }
+
+  :where(
+      [data-nk="app-navigation"] [data-slot="app-navigation-section-icon"]
+    ) {
+    flex: none;
+    inline-size: var(--nk-icon-size-xs);
+    block-size: var(--nk-icon-size-xs);
+    transition: transform var(--nk-duration-fast) var(--nk-ease);
+  }
+
+  :where(
+      [data-nk="app-navigation"]
+        [data-slot="app-navigation-section-disclosure"]:not([open])
+        [data-slot="app-navigation-section-icon"]
+    ) {
+    transform: rotate(-90deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(
+        [data-nk="app-navigation"] [data-slot="app-navigation-section-icon"]
+      ) {
+      transition-duration: 0.01ms;
+    }
+  }
+
   :where([data-nk="app-navigation"] [data-slot="app-navigation-item"]) {
     flex: 0 0 auto;
     min-inline-size: 0;
@@ -80,7 +134,7 @@
     font-weight: var(--nk-font-weight-medium);
     line-height: var(--nk-leading-tight);
     text-decoration: none;
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);
@@ -134,10 +188,29 @@
 
   @media (hover: hover) {
     :where(
-        [data-nk="app-navigation"] [data-slot="app-navigation-item-link"]:hover
+        [data-nk="app-navigation"] [data-slot="app-navigation-item-link"]:hover,
+        [data-nk="app-navigation"]
+          summary[data-slot="app-navigation-section-label"]:hover
       ) {
       color: var(--nk-app-shell-sidebar-accent-foreground);
       background: var(--nk-app-shell-sidebar-accent);
+    }
+  }
+
+  :where(
+      [data-nk="app-navigation"]
+        summary[data-slot="app-navigation-section-label"]:focus-visible
+    ) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: calc(var(--nk-focus-offset) * -1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(
+        [data-nk="app-navigation"]
+          summary[data-slot="app-navigation-section-label"]
+      ) {
+      transition-duration: 0.01ms;
     }
   }
 

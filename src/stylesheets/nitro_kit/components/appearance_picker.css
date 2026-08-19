@@ -14,12 +14,20 @@
     font-weight: var(--nk-title-compact-weight);
   }
 
+  /* The gap below the label exists only when there is a label. */
   :where(
       [data-nk="appearance-picker"] > [data-slot="appearance-picker-options"]
     ) {
     display: flex;
     flex-wrap: wrap;
     gap: calc(var(--nk-space) * 3);
+  }
+
+  :where(
+      [data-nk="appearance-picker"]
+        > [data-slot="appearance-picker-legend"]
+        + [data-slot="appearance-picker-options"]
+    ) {
     margin-block-start: calc(var(--nk-space) * 2);
   }
 
@@ -30,15 +38,17 @@
     display: grid;
   }
 
+  /* Like every other control, the segmented row fills its container and the
+     parent owns the available width; the segments share it equally. */
   :where(
       [data-nk="appearance-picker"][data-presentation="segmented"]
         > [data-slot="appearance-picker-options"]
     ) {
-    display: inline-flex;
+    display: flex;
     gap: 0;
     padding: var(--nk-space);
     background: var(--nk-color-muted);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 
   :where([data-nk="appearance-picker"] [data-slot="appearance-picker-option"]) {
@@ -65,8 +75,10 @@
         [data-slot="appearance-picker-option"]
     ) {
     position: relative;
+    flex: 1 1 0;
+    justify-content: center;
     padding-inline: calc(var(--nk-space) * 3);
-    border-radius: calc(var(--nk-radius-md) - var(--nk-space));
+    border-radius: calc(var(--nk-radius-lg) - var(--nk-space));
   }
 
   :where(
@@ -90,7 +102,7 @@
     font: inherit;
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 }
 

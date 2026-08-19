@@ -115,8 +115,8 @@ module Gallery
         example_section(
           "Presentation",
           slug: "dropzone-presentation",
-          description: "The default presentation keeps the native file input visible beside the drop target. " \
-            "The minimal presentation hides it, so the drop target is the only visible affordance."
+          description: "The default minimal presentation hides the native file input, so the drop target " \
+            "is the only visible affordance. The input presentation keeps the native control visible beside it."
         ) do
           example(
             "Drop target only",
@@ -129,10 +129,26 @@ module Gallery
               name: "avatar[file]",
               label: "Replace the workspace avatar",
               description: "One PNG, no larger than 1 MB.",
-              presentation: :minimal,
               direct_upload: false,
               accept: "image/png",
               max_bytes: 1024 * 1024
+            )
+          end
+
+          example(
+            "Visible native input",
+            slug: "dropzone-native-input",
+            description: "presentation: :input keeps the native file control visible beside the drop target."
+          ) do
+            render NitroKit::Dropzone.new(
+              id: "gallery-dropzone-native-input",
+              name: "attachment[file]",
+              label: "Attach a document",
+              description: "One PDF, no larger than 2 MB.",
+              presentation: :input,
+              direct_upload: false,
+              accept: "application/pdf",
+              max_bytes: 2 * 1024 * 1024
             )
           end
         end

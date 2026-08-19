@@ -4,6 +4,14 @@
 
 ### Added
 
+- Add `label_visible: false` to `AppearancePicker`'s segmented presentation:
+  the legend hides visually while the fieldset keeps its accessible name,
+  and the segmented row now fills its container like every other control,
+  with the segments sharing the width equally.
+- Add collapsible `AppNavigation` sections: `section(label:, collapsible:
+  true, expanded:)` renders native `details` and `summary` with an owned
+  chevron, so groups disclose without JavaScript and open state stays on
+  the native `open` attribute. Collapsible sections require a label.
 - Assert the stylesheet conventions as tests. Spacing steps, geometry
   through tokens, the type and shadow scales, themeable opacity, guarded
   motion and hover, the four z-index tiers, and the destructive spellings
@@ -78,6 +86,31 @@
 
 ### Changed
 
+- Quiet the dark-mode borders one step, from `--nk-zinc-700` to
+  `--nk-zinc-800`, so dark surfaces read as soft fills instead of outlined
+  boxes.
+- Render every owned glyph through the Icon component. Accordion, Select,
+  Combobox, and AppNavigation drew their chevrons as hand-approximated SVG
+  paths; they now render the real Lucide `chevron-down` at the same sizes,
+  so one icon set covers the whole library and the glyphs ride the
+  `--nk-icon-size-*` axis.
+- Default Dropzone to the `minimal` presentation: the drop target is the
+  only visible affordance, and the native file input stays focusable,
+  named, and operable underneath — file selection and keyboard flows are
+  unchanged. `presentation: :input` still shows the native control beside
+  the drop target.
+- Align the default radius at `--nk-radius-lg` (8px): inputs, selects,
+  textareas, the rich text editor, navigation rows, pagination links,
+  dropzone, grouped choice frames, and the segmented appearance picker now
+  share Button's radius instead of sitting one step smaller. Nested pieces
+  are concentric — inner radius is the container's minus its padding — so
+  segmented options, dropdown items, combobox options, and command palette
+  destinations sit flush inside their containers. Buttons' smaller sizes
+  keep their own ramp; badges, tooltips, and chips keep their compact radii.
+- Lower the default control height from 40px to 36px:
+  `--nk-control-height-md` is now `2.25rem`, so medium buttons, inputs,
+  selects, menu rows, and the choice controls' hit areas tighten together.
+  Coarse pointers still adopt the 44px large step.
 - Meet the 44px touch target on coarse pointers: `--nk-control-height-md`
   adopts the large step there, so default buttons, inputs, selects, menu
   rows, and the choice controls' hit areas all reach 44px on touch screens

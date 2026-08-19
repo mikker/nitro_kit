@@ -91,7 +91,7 @@
 
     --nk-control-height-xs: 1.5rem;
     --nk-control-height-sm: 2rem;
-    --nk-control-height-md: 2.5rem;
+    --nk-control-height-md: 2.25rem;
     --nk-control-height-lg: 2.75rem;
     --nk-control-height-xl: 3.5rem;
 
@@ -495,7 +495,7 @@
       --nk-color-foreground: var(--nk-zinc-100);
       --nk-color-muted: var(--nk-zinc-800);
       --nk-color-muted-foreground: var(--nk-zinc-400);
-      --nk-color-border: var(--nk-zinc-700);
+      --nk-color-border: var(--nk-zinc-800);
       --nk-color-focus: var(--nk-blue-700);
       --nk-color-primary: var(--nk-white);
       --nk-color-primary-foreground: var(--nk-zinc-800);
@@ -551,7 +551,7 @@
     --nk-color-foreground: var(--nk-zinc-100);
     --nk-color-muted: var(--nk-zinc-800);
     --nk-color-muted-foreground: var(--nk-zinc-400);
-    --nk-color-border: var(--nk-zinc-700);
+    --nk-color-border: var(--nk-zinc-800);
     --nk-color-focus: var(--nk-blue-700);
     --nk-color-primary: var(--nk-white);
     --nk-color-primary-foreground: var(--nk-zinc-800);
@@ -1107,6 +1107,60 @@
     line-height: var(--nk-leading-tight);
   }
 
+  /* A collapsible label is a row like the items around it: same height,
+     same inline padding, symmetric block margins, and the same hover
+     treatment, so the disclosure target is as easy to hit as a destination. */
+  :where(
+      [data-nk="app-navigation"]
+        summary[data-slot="app-navigation-section-label"]
+    ) {
+    display: flex;
+    gap: var(--nk-space);
+    align-items: center;
+    min-block-size: var(--nk-control-height-md);
+    margin: var(--nk-space) 0;
+    padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
+    list-style: none;
+    user-select: none;
+    cursor: pointer;
+    border-radius: var(--nk-radius-lg);
+    transition:
+      color var(--nk-duration-normal) var(--nk-ease),
+      background-color var(--nk-duration-normal) var(--nk-ease);
+  }
+
+  :where(
+      [data-nk="app-navigation"]
+        summary[data-slot="app-navigation-section-label"]::-webkit-details-marker
+    ) {
+    display: none;
+  }
+
+  :where(
+      [data-nk="app-navigation"] [data-slot="app-navigation-section-icon"]
+    ) {
+    flex: none;
+    inline-size: var(--nk-icon-size-xs);
+    block-size: var(--nk-icon-size-xs);
+    transition: transform var(--nk-duration-fast) var(--nk-ease);
+  }
+
+  :where(
+      [data-nk="app-navigation"]
+        [data-slot="app-navigation-section-disclosure"]:not([open])
+        [data-slot="app-navigation-section-icon"]
+    ) {
+    transform: rotate(-90deg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(
+        [data-nk="app-navigation"] [data-slot="app-navigation-section-icon"]
+      ) {
+      transition-duration: 0.01ms;
+    }
+  }
+
   :where([data-nk="app-navigation"] [data-slot="app-navigation-item"]) {
     flex: 0 0 auto;
     min-inline-size: 0;
@@ -1122,7 +1176,7 @@
     font-weight: var(--nk-font-weight-medium);
     line-height: var(--nk-leading-tight);
     text-decoration: none;
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);
@@ -1176,10 +1230,29 @@
 
   @media (hover: hover) {
     :where(
-        [data-nk="app-navigation"] [data-slot="app-navigation-item-link"]:hover
+        [data-nk="app-navigation"] [data-slot="app-navigation-item-link"]:hover,
+        [data-nk="app-navigation"]
+          summary[data-slot="app-navigation-section-label"]:hover
       ) {
       color: var(--nk-app-shell-sidebar-accent-foreground);
       background: var(--nk-app-shell-sidebar-accent);
+    }
+  }
+
+  :where(
+      [data-nk="app-navigation"]
+        summary[data-slot="app-navigation-section-label"]:focus-visible
+    ) {
+    outline: var(--nk-focus-width) solid var(--nk-color-focus);
+    outline-offset: calc(var(--nk-focus-offset) * -1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :where(
+        [data-nk="app-navigation"]
+          summary[data-slot="app-navigation-section-label"]
+      ) {
+      transition-duration: 0.01ms;
     }
   }
 
@@ -1225,7 +1298,7 @@
     color: var(--nk-color-primary-foreground);
     text-decoration: none;
     background: var(--nk-color-primary);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     transform: translateY(calc(-100% - (var(--nk-space) * 4)));
     transition: transform var(--nk-duration-fast) var(--nk-ease);
@@ -1280,7 +1353,7 @@
     cursor: pointer;
     background: transparent;
     border: 0;
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     transition:
       background-color var(--nk-duration-fast) var(--nk-ease),
       scale var(--nk-duration-fast) var(--nk-ease);
@@ -1825,12 +1898,20 @@
     font-weight: var(--nk-title-compact-weight);
   }
 
+  /* The gap below the label exists only when there is a label. */
   :where(
       [data-nk="appearance-picker"] > [data-slot="appearance-picker-options"]
     ) {
     display: flex;
     flex-wrap: wrap;
     gap: calc(var(--nk-space) * 3);
+  }
+
+  :where(
+      [data-nk="appearance-picker"]
+        > [data-slot="appearance-picker-legend"]
+        + [data-slot="appearance-picker-options"]
+    ) {
     margin-block-start: calc(var(--nk-space) * 2);
   }
 
@@ -1841,15 +1922,17 @@
     display: grid;
   }
 
+  /* Like every other control, the segmented row fills its container and the
+     parent owns the available width; the segments share it equally. */
   :where(
       [data-nk="appearance-picker"][data-presentation="segmented"]
         > [data-slot="appearance-picker-options"]
     ) {
-    display: inline-flex;
+    display: flex;
     gap: 0;
     padding: var(--nk-space);
     background: var(--nk-color-muted);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 
   :where([data-nk="appearance-picker"] [data-slot="appearance-picker-option"]) {
@@ -1876,8 +1959,10 @@
         [data-slot="appearance-picker-option"]
     ) {
     position: relative;
+    flex: 1 1 0;
+    justify-content: center;
     padding-inline: calc(var(--nk-space) * 3);
-    border-radius: calc(var(--nk-radius-md) - var(--nk-space));
+    border-radius: calc(var(--nk-radius-lg) - var(--nk-space));
   }
 
   :where(
@@ -1901,7 +1986,7 @@
     font: inherit;
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 }
 
@@ -2876,7 +2961,7 @@
     padding: calc(var(--nk-space) * 3);
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 }
 
@@ -2963,7 +3048,7 @@
     font-size: var(--nk-text-sm);
     line-height: var(--nk-leading-normal);
     cursor: pointer;
-    border-radius: var(--nk-radius-md);
+    border-radius: calc(var(--nk-radius-lg) - var(--nk-space));
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);
@@ -3057,12 +3142,17 @@
     inline-size: 100%;
   }
 
+  /* The trigger reads as the search input it opens: Input's plain border,
+     radius, and surface instead of Button's raised treatment. */
   :where([data-nk="command-palette"] > [data-slot="command-palette-trigger"]) {
     justify-content: start;
     inline-size: 100%;
     color: var(--nk-color-muted-foreground);
     font-weight: var(--nk-font-weight-normal);
     background: var(--nk-color-surface);
+    border-color: var(--nk-color-border);
+    border-block-end-color: var(--nk-color-border);
+    border-radius: var(--nk-radius-lg);
     box-shadow: none;
   }
 
@@ -3086,6 +3176,17 @@
     white-space: nowrap;
   }
 
+  /* The chip floats at the trigger's end with the same inset on its top,
+     end, and bottom sides, so the trigger's text padding stands down. */
+  :where(
+      [data-nk="command-palette"]
+        > [data-slot="command-palette-trigger"]:has(
+          [data-slot="command-palette-shortcut"]
+        )
+    ) {
+    padding-inline-end: calc(var(--nk-space) * 2 - var(--nk-border-width));
+  }
+
   :where([data-nk="command-palette"] [data-slot="command-palette-shortcut"]) {
     flex: 0 0 auto;
     margin-inline-start: auto;
@@ -3100,9 +3201,19 @@
     border-radius: var(--nk-radius-sm);
   }
 
+  /* The panel hugs its results and stops growing at the cap; past it, the
+     shrinkable list scrolls. The flex display applies only while open, so
+     the closed dialog keeps the user-agent's display: none. */
+  :where(
+      [data-nk="command-palette"] > [data-slot="command-palette-panel"][open]
+    ) {
+    display: flex;
+    flex-direction: column;
+  }
+
   :where([data-nk="command-palette"] > [data-slot="command-palette-panel"]) {
     inline-size: min(calc(100% - (var(--nk-space) * 8)), var(--nk-content-md));
-    block-size: min(36rem, calc(100dvh - (var(--nk-space) * 8)));
+    max-block-size: min(36rem, calc(100dvh - (var(--nk-space) * 8)));
     margin: auto;
     padding: 0;
     overflow: hidden;
@@ -3111,6 +3222,16 @@
     border: var(--nk-border-width) solid var(--nk-color-border);
     border-radius: var(--nk-radius-xl);
     box-shadow: var(--nk-shadow-lg);
+  }
+
+  /* The modal palette anchors near the viewport top, so hugging grows and
+     shrinks downward and the top edge never jumps while filtering. The
+     non-enhanced fallback keeps the centered default. */
+  :where(
+      [data-nk="command-palette"] > [data-slot="command-palette-panel"]:modal
+    ) {
+    margin-block: 12dvh auto;
+    max-block-size: min(36rem, calc(88dvh - var(--nk-space) * 4));
   }
 
   :where(
@@ -3137,6 +3258,7 @@
 
   :where([data-nk="command-palette"] [data-slot="command-palette-search"]) {
     display: flex;
+    flex: 0 0 auto;
     gap: calc(var(--nk-space) * 2);
     align-items: center;
     padding: calc(var(--nk-space) * 2);
@@ -3200,8 +3322,10 @@
 
   :where([data-nk="command-palette"] [data-slot="command-palette-results"]) {
     display: grid;
+    flex: 0 1 auto;
     gap: var(--nk-space);
     max-block-size: 26rem;
+    min-block-size: 0;
     padding: calc(var(--nk-space) * 2);
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -3225,7 +3349,7 @@
     font-size: var(--nk-text-sm);
     line-height: var(--nk-leading-normal);
     text-decoration: none;
-    border-radius: var(--nk-radius-md);
+    border-radius: calc(var(--nk-radius-xl) - var(--nk-space) * 2);
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);
@@ -3247,6 +3371,25 @@
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
     text-align: center;
+  }
+}
+
+@layer nitro-kit.compound {
+  /* The search strip is the field: the icon sits inside it and the nested
+     Input drops its own chrome, so the row reads as one input bounded by
+     the hairline below. The caret is the focus indicator, matching every
+     command palette — a ring on a borderless strip would show permanently,
+     because text inputs are always focus-visible. */
+  :where([data-nk="command-palette"] [data-slot="command-palette-input"]) {
+    background: transparent;
+    border-color: transparent;
+  }
+
+  :where(
+      [data-nk="command-palette"]
+        [data-slot="command-palette-input"]:focus-visible
+    ) {
+    outline: none;
   }
 }
 
@@ -3412,8 +3555,8 @@
           span[data-slot="control-group-addon"]
         ):first-child
     ) {
-    border-start-start-radius: var(--nk-radius-md);
-    border-end-start-radius: var(--nk-radius-md);
+    border-start-start-radius: var(--nk-radius-lg);
+    border-end-start-radius: var(--nk-radius-lg);
   }
 
   :where(
@@ -3424,8 +3567,8 @@
           span[data-slot="control-group-addon"]
         ):last-child
     ) {
-    border-start-end-radius: var(--nk-radius-md);
-    border-end-end-radius: var(--nk-radius-md);
+    border-start-end-radius: var(--nk-radius-lg);
+    border-end-end-radius: var(--nk-radius-lg);
   }
 
   :where(
@@ -3471,13 +3614,13 @@
   }
 
   :where([data-nk="control-group"] > [data-nk="select"]:first-child > select) {
-    border-start-start-radius: var(--nk-radius-md);
-    border-end-start-radius: var(--nk-radius-md);
+    border-start-start-radius: var(--nk-radius-lg);
+    border-end-start-radius: var(--nk-radius-lg);
   }
 
   :where([data-nk="control-group"] > [data-nk="select"]:last-child > select) {
-    border-start-end-radius: var(--nk-radius-md);
-    border-end-end-radius: var(--nk-radius-md);
+    border-start-end-radius: var(--nk-radius-lg);
+    border-end-end-radius: var(--nk-radius-lg);
   }
 }
 
@@ -3780,7 +3923,7 @@
     cursor: pointer;
     background: transparent;
     border: 0;
-    border-radius: var(--nk-radius-md);
+    border-radius: calc(var(--nk-radius-lg) - var(--nk-space));
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);
@@ -3925,7 +4068,7 @@
     color: var(--nk-color-foreground);
     background: var(--nk-color-canvas);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 
   :where(
@@ -3974,7 +4117,7 @@
     padding: calc(var(--nk-space) * 2);
     background: var(--nk-color-canvas);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 
   :where([data-nk="dropzone"] [data-slot="dropzone-preview-image"]) {
@@ -5129,7 +5272,7 @@
     font-size: var(--nk-text-sm);
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     transition:
       border-color var(--nk-duration-normal) var(--nk-ease),
       box-shadow var(--nk-duration-normal) var(--nk-ease);
@@ -5848,7 +5991,7 @@
     font-size: var(--nk-text-sm);
     font-weight: var(--nk-font-weight-medium);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 
   :where(
@@ -6421,7 +6564,7 @@
     padding: calc(var(--nk-space) * 3);
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 
   :where(
@@ -6432,7 +6575,7 @@
     gap: 0;
     padding: var(--nk-space);
     background: var(--nk-color-muted);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 
   :where(
@@ -6442,7 +6585,7 @@
     ) {
     min-inline-size: 0;
     padding-inline: calc(var(--nk-space) * 3);
-    border-radius: calc(var(--nk-radius-md) - var(--nk-space));
+    border-radius: calc(var(--nk-radius-lg) - var(--nk-space));
   }
 
   :where(
@@ -6500,7 +6643,7 @@
       [data-nk="radio-button-group"][data-presentation="segmented"]
         [data-slot="radio-button-control"]:focus-visible
     ) {
-    border-radius: calc(var(--nk-radius-md) - var(--nk-space));
+    border-radius: calc(var(--nk-radius-lg) - var(--nk-space));
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: calc(var(--nk-focus-offset) * -1);
   }
@@ -6521,7 +6664,7 @@
     --lexxy-color-ink-lightest: var(--nk-color-muted);
     --lexxy-color-selected: var(--nk-color-muted);
     --lexxy-color-selected-hover: var(--nk-color-border);
-    --lexxy-radius: var(--nk-radius-md);
+    --lexxy-radius: var(--nk-radius-lg);
     display: block;
     inline-size: 100%;
   }
@@ -6564,7 +6707,7 @@
     appearance: none;
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     transition:
       border-color var(--nk-duration-normal) var(--nk-ease),
       box-shadow var(--nk-duration-normal) var(--nk-ease);
@@ -6664,7 +6807,7 @@
     font-weight: var(--nk-font-weight-medium);
     line-height: var(--nk-leading-tight);
     text-decoration: none;
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);
@@ -7435,7 +7578,7 @@
     resize: vertical;
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
     transition:
       border-color var(--nk-duration-normal) var(--nk-ease),
       box-shadow var(--nk-duration-normal) var(--nk-ease);

@@ -41,7 +41,7 @@
     color: var(--nk-color-foreground);
     background: var(--nk-color-canvas);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 
   :where(
@@ -90,7 +90,7 @@
     padding: calc(var(--nk-space) * 2);
     background: var(--nk-color-canvas);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 
   :where([data-nk="dropzone"] [data-slot="dropzone-preview-image"]) {

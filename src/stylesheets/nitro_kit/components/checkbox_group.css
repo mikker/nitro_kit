@@ -45,7 +45,7 @@
     padding: calc(var(--nk-space) * 3);
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-md);
+    border-radius: var(--nk-radius-lg);
   }
 }
 

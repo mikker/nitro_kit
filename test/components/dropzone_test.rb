@@ -224,7 +224,8 @@ class DropzoneTest < ActiveSupport::TestCase
     assert_nil input["tabindex"]
     assert_equal "avatar-input", node.at_css("label[data-slot='dropzone-message']")["for"]
 
-    assert_equal "input", render_dropzone["data-presentation"]
+    assert_equal "minimal", render_dropzone["data-presentation"]
+    assert_equal "input", render_dropzone(presentation: :input)["data-presentation"]
   end
 
   test "ships owner-scoped static CSS" do

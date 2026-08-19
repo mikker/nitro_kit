@@ -4,10 +4,27 @@ module Gallery
       SPACING_STEPS = NitroKit::LayoutOptions::GAPS
       CONTROL_HEIGHTS = {
         xs: [ "1.5rem", "24px" ],
-        sm: [ "1.75rem", "28px" ],
-        md: [ "2.5rem", "40px" ],
+        sm: [ "2rem", "32px" ],
+        md: [ "2.25rem", "36px" ],
         lg: [ "2.75rem", "44px" ],
         xl: [ "3.5rem", "56px" ]
+      }.freeze
+      CHOICE_SIZES = {
+        md: [ "1.125rem", "18px" ],
+        lg: [ "1.5rem", "24px" ]
+      }.freeze
+      ICON_SIZES = {
+        xs: [ "0.75rem", "12px" ],
+        sm: [ "1rem", "16px" ],
+        md: [ "1.25rem", "20px" ],
+        lg: [ "1.75rem", "28px" ],
+        xl: [ "2.25rem", "36px" ]
+      }.freeze
+      AVATAR_SIZES = {
+        xs: [ "1.5rem", "24px" ],
+        sm: [ "2rem", "32px" ],
+        md: [ "3rem", "48px" ],
+        lg: [ "4rem", "64px" ]
       }.freeze
       CONTENT_WIDTHS = {
         sm: [ "24rem", "384px" ],
@@ -58,7 +75,7 @@ module Gallery
         example_section(
           "Control heights",
           slug: "control-heights",
-          description: "Five Nitro-specific tokens keep interactive controls aligned across component families."
+          description: "Five Nitro-specific tokens keep interactive controls aligned across component families, sharing one inline padding. On coarse pointers the default adopts the large step, so every default control meets the 44px touch target."
         ) do
           example("Every control height", slug: "control-height-scale", mode: :full_width) do
             div(role: "list", data: { gallery: "measure-list" }) do
@@ -68,6 +85,72 @@ module Gallery
                   label: "--nk-control-height-#{size}",
                   value: "#{rem} · #{pixels}",
                   css_value: "var(--nk-control-height-#{size})",
+                  axis: :height
+                )
+              end
+              measurement(
+                key: "control-padding-inline",
+                label: "--nk-control-padding-inline",
+                value: "0.75rem · 12px",
+                css_value: "var(--nk-control-padding-inline)"
+              )
+            end
+          end
+        end
+
+        example_section(
+          "Choice sizes",
+          slug: "choice-sizes",
+          description: "Checkboxes and radios have one comfortable size and one emphasized size; every box, glyph, and indent derives from these two tokens."
+        ) do
+          example("Every choice size", slug: "choice-size-scale", mode: :full_width) do
+            div(role: "list", data: { gallery: "measure-list" }) do
+              CHOICE_SIZES.each do |size, (rem, pixels)|
+                measurement(
+                  key: "choice-#{size}",
+                  label: "--nk-choice-size-#{size}",
+                  value: "#{rem} · #{pixels}",
+                  css_value: "var(--nk-choice-size-#{size})",
+                  axis: :height
+                )
+              end
+            end
+          end
+        end
+
+        example_section(
+          "Icon sizes",
+          slug: "icon-sizes",
+          description: "The Icon ladder also sizes every owned glyph: Alert status icons and the Accordion chevron resolve through the same axis."
+        ) do
+          example("Every icon size", slug: "icon-size-scale", mode: :full_width) do
+            div(role: "list", data: { gallery: "measure-list" }) do
+              ICON_SIZES.each do |size, (rem, pixels)|
+                measurement(
+                  key: "icon-#{size}",
+                  label: "--nk-icon-size-#{size}",
+                  value: "#{rem} · #{pixels}",
+                  css_value: "var(--nk-icon-size-#{size})",
+                  axis: :height
+                )
+              end
+            end
+          end
+        end
+
+        example_section(
+          "Avatar sizes",
+          slug: "avatar-sizes",
+          description: "Avatar and AvatarStack share one size ladder, from a list row up to a profile header."
+        ) do
+          example("Every avatar size", slug: "avatar-size-scale", mode: :full_width) do
+            div(role: "list", data: { gallery: "measure-list" }) do
+              AVATAR_SIZES.each do |size, (rem, pixels)|
+                measurement(
+                  key: "avatar-#{size}",
+                  label: "--nk-avatar-size-#{size}",
+                  value: "#{rem} · #{pixels}",
+                  css_value: "var(--nk-avatar-size-#{size})",
                   axis: :height
                 )
               end

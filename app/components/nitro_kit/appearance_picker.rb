@@ -13,6 +13,7 @@ module NitroKit
     def initialize(
       id:,
       label: I18n.t("nitro_kit.appearance_picker.label"),
+      label_visible: true,
       presentation: :segmented,
       preference: :system,
       html: {},
@@ -22,13 +23,21 @@ module NitroKit
     )
       @identifier = validate_id!("AppearancePicker id", id)
       @label = validate_label!(label)
+      @label_visible = validate_boolean!(:label_visible, label_visible)
       @presentation = validate_choice!(:presentation, presentation, PRESENTATIONS)
       @preference = validate_choice!(:preference, preference, PREFERENCES)
+      if !@label_visible && @presentation != :segmented
+        raise ArgumentError,
+          "AppearancePicker label_visible: false requires the segmented presentation"
+      end
 
       super(
         component: :appearance_picker,
         attributes: {
           id: @identifier,
+          # Browsers give legends special layout, so a hidden label omits the
+          # element entirely and the fieldset keeps its name through ARIA.
+          aria: @label_visible ? {} : { label: @label },
           data: {
             controller: "nk--appearance",
             presentation: @presentation,
@@ -50,7 +59,7 @@ module NitroKit
       return render_dropdown if @presentation == :dropdown
 
       fieldset(**root_attributes) do
-        legend(**slot_attributes(:legend)) { plain(@label) }
+        legend(**slot_attributes(:legend)) { plain(@label) } if @label_visible
         div(**slot_attributes(:options)) do
           PREFERENCES.each { |preference| render_option(preference) }
         end

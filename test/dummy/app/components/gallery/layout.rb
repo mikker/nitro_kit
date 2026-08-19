@@ -47,9 +47,23 @@ module Gallery
     private
 
     def gallery_brand
-      a(href: gallery_root_path, data: { gallery: "brand" }) do
-        strong { "Nitro Kit" }
-        small { "2.0 gallery" }
+      div(data: { gallery: "brand-row" }) do
+        a(href: gallery_root_path, data: { gallery: "brand" }) do
+          strong { "Nitro Kit" }
+        end
+        a(
+          href: "https://github.com/mikker/nitro_kit/releases",
+          target: "_blank",
+          rel: "noopener",
+          aria: { label: "Nitro Kit #{NitroKit::VERSION} — releases on GitHub" },
+          data: { gallery: "brand-version" }
+        ) do
+          render NitroKit::Badge.new(
+            "v#{NitroKit::VERSION}",
+            id: "gallery-version-badge",
+            size: :sm
+          )
+        end
       end
     end
 
@@ -96,7 +110,11 @@ module Gallery
           Gallery::Catalog.collections.each do |collection|
             navigation.divider
             collection.categories.each do |category|
-              navigation.section(label: "#{collection.title} · #{category.title}") do
+              navigation.section(
+                label: section_label(collection, category),
+                collapsible: true,
+                expanded: section_expanded?(collection, category)
+              ) do
                 category.entries.each do |entry|
                   navigation.item(
                     entry.title,
@@ -114,11 +132,24 @@ module Gallery
           div(data: { gallery: "theme-switcher" }) do
             render NitroKit::AppearancePicker.new(
               id: "gallery-appearance",
-              label: "Appearance"
+              label: "Appearance",
+              label_visible: false
             )
           end
         end
       end
+    end
+
+    # Single-category collections read as one group; multi-category
+    # collections read as their group names alone.
+    def section_label(collection, category)
+      collection.categories.one? ? collection.title : category.title
+    end
+
+    # Composition groups start collapsed; the group holding the current page
+    # always starts open so navigation never lands somewhere invisible.
+    def section_expanded?(collection, category)
+      collection.kind != :composition || category.entries.any? { |entry| current_entry?(entry) }
     end
 
     def current_entry?(entry)

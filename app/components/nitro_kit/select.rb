@@ -77,20 +77,7 @@ module NitroKit
     def render_toggle_icon
       return if @multiple
 
-      svg(
-        **slot_attributes(
-          :icon,
-          attributes: {
-            viewbox: "0 0 20 20",
-            fill: "none",
-            stroke: "currentColor",
-            stroke_width: 1.5,
-            aria: { hidden: true }
-          }
-        )
-      ) do |icon|
-        icon.path(d: "m6.5 8 3.5 3.5L13.5 8", stroke_linecap: "round", stroke_linejoin: "round")
-      end
+      render_in_slot(Icon.new(:chevron_down, size: :sm), :icon)
     end
 
     def control_attributes

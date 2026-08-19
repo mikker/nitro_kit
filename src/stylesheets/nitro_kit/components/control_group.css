@@ -73,8 +73,8 @@
           span[data-slot="control-group-addon"]
         ):first-child
     ) {
-    border-start-start-radius: var(--nk-radius-md);
-    border-end-start-radius: var(--nk-radius-md);
+    border-start-start-radius: var(--nk-radius-lg);
+    border-end-start-radius: var(--nk-radius-lg);
   }
 
   :where(
@@ -85,8 +85,8 @@
           span[data-slot="control-group-addon"]
         ):last-child
     ) {
-    border-start-end-radius: var(--nk-radius-md);
-    border-end-end-radius: var(--nk-radius-md);
+    border-start-end-radius: var(--nk-radius-lg);
+    border-end-end-radius: var(--nk-radius-lg);
   }
 
   :where(
@@ -132,12 +132,12 @@
   }
 
   :where([data-nk="control-group"] > [data-nk="select"]:first-child > select) {
-    border-start-start-radius: var(--nk-radius-md);
-    border-end-start-radius: var(--nk-radius-md);
+    border-start-start-radius: var(--nk-radius-lg);
+    border-end-start-radius: var(--nk-radius-lg);
   }
 
   :where([data-nk="control-group"] > [data-nk="select"]:last-child > select) {
-    border-start-end-radius: var(--nk-radius-md);
-    border-end-end-radius: var(--nk-radius-md);
+    border-start-end-radius: var(--nk-radius-lg);
+    border-end-end-radius: var(--nk-radius-lg);
   }
 }

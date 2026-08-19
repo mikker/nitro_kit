@@ -106,25 +106,7 @@ module NitroKit
     end
 
     def chevron
-      svg(
-        **slot_attributes(
-          :icon,
-          attributes: {
-            viewbox: "0 0 16 16",
-            width: 16,
-            height: 16,
-            fill: "none",
-            stroke: "currentColor",
-            stroke_width: 1.5,
-            stroke_linecap: "round",
-            stroke_linejoin: "round",
-            focusable: "false",
-            aria: { hidden: true }
-          }
-        )
-      ) do |svg|
-        svg.path(d: "m4 6 4 4 4-4")
-      end
+      render_in_slot(Icon.new(:chevron_down, size: :sm), :icon)
     end
 
     def trigger_id(item)

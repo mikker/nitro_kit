@@ -3,12 +3,17 @@
     inline-size: 100%;
   }
 
+  /* The trigger reads as the search input it opens: Input's plain border,
+     radius, and surface instead of Button's raised treatment. */
   :where([data-nk="command-palette"] > [data-slot="command-palette-trigger"]) {
     justify-content: start;
     inline-size: 100%;
     color: var(--nk-color-muted-foreground);
     font-weight: var(--nk-font-weight-normal);
     background: var(--nk-color-surface);
+    border-color: var(--nk-color-border);
+    border-block-end-color: var(--nk-color-border);
+    border-radius: var(--nk-radius-lg);
     box-shadow: none;
   }
 
@@ -32,6 +37,17 @@
     white-space: nowrap;
   }
 
+  /* The chip floats at the trigger's end with the same inset on its top,
+     end, and bottom sides, so the trigger's text padding stands down. */
+  :where(
+      [data-nk="command-palette"]
+        > [data-slot="command-palette-trigger"]:has(
+          [data-slot="command-palette-shortcut"]
+        )
+    ) {
+    padding-inline-end: calc(var(--nk-space) * 2 - var(--nk-border-width));
+  }
+
   :where([data-nk="command-palette"] [data-slot="command-palette-shortcut"]) {
     flex: 0 0 auto;
     margin-inline-start: auto;
@@ -46,9 +62,19 @@
     border-radius: var(--nk-radius-sm);
   }
 
+  /* The panel hugs its results and stops growing at the cap; past it, the
+     shrinkable list scrolls. The flex display applies only while open, so
+     the closed dialog keeps the user-agent's display: none. */
+  :where(
+      [data-nk="command-palette"] > [data-slot="command-palette-panel"][open]
+    ) {
+    display: flex;
+    flex-direction: column;
+  }
+
   :where([data-nk="command-palette"] > [data-slot="command-palette-panel"]) {
     inline-size: min(calc(100% - (var(--nk-space) * 8)), var(--nk-content-md));
-    block-size: min(36rem, calc(100dvh - (var(--nk-space) * 8)));
+    max-block-size: min(36rem, calc(100dvh - (var(--nk-space) * 8)));
     margin: auto;
     padding: 0;
     overflow: hidden;
@@ -57,6 +83,16 @@
     border: var(--nk-border-width) solid var(--nk-color-border);
     border-radius: var(--nk-radius-xl);
     box-shadow: var(--nk-shadow-lg);
+  }
+
+  /* The modal palette anchors near the viewport top, so hugging grows and
+     shrinks downward and the top edge never jumps while filtering. The
+     non-enhanced fallback keeps the centered default. */
+  :where(
+      [data-nk="command-palette"] > [data-slot="command-palette-panel"]:modal
+    ) {
+    margin-block: 12dvh auto;
+    max-block-size: min(36rem, calc(88dvh - var(--nk-space) * 4));
   }
 
   :where(
@@ -83,6 +119,7 @@
 
   :where([data-nk="command-palette"] [data-slot="command-palette-search"]) {
     display: flex;
+    flex: 0 0 auto;
     gap: calc(var(--nk-space) * 2);
     align-items: center;
     padding: calc(var(--nk-space) * 2);
@@ -146,8 +183,10 @@
 
   :where([data-nk="command-palette"] [data-slot="command-palette-results"]) {
     display: grid;
+    flex: 0 1 auto;
     gap: var(--nk-space);
     max-block-size: 26rem;
+    min-block-size: 0;
     padding: calc(var(--nk-space) * 2);
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -171,7 +210,7 @@
     font-size: var(--nk-text-sm);
     line-height: var(--nk-leading-normal);
     text-decoration: none;
-    border-radius: var(--nk-radius-md);
+    border-radius: calc(var(--nk-radius-xl) - var(--nk-space) * 2);
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);
@@ -193,6 +232,25 @@
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
     text-align: center;
+  }
+}
+
+@layer nitro-kit.compound {
+  /* The search strip is the field: the icon sits inside it and the nested
+     Input drops its own chrome, so the row reads as one input bounded by
+     the hairline below. The caret is the focus indicator, matching every
+     command palette — a ring on a borderless strip would show permanently,
+     because text inputs are always focus-visible. */
+  :where([data-nk="command-palette"] [data-slot="command-palette-input"]) {
+    background: transparent;
+    border-color: transparent;
+  }
+
+  :where(
+      [data-nk="command-palette"]
+        [data-slot="command-palette-input"]:focus-visible
+    ) {
+    outline: none;
   }
 }
 

@@ -69,7 +69,7 @@
     font-size: var(--nk-text-sm);
     line-height: var(--nk-leading-normal);
     cursor: pointer;
-    border-radius: var(--nk-radius-md);
+    border-radius: calc(var(--nk-radius-lg) - var(--nk-space));
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
       background-color var(--nk-duration-normal) var(--nk-ease);

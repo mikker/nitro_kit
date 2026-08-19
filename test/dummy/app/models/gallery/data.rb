@@ -304,11 +304,11 @@ module Gallery
     ].freeze
 
     ICON_SIZES = [
-      IconExample.new(slug: "xs", name: :save, size: :xs, label: "Extra small save icon", stroke_width: 1.5),
-      IconExample.new(slug: "sm", name: :save, size: :sm, label: "Small save icon", stroke_width: 1.5),
-      IconExample.new(slug: "md", name: :save, size: :md, label: "Medium save icon", stroke_width: 1.5),
-      IconExample.new(slug: "lg", name: :save, size: :lg, label: "Large save icon", stroke_width: 1.5),
-      IconExample.new(slug: "xl", name: :save, size: :xl, label: "Extra large save icon", stroke_width: 1.5)
+      IconExample.new(slug: "xs", name: :flame, size: :xs, label: "Extra small flame icon", stroke_width: 1.5),
+      IconExample.new(slug: "sm", name: :flame, size: :sm, label: "Small flame icon", stroke_width: 1.5),
+      IconExample.new(slug: "md", name: :flame, size: :md, label: "Medium flame icon", stroke_width: 1.5),
+      IconExample.new(slug: "lg", name: :flame, size: :lg, label: "Large flame icon", stroke_width: 1.5),
+      IconExample.new(slug: "xl", name: :flame, size: :xl, label: "Extra large flame icon", stroke_width: 1.5)
     ].freeze
 
     ALERT_VARIANTS = [

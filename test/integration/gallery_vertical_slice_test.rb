@@ -37,10 +37,10 @@ class GalleryVerticalSliceTest < ActionDispatch::IntegrationTest
       assert_select "[data-nk='icon'][data-size='#{size}']", minimum: 1
     end
 
-    assert_select "#gallery-icon-meaningful[role='img'][aria-label='Deployment succeeded'][aria-hidden='false']"
+    assert_select "#gallery-icon-meaningful[role='img'][aria-label='Trending this week'][aria-hidden='false']"
     assert_select "#gallery-icon-decorative[aria-hidden='true']:not([role])"
-    assert_select "#gallery-icon-save-thin[stroke-width='1']"
-    assert_select "#gallery-icon-warning-bold[stroke-width='2']"
+    assert_select "#gallery-icon-stroke-thin[stroke-width='1']"
+    assert_select "#gallery-icon-stroke-bold[stroke-width='2']"
   end
 
   test "card page covers its anatomy long content and a composed profile form" do
