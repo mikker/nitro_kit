@@ -110,13 +110,10 @@
 - Lower the default control height from 40px to 36px:
   `--nk-control-height-md` is now `2.25rem`, so medium buttons, inputs,
   selects, menu rows, and the choice controls' hit areas tighten together.
-  Coarse pointers still adopt the 44px large step.
-- Meet the 44px touch target on coarse pointers: `--nk-control-height-md`
-  adopts the large step there, so default buttons, inputs, selects, menu
-  rows, and the choice controls' hit areas all reach 44px on touch screens
-  while explicit smaller and larger sizes keep their own scale. This pairs
-  with the existing pointer text contract and is asserted by the same
-  touch-emulation system test.
+- Meet the 44px touch target on coarse pointers: Button extends an
+  invisible tap area to the large control step, so a touch just outside a
+  small or default button still lands on it while the rendered size stays
+  put, asserted by a touch-emulation hit test.
 - Derive the remaining owned geometry from the token system. Switch is now
   four declared inputs — block heights ride the control ramp, the track is
   the block plus the handle's travel — so density presets finally reach
@@ -144,10 +141,10 @@
 - Dress the AvatarStack overflow chip as one of the heads: the same neutral
   fill as the avatar fallbacks and the same hairline ring, instead of an
   elevated fill with no ring.
-- Read data-entry controls and the default Button at `--nk-text-sm` on fine
-  pointers and `--nk-text-base` on coarse ones, where iOS Safari zooms a
-  focused control below 16px. The pair stays matched in both modes; Select
-  and Textarea follow the same rules instead of inheriting the page font.
+- Read data-entry controls at `--nk-text-base` below the md breakpoint and
+  `--nk-text-sm` from md up, so a focused control never zooms the viewport
+  on small screens; buttons read `--nk-text-sm` at every width. Select and
+  Textarea follow the same rule instead of inheriting the page font.
 - Even the control height ramp: `--nk-control-height-sm` is the 2rem small
   Button already rendered, and Button consumes the token, so the theme
   customizer's density exports reach small buttons instead of being

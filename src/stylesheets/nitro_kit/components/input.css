@@ -7,7 +7,7 @@
     min-block-size: var(--nk-control-height-md);
     padding-inline: var(--nk-control-padding-inline);
     color: var(--nk-color-foreground);
-    font-size: var(--nk-text-sm);
+    font-size: var(--nk-text-base);
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
     border-radius: var(--nk-radius-lg);
@@ -56,17 +56,14 @@
       var(--nk-button-default-border);
   }
 
-  /* Controls read at --nk-text-sm beside buttons and labels. On coarse
-     pointers both move to --nk-text-base, because iOS Safari zooms the
-     viewport when a focused control computes below 16px, and Button follows
-     so the pair stays matched in both modes. The guard assumes
-     --nk-text-base resolves to at least 16px; a theme that shrinks it below
-     that reintroduces the zoom. */
-  @media (pointer: coarse) {
+  /* Data-entry controls read --nk-text-base below the md breakpoint, where
+     a focused control under 16px would zoom the viewport, and --nk-text-sm
+     from md up, beside 14px labels and body text. */
+  @media (min-width: 48rem) {
     :where(
       [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
     ) {
-      font-size: var(--nk-text-base);
+      font-size: var(--nk-text-sm);
     }
   }
 

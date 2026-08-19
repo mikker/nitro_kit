@@ -303,7 +303,7 @@ Variants assign private values and generic state consumes them:
 
 Never target an unqualified `[data-slot]`. Never use `transition: all`.
 
-Interaction treatments respond to capability, not viewport width: hover effects sit under `@media (hover: hover)` and pointer-sized adjustments under `@media (pointer: coarse)`. Data-entry controls and the default Button read at `--nk-text-sm` on fine pointers and `--nk-text-base` on coarse ones, because iOS Safari zooms the viewport when a focused control computes below 16px. On the same axis, `--nk-control-height-md` adopts the large step on coarse pointers so the default control meets the 44px touch target. Width is the wrong axis for either: a tablet is wide and still zooms.
+Interaction treatments respond to capability: hover effects sit under `@media (hover: hover)`, and Button extends an invisible touch target to the large control step under `@media (pointer: coarse)`, so taps meet the 44px minimum while the rendered size stays put. Control text keys to the width axis: data-entry controls read `--nk-text-base` below the `md` breakpoint, where a focused control under 16px zooms the viewport, and `--nk-text-sm` from `md` up; buttons read `--nk-text-sm` at every width.
 
 Spacing multipliers on `--nk-space` come from the step set `0.5 1 1.5 2 2.5 3 4 5 6 7 8 10 12 16 24`. Panel and overlay maximums are viewport policy and stay literal rem values; everything a component owns rides a token or a step.
 
