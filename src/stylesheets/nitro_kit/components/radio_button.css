@@ -26,9 +26,9 @@
   }
 
   :where(
-    [data-nk="radio-button"] [data-slot="radio-button-control"],
-    [data-nk="radio-button"] [data-slot="radio-button-indicator"]
-  ) {
+      [data-nk="radio-button"] [data-slot="radio-button-control"],
+      [data-nk="radio-button"] [data-slot="radio-button-indicator"]
+    ) {
     grid-area: 1 / 1;
     inline-size: var(--_nk-choice-size);
     block-size: var(--_nk-choice-size);
@@ -80,26 +80,26 @@
 
 @layer nitro-kit.state {
   :where(
-    [data-nk="radio-button"]
-      [data-slot="radio-button-control"]:checked
-      + [data-slot="radio-button-indicator"]
-  ) {
+      [data-nk="radio-button"]
+        [data-slot="radio-button-control"]:checked
+        + [data-slot="radio-button-indicator"]
+    ) {
     border-color: var(--nk-color-primary);
   }
 
   :where(
-    [data-nk="radio-button"]
-      [data-slot="radio-button-control"]:checked
-      + [data-slot="radio-button-indicator"]
-  )::after {
+      [data-nk="radio-button"]
+        [data-slot="radio-button-control"]:checked
+        + [data-slot="radio-button-indicator"]
+    )::after {
     opacity: 1;
   }
 
   :where(
-    [data-nk="radio-button"]
-      [data-slot="radio-button-control"]:focus-visible
-      + [data-slot="radio-button-indicator"]
-  ) {
+      [data-nk="radio-button"]
+        [data-slot="radio-button-control"]:focus-visible
+        + [data-slot="radio-button-indicator"]
+    ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -114,10 +114,10 @@
      the destructive border stands down. `:user-valid` never matches before the user
      touches the control, so an untouched invalid radio keeps its border. */
   :where(
-    [data-nk="radio-button"]
-      [data-slot="radio-button-control"][aria-invalid="true"]:not(:user-valid)
-      + [data-slot="radio-button-indicator"]
-  ) {
+      [data-nk="radio-button"]
+        [data-slot="radio-button-control"][aria-invalid="true"]:not(:user-valid)
+        + [data-slot="radio-button-indicator"]
+    ) {
     border-color: var(--nk-color-destructive);
   }
 

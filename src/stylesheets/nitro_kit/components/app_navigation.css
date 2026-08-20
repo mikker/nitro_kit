@@ -94,9 +94,7 @@
     display: none;
   }
 
-  :where(
-      [data-nk="app-navigation"] [data-slot="app-navigation-section-icon"]
-    ) {
+  :where([data-nk="app-navigation"] [data-slot="app-navigation-section-icon"]) {
     flex: none;
     inline-size: var(--nk-icon-size-xs);
     block-size: var(--nk-icon-size-xs);

@@ -34,9 +34,9 @@
   }
 
   :where(
-    [data-nk="switch"] [data-slot="switch-control"],
-    [data-nk="switch"] [data-slot="switch-track"]
-  ) {
+      [data-nk="switch"] [data-slot="switch-control"],
+      [data-nk="switch"] [data-slot="switch-track"]
+    ) {
     grid-area: 1 / 1;
   }
 
@@ -94,28 +94,28 @@
 
 @layer nitro-kit.state {
   :where(
-    [data-nk="switch"]
-      [data-slot="switch-control"]:checked
-      + [data-slot="switch-track"]
-  ) {
+      [data-nk="switch"]
+        [data-slot="switch-control"]:checked
+        + [data-slot="switch-track"]
+    ) {
     background: var(--nk-color-primary);
     border-color: var(--nk-color-primary);
   }
 
   :where(
-    [data-nk="switch"]
-      [data-slot="switch-control"]:checked
-      + [data-slot="switch-track"]
-      > [data-slot="switch-handle"]
-  ) {
+      [data-nk="switch"]
+        [data-slot="switch-control"]:checked
+        + [data-slot="switch-track"]
+        > [data-slot="switch-handle"]
+    ) {
     transform: translateX(var(--_nk-switch-travel));
   }
 
   :where(
-    [data-nk="switch"]
-      [data-slot="switch-control"]:focus-visible
-      + [data-slot="switch-track"]
-  ) {
+      [data-nk="switch"]
+        [data-slot="switch-control"]:focus-visible
+        + [data-slot="switch-track"]
+    ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -130,10 +130,10 @@
      destructive border stands down. `:user-valid` never matches before the user
      touches the control, so an untouched invalid switch keeps its border. */
   :where(
-    [data-nk="switch"]
-      [data-slot="switch-control"][aria-invalid="true"]:not(:user-valid)
-      + [data-slot="switch-track"]
-  ) {
+      [data-nk="switch"]
+        [data-slot="switch-control"][aria-invalid="true"]:not(:user-valid)
+        + [data-slot="switch-track"]
+    ) {
     border-color: var(--nk-color-destructive);
   }
 }
@@ -141,9 +141,9 @@
 @media (prefers-reduced-motion: reduce) {
   @layer nitro-kit.base {
     :where(
-      [data-nk="switch"] [data-slot="switch-track"],
-      [data-nk="switch"] [data-slot="switch-handle"]
-    ) {
+        [data-nk="switch"] [data-slot="switch-track"],
+        [data-nk="switch"] [data-slot="switch-handle"]
+      ) {
       transition-duration: 0.01ms;
     }
   }

@@ -25,9 +25,9 @@
   }
 
   :where(
-    [data-nk="checkbox"] [data-slot="checkbox-control"],
-    [data-nk="checkbox"] [data-slot="checkbox-indicator"]
-  ) {
+      [data-nk="checkbox"] [data-slot="checkbox-control"],
+      [data-nk="checkbox"] [data-slot="checkbox-indicator"]
+    ) {
     grid-area: 1 / 1;
     inline-size: var(--_nk-choice-size);
     block-size: var(--_nk-choice-size);
@@ -81,28 +81,28 @@
 
 @layer nitro-kit.state {
   :where(
-    [data-nk="checkbox"]
-      [data-slot="checkbox-control"]:checked
-      + [data-slot="checkbox-indicator"],
-    [data-nk="checkbox"][data-state="indeterminate"]
-      [data-slot="checkbox-indicator"]
-  ) {
+      [data-nk="checkbox"]
+        [data-slot="checkbox-control"]:checked
+        + [data-slot="checkbox-indicator"],
+      [data-nk="checkbox"][data-state="indeterminate"]
+        [data-slot="checkbox-indicator"]
+    ) {
     background: var(--nk-color-primary);
     border-color: var(--nk-color-primary);
   }
 
   :where(
-    [data-nk="checkbox"]
-      [data-slot="checkbox-control"]:checked
-      + [data-slot="checkbox-indicator"]
-  )::after {
+      [data-nk="checkbox"]
+        [data-slot="checkbox-control"]:checked
+        + [data-slot="checkbox-indicator"]
+    )::after {
     opacity: 1;
   }
 
   :where(
-    [data-nk="checkbox"][data-state="indeterminate"]
-      [data-slot="checkbox-indicator"]
-  )::after {
+      [data-nk="checkbox"][data-state="indeterminate"]
+        [data-slot="checkbox-indicator"]
+    )::after {
     inline-size: calc(var(--_nk-choice-size) * 0.49);
     block-size: 0;
     border-block-end: calc(var(--nk-border-width) * 2) solid currentcolor;
@@ -112,10 +112,10 @@
   }
 
   :where(
-    [data-nk="checkbox"]
-      [data-slot="checkbox-control"]:focus-visible
-      + [data-slot="checkbox-indicator"]
-  ) {
+      [data-nk="checkbox"]
+        [data-slot="checkbox-control"]:focus-visible
+        + [data-slot="checkbox-indicator"]
+    ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -132,10 +132,10 @@
      user touches the control, so an untouched invalid checkbox keeps its
      border. */
   :where(
-    [data-nk="checkbox"]
-      [data-slot="checkbox-control"][aria-invalid="true"]:not(:user-valid)
-      + [data-slot="checkbox-indicator"]
-  ) {
+      [data-nk="checkbox"]
+        [data-slot="checkbox-control"][aria-invalid="true"]:not(:user-valid)
+        + [data-slot="checkbox-indicator"]
+    ) {
     border-color: var(--nk-color-destructive);
   }
 

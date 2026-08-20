@@ -4,7 +4,7 @@
 API. This table is also parsed by the gallery; keep every row to four cells and
 escape literal pipe characters.
 
-This is the shipped public catalog for `2.0.0.alpha.3`. It records current Ruby
+This is the shipped public catalog for `2.0.0.alpha.4`. It records current Ruby
 construction, rendered roots, closed vocabularies, compound cardinalities, and
 integration boundaries. For task guidance, start with the
 [agent guide](agent_guide.md) or [Rails integration](rails_integration.md).

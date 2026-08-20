@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 2.0.0.alpha.4
+
 ### Added
 
 - Add `label_visible: false` to `AppearancePicker`'s segmented presentation:
@@ -9,7 +11,7 @@
   and the segmented row now fills its container like every other control,
   with the segments sharing the width equally.
 - Add collapsible `AppNavigation` sections: `section(label:, collapsible:
-  true, expanded:)` renders native `details` and `summary` with an owned
+true, expanded:)` renders native `details` and `summary` with an owned
   chevron, so groups disclose without JavaScript and open state stays on
   the native `open` attribute. Collapsible sections require a label.
 - Assert the stylesheet conventions as tests. Spacing steps, geometry

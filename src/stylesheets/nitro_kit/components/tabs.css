@@ -38,9 +38,7 @@
     line-height: var(--nk-leading-normal);
   }
 
-  :where(
-      [data-nk="tabs"] > [data-slot="tabs-panel"][hidden="until-found"]
-    ) {
+  :where([data-nk="tabs"] > [data-slot="tabs-panel"][hidden="until-found"]) {
     padding-block: 0;
   }
 }

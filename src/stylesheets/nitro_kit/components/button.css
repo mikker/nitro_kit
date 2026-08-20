@@ -52,10 +52,10 @@
   }
 
   :where(
-    [data-nk="button"] > [data-slot="button-icon-start"],
-    [data-nk="button"] > [data-slot="button-icon-end"],
-    [data-nk="button"] > [data-slot="button-spinner"]
-  ) {
+      [data-nk="button"] > [data-slot="button-icon-start"],
+      [data-nk="button"] > [data-slot="button-icon-end"],
+      [data-nk="button"] > [data-slot="button-spinner"]
+    ) {
     display: inline-flex;
     flex: none;
   }
@@ -81,12 +81,12 @@
   }
 
   :where(
-    [data-nk="button"]:has(> [data-slot="button-icon-start"]),
-    [data-nk="button"]:has(> [data-slot="button-spinner"]),
-    [data-nk="button"]:has(
-      > [data-slot="button-submission-spinner"][data-state="visible"]
-    )
-  ) {
+      [data-nk="button"]:has(> [data-slot="button-icon-start"]),
+      [data-nk="button"]:has(> [data-slot="button-spinner"]),
+      [data-nk="button"]:has(
+          > [data-slot="button-submission-spinner"][data-state="visible"]
+        )
+    ) {
     padding-inline-start: var(--_nk-button-icon-padding);
   }
 
@@ -95,12 +95,12 @@
   }
 
   :where(
-    [data-nk="button"]:not(:has(> [data-slot="button-label"])):has(
-        > [data-slot="button-icon-start"],
-        > [data-slot="button-icon-end"],
-        > [data-slot="button-spinner"]
-      )
-  ) {
+      [data-nk="button"]:not(:has(> [data-slot="button-label"])):has(
+          > [data-slot="button-icon-start"],
+          > [data-slot="button-icon-end"],
+          > [data-slot="button-spinner"]
+        )
+    ) {
     inline-size: var(--_nk-button-height);
     padding-inline: 0;
   }
@@ -142,8 +142,7 @@
     --_nk-button-border-width: 0;
     --_nk-button-border: transparent;
     --_nk-button-border-bottom: transparent;
-    --_nk-button-shadow:
-      inset 0 1px var(--nk-color-destructive),
+    --_nk-button-shadow: inset 0 1px var(--nk-color-destructive),
       inset 0 2px color-mix(in oklab, var(--nk-white) 15%, transparent);
   }
 
@@ -162,13 +161,18 @@
 
   @media (prefers-color-scheme: dark) {
     :where(
-      :root:not([data-theme])
-        [data-nk="button"]:is([data-variant="primary"], [data-variant="destructive"])
-    ) {
+        :root:not([data-theme])
+          [data-nk="button"]:is(
+            [data-variant="primary"],
+            [data-variant="destructive"]
+          )
+      ) {
       --_nk-button-border-width: 0;
     }
 
-    :where(:root:not([data-theme]) [data-nk="button"][data-variant="destructive"]) {
+    :where(
+        :root:not([data-theme]) [data-nk="button"][data-variant="destructive"]
+      ) {
       --_nk-button-shadow: none;
     }
   }
@@ -240,9 +244,9 @@
   }
 
   :where(
-    [data-nk="button"]:disabled,
-    [data-nk="button"][aria-disabled="true"]
-  ) {
+      [data-nk="button"]:disabled,
+      [data-nk="button"][aria-disabled="true"]
+    ) {
     pointer-events: none;
     cursor: default;
     opacity: var(--nk-disabled-opacity);
@@ -252,12 +256,12 @@
      destructive control as disabled. */
   @media (prefers-color-scheme: dark) {
     :where(
-      :root:not([data-theme])
-        [data-nk="button"][data-variant="destructive"]:is(
-          :disabled,
-          [aria-disabled="true"]
-        )
-    ) {
+        :root:not([data-theme])
+          [data-nk="button"][data-variant="destructive"]:is(
+            :disabled,
+            [aria-disabled="true"]
+          )
+      ) {
       --_nk-button-background: color-mix(
         in oklab,
         var(--nk-color-destructive) 40%,
@@ -267,12 +271,12 @@
   }
 
   :where(
-    [data-theme="dark"]
-      [data-nk="button"][data-variant="destructive"]:is(
-        :disabled,
-        [aria-disabled="true"]
-      )
-  ) {
+      [data-theme="dark"]
+        [data-nk="button"][data-variant="destructive"]:is(
+          :disabled,
+          [aria-disabled="true"]
+        )
+    ) {
     --_nk-button-background: color-mix(
       in oklab,
       var(--nk-color-destructive) 40%,
@@ -285,9 +289,9 @@
   }
 
   :where(
-    [data-nk="button"]
-      > [data-slot="button-submission-spinner"][data-state="visible"]
-  ) {
+      [data-nk="button"]
+        > [data-slot="button-submission-spinner"][data-state="visible"]
+    ) {
     display: inline-flex;
     animation: nk-button-spin 1s linear infinite;
   }
@@ -300,10 +304,10 @@
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-      [data-nk="button"][aria-busy="true"] > [data-slot="button-spinner"],
-      [data-nk="button"]
-        > [data-slot="button-submission-spinner"][data-state="visible"]
-    ) {
+        [data-nk="button"][aria-busy="true"] > [data-slot="button-spinner"],
+        [data-nk="button"]
+          > [data-slot="button-submission-spinner"][data-state="visible"]
+      ) {
       animation: none;
     }
   }

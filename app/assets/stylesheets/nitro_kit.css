@@ -15,12 +15,10 @@
 /* Source: src/stylesheets/nitro_kit/tokens.css */
 @layer nitro-kit.tokens {
   :where(:root) {
-    --nk-font-sans:
-      ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    --nk-font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --nk-font-mono:
-      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
-      "Courier New", monospace;
+    --nk-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+      "Liberation Mono", "Courier New", monospace;
 
     --nk-text-xs: 0.75rem;
     --nk-text-sm: 0.875rem;
@@ -77,11 +75,9 @@
       color-mix(in oklab, var(--nk-black) 5%, transparent);
     --nk-shadow-sm: 0 1px 2px
       color-mix(in oklab, var(--nk-black) 8%, transparent);
-    --nk-shadow-md:
-      0 4px 6px -1px color-mix(in oklab, var(--nk-black) 10%, transparent),
+    --nk-shadow-md: 0 4px 6px -1px color-mix(in oklab, var(--nk-black) 10%, transparent),
       0 2px 4px -2px color-mix(in oklab, var(--nk-black) 10%, transparent);
-    --nk-shadow-lg:
-      0 10px 15px -3px color-mix(in oklab, var(--nk-black) 12%, transparent),
+    --nk-shadow-lg: 0 10px 15px -3px color-mix(in oklab, var(--nk-black) 12%, transparent),
       0 4px 6px -4px color-mix(in oklab, var(--nk-black) 12%, transparent);
 
     --nk-duration-fast: 100ms;
@@ -636,7 +632,6 @@
     --nk-app-shell-sidebar-accent-foreground: var(--nk-color-foreground);
     --nk-app-shell-border: var(--nk-color-border);
   }
-
 }
 
 /* Source: src/stylesheets/nitro_kit/reset.css */
@@ -1126,9 +1121,7 @@
     display: none;
   }
 
-  :where(
-      [data-nk="app-navigation"] [data-slot="app-navigation-section-icon"]
-    ) {
+  :where([data-nk="app-navigation"] [data-slot="app-navigation-section-icon"]) {
     flex: none;
     inline-size: var(--nk-icon-size-xs);
     block-size: var(--nk-icon-size-xs);
@@ -2347,10 +2340,10 @@
   }
 
   :where(
-    [data-nk="button"] > [data-slot="button-icon-start"],
-    [data-nk="button"] > [data-slot="button-icon-end"],
-    [data-nk="button"] > [data-slot="button-spinner"]
-  ) {
+      [data-nk="button"] > [data-slot="button-icon-start"],
+      [data-nk="button"] > [data-slot="button-icon-end"],
+      [data-nk="button"] > [data-slot="button-spinner"]
+    ) {
     display: inline-flex;
     flex: none;
   }
@@ -2376,12 +2369,12 @@
   }
 
   :where(
-    [data-nk="button"]:has(> [data-slot="button-icon-start"]),
-    [data-nk="button"]:has(> [data-slot="button-spinner"]),
-    [data-nk="button"]:has(
-      > [data-slot="button-submission-spinner"][data-state="visible"]
-    )
-  ) {
+      [data-nk="button"]:has(> [data-slot="button-icon-start"]),
+      [data-nk="button"]:has(> [data-slot="button-spinner"]),
+      [data-nk="button"]:has(
+          > [data-slot="button-submission-spinner"][data-state="visible"]
+        )
+    ) {
     padding-inline-start: var(--_nk-button-icon-padding);
   }
 
@@ -2390,12 +2383,12 @@
   }
 
   :where(
-    [data-nk="button"]:not(:has(> [data-slot="button-label"])):has(
-        > [data-slot="button-icon-start"],
-        > [data-slot="button-icon-end"],
-        > [data-slot="button-spinner"]
-      )
-  ) {
+      [data-nk="button"]:not(:has(> [data-slot="button-label"])):has(
+          > [data-slot="button-icon-start"],
+          > [data-slot="button-icon-end"],
+          > [data-slot="button-spinner"]
+        )
+    ) {
     inline-size: var(--_nk-button-height);
     padding-inline: 0;
   }
@@ -2437,8 +2430,7 @@
     --_nk-button-border-width: 0;
     --_nk-button-border: transparent;
     --_nk-button-border-bottom: transparent;
-    --_nk-button-shadow:
-      inset 0 1px var(--nk-color-destructive),
+    --_nk-button-shadow: inset 0 1px var(--nk-color-destructive),
       inset 0 2px color-mix(in oklab, var(--nk-white) 15%, transparent);
   }
 
@@ -2457,13 +2449,18 @@
 
   @media (prefers-color-scheme: dark) {
     :where(
-      :root:not([data-theme])
-        [data-nk="button"]:is([data-variant="primary"], [data-variant="destructive"])
-    ) {
+        :root:not([data-theme])
+          [data-nk="button"]:is(
+            [data-variant="primary"],
+            [data-variant="destructive"]
+          )
+      ) {
       --_nk-button-border-width: 0;
     }
 
-    :where(:root:not([data-theme]) [data-nk="button"][data-variant="destructive"]) {
+    :where(
+        :root:not([data-theme]) [data-nk="button"][data-variant="destructive"]
+      ) {
       --_nk-button-shadow: none;
     }
   }
@@ -2535,9 +2532,9 @@
   }
 
   :where(
-    [data-nk="button"]:disabled,
-    [data-nk="button"][aria-disabled="true"]
-  ) {
+      [data-nk="button"]:disabled,
+      [data-nk="button"][aria-disabled="true"]
+    ) {
     pointer-events: none;
     cursor: default;
     opacity: var(--nk-disabled-opacity);
@@ -2547,12 +2544,12 @@
      destructive control as disabled. */
   @media (prefers-color-scheme: dark) {
     :where(
-      :root:not([data-theme])
-        [data-nk="button"][data-variant="destructive"]:is(
-          :disabled,
-          [aria-disabled="true"]
-        )
-    ) {
+        :root:not([data-theme])
+          [data-nk="button"][data-variant="destructive"]:is(
+            :disabled,
+            [aria-disabled="true"]
+          )
+      ) {
       --_nk-button-background: color-mix(
         in oklab,
         var(--nk-color-destructive) 40%,
@@ -2562,12 +2559,12 @@
   }
 
   :where(
-    [data-theme="dark"]
-      [data-nk="button"][data-variant="destructive"]:is(
-        :disabled,
-        [aria-disabled="true"]
-      )
-  ) {
+      [data-theme="dark"]
+        [data-nk="button"][data-variant="destructive"]:is(
+          :disabled,
+          [aria-disabled="true"]
+        )
+    ) {
     --_nk-button-background: color-mix(
       in oklab,
       var(--nk-color-destructive) 40%,
@@ -2580,9 +2577,9 @@
   }
 
   :where(
-    [data-nk="button"]
-      > [data-slot="button-submission-spinner"][data-state="visible"]
-  ) {
+      [data-nk="button"]
+        > [data-slot="button-submission-spinner"][data-state="visible"]
+    ) {
     display: inline-flex;
     animation: nk-button-spin 1s linear infinite;
   }
@@ -2595,10 +2592,10 @@
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-      [data-nk="button"][aria-busy="true"] > [data-slot="button-spinner"],
-      [data-nk="button"]
-        > [data-slot="button-submission-spinner"][data-state="visible"]
-    ) {
+        [data-nk="button"][aria-busy="true"] > [data-slot="button-spinner"],
+        [data-nk="button"]
+          > [data-slot="button-submission-spinner"][data-state="visible"]
+      ) {
       animation: none;
     }
   }
@@ -2789,9 +2786,9 @@
   }
 
   :where(
-    [data-nk="checkbox"] [data-slot="checkbox-control"],
-    [data-nk="checkbox"] [data-slot="checkbox-indicator"]
-  ) {
+      [data-nk="checkbox"] [data-slot="checkbox-control"],
+      [data-nk="checkbox"] [data-slot="checkbox-indicator"]
+    ) {
     grid-area: 1 / 1;
     inline-size: var(--_nk-choice-size);
     block-size: var(--_nk-choice-size);
@@ -2845,28 +2842,28 @@
 
 @layer nitro-kit.state {
   :where(
-    [data-nk="checkbox"]
-      [data-slot="checkbox-control"]:checked
-      + [data-slot="checkbox-indicator"],
-    [data-nk="checkbox"][data-state="indeterminate"]
-      [data-slot="checkbox-indicator"]
-  ) {
+      [data-nk="checkbox"]
+        [data-slot="checkbox-control"]:checked
+        + [data-slot="checkbox-indicator"],
+      [data-nk="checkbox"][data-state="indeterminate"]
+        [data-slot="checkbox-indicator"]
+    ) {
     background: var(--nk-color-primary);
     border-color: var(--nk-color-primary);
   }
 
   :where(
-    [data-nk="checkbox"]
-      [data-slot="checkbox-control"]:checked
-      + [data-slot="checkbox-indicator"]
-  )::after {
+      [data-nk="checkbox"]
+        [data-slot="checkbox-control"]:checked
+        + [data-slot="checkbox-indicator"]
+    )::after {
     opacity: 1;
   }
 
   :where(
-    [data-nk="checkbox"][data-state="indeterminate"]
-      [data-slot="checkbox-indicator"]
-  )::after {
+      [data-nk="checkbox"][data-state="indeterminate"]
+        [data-slot="checkbox-indicator"]
+    )::after {
     inline-size: calc(var(--_nk-choice-size) * 0.49);
     block-size: 0;
     border-block-end: calc(var(--nk-border-width) * 2) solid currentcolor;
@@ -2876,10 +2873,10 @@
   }
 
   :where(
-    [data-nk="checkbox"]
-      [data-slot="checkbox-control"]:focus-visible
-      + [data-slot="checkbox-indicator"]
-  ) {
+      [data-nk="checkbox"]
+        [data-slot="checkbox-control"]:focus-visible
+        + [data-slot="checkbox-indicator"]
+    ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -2896,10 +2893,10 @@
      user touches the control, so an untouched invalid checkbox keeps its
      border. */
   :where(
-    [data-nk="checkbox"]
-      [data-slot="checkbox-control"][aria-invalid="true"]:not(:user-valid)
-      + [data-slot="checkbox-indicator"]
-  ) {
+      [data-nk="checkbox"]
+        [data-slot="checkbox-control"][aria-invalid="true"]:not(:user-valid)
+        + [data-slot="checkbox-indicator"]
+    ) {
     border-color: var(--nk-color-destructive);
   }
 
@@ -5259,8 +5256,8 @@
 /* Source: src/stylesheets/nitro_kit/components/input.css */
 @layer nitro-kit.base {
   :where(
-    [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
-  ) {
+      [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
+    ) {
     display: block;
     inline-size: 100%;
     min-block-size: var(--nk-control-height-md);
@@ -5320,16 +5317,24 @@
      from md up, beside 14px labels and body text. */
   @media (min-width: 48rem) {
     :where(
-      [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
-    ) {
+        [data-nk="input"]:not(
+            [type="checkbox"],
+            [type="radio"],
+            [type="hidden"]
+          )
+      ) {
       font-size: var(--nk-text-sm);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-      [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
-    ) {
+        [data-nk="input"]:not(
+            [type="checkbox"],
+            [type="radio"],
+            [type="hidden"]
+          )
+      ) {
       transition-duration: 0.01ms;
     }
   }
@@ -6396,9 +6401,9 @@
   }
 
   :where(
-    [data-nk="radio-button"] [data-slot="radio-button-control"],
-    [data-nk="radio-button"] [data-slot="radio-button-indicator"]
-  ) {
+      [data-nk="radio-button"] [data-slot="radio-button-control"],
+      [data-nk="radio-button"] [data-slot="radio-button-indicator"]
+    ) {
     grid-area: 1 / 1;
     inline-size: var(--_nk-choice-size);
     block-size: var(--_nk-choice-size);
@@ -6450,26 +6455,26 @@
 
 @layer nitro-kit.state {
   :where(
-    [data-nk="radio-button"]
-      [data-slot="radio-button-control"]:checked
-      + [data-slot="radio-button-indicator"]
-  ) {
+      [data-nk="radio-button"]
+        [data-slot="radio-button-control"]:checked
+        + [data-slot="radio-button-indicator"]
+    ) {
     border-color: var(--nk-color-primary);
   }
 
   :where(
-    [data-nk="radio-button"]
-      [data-slot="radio-button-control"]:checked
-      + [data-slot="radio-button-indicator"]
-  )::after {
+      [data-nk="radio-button"]
+        [data-slot="radio-button-control"]:checked
+        + [data-slot="radio-button-indicator"]
+    )::after {
     opacity: 1;
   }
 
   :where(
-    [data-nk="radio-button"]
-      [data-slot="radio-button-control"]:focus-visible
-      + [data-slot="radio-button-indicator"]
-  ) {
+      [data-nk="radio-button"]
+        [data-slot="radio-button-control"]:focus-visible
+        + [data-slot="radio-button-indicator"]
+    ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -6484,10 +6489,10 @@
      the destructive border stands down. `:user-valid` never matches before the user
      touches the control, so an untouched invalid radio keeps its border. */
   :where(
-    [data-nk="radio-button"]
-      [data-slot="radio-button-control"][aria-invalid="true"]:not(:user-valid)
-      + [data-slot="radio-button-indicator"]
-  ) {
+      [data-nk="radio-button"]
+        [data-slot="radio-button-control"][aria-invalid="true"]:not(:user-valid)
+        + [data-slot="radio-button-indicator"]
+    ) {
     border-color: var(--nk-color-destructive);
   }
 
@@ -6756,8 +6761,8 @@
   }
 
   :where(
-    [data-nk="select"] > [data-slot="select-control"][aria-invalid="true"]
-  ) {
+      [data-nk="select"] > [data-slot="select-control"][aria-invalid="true"]
+    ) {
     border-color: var(--nk-color-destructive);
   }
 }
@@ -7166,9 +7171,9 @@
   }
 
   :where(
-    [data-nk="switch"] [data-slot="switch-control"],
-    [data-nk="switch"] [data-slot="switch-track"]
-  ) {
+      [data-nk="switch"] [data-slot="switch-control"],
+      [data-nk="switch"] [data-slot="switch-track"]
+    ) {
     grid-area: 1 / 1;
   }
 
@@ -7226,28 +7231,28 @@
 
 @layer nitro-kit.state {
   :where(
-    [data-nk="switch"]
-      [data-slot="switch-control"]:checked
-      + [data-slot="switch-track"]
-  ) {
+      [data-nk="switch"]
+        [data-slot="switch-control"]:checked
+        + [data-slot="switch-track"]
+    ) {
     background: var(--nk-color-primary);
     border-color: var(--nk-color-primary);
   }
 
   :where(
-    [data-nk="switch"]
-      [data-slot="switch-control"]:checked
-      + [data-slot="switch-track"]
-      > [data-slot="switch-handle"]
-  ) {
+      [data-nk="switch"]
+        [data-slot="switch-control"]:checked
+        + [data-slot="switch-track"]
+        > [data-slot="switch-handle"]
+    ) {
     transform: translateX(var(--_nk-switch-travel));
   }
 
   :where(
-    [data-nk="switch"]
-      [data-slot="switch-control"]:focus-visible
-      + [data-slot="switch-track"]
-  ) {
+      [data-nk="switch"]
+        [data-slot="switch-control"]:focus-visible
+        + [data-slot="switch-track"]
+    ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -7262,10 +7267,10 @@
      destructive border stands down. `:user-valid` never matches before the user
      touches the control, so an untouched invalid switch keeps its border. */
   :where(
-    [data-nk="switch"]
-      [data-slot="switch-control"][aria-invalid="true"]:not(:user-valid)
-      + [data-slot="switch-track"]
-  ) {
+      [data-nk="switch"]
+        [data-slot="switch-control"][aria-invalid="true"]:not(:user-valid)
+        + [data-slot="switch-track"]
+    ) {
     border-color: var(--nk-color-destructive);
   }
 }
@@ -7273,9 +7278,9 @@
 @media (prefers-reduced-motion: reduce) {
   @layer nitro-kit.base {
     :where(
-      [data-nk="switch"] [data-slot="switch-track"],
-      [data-nk="switch"] [data-slot="switch-handle"]
-    ) {
+        [data-nk="switch"] [data-slot="switch-track"],
+        [data-nk="switch"] [data-slot="switch-handle"]
+      ) {
       transition-duration: 0.01ms;
     }
   }
@@ -7448,9 +7453,7 @@
     line-height: var(--nk-leading-normal);
   }
 
-  :where(
-      [data-nk="tabs"] > [data-slot="tabs-panel"][hidden="until-found"]
-    ) {
+  :where([data-nk="tabs"] > [data-slot="tabs-panel"][hidden="until-found"]) {
     padding-block: 0;
   }
 }

@@ -1,7 +1,7 @@
 @layer nitro-kit.base {
   :where(
-    [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
-  ) {
+      [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
+    ) {
     display: block;
     inline-size: 100%;
     min-block-size: var(--nk-control-height-md);
@@ -61,16 +61,24 @@
      from md up, beside 14px labels and body text. */
   @media (min-width: 48rem) {
     :where(
-      [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
-    ) {
+        [data-nk="input"]:not(
+            [type="checkbox"],
+            [type="radio"],
+            [type="hidden"]
+          )
+      ) {
       font-size: var(--nk-text-sm);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-      [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
-    ) {
+        [data-nk="input"]:not(
+            [type="checkbox"],
+            [type="radio"],
+            [type="hidden"]
+          )
+      ) {
       transition-duration: 0.01ms;
     }
   }
