@@ -1,57 +1,39 @@
 # Flash and toast
 
-Rails flash is the server-side feedback contract. Render it once in the application layout with Nitro's toast adapter so redirects, Turbo visits, and full-page fallbacks all use the same path.
+**Audience:** Coding agents and developers presenting Rails server feedback.
 
 ## Summary
 
-- Render `NitroKit::Toast::FlashMessages` once in the application layout; Rails
-  flash stays the single server-side feedback contract.
-- `notice` maps to the default presentation, `alert` and `error` to the `error` item, and
-  `success`, `warning`, and `info` to their matching variants.
-- Every toast item is Turbo-temporary so a cached page never replays old
-  feedback, while the region itself survives and stays addressable.
-- Use `flash.now` when rendering the current request; a Turbo Stream that does
-  not redirect updates the same stable notification region.
-- Do not introduce a client-side notification store for server outcomes.
+- Rails flash is the server-side feedback contract; render
+  `NitroKit::Toast::FlashMessages` once in the application layout.
+- Use redirect flash for navigation and `flash.now` when rendering the current
+  request.
+- Toast items are Turbo-temporary so cached pages do not replay them; the
+  region keeps a stable address for stream updates.
+- Do not add a client-side notification store for server outcomes.
 
 ```ruby
-class UI::ApplicationLayout < Phlex::HTML
-  include Phlex::Rails::Layout
-  include Phlex::Rails::Helpers::Flash
-
-  def view_template
-    doctype
-    html do
-      head do
-        stylesheet_link_tag("nitro_kit", data: { turbo_track: "reload" })
-      end
-      body do
-        render NitroKit::Toast::FlashMessages.new(flash: flash)
-        yield
-      end
-    end
-  end
+body do
+  render NitroKit::Toast::FlashMessages.new(flash: flash)
+  yield
 end
 ```
 
-Controllers set ordinary flash while redirecting:
+Controllers use ordinary Rails flash:
 
 ```ruby
 redirect_to projects_path, status: :see_other, notice: "Project created"
-redirect_to billing_path, status: :see_other, alert: "Payment method was declined"
-```
 
-`notice` maps to the default presentation, `alert` and `error` to the `error` item, and `success`, `warning`, and `info` to their matching variants. Every toast item is Turbo-temporary so a cached page does not replay old feedback, dismissible or not. The region itself survives, so `#{toast id}-list` stays addressable.
-
-Use `flash.now` only when rendering in the current request:
-
-```ruby
 flash.now[:alert] = "Import failed"
 render UI::ImportForm.new(@import), status: :unprocessable_entity
 ```
 
-For a request-scoped Turbo Stream that does not redirect, update a stable notification region in the same stream response. Keep the HTML branch and flash fallback. Do not introduce a client-side notification store for server outcomes.
+`notice` uses the default presentation; `alert` and `error` map to error;
+`success`, `warning`, and `info` map to matching variants. A request-scoped
+Turbo Stream may update the same stable Toast list, but must keep an HTML
+branch and flash fallback.
 
 ## Tests
 
-Controller tests assert the flash severity and message. One layout or integration test should prove the flash renders through `section[data-nk=toast]`. Nitro's own tests cover timers and dismissal behavior.
+Assert flash severity and message in request tests. One layout or integration
+test should prove rendering through `section[data-nk=toast]`.

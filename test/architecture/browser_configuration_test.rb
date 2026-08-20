@@ -35,7 +35,7 @@ class BrowserConfigurationTest < ActiveSupport::TestCase
     assert_includes source, "form_builder_rails_test.rb"
   end
 
-  test "workflow keeps browser setup and version claims aligned" do
+  test "workflow matches the documented browser verification policy" do
     workflow = File.expand_path("../../.github/workflows/ci.yml", __dir__)
     source = File.read(workflow)
 
@@ -49,10 +49,10 @@ class BrowserConfigurationTest < ActiveSupport::TestCase
     refute_includes source, "timeout bin/browser-smoke"
 
     browser_support = File.expand_path("../../docs/browser_support.md", __dir__)
-    matrix = File.read(browser_support)
-    assert_includes matrix, "Chrome desktop  | Chrome 128           | Chrome 151"
-    assert_includes matrix, "Edge desktop    | Edge 128             | Edge 151"
-    assert_includes matrix, "Chrome Android  | Chrome 128           | Chrome 151 on Android"
-    assert_includes matrix, "Firefox desktop | Firefox 128 ESR      | Firefox 153"
+    policy = File.read(browser_support)
+    assert_includes policy, "full system suite in Chrome"
+    assert_includes policy, "Firefox and macOS Safari"
+    assert_includes policy, "current Android Chrome and iOS Safari"
+    assert_match(/Capability-focused\s+tests supplement these runs/, policy)
   end
 end

@@ -1,5 +1,9 @@
 # Customizing Nitro Kit
 
+**Audience:** Application developers and coding agents changing Nitro Kit
+themes or composing application-owned UI. The first sections are task guidance;
+the final token tables are exhaustive reference.
+
 Nitro Kit owns component Ruby, markup, behavior, and default CSS. Applications customize the system by overriding the public `--nk-*` custom properties, composing components into application UI, and occasionally creating a narrow subclass. Applications do not copy or edit Nitro components.
 
 ## Stylesheet order
@@ -13,7 +17,8 @@ Load browser styles in this order:
 5. Application styles, including Nitro token overrides.
 
 `NitroKit::AppearanceBootstrap` precedes every entry in this list. The install
-generator owns this ordering and can safely be rerun. For example, an
+generator applies this order when it can identify conventional layout entries
+unambiguously; otherwise it reports manual work. For example, an
 application with Lexxy and no Tailwind has exactly three stylesheet entries:
 
 ```erb
@@ -203,8 +208,10 @@ Check foreground pairs and focus indicators for contrast in both appearances. Th
 
 ## Theme customizer
 
-The interactive theme customizer lives on the documentation site at
-[nitrokit.dev/customize](https://nitrokit.dev/customize). Pick an accent, neutral, radius, density, font, and application shell, watch a complete workspace update, then copy deterministic CSS containing only changed public tokens plus a copyable `AppShell` composition for the selected layout.
+The interactive theme customizer lives at
+[nitrokit.dev/customize](https://nitrokit.dev/customize). It previews accent,
+neutral, radius, density, typography, and appearance choices, then copies the
+changed public tokens.
 
 Paste the CSS into an application-owned stylesheet such as `app/assets/stylesheets/nitro_theme.css`, then load that stylesheet after Nitro Kit and any compiled Tailwind CSS:
 
@@ -421,7 +428,11 @@ end
 
 Change only `layout:` to `:topbar` or `:hybrid`; the same `brand`, `navigation`, `topbar`, and `main` declarations remain valid. Nitro owns the responsive breakpoint, narrow drawer, focus management, sticky regions, and one reflowed navigation DOM tree. Do not clone navigation for mobile or add route registries to the shell.
 
-The gallery has complete executable examples for [sidebar](/gallery/compositions/application-sidebar), [topbar](/gallery/compositions/application-topbar), and [hybrid](/gallery/compositions/application-hybrid) applications. Each route contains multiple populated, empty, loading, long-content, missing-content, or error combinations.
+The gallery has executable examples for
+[sidebar](https://gallery.nitrokit.dev/gallery/compositions/application-sidebar),
+[topbar](https://gallery.nitrokit.dev/gallery/compositions/application-topbar),
+and [hybrid](https://gallery.nitrokit.dev/gallery/compositions/application-hybrid)
+applications.
 
 ## Rails forms and Hotwire
 

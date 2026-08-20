@@ -1,126 +1,78 @@
 # Resource form
 
-Use one model-backed component for both the initial form and validation errors. Rails owns field names and errors; Nitro owns form presentation; the response status tells Turbo whether to replace or follow a redirect.
+**Audience:** Coding agents and developers implementing model-backed create
+and update forms.
 
 ## Summary
 
-- One model-backed Phlex component renders both the initial form and its
-  validation errors.
-- Rails owns field names and errors, Nitro owns form presentation, and the
-  response status tells Turbo what to do: 422 re-renders the invalid object,
-  303 redirects on success.
-- In an application shell, render exactly one primary submit in the route
-  toolbar and associate it through the native `form:` attribute; do not also
-  call `form.submit` in the body.
-- A genuinely standalone form keeps its submit inside the same `form.group` as
-  its visible fields.
-- Parents own rhythm: stacked fields always sit inside `FieldGroup`
-  (`form.group` on the builder, or `render NitroKit::FieldGroup.new`). Fields
-  rendered as bare siblings of the `form` element stack with no gap — that is
-  an authoring mistake, not a layout the field can correct itself.
-- Wrap the form in a Turbo Frame only when it is embedded in a larger screen
-  and needs an independent lifecycle.
+- One model-backed Phlex component renders initial and invalid states.
+- Rails owns names, values, and errors; Nitro owns presentation.
+- Invalid mutations render the same model with `422`; success redirects with
+  `303`.
+- Use one primary submit: the shell toolbar owns it, or a standalone form keeps
+  it inside `form.group`.
+- Wrap the form in a Turbo Frame only when it needs an independent lifecycle.
 
-## Phlex form
+## Form
 
 ```ruby
 module UI
   class ProjectForm < Phlex::HTML
     include Phlex::Rails::Helpers::FormWith
 
-    def initialize(
-      project,
-      form_id: ActionView::RecordIdentifier.dom_id(project, :form)
-    )
+    def initialize(project, form_id:)
       @project = project
       @form_id = form_id
     end
 
     def view_template
-      render NitroKit::SettingsSection.new(
-        title: project.persisted? ? "Edit project" : "New project",
-        description: "Project details are visible to every workspace member."
-      ) do |section|
+      render NitroKit::SettingsSection.new(title: "Project details") do |section|
         section.form do
           form_with(
-            model: project,
+            model: @project,
             builder: NitroKit::FormBuilder,
-            id: form_id
+            id: @form_id
           ) do |form|
             form.group do
-              form.field(:name, required: true, autofocus: true)
-              form.field(
-                :status,
-                as: :select,
-                options: Project.statuses.keys.map do |value|
-                  [ value.humanize, value ]
-                end
-              )
+              form.field(:name, required: true)
+              form.field(:status, as: :select, options: Project.statuses.keys)
               form.field(:description, as: :textarea)
             end
           end
         end
       end
     end
-
-    private
-      attr_reader :project, :form_id
   end
 end
 ```
 
-In an application shell, render exactly one primary submit in the route
-toolbar and associate it with `form_id`:
+In an application shell, render one toolbar submit associated through the
+native form ID:
 
 ```ruby
-Button(
-  project.persisted? ? "Save project" : "Create project",
-  type: :submit,
-  form: form_id,
-  variant: :primary,
-  data: { turbo_submits_with: "Saving…" }
-)
+Button("Save project", type: :submit, form: form_id, variant: :primary)
 ```
 
-Do not also call `form.submit` in the form body. Use an in-form submit only
-when the form is genuinely standalone and has no toolbar action; put that
-submit inside the same `form.group` as its visible fields.
+Do not also call `form.submit` in the body. A standalone form without a toolbar
+keeps its submit in the same `form.group` as its visible fields.
 
-## Controller
-
-Render the same invalid object with 422. Redirect successful HTML submissions with 303.
+## Responses
 
 ```ruby
-class ProjectsController < ApplicationController
-  def create
-    @project = Current.account.projects.build(project_params)
-
-    if @project.save
-      redirect_to @project, status: :see_other, notice: "Project created"
-    else
-      render UI::ProjectForm.new(@project), status: :unprocessable_entity
-    end
-  end
-
-  def update
-    @project = Current.account.projects.find(params[:id])
-
-    if @project.update(project_params)
-      redirect_to @project, status: :see_other, notice: "Project updated"
-    else
-      render UI::ProjectForm.new(@project), status: :unprocessable_entity
-    end
-  end
-
-  private
-    def project_params
-      params.expect(project: [:name, :status, :description])
-    end
+if @project.update(project_params)
+  redirect_to @project, status: :see_other, notice: "Project updated"
+else
+  render UI::ProjectForm.new(@project, form_id:),
+    status: :unprocessable_entity
 end
 ```
 
-The same response works with Turbo Drive and without it. Wrap this component in a stable Turbo Frame only when the form is embedded in a larger screen and should have an independent lifecycle; [inline edit](inline_edit.md) shows that boundary. Add a Turbo Stream branch only when success must update multiple regions instead of navigating.
+Wrap the component in a stable frame only when embedded in a larger screen.
+Use a Turbo Stream only when success updates multiple regions. See
+[Inline edit](inline_edit.md).
 
 ## Tests
 
-Assert 303 plus the redirect and flash on success. Assert 422, the submitted value, and the model error on failure. For an embedded form, also assert the stable frame ID. Add a system test for focus or multi-region effects, not merely to restate controller behavior.
+Assert redirect and flash at `303`; submitted values and model errors at `422`;
+and the stable frame ID when embedded. Add a system test for focus or
+multi-region behavior, not to repeat controller coverage.

@@ -1,5 +1,8 @@
 # Migrating a Nitro Kit 1.x application
 
+**Audience:** Coding agents and developers migrating an existing application
+from Nitro Kit 1.x to 2.x.
+
 Treat a 1.x migration as a product-flow review, not a helper rename. Nitro Kit
 2 deliberately removed copied components, `nk_*` helpers, application-owned
 `controllers/nk`, and unrestricted utility-class customization.
@@ -113,7 +116,7 @@ end
 ```
 
 The executable minimal version is on the
-[`AppNavigation` gallery page](/gallery/components/app-navigation#example-app-navigation-minimal).
+[`AppNavigation` gallery page](https://gallery.nitrokit.dev/gallery/components/app-navigation#example-app-navigation-minimal).
 
 ### Dialog
 
@@ -164,7 +167,7 @@ end
 ```
 
 The gallery runs this structure at narrow widths in
-[`Narrow transcript actions`](/gallery/components/dialog#example-dialog-narrow-action-cluster).
+[`Narrow transcript actions`](https://gallery.nitrokit.dev/gallery/components/dialog#example-dialog-narrow-action-cluster).
 
 ### Sheet
 
@@ -204,7 +207,7 @@ end
 ```
 
 See the executable
-[`Sheet` collection example](/gallery/components/sheet#example-sheet-constructions).
+[`Sheet` collection example](https://gallery.nitrokit.dev/gallery/components/sheet#example-sheet-constructions).
 
 ### SettingsLayout
 
@@ -243,7 +246,7 @@ end
 ```
 
 See the executable
-[`SettingsLayout` minimal example](/gallery/components/settings-layout#example-settings-layout-cardinality-states).
+[`SettingsLayout` minimal example](https://gallery.nitrokit.dev/gallery/components/settings-layout#example-settings-layout-cardinality-states).
 
 ## Preserve unsupported behavior honestly
 

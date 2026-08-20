@@ -1,106 +1,68 @@
 # Hotwire with Nitro Kit
 
-Nitro Kit owns component markup, CSS, and its focused progressive controllers.
-Rails owns records, routes, authorization, queries, DOM identity, and server
-responses. Hotwire transports server-rendered HTML between those boundaries.
+**Audience:** Application developers and coding agents implementing Hotwire
+interactions with Nitro Kit.
+
+Rails owns records, routes, authorization, DOM identity, and responses. Nitro
+Kit owns component markup, CSS, and its focused controllers. Hotwire transports
+server-rendered HTML between them.
 
 ## Choose the smallest interaction
 
-1. Use ordinary links and forms under Turbo Drive.
-2. Use a Turbo Frame for one independently navigable or replaceable region.
-3. Return request-scoped Turbo Streams when one action changes multiple
-   regions.
-4. Broadcast only when another session needs the update.
-5. Add application Stimulus only for browser-owned behavior the preceding
-   layers cannot express.
+1. Ordinary links and forms under Turbo Drive.
+2. One Turbo Frame for one independently navigable region.
+3. A request-scoped Turbo Stream when one action changes multiple regions.
+4. A broadcast only when another session needs the update.
+5. Application Stimulus only for browser-owned behavior the previous layers
+   cannot express.
 
-Do not copy Nitro Kit controllers into the application. Do not add files under
-`app/javascript/controllers/nk`; consume the `nk--*` controllers packaged by
-the installed gem. For browser-sensitive interactions, follow
-[`browser_support.md`](browser_support.md); Nitro owns compatibility bridges for
-its own components.
+Do not copy Nitro controllers or add files under
+`app/javascript/controllers/nk`. Follow the canonical
+[browser support policy](browser_support.md) for fallback behavior.
 
-## Response matrix
+## Response contract
 
-| Request              | Success                                       | Invalid or denied                                                   |
-| -------------------- | --------------------------------------------- | ------------------------------------------------------------------- |
-| HTML form mutation   | Redirect with `303 See Other`                 | Render HTML with `422`                                              |
-| Frame form mutation  | Redirect or render the same frame ID          | Render the same frame ID with `422`                                 |
-| Stream form mutation | Return only when multiple targets must change | Render the invalid form target with `422` and keep an HTML fallback |
-| GET query            | Render from URL parameters                    | Render a useful empty or error state                                |
+| Request         | Success                                   | Validation failure                                              |
+| --------------- | ----------------------------------------- | --------------------------------------------------------------- |
+| HTML mutation   | Redirect with `303 See Other`             | Render the invalid form with `422`                              |
+| Frame mutation  | Redirect to, or render, the same frame ID | Render the same frame ID with `422`                             |
+| Stream mutation | Return a stream only for multiple targets | Replace the invalid form target with `422`; keep an HTML branch |
+| GET query       | Render from URL parameters                | Render a useful empty or error state                            |
 
-Use `dom_id` or one named constant for a frame. The show, edit, invalid,
-success, and cancel responses must preserve that identifier.
+Authentication and authorization failures are separate policy decisions; do
+not return `422` for them.
 
-An HTML response branch preserves the request path when Turbo is unavailable;
-it is not a blanket guarantee that every surrounding component operates
-without JavaScript.
+Use `dom_id` or one named constant for each frame. Show, edit, invalid, success,
+and cancel responses must preserve that identifier. An HTML branch preserves
+the request path without Turbo; it does not make a closed or JavaScript-owned
+interaction available.
 
-## Forms and application Stimulus
+## Stimulus and lifecycle
 
-Let Turbo submit real Rails forms. Use `data-turbo-submits-with` to opt a Button
-into submission feedback without replacing its visible label. The Button dims
-immediately; `submission_indicator: :spinner` additionally reveals an indicator
-after 1 second and lets the Button expand to fit it. Use `data-turbo-confirm` for
-compact destructive confirmation.
-Reviewed destructive flows may compose `DangerZone` and `Dialog`, but the
-dialog must still submit a real Rails form. `data-turbo-confirm` is a Turbo
-enhancement, while an ordinary server-owned review route is the no-JavaScript
-confirmation path; neither an HTML response branch nor a form inside a closed
-dialog supplies that interaction by itself. See the canonical classifications
-in [`browser_support.md`](browser_support.md).
+Let Turbo submit real Rails forms. Use `data-turbo-submits-with` for submission
+feedback and `data-turbo-confirm` only for compact confirmation. A reviewed
+destructive flow still submits a real Rails form; use the
+[destructive action pattern](patterns/destructive_action.md).
 
-Keep application controllers small, declarative, and disposable. For a
-self-submitting control, the complete controller can be:
+Keep application controllers declarative. Prefer `data-action` over manually
+registered listeners. Release listeners, observers, timers, object URLs, and
+third-party instances in `disconnect`.
 
-```js
-import { Controller } from "@hotwired/stimulus";
+Keep server-rendered markup morph-safe. Enable refresh morphing deliberately,
+and use `data-turbo-permanent` only for a stateful island with a stable unique
+ID. Clean ephemeral UI before Turbo caches a page.
 
-export default class extends Controller {
-  submit() {
-    this.element.requestSubmit();
-  }
-}
-```
+Use `_top` when navigation must leave a frame. Authentication redirects and
+errors must not strand the user behind a missing-frame response. Give lazy and
+failed frames useful content and a route to continue.
 
-Attach `data-action="change->auto-submit#submit"` to the form so change events
-bubble to that one controller root. Keep a submit button inside `noscript` as
-the HTML fallback. Use `data-action` instead of manually registering DOM listeners. If a
-controller owns a listener, observer, timer, object URL, or third-party
-instance, release it in `disconnect`.
-
-## Morphing and cache lifecycle
-
-Default to morphable server-rendered HTML. Use `data-turbo-permanent` only for
-a genuinely stateful island, always with a stable unique `id`. Update content
-inside a permanent element deliberately instead of making broad page regions
-permanent.
-
-Clean ephemeral UI before Turbo caches the page. Nitro Kit controllers own
-their own cache and reconnect behavior; application controllers must do the
-same for application-owned state. `nk--dialog` closes an open Dialog, Sheet, or
-CommandPalette on `turbo:before-cache`; reconnecting does not install listeners
-or retain a mirrored open flag.
-
-## Frame escape and recovery
-
-An authentication redirect or error response inside a frame must not strand
-the user behind a missing-frame error. Use `_top` when navigation must leave
-the frame. Keep authentication and authorization handling capable of returning
-a full-page response, and handle `turbo:frame-missing` only when the
-application has a deliberate recovery policy.
-
-Give lazy frames meaningful loading content. A failed frame should leave an
-understandable state and a path to retry or continue without JavaScript.
-
-## Verify behavior
+## Verify
 
 - Request-test `303`, `422`, HTML fallback, and stable frame IDs.
-- On mutation responses, assert submitted content inside the response's
-  matching frame, not merely somewhere in the response body.
-- System-test focus, dialogs, frame navigation, and multi-target changes.
-- Use Capybara assertions that wait for the DOM; never use `sleep`.
-- Test navigation, morphing, and reconnection without duplicating controller
-  roots or listeners.
+- Scope mutation assertions to the matching frame.
+- System-test focus, navigation, dialogs, and multi-target changes.
+- Use Capybara waiting assertions; never use `sleep`.
+- Test navigation, caching, morphing, and reconnection for duplicate state or
+  listeners.
 
-Read the matching recipe under `docs/patterns/` for complete compositions.
+Use the matching [interaction pattern](patterns/) for complete compositions.

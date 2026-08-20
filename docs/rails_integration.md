@@ -1,134 +1,47 @@
-# Rails and Hotwire integration
+# Rails integration
 
-Nitro Kit 2.0 uses Rails where Rails owns important application semantics: model-backed forms, routes, DOM IDs, and Hotwire. The supported view layer remains direct Phlex. There is no `nk_form_with`, `nk_form_for`, or general ERB component bridge.
+**Audience:** Application developers and coding agents installing Nitro Kit or
+connecting it to Rails forms, assets, Stimulus, and Hotwire.
 
-## Installation and assets
+Rails owns records, routes, DOM IDs, forms, authorization, and responses.
+Nitro Kit owns Phlex components, presentation, and focused browser behavior.
+There are no `nk_form_with` helpers or general ERB component bridge.
 
-Add the 2.0 prerelease to the application's Gemfile:
+## Install
+
+Pin the current prerelease:
 
 ```ruby
 gem "nitro_kit", "2.0.0.alpha.3"
 ```
 
-Bundler records the exact released version in `Gemfile.lock`; commit `Gemfile`
-and `Gemfile.lock` together. Before upgrading, review the changelog, run
-`bundle update nitro_kit`, rerun the generator and doctor, and run the
-application's focused and full tests before committing the updated lockfile.
-Production applications should use the released gem and a committed lockfile
-rather than a moving Git branch.
+Use the released gem and commit `Gemfile` with `Gemfile.lock`. Before upgrading,
+review the changelog, run `bundle update nitro_kit`, rerun the installer, and
+test the application before committing the lockfile.
 
 ```sh
 bundle install
 bin/rails generate nitro_kit:install
+bin/rails nitro_kit:doctor
 ```
 
-Load the static stylesheet before application styles through the Rails asset pipeline:
+The installer adds project-local agent guidance and completes conventional
+layouts when the insertion points are unambiguous. It leaves dynamic or custom
+layouts unchanged and reports manual work. It never copies component source.
+
+Load Nitro Kit before application styles:
 
 ```erb
 <%= stylesheet_link_tag "nitro_kit", "application", "data-turbo-track": "reload" %>
 ```
 
-Nitro Kit does not require Tailwind. A Tailwind CSS v4 application loads `nitro_kit-tailwind-v4`, Nitro Kit, compiled Tailwind, and application styles in that order. The adapter establishes cascade order and maps Nitro theme tokens to common Tailwind theme variables.
+For third-party base CSS, Tailwind, appearance setup, and token overrides, use
+the canonical [stylesheet order](customization.md#stylesheet-order).
 
-Keep application token overrides after Nitro Kit. The [customization guide](customization.md) documents the exact load order, every supported token, scoped and appearance-specific overrides, the theme customizer, and the optional Tailwind adapter.
+## Stimulus
 
-Raised default Buttons have their own public background, hover, foreground, and border tokens. Override `--nk-button-default-*` rather than changing `--nk-color-surface` when form controls, cards, dialogs, and menus should retain their existing surfaces.
-
-The install generator writes project-owned agent guidance — a managed Nitro Kit
-2 block in `AGENTS.md` and thin skill routers under `.agents/skills` and
-`.claude/skills` — and additively completes conventional ERB and Phlex layouts.
-It preserves existing bootstrap calls, stylesheet expressions, and their
-options. It inserts only missing entries where order is unambiguous, and adds
-`application` only when that asset exists or the layout already names it.
-Dynamic, conditional, or custom layouts remain unchanged and doctor reports a
-manual repair. The resulting order keeps optional third-party base styles such
-as Lexxy first, then the optional Tailwind adapter, Nitro Kit, compiled
-Tailwind, and application styles. A Lexxy application therefore has this exact
-three-entry baseline:
-
-```ruby
-stylesheet_link_tag("lexxy", "nitro_kit", "application", data: { turbo_track: "reload" })
-```
-
-There is no component source-copy step. Re-run the generator after upgrading
-the gem, then run `bin/rails nitro_kit:doctor`. Doctor fails for a missing,
-duplicate, or misordered bootstrap or stylesheet entry and reports the exact
-repair. Use `--format=json` for structured automation output.
-
-Install a focused upgrade acceptance flow separately:
-
-```sh
-bin/rails generate nitro_kit:upgrade_smoke_tests
-bin/rails test test/integration/nitro_kit_upgrade_smoke_test.rb
-bin/rails test test/system/nitro_kit_upgrade_smoke_test.rb
-```
-
-The generator creates each test only when its path is absent and its host
-prerequisite exists: `test/test_helper.rb` for integration coverage and
-`test/application_system_test_case.rb` for browser coverage. It prints an
-actionable message for unsupported pieces and never overwrites
-application-owned coverage. Using the currently bundled gem, the tests prepend
-a route only for each test, then restore host routing. Catch-all routes remain
-compatible, while an exact GET or PATCH collision is rejected. The
-endpoint inherits the host `ApplicationController` and renders through the
-application layout, so Nitro CSS, the appearance bootstrap, host JavaScript and
-CSP handling remain in the exercised path. Coverage includes browser-submitted
-Turbo validation and mutation, 303 redirect, layout-owned flash-to-Toast
-feedback, stable Turbo Frame identity, Dialog and Sheet behavior, and
-post-mutation Phlex rendering. No production route or application source is
-added.
-
-The endpoint intentionally keeps every `ApplicationController` callback. The
-generated classes expose a setup hook for authentication and account context;
-replace these example helper names with the host application's real test API:
-
-```ruby
-class NitroKitUpgradeSmokeTest < NitroKit::UpgradeSmokeTest
-  private
-    def prepare_nitro_kit_upgrade_smoke_test
-      sign_in users(:owner)
-      select_account accounts(:primary)
-    end
-end
-
-class NitroKitUpgradeSmokeSystemTest < ApplicationSystemTestCase
-  include NitroKit::UpgradeSmokeSystemTests
-
-  private
-    def prepare_nitro_kit_upgrade_smoke_test
-      sign_in_as users(:owner)
-      select_account accounts(:primary)
-    end
-end
-```
-
-The hook runs before the inherited requests or browser visits. These generated
-files are application-owned extension points: use the same session, sign-in,
-and account-selection path as other host tests. Do not skip callbacks or alter
-the gem controller, because that would bypass the integration under test.
-
-## Stimulus and importmap
-
-Enhanced components use gem-owned Stimulus controllers, including `nk--app-shell`, `nk--appearance`, `nk--avatar`, `nk--checkable`, `nk--combobox`, `nk--dialog`, `nk--dropdown`, `nk--dropzone`, `nk--progressive-image`, `nk--tabs`, `nk--toast`, and `nk--tooltip`.
-
-Accordion disclosure is controller-free. Its shared `name` is the native
-single-group authority; browsers without named-details grouping retain full
-disclosure but have the documented reduced, independently-open single-mode
-baseline. Dialog and Sheet prefer declarative
-`command`/`commandfor`, while `nk--dialog` owns backdrop and cancel policy. The
-controller checks each invoker's reflected relationship and uses
-`HTMLDialogElement.showModal()` or `close()` only when the native command will
-not run. CommandPalette uses the same bridge instead of replacing the native
-path. Without JavaScript, these controls still require native Invoker Commands.
-Server-rendered content inside a closed overlay is therefore not itself a
-JavaScript-free fallback; critical content needs an ordinary server review
-route. The canonical classification matrix is in
-[`browser_support.md`](browser_support.md).
-Dropdown uses native Popover as its source of truth and adds menu keyboard focus
-and positioning; Tooltip uses CSS for hover/focus and JavaScript only for Escape
-dismissal. See the [browser support policy](browser_support.md).
-
-When `importmap-rails` is present, the engine adds its importmap and asset paths automatically. The application must still install Stimulus and provide the normal controller loader:
+Importmap applications receive Nitro Kit's pins from the engine. The host still
+owns Stimulus and its normal loader:
 
 ```js
 import { application } from "controllers/application";
@@ -137,406 +50,115 @@ import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading";
 eagerLoadControllersFrom("controllers", application);
 ```
 
-Nitro Kit packages no third-party JavaScript. Accordion disclosure, date inputs,
-and Switch use native browser behavior. Dialog and Sheet mount their packaged
-controller for dismissal policy, Turbo cache cleanup, and the feature-detected
-Invoker Commands bridge.
+Do not copy `nk--*` controllers into the application. Nitro Kit currently has
+no JavaScript-package entrypoint for automatic bundler registration. Without
+the packaged controllers, Ruby and CSS remain available with the reduced
+baselines in [Browser support](browser_support.md).
 
-The engine deliberately boots when importmap is absent. In that configuration, Ruby and CSS remain available, but automatic JavaScript registration does not: a bundler-based application must expose and register the controller modules itself. Nitro Kit 2.0 does not ship a JavaScript-package entrypoint.
+## Appearance and CSP
 
-## Appearance and content security policy
-
-Render the non-visual bootstrap in the document `head` before every stylesheet link. Its fixed script body restores the validated `light`, `dark`, or `system` preference before CSS-visible paint. The optional picker can appear zero, one, or many times; every picker reflects the same document preference.
+Render `AppearanceBootstrap` before stylesheets. Render zero or more pickers in
+the body:
 
 ```ruby
-class ApplicationLayout < Phlex::HTML
-  include Phlex::Rails::Layout
-  include Phlex::Rails::Helpers::ContentSecurityPolicyNonce
+head do
+  render NitroKit::AppearanceBootstrap.new(
+    default: :system,
+    nonce: content_security_policy_nonce
+  )
+  stylesheet_link_tag("nitro_kit", data: { turbo_track: "reload" })
+  stylesheet_link_tag("application", data: { turbo_track: "reload" })
+end
 
-  def view_template
-    doctype
-    html(lang: "en") do
-      head do
-        render NitroKit::AppearanceBootstrap.new(
-          default: :system,
-          nonce: content_security_policy_nonce
-        )
-        stylesheet_link_tag("nitro_kit", data: { turbo_track: "reload" })
-      end
-
-      body do
-        render NitroKit::AppearancePicker.new(
-          id: "application-appearance",
-          label: "Appearance"
-        )
-        yield
-      end
-    end
-  end
+body do
+  render NitroKit::AppearancePicker.new(
+    id: "application-appearance",
+    label: "Appearance"
+  )
+  yield
 end
 ```
 
-The runtime stores the preference under `nitro-kit-appearance`. It writes `data-theme-preference="light|dark|system"` and the resolved `data-theme="light|dark"` on the document root. System mode follows live operating-system changes; explicit choices do not. Storage denial falls back to `default:` and does not prevent in-document changes. Nitro does not synchronize this browser preference to an application user record.
-
-For nonce-based policies, pass Rails' `content_security_policy_nonce` as above and include the generated nonce in the application's `script-src` policy. For hash-based policies, allow Nitro's exact fixed script body with:
+For a nonce policy, pass Rails' `content_security_policy_nonce`. For a hash
+policy, allow the current fixed body:
 
 ```text
 script-src 'self' 'sha256-Vcime4euWSeYtHSfjYjqz/XhRyzMcLpn6Ip2LlaHleY='
 ```
 
-The same value is available as `NitroKit::AppearanceBootstrap::CSP_HASH`. The hash covers only the fixed inline body; `default:` lives in a data attribute and a nonce lives on the script element, so neither changes it. Recheck the constant when upgrading Nitro Kit because an intentional runtime change produces a new hash.
-
-If the bootstrap is blocked or omitted, Nitro's token CSS follows `prefers-color-scheme`. An explicit `[data-theme="light"]` or `[data-theme="dark"]` on a document or containing theme root overrides that fallback. `data-theme` always names the resolved appearance; system preference is recorded separately in `data-theme-preference`. See [Customizing Nitro Kit](customization.md#global-overrides) for matching light, dark, system-fallback, and scoped CSS recipes.
-
-## Application shells
-
-`AppShell` composes directly in Phlex and keeps Rails route policy in the application. It requires one navigation and one main region; brand and topbar regions are optional:
-
-```ruby
-render NitroKit::AppShell.new(id: "workspace", layout: :sidebar) do |shell|
-  shell.brand { strong { "Northstar" } }
-
-  shell.navigation do
-    render NitroKit::AppNavigation.new(label: "Primary navigation") do |navigation|
-      navigation.body do
-        navigation.item("Overview", href: root_path, icon: :house, current: true)
-        navigation.item("Projects", href: projects_path, icon: :folder)
-        navigation.spacer
-        navigation.item("Settings", href: settings_path, icon: :settings)
-      end
-    end
-  end
-
-  shell.topbar do
-    render NitroKit::Button.new("New project", href: new_project_path, variant: :primary)
-  end
-
-  shell.main { render Workspace::Dashboard.new }
-end
-```
-
-The same declarations work with `layout: :topbar` and `layout: :hybrid`. Nitro owns responsive disclosure and focus behavior; the application owns destinations, authorization, current-route selection, and page content. The [customization guide](customization.md#application-shells) covers shell tokens, composition boundaries, and the three complete gallery applications.
-
-Large destination sets may add one command palette to the shell:
-
-```ruby
-render NitroKit::CommandPalette.new(id: "workspace-search", label: "Search workspace…") do |palette|
-  palette.destination("Overview", href: root_path, description: "Workspace")
-  palette.destination("Projects", href: projects_path, description: "Workspace")
-  palette.destination("Settings", href: settings_path, description: "Account")
-end
-```
-
-The application remains responsible for authorization and must render only destinations the current user may visit. Stimulus adds filtering and the Command-K or Control-K shortcut. Without JavaScript, the trigger and destination links are available only where declarative dialog commands are supported. Use `shortcut: false` for any additional palette on the same document so only one component owns the global shortcut.
-
-### Server-rendered command palette results
-
-For a large or dynamic destination set, pass a GET endpoint through `search_url:`. Keep a useful authorized set in the declaration block: those links are the immediate first render and the no-JavaScript baseline in browsers with declarative dialog commands.
-
-```ruby
-render NitroKit::CommandPalette.new(
-  id: "workspace-search",
-  label: "Search workspace…",
-  search_url: command_palette_results_path
-) do |palette|
-  current_user.recent_destinations.each do |destination|
-    palette.destination(destination.name, href: destination.path, description: destination.section)
-  end
-end
-```
-
-Enhancement turns the search region into a debounced GET form. Its input is named `query` and targets the palette's owned Turbo Frame. Use an ordinary REST collection endpoint:
-
-```ruby
-# config/routes.rb
-resources :command_palette_results, only: :index
-
-# app/controllers/command_palette_results_controller.rb
-class CommandPaletteResultsController < ApplicationController
-  def index
-    @destinations = Current.user.destinations.search(params[:query])
-  end
-end
-```
-
-Return the matching frame with `CommandPalette::Results`. Its `id:` must exactly match the parent palette's stable `id:`. An empty result block is valid; Nitro shows the translated empty state and updates the live result count.
-
-```erb
-<%# app/views/command_palette_results/index.html.erb %>
-<%= render NitroKit::CommandPalette::Results.new(id: "workspace-search") do |results| %>
-  <% @destinations.each do |destination| %>
-    <% results.destination(
-      destination.name,
-      href: destination.path,
-      description: destination.section
-    ) %>
-  <% end %>
-<% end %>
-```
-
-The response is HTML, not JSON and not a Turbo Stream. Turbo replaces only the results frame; destination links target the full page. Scope and authorize every query on the server rather than sending hidden destinations to the browser and filtering them there.
+The value is also `NitroKit::AppearanceBootstrap::CSP_HASH`; recheck it after
+upgrades. The runtime stores the preference under `nitro-kit-appearance`, sets
+resolved `data-theme="light|dark"`, and keeps the selected preference in
+`data-theme-preference`. Nitro does not synchronize it to a user record.
 
 ## Model-backed forms
 
-Include the Rails helpers a Phlex component actually uses, then select `NitroKit::FormBuilder` explicitly:
+Select the builder explicitly and group visible fields and actions:
 
 ```ruby
 class RegistrationForm < Phlex::HTML
-  include Phlex::Rails::Helpers::DOMID
   include Phlex::Rails::Helpers::FormWith
-  include Phlex::Rails::Helpers::Routes
-  include Phlex::Rails::Helpers::TurboFrameTag
 
   def initialize(registration)
     @registration = registration
   end
 
   def view_template
-    turbo_frame_tag(dom_id(@registration, :form)) do
-      form_with(
-        model: @registration,
-        url: registration_path,
-        builder: NitroKit::FormBuilder,
-        id: dom_id(@registration, :details)
-      ) do |form|
-        form.hidden_field(:source)
-        form.group do
-          form.field(:email, as: :email, required: true)
-          form.field(
-            :role,
-            as: :select,
-            options: [["Developer", "developer"], ["Designer", "designer"]],
-            prompt: "Choose a role",
-            required: true
-          )
-          form.field(:terms, as: :checkbox, label: "I accept the terms")
-          form.field(:attachment, as: :file, accept: "text/plain")
-          form.submit("Register", data: { turbo_submits_with: "Registering…" })
-        end
+    form_with(model: @registration, builder: NitroKit::FormBuilder) do |form|
+      form.hidden_field(:source)
+      form.group do
+        form.field(:email, as: :email, required: true)
+        form.field(
+          :role,
+          as: :select,
+          options: [["Developer", "developer"], ["Designer", "designer"]]
+        )
+        form.field(:attachment, as: :file, accept: "text/plain")
+        form.submit("Register")
       end
     end
   end
 end
 ```
 
-`form.field` is the canonical Nitro API. It preserves Rails-generated names, IDs, model values, values-before-type-cast, and errors while rendering the Nitro `Field` and control contracts. A file field marks the enclosing form as `multipart/form-data`. Checkbox fields emit the unchecked hidden value before the checkbox.
+`form.field` preserves Rails-generated names, IDs, model values, errors, file
+multipart behavior, and checkbox hidden values. `form.group` owns vertical
+rhythm. Hidden fields may remain outside it.
 
-`form.group` supplies the default vertical rhythm between a standalone form's
-visible fields, submit control, and related links. Keep hidden fields outside
-the group when convenient; they do not participate in layout. Use more than
-one group only when the form has genuinely distinct sections.
+Use `html:`, `aria:`, and `data:` for control attributes. Use
+`wrapper_html:`, `wrapper_aria:`, and `wrapper_data:` for the Field wrapper.
+The [component contracts](component_contracts.md) list supported field types
+and exact option boundaries.
 
-The builder also supports Rails-shaped control methods such as `text_field`, `email_field`, `file_field`, `check_box`, `hidden_field`, and `select`. Their ordinary native options belong to the control:
+### Optional integrations
 
-```ruby
-form.email_field(
-  :email,
-  maxlength: 120,
-  data: { action: "input->signup#validate" },
-  aria: { describedby: "email-help" }
-)
+- **Rich text:** after installing Action Text and Lexxy, use
+  `form.field(:body, as: :rich_text)`. Lexxy owns editor behavior and uploads.
+- **Direct upload:** `form.dropzone` requires configured Active Storage and its
+  direct-upload route. The native file input remains the submission source.
+- **Pagy:** pass a Pagy object to `Pagination(pagy: @pagy)`, or use the manual
+  declaration API. Pagy is optional.
+- **Remote command palette:** pass `search_url:` and return
+  `CommandPalette::Results` HTML with the same stable ID. Scope every query on
+  the server.
 
-form.select(:role, nil) do
-  option(value: "developer") { "Developer" }
-  option(value: "designer") { "Designer" }
-end
-```
+## Turbo responses
 
-Captured select blocks stay inside the native `<select>`. Explicit `selected:` values, including arrays for multiple selects, override the model value. `prompt: true` uses Rails' translated “Please select” prompt.
+| Outcome                        | Response                                                       |
+| ------------------------------ | -------------------------------------------------------------- |
+| Successful HTML mutation       | Redirect with `303 See Other`                                  |
+| Invalid mutation               | Render the same model and form with `422 Unprocessable Entity` |
+| Frame response                 | Return the same stable frame ID                                |
+| Multiple changed regions       | Return a request-scoped Turbo Stream and keep an HTML branch   |
+| Other sessions need the update | Broadcast                                                      |
 
-`hidden_field` intentionally renders a standalone hidden Nitro input rather than a visible Field wrapper. `class` and `style` remain rejected. Every builder method uses one boundary: `html:`, `aria:`, and `data:` decorate the control, `control_html:`, `control_aria:`, and `control_data:` are their explicit long forms, and giving the same key through both raises. Decorate the Field wrapper with `wrapper_html:`, `wrapper_aria:`, and `wrapper_data:`.
+Use Rails DOM helpers for frame IDs. A matching frame ID is part of the
+response contract; a page-level text assertion cannot prove Turbo can apply the
+response. See [Hotwire](hotwire.md) and the focused
+[interaction patterns](patterns/).
 
-### Rich text with Lexxy
+## Upgrade verification
 
-Lexxy is Nitro Kit's preferred Action Text editor. Once the application has
-installed Action Text and Lexxy, use the same builder API as every other field:
-
-```ruby
-form.field(:brief, as: :rich_text, placeholder: "Describe the project")
-```
-
-Nitro wraps the editor in the ordinary Field contract, so labels, descriptions,
-validation errors, layout, and theme tokens remain consistent. Lexxy continues
-to own its hidden input, attachment flow, editor behavior, prompts, and native
-options; pass editor-specific attributes through `control_html:`. Nitro Kit does
-not bundle or fork Lexxy's JavaScript.
-
-The complete builder surface includes:
-
-- `field`, `fieldset`, and `group`.
-- `dropzone` for native file selection with optional Active Storage direct uploads.
-- `select`, `radio_button`, `check_box`/`checkbox`, and `hidden_field`.
-- `submit` and `button`.
-- Rails-shaped color, date, datetime, email, file, month, number, password, phone/telephone, range, rich text, search, text, textarea, time, URL, and week fields.
-
-`month_field` and `week_field` emit native `month` and `week` input types as
-progressive enhancement. Some supported desktop browsers expose ordinary text
-entry, and older iOS Safari releases lack week selection, so do not rely on a
-picker, browser normalization, or `min`, `max`, and `step`. Validate `YYYY-MM`
-and `YYYY-Www` plus domain range and increment rules on the model. If the user
-must choose from an exact bounded set, render `form.field(..., as: :select,
-options: ...)` with application-owned options. Nitro does not ship a generic
-datepicker for this case.
-
-`submit` renders a primary submit Button named `commit`, and `button` defaults
-to `type: :submit`. The Rails helpers Nitro does not style — `label`,
-`collection_select`, `grouped_collection_select`, `collection_radio_buttons`,
-`collection_check_boxes`, `date_select`, and `time_zone_select` — raise and name
-their `form.field(as:)` equivalent instead of leaking unstyled markup.
-
-### Mutation buttons and joined controls
-
-Navigation uses `Button.new(..., href:)`. A non-GET action uses `ButtonTo`,
-which renders one Rails method form and one submit Button:
-
-```ruby
-render NitroKit::ButtonTo.new(
-  "Revoke token",
-  href: token_path(token),
-  method: :delete,
-  variant: :destructive,
-  data: { turbo_confirm: "Revoke this token?" }
-)
-```
-
-Root `html:`, `aria:`, and `data:` address the form. `button_html:`,
-`button_aria:`, and `button_data:` address the nested focusable Button when a
-composition such as Tooltip must attach attributes there. The form is
-layout-transparent, so ButtonTo participates in Flex, Grid, and action rows as
-its Button.
-
-Use `ControlGroup` when adjacent native controls intentionally share borders:
-
-```ruby
-render NitroKit::ControlGroup.new(label: "Copy webhook URL") do
-  render NitroKit::Input.new(value: webhook_url, readonly: true)
-  render NitroKit::Button.new("Copy", type: :button, icon: :copy)
-end
-```
-
-Direct Input, Select, and Button children keep their own values and behavior.
-`group.addon("https://")` adds a textual prefix, suffix, or unit. Do not use a
-ControlGroup merely to reduce ordinary form spacing; FieldGroup owns vertical
-form rhythm.
-
-### File drops and direct uploads
-
-`form.dropzone` derives the native input ID and Rails parameter name, marks the form as multipart, and accepts the same explicit upload contract as `NitroKit::Dropzone`:
-
-```ruby
-form.dropzone(
-  :attachments,
-  label: "Upload evidence",
-  description: "Up to three PDF files, each no larger than 5 MB.",
-  multiple: true,
-  accept: "application/pdf",
-  max_files: 3,
-  max_bytes: 5 * 1024 * 1024,
-  required: true
-)
-```
-
-The labelled `<input type="file">` remains the source of truth. Without JavaScript it submits ordinary uploaded files. With the controller connected, selection and dropping add removable previews, enforce the declared count, byte, and type constraints, and announce upload and error state. Set `direct_upload: false` to keep the selected `File` objects on that input for the normal multipart request.
-
-The default `direct_upload: true` uses Rails' public `DirectUpload` client. Nitro Kit pins `@rails/activestorage` for importmap applications; bundler-based applications must make that module available alongside the Nitro controller. The host application must install Active Storage's tables, configure a service, and expose the standard `rails_direct_uploads_path` route. Successful uploads submit signed blob IDs under the same Rails parameter name. Removing or replacing a file removes its signed ID, and the form's submit controls remain unavailable while uploads are active.
-
-## Validation responses
-
-Build the model from submitted parameters and render the same Phlex form with status 422 when it is invalid. `NitroKit::FormBuilder` reads the model's real `ActiveModel::Errors`; Field connects help and error IDs through `aria-describedby` and sets `aria-invalid`.
-
-```ruby
-def create
-  @registration = Registration.new(registration_params)
-  @registration.valid? ? render_success : render_errors
-end
-
-private
-  def render_errors
-    respond_to do |format|
-      format.turbo_stream do
-        render RegistrationStream.new(@registration), status: :unprocessable_entity
-      end
-      format.html do
-        render RegistrationForm.new(@registration), status: :unprocessable_entity
-      end
-    end
-  end
-```
-
-Keep the HTML branch. It is the progressive fallback when Turbo is unavailable.
-
-## Turbo Frames and Streams
-
-Use Rails' DOM helper for stable frame targets. A form inside a frame submits to that frame by default; use `data: { turbo_frame: "_top" }` only for navigation that should leave it.
-
-Turbo Stream responses can also be Phlex components:
-
-```ruby
-class RegistrationStream < Phlex::HTML
-  include Phlex::Rails::Helpers::DOMID
-  include Phlex::Rails::Helpers::TurboStream
-
-  def initialize(registration)
-    @registration = registration
-  end
-
-  def view_template
-    turbo_stream.replace(dom_id(@registration, :form)) do
-      render RegistrationForm.new(@registration)
-    end
-  end
-end
-```
-
-Deliver the submitting user's stream over the HTTP response. A successful non-Turbo POST should redirect with `303 See Other`; an invalid HTML or Turbo submission should return 422. Reserve Action Cable broadcasts for updates that must reach other sessions.
-
-The dummy application's `RailsIntegration::RegistrationForm`,
-`RegistrationStream`, `RegistrationSuccess`, and request/system tests are an
-executable reference implementation of this contract. The form submits a
-note. A 422 response replaces `form_registration` with the same invalid Phlex
-form and preserves that submitted note; a successful stream replaces the same
-frame with `RegistrationSuccess` and renders the submitted email and note.
-The tests scope those assertions to
-`turbo-stream > template > turbo-frame#form_registration` and, in the browser,
-to the live `turbo-frame#form_registration`. This matching-ID boundary is
-intentional: a page-level text assertion can pass while a frame response is
-missing its target and Turbo renders nothing.
-
-## Pagy pagination
-
-Keep the collection query in the controller and pass Pagy's result directly to Pagination:
-
-```ruby
-class ProjectsController < ApplicationController
-  def index
-    @pagy, @projects = pagy(:offset, Project.order(updated_at: :desc))
-  end
-end
-```
-
-```ruby
-Pagination(pagy: @pagy)
-```
-
-Pagination reads Pagy's previous page, visible series, gaps, current page, next page, and page URLs. Pagy remains optional: applications that do not bundle it keep using the manual declaration API. Modern Pagy objects own URL generation through their request context. For an older Pagy release or a custom compatible object, supply the URL boundary explicitly:
-
-```ruby
-Pagination(
-  pagy: @pagy,
-  page_url: ->(page) { pagy_url_for(@pagy, page) }
-)
-```
-
-This replaces the 1.x `nk_pagy_nav(@pagy)` helper without bringing the old global helper layer into Phlex composition.
-
-## Conventional interaction recipes
-
-Use the packaged recipes for complete application flows:
-
-- [Queryable collections](patterns/queryable_collection.md) for GET filters, sorting, pagination, and one results frame.
-- [Resource forms](patterns/resource_form.md) for model-backed create/update flows and 422 validation responses.
-- [Destructive actions](patterns/destructive_action.md) for reviewed dialogs, compact confirmation, and 303 redirects.
-- [Flash and toast](patterns/flash_and_toast.md) for one server-feedback path across Turbo and HTML.
-- [Inline edit](patterns/inline_edit.md) for stable resource frames and Cancel behavior.
-
-These recipes are conventions rather than new client-side abstractions. Rails owns the request and policy, Hotwire owns transport and replacement, and Nitro owns the rendered UI contract.
+For a Nitro Kit 1.x application, follow the dedicated
+[migration guide](migration_1_to_2.md). It owns the upgrade smoke-test setup,
+legacy inventory, Doctor review, and browser acceptance checklist.

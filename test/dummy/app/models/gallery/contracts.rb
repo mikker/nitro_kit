@@ -13,6 +13,9 @@ module Gallery
     class ContractNotFound < KeyError
     end
 
+    class MalformedTable < StandardError
+    end
+
     module_function
 
     def rows
@@ -56,6 +59,14 @@ module Gallery
 
         key = cells.first[KEY_CELL, 1]
         next unless key && columns
+
+        unless cells.size == columns.size
+          raise MalformedTable,
+            "#{relative_path}:#{index + 1} has #{cells.size} cells; expected #{columns.size}"
+        end
+        if result.key?(key)
+          raise MalformedTable, "#{relative_path}:#{index + 1} duplicates #{key}"
+        end
 
         result[key] = Row.new(
           component: key,

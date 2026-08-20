@@ -58,28 +58,19 @@ class AgentGuidanceTest < ActiveSupport::TestCase
   end
 
   test "migration guidance preserves unsupported application controls" do
-    guidance = [
-      ROOT.join("docs/agent_guide.md"),
-      ROOT.join("docs/initialization_prompt.md"),
-      PLUGIN_ROOT.join("skills/nitro-kit-rails/SKILL.md"),
-      PLUGIN_ROOT.join("skills/nitro-kit-ui/SKILL.md")
-    ]
+    guide = ROOT.join("docs/agent_guide.md").read
+    migration = ROOT.join("docs/migration_1_to_2.md").read
 
-    guidance.each do |path|
-      instructions = path.read
-
-      assert_match(/genuine semantic\s+and behavioral equivalent/, instructions)
-      assert_match(/application-owned\s+Rails and semantic HTML/, instructions)
-      assert_match(/copied\s+Nitro Kit 1\.x source/, instructions)
-    end
+    assert_includes guide, "migration_1_to_2.md"
+    assert_match(/genuine semantic\s+and behavioral equivalent/, migration)
+    assert_match(/application-owned\s+Rails and semantic\s+HTML/, migration)
+    assert_match(/copied\s+Nitro Kit 1\.x source/, migration)
   end
 
   test "application guidance prefers full-stack Phlex only for greenfield applications" do
     guidance = [
       ROOT.join("docs/agent_guide.md"),
-      ROOT.join("docs/initialization_prompt.md"),
-      PLUGIN_ROOT.join("skills/nitro-kit-rails/SKILL.md"),
-      PLUGIN_ROOT.join("skills/nitro-kit-ui/SKILL.md")
+      ROOT.join("docs/initialization_prompt.md")
     ]
 
     guidance.each do |path|
@@ -88,8 +79,9 @@ class AgentGuidanceTest < ActiveSupport::TestCase
       assert_includes instructions, "bin/rails generate phlex:install"
       assert_includes instructions, "application layout"
       assert_match(/reusable\s+UI/, instructions)
-      assert_match(/established application/, instructions)
-      assert_match(/application-wide\s+migration is explicitly authorized/, instructions)
+      assert_match(/established\s+application/, instructions)
+      assert_includes instructions, "application-wide migration"
+      assert_match(/explicitly\s+authorized/, instructions)
     end
   end
 

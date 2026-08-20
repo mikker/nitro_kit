@@ -85,9 +85,8 @@ class InputFieldTest < ActiveSupport::TestCase
 
     assert_includes contracts, "browsers may expose text entry without picker, normalization"
     assert_includes contracts, "server-validate `YYYY-MM` or `YYYY-Www`"
-    assert_includes browser_support, "Applications must accept and validate the submitted ISO shapes on the server"
-    assert_includes rails_integration, "form.field(..., as: :select,"
-    assert_match(/Nitro does not ship a generic\s+datepicker/, rails_integration)
+    assert_includes browser_support, "Applications must server-validate `YYYY-MM` or `YYYY-Www`"
+    assert_includes rails_integration, "browser_support.md"
   end
 
   test "renders nested input ownership and invalid semantics" do

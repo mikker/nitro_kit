@@ -106,7 +106,7 @@ class GalleryReferenceTest < ActionDispatch::IntegrationTest
 
     assert_select "[data-gallery-pattern='queryable_collection']" do
       assert_select "h3", text: "Queryable collection"
-      assert_select "li", text: /a stable ID owns filters, sorting, results/
+      assert_select "li", text: /One GET-driven Turbo Frame owns filters, sorting, results/
     end
 
     get gallery_component_path("settings-section")
@@ -114,6 +114,6 @@ class GalleryReferenceTest < ActionDispatch::IntegrationTest
     assert_response :success
 
     assert_select "[data-gallery-pattern='resource_form'] h3", text: "Resource form"
-    assert_select "[data-gallery-pattern='crud_resource'] h3", text: "A complete product resource"
+    assert_select "[data-gallery-pattern='crud_resource'] h3", text: "Complete product resource"
   end
 end

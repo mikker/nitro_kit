@@ -4,21 +4,20 @@
 
 # Nitro Kit
 
-**Rails front-end for the agent era.**
+**Audience:** Rails developers evaluating or installing Nitro Kit.
 
-Nitro Kit is a gem-owned, agent-native UI system for Ruby on Rails. The `2.0.0.alpha.3` prerelease is a ground-up rebuild under active testing and must not be treated as stable. New documentation and the Nitro Kit Pro alpha catalog are coming next.
+Nitro Kit is a gem-owned Phlex UI system for Rails. The `2.0.0.alpha.3` prerelease
+is under active testing and is not stable.
 
 [![RubyGems](https://img.shields.io/gem/v/nitro_kit.svg)](https://rubygems.org/gems/nitro_kit)
 
-## Installation
+## Install
 
-Install the prerelease explicitly and keep it pinned while evaluating it.
+Pin the prerelease:
 
 ```ruby
 gem "nitro_kit", "2.0.0.alpha.3"
 ```
-
-Use the released gem and commit `Gemfile` with `Gemfile.lock`. Before upgrading, review the changelog, run `bundle update nitro_kit`, rerun the installer, and test the application.
 
 ```sh
 bundle install
@@ -26,29 +25,26 @@ bin/rails generate nitro_kit:install
 bin/rails nitro_kit:doctor
 ```
 
-Example migration prompt:
+Commit `Gemfile` and `Gemfile.lock`. Before upgrading, review the changelog,
+run `bundle update nitro_kit`, rerun the installer, and test the application.
+Production applications should use a released gem with a committed lockfile.
 
-> Upgrade this Rails app to Nitro Kit `2.0.0.alpha.3`. Run the installer, follow its diagnostics, preserve existing behavior and styling, and use Nitro Kit MCP patterns where helpful. Run tests and summarize changes or unresolved issues.
+Start with:
 
-Example new application prompt:
+- [Rails integration](docs/rails_integration.md)
+- [Component contracts](docs/component_contracts.md)
+- [Customization](docs/customization.md)
+- [Browser support](docs/browser_support.md)
+- [Nitro Kit 1.x migration](docs/migration_1_to_2.md)
+- [Coding-agent guide](docs/agent_guide.md)
 
-> Build this Rails app with Nitro Kit `2.0.0.alpha.3`. Run the installer, follow the included agent guide, compose gem-owned components, and use Nitro Kit MCP patterns where helpful. Add tests and summarize the result.
+Nitro Kit targets maintained evergreen browsers from roughly the previous two
+years, with Mobile Safari as a first-class target. See the
+[browser support policy](docs/browser_support.md) for exact fallback behavior.
 
-The [agent guide](docs/agent_guide.md), [Rails integration guide](docs/rails_integration.md), [component contracts](docs/component_contracts.md), and [browser support policy](docs/browser_support.md) are included with the gem.
-
-## Browser support
-
-Nitro Kit uses modern web standards while keeping core content and actions
-usable for the overwhelming majority of people on maintained browsers. The
-practical target is current stable and popular evergreen releases from roughly
-the previous two years, with Mobile Safari as a first-class target. Small,
-feature-detected fallbacks preserve essential behavior without holding
-components to the oldest browser's feature set; visual polish may degrade. See
-the [browser support policy](docs/browser_support.md) for the dated browser
-matrix and canonical full/reduced/unavailable no-JavaScript classifications.
-
-Maintaining Nitro Kit 1? Its frozen documentation remains at [v1.nitrokit.dev](https://v1.nitrokit.dev).
+Maintaining Nitro Kit 1? Its frozen documentation remains at
+[v1.nitrokit.dev](https://v1.nitrokit.dev).
 
 ## License
 
-Nitro Kit is distributed under the custom [NitroKit License](LICENSE).
+Nitro Kit uses the custom [NitroKit License](LICENSE).

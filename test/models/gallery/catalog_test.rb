@@ -152,6 +152,15 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
     assert_raises(Gallery::Contracts::ContractNotFound) { Gallery::Contracts.fetch!("Nonexistent") }
   end
 
+  test "data section contract is not truncated by markdown pipes" do
+    contract = Gallery::Contracts.fetch!("DataSection")
+    compound = contract.fields.find { |field| field.label == "Compound contract" }
+
+    assert_includes compound.value, "DetailsTable"
+    assert_includes compound.value, "EmptyState"
+    assert_includes compound.value, "actions"
+  end
+
   test "declared page patterns resolve to summarized pattern documents" do
     assert_equal(
       Gallery::Catalog::PATTERNS.keys.uniq,

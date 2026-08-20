@@ -36,11 +36,11 @@ class BrowserSupportPolicyTest < ActiveSupport::TestCase
   test "publishes one dated no-JavaScript classification policy" do
     policy = POLICY.read
 
-    assert_includes policy, "Nitro Kit 2.0 release matrix (2026-08-05)"
     %w[Full Reduced Unavailable].each { |classification| assert_includes policy, "**#{classification}**" }
     INTERACTIVE_FAMILIES.each { |family| assert_includes policy, family }
     assert_match(/server-rendered HTML response is not automatically a JavaScript-free\s+interaction/, policy)
     assert_includes policy, "Turbo transport"
+    assert_includes policy, "Do not publish planned or simulated versions as verified coverage"
   end
 
   test "routes public and agent guidance to the canonical policy" do
@@ -50,12 +50,12 @@ class BrowserSupportPolicyTest < ActiveSupport::TestCase
   end
 
   test "keeps implemented compatibility claims and removes stale gaps" do
-    documentation = ROUTED_DOCUMENTS.map { |document| ROOT.join(document).read }.join("\n")
+    policy = POLICY.read
 
-    assert_includes documentation, "falls back to `showModal()` or `close()`"
-    assert_includes documentation, "outside-pointer"
-    assert_includes documentation, "low-specificity fallback"
-    assert_includes documentation, "YYYY-Www"
-    refute_match(/missing imperative fallback|controller-free Dialog/i, documentation)
+    assert_includes policy, "falls back to `showModal()` or `close()`"
+    assert_includes policy, "outside-pointer"
+    assert_includes policy, "low-specificity fallback"
+    assert_includes policy, "YYYY-Www"
+    refute_match(/missing imperative fallback|controller-free Dialog/i, policy)
   end
 end

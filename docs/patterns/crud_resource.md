@@ -1,147 +1,62 @@
-# A complete product resource
+# Complete product resource
 
-Build CRUD as one coherent product surface, not independent generated screens.
-Before writing the views, name the resource, tenant boundary, actor, lifecycle,
-visibility rules, and states. Implement index, form, detail, destructive action,
-and their tests together.
+**Audience:** Coding agents and developers implementing a full Rails CRUD
+resource with Nitro Kit.
 
 ## Summary
 
-- Build index, form, detail, destructive action, and their tests as one
-  surface; name the resource, tenant boundary, actor, lifecycle, and states
-  before writing views.
-- `AppShell(layout: :hybrid)` frames the admin area, and a `Toolbar` in
-  `shell.topbar` carries the route's single `h1` plus its basic actions.
-- Spend hierarchy once: one route, one `h1`, an `h2` only for a genuinely
-  separate region, and no resource name repeated across toolbar, `PageHeader`,
-  `DataSection`, Card, and caption.
-- Child routes add one compact icon Back link before the title instead of a
-  trailing Cancel action.
-- At narrow widths, trailing actions stack below the Back affordance and title;
-  do not clip the title or hide persistent actions to keep the header short.
-- One responsive padding rule on the main wrapper owns the page gutter;
-  data-heavy hybrid CRUD content uses the full available width.
+- Define the resource, tenant boundary, actor, lifecycle, visibility, and
+  states before writing views.
+- Build index, form, detail, destructive action, and tests as one product
+  surface.
+- Use one shell toolbar title and one application-owned page gutter; do not
+  repeat hierarchy across nested components.
+- Scope every lookup through the current tenant and model meaningful lifecycle
+  transitions as noun resources.
 
-## Use the hybrid application frame
+## Resource map
 
-An authenticated admin area defaults to `AppShell(layout: :hybrid)`. Nitro Kit
-owns the desktop sidebar, mobile menu button, navigation dialog, focus behavior,
-and responsive transition. The application provides destinations and current
-state.
+Use `AppShell(layout: :hybrid)` for an authenticated product area. Put the
+route's one `h1` and persistent actions in the topbar `Toolbar`. Child routes
+place one compact Back link before the title. One wrapper inside `shell.main`
+owns page padding; child pages add no outer gutter.
 
-Put a `Toolbar` in `shell.topbar`. Its leading region contains the route's one
-`h1`; its trailing region contains basic actions such as New, Edit, Cancel,
-Save, Publish, or View. A Button outside a form can submit it through the
-native `form:` attribute. This keeps the same action hierarchy on narrow and
-wide screens without custom JavaScript. Nitro Kit stacks the regions at narrow
-widths so a Back affordance, long title, and several actions remain legible.
+| Route                 | Composition                                                                                                             |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Index                 | Optional short introduction, then Table or EmptyState and pagination. Use DataSection only for multiple named datasets. |
+| New/Edit              | One `SettingsSection` and one shared form component. A toolbar submit targets the form's stable `form:` ID.             |
+| Show                  | Status or metadata, then the resource. Keep lifecycle actions in the normal detail flow.                                |
+| Edit destructive area | One `DangerZone` with a safe escape. Do not put permanent deletion on every show page.                                  |
+
+Use one primary action. Do not render the same Save or Create action in both
+the toolbar and form body. Use Card only for a bounded object that benefits
+from its own surface.
+
+See [Resource form](resource_form.md),
+[Destructive action](destructive_action.md), and
+[Queryable collection](queryable_collection.md) for complete interaction
+contracts.
+
+## Lifecycle and responses
+
+Scope lookups through `Current.team` or `Current.account`. Use
+`Current.user` as actor. When state has timing, provenance, or behavior, model
+it as a noun resource:
 
 ```ruby
-AppShell(id: "admin", layout: :hybrid) do |shell|
-  shell.navigation { render admin_navigation }
-  shell.topbar do
-    Toolbar do |toolbar|
-      toolbar.leading { h1 { page_title } }
-      toolbar.trailing do
-        Button(
-          "Save",
-          type: :submit,
-          form: dom_id(@post, :form),
-          variant: :primary
-        )
-      end
-    end
-  end
-  shell.main do
-    div(data: { ui: "admin-main" }) do
-      render page
-    end
-  end
+resources :posts do
+  resource :publication, only: %i[create destroy], module: :posts
 end
 ```
 
-Child routes add one compact Back link before the title. Prefer an icon-only
-Button with an explicit label such as `aria: { label: "Back to projects" }`.
-Do not repeat that navigation as a trailing Cancel action.
+Keep the main controller to REST actions. Successful mutations redirect with
+`303 See Other`; invalid forms render the same model with `422 Unprocessable
+Entity`. Public controllers query only publicly visible records.
 
-The application stylesheet gives `admin-main` one responsive padding rule.
-Child pages do not add another outer gutter. Keep data-heavy hybrid CRUD
-content full width; constrain only a specific content-led region whose measure
-benefits from it.
+## Acceptance checklist
 
-Do not add viewport height or another outer padding rule to `admin-main`; the
-shell owns viewport geometry and the wrapper owns the one page gutter. Use the
-same shell and gutter on team administration and settings routes.
-Place a bottom-anchored Settings destination after `AppNavigation#spacer`, then
-compose settings subsections with `SettingsLayout` and plain `SettingsSection`
-regions. Settings destinations are links with `aria-current`, not action
-Buttons. Read `application_foundation.md` for the complete application frame.
-
-## Spend hierarchy once
-
-- One route, one `h1`, normally in the shell toolbar.
-- Add an `h2` only for a genuinely separate region.
-- Do not repeat “Posts” in the toolbar, `PageHeader`, `DataSection`, Card, and
-  visible table caption.
-- Use `PageHeader` for a content-led introduction, not as mandatory CRUD
-  ceremony under an existing toolbar.
-- Prefer whitespace and dividers. Use Card only for a bounded object that
-  benefits from its own surface. Never default to Card inside Card.
-
-An index begins with a short introduction only if it adds useful context, then
-renders its table and pagination directly. Use `DataSection` when a page has
-multiple independently named datasets. At zero records, replace the data region
-with one intentional `EmptyState`; keep the primary New action in the toolbar.
-
-A new or edit page begins with `SettingsSection`. Use one form component for new,
-edit, and invalid renders. Put the primary submit in the toolbar by setting the
-button's `form:` to the form's stable DOM ID. Invalid submissions render the
-same model and form with `422 Unprocessable Entity`. The toolbar owns that
-action: do not render a second Save or Create submit inside the form body.
-
-A detail page begins with status or stable metadata, then the resource itself.
-Keep status inside that normal details flow instead of detaching it into a
-second side panel.
-Use the authenticated `show` route as the operational detail or draft preview.
-Put lifecycle forms in the page and associate their toolbar buttons with
-`form:`. Put destructive confirmation in one separate `DangerZone` on edit,
-with a safe escape back to the record. Do not make every show page end in a
-large deletion surface.
-
-## Model and route the lifecycle
-
-Scope every lookup through `Current.team` or `Current.account`. Record
-`Current.user` as author, creator, or publisher. If a state has provenance,
-timing, or behavior, model it as a record and expose it as a noun resource:
-
-```ruby
-namespace :admin do
-  resources :posts do
-    resource :publication,
-      only: %i[create destroy],
-      module: :posts
-  end
-end
-```
-
-The main controller keeps the seven REST actions. Successful mutations redirect
-with `303 See Other`. Publication create and destroy invoke domain methods and
-redirect. Public controllers query published records only. Ordinary Rails forms
-and Turbo Drive are the default; do not add fetch code for CRUD submissions.
-
-## Ship the acceptance path
-
-Request tests cover tenant isolation, public visibility, successful `303`
-redirects, invalid `422` renders, pagination, and lifecycle resources. Rendering
-assertions should also protect the high-level composition: hybrid AppShell,
-one `h1`, navigation, toolbar action, actual form association, table or empty
-state, and destructive confirmation. Add one browser test for the meaningful
-end-to-end path, using Capybara waiting assertions instead of sleeps.
-
-Assert that each primary action has one visible control. A toolbar-associated
-form submit plus an identical body submit is duplication, even when both invoke
-the same valid form.
-
-Before finishing, inspect a populated index, empty index, invalid form, narrow
-form, draft detail, published detail, and edit-owned destructive dialog. Remove any extra
-heading, surface, wrapper, or page gutter that does not communicate information.
+Test tenant isolation, authorization, public visibility, lifecycle resources,
+pagination, `303` redirects, and `422` validation. Protect the high-level
+composition: one title, one primary action, the correct form association,
+Table or EmptyState, and edit-owned destructive confirmation. Inspect
+populated, empty, invalid, narrow, draft, published, and destructive states.

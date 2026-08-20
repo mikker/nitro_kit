@@ -48,14 +48,11 @@ class UpgradeExamplesTest < ActionDispatch::IntegrationTest
     assert_includes guide, "wrap: :nowrap"
   end
 
-  test "customization guide embeds the tested application base and example" do
+  test "customization guide documents application composition boundaries" do
     guide = NitroKit::Engine.root.join("docs/customization.md").read
-    base = Rails.root.join("app/components/application_component.rb").read.strip
-    example = Rails.root.join("app/components/rails_integration/status_pill.rb").read.strip
 
-    assert_includes guide, base
-    assert_includes guide, example
-    assert_includes guide, "Caller `html:` values replace same-key defaults"
-    assert_includes guide, "Class attribute order does not override the CSS cascade"
+    assert_includes guide, "Composition is the default extension mechanism"
+    assert_includes guide, "Do not override Nitro rendering methods"
+    assert_includes guide, "application-owned"
   end
 end
