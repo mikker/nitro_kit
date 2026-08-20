@@ -247,9 +247,18 @@ See the executable
 
 ## Preserve unsupported behavior honestly
 
-When no equivalent exists, keep semantic Rails or HTML under the application
-namespace and report the missing capability. Do not retain copied 1.x source,
-downgrade a specialized control, or hide the gap behind a generic component.
+Replace a form control only when the installed Nitro Kit catalog provides a
+genuine semantic and behavioral equivalent. Preserve its parameter name, IDs,
+values, errors, accessibility, uploads, and browser behavior. If no equivalent
+exists, keep or re-express the control as application-owned Rails and semantic
+HTML, optionally inside a custom `form.field` composition. Never downgrade an
+editor, autocomplete, date range, upload, or other specialized input to the
+nearest generic Nitro control merely for visual consistency.
+
+Do not retain copied Nitro Kit 1.x source as the fallback. Remove the legacy
+component, preserve the unsupported behavior in clearly application-owned
+code, and report the missing equivalent as a Nitro Kit coverage gap. Do not
+hide the gap behind a generic component.
 
 Tooltip custom triggers are the explicit composition path for an existing
 focusable control. Forward every yielded boundary to that actual control:
@@ -282,15 +291,19 @@ bin/rails test test/system/nitro_kit_upgrade_smoke_test.rb
 
 The generator does not overwrite existing tests. It generates only files
 supported by the host's Rails Minitest and system-test setup and prints setup
-guidance for skipped files. The tests use the currently bundled gem and cover
-the shared upgrade boundary — browser-submitted Turbo validation and mutation,
-Dialog and Sheet, layout-owned Rails flash, Turbo Frame identity, redirects,
-and post-mutation Phlex rendering. Their route is prepended only during each
-test, so host catch-all routes remain compatible; an exact GET or PATCH route
-at the same path is still rejected rather than masked. The route is restored
-afterward and adds no production route or component source. Keep
-application-specific migration tests for inventoried
-product behavior alongside them.
+guidance for skipped files. Keep the generated explanatory header in each
+test: these are host-integration regression checks, not substitutes for
+application-specific acceptance tests. Run every supported generated test
+before and after the application conversion, while retaining
+application-specific acceptance coverage for every inventoried flow.
+
+The tests use the currently bundled gem and cover the shared upgrade boundary
+— browser-submitted Turbo validation and mutation, Dialog and Sheet,
+layout-owned Rails flash, Turbo Frame identity, redirects, and post-mutation
+Phlex rendering. Their route is prepended only during each test, so host
+catch-all routes remain compatible; an exact GET or PATCH route at the same
+path is still rejected rather than masked. The route is restored afterward and
+adds no production route or component source.
 
 The endpoint deliberately inherits `ApplicationController` callbacks. If the
 application requires authentication or current-account state, fill in the

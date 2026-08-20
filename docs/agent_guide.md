@@ -31,6 +31,9 @@ Read this guide from that directory, then consult only the reference needed for 
 
 The installed component source is the final authority for constructor and compound-method details. This guide describes Nitro Kit 2.x. Do not use an API remembered from Nitro Kit 1.x or another installed version.
 
+Before changing a Nitro Kit 1.x application, read the dedicated
+[`1.x to 2.x migration guide`](migration_1_to_2.md).
+
 ## Choose the application view architecture deliberately
 
 In a greenfield application, install Phlex before building the interface:
@@ -80,48 +83,6 @@ use toolbar Back links on child routes, keep deletion on edit, keep status in
 the details flow, implement full invitation and membership management, and use
 native links for settings destinations. Do not stop after rendering a screen
 that only looks structurally similar.
-
-## Preserve controls during migration
-
-Before changing a 1.x application, read `docs/migration_1_to_2.md`. Inventory
-user-facing flows and behavior before mapping helpers. When the Nitro Kit MCP
-catalog is available, search by product workflow rather than old component
-name, then prefer the highest-level matching composition before replacing
-atoms.
-
-After establishing that inventory, generate the host integration smoke tests
-from the currently bundled gem with `bin/rails generate
-nitro_kit:upgrade_smoke_tests`. The generator preserves existing files and
-skips missing Rails Minitest or system-test infrastructure with setup guidance.
-Keep the generated explanatory header in each test: these are host-integration
-regression checks, not substitutes for application-specific acceptance tests.
-Run supported generated tests before and after the application conversion,
-while retaining application-specific acceptance coverage for every inventoried
-flow. Customize each generated `prepare_nitro_kit_upgrade_smoke_test` method
-with host sign-in and account-selection helpers when `ApplicationController`
-requires them; do not disable the host callbacks.
-
-In an existing application, replace a form control only when the installed
-Nitro Kit catalog provides a genuine semantic and behavioral equivalent.
-Preserve its parameter name, IDs, values, errors, accessibility, uploads, and
-browser behavior. If no equivalent exists, keep or re-express the control as
-application-owned Rails and semantic HTML, optionally inside a custom
-`form.field` composition. Never downgrade an editor, autocomplete, date range,
-upload, or other specialized input to the nearest generic Nitro control merely
-for visual consistency.
-
-Do not retain copied Nitro Kit 1.x source as the fallback. Remove the legacy
-component and preserve the unsupported behavior in clearly application-owned
-code. Report the missing equivalent as a Nitro Kit coverage gap.
-
-At the end of a migration, search the whole application for
-`desperately_need_a_class:` and review every result. Aim for zero rather than
-translating old utility classes mechanically. Move application layout and
-visual treatment to wrappers, use semantic component options or native
-attributes, accept incidental Nitro defaults, and keep unmatched product UI
-application-owned. Remove generic class forwarding from shared builders.
-Retain an escape only for a named external integration that requires a class
-hook, and record that reason in the migration review.
 
 ## Use one interaction grammar
 
