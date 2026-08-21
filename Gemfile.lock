@@ -123,7 +123,7 @@ GEM
       reline (>= 0.4.2)
     json (2.21.2)
     language_server-protocol (3.17.0.6)
-    lexxy (0.9.30)
+    lexxy (0.9.31)
       rails (>= 8.0.2)
     lint_roller (1.1.0)
     logger (1.7.0)
