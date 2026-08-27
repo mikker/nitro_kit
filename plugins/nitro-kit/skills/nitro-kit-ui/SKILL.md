@@ -18,14 +18,25 @@ Use the documentation shipped with the application's installed gem as the source
    classifications in `NITRO_KIT_ROOT/docs/browser_support.md`.
 7. Inspect the installed component source when constructor or compound-slot details remain unclear. Never guess a component API from memory.
 
+## Discover optional catalog guidance
+
+For greenfield planning or broad product UI work, check whether Nitro Kit
+catalog or MCP tools are available. When they are, inventory and search by
+product workflow, retrieve the relevant patterns, and state what will be used,
+adapted, or deferred before implementation. When they are not, continue with
+the installed skills, documentation, component contracts, and source. Catalog
+access is optional and must never block the work or be implied in the result.
+
+For a focused component change, use the catalog only when it is already
+available and a higher-level composition would materially help.
+
 For a Nitro Kit 1.x migration, read
 `NITRO_KIT_ROOT/docs/migration_1_to_2.md` before editing. Inventory product
 flows, behavior, application-owned button classes and Rails button helpers,
 joined controls, and the existing semantic color, focus, radius, density, and
 typography tokens first. Capture representative wide and narrow screenshots.
-If the Nitro Kit MCP catalog is available, search it by workflow rather than
-old component name, then select high-level compositions before replacing
-atoms.
+Apply the optional catalog process above, searching by workflow rather than old
+component name and selecting high-level compositions before replacing atoms.
 
 If the gem is not installed, say that the skill requires Nitro Kit and follow the application's requested installation scope. Do not substitute APIs from an older Nitro Kit release.
 
@@ -75,5 +86,9 @@ If the gem is not installed, say that the skill requires Nitro Kit and follow th
 ## Verify
 
 Run the smallest relevant application tests. For component rendering, assert semantic elements and owned `data-nk` or slot attributes rather than private implementation helpers. Exercise invalid and empty states when the UI accepts user input or collections.
+
+Nitro Kit Doctor verifies integration and runtime contracts, not product
+completeness. Do not use a green Doctor result as proof that every relevant
+screen, state, or catalog workflow has been implemented.
 
 For a migration, Doctor is an inventory, not visual proof. Run representative form and component rendering with `ActiveModel::Translation.raise_on_missing_translations` enabled when the application uses strict i18n. Compare the same representative flows in a browser at wide and narrow widths, exercise keyboard focus, and inspect computed styles for missing application classes, stacked Button content, broken compound corners, double focus rings, clipping, and theme drift. Re-audit rendered native buttons, Rails button helpers, and application-owned button classes before declaring the conversion complete. Search the whole application for `desperately_need_a_class:` and review every result, aiming for zero. Move layout and visual treatment to application-owned wrappers, remove generic class forwarding, accept incidental Nitro defaults, and keep unmatched product UI application-owned; retain only documented external-integration hooks.

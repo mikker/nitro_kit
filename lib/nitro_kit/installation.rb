@@ -23,6 +23,14 @@ module NitroKit
       Each skill resolves the installed gem with `bundle show nitro_kit` and reads
       its version-matched documentation.
 
+      For greenfield planning or broad product work, check whether Nitro Kit
+      catalog or MCP tools are available. When they are, inventory and search the
+      catalog by product workflow, retrieve the relevant patterns, and state what
+      will be used, adapted, or deferred before implementation. When they are not,
+      continue with the bundled skills, documentation, and component contracts;
+      catalog access is optional and must never block the work. Nitro Kit Doctor
+      verifies integration health, not product completeness.
+
       In a greenfield application, run `bin/rails generate phlex:install` and use
       Phlex for the application layout, route views, and reusable UI. In an
       established application, preserve its existing view architecture and

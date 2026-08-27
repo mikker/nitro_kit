@@ -35,6 +35,28 @@ Read this guide from that directory. The installed
 Before changing a Nitro Kit 1.x application, read the migration guide. Do not
 infer 2.x APIs from memory or old application code.
 
+## Discover optional product patterns
+
+The installed skills, documentation, component contracts, and source are the
+complete required path for using Nitro Kit. A Nitro Kit catalog may also be
+available through MCP or another tool, but catalog access is optional and must
+never block the work.
+
+For greenfield planning or broad product work:
+
+1. Check whether Nitro Kit catalog or MCP tools are available.
+2. When available, inventory the catalog, then search by product workflow rather
+   than component name.
+3. Retrieve the relevant patterns before implementation and record which will be
+   used, adapted, or deferred.
+4. When unavailable, continue with the installed guidance and report no catalog
+   coverage claims.
+
+For a focused component or interaction change, search only when a catalog tool
+is already available and the task could benefit from a higher-level pattern.
+`nitro_kit:doctor` validates installation and runtime contracts; it is not a
+product-completeness audit.
+
 ## Preserve the application's architecture
 
 For a greenfield application, run:

@@ -24,6 +24,18 @@ established application outside the requested scope.
 9. Read `NITRO_KIT_ROOT/docs/browser_support.md` before claiming an
    interaction works without JavaScript.
 
+## Discover optional catalog guidance
+
+For greenfield planning or broad product work, check whether Nitro Kit catalog
+or MCP tools are available. When they are, inventory and search by product
+workflow, retrieve the relevant patterns, and state what will be used, adapted,
+or deferred before implementation. When they are not, continue with the
+installed skills, documentation, component contracts, and source. Catalog
+access is optional and must never block the work or be implied in the result.
+
+For a focused Rails change, use the catalog only when it is already available
+and the task could benefit from a higher-level product pattern.
+
 Never use a Nitro Kit 1.x helper, copied component, controller, or Tailwind
 contract as a substitute for the installed API.
 
@@ -70,3 +82,6 @@ Nitro Kit owns component contracts and focused progressive behavior.
 Run focused model and request tests first. Add a system test only where browser
 behavior is part of the contract. Assert status, visibility, authorization,
 and stable DOM boundaries rather than implementation trivia.
+
+Nitro Kit Doctor verifies integration and runtime contracts, not product
+completeness. For broad work, verify the agreed workflow coverage separately.

@@ -14,15 +14,15 @@
   "interface": {
     "displayName": "Nitro Kit",
     "shortDescription": "Build Rails UI with Nitro Kit and Hotwire",
-    "longDescription": "Model conventional Rails resources, compose Nitro Kit components, and implement Hotwire interactions from the installed gem version.",
+    "longDescription": "Model conventional Rails resources, compose Nitro Kit components, implement Hotwire interactions from the installed gem version, and use optional catalog guidance when available.",
     "developerName": "Mikkel Malmberg",
     "category": "Developer",
     "capabilities": ["Read", "Write"],
     "websiteURL": "https://nitrokit.dev",
     "defaultPrompt": [
-      "Build this Rails feature on the Nitro Kit Rails path.",
-      "Build this Rails interface with Nitro Kit components.",
-      "Implement this interaction with Nitro Kit and conventional Hotwire."
+      "Build this Rails feature on the Nitro Kit Rails path, using relevant catalog guidance when available.",
+      "Build this Rails interface with Nitro Kit components and any relevant catalog guidance available.",
+      "Implement this interaction with Nitro Kit, conventional Hotwire, and relevant catalog guidance when available."
     ]
   }
 }

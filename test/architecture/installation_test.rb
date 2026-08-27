@@ -50,6 +50,8 @@ class InstallationTest < ActiveSupport::TestCase
       assert_includes contents, "capitalized Kit methods"
       assert_includes contents, "use `.new` only when another API requires a component object"
       assert_includes contents, "application-wide migration is explicitly authorized"
+      assert_includes contents, "catalog access is optional and must never block the work"
+      assert_includes contents, "verifies integration health, not product completeness"
       refute_includes contents, "stale"
       assert_equal 1, contents.scan(NitroKit::Installation::AGENTS_START).size
     end
@@ -504,6 +506,7 @@ class InstallationTest < ActiveSupport::TestCase
     assert_includes prompt, "Nitro Kit 2"
     assert_includes prompt, "bundle show nitro_kit"
     assert_includes prompt, "nitro_kit:doctor"
+    assert_includes prompt, "catalog access is optional"
     refute_includes prompt, "launch"
   end
 

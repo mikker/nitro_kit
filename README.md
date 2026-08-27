@@ -42,6 +42,21 @@ Nitro Kit targets maintained evergreen browsers from roughly the previous two
 years, with Mobile Safari as a first-class target. See the
 [browser support policy](docs/browser_support.md) for exact fallback behavior.
 
+## Prompting a coding agent
+
+Add this to a product bootstrap prompt so the agent installs Nitro Kit, uses
+its guidance, and discovers optional product patterns when available:
+
+```text
+Add Nitro Kit 2 to this Rails app and use it for the product's application UI.
+
+Set up Nitro Kit before planning or implementing the product:
+- Add and pin the current Nitro Kit 2 prerelease in the Gemfile, run bundle install, run bin/rails generate nitro_kit:install, and run bin/rails nitro_kit:doctor.
+- Load the generated project-local Nitro Kit skills and installed, version-matched docs.
+- Check whether Nitro Kit catalog or MCP tools are available. If they are, inventory and search them by product workflow, retrieve relevant patterns, and state what you will use, adapt, or defer.
+- If no catalog is available, continue with the bundled docs and component contracts; catalog access is optional.
+```
+
 Maintaining Nitro Kit 1? Its frozen documentation remains at
 [v1.nitrokit.dev](https://v1.nitrokit.dev).
 

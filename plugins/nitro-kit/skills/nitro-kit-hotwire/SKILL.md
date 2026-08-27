@@ -25,6 +25,18 @@ Make the server response and stable DOM boundary the interaction API. Add Stimul
 7. Read `NITRO_KIT_ROOT/docs/browser_support.md` for the canonical
    full/reduced/unavailable no-JavaScript classification.
 
+## Discover optional catalog guidance
+
+For a broad product workflow, check whether Nitro Kit catalog or MCP tools are
+available. When they are, inventory and search by workflow, retrieve relevant
+patterns, and state what will be used, adapted, or deferred before
+implementation. When they are not, continue with the installed Hotwire recipes,
+component contracts, and source. Catalog access is optional and must never
+block the work or be implied in the result.
+
+For a focused interaction, use the catalog only when it is already available
+and a higher-level pattern would materially help.
+
 Do not proceed with a remembered Nitro Kit 1.x API. Do not copy or recreate
 the installed gem's `nk--*` controllers under `app/javascript/controllers/nk`.
 
