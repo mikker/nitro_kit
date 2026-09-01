@@ -2,6 +2,21 @@
 
 ## Unreleased
 
+## 2.0.0.alpha.5
+
+### Added
+
+- Add a copyable product bootstrap prompt that tells coding agents to install
+  Nitro Kit before planning an application and to discover optional product
+  patterns when catalog tools are available.
+
+### Changed
+
+- Teach the installed agent guidance and bundled Codex plugin to search an
+  available Nitro Kit catalog by product workflow without making catalog access
+  a requirement, and clarify that Nitro Kit Doctor checks integration health
+  rather than product completeness.
+
 ## 2.0.0.alpha.4
 
 ### Added
