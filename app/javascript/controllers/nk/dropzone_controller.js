@@ -181,6 +181,12 @@ export default class extends Controller {
     }
   }
 
+  submitted(event) {
+    if (event.target === this.element.closest("form")) {
+      this.inputTarget.disabled = false;
+    }
+  }
+
   teardown() {
     this.release({ clearInput: true });
   }
@@ -203,6 +209,7 @@ export default class extends Controller {
       this.releaseEntry(entry, { removeElement: true }),
     );
     this.entries = [];
+    this.updateAvatar();
     this.restoreSubmitControls();
     this.dragDepth = 0;
 
@@ -394,7 +401,20 @@ export default class extends Controller {
     this.previewListTarget.hidden = this.entries.length === 0;
   }
 
+  updateAvatar() {
+    const image = this.element.querySelector(
+      '[data-slot="dropzone-avatar-image"]',
+    );
+    if (!image) return;
+
+    const url = this.entries[0]?.objectUrl;
+    image.hidden = !url;
+    if (url) image.src = url;
+    else image.removeAttribute("src");
+  }
+
   reflectState() {
+    this.updateAvatar();
     if (this.dragDepth > 0) return;
 
     if (

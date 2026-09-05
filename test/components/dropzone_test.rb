@@ -17,6 +17,7 @@ class DropzoneTest < ActiveSupport::TestCase
         form.dropzone(
           :files,
           id: "builder-dropzone",
+          inline: true,
           direct_upload: false,
           multiple: true,
           accept: "text/plain",
@@ -46,7 +47,7 @@ class DropzoneTest < ActiveSupport::TestCase
     assert_equal "1048576", node["data-nk--dropzone-max-bytes-value"]
     assert_equal "text/plain", node["data-nk--dropzone-accept-value"]
     assert_includes node["data-action"], "drop->nk--dropzone#drop"
-    assert_includes node["data-action"], "submit@document->nk--dropzone#submit"
+    assert_includes node["data-action"], "submit@document->nk--dropzone#submit:capture"
     assert_includes node["data-action"], "turbo:before-cache@document->nk--dropzone#teardown"
 
     message = node.at_css("label[data-slot='dropzone-message']")
@@ -148,6 +149,7 @@ class DropzoneTest < ActiveSupport::TestCase
       accept: [ "", :text ],
       direct_upload: [ nil, :yes ],
       multiple: [ nil, :yes ],
+      inline: [ nil, :yes ],
       disabled: [ nil, :yes ],
       required: [ nil, :yes ],
       max_files: [ nil, 0, -1, 1.5 ],
@@ -200,6 +202,7 @@ class DropzoneTest < ActiveSupport::TestCase
     form = Nokogiri::HTML.fragment(html).at_css("form")
     input = form.at_css("#builder-dropzone-input")
 
+    assert_equal "inline", form.at_css("#builder-dropzone")["data-layout"]
     assert_equal "multipart/form-data", form["enctype"]
     assert_equal "upload[files][]", input["name"]
     assert input.key?("multiple")
@@ -228,10 +231,34 @@ class DropzoneTest < ActiveSupport::TestCase
     assert_equal "input", render_dropzone(presentation: :input)["data-presentation"]
   end
 
+  test "inline layout keeps native selection and decorative icons" do
+    node = render_dropzone(inline: true, direct_upload: false)
+
+    assert_equal "inline", node["data-layout"]
+    assert_equal "stacked", render_dropzone["data-layout"]
+    assert node.at_css("[data-slot=dropzone-icon] svg[aria-hidden=true]")
+    assert node.at_css("template [data-slot=dropzone-file-icon] svg[aria-hidden=true]")
+    assert_nil node.at_css("input[type=file]")["hidden"]
+  end
+
+  test "avatar and compact presentations preserve native file selection" do
+    %i[avatar compact].each do |presentation|
+      node = render_dropzone(presentation:, direct_upload: false)
+      assert_equal presentation.to_s, node["data-presentation"]
+      assert_equal "upload-input", node.at_css("label")["for"]
+      assert_nil node.at_css("input[type=file]")["hidden"]
+    end
+    avatar = render_dropzone(presentation: :avatar)
+    assert avatar.at_css("[data-slot=dropzone-avatar-image][hidden]")
+    assert avatar.at_css("[data-slot=dropzone-upload-badge] svg[aria-hidden=true]")
+    assert_raises(ArgumentError) { render_dropzone(presentation: :avatar, multiple: true) }
+    assert_raises(ArgumentError) { render_dropzone(presentation: :avatar, inline: true) }
+  end
+
   test "ships owner-scoped static CSS" do
     source = NitroKit::Engine.root.join("src/stylesheets/nitro_kit/components/dropzone.css").read
     css = NitroKit::CssBundle.compile
-    minimal_input = ':where( [data-nk="dropzone"][data-presentation="minimal"] > [data-slot="dropzone-input"] )'
+    minimal_input = ':where( [data-nk="dropzone"]:not([data-presentation="input"]) > [data-slot="dropzone-input"] )'
 
     assert_includes css, "Source: src/stylesheets/nitro_kit/components/dropzone.css"
     assert_includes source, ':where([data-nk="dropzone"])'

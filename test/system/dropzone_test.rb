@@ -18,9 +18,78 @@ class DropzoneSystemTest < ApplicationSystemTestCase
     assert_button "Save direct upload", disabled: false
     assert_no_severe_console_errors(context: path)
 
+    attach_file("gallery-dropzone-multipart-input", file_fixture("evidence.txt"))
     click_button "Save direct upload"
 
-    assert_text "Received 1 file: direct upload"
+    assert_selector "#gallery-dropzone-multipart [data-slot=dropzone-file-name]", text: "evidence.txt"
+    assert_text "Processed 1 file"
+    assert_text "profile.txt"
+    assert_current_path path
+    assert_selector "#gallery-dropzone-direct[data-state='idle']"
+    assert_equal 0, evaluate_script("document.querySelector('#gallery-dropzone-direct-input').files.length")
+    assert_no_selector "#gallery-dropzone-direct [data-slot='dropzone-signed-id']", visible: :all
+    assert_no_selector "#gallery-dropzone-direct [data-slot='dropzone-preview']"
+
+    attach_file("gallery-dropzone-direct-input", file_fixture("evidence.txt"))
+    assert_selector "#gallery-dropzone-direct[data-state='success']"
+    click_button "Save direct upload"
+    within("#gallery-dropzone-direct-preview") { assert_text "evidence.txt" }
+    assert_selector "#gallery-dropzone-direct[data-state='idle']"
+  end
+
+  test "saving a shared form processes and clears both uploaders" do
+    visit gallery_component_path("dropzone")
+    attach_file("gallery-dropzone-shared-primary-input", file_fixture("profile.txt"))
+    attach_file("gallery-dropzone-shared-secondary-input", file_fixture("evidence.txt"))
+    assert_selector "#gallery-dropzone-shared-primary[data-state=success]"
+    assert_selector "#gallery-dropzone-shared-secondary[data-state=success]"
+
+    click_button "Save both uploads"
+
+    within "#gallery-dropzone-shared-preview" do
+      assert_text "Processed 2 files"
+      assert_text "profile.txt"
+      assert_text "evidence.txt"
+      assert_selector "[data-nk=dropzone][data-state=idle]", count: 2
+      assert_no_selector "[data-slot=dropzone-signed-id]", visible: :all
+    end
+    assert_equal [ 0, 0 ], evaluate_script("Array.from(document.querySelectorAll('#gallery-dropzone-shared-preview input[type=file]'), input => input.files.length)")
+  end
+
+  test "small uploaders fit mobile and avatar selection previews and resets" do
+    resize_viewport(width: 320, height: 800)
+    visit gallery_component_path("dropzone")
+    assert_equal 80, evaluate_script("document.querySelector('#gallery-dropzone-avatar label').getBoundingClientRect().width")
+    assert_operator evaluate_script("document.querySelector('#gallery-dropzone-compact label').getBoundingClientRect().width"), :<, 150
+    refute evaluate_script("document.documentElement.scrollWidth > innerWidth")
+
+    execute_script("document.querySelector('#gallery-dropzone-avatar-input').focus()")
+    assert_focused "#gallery-dropzone-avatar-input"
+    assert_equal "solid", evaluate_script("getComputedStyle(document.querySelector('#gallery-dropzone-avatar label')).outlineStyle")
+    attach_file("gallery-dropzone-avatar-input", file_fixture("avatar.png"))
+    assert_selector "#gallery-dropzone-avatar[data-state=success]"
+    assert_selector "#gallery-dropzone-avatar [data-slot=dropzone-avatar-image]:not([hidden])"
+    find("#gallery-dropzone-avatar [aria-label='Remove avatar.png']").click
+    assert_selector "#gallery-dropzone-avatar [data-slot=dropzone-avatar-image][hidden]", visible: :all
+    attach_file("gallery-dropzone-avatar-input", file_fixture("avatar.png"))
+    assert_selector "#gallery-dropzone-avatar[data-state=success]"
+    click_button "Save photo"
+    within("#gallery-dropzone-avatar-preview") { assert_text "Processed 1 file" }
+    assert_selector "#gallery-dropzone-avatar[data-state=idle]"
+    assert_selector "#gallery-dropzone-avatar [data-slot=dropzone-avatar-image][hidden]", visible: :all
+    assert_equal 0, evaluate_script("document.querySelector('#gallery-dropzone-avatar-input').files.length")
+  end
+
+  test "mobile composition keeps a full-width form inside a desktop gallery" do
+    resize_viewport(width: 1440, height: 1000)
+    visit "/gallery/compositions/uploads/mobile"
+
+    widths = evaluate_script(<<~JS)
+      ["#gallery-uploads-surface", "#gallery-uploads-form"].map(selector =>
+        document.querySelector(selector).getBoundingClientRect().width)
+    JS
+    assert_equal 384, widths.first
+    assert_in_delta widths.first, widths.last, 1
   end
 
   test "native drop validates every file supports removal repeat selection and ordinary multipart submission" do
@@ -72,7 +141,10 @@ class DropzoneSystemTest < ApplicationSystemTestCase
     assert_no_severe_console_errors(context: path)
 
     click_button "Submit files"
-    assert_text "Received 1 file: evidence.txt"
+    assert_text "Processed 1 file"
+    assert_text "evidence.txt"
+    assert_current_path path
+    assert_selector "#gallery-dropzone-multipart[data-state=idle]"
   end
 
   test "invalid type can be replaced and failed direct upload can be retried" do
@@ -137,7 +209,10 @@ class DropzoneSystemTest < ApplicationSystemTestCase
     assert_no_severe_console_errors(context: path)
 
     click_button "Save direct upload"
-    assert_text "Received 2 files: direct upload, direct upload"
+    assert_text "Processed 2 files"
+    assert_text "accepted-one.txt"
+    assert_text "accepted-two.txt"
+    assert_selector "#gallery-dropzone-direct[data-state=idle]"
   end
 
   test "two Dropzones retain independent locks for a shared form through cancellation and teardown" do
@@ -240,7 +315,7 @@ class DropzoneSystemTest < ApplicationSystemTestCase
     assert_selector "#gallery-dropzone-multipart[data-state='idle']"
     assert_selector "#gallery-dropzone-multipart [data-slot='dropzone-preview-list'][hidden]", visible: :all
     assert_no_selector "#gallery-dropzone-multipart [data-slot='dropzone-preview']", visible: :all
-    assert_selector "#gallery-dropzone-multipart-status", text: "No files selected."
+    assert_selector "#gallery-dropzone-multipart-status", text: "No files selected.", visible: :all
     assert_equal 0, evaluate_script("document.querySelector('#gallery-dropzone-multipart-input').files.length")
 
     click_gallery_navigation_link("Button")
@@ -264,10 +339,13 @@ class DropzoneSystemTest < ApplicationSystemTestCase
 
     assert_equal 1, evaluate_script("document.querySelector(arguments[0]).files.length", input)
     assert_selector "#{root} [data-slot='dropzone-preview-list'][hidden]", visible: :all
-    assert_selector "#{root} [data-slot='dropzone-status']", text: "1 file selected."
+    assert_selector "#{root} [data-slot='dropzone-status']", text: "1 file selected.", visible: :all
 
     click_button "Submit files"
-    assert_text "Received 1 file: evidence.txt"
+    assert_text "Processed 1 file"
+    assert_text "evidence.txt"
+    assert_current_path path
+    assert_selector "#gallery-dropzone-multipart[data-state=idle]"
 
     visit path
     attach_file("gallery-dropzone-multipart-input", file_fixture("evidence.txt"))

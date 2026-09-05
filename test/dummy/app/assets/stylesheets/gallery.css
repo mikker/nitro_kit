@@ -1002,7 +1002,18 @@
   }
 
   :where([data-gallery="composition-surface"][data-gallery-mobile="true"]) {
-    width: min(100%, 20rem);
+    width: min(100%, 24rem);
+  }
+
+  /* Mobile scenarios retain their stacked layout in a desktop gallery. */
+  :where([data-gallery-mobile="true"] [data-nk="settings-section"], [data-gallery-mobile="true"] [data-nk="page-header"]) {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  :where([data-gallery-mobile="true"] [data-slot="settings-section-form"], [data-gallery-mobile="true"] [data-slot="settings-section-status"], [data-gallery-mobile="true"] [data-slot="page-header-actions"]) {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: start;
   }
 
   :where([data-gallery="composition-surface"] turbo-frame) {

@@ -6,7 +6,7 @@ module Gallery
       private
 
       def render_scenario
-        workspace_surface do
+        workspace_surface(size: :lg) do
           render_header
           render_upload_form
           render_upload_records
@@ -34,7 +34,7 @@ module Gallery
 
         render NitroKit::SettingsSection.new(
           title: multiple ? "New multi-file import" : "New import",
-          description: "Choose the source files and where their records belong. Files are scanned before processing begins.",
+          description: "Choose a file and its destination.",
           id: "gallery-uploads-settings-section"
         ) do |section|
           render_upload_status(section)
@@ -56,14 +56,19 @@ module Gallery
                   required: true,
                   disabled:
                 )
-                form.field(:note, as: :textarea, label: "Import note", description: "Optional context for workspace audit history.", disabled:, maxlength: 240)
-                form.field(
-                  :overwrite,
-                  as: :checkbox,
-                  label: "Replace records with matching external IDs",
-                  description: "Available only where the destination permits replacement.",
-                  disabled:
-                )
+                details do
+                  summary { "Import options" }
+                  render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
+                    form.field(:note, as: :textarea, label: "Note", description: "Optional context for this import.", disabled:, maxlength: 240)
+                    form.field(
+                      :overwrite,
+                      as: :checkbox,
+                      label: "Replace matching records",
+                      description: "Match records by external ID.",
+                      disabled:
+                    )
+                  end
+                end
                 render NitroKit::Toolbar.new(id: "gallery-uploads-form-toolbar") do |toolbar|
                   toolbar.trailing do
                     form.submit(
@@ -96,9 +101,10 @@ module Gallery
           form.dropzone(
             :files,
             id: "gallery-uploads-dropzone",
-            label: multiple ? "Choose up to five data files" : "Choose a data file",
-            description: "CSV, NDJSON, JSON, or ZIP · 250 MB per file",
+            label: multiple ? "Add up to five files" : "Add a data file",
+            description: "CSV, NDJSON, JSON, ZIP · Up to 250 MB",
             presentation: :minimal,
+            inline: true,
             direct_upload: false,
             accept: ".csv,.ndjson,.json,.zip,text/csv,application/json,application/zip",
             multiple:,
@@ -195,6 +201,8 @@ module Gallery
 
       def upload_submission
         attributes = case state
+        when "empty"
+          { files: [], destination: nil, note: nil, overwrite: false }
         when "error"
           { files: [], destination: "unsupported", note: "Retry after validating the source.", overwrite: false }
         when "multiple", "uploading"

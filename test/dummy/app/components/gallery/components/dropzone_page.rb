@@ -8,7 +8,7 @@ module Gallery
       end
 
       def api_note
-        "NitroKit::Dropzone.new(id:, name:, presentation:, direct_upload:, multiple:, accept:, max_files:, max_bytes:)"
+        "NitroKit::Dropzone.new(id:, name:, presentation:, inline:, direct_upload:, multiple:, accept:, max_files:, max_bytes:)"
       end
 
       def component_template
@@ -20,95 +20,28 @@ module Gallery
           example(
             "Active Storage direct upload",
             slug: "dropzone-direct-upload",
-            description: "Selection starts a direct upload, writes signed blob IDs, and keeps the form unavailable until uploads settle."
+            description: "Choose files, then save to process them. The receipt appears here and the uploader clears for the next batch.",
+            code: Gallery::SourceCode.from_method(Gallery::UploadPreview.instance_method(:direct_form))
           ) do
-            form_with(
-              scope: :upload,
-              url: gallery_upload_submissions_path,
-              builder: NitroKit::FormBuilder,
-              id: "gallery-dropzone-direct-form",
-              data: { turbo: false }
-            ) do |form|
-              form.group do
-                form.dropzone(
-                  :files,
-                  id: "gallery-dropzone-direct",
-                  label: "Upload supporting evidence",
-                  description: "Up to two text or PNG files, each no larger than 2 MB.",
-                  multiple: true,
-                  accept: "text/plain,image/png",
-                  max_files: 2,
-                  max_bytes: 2 * 1024 * 1024,
-                  required: true
-                )
-                form.submit("Save direct upload", id: "gallery-dropzone-direct-submit")
-              end
-            end
+            render Gallery::UploadPreview.new(mode: "direct")
           end
 
           example(
             "Ordinary multipart upload",
             slug: "dropzone-multipart",
-            description: "With direct upload disabled, dropped and selected files stay on the native input for the normal form request."
+            description: "Files travel with the form request. Processing shows a receipt and clears only this preview.",
+            code: Gallery::SourceCode.from_method(Gallery::UploadPreview.instance_method(:multipart_form))
           ) do
-            form_with(
-              scope: :upload,
-              url: gallery_upload_submissions_path,
-              builder: NitroKit::FormBuilder,
-              id: "gallery-dropzone-multipart-form",
-              data: { turbo: false }
-            ) do |form|
-              form.group do
-                form.dropzone(
-                  :files,
-                  id: "gallery-dropzone-multipart",
-                  label: "Add source files",
-                  description: "Choose up to three text or PNG files.",
-                  direct_upload: false,
-                  multiple: true,
-                  accept: "text/plain,image/png",
-                  max_files: 3,
-                  max_bytes: 1024 * 1024
-                )
-                form.submit("Submit files", id: "gallery-dropzone-multipart-submit")
-              end
-            end
+            render Gallery::UploadPreview.new(mode: "multipart")
           end
 
           example(
             "Shared form uploads",
             slug: "dropzone-shared-form",
-            description: "Each Dropzone keeps the shared form unavailable only while its own upload is active."
+            description: "Both uploads are processed together. Saving clears both inputs and leaves the other examples alone.",
+            code: Gallery::SourceCode.from_method(Gallery::UploadPreview.instance_method(:shared_form))
           ) do
-            form_with(
-              scope: :upload,
-              url: gallery_upload_submissions_path,
-              builder: NitroKit::FormBuilder,
-              id: "gallery-dropzone-shared-form",
-              data: { turbo: false }
-            ) do |form|
-              form.group do
-                form.dropzone(
-                  :primary_file,
-                  id: "gallery-dropzone-shared-primary",
-                  label: "Upload primary evidence",
-                  accept: "text/plain"
-                )
-                form.dropzone(
-                  :secondary_file,
-                  id: "gallery-dropzone-shared-secondary",
-                  label: "Upload secondary evidence",
-                  accept: "text/plain"
-                )
-                form.submit("Save both uploads", id: "gallery-dropzone-shared-submit")
-                form.button(
-                  "Unavailable action",
-                  id: "gallery-dropzone-shared-disabled-submit",
-                  type: :submit,
-                  disabled: true
-                )
-              end
-            end
+            render Gallery::UploadPreview.new(mode: "shared")
           end
         end
 
@@ -132,6 +65,43 @@ module Gallery
               direct_upload: false,
               accept: "image/png",
               max_bytes: 1024 * 1024
+            )
+          end
+
+          example(
+            "Avatar upload",
+            slug: "dropzone-avatar",
+            description: "A small photo picker. Choose an image, then save to process it and reset the input.",
+            code: Gallery::SourceCode.from_method(Gallery::UploadPreview.instance_method(:avatar_form))
+          ) do
+            render Gallery::UploadPreview.new(mode: "avatar")
+          end
+
+          example(
+            "Table row upload",
+            slug: "dropzone-compact",
+            description: "A tiny attachment control for receipts and dense lists, with a larger touch target on mobile.",
+            code: Gallery::SourceCode.from_method(Gallery::UploadPreview.instance_method(:compact_form))
+          ) do
+            render Gallery::UploadPreview.new(mode: "compact")
+          end
+
+          example(
+            "Inline layout",
+            slug: "dropzone-inline",
+            description: "A compact horizontal drop target with the same file previews and keyboard support."
+          ) do
+            render NitroKit::Dropzone.new(
+              id: "gallery-dropzone-inline",
+              name: "attachments[files][]",
+              label: "Upload attachments",
+              description: "PNG, JPG or PDF, up to 10 MB each.",
+              inline: true,
+              direct_upload: false,
+              multiple: true,
+              accept: "image/png,image/jpeg,application/pdf",
+              max_files: 5,
+              max_bytes: 10 * 1024 * 1024
             )
           end
 

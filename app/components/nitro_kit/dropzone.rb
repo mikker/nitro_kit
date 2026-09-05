@@ -37,7 +37,7 @@ module NitroKit
     # `:input` keeps the native file input visible beside the drop target.
     # `:minimal` leaves the drop target as the only visible affordance; the
     # input stays in the accessibility tree and keeps its own focus ring.
-    PRESENTATIONS = %i[input minimal].freeze
+    PRESENTATIONS = %i[input minimal avatar compact].freeze
 
     def initialize(
       id:,
@@ -45,6 +45,7 @@ module NitroKit
       label: I18n.t("nitro_kit.dropzone.label"),
       description: nil,
       presentation: :minimal,
+      inline: false,
       direct_upload: true,
       multiple: false,
       accept: nil,
@@ -62,6 +63,7 @@ module NitroKit
       @label = required_text(:label, label)
       @description = optional_text(:description, description)
       @presentation = validate_choice!(:presentation, presentation, PRESENTATIONS)
+      @inline = validate_boolean!(:inline, inline)
       @direct_upload = validate_boolean!(:direct_upload, direct_upload)
       @multiple = validate_boolean!(:multiple, multiple)
       @accept = optional_text(:accept, accept)
@@ -69,6 +71,10 @@ module NitroKit
       @max_bytes = positive_integer(:max_bytes, max_bytes, allow_nil: true)
       @disabled = validate_boolean!(:disabled, disabled)
       @required = validate_boolean!(:required, required)
+
+      if @presentation == :avatar && (@multiple || @inline)
+        raise ArgumentError, "avatar presentation requires a single file and inline: false"
+      end
 
       if !@multiple && @max_files != 1
         raise ArgumentError, "max_files must be 1 when multiple is false"
@@ -81,6 +87,7 @@ module NitroKit
           aria: { disabled: @disabled ? true : nil },
           data: {
             presentation: @presentation,
+            layout: @inline ? "inline" : "stacked",
             controller: @disabled ? nil : "nk--dropzone",
             state: @disabled ? "disabled" : "idle",
             action: @disabled ? nil : dropzone_actions,
@@ -125,6 +132,13 @@ module NitroKit
           attributes: { for: input_id }
         )
       ) do
+        if @presentation == :avatar
+          img(**slot_attributes(:avatar_image, attributes: { alt: "", hidden: true }))
+          span(**slot_attributes(:icon)) { render Icon.new(:user_round, size: :lg) }
+          span(**slot_attributes(:upload_badge)) { render Icon.new(:arrow_up, size: :sm) }
+        elsif @presentation != :compact
+          span(**slot_attributes(:icon)) { render Icon.new(:cloud_upload, size: :lg) }
+        end
         strong(**slot_attributes(:title, attributes: { id: title_id })) { plain(@label) }
         span(**slot_attributes(:instruction)) { plain(I18n.t("nitro_kit.dropzone.prompt")) }
         span(**slot_attributes(:compact_instruction)) { plain(I18n.t("nitro_kit.dropzone.compact_prompt")) }
@@ -216,6 +230,7 @@ module NitroKit
         )
       ) do
         li(**slot_attributes(:preview, attributes: { data: { state: "queued" } })) do
+          span(**slot_attributes(:file_icon)) { render Icon.new(:file, size: :md) }
           img(**slot_attributes(:preview_image, attributes: { alt: "", hidden: true }))
 
           span(**slot_attributes(:file)) do
@@ -262,7 +277,8 @@ module NitroKit
         "dragover->nk--dropzone#dragOver",
         "dragleave->nk--dropzone#dragLeave",
         "drop->nk--dropzone#drop",
-        "submit@document->nk--dropzone#submit",
+        "submit@document->nk--dropzone#submit:capture",
+        "turbo:submit-end@document->nk--dropzone#submitted",
         "turbo:before-cache@document->nk--dropzone#teardown"
       ].join(" ")
     end

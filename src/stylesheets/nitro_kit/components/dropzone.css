@@ -3,20 +3,42 @@
     position: relative;
     display: grid;
     gap: calc(var(--nk-space) * 3);
-    min-inline-size: 16rem;
-    padding: calc(var(--nk-space) * 4);
+    min-inline-size: 0;
+    inline-size: 100%;
     color: var(--nk-color-foreground);
-    background: var(--nk-color-surface);
-    border: calc(var(--nk-border-width) * 2) dashed var(--nk-color-border);
-    border-radius: var(--nk-radius-lg);
     container: nk-dropzone / inline-size;
   }
 
   :where([data-nk="dropzone"] > [data-slot="dropzone-message"]) {
     display: grid;
+    justify-items: center;
+    align-content: center;
     gap: var(--nk-space);
+    padding: calc(var(--nk-space) * 8) calc(var(--nk-space) * 4);
+    background: var(--nk-color-muted);
+    border: var(--nk-border-width) dashed var(--nk-color-border);
+    border-color: color-mix(
+      in srgb,
+      var(--nk-color-foreground) 20%,
+      transparent
+    );
+    border-radius: var(--nk-radius-lg);
     cursor: pointer;
     text-align: center;
+  }
+
+  :where([data-nk="dropzone"] [data-slot="dropzone-icon"]) {
+    display: flex;
+    margin-block-end: calc(var(--nk-space) * 2);
+    color: var(--nk-color-muted-foreground);
+  }
+
+  :where(
+      [data-nk="dropzone"] [data-slot="dropzone-title"],
+      [data-nk="dropzone"] [data-slot="dropzone-file-name"]
+    ) {
+    font-size: var(--nk-text-sm);
+    font-weight: var(--nk-font-weight-medium);
   }
 
   :where(
@@ -31,8 +53,49 @@
     font-size: var(--nk-text-sm);
   }
 
+  :where(
+      [data-nk="dropzone"]
+        [data-slot="dropzone-message"]
+        > span:not([data-slot="dropzone-icon"])
+    ) {
+    color: var(--nk-color-muted-foreground);
+    color: color-mix(
+      in srgb,
+      var(--nk-color-muted-foreground) 85%,
+      var(--nk-color-foreground)
+    );
+  }
+
   :where([data-nk="dropzone"] [data-slot="dropzone-compact-instruction"]) {
     display: none;
+  }
+
+  :where(
+      [data-nk="dropzone"][data-layout="inline"]
+        > [data-slot="dropzone-message"]
+    ) {
+    grid-template-columns: auto minmax(0, 1fr);
+    justify-items: start;
+    column-gap: calc(var(--nk-space) * 4);
+    padding: calc(var(--nk-space) * 4);
+    text-align: start;
+  }
+
+  :where(
+      [data-nk="dropzone"][data-layout="inline"] [data-slot="dropzone-icon"]
+    ) {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    align-self: center;
+    margin: 0;
+  }
+
+  :where(
+      [data-nk="dropzone"][data-layout="inline"]
+        [data-slot="dropzone-message"]
+        > :not([data-slot="dropzone-icon"])
+    ) {
+    grid-column: 2;
   }
 
   :where([data-nk="dropzone"] > [data-slot="dropzone-input"]) {
@@ -52,21 +115,29 @@
     );
     margin-inline-end: calc(var(--nk-space) * 3);
     padding-inline: calc(var(--nk-space) * 3);
-    color: var(--nk-color-foreground);
+    color: var(--nk-button-default-foreground);
     font-weight: var(--nk-font-weight-medium);
-    background: var(--nk-color-muted);
+    background: var(--nk-button-default-background);
     border: 0;
-    border-inline-end: var(--nk-border-width) solid var(--nk-color-border);
+    border-inline-end: var(--nk-border-width) solid
+      var(--nk-button-default-border);
   }
 
-  /* The minimal presentation keeps the native input operable and in the
-     accessibility tree while the drop target is the only visible affordance.
-     The label already points at the input, so clicking anywhere in the message
-     still opens the file picker. */
+  /* Keep the native input focusable; its label carries the visible focus ring. */
   :where(
-      [data-nk="dropzone"][data-presentation="minimal"]
+      [data-nk="dropzone"]:not([data-presentation="input"])
         > [data-slot="dropzone-input"]
     ) {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    white-space: nowrap;
+    clip-path: inset(50%);
+  }
+
+  /* Selection is visible in the file rows. Keep the summary for screen readers. */
+  :where([data-nk="dropzone"] > [data-slot="dropzone-status"]) {
     position: absolute;
     inline-size: 1px;
     block-size: 1px;
@@ -85,24 +156,51 @@
   :where([data-nk="dropzone"] [data-slot="dropzone-preview"]) {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: calc(var(--nk-space) * 2);
+    column-gap: calc(var(--nk-space) * 3);
+    row-gap: var(--nk-space);
     align-items: center;
-    padding: calc(var(--nk-space) * 2);
-    background: var(--nk-color-canvas);
+    padding: calc(var(--nk-space) * 3);
+    background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
     border-radius: var(--nk-radius-lg);
   }
 
-  :where([data-nk="dropzone"] [data-slot="dropzone-preview-image"]) {
-    grid-row: span 2;
-    inline-size: calc(var(--nk-space) * 12);
-    block-size: calc(var(--nk-space) * 12);
-    object-fit: cover;
+  :where(
+      [data-nk="dropzone"] [data-slot="dropzone-preview-image"],
+      [data-nk="dropzone"] [data-slot="dropzone-file-icon"]
+    ) {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+    inline-size: calc(var(--nk-space) * 10);
+    block-size: calc(var(--nk-space) * 10);
     border-radius: var(--nk-radius-sm);
+  }
+
+  :where([data-nk="dropzone"] [data-slot="dropzone-preview-image"]) {
+    object-fit: cover;
+  }
+
+  :where([data-nk="dropzone"] [data-slot="dropzone-file-icon"]) {
+    display: grid;
+    place-items: center;
+    color: var(--nk-color-muted-foreground);
+    background: var(--nk-color-muted);
+  }
+
+  :where(
+      [data-nk="dropzone"]
+        [data-slot="dropzone-preview"]:has(
+          [data-slot="dropzone-preview-image"]:not([hidden])
+        )
+        > [data-slot="dropzone-file-icon"]
+    ) {
+    display: none;
   }
 
   :where([data-nk="dropzone"] [data-slot="dropzone-file"]) {
     display: grid;
+    grid-column: 2;
+    grid-row: 1;
     min-inline-size: 0;
   }
 
@@ -113,51 +211,67 @@
   }
 
   :where([data-nk="dropzone"] [data-slot="dropzone-progress"]) {
+    grid-column: 2;
+    grid-row: 3;
     inline-size: 100%;
-    block-size: calc(var(--nk-space) * 2);
+    block-size: var(--nk-space);
     accent-color: var(--nk-color-primary);
+  }
+
+  :where([data-nk="dropzone"] [data-slot="dropzone-file-status"]) {
+    grid-column: 2;
+    grid-row: 2;
+    overflow-wrap: anywhere;
   }
 
   :where([data-nk="dropzone"] [data-slot="dropzone-remove-control"]) {
     grid-column: -2 / -1;
+    grid-row: 1 / span 3;
     justify-self: end;
     min-block-size: var(--nk-control-height-md);
-    padding-inline: calc(var(--nk-space) * 2);
-    color: var(--nk-color-foreground);
-    background: var(--nk-color-surface);
-    border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-sm);
+    padding-inline: calc(var(--nk-space) * 3);
+    font-size: var(--nk-text-sm);
+    font-weight: var(--nk-font-weight-medium);
+    color: var(--nk-button-default-foreground);
+    background: var(--nk-button-default-background);
+    border: var(--nk-border-width) solid var(--nk-button-default-border);
+    border-radius: var(--nk-radius-md);
+    cursor: pointer;
   }
 }
 
 @layer nitro-kit.state {
-  :where([data-nk="dropzone"][data-state="drag"]) {
-    background: var(--nk-color-muted);
+  :where(
+      [data-nk="dropzone"][data-state="drag"] > [data-slot="dropzone-message"]
+    ) {
+    background: var(--nk-color-surface-hover);
     border-color: var(--nk-color-primary);
+    border-style: solid;
   }
 
   :where(
-      [data-nk="dropzone"][data-presentation="minimal"][data-state="idle"]
-        > [data-slot="dropzone-status"]
+      [data-nk="dropzone"][data-state="uploading"]
+        > [data-slot="dropzone-message"]
     ) {
-    text-align: center;
-  }
-
-  :where([data-nk="dropzone"][data-state="uploading"]) {
     border-color: var(--nk-color-info);
   }
 
-  :where([data-nk="dropzone"][data-state="success"]) {
-    border-color: var(--nk-color-success);
-  }
-
-  :where([data-nk="dropzone"][data-state="error"]) {
+  :where(
+      [data-nk="dropzone"][data-state="error"] > [data-slot="dropzone-message"],
+      [data-nk="dropzone"] [data-slot="dropzone-preview"][data-state="error"]
+    ) {
     border-color: var(--nk-color-destructive);
   }
 
   :where([data-nk="dropzone"][data-state="disabled"]) {
-    cursor: not-allowed;
     opacity: var(--nk-disabled-opacity);
+  }
+
+  :where(
+      [data-nk="dropzone"][data-state="disabled"]
+        > [data-slot="dropzone-message"]
+    ) {
+    cursor: not-allowed;
   }
 
   :where(
@@ -168,24 +282,35 @@
     outline-offset: var(--nk-focus-offset);
   }
 
-  /* The clipped input cannot carry a visible ring, so the drop target it
-     labels wears the focus treatment on its behalf. */
   :where(
-      [data-nk="dropzone"][data-presentation="minimal"]:has(
+      [data-nk="dropzone"]:not([data-presentation="input"]):has(
           > [data-slot="dropzone-input"]:focus-visible
         )
+        > [data-slot="dropzone-message"]
     ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
 
   @media (hover: hover) {
-    :where([data-nk="dropzone"] [data-slot="dropzone-remove-control"]:hover) {
+    :where(
+        [data-nk="dropzone"]:not([data-state="disabled"])
+          > [data-slot="dropzone-message"]:hover
+      ) {
       background: var(--nk-color-surface-hover);
+    }
+
+    :where([data-nk="dropzone"] [data-slot="dropzone-remove-control"]:hover) {
+      background: var(--nk-button-default-hover-background);
     }
   }
 
-  :where([data-nk="dropzone"] > [data-slot="dropzone-error"]) {
+  :where(
+      [data-nk="dropzone"] > [data-slot="dropzone-error"],
+      [data-nk="dropzone"]
+        [data-slot="dropzone-preview"][data-state="error"]
+        > [data-slot="dropzone-file-status"]
+    ) {
     color: var(--nk-color-destructive-content);
     font-size: var(--nk-text-sm);
   }
@@ -193,6 +318,13 @@
 
 @container nk-dropzone (max-width: 24rem) {
   @layer nitro-kit.base {
+    :where([data-nk="dropzone"] > [data-slot="dropzone-message"]) {
+      padding: calc(var(--nk-space) * 5) calc(var(--nk-space) * 3);
+    }
+    :where([data-nk="dropzone"] [data-slot="dropzone-description"]) {
+      text-wrap: pretty;
+    }
+
     :where([data-nk="dropzone"] [data-slot="dropzone-instruction"]) {
       display: none;
     }
@@ -201,41 +333,113 @@
       display: inline;
     }
 
-    :where([data-nk="dropzone"] > [data-slot="dropzone-input"]) {
-      position: absolute;
-      inline-size: 1px;
-      block-size: 1px;
-      overflow: hidden;
-      white-space: nowrap;
-      clip-path: inset(50%);
-    }
-
-    :where(
-        [data-nk="dropzone"][data-state="idle"] > [data-slot="dropzone-status"]
-      ) {
-      position: absolute;
-      inline-size: 1px;
-      block-size: 1px;
-      overflow: hidden;
-      white-space: nowrap;
-      clip-path: inset(50%);
-    }
-
     :where([data-nk="dropzone"] [data-slot="dropzone-preview"]) {
-      grid-template-columns: minmax(0, 1fr) auto;
-    }
-
-    :where([data-nk="dropzone"] [data-slot="dropzone-preview-image"]) {
-      display: none;
+      column-gap: calc(var(--nk-space) * 2);
+      padding: calc(var(--nk-space) * 2);
     }
   }
+}
 
-  @layer nitro-kit.state {
+@layer nitro-kit.variant {
+  :where(
+      [data-nk="dropzone"][data-presentation="avatar"]
+        > [data-slot="dropzone-message"]
+    ) {
+    position: relative;
+    inline-size: calc(var(--nk-space) * 16 + var(--nk-space) * 4);
+    block-size: calc(var(--nk-space) * 16 + var(--nk-space) * 4);
+    padding: 0;
+    border-style: solid;
+    border-radius: 50%;
+  }
+
+  :where(
+      [data-nk="dropzone"][data-presentation="avatar"]
+        [data-slot="dropzone-icon"]
+    ) {
+    margin: 0;
+  }
+
+  :where([data-nk="dropzone"] [data-slot="dropzone-avatar-image"]) {
+    position: absolute;
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+  }
+
+  :where(
+      [data-nk="dropzone"]
+        [data-slot="dropzone-message"]:has(
+          [data-slot="dropzone-avatar-image"]:not([hidden])
+        )
+        > [data-slot="dropzone-icon"]
+    ) {
+    visibility: hidden;
+  }
+
+  :where([data-nk="dropzone"] [data-slot="dropzone-upload-badge"]) {
+    position: absolute;
+    inset-inline-end: 0;
+    inset-block-end: 0;
+    display: grid;
+    place-items: center;
+    inline-size: calc(var(--nk-space) * 6);
+    block-size: calc(var(--nk-space) * 6);
+    color: var(--nk-color-foreground);
+    background: var(--nk-color-muted);
+    border: calc(var(--nk-border-width) * 2) solid var(--nk-color-canvas);
+    border-radius: 50%;
+  }
+
+  :where(
+      [data-nk="dropzone"][data-presentation="compact"]
+        > [data-slot="dropzone-message"]
+    ) {
+    display: inline-flex;
+    justify-self: start;
+    align-items: center;
+    gap: calc(var(--nk-space) * 1.5);
+    min-block-size: var(--nk-control-height-sm);
+    max-inline-size: 100%;
+    padding: calc(var(--nk-space) * 0.5) calc(var(--nk-space) * 2);
+    background: var(--nk-button-default-background);
+    color: var(--nk-button-default-foreground);
+    border: var(--nk-border-width) solid var(--nk-button-default-border);
+    border-radius: var(--nk-radius-md);
+    text-align: start;
+  }
+
+  /* Concise controls retain their full accessible label and constraints. */
+  :where(
+      [data-nk="dropzone"]:is(
+          [data-presentation="avatar"],
+          [data-presentation="compact"]
+        )
+        [data-slot="dropzone-message"]
+        > span:not([data-slot="dropzone-icon"]):not(
+          [data-slot="dropzone-upload-badge"]
+        ),
+      [data-nk="dropzone"][data-presentation="avatar"]
+        [data-slot="dropzone-title"]
+    ) {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    white-space: nowrap;
+    clip-path: inset(50%);
+  }
+}
+
+@media (pointer: coarse) {
+  @layer nitro-kit.size {
     :where(
-        [data-nk="dropzone"]:has(> [data-slot="dropzone-input"]:focus-visible)
+        [data-nk="dropzone"][data-presentation="compact"]
+          > [data-slot="dropzone-message"]
       ) {
-      outline: var(--nk-focus-width) solid var(--nk-color-focus);
-      outline-offset: var(--nk-focus-offset);
+      min-block-size: var(--nk-control-height-lg);
     }
   }
 }

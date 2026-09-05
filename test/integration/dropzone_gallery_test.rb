@@ -8,8 +8,8 @@ class DropzoneGalleryTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "[data-gallery-page='dropzone']"
-    assert_select "[data-gallery='example']", count: 6
-    assert_select "[data-gallery='code-source']", count: 6
+    assert_select "[data-gallery='example']", count: 9
+    assert_select "[data-gallery='code-source']", count: 9
     assert_select "[data-gallery='code-source']", text: /form\.dropzone/
 
     assert_select "#gallery-dropzone-direct-form[method='post'][enctype='multipart/form-data']" do
@@ -60,7 +60,46 @@ class DropzoneGalleryTest < ActionDispatch::IntegrationTest
     }
 
     assert_response :success
-    assert_equal "Received 2 files: profile.txt, evidence.txt", response.body
+    assert_select "turbo-frame#gallery-dropzone-multipart-preview"
+    assert_select "[data-nk=alert]", text: /Processed 2 files.*profile.txt.*evidence.txt/
+    assert_select "#gallery-dropzone-multipart[data-state=idle]"
+  end
+
+  test "processes signed blobs and renders a fresh direct upload form" do
+    blob = ActiveStorage::Blob.create_and_upload!(
+      io: StringIO.new("real upload contents"), filename: "evidence.txt", content_type: "text/plain"
+    )
+    key = blob.key
+
+    assert_difference("ActiveStorage::Blob.count", -1) do
+      post gallery_upload_submissions_path(mode: "direct"), params: { upload: { files: [ blob.signed_id ] } }
+    end
+
+    assert_response :success
+    assert_select "turbo-frame#gallery-dropzone-direct-preview" do
+      assert_select "[data-nk=alert]", text: /Processed 1 file.*evidence.txt \(20 bytes\)/
+      assert_select "#gallery-dropzone-direct[data-state=idle]"
+      assert_select "[data-slot=dropzone-signed-id]", count: 0
+      assert_select "input[type=file]:not([value])"
+    end
+    refute ActiveStorage::Blob.service.exist?(key)
+  end
+
+  test "processes both shared inputs and reports expired uploads" do
+    blobs = %w[primary secondary].map do |name|
+      ActiveStorage::Blob.create_and_upload!(io: StringIO.new(name), filename: "#{name}.txt")
+    end
+    post gallery_upload_submissions_path(mode: "shared"), params: {
+      upload: { primary_file: blobs.first.signed_id, secondary_file: blobs.last.signed_id }
+    }
+    assert_response :success
+    assert_select "turbo-frame#gallery-dropzone-shared-preview [data-nk=alert]", text: /Processed 2 files.*primary.txt.*secondary.txt/
+    assert_select "#gallery-dropzone-shared-primary[data-state=idle]"
+    assert_select "#gallery-dropzone-shared-secondary[data-state=idle]"
+
+    post gallery_upload_submissions_path(mode: "direct"), params: { upload: { files: [ "invalid" ] } }
+    assert_response :unprocessable_entity
+    assert_select "turbo-frame#gallery-dropzone-direct-preview [role=alert]", text: /no longer available/
   end
 
   test "dummy Active Storage endpoint creates a direct upload contract" do
