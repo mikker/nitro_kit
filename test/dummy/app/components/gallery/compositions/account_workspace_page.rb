@@ -1,6 +1,6 @@
 module Gallery
   module Compositions
-    class HybridApplicationPage < ApplicationPage
+    class AccountWorkspacePage < ApplicationPage
       Profile = ::Data.define(:name, :email, :role, :website, :joined_on, :last_seen)
 
       PROFILE = Profile.new(
@@ -26,71 +26,64 @@ module Gallery
       def application_template
         application_section(
           "Account workspace states",
-          slug: "hybrid-application-states",
-          description: "The hybrid shell combines persistent navigation with contextual header actions across complete, missing, and failed account settings."
+          slug: "account-workspace-states",
+          description: "The sidebar shell combines persistent navigation with contextual header actions across complete, missing, and failed account settings."
         ) do
           application_example(
             "Populated system settings",
-            slug: "hybrid-application-populated",
+            slug: "account-workspace-populated",
             description: "Two synchronized appearance pickers, profile media, record details, a Rails form, account actions, and a saved toast form one settings application.",
-            source: :render_hybrid_populated
-          ) { render_hybrid_populated }
+            source: :render_sidebar_populated
+          ) { render_sidebar_populated }
 
           application_example(
             "Missing light profile",
-            slug: "hybrid-application-missing",
+            slug: "account-workspace-missing",
             description: "Absent media and optional record values remain explicit while the application offers one clear recovery path.",
-            source: :render_hybrid_missing
-          ) { render_hybrid_missing }
+            source: :render_sidebar_missing
+          ) { render_sidebar_missing }
 
           application_example(
             "Failed dark access request",
-            slug: "hybrid-application-error",
+            slug: "account-workspace-error",
             description: "Authorization failure, invalid fields, disabled submission, a native review dialog, and an error notification stay distinct.",
-            source: :render_hybrid_error
-          ) { render_hybrid_error }
+            source: :render_sidebar_error
+          ) { render_sidebar_error }
         end
       end
 
-      def render_hybrid_populated
+      def render_sidebar_populated
         render NitroKit::AppShell.new(
-          id: "gallery-hybrid-application-populated",
-          layout: :hybrid,
+          id: "gallery-account-workspace-populated",
+          layout: :sidebar,
           data: {
             gallery_shell_preview: "true",
-            gallery_application: "hybrid",
+            gallery_application: "sidebar",
             gallery_application_state: "populated"
           }
         ) do |shell|
           shell.brand { strong { "Northstar Admin" } }
           shell.navigation do
             render_application_navigation(
-              id: "gallery-hybrid-application-populated-navigation",
+              id: "gallery-account-workspace-populated-navigation",
               current: :settings,
+              account_menu: false,
               context: "Team plan",
-              appearance_picker_id: "gallery-hybrid-application-navigation-appearance"
+              appearance_picker_id: "gallery-account-workspace-navigation-appearance"
             )
           end
-          shell.topbar do
-            render NitroKit::Dropdown.new(id: "gallery-hybrid-application-account-menu") do |menu|
-              menu.trigger("Ada Lovelace", variant: :ghost, size: :sm)
-              menu.item("View public profile", href: "#public-profile")
-              menu.item("Download account data")
-              menu.separator
-              menu.item("Sign out")
-            end
-          end
+          shell.topbar { render_account_menu(id: "gallery-account-workspace-account", placement: :bottom_end) }
           shell.main do
             render_application_main do
               render NitroKit::PageHeader.new(
                 title: "Account settings",
                 description: "Manage the public profile and personal appearance without duplicating application chrome.",
-                id: "gallery-hybrid-application-populated-header"
+                id: "gallery-account-workspace-populated-header"
               )
 
-              appearance_picker("gallery-hybrid-application-main-appearance", label: "Content appearance")
+              appearance_picker("gallery-account-workspace-main-appearance", label: "Content appearance")
 
-              render NitroKit::SettingsLayout.new(id: "gallery-hybrid-application-settings") do |layout|
+              render NitroKit::SettingsLayout.new(id: "gallery-account-workspace-settings") do |layout|
                 layout.navigation(label: "Account settings") do
                   layout.item("Profile", href: "#profile", current: true)
                   layout.item("Security", href: "#security")
@@ -104,13 +97,13 @@ module Gallery
                         attachment: demo_attachment,
                         alt: "Abstract cover for Ada Lovelace's workspace profile",
                         size: :sm,
-                        id: "gallery-hybrid-application-profile-image"
+                        id: "gallery-account-workspace-profile-image"
                       )
 
                       render NitroKit::DetailsTable.new(
                         PROFILE,
                         label: "Account details",
-                        id: "gallery-hybrid-application-profile-details"
+                        id: "gallery-account-workspace-profile-details"
                       ) do |details|
                         details.field(:role) do |role|
                           render NitroKit::Badge.new(role.to_s.humanize, color: :success, size: :sm)
@@ -122,20 +115,20 @@ module Gallery
                     render NitroKit::SettingsSection.new(
                       title: "Public profile",
                       description: "These values appear in workspace activity and invitations.",
-                      id: "gallery-hybrid-application-profile-settings-section"
+                      id: "gallery-account-workspace-profile-settings-section"
                     ) do |section|
                       section.form do
                         form_with(
                           scope: :profile,
                           url: "#save-profile",
                           builder: NitroKit::FormBuilder,
-                          id: "gallery-hybrid-application-profile-form"
+                          id: "gallery-account-workspace-profile-form"
                         ) do |form|
                           form.group do
                             form.field(:name, label: "Name", value: PROFILE.name, required: true)
                             form.field(:email, as: :email, label: "Email", value: PROFILE.email, required: true)
                             form.field(:website, as: :url, label: "Website", value: PROFILE.website)
-                            form.submit("Save profile", id: "gallery-hybrid-application-profile-submit")
+                            form.submit("Save profile", id: "gallery-account-workspace-profile-submit")
                           end
                         end
                       end
@@ -147,7 +140,7 @@ module Gallery
               render NitroKit::Toast.new(
                 duration: 600_000,
                 label: "Account notifications",
-                id: "gallery-hybrid-application-toast"
+                id: "gallery-account-workspace-toast"
               ) do |toast|
                 toast.item(
                   title: "Profile saved",
@@ -160,13 +153,13 @@ module Gallery
         end
       end
 
-      def render_hybrid_missing
+      def render_sidebar_missing
         render NitroKit::AppShell.new(
-          id: "gallery-hybrid-application-missing",
-          layout: :hybrid,
+          id: "gallery-account-workspace-missing",
+          layout: :sidebar,
           data: {
             gallery_shell_preview: "true",
-            gallery_application: "hybrid",
+            gallery_application: "sidebar",
             gallery_application_state: "missing",
             theme: "light"
           }
@@ -174,7 +167,7 @@ module Gallery
           shell.brand { strong { "Northstar Admin" } }
           shell.navigation do
             render_application_navigation(
-              id: "gallery-hybrid-application-missing-navigation",
+              id: "gallery-account-workspace-missing-navigation",
               current: :people,
               context: "Invitations"
             )
@@ -186,20 +179,20 @@ module Gallery
             render_application_main(size: :lg) do
               render NitroKit::PageHeader.new(
                 title: "Invited teammate",
-                id: "gallery-hybrid-application-missing-header"
+                id: "gallery-account-workspace-missing-header"
               )
 
               render NitroKit::ProgressiveImage.new(
                 attachment: nil,
                 alt: "Invited teammate profile image",
                 size: :sm,
-                id: "gallery-hybrid-application-missing-image"
+                id: "gallery-account-workspace-missing-image"
               )
 
               render NitroKit::DetailsTable.new(
                 MISSING_PROFILE,
                 label: "Invitation details",
-                id: "gallery-hybrid-application-missing-details"
+                id: "gallery-account-workspace-missing-details"
               ) do |details|
                 details.fields(:name, :email, :role, :website, :joined_on, :last_seen)
               end
@@ -207,7 +200,7 @@ module Gallery
               render NitroKit::EmptyState.new(
                 title: "Profile setup has not started",
                 description: "Resend the invitation or copy a fresh setup link for this teammate.",
-                id: "gallery-hybrid-application-missing-state"
+                id: "gallery-account-workspace-missing-state"
               ) do |empty|
                 empty.icon NitroKit::Icon.new(:users)
                 empty.action NitroKit::Button.new("Resend invitation", href: "#resend", variant: :primary)
@@ -218,13 +211,13 @@ module Gallery
         end
       end
 
-      def render_hybrid_error
+      def render_sidebar_error
         render NitroKit::AppShell.new(
-          id: "gallery-hybrid-application-error",
-          layout: :hybrid,
+          id: "gallery-account-workspace-error",
+          layout: :sidebar,
           data: {
             gallery_shell_preview: "true",
-            gallery_application: "hybrid",
+            gallery_application: "sidebar",
             gallery_application_state: "error",
             theme: "dark"
           }
@@ -232,13 +225,13 @@ module Gallery
           shell.brand { strong { "Northstar Admin" } }
           shell.navigation do
             render_application_navigation(
-              id: "gallery-hybrid-application-error-navigation",
+              id: "gallery-account-workspace-error-navigation",
               current: :settings,
               context: "Restricted"
             )
           end
           shell.topbar do
-            render NitroKit::Dialog.new(id: "gallery-hybrid-application-policy-dialog") do |dialog|
+            render NitroKit::Dialog.new(id: "gallery-account-workspace-policy-dialog") do |dialog|
               dialog.trigger("Review policy", size: :sm)
               dialog.panel(
                 title: "Workspace access policy",
@@ -253,12 +246,12 @@ module Gallery
               render NitroKit::PageHeader.new(
                 title: "Request production access",
                 description: "Review the incomplete request and ask a workspace owner to restore submission access.",
-                id: "gallery-hybrid-application-error-header"
+                id: "gallery-account-workspace-error-header"
               )
 
               render NitroKit::Alert.new(
                 variant: :destructive,
-                id: "gallery-hybrid-application-error-alert"
+                id: "gallery-account-workspace-error-alert"
               ) do |alert|
                 alert.icon NitroKit::Icon.new(:triangle_alert)
                 alert.title("Access request needs attention")
@@ -268,14 +261,14 @@ module Gallery
               render NitroKit::SettingsSection.new(
                 title: "Production access",
                 description: "Restricted fields remain visible so the failed request can be understood.",
-                id: "gallery-hybrid-application-access-section"
+                id: "gallery-account-workspace-access-section"
               ) do |section|
                 section.form do
                   form_with(
                     scope: :access_request,
                     url: "#request-access",
                     builder: NitroKit::FormBuilder,
-                    id: "gallery-hybrid-application-access-form"
+                    id: "gallery-account-workspace-access-form"
                   ) do |form|
                     form.fieldset(legend: "Request details", disabled: true) do
                       form.group do
@@ -299,7 +292,7 @@ module Gallery
                     end
                     form.submit(
                       "Request access",
-                      id: "gallery-hybrid-application-access-submit",
+                      id: "gallery-account-workspace-access-submit",
                       disabled: true
                     )
                   end
@@ -309,7 +302,7 @@ module Gallery
               render NitroKit::Toast.new(
                 duration: 600_000,
                 label: "Access request notifications",
-                id: "gallery-hybrid-application-error-toast"
+                id: "gallery-account-workspace-error-toast"
               ) do |toast|
                 toast.item(
                   title: "Access request was not sent",

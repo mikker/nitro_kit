@@ -426,12 +426,11 @@ module Workspace
 end
 ```
 
-Change only `layout:` to `:topbar` or `:hybrid`; the same `brand`, `navigation`, `topbar`, and `main` declarations remain valid. Nitro owns the responsive breakpoint, narrow drawer, focus management, sticky regions, and one reflowed navigation DOM tree. Do not clone navigation for mobile or add route registries to the shell.
+Change only `layout:` to `:topbar` or `:sidebar`; the same `brand`, `navigation`, `topbar`, and `main` declarations remain valid. Nitro owns the responsive breakpoint, narrow drawer, focus management, sticky regions, and one reflowed navigation DOM tree. Do not clone navigation for mobile or add route registries to the shell.
 
 The gallery has executable examples for
-[sidebar](https://gallery.nitrokit.dev/gallery/compositions/application-sidebar),
-[topbar](https://gallery.nitrokit.dev/gallery/compositions/application-topbar),
-and [hybrid](https://gallery.nitrokit.dev/gallery/compositions/application-hybrid)
+[sidebar](https://gallery.nitrokit.dev/gallery/compositions/application-sidebar) and
+[topbar](https://gallery.nitrokit.dev/gallery/compositions/application-topbar)
 applications.
 
 ## Rails forms and Hotwire

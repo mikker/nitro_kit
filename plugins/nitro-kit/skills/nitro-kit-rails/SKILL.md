@@ -65,7 +65,7 @@ contract as a substitute for the installed API.
 - Render HTML on the server and add Hotwire progressively.
 - Set the document language on the root `html` element.
 - Test with Minitest and fixtures, including tenancy and unhappy paths.
-- In authenticated admin areas, default to a hybrid `AppShell` with the route's
+- In authenticated admin areas, default to a sidebar `AppShell` with the route's
   one `h1` and basic actions in its `Toolbar`. Keep one page gutter and avoid
   repeated headings or automatic Card wrappers. At narrow widths, let trailing
   actions stack below a Back affordance and title instead of clipping the title

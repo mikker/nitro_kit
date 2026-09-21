@@ -47,7 +47,7 @@ class GalleryAppShellTest < ActionDispatch::IntegrationTest
     get gallery_component_path("app-shell")
 
     assert_response :success
-    assert_select "[data-gallery='example-canvas'] [data-nk='app-shell']", count: 5 do |shells|
+    assert_select "[data-gallery='example-canvas'] [data-nk='app-shell']", count: 4 do |shells|
       shells.each do |shell|
         assert_equal "header", shell.at_css("[data-slot='app-shell-header']").name
         assert_equal "div", shell.at_css("[data-slot='app-shell-sidebar']").name
@@ -65,12 +65,12 @@ class GalleryAppShellTest < ActionDispatch::IntegrationTest
         assert_equal 1, sidebar.css("> [data-slot='app-shell-navigation']").count
       end
     end
-    %w[sidebar topbar hybrid].each do |layout|
+    %w[sidebar topbar].each do |layout|
       assert_select "#gallery-app-shell-#{layout}[data-layout='#{layout}']", count: 1
     end
     assert_select "#gallery-app-shell-minimal [data-slot='app-shell-brand']", count: 0
     assert_select "#gallery-app-shell-minimal [data-slot='app-shell-topbar']", count: 0
-    assert_select "#gallery-app-shell-hybrid [data-slot='app-navigation-item']", minimum: 8
+    assert_select "#gallery-app-shell-long [data-slot='app-navigation-item']", minimum: 8
     assert_select "#gallery-app-shell-long [data-slot='app-navigation-item-label']", text: /Cross-regional capacity/
     assert_select "#gallery-app-shell-sidebar [data-nk='page-header']" do
       assert_select "h4[data-slot='page-header-title']", text: "Workspace overview"

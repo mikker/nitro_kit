@@ -36,10 +36,10 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
     assert_equal(
       %w[
         sign-in password-reset email-verification invitation-acceptance account-creation account-security onboarding
-        onboarding-branches dashboard settings users team-management api-credentials organization-overview organization-settings
+        onboarding-branches dashboard settings account-workspace users team-management api-credentials organization-overview organization-settings
         team-activity team-member billing checkout checkout-result data-resource-overview data-resource-activity
         data-resource-settings product-resource api-webhooks integration-management uploads activity-audit changelog help-center
-        system-status landing pricing features contact application-sidebar application-topbar application-hybrid
+        system-status landing pricing features contact application-sidebar application-topbar
       ],
       Gallery::Catalog.entries(kind: :composition).map(&:slug)
     )

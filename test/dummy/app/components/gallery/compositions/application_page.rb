@@ -3,7 +3,7 @@ module Gallery
     class ApplicationPage < Page
       include Phlex::Rails::Helpers::FormWith
 
-      APPLICATION_SLUGS = %w[application-sidebar application-topbar application-hybrid].freeze
+      APPLICATION_SLUGS = %w[application-sidebar application-topbar].freeze
 
       class DemoBlob
         def metadata = { "width" => 1_200, "height" => 800 }
@@ -75,7 +75,8 @@ module Gallery
         context:,
         dense: false,
         compact: false,
-        appearance_picker_id: nil
+        appearance_picker_id: nil,
+        account_menu: true
       )
         render NitroKit::AppNavigation.new(id:, label: "#{context} navigation") do |navigation|
           navigation.body do
@@ -99,8 +100,9 @@ module Gallery
               navigation.item("Settings", href: "#settings", icon: :settings, current: current == :settings)
             end
           end
-          unless compact
-            navigation.footer do
+          navigation.footer do
+            render_account_menu(id: "#{id}-account", placement: compact ? :bottom_end : :top_start) if account_menu
+            unless compact
               render NitroKit::Flex.new(dir: :row, gap: 2, align: :center, justify: :between) do
                 render NitroKit::Button.new("Help", href: "#help", size: :sm, icon: :circle_help)
                 if appearance_picker_id

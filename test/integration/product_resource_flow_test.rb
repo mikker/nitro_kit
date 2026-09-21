@@ -40,11 +40,11 @@ class ProductResourceFlowTest < ActionDispatch::IntegrationTest
     assert_select "turbo-frame#gallery-product-resource-query[data-turbo-action='advance']"
   end
 
-  test "every product state renders in one hybrid application shell from executable source" do
+  test "every product state renders in one sidebar application shell from executable source" do
     STATES.each do |state|
       get_flow(state)
 
-      assert_select "#gallery-product-resource-shell[data-nk='app-shell'][data-layout='hybrid']" \
+      assert_select "#gallery-product-resource-shell[data-nk='app-shell'][data-layout='sidebar']" \
         "[data-gallery='composition-surface'][data-gallery-composition='product-resource']" \
         "[data-gallery-composition-state='#{state}']" do
         assert_select "[data-slot='app-shell-topbar'] #gallery-product-resource-toolbar[data-nk='toolbar'] h1",
@@ -53,11 +53,8 @@ class ProductResourceFlowTest < ActionDispatch::IntegrationTest
           " [data-slot='app-navigation-item-link'][aria-current='page']",
           text: "Products",
           count: 1
-        assert_select "[data-gallery='product-resource-main']" do
-          assert_select "> #gallery-product-resource-stack[data-nk='flex'][data-dir='col'][data-gap='6']",
-            count: 1
-          assert_select "> [data-nk='container']", count: 0
-        end
+        assert_select "#gallery-product-resource-stack[data-gallery='product-resource-main'][data-ui='workspace-content']" \
+          "[data-nk='flex'][data-dir='col'][data-gap='6']", count: 1
       end
       assert_select "[data-gallery='composition-states'] a[aria-current='page']",
         text: state.tr("-", " ").humanize,
@@ -183,7 +180,7 @@ class ProductResourceFlowTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "#gallery-product-resource-toolbar h1", text: "Release Console"
     assert_select "#gallery-product-resource-details", text: /REL-042/
-    assert_select "#gallery-product-resource-toolbar-actions" do
+    assert_select "#gallery-product-resource-toolbar [data-slot='toolbar-trailing']" do
       assert_select "a[href*='product_id=product_release_console']", count: 2
     end
   end
@@ -191,7 +188,7 @@ class ProductResourceFlowTest < ActionDispatch::IntegrationTest
   test "narrow state uses the same shell and query frame" do
     get_flow("narrow")
 
-    assert_select "#gallery-product-resource-shell[data-gallery-mobile='true'][data-layout='hybrid']"
+    assert_select "#gallery-product-resource-shell[data-gallery-mobile='true'][data-layout='sidebar']"
     assert_select "#gallery-product-resource-toolbar h1", text: "Products"
     assert_select "turbo-frame#gallery-product-resource-query[data-turbo-action='advance']"
     assert_select "#gallery-product-resource-filter-grid[data-cols='1 md:3']"

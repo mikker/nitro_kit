@@ -16,8 +16,9 @@ module Gallery
       def render_scenario
         render NitroKit::AppShell.new(
           id: "gallery-product-resource-shell",
-          layout: :hybrid,
+          layout: :sidebar,
           data: {
+            ui: "inset-workspace",
             gallery: "composition-surface",
             gallery_shell_preview: "true",
             gallery_composition: "product-resource",
@@ -25,20 +26,17 @@ module Gallery
             gallery_mobile: state == "narrow" ? "true" : nil
           }.compact
         ) do |shell|
-          shell.brand { strong { "Northstar" } }
+          shell.brand { img(src: "/gallery/racecamp-logo.png", alt: "Racecamp", width: 132, height: 28, data: { ui: "application-logo" }) }
           shell.navigation { render_product_navigation }
           shell.topbar { render_product_toolbar }
           shell.main do
-            div(data: { gallery: "product-resource-main" }) do
-              render NitroKit::Flex.new(
-                dir: :col,
-                gap: 6,
-                align: :stretch,
-                id: "gallery-product-resource-stack"
-              ) do
-                render_product_state
-              end
-            end
+            render NitroKit::Flex.new(
+              dir: :col,
+              gap: 6,
+              align: :stretch,
+              id: "gallery-product-resource-stack",
+              data: { gallery: "product-resource-main", ui: "workspace-content" }
+            ) { render_product_state }
           end
         end
       end
@@ -46,8 +44,9 @@ module Gallery
       def render_product_navigation
         render NitroKit::AppNavigation.new(
           id: "gallery-product-resource-navigation",
-          label: "Northstar administration"
+          label: "Racecamp administration"
         ) do |navigation|
+          navigation.footer { render_account_menu(id: "gallery-product-resource-account") }
           navigation.body do
             navigation.section(label: "Catalog") do
               navigation.item("Overview", href: "#overview", icon: :house)
@@ -104,14 +103,9 @@ module Gallery
             id: "gallery-product-resource-new"
           )
         else
-          render NitroKit::ButtonGroup.new(
-            label: "Product actions",
-            id: "gallery-product-resource-toolbar-actions"
-          ) do |actions|
-            product_id = selected_product.id
-            actions.button("History", href: flow_path(state: "history", product_id:)) unless state == "history"
-            actions.button("Edit product", href: flow_path(state: "edit", product_id:), variant: :primary)
-          end
+          product_id = selected_product.id
+          render NitroKit::Button.new("History", href: flow_path(state: "history", product_id:)) unless state == "history"
+          render NitroKit::Button.new("Edit product", href: flow_path(state: "edit", product_id:), variant: :primary)
         end
       end
 
@@ -205,70 +199,67 @@ module Gallery
       end
 
       def render_product_results
-        render NitroKit::DataSection.new(
-          title: "Product catalog",
-          description: results_description,
-          id: "gallery-product-resource-results"
-        ) do |section|
-          if products.empty?
-            section.empty_state NitroKit::EmptyState.new(
-              title: "No products match these filters",
-              description: "Reset the query or create the first product for this catalog.",
-              level: 3,
-              id: "gallery-product-resource-empty"
-            ) do |empty|
-              empty.icon NitroKit::Icon.new(:package_search)
-              empty.action NitroKit::Button.new(
-                "Reset filters",
-                href: flow_path(state: "index"),
-                data: {
-                  turbo_frame: QUERY_FRAME_ID,
-                  turbo_action: "replace"
-                }
-              )
-              empty.action NitroKit::Button.new(
-                "New product",
-                href: flow_path(state: "new"),
-                variant: :primary,
-                data: { turbo_frame: "_top" }
-              )
+        if products.empty?
+          render NitroKit::EmptyState.new(
+            title: "No products match these filters",
+            description: "Reset the query or create the first product for this catalog.",
+            level: 2,
+            id: "gallery-product-resource-empty"
+          ) do |empty|
+            empty.icon NitroKit::Icon.new(:package_search)
+            empty.action NitroKit::Button.new(
+              "Reset filters",
+              href: flow_path(state: "index"),
+              data: {
+                turbo_frame: QUERY_FRAME_ID,
+                turbo_action: "replace"
+              }
+            )
+            empty.action NitroKit::Button.new(
+              "New product",
+              href: flow_path(state: "new"),
+              variant: :primary,
+              data: { turbo_frame: "_top" }
+            )
+          end
+        else
+          render NitroKit::Table.new(
+            sort: current_sort,
+            direction: current_direction,
+            id: "gallery-product-resource-table",
+            data: { ui: "resource-table" },
+            table_aria: { label: "Racecamp products" }
+          ) do |table|
+            table.thead do
+              table.tr do
+                table.th(
+                  "Product",
+                  sort: :name,
+                  data: { resource_column: "name" },
+                  href: sort_path(:name),
+                  sort_data: { turbo_action: "replace" }
+                )
+                table.th("Status", data: { resource_column: "status" })
+                table.th(
+                  "Price",
+                  align: :right,
+                  sort: :price,
+                  data: { resource_column: "secondary" },
+                  href: sort_path(:price),
+                  sort_data: { turbo_action: "replace" }
+                )
+                table.th(
+                  "Updated",
+                  sort: :updated_at,
+                  data: { resource_column: "secondary" },
+                  href: sort_path(:updated_at),
+                  sort_data: { turbo_action: "replace" }
+                )
+                table.th("Actions", align: :right, data: { resource_column: "actions" })
+              end
             end
-          else
-            section.table NitroKit::Table.new(
-              sort: current_sort,
-              direction: current_direction,
-              id: "gallery-product-resource-table",
-              table_aria: { label: "Northstar products" }
-            ) do |table|
-              table.caption("Products in Northstar Commerce")
-              table.thead do
-                table.tr do
-                  table.th(
-                    "Product",
-                    sort: :name,
-                    href: sort_path(:name),
-                    sort_data: { turbo_action: "replace" }
-                  )
-                  table.th("Status")
-                  table.th(
-                    "Price",
-                    align: :right,
-                    sort: :price,
-                    href: sort_path(:price),
-                    sort_data: { turbo_action: "replace" }
-                  )
-                  table.th(
-                    "Updated",
-                    sort: :updated_at,
-                    href: sort_path(:updated_at),
-                    sort_data: { turbo_action: "replace" }
-                  )
-                  table.th("Actions", align: :right)
-                end
-              end
-              table.tbody do
-                products.each { |product| render_product_row(table, product) }
-              end
+            table.tbody do
+              products.each { |product| render_product_row(table, product) }
             end
           end
         end
@@ -276,22 +267,22 @@ module Gallery
 
       def render_product_row(table, product)
         table.tr do
-          table.th(scope: :row) do
+          table.th(scope: :row, data: { resource_column: "name" }) do
             strong { product.name }
             small { product.sku }
           end
-          table.td do
+          table.td(data: { resource_column: "status" }) do
             render NitroKit::Badge.new(
               product.status.to_s.humanize,
               color: product_status_color(product.status),
               size: :sm
             )
           end
-          table.td(money(product.price_cents), align: :right)
-          table.td(product.updated_at.to_fs(:short))
-          table.td(align: :right) do
-            render NitroKit::ButtonGroup.new(label: "Actions for #{product.name}") do |actions|
-              actions.button(
+          table.td(money(product.price_cents), align: :right, data: { resource_column: "secondary" })
+          table.td(product.updated_at.to_fs(:short), data: { resource_column: "secondary" })
+          table.td(align: :right, data: { resource_column: "actions" }) do
+            render NitroKit::Flex.new(dir: :row, gap: 1, align: :stretch, justify: :end) do
+              render NitroKit::Button.new(
                 "View",
                 href: flow_path(
                   state: product.status == :archived ? "archived" : "active",
@@ -300,7 +291,7 @@ module Gallery
                 size: :sm,
                 data: { turbo_frame: "_top" }
               )
-              actions.button(
+              render NitroKit::Button.new(
                 "Edit",
                 href: flow_path(state: "edit", product_id: product.id),
                 size: :sm,
@@ -666,14 +657,6 @@ module Gallery
         end
       end
 
-      def results_description
-        return "No product satisfies the current name, SKU, and status filters." if products.empty?
-        return "One active product matches “Sensor” across name, SKU, and description." if state == "filtered"
-        return "Page two preserves the active GET query, sort, and browser history." if state == "paginated"
-
-        "Products are scoped to Northstar Commerce and ordered by name."
-      end
-
       def validation_state?
         state.end_with?("validation")
       end
@@ -706,7 +689,7 @@ module Gallery
           "active" => "An active product detail combines status, metadata, and recent lifecycle provenance.",
           "archived" => "An archived product remains readable with sales impact and lifecycle history.",
           "history" => "The complete product lifecycle records actor, time, action, and detail.",
-          "narrow" => "The same hybrid application shell, toolbar, query frame, and table run in a narrow preview."
+          "narrow" => "The same sidebar application shell, toolbar, query frame, and table run in a narrow preview."
         }.fetch(state)
       end
     end

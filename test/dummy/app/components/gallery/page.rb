@@ -36,6 +36,21 @@ module Gallery
 
     private
 
+    def render_account_menu(id:, placement: :top_start)
+      render NitroKit::Dropdown.new(id:, placement:) do |menu|
+        menu.trigger(icon_end: :chevrons_up_down) do
+          span(data: { ui: "account-identity" }) do
+            render NitroKit::Avatar.new(alt: "Ada Lovelace", size: :xs, decorative: true)
+            span { "Ada Lovelace" }
+          end
+        end
+        menu.item("Account", href: "#account", icon: :circle_user)
+        menu.item("Settings", href: "#settings", icon: :settings)
+        menu.separator
+        menu.item("Sign out", icon: :log_out)
+      end
+    end
+
     def page_template
       raise NotImplementedError, "#{self.class.name} must implement #page_template"
     end

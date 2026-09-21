@@ -14,12 +14,8 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
   RETAINED_GHOSTS = {
     "test/dummy/app/components/gallery/components/app_shell_page.rb" => [
       GhostUse.new(
-        pattern: /group\.button\("Search", href: "#search", variant: :ghost, size: :sm, icon: :search\)/,
+        pattern: /Button\.new\("Search", href: "#search", variant: :ghost, size: :sm, icon: :search\)/,
         reason: "topbar utility embedded in application-shell chrome"
-      ),
-      GhostUse.new(
-        pattern: /group\.button\("Account", href: "#account", variant: :ghost, size: :sm, icon: :circle_user_round\)/,
-        reason: "account utility embedded in application-shell chrome"
       ),
       GhostUse.new(
         pattern: /Button\.new\("Help", href: "#help", variant: :ghost, size: :sm, icon: :circle_help\)/,
@@ -48,12 +44,6 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
         reason: "inactive destinations in the gallery's composition-state navigation chrome"
       )
     ],
-    "test/dummy/app/components/gallery/components/app_navigation_page.rb" => [
-      GhostUse.new(
-        pattern: /Button\.new\("Sign out", href: "#sign-out", variant: :ghost, size: :sm, icon: :log_out\)/,
-        reason: "account utility embedded in navigation chrome"
-      )
-    ],
     "test/dummy/app/components/gallery/components/button_page.rb" => [
       GhostUse.new(
         pattern: /id: "gallery-button-variant-ghost",\s+variant: :ghost/m,
@@ -80,22 +70,10 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
         reason: "icon-only copy control in the Tooltip showcase"
       )
     ],
-    "test/dummy/app/components/gallery/compositions/hybrid_application_page.rb" => [
-      GhostUse.new(
-        pattern: /menu\.trigger\("Ada Lovelace", variant: :ghost, size: :sm\)/,
-        reason: "compact account menu trigger embedded in application-shell topbar chrome"
-      )
-    ],
     "test/dummy/app/components/gallery/compositions/product_resource_page.rb" => [
       GhostUse.new(
         pattern: /href: back_path,\s+icon: :arrow_left,\s+label: back_label,\s+size: :sm,\s+variant: :ghost,/m,
         reason: "compact back link embedded in product-resource toolbar chrome"
-      )
-    ],
-    "test/dummy/app/components/gallery/compositions/sidebar_application_page.rb" => [
-      GhostUse.new(
-        pattern: /menu\.trigger\("Account", variant: :ghost, size: :sm\)/,
-        reason: "compact account menu trigger embedded in application-shell topbar chrome"
       )
     ],
     "test/dummy/app/components/gallery/compositions/topbar_application_page.rb" => [
@@ -117,7 +95,7 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
     end.reject { |_path, count| count.zero? }
 
     assert_equal RETAINED_GHOSTS.keys.sort, actual_by_file.keys.sort
-    assert_equal 18, actual_by_file.values.sum
+    assert_equal 14, actual_by_file.values.sum
 
     RETAINED_GHOSTS.each do |relative_path, uses|
       source = ROOT.join(relative_path).read

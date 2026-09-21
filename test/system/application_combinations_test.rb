@@ -10,8 +10,8 @@ class ApplicationCombinationsTest < ApplicationSystemTestCase
       layout: "topbar",
       states: %w[populated loading long]
     },
-    "application-hybrid" => {
-      layout: "hybrid",
+    "account-workspace" => {
+      layout: "sidebar",
       states: %w[populated missing error]
     }
   }.freeze
@@ -24,7 +24,7 @@ class ApplicationCombinationsTest < ApplicationSystemTestCase
 
       layout = contract.fetch(:layout)
       state = contract.fetch(:states).first
-      root = "#gallery-#{layout}-application-#{state}"
+      root = slug == "account-workspace" ? "#gallery-account-workspace-#{state}" : "#gallery-#{layout}-application-#{state}"
       sidebar = "#{root} > [data-slot='app-shell-sidebar']"
       dialog = "#{root} > [data-slot='app-shell-dialog']"
       trigger = "#{root} [data-slot='app-shell-mobile-trigger']"
@@ -64,7 +64,7 @@ class ApplicationCombinationsTest < ApplicationSystemTestCase
     end
   end
 
-  test "a narrow child-route toolbar preserves its title above persistent actions" do
+  test "a narrow child-route toolbar keeps its title before right-aligned actions" do
     resize_viewport(width: 390, height: 844)
     visit gallery_composition_path(
       slug: "product-resource",
@@ -73,7 +73,7 @@ class ApplicationCombinationsTest < ApplicationSystemTestCase
     )
 
     assert_selector "#gallery-product-resource-back"
-    assert_selector "#gallery-product-resource-toolbar-actions [data-nk='button']", count: 2
+    assert_selector "#gallery-product-resource-toolbar [data-slot='toolbar-trailing'] [data-nk='button']", count: 2
     assert_selector "#gallery-product-resource-toolbar h1", text: "Release Console"
 
     geometry = evaluate_script(<<~JAVASCRIPT)
@@ -92,7 +92,7 @@ class ApplicationCombinationsTest < ApplicationSystemTestCase
           titleInsideLeading:
             titleRect.left >= leadingRect.left - 1 &&
             titleRect.right <= leadingRect.right + 1,
-          actionsBelowTitle: leadingRect.bottom <= trailingRect.top + 1,
+          actionsAfterTitle: leadingRect.right <= trailingRect.left + 1,
           childrenInsideToolbar: [leadingRect, trailingRect].every((rect) =>
             rect.left >= toolbarRect.left - 1 &&
             rect.right <= toolbarRect.right + 1 &&
@@ -105,7 +105,7 @@ class ApplicationCombinationsTest < ApplicationSystemTestCase
 
     assert_operator geometry.fetch("titleWidth"), :>, 80
     assert geometry.fetch("titleInsideLeading")
-    assert geometry.fetch("actionsBelowTitle")
+    assert geometry.fetch("actionsAfterTitle")
     assert geometry.fetch("childrenInsideToolbar")
     assert_document_fits_viewport
   end
@@ -124,12 +124,6 @@ class ApplicationCombinationsTest < ApplicationSystemTestCase
     when "topbar"
       assert_equal "contents", state.fetch("drawerDisplay")
       assert_equal "row", state.fetch("navigationDirection")
-      assert_topbar_containment(state)
-    when "hybrid"
-      assert_equal "sticky", state.fetch("drawerPosition")
-      assert_equal "column", state.fetch("navigationDirection")
-      assert_equal "flex", state.fetch("topbarDisplay")
-      assert_in_delta 0, state.fetch("drawerBottomDelta"), 1
       assert_topbar_containment(state)
     else
       flunk("Unknown application layout: #{layout}")

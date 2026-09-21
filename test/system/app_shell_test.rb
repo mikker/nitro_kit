@@ -6,7 +6,6 @@ class AppShellTest < ApplicationSystemTestCase
 
     assert_shell_tree("#gallery-app-shell-sidebar")
     assert_shell_tree("#gallery-app-shell-topbar")
-    assert_shell_tree("#gallery-app-shell-hybrid")
 
     sidebar = computed_shell("gallery-app-shell-sidebar")
     assert_equal "sticky", sidebar.fetch("drawerPosition")
@@ -19,18 +18,13 @@ class AppShellTest < ApplicationSystemTestCase
     assert_equal "row", topbar.fetch("navigationDirection")
     assert_equal "auto", topbar.fetch("bodyOverflowX")
 
-    hybrid = computed_shell("gallery-app-shell-hybrid")
-    assert_equal "sticky", hybrid.fetch("drawerPosition")
-    assert_equal "flex", hybrid.fetch("topbarDisplay")
-    assert_equal "column", hybrid.fetch("navigationDirection")
-
     minimal = computed_shell("gallery-app-shell-minimal")
     assert_equal "1", minimal.fetch("drawerGridRowStart")
     assert_in_delta 0, minimal.fetch("drawerOffset"), 1
     assert_equal "2", sidebar.fetch("drawerGridRowStart")
     assert_operator sidebar.fetch("drawerOffset"), :>, 0
 
-    [ "gallery-app-shell-sidebar", "gallery-app-shell-topbar", "gallery-app-shell-hybrid" ].each do |id|
+    [ "gallery-app-shell-sidebar", "gallery-app-shell-topbar" ].each do |id|
       sidebar = find("##{id} [data-slot='app-shell-sidebar']", visible: :all)
       dialog = find("##{id} [data-slot='app-shell-dialog']", visible: :all)
       assert_equal "div", sidebar.tag_name

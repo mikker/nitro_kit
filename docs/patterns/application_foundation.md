@@ -26,11 +26,16 @@ invited email. Existing and new users should share one acceptance path.
 
 ## Authenticated shell
 
-Use one `AppShell`, normally `layout: :hybrid`, for authenticated routes.
+Use one `AppShell`, normally `layout: :sidebar`, for authenticated routes.
 `AppNavigation` owns brand and destinations; a `Toolbar` in `shell.topbar`
 owns the route's single `h1` and persistent actions. One wrapper inside
 `shell.main` owns responsive page padding. Do not add another viewport-height
 or outer-padding rule in child pages.
+
+For an inset workspace, use the complete [inset composition](inset_workspace.md).
+It works with both sidebar-bearing layouts and names the owner of rail
+padding, canvas gaps, and page gutters. Do not reconstruct it from unrelated
+spacing overrides.
 
 Application code owns destinations, authorization, and current-route policy.
 Nitro owns responsive disclosure and focus behavior. Put infrequent account
@@ -60,3 +65,13 @@ ordinary Rails flash and `303 See Other` redirects. Use the dedicated
 - Owner, administrator, and member policy differs where intended.
 - Populated, empty, invalid, narrow, settings, and destructive states work.
 - Successful mutations redirect with `303`; invalid forms render with `422`.
+
+## Account menu
+
+Use a Dropdown for the signed-in identity across application examples. Include
+Account and Settings links, a separator, and Sign out. Put it in the navigation
+footer or existing topbar account position, consistently within each application.
+Use the normal button treatment, an Avatar with photo or initials fallback, and a disclosure chevron. Route
+URLs and sign-out behavior belong to the application; a real sign-out must
+submit to the session endpoint using its non-GET method. The gallery's sign-out
+item is an inert demonstration because it has no authenticated session.

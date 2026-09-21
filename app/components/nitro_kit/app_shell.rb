@@ -4,7 +4,7 @@ module NitroKit
   class AppShell < Component
     alias_method :html_main, :main
 
-    LAYOUTS = %i[sidebar topbar hybrid].freeze
+    LAYOUTS = %i[sidebar topbar].freeze
     REGIONS = %i[brand navigation topbar main].freeze
     REQUIRED_REGIONS = %i[navigation main].freeze
     private_constant :REQUIRED_REGIONS

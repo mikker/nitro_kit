@@ -12,20 +12,20 @@ class ApplicationCombinationsGalleryTest < ActionDispatch::IntegrationTest
       states: %w[populated loading long],
       source: "topbar_application_page.rb"
     },
-    "application-hybrid" => {
-      layout: "hybrid",
+    "account-workspace" => {
+      layout: "sidebar",
       states: %w[populated missing error],
-      source: "hybrid_application_page.rb"
+      source: "account_workspace_page.rb"
     }
   }.freeze
 
-  test "catalog exposes three complete application routes without synthetic state routes" do
+  test "catalog exposes both layouts and the account workflow without synthetic state routes" do
     entries = Gallery::Catalog.entries(kind: :composition).select { |entry| APPLICATIONS.key?(entry.slug) }
 
-    assert_equal APPLICATIONS.keys, entries.map(&:slug)
+    assert_equal APPLICATIONS.keys.sort, entries.map(&:slug).sort
     entries.each do |entry|
       assert_empty entry.states
-      assert_equal "Complete applications", Gallery::Catalog.category_for(entry).title
+      assert_equal(entry.slug == "account-workspace" ? "Workspace & organization" : "Complete applications", Gallery::Catalog.category_for(entry).title)
       assert_equal "/gallery/compositions/#{entry.slug}", Gallery::Catalog.path_for(
         entry,
         routes: Rails.application.routes.url_helpers
@@ -95,7 +95,7 @@ class ApplicationCombinationsGalleryTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "#gallery-topbar-application-populated[data-theme='light']" do
       assert_select "[data-nk='progressive-image']", count: 3
-      assert_select "[data-nk='dropdown']", count: 3
+      assert_select "[data-nk='dropdown']", count: 4
       assert_select "[data-nk='toast'] [data-slot='toast-item'][data-variant='success']", count: 1
     end
     assert_select "#gallery-topbar-application-loading[aria-busy='true']" do
@@ -109,35 +109,35 @@ class ApplicationCombinationsGalleryTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "hybrid applications combine synchronized appearance details forms missing data and policy failure" do
-    get gallery_composition_path(slug: "application-hybrid")
+  test "sidebar applications combine synchronized appearance details forms missing data and policy failure" do
+    get gallery_composition_path(slug: "account-workspace")
 
     assert_response :success
-    assert_select "#gallery-hybrid-application-populated" do
+    assert_select "#gallery-account-workspace-populated" do
       assert_select "[data-nk='appearance-picker']", count: 2
       assert_select "[data-slot='app-navigation-footer'] [data-nk='appearance-picker'][data-presentation='dropdown']", count: 1
       assert_select "[data-nk='settings-layout']", count: 1
       assert_select "[data-nk='settings-layout'] [data-nk='grid'][data-cols='1 md:2']", count: 1
       assert_select "[data-nk='progressive-image']", count: 1
       assert_select "[data-nk='details-table']", count: 1
-      assert_select "form#gallery-hybrid-application-profile-form > [data-nk='field-group']" do
+      assert_select "form#gallery-account-workspace-profile-form > [data-nk='field-group']" do
         assert_select "> [data-nk='field']", count: 3
-        assert_select "> #gallery-hybrid-application-profile-submit[data-nk='button']", count: 1
+        assert_select "> #gallery-account-workspace-profile-submit[data-nk='button']", count: 1
       end
-      assert_select "form#gallery-hybrid-application-profile-form [data-nk='fieldset']", count: 0
+      assert_select "form#gallery-account-workspace-profile-form [data-nk='fieldset']", count: 0
       assert_select "[data-nk='toast'] [data-slot='toast-item'][data-variant='success']", count: 1
     end
-    assert_select "#gallery-hybrid-application-missing[data-theme='light']" do
+    assert_select "#gallery-account-workspace-missing[data-theme='light']" do
       assert_select "[data-nk='progressive-image'][data-state='empty']", count: 1
       assert_select "[data-slot='details-table-empty']", count: 4
       assert_select "[data-nk='empty-state']", text: /Profile setup has not started/
       assert_select "[data-slot='page-header-description']", count: 0
     end
-    assert_select "#gallery-hybrid-application-error[data-theme='dark']" do
+    assert_select "#gallery-account-workspace-error[data-theme='dark']" do
       assert_select "[data-nk='alert'][data-variant='destructive']", count: 1
       assert_select "[data-nk='fieldset'][disabled]", count: 1
       assert_select "[data-nk='field'][data-state='invalid']", count: 2
-      assert_select "#gallery-hybrid-application-access-submit[disabled]", count: 1
+      assert_select "#gallery-account-workspace-access-submit[disabled]", count: 1
       assert_select "[data-nk='dialog']", count: 1
       assert_select "[data-nk='toast'] [data-slot='toast-item'][data-variant='error']", count: 1
     end

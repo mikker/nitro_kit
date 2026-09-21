@@ -19,6 +19,7 @@ Read this guide from that directory. The installed
 | -------------------------------------------------- | ------------------------------------------------------------ |
 | Rails models, routes, CRUD, and tests              | [Rails conventions](rails_conventions.md)                    |
 | Authentication, teams, shell, and settings         | [Application foundation](patterns/application_foundation.md) |
+| Inset canvas and shell spacing                     | [Inset workspace](patterns/inset_workspace.md)               |
 | Complete product CRUD                              | [CRUD resource](patterns/crud_resource.md)                   |
 | Components and composition                         | [Component contracts](component_contracts.md)                |
 | Installation, assets, forms, and Rails integration | [Rails integration](rails_integration.md)                    |

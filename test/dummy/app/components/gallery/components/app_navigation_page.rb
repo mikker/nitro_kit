@@ -29,7 +29,7 @@ module Gallery
               data: { gallery_navigation_preview: "complete" }
             ) do |navigation|
               navigation.footer do
-                render NitroKit::Button.new("Sign out", href: "#sign-out", variant: :ghost, size: :sm, icon: :log_out)
+                render_account_menu(id: "gallery-app-navigation-account")
               end
               navigation.body do
                 navigation.section(label: "Workspace") do

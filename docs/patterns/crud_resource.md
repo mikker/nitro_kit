@@ -16,10 +16,12 @@ resource with Nitro Kit.
 
 ## Resource map
 
-Use `AppShell(layout: :hybrid)` for an authenticated product area. Put the
+Use `AppShell(layout: :sidebar)` for an authenticated product area. Put the
 route's one `h1` and persistent actions in the topbar `Toolbar`. Child routes
-place one compact Back link before the title. One wrapper inside `shell.main`
-owns page padding; child pages add no outer gutter.
+place one compact Back link before the title. One layout element inside `shell.main`
+owns page padding and vertical spacing; child pages add no outer gutter. For an inset treatment,
+use [Inset workspace](inset_workspace.md) rather than adding padding to each
+shell region.
 
 | Route                 | Composition                                                                                                             |
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------- |
@@ -27,6 +29,10 @@ owns page padding; child pages add no outer gutter.
 | New/Edit              | One `SettingsSection` and one shared form component. A toolbar submit targets the form's stable `form:` ID.             |
 | Show                  | Status or metadata, then the resource. Keep lifecycle actions in the normal detail flow.                                |
 | Edit destructive area | One `DangerZone` with a safe escape. Do not put permanent deletion on every show page.                                  |
+
+Keep all columns and View/Edit actions intact at 390px. Use Table's built-in
+horizontal scroll wrapper as shown in [Queryable collection](queryable_collection.md).
+Do not hide columns or stack row actions to squeeze the table into the viewport.
 
 Use one primary action. Do not render the same Save or Create action in both
 the toolbar and form body. Use Card only for a bounded object that benefits
@@ -60,3 +66,7 @@ pagination, `303` redirects, and `422` validation. Protect the high-level
 composition: one title, one primary action, the correct form association,
 Table or EmptyState, and edit-owned destructive confirmation. Inspect
 populated, empty, invalid, narrow, draft, published, and destructive states.
+
+Avoid layout-only wrappers inside Toolbar.leading or Toolbar.trailing: these
+regions already arrange their children. Render independent action Buttons
+directly; use ButtonGroup only when the actions are intentionally a joined set.

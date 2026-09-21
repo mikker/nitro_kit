@@ -26,16 +26,6 @@
     justify-content: flex-end;
     margin-inline-start: auto;
   }
-
-  /* Nested scroll regions such as a clipped ButtonGroup keep a visible
-     scrollbar so cropped actions read as scrollable. */
-  :where(
-      [data-nk="toolbar"] > [data-slot="toolbar-leading"] > *,
-      [data-nk="toolbar"] > [data-slot="toolbar-trailing"] > *
-    ) {
-    scrollbar-width: thin;
-    scrollbar-color: var(--nk-color-border) transparent;
-  }
 }
 
 @layer nitro-kit.state {

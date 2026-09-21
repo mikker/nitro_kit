@@ -130,7 +130,7 @@ class AppShellTest < ActiveSupport::TestCase
 
   test "validates identity and layout as a closed vocabulary" do
     assert_predicate NitroKit::AppShell::LAYOUTS, :frozen?
-    assert_equal %i[sidebar topbar hybrid], NitroKit::AppShell::LAYOUTS
+    assert_equal %i[sidebar topbar], NitroKit::AppShell::LAYOUTS
     assert_predicate NitroKit::AppShell::REGIONS, :frozen?
     assert_equal %i[brand navigation topbar main], NitroKit::AppShell::REGIONS
     assert_raises(ArgumentError) { NitroKit::AppShell.new }
@@ -139,7 +139,7 @@ class AppShellTest < ActiveSupport::TestCase
       assert_match(/id must be/, assert_raises(ArgumentError) { NitroKit::AppShell.new(id:) }.message)
     end
     assert_match(/Unknown layout/, assert_raises(ArgumentError) do
-      NitroKit::AppShell.new(id: "workspace", layout: :drawer)
+      NitroKit::AppShell.new(id: "workspace", layout: :hybrid)
     end.message)
   end
 

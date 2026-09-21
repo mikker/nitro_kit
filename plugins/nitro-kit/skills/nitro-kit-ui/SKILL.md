@@ -55,7 +55,7 @@ If the gem is not installed, say that the skill requires Nitro Kit and follow th
 5. Keep routes, authorization, records, query policy, DOM IDs, Turbo boundaries, and response semantics in the application.
 6. Translate the application's semantic theme into documented `--nk-*` properties instead of choosing similar raw palette values. Use `--nk-button-radius` when Button shape intentionally differs from inputs and surfaces.
 7. Verify closed options and required compound declarations before rendering.
-8. For authenticated CRUD, prefer a hybrid `AppShell` with a `Toolbar` that
+8. For authenticated CRUD, prefer a sidebar `AppShell` with a `Toolbar` that
    owns the route's single `h1` and basic actions. The shell main region owns
    one content gutter. Do not repeat that heading in `PageHeader`, or wrap each
    table, form, and detail region in another Card. At narrow widths, preserve

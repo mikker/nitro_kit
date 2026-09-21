@@ -56,18 +56,13 @@ module Gallery
           shell.navigation do
             render_application_navigation(
               id: "gallery-sidebar-application-populated-navigation",
+              account_menu: false,
               current: :overview,
               context: "Production",
               appearance_picker_id: "gallery-sidebar-application-appearance"
             )
           end
-          shell.topbar do
-            render NitroKit::Dropdown.new(id: "gallery-sidebar-application-account") do |menu|
-              menu.trigger("Account", variant: :ghost, size: :sm)
-              menu.item("Profile", href: "#profile")
-              menu.item("Sign out")
-            end
-          end
+          shell.topbar { render_account_menu(id: "gallery-sidebar-application-account", placement: :bottom_end) }
           shell.main do
             render_application_main do
               render NitroKit::PageHeader.new(

@@ -83,9 +83,61 @@ filter controls use `turbo_action: "replace"`; pagination inherits the frame's
 No Stimulus controller is required. Optional autosubmit may call the same GET
 form's `requestSubmit`; the URL remains the source of truth.
 
+## Keep tables intact at every viewport
+
+Every Table owns a horizontal scroll wrapper. Keep all columns and row actions
+in their desktop arrangement on mobile; scroll the table instead of hiding
+columns, stacking buttons, or forcing narrow column widths. Cells preserve
+unbroken labels so controls retain their intrinsic size.
+
+This complete table uses application-owned hooks. Adapt the fields and routes,
+then load the accompanying CSS after Nitro Kit:
+
+```ruby
+Table(data: { ui: "resource-table" }, table_aria: { label: "Projects" }) do |table|
+  table.thead do
+    table.tr do
+      table.th("Project", data: { resource_column: "name" })
+      table.th("Status", data: { resource_column: "status" })
+      table.th("Updated", data: { resource_column: "secondary" })
+      table.th("Actions", data: { resource_column: "actions" })
+    end
+  end
+  table.tbody do
+    projects.each do |project|
+      table.tr do
+        table.th(project.name, scope: :row, data: { resource_column: "name" })
+        table.td(data: { resource_column: "status" }) do
+          Badge(project.archived? ? "Archived" : "Active", size: :sm)
+        end
+        table.td(project.updated_at.to_date.to_fs(:long), data: { resource_column: "secondary" })
+        table.td(data: { resource_column: "actions" }) do
+          Flex(dir: :row, gap: 1, align: :stretch, justify: :end) do
+            Button("View", href: project_path(project), size: :sm, data: { turbo_frame: "_top" })
+            Button("Edit", href: edit_project_path(project), size: :sm, data: { turbo_frame: "_top" })
+          end
+        end
+      end
+    end
+  end
+end
+```
+
+```css
+/* Table owns horizontal scrolling; record names keep their secondary line. */
+:where([data-ui="resource-table"] tbody [data-resource-column="name"] > *) {
+  display: block;
+}
+```
+
+The public Product resource gallery runs this composition. Table provides the
+scroll wrapper automatically; no extra overflow wrapper is needed.
+
 ## Tests
 
 Request-test parameter preservation, safe fallback for invalid sort keys, and
 the stable frame in populated and empty responses. System-test filter → sort →
 paginate → Back/Forward, address-bar changes, and a row link leaving the frame.
-Use Capybara waiting assertions, not sleeps.
+Use Capybara waiting assertions, not sleeps. At 390px, assert that the page stays within the viewport and the table scrolls
+horizontally to reveal intact row actions, including a long unbroken resource
+name and a multi-word status. Repeat in light and dark appearances.

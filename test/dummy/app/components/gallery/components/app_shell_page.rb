@@ -15,7 +15,7 @@ module Gallery
         example_section(
           "Layout variants",
           slug: "app-shell-layouts",
-          description: "All three layouts reflow the same AppNavigation tree while the application supplies brand, actions, routes, and main content."
+          description: "Both layouts reflow the same AppNavigation tree while the application supplies brand, actions, routes, and main content."
         ) do
           example(
             "Sidebar workspace",
@@ -33,16 +33,7 @@ module Gallery
             mode: :full_width,
             description: "Brand, navigation, and account actions share the desktop header before the same tree becomes a narrow drawer."
           ) do
-            render_workspace_shell(id: "gallery-app-shell-topbar", layout: :topbar, current: :projects)
-          end
-
-          example(
-            "Hybrid operations",
-            slug: "app-shell-hybrid",
-            mode: :full_width,
-            description: "Persistent navigation and a sticky action row combine without a second navigation copy."
-          ) do
-            render_workspace_shell(id: "gallery-app-shell-hybrid", layout: :hybrid, current: :incidents, dense: true)
+            render_workspace_shell(id: "gallery-app-shell-topbar", layout: :topbar, current: :overview)
           end
         end
 
@@ -74,7 +65,7 @@ module Gallery
           ) do
             render_workspace_shell(
               id: "gallery-app-shell-long",
-              layout: :hybrid,
+              layout: :sidebar,
               current: :capacity,
               long: true,
               dense: true
@@ -104,10 +95,7 @@ module Gallery
           end
 
           shell.topbar do
-            render NitroKit::ButtonGroup.new(label: "Workspace actions") do |group|
-              group.button("Search", href: "#search", variant: :ghost, size: :sm, icon: :search)
-              group.button("Account", href: "#account", variant: :ghost, size: :sm, icon: :circle_user_round)
-            end
+            render NitroKit::Button.new("Search", href: "#search", variant: :ghost, size: :sm, icon: :search)
           end if actions
 
           shell.main { render_workspace_main(layout:, long:) }
@@ -148,6 +136,7 @@ module Gallery
             navigation.item("Settings", href: "#settings", icon: :settings)
           end
           navigation.footer do
+            render_account_menu(id: "#{id}-account")
             render NitroKit::Button.new("Help", href: "#help", variant: :ghost, size: :sm, icon: :circle_help)
           end
         end

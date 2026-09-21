@@ -1,7 +1,7 @@
 @layer nitro-kit.base {
   :where([data-nk="table"]) {
     inline-size: 100%;
-    overflow-x: auto;
+    overflow-x: scroll;
     color: var(--nk-color-foreground);
     scrollbar-width: thin;
     scrollbar-color: var(--nk-color-border) transparent;
@@ -34,6 +34,7 @@
     padding-inline: calc(var(--nk-space) * 2);
     text-align: start;
     vertical-align: middle;
+    white-space: nowrap;
   }
 
   :where([data-nk="table"] [data-slot="table-header"]) {

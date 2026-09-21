@@ -3,14 +3,12 @@
     display: block;
     inline-size: fit-content;
     max-inline-size: 100%;
-    overflow-x: auto;
     font-size: var(--nk-text-sm);
-    scrollbar-width: thin;
   }
 
   :where([data-nk="pagination"] > [data-slot="pagination-list"]) {
     display: flex;
-    inline-size: max-content;
+    flex-wrap: wrap;
     align-items: center;
     gap: var(--nk-space);
     list-style: none;
@@ -115,14 +113,5 @@
     place-items: center;
     color: var(--nk-color-muted-foreground);
     user-select: none;
-  }
-}
-
-@layer nitro-kit.state {
-  @media (width < 48rem) {
-    :where([data-nk="pagination"] > [data-slot="pagination-list"]) {
-      inline-size: auto;
-      flex-wrap: wrap;
-    }
   }
 }

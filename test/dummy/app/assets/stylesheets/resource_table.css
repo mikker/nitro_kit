@@ -1,0 +1,4 @@
+/* Table owns horizontal scrolling; record names keep their secondary line. */
+:where([data-ui="resource-table"] tbody [data-resource-column="name"] > *) {
+  display: block;
+}

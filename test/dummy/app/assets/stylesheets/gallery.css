@@ -1088,3 +1088,29 @@
     }
   }
 }
+
+/* Full application previews use their actual viewport, not a thumbnail box. */
+:where([data-gallery="preview-body"]:has([data-ui="inset-workspace"])) {
+  padding: 0;
+}
+:where([data-gallery="preview-body"] [data-ui="inset-workspace"]) {
+  block-size: 100vh;
+  block-size: 100dvh;
+  min-block-size: 100vh;
+  min-block-size: 100dvh;
+}
+
+:where([data-ui="account-identity"]) {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--nk-space) * 2);
+}
+
+:where([data-ui="application-logo"]) {
+  inline-size: 132px;
+  block-size: 28px;
+  object-fit: cover;
+}
+:where([data-theme="dark"] [data-ui="application-logo"]) {
+  filter: invert(1) hue-rotate(180deg);
+}

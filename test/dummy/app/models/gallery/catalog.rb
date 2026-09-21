@@ -517,7 +517,7 @@ module Gallery
         subcategory: :application,
         slug: "app-shell",
         title: "Application shell",
-        description: "Sidebar, topbar, and hybrid application frames that reflow one AppNavigation tree through an accessible narrow drawer.",
+        description: "Sidebar, topbar, and sidebar application frames that reflow one AppNavigation tree through an accessible narrow drawer.",
         page: Gallery::Components::AppShellPage,
         states: [],
         expected_roots: %w[app-shell app-navigation icon badge button-group button container flex grid page-header card]
@@ -798,7 +798,7 @@ module Gallery
         kind: :composition,
         slug: "product-resource",
         title: "Product resource lifecycle",
-        description: "A coherent product resource composition covering queryable indexes, validated forms, lifecycle details, edit-owned deletion, and a narrow hybrid shell.",
+        description: "A coherent product resource composition covering queryable indexes, validated forms, lifecycle details, edit-owned deletion, and a narrow sidebar shell.",
         page: Gallery::Compositions::ProductResourcePage,
         states: %w[
           index filtered empty paginated new new-validation edit edit-validation active archived history narrow
@@ -977,10 +977,10 @@ module Gallery
       ),
       Entry.new(
         kind: :composition,
-        slug: "application-hybrid",
-        title: "Hybrid account application",
-        description: "A realistic hybrid application combining synchronized appearance, profile media, record details, forms, missing data, policy errors, and overlays.",
-        page: Gallery::Compositions::HybridApplicationPage,
+        slug: "account-workspace",
+        title: "Account workspace",
+        description: "A realistic sidebar application combining synchronized appearance, profile media, record details, forms, missing data, policy errors, and overlays.",
+        page: Gallery::Compositions::AccountWorkspacePage,
         states: [],
         expected_roots: %w[
           app-shell app-navigation page-header appearance-picker settings-layout progressive-image details-table settings-section
@@ -994,7 +994,7 @@ module Gallery
     PATTERNS = {
       [ :component, "alert" ] => %w[flash_and_toast],
       [ :component, "app-navigation" ] => %w[application_foundation],
-      [ :component, "app-shell" ] => %w[application_foundation crud_resource],
+      [ :component, "app-shell" ] => %w[application_foundation inset_workspace crud_resource],
       [ :component, "auth-shell" ] => %w[application_foundation],
       [ :component, "card" ] => %w[inline_edit],
       [ :component, "checkbox" ] => %w[resource_form],
@@ -1106,6 +1106,7 @@ module Gallery
               :composition,
               "dashboard",
               "settings",
+              "account-workspace",
               "users",
               "team-management",
               "api-credentials",
@@ -1152,12 +1153,11 @@ module Gallery
           Category.new(
             slug: "complete-applications",
             title: "Complete applications",
-            description: "End-to-end sidebar, topbar, and hybrid application compositions.",
+            description: "End-to-end sidebar and topbar application compositions.",
             entries: pick_entries.call(
               :composition,
               "application-sidebar",
-              "application-topbar",
-              "application-hybrid"
+              "application-topbar"
             )
           )
         ].freeze
