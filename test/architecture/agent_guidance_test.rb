@@ -114,7 +114,9 @@ class AgentGuidanceTest < ActiveSupport::TestCase
     assert_includes destructive_action, "invitation revocation"
     assert_includes destructive_action, "dialog.close_button"
     assert_includes queryable_collection, "NitroKit::Table"
-    assert_includes queryable_collection, "turbo_frame_tag"
+    assert_includes queryable_collection, "Turbo Drive"
+    assert_includes queryable_collection, "default caching"
+    assert_includes queryable_collection, "When a frame is useful"
     assert_includes flash_and_toast, "NitroKit::Toast::FlashMessages"
   end
 

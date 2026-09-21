@@ -1,18 +1,18 @@
 # Queryable collection
 
 **Audience:** Coding agents and developers implementing filters, sorting, and
-pagination with Turbo Frames.
+pagination with ordinary Rails GET requests and Turbo Drive.
 
 ## Summary
 
-- One GET-driven Turbo Frame owns filters, sorting, results, and pagination;
-  URL parameters are the state.
+- Default to ordinary GET forms and links with Turbo Drive for a full-page
+  collection. URL parameters are the state; keep Turbo's default caching.
 - An application query object owns allowlists, defaults, tenant scope, and page
   bounds; `NitroKit::Table` owns no query policy.
 - Pagination advances browser history; filters, reset, and sorting replace the
   current history entry.
-- Every response contains the same frame, including empty results; links that
-  leave the collection target `_top`.
+- Add a Turbo Frame only when the collection is an independently navigable
+  region of a larger page, not merely to make pagination feel faster.
 
 ## Query contract
 
@@ -33,55 +33,59 @@ query URL generation. It may expose `records`, `filters`, `current_sort`,
 `direction`, `sort_url(key)`, `pagination`, and `summary`. Ransack is one
 possible implementation, not a Nitro dependency.
 
-## Frame composition
+## Page composition
 
 ```ruby
-FRAME_ID = "projects-results"
+form_with(
+  scope: :q,
+  url: projects_path,
+  method: :get,
+  builder: NitroKit::FormBuilder,
+  data: { turbo_action: "replace" }
+) do |form|
+  form.group do
+    form.field(:name_cont, as: :search, label: "Search")
+    form.submit("Apply filters")
+  end
+end
 
-turbo_frame_tag(FRAME_ID, data: { turbo_action: "advance" }) do
-  form_with(
-    scope: :q,
-    url: projects_path,
-    method: :get,
-    builder: NitroKit::FormBuilder,
-    data: { turbo_frame: FRAME_ID, turbo_action: "replace" }
-  ) do |form|
-    form.group do
-      form.field(:name_cont, as: :search, label: "Search")
-      form.submit("Apply filters")
+render NitroKit::Table.new(
+  sort: query.current_sort,
+  direction: query.direction
+) do |table|
+  table.caption("Projects")
+  table.thead do
+    table.tr do
+      table.th(:name, sort: :name, href: query.sort_url(:name),
+        sort_data: { turbo_action: "replace" })
     end
   end
-
-  render NitroKit::Table.new(
-    sort: query.current_sort,
-    direction: query.direction
-  ) do |table|
-    table.caption("Projects")
-    table.thead do
-      table.tr do
-        table.th(:name, sort: :name, href: query.sort_url(:name),
-          sort_data: { turbo_action: "replace" })
-      end
-    end
-    table.tbody do
-      query.records.each { |project| render_project_row(table, project) }
-    end
+  table.tbody do
+    query.records.each { |project| render_project_row(table, project) }
   end
+end
 
-  render NitroKit::PaginationBar.new do |bar|
-    bar.summary(query.summary)
-    bar.pagination(query.pagination)
-  end
+render NitroKit::PaginationBar.new do |bar|
+  bar.summary(query.summary)
+  bar.pagination(query.pagination)
 end
 ```
 
-Reset with the plain collection URL so stale parameters disappear. Sort and
-filter controls use `turbo_action: "replace"`; pagination inherits the frame's
-`advance`. Give View, Edit, and New links
-`data: { turbo_frame: "_top" }` or place them outside the frame.
+Reset with the plain collection URL so stale parameters disappear. Sort,
+filter, and reset controls may use `turbo_action: "replace"` to avoid filling
+history with refinements; pagination uses ordinary links and advances history.
+No result frame, frame targets, cache opt-out, or custom JavaScript is needed.
+Optional autosubmit may call the same GET form's `requestSubmit`.
 
-No Stimulus controller is required. Optional autosubmit may call the same GET
-form's `requestSubmit`; the URL remains the source of truth.
+## When a frame is useful
+
+For an independent collection within a larger page, wrap the region in a
+stable `turbo_frame_tag("projects-results", data: { turbo_action: "advance" })`.
+Return that frame for populated and empty responses, and target `_top` on
+links that should open complete pages. Exercise repeated refinements followed
+by pagination and Back/Forward, checking actual rows and controls as well as
+the URL. Do not disable Turbo caching just to make a flaky history test pass;
+first distinguish preview/test timing from an incorrect restored snapshot.
 
 ## Keep tables intact at every viewport
 
@@ -113,8 +117,8 @@ Table(data: { ui: "resource-table" }, table_aria: { label: "Projects" }) do |tab
         table.td(project.updated_at.to_date.to_fs(:long), data: { resource_column: "secondary" })
         table.td(data: { resource_column: "actions" }) do
           Flex(dir: :row, gap: 1, align: :stretch, justify: :end) do
-            Button("View", href: project_path(project), size: :sm, data: { turbo_frame: "_top" })
-            Button("Edit", href: edit_project_path(project), size: :sm, data: { turbo_frame: "_top" })
+            Button("View", href: project_path(project), size: :sm)
+            Button("Edit", href: edit_project_path(project), size: :sm)
           end
         end
       end
@@ -136,8 +140,12 @@ scroll wrapper automatically; no extra overflow wrapper is needed.
 ## Tests
 
 Request-test parameter preservation, safe fallback for invalid sort keys, and
-the stable frame in populated and empty responses. System-test filter → sort →
-paginate → Back/Forward, address-bar changes, and a row link leaving the frame.
+populated and empty responses. System-test repeated filter → sort →
+paginate → Back/Forward, restored controls and rows, address-bar changes, and
+full-page row links. A correct URL alone does not prove restoration worked.
+When a visit displays a cached preview, wait for `html[data-turbo-preview]` to
+disappear before entering fields or submitting another form. Keep caching
+enabled in the test.
 Use Capybara waiting assertions, not sleeps. At 390px, assert that the page stays within the viewport and the table scrolls
 horizontally to reveal intact row actions, including a long unbroken resource
 name and a multi-word status. Repeat in light and dark appearances.

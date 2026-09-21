@@ -81,3 +81,8 @@ before changing application code. Disable Chrome's background throttling or
 use a test-only `requestAnimationFrame` shim when necessary. Never ship that
 workaround in the application or replace a conventional Turbo flow to satisfy
 one browser driver.
+
+For a full-page CRUD index, default to ordinary GET forms and links with Turbo
+Drive and normal caching. Use Frames for independently navigable regions.
+History tests must check restored rows and controls, not just the URL, and
+wait past `html[data-turbo-preview]` before interacting with a new page.

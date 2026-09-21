@@ -32,6 +32,9 @@ a centered `Container(size: :md)` or `Container(size: :lg)` without extra paddin
 | Show                  | Status or metadata, then the resource. Keep lifecycle actions in the normal detail flow.                                |
 | Edit destructive area | One `DangerZone` with a safe escape. Do not put permanent deletion on every show page.                                  |
 
+Use ordinary GET forms and links with Turbo Drive for a full-page index. Keep
+default caching; reserve Frames for independently navigable page regions.
+
 Keep all columns and View/Edit actions intact at 390px. Use Table's built-in
 horizontal scroll wrapper as shown in [Queryable collection](queryable_collection.md).
 Do not hide columns or stack row actions to squeeze the table into the viewport.
