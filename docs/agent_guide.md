@@ -81,6 +81,10 @@ explicitly authorized.
 - Put stacked fields and actions in `form.group` or `FieldGroup`.
 - Use documented component options, compound methods, native attributes, and
   public `--nk-*` tokens.
+- Default to Nitro `Dialog` for destructive confirmations, even short member
+  removal or invitation revocation. See the destructive-action pattern.
+- Let the shell own gutters and each page choose content width: full width for
+  tables, a centered Container for bounded forms or reading content.
 - Keep product policy, records, routes, authorization, queries, DOM IDs, and
   server responses in application code.
 - Do not copy Nitro source, add `nk_*` helpers, mutate Nitro controllers, or

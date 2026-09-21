@@ -58,7 +58,7 @@ Keep frames around complete resource or collection regions, not individual butto
 - Do not describe that HTML branch as a JavaScript-free interaction when its
   control still depends on Turbo or a closed overlay.
 - Let GET query parameters be the source of truth for filtering, sorting, and pagination.
-- Use native Nitro Dialog behavior for reviewed destructive actions. Use `data: { turbo_confirm: ... }` for compact confirmations that do not need a dialog.
+- Use Nitro Dialog for destructive confirmations, including short delete, remove, and revoke flows. Put the real Rails form inside the dialog; do not add `turbo_confirm`. Follow `docs/patterns/destructive_action.md`.
 - Render flash through `NitroKit::Toast::FlashMessages`; the application owns setting the flash.
 
 ## Preserve ownership

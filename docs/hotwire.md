@@ -40,8 +40,8 @@ interaction available.
 ## Stimulus and lifecycle
 
 Let Turbo submit real Rails forms. Use `data-turbo-submits-with` for submission
-feedback and `data-turbo-confirm` only for compact confirmation. A reviewed
-destructive flow still submits a real Rails form; use the
+feedback. Destructive confirmations use Nitro Dialog, including compact
+remove and revoke flows, with a real Rails form inside; use the
 [destructive action pattern](patterns/destructive_action.md).
 
 Keep application controllers declarative. Prefer `data-action` over manually

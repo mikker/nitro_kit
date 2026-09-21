@@ -57,7 +57,9 @@ If the gem is not installed, say that the skill requires Nitro Kit and follow th
 7. Verify closed options and required compound declarations before rendering.
 8. For authenticated CRUD, prefer a sidebar `AppShell` with a `Toolbar` that
    owns the route's single `h1` and basic actions. The shell main region owns
-   one content gutter. Do not repeat that heading in `PageHeader`, or wrap each
+   one content gutter, not a universal maximum width. Tables fill the canvas;
+   form and reading pages may use a centered Container inside that gutter.
+   Do not repeat that heading in `PageHeader`, or wrap each
    table, form, and detail region in another Card. At narrow widths, preserve
    the full title and persistent actions by stacking the trailing actions below
    the title rather than clipping either region.
@@ -92,3 +94,7 @@ completeness. Do not use a green Doctor result as proof that every relevant
 screen, state, or catalog workflow has been implemented.
 
 For a migration, Doctor is an inventory, not visual proof. Run representative form and component rendering with `ActiveModel::Translation.raise_on_missing_translations` enabled when the application uses strict i18n. Compare the same representative flows in a browser at wide and narrow widths, exercise keyboard focus, and inspect computed styles for missing application classes, stacked Button content, broken compound corners, double focus rings, clipping, and theme drift. Re-audit rendered native buttons, Rails button helpers, and application-owned button classes before declaring the conversion complete. Search the whole application for `desperately_need_a_class:` and review every result, aiming for zero. Move layout and visual treatment to application-owned wrappers, remove generic class forwarding, accept incidental Nitro defaults, and keep unmatched product UI application-owned; retain only documented external-integration hooks.
+
+Use Nitro Dialog for destructive confirmations, including simple deletion,
+member removal, and invitation revocation. Read `docs/patterns/destructive_action.md`;
+do not substitute native browser confirmation for short messages.

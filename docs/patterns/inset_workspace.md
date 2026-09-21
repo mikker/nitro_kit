@@ -29,6 +29,11 @@ on the left or gap on the right. On mobile, hide the brand and place
 the title after the navigation button, with the action at the far right. Do not
 add padding to the shell sidebar, an outer page container, and the page itself.
 
+The content wrapper fills the canvas and owns only its gutter. Let tables use
+that width. Bound individual forms or reading regions with a centered
+`Container(size: :md)` or `Container(size: :lg)` inside the gutter; do not add
+a shared shell maximum width.
+
 ## Compose the frame
 
 Use application-owned `data-ui` hooks. This is ordinary application CSS, not a

@@ -21,7 +21,9 @@ route's one `h1` and persistent actions in the topbar `Toolbar`. Child routes
 place one compact Back link before the title. One layout element inside `shell.main`
 owns page padding and vertical spacing; child pages add no outer gutter. For an inset treatment,
 use [Inset workspace](inset_workspace.md) rather than adding padding to each
-shell region.
+shell region. The shell owns gutters, not a universal maximum width. Let
+indexes and tables fill the canvas; bound form or reading content locally with
+a centered `Container(size: :md)` or `Container(size: :lg)` without extra padding.
 
 | Route                 | Composition                                                                                                             |
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------- |

@@ -5,8 +5,9 @@ archive, or similarly destructive Rails actions.
 
 ## Summary
 
-- Use `NitroKit::Dialog` when the user must review impact or type confirmation;
-  use Turbo's native browser confirmation for a one-sentence consequence.
+- Use `NitroKit::Dialog` for destructive confirmations, including simple
+  deletion, member removal, and invitation revocation. A short consequence
+  still belongs in the application dialog, not a native browser confirm.
 - A real Rails form owns the request, and the server owns authorization.
 - Put permanent deletion on the edit route, not the operational show route.
 - Use a server-rendered review route when confirmation must work without
@@ -14,13 +15,16 @@ archive, or similarly destructive Rails actions.
 
 ## Choose one confirmation path
 
-| Need                                            | Pattern                                                         |
-| ----------------------------------------------- | --------------------------------------------------------------- |
-| One-sentence confirmation                       | Real form with `data: { turbo_confirm: "Delete permanently?" }` |
-| Reviewed impact or typed confirmation           | `DangerZone` containing a Dialog and real form                  |
-| Confirmation required without client JavaScript | Ordinary link to a server-rendered review page                  |
+Use a Dialog with a clear title, a short consequence, a Cancel control, and a
+real Rails form with a specifically named destructive submit. Use stable,
+record-specific dialog IDs when rendering repeated actions in a table.
+Put permanent deletion in an edit-page `DangerZone`; invitation revocation
+may open a compact Dialog from its table row without adding a DangerZone.
 
-Never stack `turbo_confirm` inside a Dialog.
+Use an ordinary link to a server-rendered review page when confirmation must
+work without client JavaScript. Do not add `turbo_confirm` to a Dialog form:
+it would ask twice. Native browser confirmations are not the default Nitro Kit
+experience; keep them only when the host application explicitly requires them.
 
 ```ruby
 render NitroKit::DangerZone.new(

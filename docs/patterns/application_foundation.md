@@ -30,10 +30,13 @@ Use one `AppShell`, normally `layout: :sidebar`, for authenticated routes.
 `AppNavigation` owns brand and destinations; a `Toolbar` in `shell.topbar`
 owns the route's single `h1` and persistent actions. One wrapper inside
 `shell.main` owns responsive page padding. Do not add another viewport-height
-or outer-padding rule in child pages.
+or outer-padding rule in child pages. The shell does not cap content width.
+Tables fill the available canvas; individual form or reading pages may use a
+`Container(size: :md)` or `Container(size: :lg)` inside the shared gutter.
+Keep the Container intact so its width and centering stay together.
 
 For an inset workspace, use the complete [inset composition](inset_workspace.md).
-It works with both sidebar-bearing layouts and names the owner of rail
+It describes the sidebar canvas and names the owner of rail
 padding, canvas gaps, and page gutters. Do not reconstruct it from unrelated
 spacing overrides.
 
