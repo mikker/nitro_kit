@@ -106,7 +106,7 @@ class GalleryReferenceTest < ActionDispatch::IntegrationTest
 
     assert_select "[data-gallery-pattern='queryable_collection']" do
       assert_select "h3", text: "Queryable collection"
-      assert_select "li", text: /One GET-driven Turbo Frame owns filters, sorting, results/
+      assert_select "li", text: /Default to ordinary GET forms and links with Turbo Drive/
     end
 
     get gallery_component_path("settings-section")

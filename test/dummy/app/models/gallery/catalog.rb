@@ -517,10 +517,10 @@ module Gallery
         subcategory: :application,
         slug: "app-shell",
         title: "Application shell",
-        description: "Sidebar, topbar, and sidebar application frames that reflow one AppNavigation tree through an accessible narrow drawer.",
+        description: "Sidebar and topbar application frames that reflow one AppNavigation tree through an accessible narrow drawer.",
         page: Gallery::Components::AppShellPage,
         states: [],
-        expected_roots: %w[app-shell app-navigation icon badge button-group button container flex grid page-header card]
+        expected_roots: %w[app-shell app-navigation icon badge button container flex grid page-header card]
       ),
       Entry.new(
         kind: :component,
