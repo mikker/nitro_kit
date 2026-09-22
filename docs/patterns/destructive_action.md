@@ -36,24 +36,34 @@ render NitroKit::DangerZone.new(
     render NitroKit::Dialog.new(id: dom_id(project, :delete_dialog)) do |dialog|
       dialog.trigger("Review deletion", variant: :destructive)
       dialog.panel(title: "Delete #{project.name}?") do
-        form_with(
-          model: project,
-          method: :delete,
-          data: { turbo_frame: "_top" }
-        ) do
+        render NitroKit::Flex.new(dir: :row, gap: 2, justify: :end, wrap: :wrap) do
           render NitroKit::Button.new(
-            "Delete project",
-            type: :submit,
-            variant: :destructive
+            "Cancel",
+            html: { command: "close", commandfor: "#{dialog.id}-panel" }
           )
+          form_with(
+            model: project,
+            method: :delete,
+            data: { turbo_frame: "_top" }
+          ) do
+            render NitroKit::Button.new(
+              "Delete project",
+              type: :submit,
+              variant: :destructive
+            )
+          end
         end
-        dialog.close_button(label: "Cancel deletion")
       end
     end
   end
   zone.escape NitroKit::Button.new("Keep project", href: project_path(project))
 end
 ```
+
+Keep Cancel and the destructive action together in this right-aligned row.
+`dialog.close_button` configures the corner X and its accessible label; it does
+not render a visible footer Cancel button. The ordinary Cancel Button uses
+native commands with Nitro's existing browser fallback.
 
 The `_top` target keeps the redirect out of a surrounding frame. The dialog is
 not a security boundary; load and authorize the record on the server.

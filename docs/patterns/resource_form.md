@@ -15,6 +15,12 @@ and update forms.
 
 ## Form
 
+Use one full-width column of fields inside a centered `Container(size: :lg)`
+for ordinary resource forms. A `Fieldset` puts its legend above the controls.
+Reserve the two-column `SettingsSection` for settings pages with enough room
+for both explanatory text and fields; nesting it in a narrow form container
+squeezes the controls.
+
 ```ruby
 module UI
   class ProjectForm < Phlex::HTML
@@ -26,18 +32,16 @@ module UI
     end
 
     def view_template
-      render NitroKit::SettingsSection.new(title: "Project details") do |section|
-        section.form do
-          form_with(
-            model: @project,
-            builder: NitroKit::FormBuilder,
-            id: @form_id
-          ) do |form|
-            form.group do
-              form.field(:name, required: true)
-              form.field(:status, as: :select, options: Project.statuses.keys)
-              form.field(:description, as: :textarea)
-            end
+      render NitroKit::Container.new(size: :lg) do
+        form_with(
+          model: @project,
+          builder: NitroKit::FormBuilder,
+          id: @form_id
+        ) do |form|
+          form.fieldset(legend: "Project details") do
+            form.field(:name, required: true)
+            form.field(:status, as: :select, options: Project.statuses.keys)
+            form.field(:description, as: :textarea)
           end
         end
       end

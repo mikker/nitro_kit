@@ -214,9 +214,11 @@ module NitroKit
         )
       ) do
         render_close_button if @dismissible
-        render_title
-        render_description if @panel.description
-        raw(safe(content))
+        header(**slot_attributes(:header)) do
+          render_title
+          render_description if @panel.description
+        end
+        div(**slot_attributes(:body)) { raw(safe(content)) }
       end
     end
 

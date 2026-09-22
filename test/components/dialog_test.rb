@@ -65,7 +65,7 @@ class DialogTest < ActiveSupport::TestCase
     panel = node.at_css("[data-slot='dialog-panel']")
 
     assert_equal(
-      [ "dialog-close", "dialog-title", "dialog-description", nil ],
+      [ "dialog-close", "dialog-header", "dialog-body" ],
       panel.element_children.map { |child| child["data-slot"] }
     )
     assert_equal "Close terms", panel.at_css("[data-slot='dialog-close']")["aria-label"]

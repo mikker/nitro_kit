@@ -287,3 +287,9 @@ interaction merely from server-rendered markup in this table.
 The interactive theme customizer is documentation-site software rather than a component contract. The gallery instead verifies the theming contract itself: the documented token set, the set declared in `src/stylesheets/nitro_kit/tokens.css`, and the set the bundled stylesheet serves are the same set, component CSS consumes only declared public tokens, and scoped `--nk-*` overrides on an application-owned wrapper reach Nitro descendants through inheritance.
 
 The public [customization guide](customization.md) covers the complete token catalog, load order, scoped overrides, light/dark/system selectors, appearance and CSP setup, customizer-export installation, shell composition, and copyable Rails examples.
+
+Dialog panels reset text alignment to `start`. The `dialog-header` keeps the
+title and description clear of the sticky corner close control; `dialog-body`
+owns the application content below it. `close_button` configures that corner
+control, not a footer action. Compose visible Cancel and submit Buttons in a
+right-aligned Flex row as shown in the destructive-action pattern.

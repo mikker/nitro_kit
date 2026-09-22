@@ -59,6 +59,8 @@ If the gem is not installed, say that the skill requires Nitro Kit and follow th
    owns the route's single `h1` and basic actions. The shell main region owns
    one content gutter, not a universal maximum width. Tables fill the canvas;
    form and reading pages may use a centered Container inside that gutter.
+   Simple resource forms use a single-column Fieldset in Container lg so fields
+   use the available width; reserve split SettingsSections for roomy settings pages.
    Do not repeat that heading in `PageHeader`, or wrap each
    table, form, and detail region in another Card. At narrow widths, preserve
    the full title and persistent actions by stacking the trailing actions below

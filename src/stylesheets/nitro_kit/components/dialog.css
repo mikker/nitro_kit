@@ -10,6 +10,7 @@
     margin: auto;
     padding: calc(var(--nk-space) * 6);
     overflow: auto;
+    text-align: start;
     color: var(--nk-color-foreground);
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
@@ -27,6 +28,23 @@
     position: static;
   }
 
+  :where(
+      [data-nk="dialog"]
+        > [data-slot="dialog-panel"]
+        > [data-slot="dialog-header"]
+    ) {
+    display: flow-root;
+    margin-block-end: calc(var(--nk-space) * 4);
+  }
+
+  :where(
+      [data-nk="dialog"]
+        > [data-slot="dialog-panel"]
+        > [data-slot="dialog-body"]
+    ) {
+    clear: both;
+  }
+
   :where([data-nk="dialog"] [data-slot="dialog-title"]) {
     font-size: var(--nk-title-surface-size);
     font-weight: var(--nk-title-surface-weight);
@@ -36,7 +54,6 @@
 
   :where([data-nk="dialog"] [data-slot="dialog-description"]) {
     margin-block-start: calc(var(--nk-space) * 2);
-    margin-block-end: calc(var(--nk-space) * 4);
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
     line-height: var(--nk-leading-relaxed);

@@ -28,7 +28,7 @@ a centered `Container(size: :md)` or `Container(size: :lg)` without extra paddin
 | Route                 | Composition                                                                                                             |
 | --------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | Index                 | Optional short introduction, then Table or EmptyState and pagination. Use DataSection only for multiple named datasets. |
-| New/Edit              | One `SettingsSection` and one shared form component. A toolbar submit targets the form's stable `form:` ID.             |
+| New/Edit              | One single-column `Fieldset` and one shared form component. A toolbar submit targets the form's stable `form:` ID.      |
 | Show                  | Status or metadata, then the resource. Keep lifecycle actions in the normal detail flow.                                |
 | Edit destructive area | One `DangerZone` with a safe escape. Do not put permanent deletion on every show page.                                  |
 

@@ -54,18 +54,20 @@ module Gallery
                 title: "Remove Katherine Johnson?",
                 description: "Katherine will immediately lose access to this workspace."
               ) do
-                dialog.close_button(label: "Keep team member")
-                form(
-                  action: "/gallery/destructive_action",
-                  method: "post",
-                  id: "gallery-dialog-delete-form"
-                ) do
-                  input(type: "hidden", name: "_method", value: "delete")
-                  render NitroKit::Button.new(
-                    "Remove team member",
-                    type: :submit,
-                    variant: :destructive
-                  )
+                render NitroKit::Flex.new(dir: :row, gap: 2, justify: :end, wrap: :wrap) do
+                  render NitroKit::Button.new("Cancel", html: { command: "close", commandfor: "#{dialog.id}-panel" })
+                  form(
+                    action: "/gallery/destructive_action",
+                    method: "post",
+                    id: "gallery-dialog-delete-form"
+                  ) do
+                    input(type: "hidden", name: "_method", value: "delete")
+                    render NitroKit::Button.new(
+                      "Remove team member",
+                      type: :submit,
+                      variant: :destructive
+                    )
+                  end
                 end
               end
             end
