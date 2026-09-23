@@ -6,7 +6,7 @@
 
 **Audience:** Rails developers evaluating or installing Nitro Kit.
 
-Nitro Kit is a gem-owned Phlex UI system for Rails. The `2.0.0.alpha.6` prerelease
+Nitro Kit is a gem-owned Phlex UI system for Rails. The `2.0.0.beta.1` prerelease
 is under active testing and is not stable.
 
 [![RubyGems](https://img.shields.io/gem/v/nitro_kit.svg)](https://rubygems.org/gems/nitro_kit)
@@ -16,7 +16,7 @@ is under active testing and is not stable.
 Pin the prerelease:
 
 ```ruby
-gem "nitro_kit", "2.0.0.alpha.6"
+gem "nitro_kit", "2.0.0.beta.1"
 ```
 
 ```sh

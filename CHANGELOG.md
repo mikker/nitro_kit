@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+## 2.0.0.beta.1
+
+### Changed
+
+- Promote Nitro Kit 2 to beta after application evals and real-project review.
+- Update installation examples and public contracts to pin the beta release.
+- No component runtime or API changes from 2.0.0.alpha.6.
+
+### Upgrade notes
+
+- Pin `2.0.0.beta.1` explicitly. Beta releases may still change APIs; review
+  release notes before updating. Nitro Kit 1 applications require migration.
+
 ## 2.0.0.alpha.6
 
 ### Changed
