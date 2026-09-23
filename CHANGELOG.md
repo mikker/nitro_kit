@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+## 2.0.0.alpha.6
+
+### Changed
+
+- Simplify application shells and responsive resource layouts, with clearer
+  guidance on page widths and application-owned spacing.
+- Default full-page search, filtering, and pagination to Turbo Drive with
+  normal history and caching behavior.
+- Improve dialog composition: reset inherited text alignment, keep the close
+  control clear of content, and document explicit Cancel actions.
+- Improve upload and mobile gallery examples and resource form compositions.
+
+### Upgrade notes
+
+- Use the documented dialog header/body/footer composition and add a visible
+  Cancel action when a confirmation needs one; the corner close control is
+  separate.
+- Review application-owned pages for unnecessary width limits. Existing
+  copied source is not updated automatically by this gem release.
+
 ## 2.0.0.alpha.5
 
 ### Added
