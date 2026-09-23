@@ -44,11 +44,12 @@ class ProductResourceResponsiveTest < ApplicationSystemTestCase
             const nav = shell.querySelector('[data-slot="app-navigation-body"]')
             const item = nav.querySelector('[aria-current]').getBoundingClientRect()
             const main = shell.querySelector('[data-slot="app-shell-main"]').getBoundingClientRect()
+            const scrollbar = nav.offsetWidth - nav.clientWidth
             return { padding: [style.paddingTop, style.paddingRight, style.paddingBottom, style.paddingLeft].map(parseFloat),
               brand: getComputedStyle(shell.querySelector('[data-slot="app-shell-brand"]')).display,
               titleLeft: title.left, titleMiddle: (title.top+title.bottom)/2,
               actionRight: action.right, actionMiddle: (action.top+action.bottom)/2, triggerRight: trigger.right,
-              railGutters: [item.left, main.left-item.right] }
+              railGutters: [item.left, main.left-item.right-scrollbar] }
           })()
         JS
         if width == 390

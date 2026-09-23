@@ -197,7 +197,7 @@ class ResponsiveThemeTest < ApplicationSystemTestCase
       assert_horizontally_inside_viewport(selector)
 
       overflow = evaluate_script("getComputedStyle(arguments[0]).overflowX", find(selector))
-      assert_equal "auto", overflow
+      assert_equal "scroll", overflow
     end
 
     def assert_settings_layout_containment(viewport:)
