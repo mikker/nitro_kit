@@ -70,6 +70,8 @@
     font-size: var(--nk-text-sm);
     text-align: center;
     text-wrap: pretty;
+    /* The alt text is an anonymous grid item with a min-content floor. */
+    overflow-wrap: anywhere;
   }
 }
 

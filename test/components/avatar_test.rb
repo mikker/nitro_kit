@@ -24,7 +24,19 @@ class AvatarTest < ActiveSupport::TestCase
     end
   end
 
-  test "supports keyword sources and explicit fallbacks" do
+test "long fallbacks step down through data-length and longer ones raise" do
+  fallback = ->(**options) { render_node(NitroKit::Avatar.new(**options)).at_css("[data-slot='avatar-fallback']") }
+
+  assert_nil fallback.call(alt: "Ada Lovelace")["data-length"]
+  assert_nil fallback.call(alt: "Yamada Taro", fallback: "山田")["data-length"]
+  assert_equal "3", fallback.call(alt: "Deploy bot", fallback: "BOT")["data-length"]
+  assert_equal "4", fallback.call(alt: "Platform team", fallback: "TEAM")["data-length"]
+
+  assert_raises(ArgumentError) { NitroKit::Avatar.new(alt: "Robot", fallback: "ROBOT") }
+  assert_raises(ArgumentError) { NitroKit::Avatar.new(alt: "Robot", fallback: " ") }
+end
+
+test "supports keyword sources and explicit fallbacks" do
     node = render_node(
       NitroKit::Avatar.new(src: IMAGE_URL, alt: "Ada Lovelace", fallback: "NK")
     )

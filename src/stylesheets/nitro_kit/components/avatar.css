@@ -52,6 +52,16 @@
     z-index: 1;
     object-fit: cover;
   }
+
+  /* Derived initials are two characters. Explicit fallbacks may run to four,
+     so longer ones step the type down instead of clipping mid-letter. */
+  :where([data-nk="avatar"] > [data-slot="avatar-fallback"][data-length="3"]) {
+    font-size: 80%;
+  }
+
+  :where([data-nk="avatar"] > [data-slot="avatar-fallback"][data-length="4"]) {
+    font-size: 62.5%;
+  }
 }
 
 @layer nitro-kit.state {

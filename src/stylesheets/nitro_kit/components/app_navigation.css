@@ -78,6 +78,8 @@
     min-block-size: var(--nk-control-height-md);
     margin: var(--nk-space) 0;
     padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
+    /* The label text is an anonymous flex item with a min-content floor. */
+    overflow-wrap: anywhere;
     list-style: none;
     user-select: none;
     cursor: pointer;

@@ -3,6 +3,9 @@
 module NitroKit
   class Avatar < Component
     SIZES = %i[xs sm md lg].freeze
+    # Derived initials never exceed two characters; explicit fallbacks may run
+    # to four, which the stylesheet steps down so they stay inside the circle.
+    MAX_FALLBACK_LENGTH = 4
 
     def initialize(
       src: nil,
@@ -30,6 +33,7 @@ module NitroKit
         raise ArgumentError, "Avatar images require alt: text unless decorative: true"
       end
       @fallback = fallback || initials_for(alt)
+      validate_fallback!(@fallback) unless fallback.nil?
       @size = validate_choice!(:size, size, SIZES)
       root_aria = fallback_aria(aria)
 
@@ -61,7 +65,7 @@ module NitroKit
         span(
           **slot_attributes(
             :fallback,
-            attributes: src? ? { data: { nk__avatar_target: "fallback" } } : {},
+            attributes: { data: { nk__avatar_target: src? ? "fallback" : nil, length: fallback_length }.compact },
             aria: { hidden: (src? || !alt.empty?) ? true : nil }
           )
         ) { fallback }
@@ -97,7 +101,22 @@ module NitroKit
       label_key ? aria : { label: alt }.merge(aria)
     end
 
-    def initials_for(name)
+def validate_fallback!(value)
+  if value.strip.empty?
+    raise ArgumentError, "fallback must not be blank"
+  end
+  if value.grapheme_clusters.size > MAX_FALLBACK_LENGTH
+    raise ArgumentError, "fallback must be at most #{MAX_FALLBACK_LENGTH} characters; an avatar shows initials, not a word"
+  end
+end
+
+# Only fallbacks longer than derived initials need the stylesheet to react.
+def fallback_length
+  length = fallback.grapheme_clusters.size
+  length if length > 2
+end
+
+def initials_for(name)
       words = name.strip.split
       return "?" if words.empty?
 

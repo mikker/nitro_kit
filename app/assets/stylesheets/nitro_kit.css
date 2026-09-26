@@ -654,9 +654,19 @@
   }
 
   /* Nitro-owned boxes never establish a min-content floor, so long slot
-     content shrinks instead of overflowing its flex or grid parent. */
+     content shrinks instead of overflowing its flex or grid parent, and a
+     word too long for its line breaks rather than painting past the box.
+     `break-word` leaves intrinsic sizing alone, so nothing shrinks that would
+     not have shrunk already; `nowrap` slots keep their single line. */
   :where([data-nk], [data-nk] [data-slot]) {
     min-inline-size: 0;
+    overflow-wrap: break-word;
+  }
+
+  /* A legend sizes to its content regardless of its fieldset, so a long
+     label would widen the page; cap it and let it wrap like any label. */
+  :where([data-nk] legend) {
+    max-inline-size: 100%;
   }
 
   :where(html, :host) {
@@ -1105,6 +1115,8 @@
     min-block-size: var(--nk-control-height-md);
     margin: var(--nk-space) 0;
     padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
+    /* The label text is an anonymous flex item with a min-content floor. */
+    overflow-wrap: anywhere;
     list-style: none;
     user-select: none;
     cursor: pointer;
@@ -2052,6 +2064,16 @@
     z-index: 1;
     object-fit: cover;
   }
+
+  /* Derived initials are two characters. Explicit fallbacks may run to four,
+     so longer ones step the type down instead of clipping mid-letter. */
+  :where([data-nk="avatar"] > [data-slot="avatar-fallback"][data-length="3"]) {
+    font-size: 80%;
+  }
+
+  :where([data-nk="avatar"] > [data-slot="avatar-fallback"][data-length="4"]) {
+    font-size: 62.5%;
+  }
 }
 
 @layer nitro-kit.state {
@@ -2133,7 +2155,9 @@
   }
 
   /* The chip is one of the heads: same fill as the avatar fallbacks and the
-     same hairline ring, drawn as a real border since nothing overlaps it. */
+     same hairline ring, drawn as a real border since nothing overlaps it.
+     Its size is a minimum, so a wide count grows it into a pill instead of
+     spilling past the circle. */
   :where([data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]) {
     /* Preceding avatars are positioned, so the overflow chip must be too or
        their paint order covers its leading "+". */
@@ -2143,16 +2167,18 @@
     font-weight: var(--nk-font-weight-semibold);
     line-height: 1;
     color: var(--nk-color-muted-foreground);
+    white-space: nowrap;
     border: var(--nk-border-width) solid
       color-mix(in oklab, var(--nk-color-foreground) 10%, transparent);
     border-radius: var(--nk-radius-full);
+    padding-inline: var(--nk-space);
   }
 
   :where(
       [data-nk="avatar-stack"][data-size="xs"]
         > [data-slot="avatar-stack-overflow"]
     ) {
-    inline-size: var(--nk-avatar-size-xs);
+    min-inline-size: var(--nk-avatar-size-xs);
     block-size: var(--nk-avatar-size-xs);
     font-size: calc(var(--nk-text-xs) * 0.875);
   }
@@ -2161,7 +2187,7 @@
       [data-nk="avatar-stack"][data-size="sm"]
         > [data-slot="avatar-stack-overflow"]
     ) {
-    inline-size: var(--nk-avatar-size-sm);
+    min-inline-size: var(--nk-avatar-size-sm);
     block-size: var(--nk-avatar-size-sm);
     font-size: var(--nk-text-xs);
   }
@@ -2170,7 +2196,7 @@
       [data-nk="avatar-stack"][data-size="md"]
         > [data-slot="avatar-stack-overflow"]
     ) {
-    inline-size: var(--nk-avatar-size-md);
+    min-inline-size: var(--nk-avatar-size-md);
     block-size: var(--nk-avatar-size-md);
     font-size: var(--nk-text-sm);
   }
@@ -2179,7 +2205,7 @@
       [data-nk="avatar-stack"][data-size="lg"]
         > [data-slot="avatar-stack-overflow"]
     ) {
-    inline-size: var(--nk-avatar-size-lg);
+    min-inline-size: var(--nk-avatar-size-lg);
     block-size: var(--nk-avatar-size-lg);
     font-size: var(--nk-text-base);
   }
@@ -4464,6 +4490,21 @@
   }
 }
 
+@layer nitro-kit.base {
+  /* Message children are grid items placed at start, so they size to their
+     content; cap them at the cell so one long word wraps inside the target. */
+  :where(
+      [data-nk="dropzone"]
+        [data-slot="dropzone-message"]
+        > [data-slot="dropzone-title"],
+      [data-nk="dropzone"]
+        [data-slot="dropzone-message"]
+        > [data-slot="dropzone-description"]
+    ) {
+    max-inline-size: 100%;
+  }
+}
+
 /* Source: src/stylesheets/nitro_kit/components/empty_state.css */
 @layer nitro-kit.base {
   :where([data-nk="empty-state"]) {
@@ -4486,7 +4527,7 @@
   }
 
   :where([data-nk="empty-state"] > [data-slot="empty-state-title"]) {
-    max-inline-size: var(--nk-content-md);
+    max-inline-size: min(100%, var(--nk-content-md));
     font-size: var(--nk-title-surface-size);
     font-weight: var(--nk-title-surface-weight);
     line-height: var(--nk-leading-tight);
@@ -4494,7 +4535,7 @@
   }
 
   :where([data-nk="empty-state"] > [data-slot="empty-state-description"]) {
-    max-inline-size: var(--nk-content-md);
+    max-inline-size: min(100%, var(--nk-content-md));
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
     line-height: var(--nk-leading-relaxed);
@@ -6238,6 +6279,9 @@
   @media (width < 48rem) {
     :where([data-nk="pagination-bar"]) {
       flex-direction: column;
+      /* A wrapping column sizes its line to the widest item, so stretch
+         could not narrow anything; one column never needs to wrap. */
+      flex-wrap: nowrap;
       align-items: stretch;
     }
 
@@ -6506,6 +6550,8 @@
     font-size: var(--nk-text-sm);
     text-align: center;
     text-wrap: pretty;
+    /* The alt text is an anonymous grid item with a min-content floor. */
+    overflow-wrap: anywhere;
   }
 }
 
@@ -6991,6 +7037,8 @@
     display: flex;
     gap: calc(var(--nk-space) * 2);
     align-items: center;
+    /* The label text is an anonymous flex item with a min-content floor. */
+    overflow-wrap: anywhere;
     min-block-size: var(--nk-control-height-sm);
     padding: var(--nk-space) calc(var(--nk-space) * 2);
     color: var(--nk-color-muted-foreground);
@@ -7935,12 +7983,24 @@
     justify-content: flex-end;
     margin-inline-start: auto;
   }
+
+  /* Application content in a region is a flex item; without this a heading
+     holding one long word keeps its min-content width and widens the page. */
+  :where(
+      [data-nk="toolbar"] > [data-slot="toolbar-leading"] > *,
+      [data-nk="toolbar"] > [data-slot="toolbar-trailing"] > *
+    ) {
+    min-inline-size: 0;
+  }
 }
 
 @layer nitro-kit.state {
   @media (width < 48rem) {
     :where([data-nk="toolbar"]) {
       flex-direction: column;
+      /* A wrapping column sizes its line to the widest item, so stretch
+         could not narrow anything; one column never needs to wrap. */
+      flex-wrap: nowrap;
       align-items: stretch;
     }
 
@@ -7973,6 +8033,9 @@
     line-height: var(--nk-leading-normal);
     text-wrap: pretty;
     pointer-events: auto;
+    /* Hidden tooltips leave layout entirely; a merely invisible one still
+       widens the page when it hangs past the viewport edge. */
+    display: none;
     visibility: hidden;
     background: var(--nk-color-elevated);
     border: var(--nk-border-width) solid var(--nk-color-border);
@@ -7981,7 +8044,8 @@
     opacity: 0;
     transition:
       opacity var(--nk-duration-fast) var(--nk-ease),
-      visibility var(--nk-duration-fast) var(--nk-ease) allow-discrete;
+      visibility var(--nk-duration-fast) var(--nk-ease) allow-discrete,
+      display var(--nk-duration-fast) var(--nk-ease) allow-discrete;
   }
 
   :where([data-nk="tooltip"] > [data-slot="tooltip-content"]::before) {
@@ -8065,8 +8129,13 @@
       [data-nk="tooltip"]:not([data-dismissed]):focus-within
         > [data-slot="tooltip-content"]
     ) {
+    display: block;
     visibility: visible;
     opacity: 1;
+
+    @starting-style {
+      opacity: 0;
+    }
   }
 
   @media (hover: hover) {
@@ -8074,8 +8143,13 @@
         [data-nk="tooltip"]:not([data-dismissed]):hover
           > [data-slot="tooltip-content"]
       ) {
+      display: block;
       visibility: visible;
       opacity: 1;
+
+      @starting-style {
+        opacity: 0;
+      }
     }
   }
 
@@ -8207,6 +8281,9 @@
     padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
     text-align: start;
     vertical-align: top;
+    /* Prose tables have no scroll wrapper, so an unbroken email or
+       identifier must be allowed to break inside its cell. */
+    overflow-wrap: anywhere;
     border-block-end: var(--nk-border-width) solid var(--nk-color-border);
   }
 
@@ -8348,6 +8425,7 @@
       padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
       text-align: start;
       vertical-align: top;
+      overflow-wrap: anywhere;
       border-block-end: var(--nk-border-width) solid var(--nk-color-border);
     }
 

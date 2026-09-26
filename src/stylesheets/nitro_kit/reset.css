@@ -17,9 +17,19 @@
   }
 
   /* Nitro-owned boxes never establish a min-content floor, so long slot
-     content shrinks instead of overflowing its flex or grid parent. */
+     content shrinks instead of overflowing its flex or grid parent, and a
+     word too long for its line breaks rather than painting past the box.
+     `break-word` leaves intrinsic sizing alone, so nothing shrinks that would
+     not have shrunk already; `nowrap` slots keep their single line. */
   :where([data-nk], [data-nk] [data-slot]) {
     min-inline-size: 0;
+    overflow-wrap: break-word;
+  }
+
+  /* A legend sizes to its content regardless of its fieldset, so a long
+     label would widen the page; cap it and let it wrap like any label. */
+  :where([data-nk] legend) {
+    max-inline-size: 100%;
   }
 
   :where(html, :host) {

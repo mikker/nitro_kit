@@ -28,6 +28,9 @@
   @media (width < 48rem) {
     :where([data-nk="pagination-bar"]) {
       flex-direction: column;
+      /* A wrapping column sizes its line to the widest item, so stretch
+         could not narrow anything; one column never needs to wrap. */
+      flex-wrap: nowrap;
       align-items: stretch;
     }
 

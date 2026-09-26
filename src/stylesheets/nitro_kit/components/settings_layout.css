@@ -29,6 +29,8 @@
     display: flex;
     gap: calc(var(--nk-space) * 2);
     align-items: center;
+    /* The label text is an anonymous flex item with a min-content floor. */
+    overflow-wrap: anywhere;
     min-block-size: var(--nk-control-height-sm);
     padding: var(--nk-space) calc(var(--nk-space) * 2);
     color: var(--nk-color-muted-foreground);

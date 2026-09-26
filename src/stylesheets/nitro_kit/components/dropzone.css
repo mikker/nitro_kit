@@ -443,3 +443,18 @@
     }
   }
 }
+
+@layer nitro-kit.base {
+  /* Message children are grid items placed at start, so they size to their
+     content; cap them at the cell so one long word wraps inside the target. */
+  :where(
+      [data-nk="dropzone"]
+        [data-slot="dropzone-message"]
+        > [data-slot="dropzone-title"],
+      [data-nk="dropzone"]
+        [data-slot="dropzone-message"]
+        > [data-slot="dropzone-description"]
+    ) {
+    max-inline-size: 100%;
+  }
+}

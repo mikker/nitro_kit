@@ -118,6 +118,9 @@
     padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
     text-align: start;
     vertical-align: top;
+    /* Prose tables have no scroll wrapper, so an unbroken email or
+       identifier must be allowed to break inside its cell. */
+    overflow-wrap: anywhere;
     border-block-end: var(--nk-border-width) solid var(--nk-color-border);
   }
 
@@ -259,6 +262,7 @@
       padding: calc(var(--nk-space) * 2) calc(var(--nk-space) * 3);
       text-align: start;
       vertical-align: top;
+      overflow-wrap: anywhere;
       border-block-end: var(--nk-border-width) solid var(--nk-color-border);
     }
 

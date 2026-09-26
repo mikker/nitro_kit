@@ -26,12 +26,24 @@
     justify-content: flex-end;
     margin-inline-start: auto;
   }
+
+  /* Application content in a region is a flex item; without this a heading
+     holding one long word keeps its min-content width and widens the page. */
+  :where(
+      [data-nk="toolbar"] > [data-slot="toolbar-leading"] > *,
+      [data-nk="toolbar"] > [data-slot="toolbar-trailing"] > *
+    ) {
+    min-inline-size: 0;
+  }
 }
 
 @layer nitro-kit.state {
   @media (width < 48rem) {
     :where([data-nk="toolbar"]) {
       flex-direction: column;
+      /* A wrapping column sizes its line to the widest item, so stretch
+         could not narrow anything; one column never needs to wrap. */
+      flex-wrap: nowrap;
       align-items: stretch;
     }
 

@@ -19,6 +19,9 @@
     line-height: var(--nk-leading-normal);
     text-wrap: pretty;
     pointer-events: auto;
+    /* Hidden tooltips leave layout entirely; a merely invisible one still
+       widens the page when it hangs past the viewport edge. */
+    display: none;
     visibility: hidden;
     background: var(--nk-color-elevated);
     border: var(--nk-border-width) solid var(--nk-color-border);
@@ -27,7 +30,8 @@
     opacity: 0;
     transition:
       opacity var(--nk-duration-fast) var(--nk-ease),
-      visibility var(--nk-duration-fast) var(--nk-ease) allow-discrete;
+      visibility var(--nk-duration-fast) var(--nk-ease) allow-discrete,
+      display var(--nk-duration-fast) var(--nk-ease) allow-discrete;
   }
 
   :where([data-nk="tooltip"] > [data-slot="tooltip-content"]::before) {
@@ -111,8 +115,13 @@
       [data-nk="tooltip"]:not([data-dismissed]):focus-within
         > [data-slot="tooltip-content"]
     ) {
+    display: block;
     visibility: visible;
     opacity: 1;
+
+    @starting-style {
+      opacity: 0;
+    }
   }
 
   @media (hover: hover) {
@@ -120,8 +129,13 @@
         [data-nk="tooltip"]:not([data-dismissed]):hover
           > [data-slot="tooltip-content"]
       ) {
+      display: block;
       visibility: visible;
       opacity: 1;
+
+      @starting-style {
+        opacity: 0;
+      }
     }
   }
 
