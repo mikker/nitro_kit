@@ -147,6 +147,41 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "radio-button-stress",
+          description: "Every hostile identity from Gallery::Hostile as a same-name radio label with sentence and URL " \
+            "descriptions, then a required radio that is also disabled and invalid under a paragraph-length label."
+        ) do
+          example("Hostile labels", slug: "radio-button-hostile", stress: true) do
+            render NitroKit::Flex.new(dir: :col, gap: 3, align: :stretch) do
+              Gallery::Hostile::NAMES.each_with_index do |name, index|
+                render NitroKit::RadioButton.new(
+                  label: name,
+                  description: index.even? ? Gallery::Hostile::LONG_SENTENCE : Gallery::Hostile::LONG_URL,
+                  id: "gallery-radio-button-hostile-#{index}-control",
+                  name: "hostile[identity]",
+                  value: "hostile_#{index}",
+                  checked: index.zero?,
+                  size: index.odd? ? :lg : :md,
+                  html: { id: "gallery-radio-button-hostile-#{index}" }
+                )
+              end
+              render NitroKit::RadioButton.new(
+                label: Gallery::Hostile::LONG_PARAGRAPH,
+                description: Gallery::Hostile::LONG_ERROR,
+                id: "gallery-radio-button-hostile-locked-control",
+                name: "hostile[identity]",
+                value: "hostile_locked",
+                required: true,
+                disabled: true,
+                invalid: true,
+                html: { id: "gallery-radio-button-hostile-locked" }
+              )
+            end
+          end
+        end
       end
     end
   end

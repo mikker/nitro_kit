@@ -144,6 +144,69 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "select-stress",
+          description: "Thirty Gallery::Hostile badge labels as options, with the unbroken word selected, a paragraph " \
+            "prompt, a required disabled select, and a multiple select with many hostile selections."
+        ) do
+          example("Hostile single selects", slug: "select-hostile-single", stress: true) do
+            options = Gallery::Hostile::CHOICES
+
+            render NitroKit::Flex.new(dir: :col, gap: 3, align: :stretch) do
+              render NitroKit::Select.new(
+                id: "gallery-select-hostile-word-control",
+                control_aria: { label: Gallery::Hostile::LONG_LABEL },
+                name: "hostile[word]",
+                value: "hostile_3",
+                options:,
+                html: { id: "gallery-select-hostile-word" }
+              )
+              render NitroKit::Select.new(
+                id: "gallery-select-hostile-prompt-control",
+                control_aria: { label: Gallery::Hostile::LONG_LABEL },
+                name: "hostile[prompt]",
+                prompt: Gallery::Hostile::LONG_SENTENCE,
+                required: true,
+                options:,
+                html: { id: "gallery-select-hostile-prompt" }
+              )
+              render NitroKit::Select.new(
+                id: "gallery-select-hostile-blank-control",
+                control_aria: { label: Gallery::Hostile::RTL_NAME },
+                name: "hostile[blank]",
+                include_blank: Gallery::Hostile::LONG_LABEL,
+                options:,
+                html: { id: "gallery-select-hostile-blank" }
+              )
+              render NitroKit::Select.new(
+                id: "gallery-select-hostile-locked-control",
+                control_aria: { label: Gallery::Hostile::CJK_NAME, invalid: true },
+                name: "hostile[locked]",
+                value: "hostile_1",
+                required: true,
+                disabled: true,
+                options:,
+                html: { id: "gallery-select-hostile-locked" }
+              )
+            end
+          end
+
+          example("Hostile multiple select", slug: "select-hostile-multiple", stress: true) do
+            options = Gallery::Hostile::CHOICES
+
+            render NitroKit::Select.new(
+              id: "gallery-select-hostile-multiple-control",
+              control_aria: { label: Gallery::Hostile::LONG_LABEL },
+              name: "hostile[multiple]",
+              value: %w[hostile_1 hostile_3 hostile_5 hostile_7 hostile_9 hostile_11 hostile_13 hostile_17],
+              multiple: true,
+              options:,
+              html: { id: "gallery-select-hostile-multiple" }
+            )
+          end
+        end
       end
     end
   end

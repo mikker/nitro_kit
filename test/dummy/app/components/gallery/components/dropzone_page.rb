@@ -153,6 +153,71 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "dropzone-stress",
+          description: "Every presentation labelled and described with Gallery::Hostile's unbroken, mixed-script, and paragraph-length values, under an oversized file policy."
+        ) do
+          example("Hostile presentations", slug: "dropzone-hostile", stress: true, layout: :matrix) do
+            sample("Minimal", slug: "minimal") do
+              render NitroKit::Dropzone.new(
+                id: "gallery-dropzone-hostile-minimal",
+                name: "#{Gallery::Hostile::LONG_SLUG}[files][]",
+                label: Gallery::Hostile::LONG_LABEL,
+                description: Gallery::Hostile::LONG_PARAGRAPH,
+                direct_upload: false,
+                multiple: true,
+                accept: "image/png,image/jpeg,application/pdf",
+                max_files: 999,
+                max_bytes: Gallery::Hostile::HUGE_NUMBER
+              )
+            end
+            sample("Inline", slug: "inline") do
+              render NitroKit::Dropzone.new(
+                id: "gallery-dropzone-hostile-inline",
+                name: "attachments[files][]",
+                label: Gallery::Hostile::LONG_WORD,
+                description: Gallery::Hostile::LONG_EMAIL,
+                inline: true,
+                direct_upload: false,
+                multiple: true,
+                max_files: 999
+              )
+            end
+            sample("Input", slug: "input") do
+              render NitroKit::Dropzone.new(
+                id: "gallery-dropzone-hostile-input",
+                name: "document[file]",
+                label: Gallery::Hostile::CJK_NAME,
+                description: Gallery::Hostile::RTL_NAME,
+                presentation: :input,
+                direct_upload: false
+              )
+            end
+            sample("Compact", slug: "compact") do
+              render NitroKit::Dropzone.new(
+                id: "gallery-dropzone-hostile-compact",
+                name: "receipt[file]",
+                label: Gallery::Hostile::EMOJI_NAME,
+                description: Gallery::Hostile::LONG_WORD,
+                presentation: :compact,
+                direct_upload: false
+              )
+            end
+            sample("Avatar", slug: "avatar") do
+              render NitroKit::Dropzone.new(
+                id: "gallery-dropzone-hostile-avatar",
+                name: "avatar[file]",
+                label: Gallery::Hostile::LONG_NAME,
+                description: Gallery::Hostile::THAI_NAME,
+                presentation: :avatar,
+                direct_upload: false,
+                accept: "image/png"
+              )
+            end
+          end
+        end
       end
     end
   end

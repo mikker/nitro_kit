@@ -226,6 +226,53 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "button-stress",
+          description: "Every Gallery::Hostile action label as a button, including an eighty-character setting name and an unbroken hundred-letter word, then links whose visible text is a full webhook URL and a 130-character email."
+        ) do
+          example("Hostile labels", slug: "button-hostile-labels", layout: :row, stress: true) do
+            Gallery::Hostile::ACTION_LABELS.each_with_index do |label, index|
+              render NitroKit::Button.new(
+                label,
+                id: "gallery-button-hostile-label-#{index + 1}",
+                variant: index.zero? ? :primary : :default,
+                icon: index.even? ? :save : nil,
+                icon_end: index.odd? ? :arrow_right : nil
+              )
+            end
+          end
+
+          example("Hostile link text", slug: "button-hostile-links", stress: true) do
+            render NitroKit::Button.new(
+              Gallery::Hostile::LONG_URL,
+              id: "gallery-button-hostile-url",
+              href: Gallery::Hostile::LONG_URL,
+              icon_end: :external_link
+            )
+            render NitroKit::Button.new(
+              Gallery::Hostile::LONG_EMAIL,
+              id: "gallery-button-hostile-email",
+              href: "mailto:#{Gallery::Hostile::LONG_EMAIL}",
+              size: :sm
+            )
+            render NitroKit::Button.new(
+              Gallery::Hostile::RTL_NAME,
+              id: "gallery-button-hostile-rtl",
+              href: "#hostile-rtl",
+              icon: :archive,
+              size: :xl
+            )
+            render NitroKit::Button.new(
+              Gallery::Hostile::EMOJI_NAME,
+              id: "gallery-button-hostile-emoji",
+              variant: :destructive,
+              icon: :trash_2,
+              size: :xs
+            )
+          end
+        end
       end
 
       def render_button(button, id:)

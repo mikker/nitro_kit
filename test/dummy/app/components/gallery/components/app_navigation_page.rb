@@ -232,6 +232,51 @@ module Gallery
             render_inventory_navigation
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "app-navigation-stress",
+          description: "Every Gallery::Hostile navigation label with hostile badges and long URLs, a collapsible group of two dozen tab labels, and header and footer identities that cannot wrap."
+        ) do
+          example("Hostile inventory", slug: "app-navigation-hostile", stress: true, mode: :full_width) do
+            render NitroKit::AppNavigation.new(
+              id: "gallery-app-navigation-hostile",
+              label: Gallery::Hostile::LONG_LABEL,
+              data: { gallery_navigation_preview: "hostile" }
+            ) do |navigation|
+              navigation.header { strong { Gallery::Hostile::LONG_NAME } }
+              navigation.body do
+                navigation.section(label: Gallery::Hostile::LONG_LABEL) do
+                  Gallery::Hostile::NAVIGATION_LABELS.each_with_index do |label, index|
+                    navigation.item(
+                      label,
+                      href: "#{Gallery::Hostile::LONG_URL}#destination-#{index}",
+                      icon: index.even? ? :folder : nil,
+                      badge: Gallery::Hostile::BADGE_LABELS[index],
+                      current: index == 1
+                    )
+                  end
+                end
+                navigation.section(label: Gallery::Hostile::LONG_WORD, collapsible: true) do
+                  Gallery::Hostile::TAB_LABELS.each_with_index do |label, index|
+                    navigation.item(label, href: "#{Gallery::Hostile::LONG_URL}#setting-#{index}")
+                  end
+                end
+                navigation.spacer
+                navigation.divider
+                navigation.item(
+                  Gallery::Hostile::LONG_WORD,
+                  href: Gallery::Hostile::LONG_URL,
+                  icon: :settings,
+                  badge: Gallery::Hostile::HUGE_FORMATTED
+                )
+              end
+              navigation.footer do
+                p { Gallery::Hostile::LONG_EMAIL }
+              end
+            end
+          end
+        end
       end
 
       def render_inventory_navigation

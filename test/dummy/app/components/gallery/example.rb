@@ -18,6 +18,7 @@ module Gallery
       layout: :stack,
       density: :comfortable,
       scroll: false,
+      stress: false,
       source: nil,
       api: nil,
       code:,
@@ -30,6 +31,7 @@ module Gallery
       @layout = validate_choice!(:layout, layout, LAYOUTS)
       @density = validate_choice!(:density, density, DENSITIES)
       @scroll = validate_boolean!(:scroll, scroll)
+      @stress = validate_boolean!(:stress, stress)
       @notes = Notes.new(source:, api:)
       @preview_path = validate_text!(:preview_path, preview_path, optional: true)
       unless code.is_a?(SourceCode)
@@ -38,7 +40,7 @@ module Gallery
       @code = code
     end
 
-    attr_reader :slug, :title, :description, :mode, :layout, :density, :scroll, :notes, :code, :preview_path
+    attr_reader :slug, :title, :description, :mode, :layout, :density, :scroll, :stress, :notes, :code, :preview_path
 
     def view_template(&block)
       raise ArgumentError, "Gallery::Example requires a preview block" unless block
@@ -55,7 +57,8 @@ module Gallery
           gallery_mode: data_value(mode),
           gallery_layout: data_value(layout),
           gallery_density: data_value(density),
-          gallery_scroll: scroll ? "true" : nil
+          gallery_scroll: scroll ? "true" : nil,
+          gallery_stress: stress ? "true" : nil
         }.compact
       ) do
         header(data: { gallery: "example-header" }) do

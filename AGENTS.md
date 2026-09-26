@@ -92,8 +92,11 @@ Every component needs:
 - Structural/accessibility assertions.
 - A navigable gallery combination page.
 - Meaningful variants, sizes, states, long content, disabled/error cases, dark mode, and narrow-width coverage.
+- An "Under pressure" section whose examples are flagged `stress: true` and compose only from `Gallery::Hostile`.
 
 The gallery is a real Phlex application driven by an explicit catalog. Do not add ERB test templates or filename-based template dispatch. Keep preview composition inside the block passed to `example`/`render_example`; `Gallery::SourceCode` extracts its executable Ruby body for the paired Code tab. Inherited flow wrappers may pass `SourceCode.from_method` for the concrete composition method. Do not duplicate snippets in heredocs.
+
+Stress examples are the gallery's break-it suite. `Gallery::Hostile` holds worst-case content: unbroken words, overlong emails and URLs, mixed scripts, extreme magnitudes, and dozens of items where a component takes a list. `test/system/stress_sweep_test.rb` loads every `stress: true` example in isolation at phone, tablet, and desktop widths and runs `test/system/support/layout_audit.js`, which fails on document overflow, content outside the viewport or its clipping ancestor, text that overflows or is clipped without an ellipsis, and overlapping siblings. The Stress lab composition shows the same list at phone width on one screen. When a break-it session finds content that breaks a component, add the content to `Gallery::Hostile` and use it in a stress example so the finding stays a regression test, then fix the component; never soften the content to pass.
 
 Preserve these pre-existing behaviors when migrating their files:
 

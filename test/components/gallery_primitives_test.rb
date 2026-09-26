@@ -104,6 +104,22 @@ class GalleryPrimitivesTest < ActiveSupport::TestCase
     assert_equal "comfortable", single["data-gallery-density"]
   end
 
+test "stress examples flag themselves for the sweep and the lab" do
+  entry = Gallery::Catalog.fetch!(kind: :component, slug: "tabs")
+  fragment = render_fragment(entry.page.new(entry:))
+
+  assert_equal "true", fragment.at_css("[data-gallery-example='tabs-hostile']")["data-gallery-stress"]
+  assert_nil fragment.at_css("[data-gallery-example='tabs-single']")["data-gallery-stress"]
+
+  preview = Nokogiri::HTML.fragment(entry.page.new(entry:, preview: "tabs-hostile").call)
+  assert_equal "true", preview.at_css("main[data-gallery='example']")["data-gallery-stress"]
+
+  stress = Gallery::Catalog.stress_previews
+  assert_includes stress.map(&:example), "tabs-hostile"
+  assert stress.all? { |item| item.entry.kind != :home }
+  assert_equal stress.map { |item| [ item.entry.slug, item.state, item.example ] }.uniq.size, stress.size
+end
+
   test "matrix samples have stable identities and captions" do
     fragment = render_fragment(page)
     default_sample = fragment.at_css("[data-gallery='sample'][data-gallery-sample='default']")

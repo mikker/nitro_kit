@@ -164,6 +164,40 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "checkbox-stress",
+          description: "Every hostile identity from Gallery::Hostile as a checkbox label with sentence and URL descriptions, " \
+            "then a required checkbox that is also disabled and invalid under a paragraph-length label."
+        ) do
+          example("Hostile labels", slug: "checkbox-hostile", stress: true) do
+            render NitroKit::Flex.new(dir: :col, gap: 3, align: :stretch) do
+              Gallery::Hostile::NAMES.each_with_index do |name, index|
+                render NitroKit::Checkbox.new(
+                  label: name,
+                  description: index.even? ? Gallery::Hostile::LONG_SENTENCE : Gallery::Hostile::LONG_URL,
+                  id: "gallery-checkbox-hostile-#{index}-control",
+                  name: "hostile[names][#{index}]",
+                  checked: index.zero?,
+                  size: index.odd? ? :lg : :md,
+                  html: { id: "gallery-checkbox-hostile-#{index}" }
+                )
+              end
+              render NitroKit::Checkbox.new(
+                label: Gallery::Hostile::LONG_PARAGRAPH,
+                description: Gallery::Hostile::LONG_ERROR,
+                id: "gallery-checkbox-hostile-locked-control",
+                name: "hostile[locked]",
+                checked: true,
+                required: true,
+                disabled: true,
+                invalid: true,
+                html: { id: "gallery-checkbox-hostile-locked" }
+              )
+            end
+          end
+        end
       end
     end
   end

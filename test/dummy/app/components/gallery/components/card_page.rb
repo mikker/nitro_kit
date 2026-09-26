@@ -225,6 +225,47 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "card-stress",
+          description: "A card titled with a hundred-character name, carrying an unbroken-word badge, four paragraphs of pasted prose, a webhook URL and a 130-character email as links, and all twelve hostile actions in its footer; then an unbroken title in a small container."
+        ) do
+          example("Hostile record card", slug: "card-hostile", stress: true) do
+            render NitroKit::Card.new(id: "gallery-card-hostile") do |card|
+              card.title(Gallery::Hostile::LONG_NAME, level: 3)
+              card.body do
+                render NitroKit::Badge.new(
+                  Gallery::Hostile::LONG_WORD,
+                  id: "gallery-card-hostile-status",
+                  color: :warning,
+                  size: :sm
+                )
+                p { Gallery::Hostile::LONG_PARAGRAPH }
+                p { a(href: Gallery::Hostile::LONG_URL) { Gallery::Hostile::LONG_URL } }
+                p { a(href: "mailto:#{Gallery::Hostile::LONG_EMAIL}") { Gallery::Hostile::LONG_EMAIL } }
+              end
+              card.divider
+              card.footer do
+                render NitroKit::ButtonGroup.new(id: "gallery-card-hostile-actions", label: "Hostile record actions") do |group|
+                  Gallery::Hostile::ACTION_LABELS.each_with_index do |label, index|
+                    group.button(label, id: "gallery-card-hostile-action-#{index + 1}", size: :sm)
+                  end
+                end
+              end
+            end
+          end
+
+          example("Hostile title in a small container", slug: "card-hostile-narrow", stress: true) do
+            render NitroKit::Container.new(size: :sm, id: "gallery-card-hostile-narrow-container") do
+              render NitroKit::Card.new(id: "gallery-card-hostile-narrow") do |card|
+                card.title(Gallery::Hostile::LONG_WORD, level: 3)
+                card.body(Gallery::Hostile::LONG_EMAIL)
+                card.footer(Gallery::Hostile::HUGE_MONEY)
+              end
+            end
+          end
+        end
       end
     end
   end

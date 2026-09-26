@@ -52,7 +52,7 @@ module Gallery
             end
           end
 
-          example("Long values nested in content", slug: "stat-grid-long", mode: :full_width) do
+          example("Long values nested in content", slug: "stat-grid-long", mode: :full_width, stress: true) do
             render NitroKit::Container.new(size: :lg, id: "gallery-stat-grid-long-container") do
               render NitroKit::StatGrid.new(id: "gallery-stat-grid-long") do |stats|
                 stats.stat(key: :retention, label: "Annual enterprise data retention", value: "365 days", detail: "Applies to International Research and Reliability Engineering")

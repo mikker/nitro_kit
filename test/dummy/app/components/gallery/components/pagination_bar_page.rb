@@ -152,6 +152,43 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "pagination-bar-stress",
+          description: "A summary built from Gallery::Hostile's long sentence, long email, huge count, and unbroken badge beside thirty visible pages that link to the long URL."
+        ) do
+          example("Hostile summary and range", slug: "pagination-bar-hostile", stress: true, mode: :full_width) do
+            render NitroKit::PaginationBar.new(id: "gallery-pagination-bar-hostile") do |bar|
+              bar.summary do
+                plain([ Gallery::Hostile::LONG_SENTENCE, Gallery::Hostile::LONG_EMAIL, Gallery::Hostile::HUGE_FORMATTED ].join(" · "))
+                render NitroKit::Badge.new(
+                  Gallery::Hostile::LONG_WORD,
+                  id: "gallery-pagination-bar-hostile-badge",
+                  size: :sm,
+                  variant: :outline
+                )
+              end
+              bar.pagination(
+                NitroKit::Pagination.new(
+                  id: "gallery-pagination-bar-hostile-pagination",
+                  label: Gallery::Hostile::LONG_LABEL
+                )
+              ) do |pagination|
+                pagination.prev(href: "#{Gallery::Hostile::LONG_URL}&page=14", id: "gallery-pagination-bar-hostile-previous")
+                (1..30).each do |page|
+                  pagination.page(
+                    page,
+                    href: "#{Gallery::Hostile::LONG_URL}&page=#{page}",
+                    current: page == 15,
+                    id: "gallery-pagination-bar-hostile-page-#{page}"
+                  )
+                end
+                pagination.next(href: "#{Gallery::Hostile::LONG_URL}&page=16", id: "gallery-pagination-bar-hostile-next")
+              end
+            end
+          end
+        end
       end
 
       def render_boundary_bar(slug, current:, total:, range:, previous:, following:)

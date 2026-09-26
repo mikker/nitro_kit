@@ -159,6 +159,48 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "progressive-image-stress",
+          description: "Broken and missing attachments whose fallback text is an unbroken word, a long URL, and a full " \
+            "paragraph from Gallery::Hostile."
+        ) do
+          example("Hostile fallbacks", slug: "progressive-image-hostile", stress: true, layout: :matrix) do
+            sample("Broken source, unbroken alt", slug: "word") do
+              render NitroKit::ProgressiveImage.new(
+                attachment: broken_attachment,
+                alt: Gallery::Hostile::LONG_WORD,
+                size: :sm,
+                id: "gallery-progressive-image-hostile-word"
+              )
+            end
+            sample("Broken source, URL alt", slug: "url") do
+              render NitroKit::ProgressiveImage.new(
+                attachment: broken_attachment,
+                alt: Gallery::Hostile::LONG_URL,
+                size: :lg,
+                id: "gallery-progressive-image-hostile-url"
+              )
+            end
+            sample("Empty attachment, paragraph alt", slug: "paragraph") do
+              render NitroKit::ProgressiveImage.new(
+                attachment: nil,
+                alt: Gallery::Hostile::LONG_PARAGRAPH,
+                size: :md,
+                id: "gallery-progressive-image-hostile-paragraph"
+              )
+            end
+            sample("Empty attachment, mixed-script alt", slug: "scripts") do
+              render NitroKit::ProgressiveImage.new(
+                attachment: nil,
+                alt: "#{Gallery::Hostile::RTL_NAME} #{Gallery::Hostile::CJK_NAME} #{Gallery::Hostile::EMOJI_NAME}",
+                size: :sm,
+                id: "gallery-progressive-image-hostile-scripts"
+              )
+            end
+          end
+        end
       end
 
       def image_attachment

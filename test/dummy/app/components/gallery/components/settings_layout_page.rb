@@ -189,6 +189,43 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "settings-layout-stress",
+          description: "All twenty Gallery::Hostile navigation labels, unbroken, RTL, CJK, and emoji, beside content titled with an unbroken word and filled with four paragraphs, a webhook URL, and every hostile action."
+        ) do
+          example("Hostile navigation", slug: "settings-layout-hostile", mode: :full_width, stress: true) do
+            render NitroKit::SettingsLayout.new(id: "gallery-settings-layout-hostile") do |layout|
+              layout.navigation(label: Gallery::Hostile::LONG_LABEL) do
+                Gallery::Hostile::NAVIGATION_LABELS.each_with_index do |label, index|
+                  layout.item(
+                    label,
+                    href: "#hostile-destination-#{index + 1}",
+                    icon: :settings,
+                    current: index == 3
+                  )
+                end
+              end
+              layout.content do
+                render NitroKit::Card.new(id: "gallery-settings-layout-hostile-card") do |card|
+                  card.title(Gallery::Hostile::LONG_WORD, level: 4)
+                  card.body do
+                    p { Gallery::Hostile::LONG_PARAGRAPH }
+                    p { a(href: Gallery::Hostile::LONG_URL) { Gallery::Hostile::LONG_URL } }
+                  end
+                  card.footer do
+                    render NitroKit::ButtonGroup.new(id: "gallery-settings-layout-hostile-actions", label: "Every hostile setting action") do |group|
+                      Gallery::Hostile::ACTION_LABELS.each_with_index do |label, index|
+                        group.button(label, id: "gallery-settings-layout-hostile-action-#{index + 1}", size: :sm)
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
       end
     end
   end

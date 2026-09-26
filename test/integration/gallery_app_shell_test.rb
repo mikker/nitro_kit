@@ -21,7 +21,7 @@ class GalleryAppShellTest < ActionDispatch::IntegrationTest
     get gallery_component_path("app-navigation")
 
     assert_response :success
-    assert_select "[data-gallery='example-canvas'] [data-nk='app-navigation']", count: 7 do |navigations|
+    assert_select "[data-gallery='example-canvas'] [data-nk='app-navigation']", count: 8 do |navigations|
       navigations.each do |navigation|
         assert_equal 1, navigation.xpath("./*[@data-slot='app-navigation-body']").count
         assert_operator navigation.css("[data-slot='app-navigation-item']").count, :>=, 1
@@ -47,7 +47,7 @@ class GalleryAppShellTest < ActionDispatch::IntegrationTest
     get gallery_component_path("app-shell")
 
     assert_response :success
-    assert_select "[data-gallery='example-canvas'] [data-nk='app-shell']", count: 4 do |shells|
+    assert_select "[data-gallery='example-canvas'] [data-nk='app-shell']", count: 6 do |shells|
       shells.each do |shell|
         assert_equal "header", shell.at_css("[data-slot='app-shell-header']").name
         assert_equal "div", shell.at_css("[data-slot='app-shell-sidebar']").name
@@ -61,12 +61,13 @@ class GalleryAppShellTest < ActionDispatch::IntegrationTest
         dialog = shell.at_css("[data-slot='app-shell-dialog']")
         assert_nil sidebar["aria-hidden"]
         assert_nil dialog["open"]
-        assert_equal "Workspace navigation", dialog["aria-label"]
+        assert_predicate dialog["aria-label"], :present?
         assert_equal 1, sidebar.css("> [data-slot='app-shell-navigation']").count
       end
     end
     %w[sidebar topbar].each do |layout|
       assert_select "#gallery-app-shell-#{layout}[data-layout='#{layout}']", count: 1
+      assert_select "#gallery-app-shell-#{layout} [data-slot='app-shell-dialog'][aria-label='Workspace navigation']", count: 1
     end
     assert_select "#gallery-app-shell-minimal [data-slot='app-shell-brand']", count: 0
     assert_select "#gallery-app-shell-minimal [data-slot='app-shell-topbar']", count: 0

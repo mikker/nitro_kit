@@ -113,6 +113,54 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "details-table-stress",
+          description: "A hostile member record: a hundred-character name, a 130-character email, an unbroken slug, a webhook URL as link text, RTL and CJK values, huge and negative amounts, and an eighty-character label; then the same record in a small container."
+        ) do
+          example("Hostile record", slug: "details-table-hostile", mode: :full_width, stress: true) do
+            member = Gallery::Hostile.members(1).first
+
+            render NitroKit::DetailsTable.new(member, id: "gallery-details-table-hostile", label: "Hostile member details") do |details|
+              details.field(:name)
+              details.field(:email) { |email| a(href: "mailto:#{email}") { email } }
+              details.field(:slug, label: "Workspace slug", value: Gallery::Hostile::LONG_WORD)
+              details.field(:webhook, label: Gallery::Hostile::LONG_LABEL, value: Gallery::Hostile::LONG_URL) do |url|
+                a(href: url) { url }
+              end
+              details.field(:owner, label: Gallery::Hostile::RTL_NAME, value: Gallery::Hostile::CJK_NAME)
+              details.field(:balance, label: "Outstanding balance", value: Gallery::Hostile::HUGE_MONEY)
+              details.field(:credit, label: "Credit", value: Gallery::Hostile::NEGATIVE_MONEY)
+              details.field(:notes, label: "Notes", value: Gallery::Hostile::LONG_PARAGRAPH)
+              details.field(:joined_on)
+              details.field(:status) do |status|
+                render NitroKit::Badge.new(
+                  Gallery::Hostile::BADGE_LABELS.fetch(1),
+                  id: "gallery-details-table-hostile-status",
+                  color: status == :active ? :success : :warning,
+                  size: :sm
+                )
+              end
+            end
+          end
+
+          example("Hostile record in a small container", slug: "details-table-hostile-narrow", stress: true) do
+            render NitroKit::Container.new(size: :sm, id: "gallery-details-table-hostile-narrow-container") do
+              render NitroKit::DetailsTable.new(
+                Gallery::Hostile.members(1).first,
+                id: "gallery-details-table-hostile-narrow",
+                label: "Hostile member details in a small container"
+              ) do |details|
+                details.fields(:name, :email)
+                details.field(:webhook, label: Gallery::Hostile::LONG_LABEL, value: Gallery::Hostile::LONG_URL) do |url|
+                  a(href: url) { url }
+                end
+                details.field(:balance, label: Gallery::Hostile::LONG_WORD, value: Gallery::Hostile::HUGE_MONEY)
+              end
+            end
+          end
+        end
       end
 
       def demo_attachment

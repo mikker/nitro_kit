@@ -228,6 +228,56 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "flex-stress",
+          description: "Thirty Gallery::Hostile badge labels in a wrapping row, then a no-wrap responsive row whose children carry the unbroken word, huge number, long label, and long paragraph."
+        ) do
+          example("Hostile wrapping row", slug: "flex-hostile-wrap", stress: true, mode: :full_width) do
+            render NitroKit::Flex.new(
+              dir: :row,
+              gap: 2,
+              align: :center,
+              wrap: :wrap,
+              id: "gallery-flex-hostile-wrap"
+            ) do
+              Gallery::Hostile::BADGE_LABELS.each_with_index do |label, index|
+                render NitroKit::Badge.new(
+                  label,
+                  id: "gallery-flex-hostile-wrap-#{index}",
+                  variant: :outline
+                )
+              end
+            end
+          end
+
+          example("Hostile no-wrap row", slug: "flex-hostile-nowrap", stress: true, mode: :full_width) do
+            render NitroKit::Flex.new(
+              dir: "col md:row",
+              gap: "2 md:4",
+              align: "stretch md:center",
+              justify: "start md:between",
+              wrap: :nowrap,
+              id: "gallery-flex-hostile-nowrap"
+            ) do
+              render NitroKit::Card.new(id: "gallery-flex-hostile-nowrap-card") do |card|
+                card.title(Gallery::Hostile::LONG_WORD, level: 4)
+                card.body(Gallery::Hostile::LONG_PARAGRAPH)
+              end
+              render NitroKit::Badge.new(
+                Gallery::Hostile::HUGE_FORMATTED,
+                id: "gallery-flex-hostile-nowrap-badge",
+                color: :success
+              )
+              render NitroKit::Button.new(
+                Gallery::Hostile::LONG_LABEL,
+                id: "gallery-flex-hostile-nowrap-action",
+                variant: :primary
+              )
+            end
+          end
+        end
       end
     end
   end

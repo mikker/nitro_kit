@@ -1,6 +1,6 @@
 module Gallery
   class Page < Phlex::HTML
-    PreviewDefinition = ::Data.define(:slug, :title, :mode, :layout, :density, :scroll, :content)
+    PreviewDefinition = ::Data.define(:slug, :title, :mode, :layout, :density, :scroll, :stress, :content)
 
     class PreviewNotFound < KeyError
     end
@@ -16,9 +16,20 @@ module Gallery
       @preview = preview&.to_s
     end
 
-    attr_reader :entry, :state, :preview
+attr_reader :entry, :state, :preview
 
-    def view_template
+# Runs the page once with every example block skipped and returns the
+# PreviewDefinitions it declared, so previews can be enumerated without a
+# request. Gallery::Catalog.stress_previews and the stress lab use it.
+def collect_previews
+  @preview_definitions = []
+  call
+  @preview_definitions
+ensure
+  @preview_definitions = nil
+end
+
+def view_template
       if preview
         preview_template
       else
@@ -55,8 +66,11 @@ module Gallery
       raise NotImplementedError, "#{self.class.name} must implement #page_template"
     end
 
+    # Outside a request (see #collect_previews) the page has no view context,
+    # so links fall back to the application route helpers.
     def entry_path(entry, state: nil)
-      Gallery::Catalog.path_for(entry, routes: self, state:)
+      routes = collecting_previews? ? Rails.application.routes.url_helpers : self
+      Gallery::Catalog.path_for(entry, routes:, state:)
     end
 
     def render_example(
@@ -67,6 +81,7 @@ module Gallery
       layout: :stack,
       density: :comfortable,
       scroll: false,
+      stress: false,
       source: nil,
       api: nil,
       code: nil,
@@ -82,6 +97,7 @@ module Gallery
           layout:,
           density:,
           scroll:,
+          stress:,
           content: block
         )
         return
@@ -98,6 +114,7 @@ module Gallery
           layout:,
           density:,
           scroll:,
+          stress:,
           source:,
           api:,
           code:,
@@ -132,7 +149,8 @@ module Gallery
           mode: definition.mode,
           layout: definition.layout,
           density: definition.density,
-          scroll: definition.scroll
+          scroll: definition.scroll,
+          stress: definition.stress
         ),
         &definition.content
       )

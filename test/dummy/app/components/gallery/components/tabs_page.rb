@@ -102,6 +102,24 @@ module Gallery
         end
 
         example_section(
+          "Under pressure",
+          slug: "tabs-stress",
+          description: "Two dozen tabs with unbroken, mixed-script, and emoji labels from Gallery::Hostile, each opening on a wall of text."
+        ) do
+          example("Hostile tablist", slug: "tabs-hostile", stress: true) do
+            render NitroKit::Tabs.new(
+              id: "gallery-tabs-hostile",
+              default: :setting_0,
+              label: "Every workspace setting"
+            ) do |tabs|
+              Gallery::Hostile::TAB_LABELS.each_with_index do |label, index|
+                tabs.tab(:"setting_#{index}", label) { Gallery::Hostile::LONG_PARAGRAPH }
+              end
+            end
+          end
+        end
+
+        example_section(
           "Settings composition",
           slug: "tabs-settings-composition",
           description: "A complete settings surface nests forms, cards, status, tables, and grouped actions in panels."

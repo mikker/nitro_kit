@@ -154,6 +154,34 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "container-stress",
+          description: "The narrowest content boundary holds Gallery::Hostile's long name, unbroken word, long URL, long email, and four-sentence paragraph."
+        ) do
+          example("Hostile small boundary", slug: "container-hostile", stress: true, mode: :full_width) do
+            render NitroKit::Container.new(size: :sm, id: "gallery-container-hostile") do
+              render NitroKit::Card.new(id: "gallery-container-hostile-card") do |card|
+                card.title(Gallery::Hostile::LONG_NAME, level: 4)
+                card.body do
+                  p { Gallery::Hostile::LONG_WORD }
+                  p { a(href: Gallery::Hostile::LONG_URL) { Gallery::Hostile::LONG_URL } }
+                  p { Gallery::Hostile::LONG_EMAIL }
+                  p { Gallery::Hostile::LONG_PARAGRAPH }
+                end
+                card.footer do
+                  render NitroKit::Button.new(
+                    Gallery::Hostile::LONG_LABEL,
+                    id: "gallery-container-hostile-action",
+                    href: Gallery::Hostile::LONG_URL,
+                    variant: :primary
+                  )
+                end
+              end
+            end
+          end
+        end
       end
     end
   end

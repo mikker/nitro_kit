@@ -13,7 +13,7 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
     )
     assert_equal %w[
       access-and-onboarding workspace-and-organization billing-and-commerce data-and-operations
-      product-and-support marketing complete-applications
+      product-and-support marketing complete-applications quality
     ], Gallery::Catalog.collection!(:composition).categories.map(&:slug)
     assert_equal(
       {
@@ -39,7 +39,7 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
         onboarding-branches dashboard settings account-workspace users team-management api-credentials organization-overview organization-settings
         team-activity team-member billing checkout checkout-result data-resource-overview data-resource-activity
         data-resource-settings product-resource api-webhooks integration-management uploads activity-audit changelog help-center
-        system-status landing pricing features contact application-sidebar application-topbar
+        system-status landing pricing features contact application-sidebar application-topbar stress-lab
       ],
       Gallery::Catalog.entries(kind: :composition).map(&:slug)
     )
@@ -98,10 +98,10 @@ class Gallery::CatalogTest < ActiveSupport::TestCase
     end
   end
 
-  test "composition entries declare deterministic states or one complete application showcase" do
+  test "composition entries declare deterministic states or one stateless showcase" do
     Gallery::Catalog.entries(kind: :composition).each do |composition|
       assert composition.page < Gallery::Page
-      if composition.page < Gallery::Compositions::ApplicationPage
+      if composition.page < Gallery::Compositions::ApplicationPage || composition.page == Gallery::Compositions::StressLabPage
         assert_empty composition.states
       else
         assert_predicate composition.states, :any?

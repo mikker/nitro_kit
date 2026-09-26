@@ -156,6 +156,62 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "combobox-stress",
+          description: "Thirty Gallery::Hostile badge labels as searchable options with sentence-long descriptions, an " \
+            "unbroken selected label, a hostile placeholder, and a required disabled combobox inside an invalid field."
+        ) do
+          example("Hostile comboboxes", slug: "combobox-hostile", stress: true) do
+            options = Gallery::Hostile::BADGE_LABELS.each_with_index.map do |label, index|
+              { label:, value: "hostile_#{index}", description: index.odd? ? Gallery::Hostile::LONG_SENTENCE : nil }
+            end
+
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
+              render NitroKit::Combobox.new(
+                id: "gallery-combobox-hostile-word",
+                name: "hostile[word]",
+                label: Gallery::Hostile::LONG_LABEL,
+                options:,
+                value: "hostile_3",
+                placeholder: Gallery::Hostile::LONG_SENTENCE
+              )
+              render NitroKit::Combobox.new(
+                id: "gallery-combobox-hostile-locked",
+                name: "hostile[locked]",
+                label: Gallery::Hostile::LONG_WORD,
+                options:,
+                value: "hostile_1",
+                placement: :top_end,
+                required: true,
+                disabled: true
+              )
+            end
+          end
+
+          example("Hostile combobox field", slug: "combobox-hostile-field", stress: true) do
+            options = Gallery::Hostile::BADGE_LABELS.each_with_index.map do |label, index|
+              { label:, value: "hostile_#{index}", description: index.even? ? Gallery::Hostile::LONG_URL : nil }
+            end
+
+            render NitroKit::Field.new(
+              nil,
+              :status,
+              as: :combobox,
+              id: "gallery-combobox-hostile-field",
+              name: "hostile[status]",
+              value: "hostile_3",
+              label: Gallery::Hostile::LONG_LABEL,
+              description: Gallery::Hostile::LONG_PARAGRAPH,
+              errors: [ Gallery::Hostile::LONG_ERROR ],
+              options:,
+              placeholder: Gallery::Hostile::LONG_WORD,
+              required: true,
+              html: { id: "gallery-combobox-hostile-field-wrapper" }
+            )
+          end
+        end
       end
 
       def render_combobox(id, **attributes)

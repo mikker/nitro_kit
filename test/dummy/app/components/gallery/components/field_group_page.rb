@@ -157,6 +157,77 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "field-group-stress",
+          description: "One group stacks text, textarea, select, checkbox, and switch fields whose labels, guidance, " \
+            "errors, and values all come from Gallery::Hostile."
+        ) do
+          example("Hostile group", slug: "field-group-hostile", stress: true) do
+            options = Gallery::Hostile::CHOICES
+
+            render NitroKit::FieldGroup.new(html: { id: "gallery-field-group-hostile" }) do
+              render NitroKit::Field.new(
+                nil,
+                :name,
+                id: "gallery-field-group-hostile-name",
+                name: "hostile[name]",
+                value: Gallery::Hostile::LONG_NAME,
+                label: Gallery::Hostile::LONG_LABEL,
+                description: Gallery::Hostile::LONG_PARAGRAPH,
+                errors: [ Gallery::Hostile::LONG_ERROR ],
+                required: true
+              )
+              render NitroKit::Field.new(
+                nil,
+                :summary,
+                as: :textarea,
+                id: "gallery-field-group-hostile-summary",
+                name: "hostile[summary]",
+                value: Gallery::Hostile::LONG_WORD,
+                label: Gallery::Hostile::LONG_WORD,
+                description: Gallery::Hostile::LONG_URL,
+                rows: 2
+              )
+              render NitroKit::Field.new(
+                nil,
+                :status,
+                as: :select,
+                id: "gallery-field-group-hostile-status",
+                name: "hostile[status]",
+                value: "hostile_1",
+                label: Gallery::Hostile::RTL_NAME,
+                description: Gallery::Hostile::LONG_SENTENCE,
+                errors: [ Gallery::Hostile::LONG_ERROR ],
+                options:,
+                required: true,
+                disabled: true
+              )
+              render NitroKit::Field.new(
+                nil,
+                :agreement,
+                as: :checkbox,
+                id: "gallery-field-group-hostile-agreement",
+                name: "hostile[agreement]",
+                label: Gallery::Hostile::LONG_LABEL,
+                description: Gallery::Hostile::LONG_SENTENCE,
+                errors: [ Gallery::Hostile::LONG_ERROR ],
+                required: true
+              )
+              render NitroKit::Field.new(
+                nil,
+                :alerts,
+                as: :switch,
+                id: "gallery-field-group-hostile-alerts",
+                name: "hostile[alerts]",
+                checked: true,
+                label: Gallery::Hostile::EMOJI_NAME,
+                description: Gallery::Hostile::LONG_PARAGRAPH
+              )
+            end
+          end
+        end
       end
     end
   end

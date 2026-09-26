@@ -201,6 +201,63 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "pagination-stress",
+          description: "Forty visible pages linking to Gallery::Hostile's long URL, then boundaries and page labels made of the long label, unbroken word, huge number, and CJK name."
+        ) do
+          example("Forty pages", slug: "pagination-hostile-range", stress: true, mode: :full_width) do
+            render NitroKit::Pagination.new(
+              id: "gallery-pagination-hostile-range",
+              label: Gallery::Hostile::LONG_LABEL
+            ) do |pagination|
+              pagination.prev(href: "#{Gallery::Hostile::LONG_URL}&page=19", id: "gallery-pagination-hostile-range-previous")
+              (1..40).each do |page|
+                pagination.page(
+                  page,
+                  href: "#{Gallery::Hostile::LONG_URL}&page=#{page}",
+                  current: page == 20,
+                  id: "gallery-pagination-hostile-range-page-#{page}"
+                )
+              end
+              pagination.next(href: "#{Gallery::Hostile::LONG_URL}&page=21", id: "gallery-pagination-hostile-range-next")
+            end
+          end
+
+          example("Hostile labels", slug: "pagination-hostile-labels", stress: true) do
+            render NitroKit::Pagination.new(
+              id: "gallery-pagination-hostile-labels",
+              label: Gallery::Hostile::LONG_LABEL
+            ) do |pagination|
+              pagination.prev(
+                Gallery::Hostile::LONG_LABEL,
+                href: Gallery::Hostile::LONG_URL,
+                icon: nil,
+                id: "gallery-pagination-hostile-labels-previous"
+              )
+              pagination.page(
+                Gallery::Hostile::HUGE_FORMATTED,
+                href: Gallery::Hostile::LONG_URL,
+                id: "gallery-pagination-hostile-labels-huge"
+              )
+              pagination.page(current: true, id: "gallery-pagination-hostile-labels-current") do
+                Gallery::Hostile::LONG_WORD
+              end
+              pagination.page(
+                Gallery::Hostile::CJK_NAME,
+                href: Gallery::Hostile::LONG_URL,
+                id: "gallery-pagination-hostile-labels-cjk"
+              )
+              pagination.next(
+                Gallery::Hostile::LONG_WORD,
+                href: Gallery::Hostile::LONG_URL,
+                icon: nil,
+                id: "gallery-pagination-hostile-labels-next"
+              )
+            end
+          end
+        end
       end
 
       def render_boundary(example)

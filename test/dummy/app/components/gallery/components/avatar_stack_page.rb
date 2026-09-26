@@ -97,6 +97,36 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "avatar-stack-stress",
+          description: "Forty hostile identities bounded by max:, then a five-digit overflow beside long and non-Latin fallbacks."
+        ) do
+          example("Hostile stacks", slug: "avatar-stack-hostile", stress: true) do
+            render NitroKit::AvatarStack.new(
+              id: "gallery-avatar-stack-hostile-max",
+              size: :md,
+              max: 5,
+              label: "Everyone in the workspace"
+            ) do |stack|
+              Gallery::Hostile.members(40).each_with_index do |member, index|
+                stack.avatar(alt: member.name, id: "gallery-avatar-stack-hostile-max-#{index}")
+              end
+            end
+
+            render NitroKit::AvatarStack.new(
+              id: "gallery-avatar-stack-hostile-count",
+              size: :xs,
+              label: "Deployment observers"
+            ) do |stack|
+              stack.avatar(alt: Gallery::Hostile::LONG_NAME, fallback: "TEAM", id: "gallery-avatar-stack-hostile-team")
+              stack.avatar(alt: Gallery::Hostile::CJK_NAME, fallback: "山田", id: "gallery-avatar-stack-hostile-cjk")
+              stack.avatar(alt: Gallery::Hostile::EMOJI_NAME, fallback: "🦄", id: "gallery-avatar-stack-hostile-emoji")
+              stack.overflow(99_999, label: "99,999 more deployment observers")
+            end
+          end
+        end
       end
 
       def render_stack(stack)

@@ -87,7 +87,7 @@ class GalleryContentComponentsTest < ActionDispatch::IntegrationTest
   test "danger zone gallery keeps confirmation composition and safe escape distinct" do
     get_block("danger-zone")
 
-    assert_select "[data-nk='danger-zone']", count: 5 do |zones|
+    assert_select "[data-nk='danger-zone']", count: 7 do |zones|
       assert zones.all? { |zone| zone.at_css("[data-slot='danger-zone-confirmation']") }
       assert zones.all? { |zone| zone.at_css("[data-slot='danger-zone-description']") }
       assert zones.none? { |zone| zone.at_css("[data-slot='danger-zone-escape'][data-variant='destructive']") }

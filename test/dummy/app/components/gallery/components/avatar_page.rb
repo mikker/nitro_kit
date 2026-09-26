@@ -90,6 +90,44 @@ module Gallery
             )
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "avatar-stress",
+          description: "Generated initials for every Gallery::Hostile identity, from unbroken, RTL, CJK, Thai, and emoji names to zero-width, combining, and single-letter ones, plus four-grapheme and non-Latin custom fallbacks at every size and a broken image falling back to four letters of an unbroken word."
+        ) do
+          example("Hostile initials", slug: "avatar-hostile-initials", layout: :matrix, density: :compact, stress: true) do
+            Gallery::Hostile::NAMES.each_with_index do |name, index|
+              sample("Identity #{index + 1}", slug: "identity-#{index + 1}") do
+                render NitroKit::Avatar.new(alt: name, size: :lg, id: "gallery-avatar-hostile-initials-#{index + 1}")
+              end
+            end
+          end
+
+          example("Hostile fallbacks", slug: "avatar-hostile-fallbacks", layout: :row, stress: true) do
+            Gallery::Hostile::INITIALS.each_with_index do |fallback, index|
+              render NitroKit::Avatar.new(
+                alt: Gallery::Hostile::NAMES.fetch(index),
+                fallback:,
+                size: %i[xs sm md lg].fetch(index % 4),
+                id: "gallery-avatar-hostile-fallback-#{index + 1}"
+              )
+            end
+            render NitroKit::Avatar.new(
+              alt: Gallery::Hostile::LONG_NAME,
+              fallback: Gallery::Hostile::LONG_WORD[0, 4],
+              size: :lg,
+              id: "gallery-avatar-hostile-fallback-word"
+            )
+            render NitroKit::Avatar.new(
+              src: "/gallery/not-an-image.txt",
+              alt: Gallery::Hostile::LONG_NAME,
+              fallback: Gallery::Hostile::LONG_WORD[0, 4],
+              size: :md,
+              id: "gallery-avatar-hostile-broken-image"
+            )
+          end
+        end
       end
 
       def render_avatar(avatar)

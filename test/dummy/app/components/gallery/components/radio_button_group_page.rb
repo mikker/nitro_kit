@@ -142,6 +142,58 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "radio-button-group-stress",
+          description: "Thirty Gallery::Hostile badge labels as radio choices under an overlong legend and paragraph " \
+            "guidance, then the same choices as a horizontal segmented control and as cards with paragraph descriptions."
+        ) do
+          example("Hostile list", slug: "radio-button-group-hostile-list", stress: true) do
+            render NitroKit::RadioButtonGroup.new(
+              legend: Gallery::Hostile::LONG_LABEL,
+              description: Gallery::Hostile::LONG_PARAGRAPH,
+              id: "gallery-radio-button-group-hostile-list",
+              name: "hostile[list]",
+              value: "hostile_3",
+              required: true,
+              size: :lg,
+              options: Gallery::Hostile::CHOICES
+            )
+          end
+
+          example("Hostile segmented and cards", slug: "radio-button-group-hostile-presentations", stress: true) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
+              render NitroKit::RadioButtonGroup.new(
+                legend: Gallery::Hostile::LONG_WORD,
+                description: Gallery::Hostile::LONG_SENTENCE,
+                id: "gallery-radio-button-group-hostile-segmented",
+                name: "hostile[segmented]",
+                value: "hostile_3",
+                presentation: :segmented,
+                orientation: :horizontal,
+                options: Gallery::Hostile::CHOICES
+              )
+              render NitroKit::RadioButtonGroup.new(
+                legend: Gallery::Hostile::RTL_NAME,
+                description: Gallery::Hostile::LONG_URL,
+                id: "gallery-radio-button-group-hostile-cards",
+                name: "hostile[cards]",
+                value: "hostile_1",
+                presentation: :cards,
+                disabled: true,
+                required: true,
+                options: Gallery::Hostile::NAMES.each_with_index.map do |label, index|
+                  {
+                    label:,
+                    value: "hostile_#{index}",
+                    description: index.even? ? Gallery::Hostile::LONG_PARAGRAPH : Gallery::Hostile::LONG_WORD
+                  }
+                end
+              )
+            end
+          end
+        end
       end
     end
   end

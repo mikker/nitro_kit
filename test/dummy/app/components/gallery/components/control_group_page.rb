@@ -174,6 +174,86 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "control-group-stress",
+          description: "Unbroken and mixed-script addons from Gallery::Hostile joined to inputs holding a long URL and email, " \
+            "a thirty-option select, a paragraph placeholder, and buttons labelled with the longest action labels."
+        ) do
+          example("Hostile joined controls", slug: "control-group-hostile", stress: true) do
+            options = Gallery::Hostile::CHOICES
+
+            render NitroKit::Flex.new(dir: :col, gap: 3, align: :stretch) do
+              render NitroKit::ControlGroup.new(
+                id: "gallery-control-group-hostile-addons",
+                label: Gallery::Hostile::LONG_LABEL
+              ) do |group|
+                group.addon(Gallery::Hostile::LONG_WORD, html: { id: "gallery-control-group-hostile-addons-prefix" })
+                render NitroKit::Input.new(
+                  type: :url,
+                  id: "gallery-control-group-hostile-addons-input",
+                  name: "hostile[url]",
+                  value: Gallery::Hostile::LONG_URL,
+                  aria: {
+                    label: Gallery::Hostile::LONG_LABEL,
+                    describedby: "gallery-control-group-hostile-addons-prefix gallery-control-group-hostile-addons-suffix"
+                  }
+                )
+                group.addon(Gallery::Hostile::CJK_NAME, html: { id: "gallery-control-group-hostile-addons-suffix" })
+              end
+              render NitroKit::ControlGroup.new(
+                id: "gallery-control-group-hostile-filter",
+                label: Gallery::Hostile::LONG_WORD
+              ) do
+                render NitroKit::Select.new(
+                  id: "gallery-control-group-hostile-filter-select",
+                  name: "hostile[status]",
+                  value: "hostile_3",
+                  control_aria: { label: Gallery::Hostile::RTL_NAME },
+                  options:
+                )
+                render NitroKit::Input.new(
+                  type: :search,
+                  id: "gallery-control-group-hostile-filter-query",
+                  name: "hostile[query]",
+                  placeholder: Gallery::Hostile::LONG_PARAGRAPH,
+                  aria: { label: Gallery::Hostile::EMOJI_NAME }
+                )
+                render NitroKit::Button.new(
+                  Gallery::Hostile::ACTION_LABELS.last,
+                  id: "gallery-control-group-hostile-filter-submit",
+                  type: :submit
+                )
+              end
+              render NitroKit::ControlGroup.new(
+                id: "gallery-control-group-hostile-locked",
+                label: Gallery::Hostile::THAI_NAME
+              ) do |group|
+                group.addon(Gallery::Hostile::RTL_NAME, html: { id: "gallery-control-group-hostile-locked-prefix" })
+                render NitroKit::Input.new(
+                  type: :email,
+                  id: "gallery-control-group-hostile-locked-input",
+                  name: "hostile[email]",
+                  value: Gallery::Hostile::LONG_EMAIL,
+                  required: true,
+                  disabled: true,
+                  aria: {
+                    label: Gallery::Hostile::LONG_EMAIL,
+                    invalid: true,
+                    describedby: "gallery-control-group-hostile-locked-prefix"
+                  }
+                )
+                render NitroKit::Button.new(
+                  Gallery::Hostile::ACTION_LABELS[2],
+                  id: "gallery-control-group-hostile-locked-button",
+                  type: :button,
+                  disabled: true
+                )
+              end
+            end
+          end
+        end
       end
     end
   end

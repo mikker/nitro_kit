@@ -126,6 +126,58 @@ module Gallery
             )
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "page-header-stress",
+          description: "An RTL eyebrow over an unbroken hundred-letter h1, four paragraphs of description, and all twelve Gallery::Hostile actions in the group; then a hundred-character title in a small container."
+        ) do
+          example("Hostile header", slug: "page-header-hostile", mode: :full_width, stress: true) do
+            render NitroKit::PageHeader.new(
+              eyebrow: Gallery::Hostile::RTL_NAME,
+              title: Gallery::Hostile::LONG_WORD,
+              description: Gallery::Hostile::LONG_PARAGRAPH,
+              id: "gallery-page-header-hostile"
+            ) do |header|
+              header.actions NitroKit::ButtonGroup.new(id: "gallery-page-header-hostile-actions", label: "Every workspace action") do |actions|
+                Gallery::Hostile::ACTION_LABELS.each_with_index do |label, index|
+                  actions.button(
+                    label,
+                    id: "gallery-page-header-hostile-action-#{index + 1}",
+                    href: "#hostile-action-#{index + 1}",
+                    variant: index.zero? ? :primary : :default
+                  )
+                end
+              end
+            end
+          end
+
+          example("Hostile header in a small container", slug: "page-header-hostile-narrow", stress: true) do
+            render NitroKit::Container.new(size: :sm, id: "gallery-page-header-hostile-narrow-container") do
+              render NitroKit::PageHeader.new(
+                eyebrow: Gallery::Hostile::CJK_NAME,
+                title: Gallery::Hostile::LONG_NAME,
+                description: Gallery::Hostile::LONG_EMAIL,
+                level: 2,
+                id: "gallery-page-header-hostile-narrow"
+              ) do |header|
+                header.actions NitroKit::ButtonGroup.new(id: "gallery-page-header-hostile-narrow-actions", label: "Narrow hostile actions") do |actions|
+                  actions.button(
+                    Gallery::Hostile::LONG_LABEL,
+                    id: "gallery-page-header-hostile-narrow-save",
+                    href: "#hostile-narrow-save",
+                    variant: :primary
+                  )
+                  actions.button(
+                    Gallery::Hostile::EMOJI_NAME,
+                    id: "gallery-page-header-hostile-narrow-emoji",
+                    href: "#hostile-narrow-emoji"
+                  )
+                end
+              end
+            end
+          end
+        end
       end
 
       def source_note

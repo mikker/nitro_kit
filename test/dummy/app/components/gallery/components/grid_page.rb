@@ -182,6 +182,46 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "grid-stress",
+          description: "Forty Gallery::Hostile member cards in a responsive grid, then thirty hostile badge labels forced into twelve fixed tracks."
+        ) do
+          example("Forty hostile members", slug: "grid-hostile-members", stress: true, mode: :full_width) do
+            render NitroKit::Grid.new(
+              cols: "1 sm:2 lg:4",
+              gap: "2 lg:4",
+              id: "gallery-grid-hostile-members"
+            ) do
+              Gallery::Hostile.members(40).each do |member|
+                render NitroKit::Card.new(id: "gallery-grid-hostile-member-#{member.id}") do |card|
+                  card.title(member.name, level: 4)
+                  card.body do
+                    render NitroKit::Badge.new(
+                      member.role.to_s.humanize,
+                      id: "gallery-grid-hostile-member-#{member.id}-role",
+                      size: :sm
+                    )
+                    p { member.email }
+                  end
+                end
+              end
+            end
+          end
+
+          example("Twelve fixed tracks", slug: "grid-hostile-tracks", stress: true, mode: :full_width) do
+            render NitroKit::Grid.new(cols: 12, gap: 1, id: "gallery-grid-hostile-tracks") do
+              Gallery::Hostile::BADGE_LABELS.each_with_index do |label, index|
+                render NitroKit::Badge.new(
+                  label,
+                  id: "gallery-grid-hostile-track-#{index}",
+                  color: :info
+                )
+              end
+            end
+          end
+        end
       end
     end
   end

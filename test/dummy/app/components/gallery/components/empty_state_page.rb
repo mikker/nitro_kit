@@ -117,6 +117,62 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "empty-state-stress",
+          description: "An unbroken hundred-letter title over four paragraphs of description with two hostile-labelled actions in a small container, then a borderless state whose description is a raw webhook URL inside a CJK-titled card."
+        ) do
+          example("Hostile empty state", slug: "empty-state-hostile", stress: true) do
+            render NitroKit::Container.new(size: :sm, id: "gallery-empty-state-hostile-container") do
+              render NitroKit::EmptyState.new(
+                title: Gallery::Hostile::LONG_WORD,
+                description: Gallery::Hostile::LONG_PARAGRAPH,
+                level: 3,
+                id: "gallery-empty-state-hostile"
+              ) do |empty|
+                empty.icon NitroKit::Icon.new(:search_x, id: "gallery-empty-state-hostile-icon")
+                empty.action NitroKit::Button.new(
+                  Gallery::Hostile::LONG_LABEL,
+                  id: "gallery-empty-state-hostile-primary",
+                  href: Gallery::Hostile::LONG_URL,
+                  variant: :primary
+                )
+                empty.action NitroKit::Button.new(
+                  Gallery::Hostile::RTL_NAME,
+                  id: "gallery-empty-state-hostile-escape",
+                  href: "#hostile-escape"
+                )
+              end
+            end
+          end
+
+          example("Hostile borderless in a card", slug: "empty-state-hostile-card", stress: true) do
+            render NitroKit::Card.new(id: "gallery-empty-state-hostile-card") do |card|
+              card.title(Gallery::Hostile::CJK_NAME, level: 3)
+              card.body do
+                render NitroKit::EmptyState.new(
+                  variant: :borderless,
+                  level: 4,
+                  id: "gallery-empty-state-hostile-borderless"
+                ) do |empty|
+                  empty.title(Gallery::Hostile::LONG_NAME)
+                  empty.description do
+                    plain "No deliveries recorded for "
+                    a(href: Gallery::Hostile::LONG_URL) { Gallery::Hostile::LONG_URL }
+                  end
+                  empty.icon NitroKit::Icon.new(:webhook, id: "gallery-empty-state-hostile-borderless-icon")
+                  empty.action NitroKit::Button.new(
+                    Gallery::Hostile::EMOJI_NAME,
+                    id: "gallery-empty-state-hostile-borderless-action",
+                    href: "#hostile-emoji",
+                    variant: :primary
+                  )
+                end
+              end
+            end
+          end
+        end
       end
 
       def source_note

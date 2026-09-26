@@ -351,6 +351,93 @@ module Gallery
             render_ransack_recipe
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "table-stress",
+          description: "Forty Gallery::Hostile members with 130-character emails, unbroken and mixed-script names, webhook URLs as link text, huge and negative amounts, and per-row action groups under sortable headers; then a hostile roster in a small container."
+        ) do
+          example("Hostile roster", slug: "table-hostile", mode: :full_width, stress: true) do
+            render NitroKit::Table.new(id: "gallery-table-hostile", sort: :name, direction: :asc) do |table|
+              table.caption(Gallery::Hostile::LONG_LABEL)
+              table.thead do
+                table.tr do
+                  table.th("Member", sort: :name, href: "?sort=name-desc")
+                  table.th("Email", sort: :email, href: "?sort=email-asc")
+                  table.th(Gallery::Hostile::LONG_WORD, sort: :endpoint, href: "?sort=endpoint-asc")
+                  table.th("Status")
+                  table.th("Balance", sort: :balance, href: "?sort=balance-asc", align: :right)
+                  table.th("Actions", align: :right)
+                end
+              end
+              table.tbody do
+                Gallery::Hostile.members(40).each_with_index do |member, index|
+                  table.tr do
+                    table.th(scope: :row) do
+                      render NitroKit::Avatar.new(alt: member.name, size: :sm, id: "gallery-table-hostile-avatar-#{index + 1}")
+                      plain " #{member.name}"
+                    end
+                    table.td { a(href: "mailto:#{member.email}") { member.email } }
+                    table.td do
+                      a(href: Gallery::Hostile::LONG_URL) { index.even? ? Gallery::Hostile::LONG_URL : Gallery::Hostile::LONG_SLUG }
+                    end
+                    table.td do
+                      render NitroKit::Badge.new(
+                        Gallery::Hostile::BADGE_LABELS.fetch(index % Gallery::Hostile::BADGE_LABELS.size),
+                        id: "gallery-table-hostile-status-#{index + 1}",
+                        color: member.status == :active ? :success : :warning,
+                        size: :sm
+                      )
+                    end
+                    table.td(index.even? ? Gallery::Hostile::HUGE_MONEY : Gallery::Hostile::NEGATIVE_MONEY, align: :right)
+                    table.td(align: :right) do
+                      render NitroKit::ButtonGroup.new(
+                        id: "gallery-table-hostile-actions-#{index + 1}",
+                        label: "Actions for #{member.name}"
+                      ) do |group|
+                        group.button(
+                          Gallery::Hostile::ACTION_LABELS.fetch(index % Gallery::Hostile::ACTION_LABELS.size),
+                          id: "gallery-table-hostile-action-#{index + 1}",
+                          size: :sm
+                        )
+                        group.button(
+                          Gallery::Hostile::ACTION_LABELS.fetch(10),
+                          id: "gallery-table-hostile-delete-#{index + 1}",
+                          size: :sm,
+                          variant: :destructive
+                        )
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
+
+          example("Hostile roster in a small container", slug: "table-hostile-narrow", stress: true) do
+            render NitroKit::Container.new(size: :sm, id: "gallery-table-hostile-narrow-container") do
+              render NitroKit::Table.new(id: "gallery-table-hostile-narrow") do |table|
+                table.caption("Hostile roster in a small container")
+                table.thead do
+                  table.tr do
+                    table.th("Member")
+                    table.th("Email")
+                    table.th("Balance", align: :right)
+                  end
+                end
+                table.tbody do
+                  Gallery::Hostile.members(9).each_with_index do |member, index|
+                    table.tr do
+                      table.th(member.name, scope: :row)
+                      table.td(member.email)
+                      table.td(index.even? ? Gallery::Hostile::HUGE_MONEY : Gallery::Hostile::NEGATIVE_MONEY, align: :right)
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
       end
 
       def render_sort_state_table(sort:, direction:, id:)

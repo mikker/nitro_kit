@@ -204,6 +204,44 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "button-group-stress",
+          description: "All twelve Gallery::Hostile action labels in one labelled group at full width, then the same labels as small link members inside a small container."
+        ) do
+          example("Hostile action group", slug: "button-group-hostile", mode: :full_width, stress: true) do
+            render NitroKit::ButtonGroup.new(id: "gallery-button-group-hostile", label: "Every record action") do |group|
+              Gallery::Hostile::ACTION_LABELS.each_with_index do |label, index|
+                group.button(
+                  label,
+                  id: "gallery-button-group-hostile-action-#{index + 1}",
+                  variant: index.zero? ? :primary : :default,
+                  icon: index.even? ? :save : nil
+                )
+              end
+            end
+          end
+
+          example("Hostile links in a small container", slug: "button-group-hostile-narrow", stress: true) do
+            render NitroKit::Container.new(size: :sm, id: "gallery-button-group-hostile-narrow-container") do
+              render NitroKit::ButtonGroup.new(
+                id: "gallery-button-group-hostile-narrow",
+                label: Gallery::Hostile::LONG_LABEL,
+                size: :sm
+              ) do |group|
+                Gallery::Hostile::ACTION_LABELS.each_with_index do |label, index|
+                  group.button(
+                    label,
+                    id: "gallery-button-group-hostile-narrow-action-#{index + 1}",
+                    href: "#hostile-action-#{index + 1}",
+                    variant: index == 10 ? :destructive : :default
+                  )
+                end
+              end
+            end
+          end
+        end
       end
     end
   end

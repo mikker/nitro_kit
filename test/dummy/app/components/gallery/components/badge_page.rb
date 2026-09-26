@@ -129,6 +129,38 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "badge-stress",
+          description: "All thirty Gallery::Hostile badge labels, from a single digit to an unbroken hundred-letter word and RTL, CJK, Thai, and emoji text, in isolated cells and flowing inline."
+        ) do
+          example("Hostile labels", slug: "badge-hostile-labels", layout: :matrix, density: :compact, stress: true) do
+            Gallery::Hostile::BADGE_LABELS.each_with_index do |label, index|
+              sample("Label #{index + 1}", slug: "label-#{index + 1}") do
+                render NitroKit::Badge.new(
+                  label,
+                  id: "gallery-badge-hostile-label-#{index + 1}",
+                  variant: index.even? ? :default : :outline,
+                  color: %i[neutral success info warning destructive].fetch(index % 5),
+                  size: %i[xs sm md].fetch(index % 3)
+                )
+              end
+            end
+          end
+
+          example("Hostile inline flow", slug: "badge-hostile-flow", layout: :row, density: :compact, stress: true) do
+            Gallery::Hostile::BADGE_LABELS.each_with_index do |label, index|
+              render NitroKit::Badge.new(
+                label,
+                id: "gallery-badge-hostile-flow-#{index + 1}",
+                variant: :outline,
+                color: :neutral,
+                size: :sm
+              )
+            end
+          end
+        end
       end
 
       def render_badge(badge, id:)

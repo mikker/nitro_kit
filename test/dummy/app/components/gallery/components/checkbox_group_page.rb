@@ -233,6 +233,57 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "checkbox-group-stress",
+          description: "Thirty Gallery::Hostile badge labels as choices under an overlong legend and paragraph guidance, " \
+            "then the same choices as horizontal chips and as cards with paragraph descriptions."
+        ) do
+          example("Hostile list", slug: "checkbox-group-hostile-list", stress: true) do
+            render NitroKit::CheckboxGroup.new(
+              legend: Gallery::Hostile::LONG_LABEL,
+              description: Gallery::Hostile::LONG_PARAGRAPH,
+              id: "gallery-checkbox-group-hostile-list",
+              name: "hostile[list]",
+              value: %w[hostile_1 hostile_3 hostile_5 hostile_7 hostile_9 hostile_13],
+              required: true,
+              size: :lg,
+              options: Gallery::Hostile::CHOICES
+            )
+          end
+
+          example("Hostile horizontal and cards", slug: "checkbox-group-hostile-presentations", stress: true) do
+            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
+              render NitroKit::CheckboxGroup.new(
+                legend: Gallery::Hostile::LONG_WORD,
+                description: Gallery::Hostile::LONG_SENTENCE,
+                id: "gallery-checkbox-group-hostile-horizontal",
+                name: "hostile[horizontal]",
+                value: %w[hostile_3 hostile_5],
+                orientation: :horizontal,
+                disabled: true,
+                options: Gallery::Hostile::CHOICES
+              )
+              render NitroKit::CheckboxGroup.new(
+                legend: Gallery::Hostile::RTL_NAME,
+                description: Gallery::Hostile::LONG_URL,
+                id: "gallery-checkbox-group-hostile-cards",
+                name: "hostile[cards]",
+                value: %w[hostile_1],
+                presentation: :cards,
+                options: Gallery::Hostile::NAMES.each_with_index.map do |label, index|
+                  {
+                    label:,
+                    value: "hostile_#{index}",
+                    description: index.even? ? Gallery::Hostile::LONG_PARAGRAPH : Gallery::Hostile::LONG_WORD,
+                    disabled: index == 2
+                  }
+                end
+              )
+            end
+          end
+        end
       end
     end
   end

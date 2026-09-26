@@ -138,6 +138,81 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "textarea-stress",
+          description: "Paragraph, unbroken-word, and URL values with a paragraph placeholder from Gallery::Hostile, " \
+            "then a required textarea field that is disabled and invalid."
+        ) do
+          example("Hostile values", slug: "textarea-hostile-values", stress: true, layout: :matrix) do
+            sample("Paragraph in two rows", slug: "paragraph") do
+              render NitroKit::Textarea.new(
+                id: "gallery-textarea-hostile-paragraph",
+                aria: { label: Gallery::Hostile::LONG_LABEL },
+                name: "hostile[paragraph]",
+                value: Gallery::Hostile::LONG_PARAGRAPH,
+                rows: 2
+              )
+            end
+            sample("Unbroken word", slug: "word") do
+              render NitroKit::Textarea.new(
+                id: "gallery-textarea-hostile-word",
+                aria: { label: Gallery::Hostile::LONG_LABEL },
+                name: "hostile[word]",
+                value: ([ Gallery::Hostile::LONG_WORD ] * 3).join,
+                rows: 3
+              )
+            end
+            sample("Long URL, no wrap", slug: "url") do
+              render NitroKit::Textarea.new(
+                id: "gallery-textarea-hostile-url",
+                aria: { label: Gallery::Hostile::LONG_LABEL },
+                name: "hostile[url]",
+                value: Gallery::Hostile::LONG_URL,
+                wrap: :off,
+                rows: 3
+              )
+            end
+            sample("Paragraph placeholder", slug: "placeholder") do
+              render NitroKit::Textarea.new(
+                id: "gallery-textarea-hostile-placeholder",
+                aria: { label: Gallery::Hostile::LONG_LABEL },
+                name: "hostile[placeholder]",
+                value: "",
+                placeholder: Gallery::Hostile::LONG_PARAGRAPH,
+                rows: 3
+              )
+            end
+            sample("Mixed scripts", slug: "scripts") do
+              render NitroKit::Textarea.new(
+                id: "gallery-textarea-hostile-scripts",
+                aria: { label: Gallery::Hostile::LONG_LABEL },
+                name: "hostile[scripts]",
+                value: Gallery::Hostile::NAMES.join("\n"),
+                rows: 4
+              )
+            end
+          end
+
+          example("Hostile textarea field", slug: "textarea-hostile-field", stress: true) do
+            render NitroKit::Field.new(
+              nil,
+              :notes,
+              as: :textarea,
+              id: "gallery-textarea-hostile-field",
+              name: "hostile[notes]",
+              value: Gallery::Hostile::LONG_WORD,
+              label: Gallery::Hostile::LONG_LABEL,
+              description: Gallery::Hostile::LONG_PARAGRAPH,
+              errors: [ Gallery::Hostile::LONG_ERROR ],
+              required: true,
+              disabled: true,
+              rows: 2,
+              html: { id: "gallery-textarea-hostile-field-wrapper" }
+            )
+          end
+        end
       end
     end
   end

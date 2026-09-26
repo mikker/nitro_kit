@@ -88,6 +88,43 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "sheet-stress",
+          description: "A small sheet whose trigger, title, description, close label, and navigation tree all come from Gallery::Hostile's longest, unbroken, and mixed-script values."
+        ) do
+          example("Hostile sheet", slug: "sheet-hostile", stress: true) do
+            render NitroKit::Sheet.new(
+              id: "gallery-sheet-hostile",
+              side: :left,
+              size: :sm,
+              close_label: Gallery::Hostile::LONG_LABEL
+            ) do |sheet|
+              sheet.trigger(Gallery::Hostile::LONG_LABEL, icon: :list)
+              sheet.panel(
+                title: Gallery::Hostile::LONG_NAME,
+                description: Gallery::Hostile::LONG_PARAGRAPH
+              ) do
+                p { Gallery::Hostile::LONG_WORD }
+                render NitroKit::AppNavigation.new(
+                  id: "gallery-sheet-hostile-navigation",
+                  label: Gallery::Hostile::LONG_LABEL
+                ) do |navigation|
+                  navigation.body do
+                    Gallery::Hostile::NAVIGATION_LABELS.each_with_index do |label, index|
+                      navigation.item(
+                        label,
+                        href: "#{Gallery::Hostile::LONG_URL}#prompt-#{index}",
+                        current: index.zero?
+                      )
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
       end
     end
   end

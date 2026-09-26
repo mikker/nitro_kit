@@ -1,15 +1,16 @@
 module Gallery
   class ExamplePreview < Primitive
-    def initialize(slug:, title:, mode:, layout:, density:, scroll:)
+    def initialize(slug:, title:, mode:, layout:, density:, scroll:, stress: false)
       @slug = normalize_slug(slug)
       @title = validate_text!(:title, title)
       @mode = validate_choice!(:mode, mode, Example::MODES)
       @layout = validate_choice!(:layout, layout, Example::LAYOUTS)
       @density = validate_choice!(:density, density, Example::DENSITIES)
       @scroll = validate_boolean!(:scroll, scroll)
+      @stress = validate_boolean!(:stress, stress)
     end
 
-    attr_reader :slug, :title, :mode, :layout, :density, :scroll
+    attr_reader :slug, :title, :mode, :layout, :density, :scroll, :stress
 
     def view_template(&block)
       raise ArgumentError, "Gallery::ExamplePreview requires a preview block" unless block
@@ -23,6 +24,7 @@ module Gallery
           gallery_layout: data_value(layout),
           gallery_density: data_value(density),
           gallery_scroll: scroll ? "true" : nil,
+          gallery_stress: stress ? "true" : nil,
           gallery_responsive_preview: "true"
         }.compact
       ) do

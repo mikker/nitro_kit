@@ -443,6 +443,7 @@ Every component includes:
 - Structural and component-specific accessibility assertions.
 - A gallery combination page with meaningful permutations.
 - Long, missing optional, disabled, validation/error, dark, and narrow-width examples where relevant.
+- An "Under pressure" example flagged `stress: true`, composed from `Gallery::Hostile`, that the stress sweep audits.
 - Behavior tests for interactive components.
 
 The gallery uses explicit Phlex page classes and `Gallery::Catalog`. Do not add ERB component examples or infer routes from filenames. Every `Gallery::Example` pairs Preview and Code tabs. Keep the preview in the block passed to the gallery helper so `Gallery::SourceCode` can extract, highlight, and copy its executable Ruby body; use a concrete method source for inherited flow wrappers instead of duplicating snippets.

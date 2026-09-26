@@ -161,6 +161,57 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "alert-stress",
+          description: "A destructive alert titled with an unbroken hundred-letter word whose description carries the full slug validation error, a webhook URL, and four paragraphs of pasted prose; then RTL, CJK, Thai, and emoji alerts side by side."
+        ) do
+          example("Hostile incident", slug: "alert-hostile", stress: true) do
+            render NitroKit::Alert.new(id: "gallery-alert-hostile", variant: :destructive) do |alert|
+              alert.icon(NitroKit::Icon.new(:circle_x, id: "gallery-alert-hostile-icon"))
+              alert.title(Gallery::Hostile::LONG_WORD)
+              alert.description do
+                p { "Workspace slug #{Gallery::Hostile::LONG_ERROR}." }
+                p { a(href: Gallery::Hostile::LONG_URL) { Gallery::Hostile::LONG_URL } }
+                p { Gallery::Hostile::LONG_PARAGRAPH }
+              end
+            end
+          end
+
+          example("Hostile scripts", slug: "alert-hostile-scripts", layout: :matrix, stress: true) do
+            sample("Right-to-left", slug: "rtl") do
+              render NitroKit::Alert.new(
+                id: "gallery-alert-hostile-rtl",
+                variant: :warning,
+                title: Gallery::Hostile::RTL_NAME,
+                description: Gallery::Hostile::LONG_EMAIL
+              )
+            end
+            sample("CJK and Thai", slug: "cjk-thai") do
+              render NitroKit::Alert.new(
+                id: "gallery-alert-hostile-cjk",
+                variant: :info,
+                title: Gallery::Hostile::CJK_NAME,
+                description: Gallery::Hostile::THAI_NAME
+              )
+            end
+            sample("Emoji and magnitude", slug: "emoji") do
+              render NitroKit::Alert.new(id: "gallery-alert-hostile-emoji", variant: :success) do |alert|
+                alert.title(Gallery::Hostile::EMOJI_NAME)
+                alert.description do
+                  render NitroKit::Badge.new(
+                    Gallery::Hostile::HUGE_FORMATTED,
+                    id: "gallery-alert-hostile-emoji-count",
+                    color: :success,
+                    size: :sm
+                  )
+                  plain " #{Gallery::Hostile::NEGATIVE_MONEY}"
+                end
+              end
+            end
+          end
+        end
       end
 
       def render_alert(alert)

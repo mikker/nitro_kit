@@ -95,6 +95,45 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "button-to-stress",
+          description: "Mutation buttons labelled with Gallery::Hostile text, from an eighty-character setting name and an unbroken hundred-letter word to RTL, CJK, and emoji names, all posting to a 200-character webhook URL."
+        ) do
+          example("Hostile mutations", slug: "button-to-hostile", layout: :row, stress: true) do
+            [
+              Gallery::Hostile::LONG_LABEL,
+              Gallery::Hostile::LONG_WORD,
+              Gallery::Hostile::RTL_NAME,
+              Gallery::Hostile::CJK_NAME,
+              Gallery::Hostile::EMOJI_NAME
+            ].each_with_index do |label, index|
+              render NitroKit::ButtonTo.new(
+                label,
+                href: Gallery::Hostile::LONG_URL,
+                method: index.even? ? :patch : :delete,
+                id: "gallery-button-to-hostile-#{index + 1}",
+                variant: index.odd? ? :destructive : :default,
+                icon: index.odd? ? :trash_2 : :archive
+              )
+            end
+          end
+
+          example("Hostile mutation in a small container", slug: "button-to-hostile-narrow", stress: true) do
+            render NitroKit::Container.new(size: :sm, id: "gallery-button-to-hostile-narrow-container") do
+              render NitroKit::ButtonTo.new(
+                "Delete #{Gallery::Hostile::LONG_NAME}",
+                href: Gallery::Hostile::LONG_URL,
+                method: :delete,
+                id: "gallery-button-to-hostile-narrow",
+                variant: :destructive,
+                icon: :trash_2,
+                size: :lg
+              )
+            end
+          end
+        end
       end
     end
   end

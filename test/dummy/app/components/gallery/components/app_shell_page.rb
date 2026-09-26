@@ -72,6 +72,85 @@ module Gallery
             )
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "app-shell-stress",
+          description: "Both layouts with Gallery::Hostile's long name as brand, every hostile navigation label with badges, a long-labelled topbar action, and a main region of unbroken headings and hostile member cards."
+        ) do
+          example("Hostile sidebar and topbar", slug: "app-shell-hostile", stress: true, mode: :full_width) do
+            NitroKit::AppShell::LAYOUTS.each do |layout|
+              sample(layout.to_s.humanize, slug: layout.to_s) do
+                render NitroKit::AppShell.new(
+                  id: "gallery-app-shell-hostile-#{layout}",
+                  layout:,
+                  navigation_dialog_label: Gallery::Hostile::LONG_LABEL,
+                  data: { gallery_shell_preview: layout }
+                ) do |shell|
+                  shell.brand { strong { Gallery::Hostile::LONG_NAME } }
+
+                  shell.navigation do
+                    render NitroKit::AppNavigation.new(
+                      id: "gallery-app-shell-hostile-#{layout}-navigation",
+                      label: Gallery::Hostile::LONG_LABEL
+                    ) do |navigation|
+                      navigation.header { strong { Gallery::Hostile::LONG_WORD } }
+                      navigation.body do
+                        navigation.section(label: Gallery::Hostile::LONG_LABEL) do
+                          Gallery::Hostile::NAVIGATION_LABELS.each_with_index do |label, index|
+                            navigation.item(
+                              label,
+                              href: "#{Gallery::Hostile::LONG_URL}#destination-#{index}",
+                              icon: :folder,
+                              badge: Gallery::Hostile::BADGE_LABELS[index],
+                              current: index.zero?
+                            )
+                          end
+                        end
+                        navigation.spacer
+                        navigation.divider
+                        navigation.item(Gallery::Hostile::LONG_WORD, href: Gallery::Hostile::LONG_URL, icon: :settings)
+                      end
+                      navigation.footer { p { Gallery::Hostile::LONG_EMAIL } }
+                    end
+                  end
+
+                  shell.topbar do
+                    render NitroKit::Button.new(
+                      Gallery::Hostile::LONG_LABEL,
+                      id: "gallery-app-shell-hostile-#{layout}-search",
+                      href: Gallery::Hostile::LONG_URL,
+                      size: :sm,
+                      icon: :search
+                    )
+                  end
+
+                  shell.main do
+                    div(data: { gallery: "app-shell-main" }) do
+                      render NitroKit::Container.new(size: :lg) do
+                        render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch) do
+                          render NitroKit::PageHeader.new(
+                            title: Gallery::Hostile::LONG_WORD,
+                            description: Gallery::Hostile::LONG_PARAGRAPH,
+                            level: 4
+                          )
+                          render NitroKit::Grid.new(cols: "1 sm:2 lg:3", gap: 3) do
+                            Gallery::Hostile.members(9).each do |member|
+                              render NitroKit::Card.new(id: "gallery-app-shell-hostile-#{layout}-#{member.id}") do |card|
+                                card.title(member.name, level: 5)
+                                card.body { p { member.email } }
+                              end
+                            end
+                          end
+                        end
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
       end
 
       def render_workspace_shell(id:, layout:, current:, brand: true, actions: true, dense: false, long: false)

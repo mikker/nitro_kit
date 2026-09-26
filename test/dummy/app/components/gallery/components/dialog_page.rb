@@ -194,6 +194,43 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "dialog-stress",
+          description: "An open nonmodal panel carrying Gallery::Hostile's long name, paragraph, unbroken word, long URL, and every action label, beside a modal whose trigger is the long label."
+        ) do
+          example("Hostile open panel", slug: "dialog-hostile", stress: true) do
+            render NitroKit::Dialog.new(id: "gallery-dialog-hostile") do |dialog|
+              dialog.panel(
+                title: Gallery::Hostile::LONG_NAME,
+                description: Gallery::Hostile::LONG_PARAGRAPH,
+                nonmodal: true
+              ) do
+                p { Gallery::Hostile::LONG_WORD }
+                p { a(href: Gallery::Hostile::LONG_URL) { Gallery::Hostile::LONG_URL } }
+                render NitroKit::Flex.new(dir: :row, gap: 2, justify: :end, wrap: :wrap) do
+                  Gallery::Hostile::ACTION_LABELS.each_with_index do |label, index|
+                    render NitroKit::Button.new(label, id: "gallery-dialog-hostile-action-#{index}", size: :sm)
+                  end
+                end
+                dialog.close_button(label: Gallery::Hostile::LONG_LABEL)
+              end
+            end
+          end
+
+          example("Hostile trigger", slug: "dialog-hostile-trigger", stress: true) do
+            render NitroKit::Dialog.new(id: "gallery-dialog-hostile-trigger") do |dialog|
+              dialog.trigger(Gallery::Hostile::LONG_LABEL, variant: :primary)
+              dialog.panel(
+                title: Gallery::Hostile::LONG_WORD,
+                description: Gallery::Hostile::LONG_ERROR
+              ) do
+                dialog.close_button(label: Gallery::Hostile::LONG_WORD)
+              end
+            end
+          end
+        end
       end
     end
   end

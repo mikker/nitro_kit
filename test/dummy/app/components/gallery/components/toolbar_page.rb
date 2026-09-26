@@ -149,6 +149,56 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "toolbar-stress",
+          description: "Thirty Gallery::Hostile badges in the leading region against all twelve hostile actions in the trailing region, then an unbroken heading beside a link whose text is a full webhook URL."
+        ) do
+          example("Hostile regions", slug: "toolbar-hostile", mode: :full_width, density: :compact, stress: true) do
+            render NitroKit::Toolbar.new(id: "gallery-toolbar-hostile") do |toolbar|
+              toolbar.leading do
+                Gallery::Hostile::BADGE_LABELS.each_with_index do |label, index|
+                  render NitroKit::Badge.new(
+                    label,
+                    id: "gallery-toolbar-hostile-filter-#{index + 1}",
+                    size: :sm,
+                    variant: :outline
+                  )
+                end
+              end
+              toolbar.trailing do
+                render NitroKit::ButtonGroup.new(id: "gallery-toolbar-hostile-actions", label: "Every hostile action") do |group|
+                  Gallery::Hostile::ACTION_LABELS.each_with_index do |label, index|
+                    group.button(label, id: "gallery-toolbar-hostile-action-#{index + 1}", size: :sm)
+                  end
+                end
+              end
+            end
+          end
+
+          example("Hostile heading and link", slug: "toolbar-hostile-heading", stress: true) do
+            render NitroKit::Toolbar.new(id: "gallery-toolbar-hostile-heading") do |toolbar|
+              toolbar.leading do
+                h3 { Gallery::Hostile::LONG_WORD }
+                render NitroKit::Badge.new(
+                  Gallery::Hostile::HUGE_FORMATTED,
+                  id: "gallery-toolbar-hostile-heading-count",
+                  color: :info
+                )
+              end
+              toolbar.trailing do
+                render NitroKit::Button.new(
+                  Gallery::Hostile::LONG_URL,
+                  id: "gallery-toolbar-hostile-heading-link",
+                  href: Gallery::Hostile::LONG_URL,
+                  size: :sm,
+                  icon_end: :external_link
+                )
+              end
+            end
+          end
+        end
       end
     end
   end

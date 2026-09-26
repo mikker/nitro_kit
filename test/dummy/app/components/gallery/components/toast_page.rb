@@ -232,6 +232,48 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "toast-stress",
+          description: "Eleven simultaneous notifications whose titles and descriptions cycle through Gallery::Hostile's names and emails, then the unbroken word, paragraph, long URL, and huge number."
+        ) do
+          example("Hostile notification stack", slug: "toast-hostile", stress: true, mode: :full_width) do
+            render NitroKit::Toast.new(
+              duration: 600_000,
+              label: Gallery::Hostile::LONG_LABEL,
+              id: "gallery-toast-hostile"
+            ) do |toast|
+              Gallery::Hostile::NAMES.each_with_index do |name, index|
+                toast.item(
+                  title: name,
+                  description: Gallery::Hostile::EMAILS[index % Gallery::Hostile::EMAILS.size],
+                  variant: NitroKit::Toast::Item::VARIANTS[index % NitroKit::Toast::Item::VARIANTS.size],
+                  id: "gallery-toast-hostile-item-#{index}"
+                )
+              end
+              toast.item(
+                title: Gallery::Hostile::LONG_WORD,
+                description: Gallery::Hostile::LONG_PARAGRAPH,
+                variant: :error,
+                id: "gallery-toast-hostile-paragraph"
+              )
+              toast.item(
+                title: Gallery::Hostile::LONG_LABEL,
+                variant: :info,
+                dismissible: false,
+                id: "gallery-toast-hostile-block"
+              ) do
+                p { a(href: Gallery::Hostile::LONG_URL) { Gallery::Hostile::LONG_URL } }
+                render NitroKit::Badge.new(
+                  Gallery::Hostile::HUGE_FORMATTED,
+                  id: "gallery-toast-hostile-badge",
+                  size: :sm
+                )
+              end
+            end
+          end
+        end
       end
 
       # The documented controller-to-screen path, kept as real Ruby so the Code

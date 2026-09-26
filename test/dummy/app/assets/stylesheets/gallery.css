@@ -1114,3 +1114,13 @@
 :where([data-theme="dark"] [data-ui="application-logo"]) {
   filter: invert(1) hue-rotate(180deg);
 }
+
+:where([data-gallery="stress-lab-frame"]) {
+  display: block;
+  inline-size: min(100%, 390px);
+  block-size: 36rem;
+  box-sizing: border-box;
+  border: 1px solid color-mix(in srgb, currentColor 28%, transparent);
+  border-radius: var(--nk-radius-lg);
+  background: var(--nk-color-canvas);
+}

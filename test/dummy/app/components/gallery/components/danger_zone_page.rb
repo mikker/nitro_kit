@@ -117,6 +117,63 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "danger-zone-stress",
+          description: "An unbroken hundred-letter title over four paragraphs of impact copy, a destructive confirmation labelled with a hundred-character name posting to a webhook URL, and an RTL escape; then the same zone in a small container."
+        ) do
+          example("Hostile zone", slug: "danger-zone-hostile", mode: :full_width, stress: true) do
+            render NitroKit::DangerZone.new(
+              title: Gallery::Hostile::LONG_WORD,
+              description: Gallery::Hostile::LONG_PARAGRAPH,
+              level: 4,
+              id: "gallery-danger-zone-hostile"
+            ) do |zone|
+              zone.confirmation do
+                render NitroKit::ButtonTo.new(
+                  "Delete #{Gallery::Hostile::LONG_NAME}",
+                  href: Gallery::Hostile::LONG_URL,
+                  method: :delete,
+                  id: "gallery-danger-zone-hostile-form",
+                  variant: :destructive,
+                  icon: :trash_2
+                )
+              end
+              zone.escape NitroKit::Button.new(
+                Gallery::Hostile::RTL_NAME,
+                id: "gallery-danger-zone-hostile-escape",
+                href: "#hostile-escape"
+              )
+            end
+          end
+
+          example("Hostile zone in a small container", slug: "danger-zone-hostile-narrow", stress: true) do
+            render NitroKit::Container.new(size: :sm, id: "gallery-danger-zone-hostile-narrow-container") do
+              render NitroKit::DangerZone.new(
+                title: Gallery::Hostile::LONG_NAME,
+                description: Gallery::Hostile::LONG_EMAIL,
+                level: 4,
+                id: "gallery-danger-zone-hostile-narrow"
+              ) do |zone|
+                zone.confirmation do
+                  render NitroKit::ButtonTo.new(
+                    Gallery::Hostile::LONG_LABEL,
+                    href: Gallery::Hostile::LONG_URL,
+                    method: :delete,
+                    id: "gallery-danger-zone-hostile-narrow-form",
+                    variant: :destructive
+                  )
+                end
+                zone.escape NitroKit::Button.new(
+                  Gallery::Hostile::CJK_NAME,
+                  id: "gallery-danger-zone-hostile-narrow-escape",
+                  href: "#hostile-narrow-escape"
+                )
+              end
+            end
+          end
+        end
       end
 
       def source_note

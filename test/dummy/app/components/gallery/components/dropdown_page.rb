@@ -124,6 +124,31 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "dropdown-stress",
+          description: "A trigger labelled with Gallery::Hostile's long label opening every hostile action label, an unbroken title, mixed-script items, and long URLs."
+        ) do
+          example("Hostile menu", slug: "dropdown-hostile", stress: true) do
+            render NitroKit::Dropdown.new(id: "gallery-dropdown-hostile", placement: :bottom_end) do |menu|
+              menu.trigger(Gallery::Hostile::LONG_LABEL, icon_end: :chevron_down)
+              menu.title(Gallery::Hostile::LONG_WORD)
+              Gallery::Hostile::ACTION_LABELS.each_with_index do |label, index|
+                menu.item(
+                  label,
+                  href: index.even? ? "#{Gallery::Hostile::LONG_URL}#action-#{index}" : nil,
+                  icon: :copy
+                )
+              end
+              menu.separator
+              menu.title(Gallery::Hostile::RTL_NAME)
+              menu.item(Gallery::Hostile::CJK_NAME)
+              menu.item(Gallery::Hostile::EMOJI_NAME, disabled: true)
+              menu.item(Gallery::Hostile::LONG_EMAIL, variant: :destructive)
+            end
+          end
+        end
       end
 
       def render_menu(id, placement: :bottom_start, &entries)

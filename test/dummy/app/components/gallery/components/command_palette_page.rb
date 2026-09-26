@@ -105,6 +105,43 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "command-palette-stress",
+          description: "Every Gallery::Hostile navigation label as a destination with a long URL and a long or unbroken description, behind a long-labelled trigger and again as inline open results."
+        ) do
+          example("Hostile trigger and dialog", slug: "command-palette-hostile", stress: true) do
+            render NitroKit::CommandPalette.new(
+              id: "gallery-command-palette-hostile",
+              label: Gallery::Hostile::LONG_LABEL,
+              placeholder: Gallery::Hostile::LONG_SENTENCE,
+              empty_text: Gallery::Hostile::LONG_PARAGRAPH,
+              shortcut: false
+            ) do |palette|
+              Gallery::Hostile::NAVIGATION_LABELS.each_with_index do |label, index|
+                palette.destination(
+                  label,
+                  href: "#{Gallery::Hostile::LONG_URL}#destination-#{index}",
+                  description: index.even? ? Gallery::Hostile::LONG_SENTENCE : Gallery::Hostile::LONG_WORD
+                )
+              end
+            end
+          end
+
+          example("Hostile open results", slug: "command-palette-hostile-results", stress: true) do
+            h2(id: "gallery-command-palette-hostile-results-title") { Gallery::Hostile::LONG_LABEL }
+            render NitroKit::CommandPalette::Results.new(id: "gallery-command-palette-hostile-results") do |results|
+              Gallery::Hostile::NAVIGATION_LABELS.each_with_index do |label, index|
+                results.destination(
+                  label,
+                  href: "#{Gallery::Hostile::LONG_URL}#result-#{index}",
+                  description: index.even? ? Gallery::Hostile::LONG_SENTENCE : Gallery::Hostile::LONG_WORD
+                )
+              end
+            end
+          end
+        end
       end
     end
   end

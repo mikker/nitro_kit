@@ -8,6 +8,7 @@ module Gallery
       def initialize(subcategory: nil, **) = super
     end
     Category = ::Data.define(:slug, :title, :description, :entries)
+    StressPreview = ::Data.define(:entry, :state, :example, :title)
     Collection = ::Data.define(:kind, :title, :description, :categories) do
       def entries
         categories.flat_map(&:entries)
@@ -977,6 +978,15 @@ module Gallery
       ),
       Entry.new(
         kind: :composition,
+        slug: "stress-lab",
+        title: "Stress lab",
+        description: "Every example flagged stress: true rendered at phone width in one screen, so hostile content breaks in plain sight.",
+        page: Gallery::Compositions::StressLabPage,
+        states: [],
+        expected_roots: %w[grid flex]
+      ),
+      Entry.new(
+        kind: :composition,
         slug: "account-workspace",
         title: "Account workspace",
         description: "A realistic sidebar application combining synchronized appearance, profile media, record details, forms, missing data, policy errors, and overlays.",
@@ -1159,6 +1169,12 @@ module Gallery
               "application-sidebar",
               "application-topbar"
             )
+          ),
+          Category.new(
+            slug: "quality",
+            title: "Quality",
+            description: "Components under hostile content, ready for a break-it session.",
+            entries: pick_entries.call(:composition, "stress-lab")
           )
         ].freeze
       )
@@ -1215,7 +1231,21 @@ module Gallery
       raise StateNotFound, "Unknown state #{state.inspect} for #{entry.slug.inspect}"
     end
 
-    def patterns_for(entry)
+# Every example declared with `stress: true`, in catalog order. The stress
+# sweep audits this list and the stress lab renders it.
+def stress_previews
+  entries.reject { |entry| entry.kind == :home }.flat_map do |entry|
+    states = entry.states.any? ? entry.states : [ nil ]
+
+    states.flat_map do |state|
+      entry.page.new(entry:, state:).collect_previews.select(&:stress).map do |definition|
+        StressPreview.new(entry:, state:, example: definition.slug, title: definition.title)
+      end
+    end
+  end
+end
+
+def patterns_for(entry)
       PATTERNS.fetch([ entry.kind, entry.slug ], []).map { |slug| Gallery::Patterns.fetch!(slug) }
     end
 

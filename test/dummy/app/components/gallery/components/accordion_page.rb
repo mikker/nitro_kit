@@ -170,6 +170,50 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "accordion-stress",
+          description: "Two dozen items titled with every Gallery::Hostile tab label, unbroken, RTL, CJK, and emoji, two of them expanded over four paragraphs and a webhook URL; then a hostile roster table inside a single-mode panel."
+        ) do
+          example("Hostile items", slug: "accordion-hostile", stress: true) do
+            render NitroKit::Accordion.new(id: "gallery-accordion-hostile", mode: :multiple) do |accordion|
+              Gallery::Hostile::TAB_LABELS.each_with_index do |label, index|
+                accordion.item(:"setting_#{index}", title: label, expanded: [ 1, 4 ].include?(index)) do
+                  p { Gallery::Hostile::LONG_PARAGRAPH }
+                  p { a(href: Gallery::Hostile::LONG_URL) { Gallery::Hostile::LONG_URL } }
+                end
+              end
+            end
+          end
+
+          example("Hostile roster in a panel", slug: "accordion-hostile-panel", stress: true) do
+            render NitroKit::Accordion.new(id: "gallery-accordion-hostile-panel", mode: :single) do |accordion|
+              accordion.item(:roster, title: Gallery::Hostile::LONG_LABEL, expanded: true) do
+                render NitroKit::Table.new(id: "gallery-accordion-hostile-roster") do |table|
+                  table.caption("Hostile roster")
+                  table.thead do
+                    table.tr do
+                      table.th("Member")
+                      table.th("Email")
+                      table.th("Balance", align: :right)
+                    end
+                  end
+                  table.tbody do
+                    Gallery::Hostile.members(9).each_with_index do |member, index|
+                      table.tr do
+                        table.th(member.name, scope: :row)
+                        table.td(member.email)
+                        table.td(index.even? ? Gallery::Hostile::HUGE_MONEY : Gallery::Hostile::NEGATIVE_MONEY, align: :right)
+                      end
+                    end
+                  end
+                end
+              end
+              accordion.item(:policy, title: Gallery::Hostile::LONG_WORD) { Gallery::Hostile::LONG_SENTENCE }
+            end
+          end
+        end
       end
 
       def render_health_checks

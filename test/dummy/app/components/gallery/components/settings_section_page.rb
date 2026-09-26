@@ -78,6 +78,68 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "settings-section-stress",
+          description: "An unbroken hundred-letter title, four paragraphs of description, a destructive status carrying the full slug error, and a form whose labels, values, help text, and errors all come from Gallery::Hostile."
+        ) do
+          example("Hostile form", slug: "settings-section-hostile", mode: :full_width, stress: true) do
+            render NitroKit::SettingsSection.new(
+              title: Gallery::Hostile::LONG_WORD,
+              description: Gallery::Hostile::LONG_PARAGRAPH,
+              id: "gallery-settings-section-hostile"
+            ) do |section|
+              section.status NitroKit::Alert.new(variant: :destructive, id: "gallery-settings-section-hostile-status") do |alert|
+                alert.title(Gallery::Hostile::LONG_LABEL)
+                alert.description("Workspace slug #{Gallery::Hostile::LONG_ERROR}.")
+              end
+              section.form do
+                form_with(url: "#hostile", scope: :workspace, builder: NitroKit::FormBuilder, id: "gallery-settings-section-hostile-form") do |form|
+                  form.group do
+                    form.field(
+                      :slug,
+                      id: "gallery-settings-section-hostile-slug",
+                      label: Gallery::Hostile::LONG_LABEL,
+                      value: Gallery::Hostile::LONG_WORD,
+                      errors: [ Gallery::Hostile::LONG_ERROR ],
+                      required: true
+                    )
+                    form.field(
+                      :billing_email,
+                      as: :email,
+                      id: "gallery-settings-section-hostile-email",
+                      label: "Billing email",
+                      value: Gallery::Hostile::LONG_EMAIL,
+                      description: Gallery::Hostile::LONG_SENTENCE
+                    )
+                    form.field(
+                      :owner,
+                      id: "gallery-settings-section-hostile-owner",
+                      label: Gallery::Hostile::RTL_NAME,
+                      value: Gallery::Hostile::CJK_NAME
+                    )
+                    form.field(
+                      :webhook_url,
+                      as: :url,
+                      id: "gallery-settings-section-hostile-webhook",
+                      label: Gallery::Hostile::EMOJI_NAME,
+                      value: Gallery::Hostile::LONG_URL
+                    )
+                    form.field(
+                      :notes,
+                      as: :textarea,
+                      id: "gallery-settings-section-hostile-notes",
+                      label: Gallery::Hostile::THAI_NAME,
+                      value: Gallery::Hostile::LONG_PARAGRAPH
+                    )
+                    form.submit(Gallery::Hostile::ACTION_LABELS.fetch(1), id: "gallery-settings-section-hostile-submit")
+                  end
+                end
+              end
+            end
+          end
+        end
       end
 
       def render_settings_section(id:, title:, fields:, description: nil)

@@ -123,6 +123,75 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "auth-shell-stress",
+          description: "Gallery::Hostile's long name, paragraph, unbroken word, long email, long error, and long URL fill the branding, alert, fields, and footer of one sign-in card."
+        ) do
+          example("Hostile sign-in", slug: "auth-shell-hostile", stress: true) do
+            render NitroKit::AuthShell.new(
+              id: "gallery-auth-shell-hostile",
+              aria: { labelledby: "gallery-auth-shell-hostile-brand" }
+            ) do
+              header(data: { gallery: "auth-branding" }) do
+                h4(id: "gallery-auth-shell-hostile-brand") { Gallery::Hostile::LONG_NAME }
+                p { Gallery::Hostile::LONG_PARAGRAPH }
+              end
+              render NitroKit::Card.new(id: "gallery-auth-shell-hostile-card") do |card|
+                card.title(Gallery::Hostile::LONG_WORD, level: 4)
+                card.body do
+                  render NitroKit::Alert.new(id: "gallery-auth-shell-hostile-alert", variant: :destructive) do |alert|
+                    alert.title(Gallery::Hostile::LONG_LABEL)
+                    alert.description(Gallery::Hostile::LONG_ERROR)
+                  end
+                  form(id: "gallery-auth-shell-hostile-form", action: "#auth-shell-hostile", method: "post") do
+                    render NitroKit::FieldGroup.new do
+                      render NitroKit::Field.new(
+                        nil,
+                        :email,
+                        as: :email,
+                        id: "gallery-auth-shell-hostile-email",
+                        name: "session[email]",
+                        value: Gallery::Hostile::LONG_EMAIL,
+                        label: Gallery::Hostile::LONG_LABEL,
+                        description: Gallery::Hostile::LONG_SENTENCE,
+                        errors: [ Gallery::Hostile::LONG_ERROR ],
+                        autocomplete: "email",
+                        required: true
+                      )
+                      render NitroKit::Field.new(
+                        nil,
+                        :password,
+                        as: :password,
+                        id: "gallery-auth-shell-hostile-password",
+                        name: "session[password]",
+                        label: Gallery::Hostile::LONG_WORD,
+                        autocomplete: "current-password",
+                        required: true,
+                        value: nil
+                      )
+                      render NitroKit::Button.new(
+                        Gallery::Hostile::LONG_LABEL,
+                        id: "gallery-auth-shell-hostile-submit",
+                        type: :submit,
+                        variant: :primary
+                      )
+                    end
+                  end
+                end
+                card.divider
+                card.footer do
+                  render NitroKit::Button.new(
+                    Gallery::Hostile::LONG_WORD,
+                    id: "gallery-auth-shell-hostile-switch",
+                    href: Gallery::Hostile::LONG_URL
+                  )
+                end
+              end
+            end
+          end
+        end
       end
 
       def render_credentials_card

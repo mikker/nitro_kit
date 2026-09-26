@@ -23,7 +23,7 @@ class GalleryAuthShellTest < ActionDispatch::IntegrationTest
       assert_response :success
       assert_select "html[data-theme='#{theme}']"
       assert_select "div[data-gallery='page'][data-gallery-page='auth-shell']"
-      assert_select "[data-gallery='example-canvas'] main[data-nk='auth-shell'][id]", count: 7
+      assert_select "[data-gallery='example-canvas'] main[data-nk='auth-shell'][id]", count: 8
       assert_select "[data-gallery='example-canvas'] [class]", count: 0
       assert_select "[data-gallery='example-canvas'] [style]", count: 0
       assert_select "[data-gallery='example-canvas'] [data-nk-escape]", count: 0
@@ -34,7 +34,7 @@ class GalleryAuthShellTest < ActionDispatch::IntegrationTest
     get gallery_component_path("auth-shell")
 
     assert_response :success
-    assert_select "main[data-nk='auth-shell']", count: 7 do |shells|
+    assert_select "main[data-nk='auth-shell']", count: 8 do |shells|
       shells.each do |shell|
         assert_equal 1, shell.element_children.count
         container = shell.element_children.first

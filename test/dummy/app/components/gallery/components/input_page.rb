@@ -242,6 +242,101 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "input-stress",
+          description: "Unbroken, overlong, mixed-script, and huge values from Gallery::Hostile in native inputs, " \
+            "plus a required input that is also disabled and invalid."
+        ) do
+          example("Hostile values", slug: "input-hostile-values", stress: true, layout: :matrix) do
+            sample("Unbroken word", slug: "word") do
+              render NitroKit::Input.new(
+                id: "gallery-input-hostile-word",
+                name: "hostile[word]",
+                value: Gallery::Hostile::LONG_WORD,
+                aria: { label: Gallery::Hostile::LONG_LABEL }
+              )
+            end
+            sample("Long email", slug: "email") do
+              render NitroKit::Input.new(
+                type: :email,
+                id: "gallery-input-hostile-email",
+                name: "hostile[email]",
+                value: Gallery::Hostile::LONG_EMAIL,
+                aria: { label: Gallery::Hostile::LONG_LABEL }
+              )
+            end
+            sample("Long URL", slug: "url") do
+              render NitroKit::Input.new(
+                type: :url,
+                id: "gallery-input-hostile-url",
+                name: "hostile[url]",
+                value: Gallery::Hostile::LONG_URL,
+                aria: { label: Gallery::Hostile::LONG_LABEL }
+              )
+            end
+            sample("Unicode email", slug: "unicode-email") do
+              render NitroKit::Input.new(
+                type: :email,
+                id: "gallery-input-hostile-unicode-email",
+                name: "hostile[unicode_email]",
+                value: Gallery::Hostile::UNICODE_EMAIL,
+                aria: { label: Gallery::Hostile::CJK_NAME }
+              )
+            end
+            sample("IDN email", slug: "idn-email") do
+              render NitroKit::Input.new(
+                type: :email,
+                id: "gallery-input-hostile-idn-email",
+                name: "hostile[idn_email]",
+                value: Gallery::Hostile::IDN_EMAIL,
+                aria: { label: Gallery::Hostile::RTL_NAME }
+              )
+            end
+            sample("RTL and emoji", slug: "rtl") do
+              render NitroKit::Input.new(
+                id: "gallery-input-hostile-rtl",
+                name: "hostile[rtl]",
+                value: "#{Gallery::Hostile::RTL_NAME} #{Gallery::Hostile::EMOJI_NAME}",
+                aria: { label: Gallery::Hostile::RTL_NAME }
+              )
+            end
+            sample("Huge number", slug: "number") do
+              render NitroKit::Input.new(
+                type: :number,
+                id: "gallery-input-hostile-number",
+                name: "hostile[number]",
+                value: Gallery::Hostile::HUGE_NUMBER,
+                aria: { label: Gallery::Hostile::HUGE_FORMATTED }
+              )
+            end
+            sample("Paragraph placeholder", slug: "placeholder") do
+              render NitroKit::Input.new(
+                type: :search,
+                id: "gallery-input-hostile-placeholder",
+                name: "hostile[placeholder]",
+                placeholder: Gallery::Hostile::LONG_PARAGRAPH,
+                aria: { label: Gallery::Hostile::LONG_LABEL }
+              )
+            end
+            sample("Required, disabled, invalid", slug: "locked") do
+              render NitroKit::Input.new(
+                id: "gallery-input-hostile-locked",
+                name: "hostile[locked]",
+                value: Gallery::Hostile::LONG_WORD,
+                required: true,
+                disabled: true,
+                aria: {
+                  label: Gallery::Hostile::LONG_LABEL,
+                  invalid: true,
+                  describedby: "gallery-input-hostile-locked-error"
+                }
+              )
+              p(id: "gallery-input-hostile-locked-error") { Gallery::Hostile::LONG_ERROR }
+            end
+          end
+        end
       end
 
       def render_date(id, **attributes)

@@ -8,8 +8,8 @@ class DropzoneGalleryTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "[data-gallery-page='dropzone']"
-    assert_select "[data-gallery='example']", count: 9
-    assert_select "[data-gallery='code-source']", count: 9
+    assert_select "[data-gallery='example']", count: 10
+    assert_select "[data-gallery='code-source']", count: 10
     assert_select "[data-gallery='code-source']", text: /form\.dropzone/
 
     assert_select "#gallery-dropzone-direct-form[method='post'][enctype='multipart/form-data']" do

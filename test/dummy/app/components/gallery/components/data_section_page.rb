@@ -87,6 +87,64 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "data-section-stress",
+          description: "An unbroken hundred-letter title, four paragraphs of description, all twelve hostile actions, and a forty-row table of Gallery::Hostile names, emails, badges, and extreme amounts."
+        ) do
+          example("Hostile section", slug: "data-section-hostile", mode: :full_width, stress: true) do
+            render NitroKit::DataSection.new(
+              title: Gallery::Hostile::LONG_WORD,
+              description: Gallery::Hostile::LONG_PARAGRAPH,
+              id: "gallery-data-section-hostile"
+            ) do |section|
+              section.actions NitroKit::ButtonGroup.new(id: "gallery-data-section-hostile-actions", label: "Every member action") do |actions|
+                Gallery::Hostile::ACTION_LABELS.each_with_index do |label, index|
+                  actions.button(
+                    label,
+                    id: "gallery-data-section-hostile-action-#{index + 1}",
+                    href: "#hostile-member-action-#{index + 1}",
+                    size: :sm
+                  )
+                end
+              end
+              section.table(
+                NitroKit::Table.new(
+                  id: "gallery-data-section-hostile-table",
+                  table_aria: { label: "40 hostile workspace members" }
+                )
+              ) do |table|
+                table.caption(Gallery::Hostile::LONG_LABEL)
+                table.thead do
+                  table.tr do
+                    table.th("Member")
+                    table.th("Email")
+                    table.th("Status")
+                    table.th("Balance", align: :right)
+                  end
+                end
+                table.tbody do
+                  Gallery::Hostile.members(40).each_with_index do |member, index|
+                    table.tr do
+                      table.th(member.name, scope: :row)
+                      table.td(member.email)
+                      table.td do
+                        render NitroKit::Badge.new(
+                          Gallery::Hostile::BADGE_LABELS.fetch(index % Gallery::Hostile::BADGE_LABELS.size),
+                          id: "gallery-data-section-hostile-status-#{index + 1}",
+                          color: member.status == :active ? :success : :warning,
+                          size: :sm
+                        )
+                      end
+                      table.td(index.even? ? Gallery::Hostile::HUGE_MONEY : Gallery::Hostile::NEGATIVE_MONEY, align: :right)
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
       end
 
       def member_table(id:, count:)

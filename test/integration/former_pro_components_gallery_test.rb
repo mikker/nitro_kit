@@ -6,8 +6,8 @@ class FormerProComponentsGalleryTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "[data-gallery-page='details-table']"
-    assert_select "[data-gallery='example']", count: 4
-    assert_select "[data-gallery='code-source']", count: 4
+    assert_select "[data-gallery='example']", count: 6
+    assert_select "[data-gallery='code-source']", count: 6
     assert_select "[data-gallery='code-source']", text: /NitroKit::DetailsTable\.new/
     assert_select "#gallery-details-table-profile[data-nk='details-table']"
     assert_select "#gallery-details-table-profile [data-nk='table'][data-slot='details-table-table']"
@@ -24,8 +24,8 @@ class FormerProComponentsGalleryTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "[data-gallery-page='progressive-image']"
-    assert_select "[data-gallery='example']", count: 5
-    assert_select "[data-gallery='code-source']", count: 5
+    assert_select "[data-gallery='example']", count: 6
+    assert_select "[data-gallery='code-source']", count: 6
     assert_select "[data-gallery='code-source']", text: /NitroKit::ProgressiveImage\.new/
 
     assert_select "#gallery-progressive-image-loaded[data-state='loading']:not([aria-busy])"

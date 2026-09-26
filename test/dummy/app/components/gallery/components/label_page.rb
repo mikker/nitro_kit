@@ -133,6 +133,44 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "label-stress",
+          description: "Every hostile identity from Gallery::Hostile plus an unbroken word and a full paragraph as label text " \
+            "above a control carrying the matching value."
+        ) do
+          example("Hostile label text", slug: "label-hostile", stress: true, layout: :matrix) do
+            texts = {
+              "word" => Gallery::Hostile::LONG_WORD,
+              "paragraph" => Gallery::Hostile::LONG_PARAGRAPH,
+              "url" => Gallery::Hostile::LONG_URL,
+              "rtl" => Gallery::Hostile::RTL_NAME,
+              "cjk" => Gallery::Hostile::CJK_NAME,
+              "thai" => Gallery::Hostile::THAI_NAME,
+              "emoji" => Gallery::Hostile::EMOJI_NAME,
+              "zero-width" => Gallery::Hostile::ZERO_WIDTH_NAME,
+              "combining" => Gallery::Hostile::COMBINING_NAME
+            }
+
+            texts.each do |slug, text|
+              sample(slug.humanize, slug:) do
+                render NitroKit::Flex.new(dir: :col, gap: 2, align: :stretch) do
+                  render NitroKit::Label.new(
+                    text,
+                    for: "gallery-label-hostile-#{slug}",
+                    id: "gallery-label-hostile-#{slug}-label"
+                  )
+                  render NitroKit::Input.new(
+                    id: "gallery-label-hostile-#{slug}",
+                    name: "hostile[#{slug.tr("-", "_")}]",
+                    value: text
+                  )
+                end
+              end
+            end
+          end
+        end
       end
     end
   end

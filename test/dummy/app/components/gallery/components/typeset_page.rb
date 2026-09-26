@@ -162,6 +162,77 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "typeset-stress",
+          description: "Prose whose headings are an unbroken hundred-letter word and a hundred-character name, whose links show a full webhook URL and a 130-character email, whose code block is that URL, and whose table holds huge and negative amounts beside hostile emails."
+        ) do
+          example("Hostile document", slug: "typeset-hostile", stress: true) do
+            render NitroKit::Container.new(size: :md, id: "gallery-typeset-hostile-container") do
+              render NitroKit::Typeset.new(id: "gallery-typeset-hostile") do
+                h1 { Gallery::Hostile::LONG_WORD }
+                p { Gallery::Hostile::LONG_PARAGRAPH }
+
+                h2 { Gallery::Hostile::LONG_NAME }
+                p do
+                  plain "Deliveries are listed at "
+                  a(href: Gallery::Hostile::LONG_URL) { Gallery::Hostile::LONG_URL }
+                  plain " and billing questions go to "
+                  a(href: "mailto:#{Gallery::Hostile::LONG_EMAIL}") { Gallery::Hostile::LONG_EMAIL }
+                  plain "."
+                end
+                ul do
+                  Gallery::Hostile::NAMES.each { |name| li { name } }
+                end
+                blockquote do
+                  p { Gallery::Hostile::THAI_NAME }
+                end
+
+                h3 { Gallery::Hostile::CJK_NAME }
+                p do
+                  plain "The slug "
+                  code { Gallery::Hostile::LONG_SLUG }
+                  plain " must be unique, and the delivery attempt endpoint is:"
+                end
+                pre do
+                  code { Gallery::Hostile::LONG_URL }
+                end
+
+                hr
+
+                h2 { Gallery::Hostile::EMOJI_NAME }
+                table do
+                  thead do
+                    tr do
+                      th { "Account" }
+                      th { "Email" }
+                      th { "Balance" }
+                    end
+                  end
+                  tbody do
+                    tr do
+                      td { Gallery::Hostile::LONG_NAME }
+                      td { Gallery::Hostile::LONG_EMAIL }
+                      td { Gallery::Hostile::HUGE_MONEY }
+                    end
+                    tr do
+                      td { Gallery::Hostile::LONG_WORD }
+                      td { Gallery::Hostile::IDN_EMAIL }
+                      td { Gallery::Hostile::NEGATIVE_MONEY }
+                    end
+                    tr do
+                      td { Gallery::Hostile::RTL_NAME }
+                      td { Gallery::Hostile::UNICODE_EMAIL }
+                      td { Gallery::Hostile::TINY_PERCENT }
+                    end
+                  end
+                end
+                p { "Workspace slug #{Gallery::Hostile::LONG_ERROR}." }
+              end
+            end
+          end
+        end
       end
     end
   end

@@ -245,6 +245,127 @@ module Gallery
             )
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "field-stress",
+          description: "Hostile labels, paragraph-length guidance, overlong errors, and unbroken values from Gallery::Hostile " \
+            "on text and choice controls, including required fields that are also disabled and invalid."
+        ) do
+          example("Hostile text fields", slug: "field-hostile-text", stress: true) do
+            render NitroKit::FieldGroup.new(html: { id: "gallery-field-hostile-text-group" }) do
+              render NitroKit::Field.new(
+                nil,
+                :email,
+                as: :email,
+                id: "gallery-field-hostile-email",
+                name: "hostile[email]",
+                value: Gallery::Hostile::LONG_EMAIL,
+                label: Gallery::Hostile::LONG_LABEL,
+                description: Gallery::Hostile::LONG_PARAGRAPH,
+                errors: [ Gallery::Hostile::LONG_ERROR ],
+                required: true,
+                html: { id: "gallery-field-hostile-email-wrapper" }
+              )
+              render NitroKit::Field.new(
+                nil,
+                :slug,
+                id: "gallery-field-hostile-locked",
+                name: "hostile[slug]",
+                value: Gallery::Hostile::LONG_WORD,
+                label: Gallery::Hostile::LONG_WORD,
+                description: Gallery::Hostile::LONG_SENTENCE,
+                errors: [ Gallery::Hostile::LONG_ERROR ],
+                required: true,
+                disabled: true,
+                html: { id: "gallery-field-hostile-locked-wrapper" }
+              )
+              render NitroKit::Field.new(
+                nil,
+                :webhook,
+                as: :url,
+                id: "gallery-field-hostile-url",
+                name: "hostile[webhook]",
+                value: Gallery::Hostile::LONG_URL,
+                label: Gallery::Hostile::RTL_NAME,
+                description: Gallery::Hostile::CJK_NAME,
+                html: { id: "gallery-field-hostile-url-wrapper" }
+              )
+              render NitroKit::Field.new(
+                nil,
+                :notes,
+                as: :textarea,
+                id: "gallery-field-hostile-textarea",
+                name: "hostile[notes]",
+                value: Gallery::Hostile::LONG_PARAGRAPH,
+                label: Gallery::Hostile::EMOJI_NAME,
+                description: Gallery::Hostile::LONG_URL,
+                errors: [ Gallery::Hostile::LONG_ERROR, Gallery::Hostile::LONG_WORD ],
+                rows: 3,
+                html: { id: "gallery-field-hostile-textarea-wrapper" }
+              )
+            end
+          end
+
+          example("Hostile choice fields", slug: "field-hostile-choices", stress: true) do
+            options = Gallery::Hostile::CHOICES
+
+            render NitroKit::FieldGroup.new(html: { id: "gallery-field-hostile-choice-group" }) do
+              render NitroKit::Field.new(
+                nil,
+                :status,
+                as: :select,
+                id: "gallery-field-hostile-select",
+                name: "hostile[status]",
+                value: "hostile_3",
+                label: Gallery::Hostile::LONG_LABEL,
+                description: Gallery::Hostile::LONG_SENTENCE,
+                errors: [ Gallery::Hostile::LONG_ERROR ],
+                options:,
+                required: true,
+                html: { id: "gallery-field-hostile-select-wrapper" }
+              )
+              render NitroKit::Field.new(
+                nil,
+                :role,
+                as: :radio_group,
+                id: "gallery-field-hostile-radio-group",
+                name: "hostile[role]",
+                value: "hostile_1",
+                label: Gallery::Hostile::LONG_WORD,
+                description: Gallery::Hostile::LONG_PARAGRAPH,
+                errors: [ Gallery::Hostile::LONG_ERROR ],
+                options:,
+                required: true,
+                html: { id: "gallery-field-hostile-radio-group-wrapper" }
+              )
+              render NitroKit::Field.new(
+                nil,
+                :agreement,
+                as: :checkbox,
+                id: "gallery-field-hostile-checkbox",
+                name: "hostile[agreement]",
+                label: Gallery::Hostile::LONG_LABEL,
+                description: Gallery::Hostile::LONG_PARAGRAPH,
+                errors: [ Gallery::Hostile::LONG_ERROR ],
+                required: true,
+                disabled: true,
+                html: { id: "gallery-field-hostile-checkbox-wrapper" }
+              )
+              render NitroKit::Field.new(
+                nil,
+                :alerts,
+                as: :switch,
+                id: "gallery-field-hostile-switch",
+                name: "hostile[alerts]",
+                checked: true,
+                label: Gallery::Hostile::LONG_WORD,
+                description: Gallery::Hostile::THAI_NAME,
+                html: { id: "gallery-field-hostile-switch-wrapper" }
+              )
+            end
+          end
+        end
       end
     end
   end

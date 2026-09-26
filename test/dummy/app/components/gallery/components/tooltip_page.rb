@@ -164,6 +164,42 @@ module Gallery
             end
           end
         end
+
+        example_section(
+          "Under pressure",
+          slug: "tooltip-stress",
+          description: "Each placement pairs a long-labelled trigger with Gallery::Hostile's paragraph, then an unbroken-word trigger and a mixed-script span trigger."
+        ) do
+          example("Hostile placements", slug: "tooltip-hostile", stress: true, layout: :matrix) do
+            NitroKit::Tooltip::PLACEMENTS.each do |placement|
+              sample(placement.to_s.humanize, slug: placement.to_s) do
+                render NitroKit::Tooltip.new(
+                  id: "gallery-tooltip-hostile-#{placement}",
+                  content: Gallery::Hostile::LONG_PARAGRAPH,
+                  placement:
+                ) do |tooltip|
+                  tooltip.trigger(Gallery::Hostile::LONG_LABEL)
+                end
+              end
+            end
+            sample("Unbroken word", slug: "unbroken") do
+              render NitroKit::Tooltip.new(
+                id: "gallery-tooltip-hostile-unbroken",
+                content: Gallery::Hostile::LONG_WORD
+              ) do |tooltip|
+                tooltip.trigger(Gallery::Hostile::LONG_WORD, size: :sm)
+              end
+            end
+            sample("Mixed scripts", slug: "scripts") do
+              render NitroKit::Tooltip.new(
+                id: "gallery-tooltip-hostile-scripts",
+                content: "#{Gallery::Hostile::RTL_NAME} #{Gallery::Hostile::CJK_NAME} #{Gallery::Hostile::THAI_NAME}"
+              ) do |tooltip|
+                tooltip.trigger(Gallery::Hostile::EMOJI_NAME, as: :span)
+              end
+            end
+          end
+        end
       end
 
       def render_tip(id, content, placement: :top)
