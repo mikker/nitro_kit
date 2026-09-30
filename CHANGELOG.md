@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Added
+
+- Add explicit `nitro_kit:eject COMPONENT` source-level customization, with
+  isolated Ruby/CSS/Stimulus dependencies, version provenance, and safe whole-snapshot
+  skip behavior unless `--force` is requested.
+
 ## 2.0.0.beta.1
 
 ### Changed

@@ -4,7 +4,7 @@
 themes or composing application-owned UI. The first sections are task guidance;
 the final token tables are exhaustive reference.
 
-Nitro Kit owns component Ruby, markup, behavior, and default CSS. Applications customize the system by overriding the public `--nk-*` custom properties, composing components into application UI, and occasionally creating a narrow subclass. Applications do not copy or edit Nitro components.
+Nitro Kit owns component Ruby, markup, behavior, and default CSS. Applications normally customize public `--nk-*` properties and compose application UI. When source-level changes are necessary, explicitly [eject one component](eject.md); that isolated snapshot becomes application-owned and stops receiving component updates.
 
 ## Stylesheet order
 

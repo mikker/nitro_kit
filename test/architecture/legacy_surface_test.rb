@@ -6,6 +6,7 @@ require "rbconfig"
 class LegacySurfaceTest < ActiveSupport::TestCase
   ROOT = NitroKit::Engine.root
   GENERATORS = %w[
+    lib/generators/nitro_kit/eject_generator.rb
     lib/generators/nitro_kit/install_generator.rb
     lib/generators/nitro_kit/upgrade_smoke_tests_generator.rb
   ].freeze

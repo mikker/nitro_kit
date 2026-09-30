@@ -25,7 +25,8 @@ Applications own:
 - application CSS and documented token overrides.
 
 Components load from the gem. Generators may install application guidance and
-integration files, but never copies of component source.
+integration files. The explicit, user-requested [eject generator](eject.md) is
+the sole opt-out from gem ownership, one component at a time, not copy-install.
 
 ## Public API principles
 
@@ -52,8 +53,8 @@ end
   component contracts define the current set.
 - Components reject `class:` and `style:`. The audited
   `desperately_need_a_class:` escape exists only for external integrations.
-- There are no `nk_*` helpers, generated variant helpers, copied components,
-  or general ERB bridge.
+- There are no `nk_*` helpers, generated variant helpers, copy-installed
+  components, or general ERB bridge.
 
 Rails helpers remain first-class for forms, routes, DOM IDs, translations,
 assets, Active Storage, Turbo Frames, and Turbo Streams.
@@ -105,7 +106,7 @@ hold delivery history; this document records only durable architecture.
 
 ## Outside the current architecture
 
-Nitro Kit does not provide generated component copies, a generic utility DSL,
+Nitro Kit does not provide default copy-install, a generic utility DSL,
 arbitrary breakpoints, a public component registry, an MCP server, or a
 JavaScript custom-element runtime. New abstractions require demonstrated reuse
 and an explicit public contract.

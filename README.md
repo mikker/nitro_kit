@@ -34,6 +34,7 @@ Start with:
 - [Rails integration](docs/rails_integration.md)
 - [Component contracts](docs/component_contracts.md)
 - [Customization](docs/customization.md)
+- [Eject a component into application-owned code](docs/eject.md)
 - [Browser support](docs/browser_support.md)
 - [Nitro Kit 1.x migration](docs/migration_1_to_2.md)
 - [Coding-agent guide](docs/agent_guide.md)
@@ -59,6 +60,19 @@ Set up Nitro Kit before planning or implementing the product:
 
 Maintaining Nitro Kit 1? Its frozen documentation remains at
 [v1.nitrokit.dev](https://v1.nitrokit.dev).
+
+## Eject for source-level customization
+
+Prefer tokens and composition. When you need to change a component's source:
+
+```sh
+bin/rails generate nitro_kit:eject Button
+```
+
+Render `Ui::EjectedButton::Button.new("Save")` and load `ejected_button.css`
+after `nitro_kit.css`. Ruby, CSS, and Stimulus dependencies become application-owned;
+keep the gem installed for the shared kernel and tokens. See [Eject](docs/eject.md)
+for integration, collision handling, and upgrade responsibilities.
 
 ## License
 

@@ -73,7 +73,8 @@ test/dummy/app/components/gallery/ # Phlex gallery pages
 test/integration/                  # catalog-driven route coverage
 ```
 
-Do not add component helper modules or copied-component generators.
+Do not add component helper modules or default copy-install. The explicit
+user-requested eject generator is the sole copying exception; see `docs/eject.md`.
 
 ## Component anatomy
 
