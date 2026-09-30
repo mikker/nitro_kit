@@ -3,8 +3,14 @@ import { Controller } from "@hotwired/stimulus";
 const narrowViewport = "(width < 48rem)";
 
 export default class extends Controller {
-  static targets = ["dialog", "navigation", "sidebar", "trigger"];
-  static values = { openLabel: String, closeLabel: String };
+  static targets = ["dialog", "navigation", "sidebar", "trigger", "pin"];
+  static values = {
+    openLabel: String,
+    closeLabel: String,
+    collapsible: { type: Boolean, default: false },
+    pinned: { type: Boolean, default: true },
+    hoverSuppressed: { type: Boolean, default: false },
+  };
 
   connect() {
     this.onViewportChange = this.syncViewport.bind(this);
@@ -15,6 +21,7 @@ export default class extends Controller {
 
   disconnect() {
     this.viewport?.removeEventListener("change", this.onViewportChange);
+    this.hoverSuppressedValue = false;
     this.restoreFocusAfterClose = false;
 
     const dialog = this.element.querySelector(
@@ -49,6 +56,40 @@ export default class extends Controller {
     this.dialogTarget.open ? this.closeDialog() : this.open();
   }
 
+  togglePin(event) {
+    if (
+      !this.collapsibleValue ||
+      this.isNarrow ||
+      this.element.dataset.layout !== "sidebar"
+    )
+      return;
+
+    this.hoverSuppressedValue = this.pinnedValue && event.detail > 0;
+    this.pinnedValue = !this.pinnedValue;
+  }
+
+  resumeHover(event) {
+    const brand = this.element.querySelector(
+      ':scope > [data-slot="app-shell-header"] > [data-slot="app-shell-brand"]',
+    );
+    if (
+      this.sidebarTarget.contains(event.relatedTarget) ||
+      brand?.contains(event.relatedTarget)
+    )
+      return;
+
+    this.hoverSuppressedValue = false;
+  }
+
+  pinnedValueChanged() {
+    if (this.hasPinTarget)
+      this.pinTarget.setAttribute("aria-pressed", String(this.pinnedValue));
+  }
+
+  pinTargetConnected(pin) {
+    pin.setAttribute("aria-pressed", String(this.pinnedValue));
+  }
+
   open() {
     if (!this.isNarrow || this.dialogTarget.open) return;
 
@@ -78,7 +119,27 @@ export default class extends Controller {
   }
 
   closeForNavigation() {
+    this.hoverSuppressedValue = false;
     this.closeDialog({ restoreFocus: false });
+  }
+
+  preserveSidebarState(event) {
+    if (!this.collapsibleValue || this.element.dataset.layout !== "sidebar")
+      return;
+
+    const attribute = event.detail.attributeName;
+    const sidebarState =
+      event.target === this.element &&
+      [
+        "data-nk--app-shell-pinned-value",
+        "data-nk--app-shell-hover-suppressed-value",
+      ].includes(attribute);
+    const pinState =
+      this.hasPinTarget &&
+      event.target === this.pinTarget &&
+      attribute === "aria-pressed";
+
+    if (sidebarState || pinState) event.preventDefault();
   }
 
   dialogClosed() {
@@ -101,6 +162,7 @@ export default class extends Controller {
 
     const enteringNarrow = this.wasNarrow === false && this.isNarrow;
     this.wasNarrow = this.isNarrow;
+    if (this.isNarrow) this.hoverSuppressedValue = false;
 
     if (!this.isNarrow) {
       this.closeDialog({ restoreFocus: false });

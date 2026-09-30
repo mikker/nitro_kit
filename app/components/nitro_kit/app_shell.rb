@@ -5,6 +5,7 @@ module NitroKit
     alias_method :html_main, :main
 
     LAYOUTS = %i[sidebar topbar].freeze
+    SIDEBAR_STATES = %i[expanded collapsed].freeze
     REGIONS = %i[brand navigation topbar main].freeze
     REQUIRED_REGIONS = %i[navigation main].freeze
     private_constant :REQUIRED_REGIONS
@@ -12,6 +13,9 @@ module NitroKit
     def initialize(
       id:,
       layout: :sidebar,
+      collapsible: false,
+      sidebar: :expanded,
+      sidebar_toggle_label: I18n.t("nitro_kit.app_shell.pin_sidebar"),
       skip_link_label: I18n.t("nitro_kit.app_shell.skip_link"),
       open_navigation_label: I18n.t("nitro_kit.app_shell.open_navigation"),
       close_navigation_label: I18n.t("nitro_kit.app_shell.close_navigation"),
@@ -23,6 +27,12 @@ module NitroKit
     )
       @identifier = validate_id!("AppShell id", id)
       @layout = validate_choice!(:layout, layout, LAYOUTS)
+      @collapsible = validate_boolean!(:collapsible, collapsible)
+      @sidebar = validate_choice!(:sidebar, sidebar, SIDEBAR_STATES)
+      if @sidebar == :collapsed && !@collapsible
+        raise ArgumentError, "AppShell sidebar: :collapsed requires collapsible: true"
+      end
+      @sidebar_toggle_label = validate_label!(:sidebar_toggle_label, sidebar_toggle_label)
       @skip_link_label = validate_label!(:skip_link_label, skip_link_label)
       @open_navigation_label = validate_label!(:open_navigation_label, open_navigation_label)
       @close_navigation_label = validate_label!(:close_navigation_label, close_navigation_label)
@@ -39,9 +49,12 @@ module NitroKit
             layout: @layout,
             state: "closed",
             action: "turbo:before-visit@document->nk--app-shell#closeForNavigation " \
+              "turbo:before-morph-attribute->nk--app-shell#preserveSidebarState " \
               "turbo:morph@document->nk--app-shell#syncViewport",
             nk__app_shell_open_label_value: @open_navigation_label,
-            nk__app_shell_close_label_value: @close_navigation_label
+            nk__app_shell_close_label_value: @close_navigation_label,
+            nk__app_shell_collapsible_value: @collapsible.to_s,
+            nk__app_shell_pinned_value: (@sidebar == :expanded).to_s
           }
         },
         html:,
@@ -65,8 +78,9 @@ module NitroKit
       end
     end
 
-    def brand(&content)
+    def brand(icon: nil, &content)
       add_region(:brand, content:)
+      @brand_icon = Icon.new(icon, size: :sm) unless icon.nil?
     end
 
     def navigation(&content)
@@ -124,7 +138,12 @@ module NitroKit
 
     def render_header
       header(**slot_attributes(:header)) do
-        div(**slot_attributes(:brand)) { render(region(:brand)) } if region(:brand)
+        if region(:brand)
+          div(**slot_attributes(:brand, attributes: { data: { action: @collapsible ? "pointerleave->nk--app-shell#resumeHover" : nil } })) do
+            render_in_slot(@brand_icon, :brand_icon) if @brand_icon
+            div(**slot_attributes(:brand_content)) { render(region(:brand)) }
+          end
+        end
         render_mobile_trigger
         div(**slot_attributes(:topbar)) { render(region(:topbar)) } if region(:topbar)
       end
@@ -155,17 +174,30 @@ module NitroKit
         **slot_attributes(
           :sidebar,
           attributes: {
-            data: { nk__app_shell_target: "sidebar" }
+            data: {
+              nk__app_shell_target: "sidebar",
+              action: @collapsible ? "pointerleave->nk--app-shell#resumeHover" : nil
+            }
           }
         )
       ) do
         div(
           **slot_attributes(
             :navigation,
-            attributes: { data: { nk__app_shell_target: "navigation" } }
+            attributes: { id: navigation_region_id, data: { nk__app_shell_target: "navigation" } }
           )
         ) { render(region(:navigation)) }
+        render_sidebar_toggle if layout == :sidebar && @collapsible
       end
+    end
+
+    def render_sidebar_toggle
+      render_in_slot(Button.new(
+        icon: :panel_left,
+        label: @sidebar_toggle_label,
+        aria: { controls: navigation_region_id, pressed: @sidebar == :expanded },
+        data: { nk__app_shell_target: "pin", action: "click->nk--app-shell#togglePin" }
+      ), :sidebar_toggle)
     end
 
     def render_dialog
@@ -202,6 +234,10 @@ module NitroKit
 
     def render_main
       html_main(**slot_attributes(:main, attributes: { id: main_id, tabindex: -1 })) { render(region(:main)) }
+    end
+
+    def navigation_region_id
+      "#{identifier}-navigation-region"
     end
 
     def drawer_id

@@ -87,3 +87,14 @@
     flex-shrink: 0;
   }
 }
+
+/* Embedded gallery examples use a bounded canvas; isolated previews keep the
+   application's viewport-height frame. This rule is not application CSS. */
+:where(
+  [data-gallery="example"]:not([data-gallery-responsive-preview])
+    [data-gallery="example-canvas"]
+    [data-ui="inset-workspace"][data-gallery-shell-preview]
+) {
+  block-size: 32rem;
+  min-block-size: 32rem;
+}

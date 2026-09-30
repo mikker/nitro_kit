@@ -85,4 +85,27 @@ class AppShellCssTest < ActiveSupport::TestCase
       src/stylesheets/nitro_kit/components/app_shell.css
     ].each { |path| assert_includes files, path }
   end
+
+  test "desktop rail peeks through hover or focus without changing its grid track" do
+    source = SHELL.read
+    assert_includes source, "@media (width >= 48rem)"
+    assert_includes source, 'data-nk--app-shell-collapsible-value="true"'
+    assert_includes source, "@media (hover: hover) and (pointer: fine)"
+    assert_includes source, "app-shell-navigation\"]:focus-within"
+    assert_includes source, "app-shell-navigation\"]:hover"
+    assert_includes source, "grid-template-columns: var(--_nk-shell-rail-width) minmax(0, 1fr)"
+    assert_includes source, "clip-path: var(--_nk-shell-label-clip, none)"
+    assert_includes source, "inline-size var(--nk-duration-fast) var(--nk-ease)"
+  end
+
+  test "animates the reserved track and selection with the panel and honors reduced motion" do
+    source = SHELL.read
+    assert_includes source, "transition: grid-template-columns var(--nk-duration-fast) var(--nk-ease)"
+    assert_includes NAVIGATION.read, "inline-size var(--nk-duration-fast) var(--nk-ease)"
+    reduced_motion = source.split("@media (prefers-reduced-motion: reduce)").last.gsub(/\s+/, " ")
+    assert_includes reduced_motion, '[data-nk="app-shell"][data-nk--app-shell-collapsible-value="true"],'
+    navigation_reduced_motion = NAVIGATION.read.split("@media (prefers-reduced-motion: reduce)").last
+    assert_includes navigation_reduced_motion, '[data-slot="app-navigation-item-link"]'
+    assert_includes navigation_reduced_motion, "transition-duration: 0.01ms"
+  end
 end

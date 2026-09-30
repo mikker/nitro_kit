@@ -45,6 +45,28 @@ Nitro owns responsive disclosure and focus behavior. Put infrequent account
 destinations after `navigation.spacer`. Add one `CommandPalette` only when the
 destination count warrants search, and render only authorized routes.
 
+The sidebar stays expanded by default, without a toggle or hover peek. Opt in
+with `AppShell(id: "workspace", collapsible: true)` to include the bottom
+**Pin sidebar** toggle that switches between the full sidebar and an icon rail.
+Hovering with a fine pointer or focusing within the navigation or brand
+reveals the full navigation as an overlay without moving page content.
+The pin control does not trigger peek on hover or focus, so directly pinning
+the rail starts the sidebar and content resize together.
+Clicking the toggle pins the sidebar and reserves its full layout width.
+Pointer-clicking to unpin collapses it immediately and suppresses hover peek
+until the pointer leaves the sidebar once; keyboard focus still peeks. Use
+`AppShell(id: "workspace", collapsible: true, sidebar: :collapsed)` to start with the rail, and
+give navigation items icons so they remain recognizable. Labels keep their
+accessible names and vertical positions. Touch does not hover-peek; narrow
+screens still use the modal drawer. Pin state survives Turbo morph refreshes
+of the same shell, but is not persisted across page loads.
+`sidebar_toggle_label:` overrides its name.
+
+For a brand mark that stays visible on the rail, declare
+`shell.brand(icon: :zap) { ... }`. The icon stays aligned with navigation;
+the full brand content appears on hover/focus or when pinned instead of being
+cropped to fit the rail.
+
 Use `AuthShell` with Rails `form_with` and `NitroKit::FormBuilder` for
 authentication. Put visible fields, submit, and recovery link in one
 `form.group`.

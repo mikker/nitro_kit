@@ -67,6 +67,13 @@ For `topbar`, put that Toolbar first inside `workspace-content` and omit
 `shell.topbar`. Keep one route title and one set of actions. The header and
 body in `sidebar` form one continuous canvas, not two stacked cards.
 
+The inset composition also works with `collapsible: true`. Add
+`sidebar: :expanded` to start pinned open, or `sidebar: :collapsed` to start
+as an icon rail, and give `shell.brand` an `icon:` for its compact mark.
+Pinning reserves navigation space; hover or keyboard-focus peeking overlays
+the inset canvas without moving its toolbar or content. The App shell and
+Sidebar operations galleries show static and collapsible inset examples.
+
 Load this stylesheet after Nitro Kit:
 
 ```css
@@ -165,7 +172,8 @@ Load this stylesheet after Nitro Kit:
 
 Navigation, mobile disclosure, and focus restoration remain Nitro-owned.
 Application code owns the destinations and the composition. The public
-Product resource gallery runs the sidebar example with this stylesheet at
+App shell, Sidebar operations application, and Product resource galleries
+run inset sidebar examples with this stylesheet at
 `test/dummy/app/assets/stylesheets/inset_workspace.css`.
 
 ## Verify the result

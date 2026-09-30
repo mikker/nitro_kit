@@ -1174,7 +1174,8 @@
     border-radius: var(--nk-radius-lg);
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
-      background-color var(--nk-duration-normal) var(--nk-ease);
+      background-color var(--nk-duration-normal) var(--nk-ease),
+      inline-size var(--nk-duration-fast) var(--nk-ease);
   }
 
   :where([data-nk="app-navigation"] [data-slot="app-navigation-item-label"]) {
@@ -1626,6 +1627,209 @@
 }
 
 @layer nitro-kit.compound {
+  :where(
+      [data-nk="app-shell"]
+        > [data-slot="app-shell-sidebar"]
+        > [data-slot="app-shell-sidebar-toggle"]
+    ) {
+    display: none;
+  }
+
+  @media (width >= 48rem) {
+    :where(
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+      ) {
+      --_nk-shell-rail-width: calc(var(--nk-space) * 16);
+      --_nk-shell-panel-width: var(--nk-app-shell-sidebar-width);
+      --_nk-shell-label-clip: none;
+      transition: grid-template-columns var(--nk-duration-fast) var(--nk-ease);
+    }
+
+    :where(
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+          > [data-slot="app-shell-sidebar"]
+      ) {
+      z-index: 30;
+      inline-size: var(--_nk-shell-panel-width);
+      background-color: var(--nk-app-shell-background);
+      background-image: linear-gradient(
+        var(--nk-app-shell-sidebar-background),
+        var(--nk-app-shell-sidebar-background)
+      );
+      transition: inline-size var(--nk-duration-fast) var(--nk-ease);
+    }
+
+    :where(
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+          > [data-slot="app-shell-header"]
+          > [data-slot="app-shell-brand"]:has(
+            > [data-slot="app-shell-brand-icon"]
+          )
+      ) {
+      gap: calc(var(--nk-space) * 2);
+      padding-inline: calc(var(--nk-space) * 6);
+    }
+
+    :where(
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+          > [data-slot="app-shell-header"]
+          > [data-slot="app-shell-brand"]
+          > [data-slot="app-shell-brand-icon"]
+      ) {
+      flex: none;
+    }
+
+    :where(
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+          > [data-slot="app-shell-header"]
+          > [data-slot="app-shell-brand"]
+          > [data-slot="app-shell-brand-content"]
+      ) {
+      min-inline-size: 0;
+      overflow: hidden;
+      clip-path: var(--_nk-shell-label-clip, none);
+    }
+
+    :where(
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+          > [data-slot="app-shell-header"]
+          > [data-slot="app-shell-brand"]
+      ) {
+      z-index: 30;
+      inline-size: var(--_nk-shell-panel-width);
+      overflow: hidden;
+      white-space: nowrap;
+      background-color: var(--nk-app-shell-background);
+      background-image: linear-gradient(
+        var(--nk-app-shell-sidebar-background),
+        var(--nk-app-shell-sidebar-background)
+      );
+      transition: inline-size var(--nk-duration-fast) var(--nk-ease);
+    }
+
+    :where(
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+          > [data-slot="app-shell-sidebar"]
+          > [data-slot="app-shell-navigation"]
+      ) {
+      flex: 1 1 0;
+      inline-size: calc(
+        var(--nk-app-shell-sidebar-width) - var(--nk-border-width)
+      );
+      min-inline-size: calc(
+        var(--nk-app-shell-sidebar-width) - var(--nk-border-width)
+      );
+    }
+
+    :where(
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+          > [data-slot="app-shell-sidebar"]
+          > [data-slot="app-shell-sidebar-toggle"]
+      ) {
+      display: inline-flex;
+      flex: none;
+      align-self: flex-start;
+      margin: calc(var(--nk-space) * 3);
+      margin-inline-start: calc(
+        (var(--_nk-shell-rail-width) - var(--nk-control-height-md)) / 2
+      );
+    }
+
+    :where(
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+          > [data-slot="app-shell-sidebar"]
+          [data-slot="app-navigation-item-link"]
+      ) {
+      inline-size: min(
+        100%,
+        calc(
+          var(--_nk-shell-panel-width) - (var(--_nk-app-navigation-inset) * 2)
+        )
+      );
+      overflow: hidden;
+    }
+
+    :where(
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"][data-nk--app-shell-pinned-value="false"]
+      ) {
+      --_nk-shell-panel-width: var(--_nk-shell-rail-width);
+      grid-template-columns: var(--_nk-shell-rail-width) minmax(0, 1fr);
+    }
+
+    /* Keep the full navigation geometry: only its labels disappear. Focus
+       reveals arbitrary header/footer content before it can be activated. */
+    :where(
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"][data-nk--app-shell-pinned-value="false"]:not(
+            :has(
+                > [data-slot="app-shell-sidebar"]
+                  > [data-slot="app-shell-navigation"]:focus-within,
+                > [data-slot="app-shell-header"]
+                  > [data-slot="app-shell-brand"]:focus-within
+              )
+          )
+      ) {
+      --_nk-shell-label-clip: inset(50%);
+    }
+
+    :where(
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+          > [data-slot="app-shell-sidebar"]
+          [data-slot="app-navigation-item-label"],
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+          > [data-slot="app-shell-sidebar"]
+          [data-slot="app-navigation-section-label"],
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+          > [data-slot="app-shell-sidebar"]
+          [data-slot="app-navigation-item-badge"],
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+          > [data-slot="app-shell-sidebar"]
+          [data-slot="app-navigation-item-icon-end"],
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+          > [data-slot="app-shell-sidebar"]
+          [data-slot="app-navigation-header"],
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+          > [data-slot="app-shell-sidebar"]
+          [data-slot="app-navigation-footer"]
+      ) {
+      clip-path: var(--_nk-shell-label-clip, none);
+    }
+
+    :where(
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]:has(
+            > [data-slot="app-shell-sidebar"]
+              > [data-slot="app-shell-navigation"]:focus-within,
+            > [data-slot="app-shell-header"]
+              > [data-slot="app-shell-brand"]:focus-within
+          )
+      ) {
+      --_nk-shell-panel-width: var(--nk-app-shell-sidebar-width);
+      --_nk-shell-label-clip: none;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+      :where(
+          [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]:not(
+              [data-nk--app-shell-hover-suppressed-value="true"]
+            ):has(
+              > [data-slot="app-shell-sidebar"]
+                > [data-slot="app-shell-navigation"]:hover,
+              > [data-slot="app-shell-header"]
+                > [data-slot="app-shell-brand"]:hover
+            )
+        ) {
+        --_nk-shell-panel-width: var(--nk-app-shell-sidebar-width);
+        --_nk-shell-label-clip: none;
+      }
+    }
+
+    :where(
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"][data-nk--app-shell-pinned-value="false"]
+          > [data-slot="app-shell-sidebar"]
+      ) {
+      box-shadow: var(--nk-shadow-md);
+    }
+  }
+
   @media (width < 48rem) {
     :where([data-nk="app-shell"]) {
       grid-template-rows: auto auto minmax(0, 1fr);
@@ -1843,6 +2047,12 @@
 
   @media (prefers-reduced-motion: reduce) {
     :where(
+        [data-nk="app-shell"][data-nk--app-shell-collapsible-value="true"],
+        [data-nk="app-shell"][data-nk--app-shell-collapsible-value="true"]
+          > [data-slot="app-shell-sidebar"],
+        [data-nk="app-shell"][data-nk--app-shell-collapsible-value="true"]
+          > [data-slot="app-shell-header"]
+          > [data-slot="app-shell-brand"],
         [data-nk="app-shell"] > [data-slot="app-shell-skip-link"],
         [data-nk="app-shell"] > [data-slot="app-shell-dialog"],
         [data-nk="app-shell"]

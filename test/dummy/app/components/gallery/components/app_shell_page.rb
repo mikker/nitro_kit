@@ -8,23 +8,191 @@ module Gallery
       end
 
       def api_note
-        "NitroKit::AppShell.new(id:, layout: :sidebar, skip_link_label:, open_navigation_label:, close_navigation_label:, navigation_dialog_label:) { |shell| shell.navigation { ... }; shell.main { ... } }"
+        "NitroKit::AppShell.new(id:, layout: :sidebar, collapsible: false, sidebar: :expanded, sidebar_toggle_label:, skip_link_label:, open_navigation_label:, close_navigation_label:, navigation_dialog_label:) { |shell| shell.navigation { ... }; shell.main { ... } }"
       end
 
       def component_template
         example_section(
-          "Layout variants",
+          "Sidebar configurations and topbar",
           slug: "app-shell-layouts",
-          description: "Both layouts reflow the same AppNavigation tree while the application supplies brand, actions, routes, and main content."
+          description: "Compare static, pinned, icon-rail, and application-owned inset sidebars. Topbar uses the same navigation tree without sidebar pinning; every layout becomes the mobile drawer at narrow widths."
         ) do
           example(
-            "Sidebar workspace",
+            "Collapsible sidebar — starts expanded",
             slug: "app-shell-sidebar",
             mode: :full_width,
-            description: "A sticky product sidebar surrounds a compact operational dashboard.",
-            code: Gallery::SourceCode.from_method(method(:render_workspace_shell))
+            description: "collapsible: true, sidebar: :expanded. Unpin to collapse immediately; leave and re-enter the rail to peek, or focus it with the keyboard."
           ) do
-            render_workspace_shell(id: "gallery-app-shell-sidebar", layout: :sidebar, current: :overview)
+            render NitroKit::AppShell.new(
+              id: "gallery-app-shell-sidebar",
+              layout: :sidebar,
+              collapsible: true,
+              sidebar: :expanded,
+              navigation_dialog_label: "Workspace navigation",
+              data: { gallery_shell_preview: :sidebar }
+            ) do |shell|
+              shell.brand(icon: :star) { strong { "Northstar" } }
+              shell.navigation do
+                render_shell_navigation(id: "gallery-app-shell-sidebar", current: :overview, dense: false, long: false)
+              end
+              shell.topbar { render NitroKit::Button.new("Search", href: "#search", size: :sm, icon: :search) }
+              shell.main { render_workspace_main(layout: :sidebar, long: false) }
+            end
+          end
+
+          example(
+            "Static sidebar — default",
+            slug: "app-shell-static",
+            mode: :full_width,
+            description: "collapsible: false. Navigation stays expanded with no pin button or hover peek; the mobile drawer still works."
+          ) do
+            render NitroKit::AppShell.new(
+              id: "gallery-app-shell-static",
+              layout: :sidebar,
+              collapsible: false,
+              navigation_dialog_label: "Workspace navigation",
+              data: { gallery_shell_preview: :sidebar }
+            ) do |shell|
+              shell.brand { strong { "Northstar" } }
+              shell.navigation do
+                render_shell_navigation(id: "gallery-app-shell-static", current: :overview, dense: false, long: false)
+              end
+              shell.topbar { render NitroKit::Button.new("Search", href: "#search", size: :sm, icon: :search) }
+              shell.main { render_workspace_main(layout: :sidebar, long: false) }
+            end
+          end
+
+          example(
+            "Collapsible sidebar — starts collapsed",
+            slug: "app-shell-rail",
+            mode: :full_width,
+            description: "collapsible: true, sidebar: :collapsed. Icons and the brand mark stay aligned; hover or focus to peek without shifting content, or click to pin open."
+          ) do
+            render NitroKit::AppShell.new(
+              id: "gallery-app-shell-rail",
+              collapsible: true,
+              sidebar: :collapsed,
+              data: { gallery_shell_preview: :sidebar }
+            ) do |shell|
+              shell.brand(icon: :star) { strong { "Northstar" } }
+              shell.navigation do
+                render NitroKit::AppNavigation.new(label: "Rail workspace") do |navigation|
+                  navigation.body do
+                    navigation.section(label: "Workspace") do
+                      navigation.item("Overview", href: "#overview", icon: :house, current: true)
+                      navigation.item("Projects", href: "#projects", icon: :folder)
+                      navigation.item("People", href: "#people", icon: :users)
+                    end
+                    navigation.spacer
+                    navigation.item("Help", href: "#help", icon: :circle_help)
+                    navigation.item("Settings", href: "#settings", icon: :settings)
+                  end
+                end
+              end
+              shell.topbar { render NitroKit::Button.new("New project", icon: :plus, variant: :primary) }
+              shell.main do
+                div(data: { gallery: "app-shell-main" }) do
+                  render NitroKit::PageHeader.new(
+                    title: "Projects",
+                    description: "Peek at navigation without moving this canvas, or pin it to reserve layout space.",
+                    level: 4
+                  )
+                end
+              end
+            end
+          end
+
+          example(
+            "Inset sidebar workspace",
+            slug: "app-shell-inset",
+            mode: :full_width,
+            description: "Application-owned inset_workspace.css joins the toolbar and content into one rounded canvas. Use data-ui hooks, not an inset component option; navigation and the mobile drawer remain Nitro-owned."
+          ) do
+            render NitroKit::AppShell.new(
+              id: "gallery-app-shell-inset",
+              layout: :sidebar,
+              collapsible: false,
+              data: { ui: "inset-workspace", gallery_shell_preview: :sidebar }
+            ) do |shell|
+              shell.brand { strong { "Northstar" } }
+              shell.navigation do
+                render NitroKit::AppNavigation.new(label: "Northstar workspace") do |navigation|
+                  navigation.body do
+                    navigation.section(label: "Workspace") do
+                      navigation.item("Overview", href: "#overview", icon: :house, current: true)
+                      navigation.item("Projects", href: "#projects", icon: :folder, badge: 12)
+                      navigation.item("People", href: "#people", icon: :users)
+                    end
+                    navigation.spacer
+                    navigation.item("Settings", href: "#settings", icon: :settings)
+                  end
+                  navigation.footer { render NitroKit::Button.new("Help", href: "#help", size: :sm, icon: :circle_help) }
+                end
+              end
+              shell.topbar do
+                render NitroKit::Toolbar.new do |toolbar|
+                  toolbar.leading { h4 { "Workspace overview" } }
+                  toolbar.trailing { render NitroKit::Button.new("New project", href: "#new-project", variant: :primary) }
+                end
+              end
+              shell.main do
+                render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch, data: { ui: "workspace-content" }) do
+                  p { "One content gutter, an independently scrolling canvas, and a quiet navigation rail." }
+                  render NitroKit::StatGrid.new do |stats|
+                    stats.stat(key: :projects, label: "Active projects", value: "12", detail: "Three need a decision")
+                    stats.stat(key: :deployments, label: "Deployments", value: "4", detail: "All checks passing")
+                    stats.stat(key: :incidents, label: "Open incidents", value: "2", detail: "Both assigned")
+                  end
+                end
+              end
+            end
+          end
+
+          example(
+            "Inset sidebar — collapsible",
+            slug: "app-shell-inset-collapsible",
+            mode: :full_width,
+            description: "Combine the application-owned inset canvas with collapsible: true. Start pinned open, unpin to an icon rail, then hover or focus to peek without moving the inset toolbar or content."
+          ) do
+            render NitroKit::AppShell.new(
+              id: "gallery-app-shell-inset-collapsible",
+              layout: :sidebar,
+              collapsible: true,
+              sidebar: :expanded,
+              data: { ui: "inset-workspace", gallery_shell_preview: :sidebar }
+            ) do |shell|
+              shell.brand(icon: :star) { strong { "Northstar" } }
+              shell.navigation do
+                render NitroKit::AppNavigation.new(label: "Northstar workspace") do |navigation|
+                  navigation.body do
+                    navigation.section(label: "Workspace") do
+                      navigation.item("Overview", href: "#overview", icon: :house, current: true)
+                      navigation.item("Projects", href: "#projects", icon: :folder, badge: 12)
+                      navigation.item("People", href: "#people", icon: :users)
+                    end
+                    navigation.spacer
+                    navigation.item("Settings", href: "#settings", icon: :settings)
+                  end
+                  navigation.footer { render NitroKit::Button.new("Help", href: "#help", size: :sm, icon: :circle_help) }
+                end
+              end
+              shell.topbar do
+                render NitroKit::Toolbar.new do |toolbar|
+                  toolbar.leading { h4 { "Workspace overview" } }
+                  toolbar.trailing { render NitroKit::Button.new("New project", href: "#new-project", variant: :primary) }
+                end
+              end
+              shell.main do
+                render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch, data: { ui: "workspace-content" }) do
+                  p { "Pin to reserve navigation space, or peek over the canvas without reflowing this content." }
+                  render NitroKit::StatGrid.new do |stats|
+                    stats.stat(key: :projects, label: "Active projects", value: "12", detail: "Three need a decision")
+                    stats.stat(key: :deployments, label: "Deployments", value: "4", detail: "All checks passing")
+                    stats.stat(key: :incidents, label: "Open incidents", value: "2", detail: "Both assigned")
+                  end
+                end
+              end
+            end
           end
 
           example(
@@ -33,7 +201,7 @@ module Gallery
             mode: :full_width,
             description: "Brand, navigation, and account actions share the desktop header before the same tree becomes a narrow drawer."
           ) do
-            render_workspace_shell(id: "gallery-app-shell-topbar", layout: :topbar, current: :overview)
+            render_workspace_shell(id: "gallery-app-shell-topbar", layout: :topbar, current: :overview, collapsible: false)
           end
         end
 
@@ -52,6 +220,7 @@ module Gallery
               id: "gallery-app-shell-minimal",
               layout: :sidebar,
               current: :overview,
+              collapsible: true,
               brand: false,
               actions: false
             )
@@ -67,6 +236,7 @@ module Gallery
               id: "gallery-app-shell-long",
               layout: :sidebar,
               current: :capacity,
+              collapsible: true,
               long: true,
               dense: true
             )
@@ -84,6 +254,7 @@ module Gallery
                 render NitroKit::AppShell.new(
                   id: "gallery-app-shell-hostile-#{layout}",
                   layout:,
+                  collapsible: true,
                   navigation_dialog_label: Gallery::Hostile::LONG_LABEL,
                   data: { gallery_shell_preview: layout }
                 ) do |shell|
@@ -153,17 +324,18 @@ module Gallery
         end
       end
 
-      def render_workspace_shell(id:, layout:, current:, brand: true, actions: true, dense: false, long: false)
+      def render_workspace_shell(id:, layout:, current:, collapsible:, brand: true, actions: true, dense: false, long: false)
         render NitroKit::AppShell.new(
           id:,
           layout:,
+          collapsible:,
           navigation_dialog_label: "Workspace navigation",
           data: {
             gallery_shell_preview: layout,
             gallery_shell_long: long ? "true" : nil
           }.compact
         ) do |shell|
-          shell.brand do
+          shell.brand(icon: collapsible ? :star : nil) do
             strong do
               long ? "International Analytical Engine Operations" : "Northstar"
             end

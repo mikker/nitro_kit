@@ -97,6 +97,57 @@ class AppShellTest < ActiveSupport::TestCase
     end
   end
 
+  test "sidebar rail has an accessible pin control and validated initial state" do
+    node = render_shell(NitroKit::AppShell.new(id: "workspace", collapsible: true, sidebar: :collapsed)) do |shell|
+      shell.navigation { |view| render_navigation(view) }
+      shell.main { "Dashboard" }
+    end
+    assert_equal "false", node["data-nk--app-shell-pinned-value"]
+    pin = node.at_css("[data-slot='app-shell-sidebar-toggle']")
+    assert_equal "button", pin.name
+    assert_equal "false", pin["aria-pressed"]
+    assert_equal "workspace-navigation-region", pin["aria-controls"]
+    assert_equal I18n.t("nitro_kit.app_shell.pin_sidebar"), pin["aria-label"]
+    assert_equal "click->nk--app-shell#togglePin", pin["data-action"]
+    assert_raises(ArgumentError) { NitroKit::AppShell.new(id: "workspace", sidebar: :floating) }
+    assert_raises(ArgumentError) { NitroKit::AppShell.new(id: "workspace", sidebar_toggle_label: " ") }
+
+    topbar = render_shell(NitroKit::AppShell.new(id: "workspace", layout: :topbar, collapsible: true)) do |shell|
+      shell.navigation { |view| render_navigation(view) }
+      shell.main { "Dashboard" }
+    end
+    assert_empty topbar.css("[data-slot='app-shell-sidebar-toggle']")
+  end
+
+  test "sidebar pin and peek are opt-in" do
+    node = render_shell do |shell|
+      shell.navigation { |view| render_navigation(view) }
+      shell.main { "Dashboard" }
+    end
+    assert_equal "false", node["data-nk--app-shell-collapsible-value"]
+    assert_empty node.css("[data-slot='app-shell-sidebar-toggle']")
+    assert_nil node.at_css("[data-slot='app-shell-sidebar']")["data-action"]
+    assert_raises(ArgumentError) { NitroKit::AppShell.new(id: "workspace", collapsible: "true") }
+    assert_raises(ArgumentError) { NitroKit::AppShell.new(id: "workspace", sidebar: :collapsed) }
+  end
+
+  test "brand accepts a validated icon alongside the full content" do
+    node = render_shell do |shell|
+      shell.brand(icon: :zap) { "Nitro Kit" }
+      shell.navigation { |view| render_navigation(view) }
+      shell.main { "Dashboard" }
+    end
+    assert_equal "svg", node.at_css("[data-slot='app-shell-brand-icon']").name
+    assert_equal "Nitro Kit", node.at_css("[data-slot='app-shell-brand-content']").text
+    assert_raises(ArgumentError) do
+      render_shell do |shell|
+        shell.brand(icon: :nonexistent_brand_icon) { "Brand" }
+        shell.navigation { |view| render_navigation(view) }
+        shell.main { "Dashboard" }
+      end
+    end
+  end
+
   test "requires exactly one navigation and main and limits optional regions" do
     assert_match(/declaration block/, assert_raises(ArgumentError) do
       NitroKit::AppShell.new(id: "workspace").call

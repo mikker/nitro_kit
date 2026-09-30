@@ -47,7 +47,7 @@ class GalleryAppShellTest < ActionDispatch::IntegrationTest
     get gallery_component_path("app-shell")
 
     assert_response :success
-    assert_select "[data-gallery='example-canvas'] [data-nk='app-shell']", count: 6 do |shells|
+    assert_select "[data-gallery='example-canvas'] [data-nk='app-shell']", count: 10 do |shells|
       shells.each do |shell|
         assert_equal "header", shell.at_css("[data-slot='app-shell-header']").name
         assert_equal "div", shell.at_css("[data-slot='app-shell-sidebar']").name
@@ -70,6 +70,13 @@ class GalleryAppShellTest < ActionDispatch::IntegrationTest
       assert_select "#gallery-app-shell-#{layout} [data-slot='app-shell-dialog'][aria-label='Workspace navigation']", count: 1
     end
     assert_select "#gallery-app-shell-minimal [data-slot='app-shell-brand']", count: 0
+    assert_select "#gallery-app-shell-static[data-nk--app-shell-collapsible-value='false']", count: 1
+    assert_select "#gallery-app-shell-static [data-slot='app-shell-sidebar-toggle']", count: 0
+    assert_select "#gallery-app-shell-sidebar[data-nk--app-shell-collapsible-value='true']", count: 1
+    assert_select "#gallery-app-shell-sidebar [data-slot='app-shell-sidebar-toggle']", count: 1
+    assert_select "#gallery-app-shell-rail[data-nk--app-shell-collapsible-value='true'][data-nk--app-shell-pinned-value='false']", count: 1
+    assert_select "#gallery-app-shell-rail [data-slot='app-shell-sidebar-toggle'][aria-pressed='false']", count: 1
+    assert_select "#example-app-shell-rail-code [data-gallery='code-source']", text: /collapsible: true/
     assert_select "#gallery-app-shell-minimal [data-slot='app-shell-topbar']", count: 0
     assert_select "#gallery-app-shell-long [data-slot='app-navigation-item']", minimum: 8
     assert_select "#gallery-app-shell-long [data-slot='app-navigation-item-label']", text: /Cross-regional capacity/
@@ -80,6 +87,18 @@ class GalleryAppShellTest < ActionDispatch::IntegrationTest
       assert_select "> [data-nk='card']", count: 3
     end
     assert_select "#example-app-shell-sidebar-code [data-gallery='code-source']", text: /NitroKit::AppShell\.new/
+    assert_select "#example-app-shell-sidebar-code [data-gallery='code-source']", text: /collapsible: true.*sidebar: :expanded/m
+    assert_select "#example-app-shell-static-code [data-gallery='code-source']", text: /collapsible: false/
+    assert_select "#example-app-shell-rail-code [data-gallery='code-source']", text: /collapsible: true.*sidebar: :collapsed/m
+    assert_select "#gallery-app-shell-inset[data-ui='inset-workspace'][data-nk--app-shell-collapsible-value='false']", count: 1
+    assert_select "#gallery-app-shell-inset [data-slot='app-shell-sidebar-toggle']", count: 0
+    assert_select "#gallery-app-shell-inset [data-slot='app-shell-topbar'] > [data-nk='toolbar']", count: 1
+    assert_select "#gallery-app-shell-inset > [data-slot='app-shell-main'] > [data-ui='workspace-content']", count: 1
+    assert_select "#example-app-shell-inset-code [data-gallery='code-source']", text: /ui: "inset-workspace"/
+    assert_select "#gallery-app-shell-inset-collapsible[data-ui='inset-workspace'][data-nk--app-shell-collapsible-value='true']", count: 1
+    assert_select "#gallery-app-shell-inset-collapsible [data-slot='app-shell-sidebar-toggle'][aria-pressed='true']", count: 1
+    assert_select "#gallery-app-shell-inset-collapsible [data-slot='app-shell-brand-icon']", count: 1
+    assert_select "#example-app-shell-inset-collapsible-code [data-gallery='code-source']", text: /collapsible: true.*sidebar: :expanded/m
     assert_select "[data-gallery='example-canvas'] [class]", count: 0
     assert_select "[data-gallery='example-canvas'] [style]", count: 0
   end

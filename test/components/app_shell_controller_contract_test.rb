@@ -34,7 +34,7 @@ class AppShellControllerContractTest < ActiveSupport::TestCase
   test "uses live targets across morphs and pairs the retained listener" do
     source = CONTROLLER.read
 
-    assert_includes source, 'static targets = ["dialog", "navigation", "sidebar", "trigger"]'
+    assert_includes source, 'static targets = ["dialog", "navigation", "sidebar", "trigger", "pin"]'
     assert_includes source, "dialogTargetConnected()"
     assert_includes source, "dialogTargetDisconnected(dialog)"
     assert_includes source, "navigationTargetConnected()"
@@ -56,5 +56,8 @@ class AppShellControllerContractTest < ActiveSupport::TestCase
     assert_includes source, "delete this.element.dataset.enhanced"
     assert_includes source[/syncViewport\(\) \{.*?\n  \}/m].to_s, 'this.element.dataset.enhanced = ""'
     assert_includes component, "turbo:morph@document->nk--app-shell#syncViewport"
+    assert_includes component, "turbo:before-morph-attribute->nk--app-shell#preserveSidebarState"
+    assert_includes source, '"data-nk--app-shell-pinned-value"'
+    assert_includes source, '"data-nk--app-shell-hover-suppressed-value"'
   end
 end

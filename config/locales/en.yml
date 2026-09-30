@@ -5,6 +5,7 @@ en:
       open_navigation: "Open navigation"
       close_navigation: "Close navigation"
       navigation_dialog: "Application navigation"
+      pin_sidebar: "Pin sidebar"
     appearance_picker:
       label: "Appearance"
       preferences:

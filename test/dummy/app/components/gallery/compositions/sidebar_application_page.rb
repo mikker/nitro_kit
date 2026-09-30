@@ -15,30 +15,133 @@ module Gallery
 
       def application_template
         application_section(
-          "Operational workspace states",
+          "Sidebar configurations in operation",
           slug: "sidebar-application-states",
-          description: "A persistent sidebar surrounds populated, empty, and failed operational screens. Each preview is the executable method shown in its Code tab."
+          description: "Static, pinned, icon-rail, and inset sidebars across operational screens. Every configuration shares the mobile drawer and has its executable settings in the Code tab."
         ) do
           application_example(
-            "Populated system workspace",
+            "Static sidebar — populated workspace",
             slug: "sidebar-application-populated",
-            description: "Live system appearance, summary statistics, sortable incidents, account actions, and a durable result notification share one application frame.",
+            description: "collapsible: false keeps the default sidebar expanded without a pin button. Live appearance, summary statistics, sortable incidents, account actions, and notifications share the frame.",
             source: :render_sidebar_populated
           ) { render_sidebar_populated }
 
           application_example(
-            "Empty light workspace",
+            "Collapsible sidebar — empty workspace",
             slug: "sidebar-application-empty",
-            description: "A missing optional description, true empty state, and ordinary multipart Dropzone keep the first-run path useful.",
+            description: "collapsible: true, sidebar: :expanded starts pinned open. Unpin to try the rail and hover/focus peek alongside an empty state and ordinary multipart Dropzone.",
             source: :render_sidebar_empty
           ) { render_sidebar_empty }
 
           application_example(
-            "Failed dark workspace",
+            "Collapsed rail — failed workspace",
             slug: "sidebar-application-error",
-            description: "An explicit service failure combines recovery guidance, partial record details, and a native diagnostic dialog.",
+            description: "collapsible: true, sidebar: :collapsed starts as a rail in dark mode. Peek or pin navigation while reviewing recovery guidance, partial incident details, and a native diagnostic dialog.",
             source: :render_sidebar_error
           ) { render_sidebar_error }
+
+          application_example(
+            "Inset sidebar — release workspace",
+            slug: "sidebar-application-inset",
+            description: "The application-owned inset_workspace.css joins the route toolbar and scrolling content into one rounded surface, with one workspace-content gutter. This is composition, not another AppShell option.",
+            source: :render_sidebar_inset
+          ) { render_sidebar_inset }
+
+          application_example(
+            "Inset sidebar — collapsible release workspace",
+            slug: "sidebar-application-inset-collapsible",
+            description: "The same inset release canvas with collapsible: true and sidebar: :expanded. Unpin to a rail, hover or focus to peek over the canvas, and pin to reserve navigation space again.",
+            source: :render_sidebar_inset_collapsible
+          ) { render_sidebar_inset_collapsible }
+        end
+      end
+
+      def render_sidebar_inset_collapsible
+        render NitroKit::AppShell.new(
+          id: "gallery-sidebar-application-inset-collapsible",
+          layout: :sidebar,
+          collapsible: true,
+          sidebar: :expanded,
+          data: {
+            ui: "inset-workspace",
+            gallery_shell_preview: "true",
+            gallery_application: "sidebar",
+            gallery_application_state: "inset-collapsible"
+          }
+        ) do |shell|
+          shell.brand(icon: :star) { strong { "Northstar" } }
+          shell.navigation do
+            render_application_navigation(
+              id: "gallery-sidebar-application-inset-collapsible-navigation",
+              current: :overview,
+              context: "Production"
+            )
+          end
+          shell.topbar do
+            render NitroKit::Toolbar.new do |toolbar|
+              toolbar.leading { h1 { "Release readiness" } }
+              toolbar.trailing { render NitroKit::Button.new("New deployment", href: "#new-deployment", variant: :primary) }
+            end
+          end
+          shell.main { render_inset_release_content }
+        end
+      end
+
+      def render_sidebar_inset
+        render NitroKit::AppShell.new(
+          id: "gallery-sidebar-application-inset",
+          layout: :sidebar,
+          collapsible: false,
+          data: {
+            ui: "inset-workspace",
+            gallery_shell_preview: "true",
+            gallery_application: "sidebar",
+            gallery_application_state: "inset"
+          }
+        ) do |shell|
+          shell.brand { strong { "Northstar Releases" } }
+          shell.navigation do
+            render_application_navigation(
+              id: "gallery-sidebar-application-inset-navigation",
+              current: :overview,
+              context: "Production"
+            )
+          end
+          shell.topbar do
+            render NitroKit::Toolbar.new do |toolbar|
+              toolbar.leading { h1 { "Release readiness" } }
+              toolbar.trailing { render NitroKit::Button.new("New deployment", href: "#new-deployment", variant: :primary) }
+            end
+          end
+          shell.main { render_inset_release_content }
+        end
+      end
+
+      def render_inset_release_content
+        render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch, data: { ui: "workspace-content" }) do
+          render NitroKit::StatGrid.new do |stats|
+            stats.stat(key: :services, label: "Services", value: "3", detail: "All production regions")
+            stats.stat(key: :checks, label: "Passing checks", value: "18", detail: "No blockers")
+            stats.stat(key: :regions, label: "Regions", value: "3", detail: "Ready to promote")
+          end
+          render NitroKit::DataSection.new(title: "Release checklist", description: "Verified before promoting the next deployment.") do |section|
+            section.table NitroKit::Table.new(table_aria: { label: "Release checklist" }) do |table|
+              table.thead do
+                table.tr do
+                  table.th("Service", scope: :col)
+                  table.th("Readiness", scope: :col)
+                end
+              end
+              table.tbody do
+                [ "Workspace synchronization", "Audit export", "Invoice delivery" ].each do |service|
+                  table.tr do
+                    table.th(service, scope: :row)
+                    table.td { render NitroKit::Badge.new("Ready", color: :success) }
+                  end
+                end
+              end
+            end
+          end
         end
       end
 
@@ -46,6 +149,7 @@ module Gallery
         render NitroKit::AppShell.new(
           id: "gallery-sidebar-application-populated",
           layout: :sidebar,
+          collapsible: false,
           data: {
             gallery_shell_preview: "true",
             gallery_application: "sidebar",
@@ -139,6 +243,8 @@ module Gallery
         render NitroKit::AppShell.new(
           id: "gallery-sidebar-application-empty",
           layout: :sidebar,
+          collapsible: true,
+          sidebar: :expanded,
           data: {
             gallery_shell_preview: "true",
             gallery_application: "sidebar",
@@ -146,7 +252,7 @@ module Gallery
             theme: "light"
           }
         ) do |shell|
-          shell.brand { strong { "Northstar Projects" } }
+          shell.brand(icon: :star) { strong { "Northstar Projects" } }
           shell.navigation do
             render_application_navigation(
               id: "gallery-sidebar-application-empty-navigation",
@@ -208,6 +314,8 @@ module Gallery
         render NitroKit::AppShell.new(
           id: "gallery-sidebar-application-error",
           layout: :sidebar,
+          collapsible: true,
+          sidebar: :collapsed,
           data: {
             gallery_shell_preview: "true",
             gallery_application: "sidebar",
@@ -215,7 +323,7 @@ module Gallery
             theme: "dark"
           }
         ) do |shell|
-          shell.brand { strong { "Northstar Reliability" } }
+          shell.brand(icon: :star) { strong { "Northstar Reliability" } }
           shell.navigation do
             render_application_navigation(
               id: "gallery-sidebar-application-error-navigation",

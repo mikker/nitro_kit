@@ -518,10 +518,10 @@ module Gallery
         subcategory: :application,
         slug: "app-shell",
         title: "Application shell",
-        description: "Sidebar and topbar application frames that reflow one AppNavigation tree through an accessible narrow drawer.",
+        description: "Static, pinned, icon-rail, and inset sidebar configurations plus topbar, all using one navigation tree and an accessible mobile drawer.",
         page: Gallery::Components::AppShellPage,
         states: [],
-        expected_roots: %w[app-shell app-navigation icon badge button container flex grid page-header card]
+        expected_roots: %w[app-shell app-navigation icon badge button container flex grid page-header card toolbar stat-grid]
       ),
       Entry.new(
         kind: :component,
@@ -956,11 +956,11 @@ module Gallery
         kind: :composition,
         slug: "application-sidebar",
         title: "Sidebar operations application",
-        description: "A realistic sidebar application combining appearance, data, upload, notification, recovery, and empty-state workflows.",
+        description: "Static, pinned, icon-rail, and inset sidebar configurations in operational workspaces with appearance, data, uploads, notifications, recovery, and empty states.",
         page: Gallery::Compositions::SidebarApplicationPage,
         states: [],
         expected_roots: %w[
-          app-shell app-navigation page-header appearance-picker stat-grid toast data-section empty-state
+          app-shell app-navigation page-header appearance-picker stat-grid toast data-section empty-state toolbar
           dropzone settings-section alert details-table dialog container flex button
         ]
       ),

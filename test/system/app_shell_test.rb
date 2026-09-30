@@ -1,6 +1,210 @@
 require "application_system_test_case"
 
 class AppShellTest < ApplicationSystemTestCase
+  test "inset examples share a continuous canvas and retain the mobile drawer in both themes" do
+    examples = [
+      [ "component", "app-shell", "app-shell-inset", false ],
+      [ "component", "app-shell", "app-shell-inset-collapsible", true ],
+      [ "composition", "application-sidebar", "sidebar-application-inset", false ],
+      [ "composition", "application-sidebar", "sidebar-application-inset-collapsible", true ]
+    ]
+    examples.each do |kind, slug, example, collapsible|
+      %w[light dark].each do |theme|
+        [ 1280, 390 ].each do |width|
+          resize_viewport(width:, height: 900)
+          browser.execute_cdp("Emulation.setDeviceMetricsOverride", width:, height: 900, deviceScaleFactor: 1, mobile: false) if chrome?
+          visit gallery_preview_path(kind:, slug:, example:, theme:)
+          assert_selector "[data-ui='inset-workspace'][data-enhanced]"
+          if collapsible
+            assert_selector "[data-slot='app-shell-sidebar-toggle']", visible: :all
+          else
+            assert_no_selector "[data-slot='app-shell-sidebar-toggle']", visible: :all
+          end
+          geometry = evaluate_script(<<~JS)
+            (() => {
+              const shell = document.querySelector('[data-ui="inset-workspace"]')
+              const s = shell.getBoundingClientRect()
+              const main = shell.querySelector('[data-slot="app-shell-main"]')
+              const m = main.getBoundingClientRect()
+              const topbar = shell.querySelector('[data-slot="app-shell-topbar"]')
+              const t = topbar.getBoundingClientRect()
+              const r = shell.querySelector('[data-slot="app-shell-sidebar"]').getBoundingClientRect()
+              const gutter = getComputedStyle(shell.querySelector('[data-ui="workspace-content"]'))
+              return { height: s.height, left: m.left, right: m.right,
+                gaps: [t.top-s.top, s.right-m.right, s.bottom-m.bottom, m.left-r.right],
+                seam: m.top-t.bottom, gutter: parseFloat(gutter.paddingLeft),
+                radius: parseFloat(getComputedStyle(main).borderBottomLeftRadius),
+                overflow: document.documentElement.scrollWidth-innerWidth }
+            })()
+          JS
+          assert_in_delta 900, geometry.fetch("height"), 1
+          assert_operator geometry.fetch("overflow"), :<=, 0
+          if width == 1280
+            geometry.fetch("gaps").zip([ 12, 12, 12, 0 ]).each { |actual, expected| assert_in_delta expected, actual, 1 }
+            assert_in_delta 0, geometry.fetch("seam"), 1
+            assert_in_delta 24, geometry.fetch("gutter"), 1
+            assert_operator geometry.fetch("radius"), :>, 0
+            if collapsible
+              pin = find("[data-slot='app-shell-sidebar-toggle']")
+              sidebar = find("[data-slot='app-shell-sidebar']")
+              main = find("[data-slot='app-shell-main']")
+              pin.click
+              assert_selector "[data-slot='app-shell-sidebar-toggle'][aria-pressed='false']"
+              wait_until { evaluate_script("arguments[0].getBoundingClientRect().width < 100", sidebar) }
+              wait_for_animations("[data-ui='inset-workspace']")
+              collapsed_left = evaluate_script("arguments[0].getBoundingClientRect().left", main)
+              assert_operator collapsed_left, :<, geometry.fetch("left")
+              main.hover
+              sidebar.hover
+              wait_until { evaluate_script("arguments[0].getBoundingClientRect().width > 100", sidebar) }
+              assert_in_delta collapsed_left, evaluate_script("arguments[0].getBoundingClientRect().left", main), 1
+              assert_equal evaluate_script("getComputedStyle(arguments[0].closest('[data-nk=app-shell]')).backgroundColor", sidebar),
+                evaluate_script("getComputedStyle(arguments[0]).backgroundColor", sidebar)
+              pin.click
+              assert_selector "[data-slot='app-shell-sidebar-toggle'][aria-pressed='true']"
+              wait_for_animations("[data-ui='inset-workspace']")
+              assert_in_delta geometry.fetch("left"), evaluate_script("arguments[0].getBoundingClientRect().left", main), 1
+              pin.click
+              wait_until { evaluate_script("arguments[0].getBoundingClientRect().width < 100", sidebar) }
+              wait_for_animations("[data-ui='inset-workspace']")
+              execute_script("arguments[0].focus()", first("[data-slot='app-navigation-item-link']"))
+              wait_until { evaluate_script("arguments[0].getBoundingClientRect().width > 100", sidebar) }
+              assert_in_delta collapsed_left, evaluate_script("arguments[0].getBoundingClientRect().left", main), 1
+            end
+          else
+            assert_no_selector "[data-slot='app-shell-sidebar-toggle']"
+            assert_in_delta 0, geometry.fetch("left"), 1
+            assert_in_delta width, geometry.fetch("right"), 1
+            assert_in_delta 16, geometry.fetch("gutter"), 1
+            assert_in_delta 0, geometry.fetch("radius"), 1
+            find("[data-slot='app-shell-mobile-trigger']").click
+            assert_selector "[data-slot='app-shell-dialog'][open] [data-nk='app-navigation']", count: 1
+            wait_for_animations("[data-slot='app-shell-dialog'][open]")
+            find("[data-slot='app-shell-mobile-close']").click
+            assert_no_selector "[data-slot='app-shell-dialog'][open]"
+          end
+        end
+      end
+    end
+  end
+
+  test "sidebar operations demonstrates static pinned and rail configurations" do
+    resize_viewport(width: 1200, height: 900)
+    visit gallery_composition_path(slug: "application-sidebar")
+    static = "#gallery-sidebar-application-populated"
+    pinned = "#gallery-sidebar-application-empty"
+    rail = "#gallery-sidebar-application-error"
+    assert_selector "#{static}[data-enhanced][data-nk--app-shell-collapsible-value='false']"
+    assert_no_selector "#{static} [data-slot='app-shell-sidebar-toggle']", visible: :all
+    assert_selector "#{pinned}[data-enhanced][data-nk--app-shell-pinned-value='true']"
+    assert_selector "#{pinned} [data-slot='app-shell-sidebar-toggle'][aria-pressed='true']"
+    assert_selector "#{rail}[data-enhanced][data-nk--app-shell-pinned-value='false']"
+    sidebar = find("#{rail} > [data-slot='app-shell-sidebar']")
+    main = find("#{rail} > [data-slot='app-shell-main']")
+    wait_until { evaluate_script("arguments[0].getBoundingClientRect().width < 100", sidebar) }
+    wait_for_animations(rail)
+    main_left = evaluate_script("arguments[0].getBoundingClientRect().left", main)
+    execute_script("arguments[0].focus()", first("#{rail} [data-slot='app-navigation-item-link']"))
+    wait_until { evaluate_script("arguments[0].getBoundingClientRect().width > 100", sidebar) }
+    assert_in_delta main_left, evaluate_script("arguments[0].getBoundingClientRect().left", main), 1
+  end
+
+  test "default sidebar stays static with no pin or peek behavior" do
+    visit_shell_page
+    root = "#gallery-app-shell-static"
+    assert_selector "#{root}[data-nk--app-shell-collapsible-value='false']"
+    assert_no_selector "#{root} [data-slot='app-shell-sidebar-toggle']", visible: :all
+    sidebar = find("#{root} > [data-slot='app-shell-sidebar']")
+    width = evaluate_script("arguments[0].getBoundingClientRect().width", sidebar)
+    execute_script(<<~JAVASCRIPT, root)
+      const controller = window.Stimulus.getControllerForElementAndIdentifier(
+        document.querySelector(arguments[0]), "nk--app-shell"
+      );
+      controller.togglePin({ detail: 1 });
+    JAVASCRIPT
+    assert_selector "#{root}[data-nk--app-shell-pinned-value='true']"
+    page.driver.browser.action.move_to(sidebar.native).perform
+    assert_in_delta width, evaluate_script("arguments[0].getBoundingClientRect().width", sidebar), 1
+    assert_equal "0s", evaluate_script("getComputedStyle(arguments[0]).transitionDuration", sidebar)
+  end
+
+  test "rail peeks on hover and keyboard focus without shifting content and pins on click" do
+    visit_shell_page
+    root = "#gallery-app-shell-sidebar"
+    pin = find("#{root} [data-slot='app-shell-sidebar-toggle']")
+    main = find("#{root} > [data-slot='app-shell-main']")
+    sidebar = find("#{root} > [data-slot='app-shell-sidebar']")
+    icon = first("#{root} [data-slot='app-navigation-item-icon']")
+    expanded_left = evaluate_script("arguments[0].getBoundingClientRect().left", main)
+    icon_top = evaluate_script("arguments[0].getBoundingClientRect().top - arguments[1].getBoundingClientRect().top", icon, sidebar)
+
+    pin.click
+    assert_selector "#{root}[data-nk--app-shell-pinned-value='false']"
+    assert_equal "false", pin["aria-pressed"]
+    assert_selector "#{root}[data-nk--app-shell-hover-suppressed-value='true']"
+    wait_until do
+      evaluate_script("arguments[0].getBoundingClientRect().width < 100", sidebar)
+    end
+    wait_for_animations(root)
+    assert evaluate_script("arguments[0].matches(':hover')", sidebar), "Pointer should still be on the collapsed rail"
+    page.driver.browser.action.move_to(main.native).perform
+    assert_selector "#{root}[data-nk--app-shell-hover-suppressed-value='false']"
+    rail_left = evaluate_script("arguments[0].getBoundingClientRect().left", main)
+    assert_operator rail_left, :<, expanded_left
+    assert_in_delta icon_top, evaluate_script("arguments[0].getBoundingClientRect().top - arguments[1].getBoundingClientRect().top", icon, sidebar), 1
+    assert_in_delta evaluate_script("arguments[0].getBoundingClientRect().left + arguments[0].getBoundingClientRect().width / 2", icon),
+      evaluate_script("arguments[0].getBoundingClientRect().left + arguments[0].getBoundingClientRect().width / 2", pin), 0.5
+    link = first("#{root} [data-slot='app-navigation-item-link']")
+    left_inset, right_inset = evaluate_script(<<~JAVASCRIPT, link, sidebar)
+      (() => {
+        const link = arguments[0].getBoundingClientRect();
+        const sidebar = arguments[1].getBoundingClientRect();
+        return [link.left - sidebar.left, sidebar.right - link.right];
+      })()
+    JAVASCRIPT
+    assert_in_delta left_inset, right_inset, 1
+    brand = find("#{root} [data-slot='app-shell-brand-content']", visible: :all)
+    assert_equal "inset(50%)", evaluate_script("getComputedStyle(arguments[0]).clipPath", brand)
+    mark = find("#{root} [data-slot='app-shell-brand-icon']")
+    assert_in_delta evaluate_script("arguments[0].getBoundingClientRect().left", icon),
+      evaluate_script("arguments[0].getBoundingClientRect().left", mark), 1
+
+    page.driver.browser.action.move_to(link.native).perform
+    wait_until do
+      evaluate_script("arguments[0].getBoundingClientRect().width > 100", sidebar)
+    end
+    assert_in_delta rail_left, evaluate_script("arguments[0].getBoundingClientRect().left", main), 1
+    assert_in_delta icon_top, evaluate_script("arguments[0].getBoundingClientRect().top - arguments[1].getBoundingClientRect().top", icon, sidebar), 1
+    assert_equal "none", evaluate_script("getComputedStyle(arguments[0]).clipPath", brand)
+    page.driver.browser.action.move_to(main.native).perform
+    wait_until do
+      evaluate_script("arguments[0].getBoundingClientRect().width < 100", sidebar)
+    end
+
+    execute_script("arguments[0].focus()", link)
+    wait_until do
+      evaluate_script("arguments[0].getBoundingClientRect().width > 100", sidebar)
+    end
+    assert_in_delta rail_left, evaluate_script("arguments[0].getBoundingClientRect().left", main), 1
+    pin.send_keys(:space)
+    assert_selector "#{root}[data-nk--app-shell-pinned-value='true']"
+    assert_equal "true", pin["aria-pressed"]
+    wait_for_animations(root)
+    assert_in_delta expanded_left, evaluate_script("arguments[0].getBoundingClientRect().left", main), 1
+  end
+
+  test "collapsing an outer shell does not hide nested shell labels" do
+    visit_shell_page
+    outer = "#gallery-shell"
+    nested = "#gallery-app-shell-sidebar"
+    find("#{outer} > [data-slot='app-shell-sidebar'] > [data-slot='app-shell-sidebar-toggle']").click
+    page.driver.browser.action.move_to(find("#{nested} > [data-slot='app-shell-main']").native).perform
+    label = first("#{nested} [data-slot='app-navigation-item-label']")
+    assert_equal "none", evaluate_script("getComputedStyle(arguments[0]).clipPath", label)
+    assert_selector "#{nested}[data-nk--app-shell-pinned-value='true']"
+    assert_selector "#{outer}[data-nk--app-shell-pinned-value='false']"
+  end
+
   test "desktop variants place and scroll one navigation tree without drawer semantics" do
     path = visit_shell_page
 
@@ -169,6 +373,37 @@ class AppShellTest < ApplicationSystemTestCase
     assert_no_severe_console_errors(context: path)
   end
 
+  test "a Turbo refresh morph preserves pin state until a full page load" do
+    visit_shell_page
+    unpinned = "#gallery-app-shell-sidebar"
+    pinned = "#gallery-app-shell-rail"
+    find("#{unpinned} [data-slot='app-shell-sidebar-toggle']").click
+    find("#{pinned} [data-slot='app-shell-sidebar-toggle']").click
+    assert_selector "#{unpinned}[data-nk--app-shell-pinned-value='false']"
+    assert_selector "#{pinned}[data-nk--app-shell-pinned-value='true']"
+    execute_script(<<~JS, unpinned, pinned)
+      window.sidebarControllers = Array.from(arguments).map(selector =>
+        window.Stimulus.getControllerForElementAndIdentifier(document.querySelector(selector), 'nk--app-shell'))
+    JS
+
+    install_morph_counter
+    refresh_with_turbo_stream
+    wait_until { evaluate_script("window.__nitroMorphCount") == 1 }
+
+    [ [ unpinned, false ], [ pinned, true ] ].each_with_index do |(root, state), index|
+      assert_selector "#{root}[data-enhanced][data-nk--app-shell-pinned-value='#{state}']"
+      assert_selector "#{root} [data-slot='app-shell-sidebar-toggle'][aria-pressed='#{state}']"
+      assert evaluate_script(<<~JS, root, index), "Expected the same shell controller after morph"
+        window.Stimulus.getControllerForElementAndIdentifier(document.querySelector(arguments[0]), 'nk--app-shell')
+          === window.sidebarControllers[arguments[1]]
+      JS
+    end
+
+    browser.navigate.refresh
+    assert_selector "#{unpinned}[data-enhanced][data-nk--app-shell-pinned-value='true']"
+    assert_selector "#{pinned}[data-enhanced][data-nk--app-shell-pinned-value='false']"
+  end
+
   test "a Turbo refresh morph keeps exactly one live navigation tree in the open drawer" do
     path = visit_shell_page
     resize_viewport(width: 700, height: 900)
@@ -282,7 +517,7 @@ class AppShellTest < ApplicationSystemTestCase
   def wait_for_animations(selector)
     wait_until(message: "#{selector} animations did not settle") do
       evaluate_script(<<~JAVASCRIPT, selector)
-        document.querySelector(arguments[0]).getAnimations().every(
+        document.querySelector(arguments[0]).getAnimations({subtree: true}).every(
           (animation) => animation.playState === "finished"
         )
       JAVASCRIPT

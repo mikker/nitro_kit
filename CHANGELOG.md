@@ -7,6 +7,22 @@
 - Add explicit `nitro_kit:eject COMPONENT` source-level customization, with
   isolated Ruby/CSS/Stimulus dependencies, version provenance, and safe whole-snapshot
   skip behavior unless `--force` is requested.
+- Desktop AppShell sidebar rail with hover/focus overlay peek and an accessible
+  pin toggle, enabled with `collapsible: true`. The default sidebar stays
+  expanded without a toggle or peek behavior; `sidebar: :collapsed` starts an
+  opted-in sidebar unpinned.
+  Mobile keeps its native drawer, and reduced motion disables rail animation.
+- Align rail selection backgrounds and pin controls, keep peek surfaces opaque,
+  and isolate nested shells. `brand(icon:)` keeps a brand mark on the rail
+  without cropping the full logotype.
+- Unpinning with a pointer collapses the sidebar immediately; hover peek
+  resumes after the pointer first leaves the sidebar.
+- Synchronize sidebar panel, reserved content track, and selection-highlight
+  transitions so pinning and unpinning do not snap ahead of the animation.
+  Keep the pin control outside hover/focus peek so direct expansion starts
+  the panel and content transitions together.
+- Preserve client sidebar pin state and its accessible toggle state across
+  Turbo morph refreshes without persisting it across page loads.
 
 ## 2.0.0.beta.1
 

@@ -4,7 +4,7 @@ class ApplicationCombinationsGalleryTest < ActionDispatch::IntegrationTest
   APPLICATIONS = {
     "application-sidebar" => {
       layout: "sidebar",
-      states: %w[populated empty error],
+      states: %w[populated empty error inset inset-collapsible],
       source: "sidebar_application_page.rb"
     },
     "application-topbar" => {
@@ -33,25 +33,29 @@ class ApplicationCombinationsGalleryTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "each application page renders three themed executable shell examples with source parity" do
+  test "each application page renders themed executable shell examples with source parity" do
     APPLICATIONS.each do |slug, contract|
       get gallery_composition_path(slug:)
 
       assert_response :success
       assert_select "[data-gallery-page='#{slug}']"
-      assert_select "[data-gallery='example']", count: 3
+      assert_select "[data-gallery='example']", count: contract.fetch(:states).size
       assert_select "[data-gallery-application='#{contract.fetch(:layout)}'][data-layout='#{contract.fetch(:layout)}']",
-        count: 3
+        count: contract.fetch(:states).size
 
       contract.fetch(:states).each do |state|
         shell = "[data-gallery-application='#{contract.fetch(:layout)}']" \
           "[data-gallery-application-state='#{state}']"
         assert_select "#{shell}[data-nk='app-shell'][id]", count: 1
         assert_select "#{shell} [data-nk='app-navigation']", count: 1
-        assert_select "#{shell} > [data-slot='app-shell-main'] [data-nk='page-header']", count: 1
+        if state.start_with?("inset")
+          assert_select "#{shell} [data-slot='app-shell-topbar'] [data-nk='toolbar'] h1", text: "Release readiness"
+        else
+          assert_select "#{shell} > [data-slot='app-shell-main'] [data-nk='page-header']", count: 1
+        end
       end
 
-      assert_select "[data-gallery-application='#{contract.fetch(:layout)}']:not([data-theme])", count: 1
+      assert_select "[data-gallery-application='#{contract.fetch(:layout)}']:not([data-theme])", count: contract.fetch(:states).size - 2
       assert_select "[data-gallery-application='#{contract.fetch(:layout)}'][data-theme='light']", count: 1
       assert_select "[data-gallery-application='#{contract.fetch(:layout)}'][data-theme='dark']", count: 1
 
@@ -71,22 +75,46 @@ class ApplicationCombinationsGalleryTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "#gallery-sidebar-application-populated" do
+      assert_select "[data-slot='app-shell-sidebar-toggle']", count: 0
       assert_select "[data-slot='app-navigation-footer'] [data-nk='appearance-picker'][data-presentation='dropdown']", count: 1
       assert_select "[data-nk='stat-grid'] [data-slot='stat-grid-stat']", count: 3
       assert_select "[data-nk='data-section'] > [data-slot='data-section-table'][data-nk='table'][data-sort] tbody tr", count: 3
       assert_select "[data-nk='toast'] [data-slot='toast-item'][data-variant='success']", count: 1
     end
     assert_select "#gallery-sidebar-application-empty[data-theme='light']" do
+      assert_select "[data-slot='app-shell-sidebar-toggle'][aria-pressed='true']", count: 1
       assert_select "> [data-slot='app-shell-main'] [data-nk='empty-state'][data-variant='default']", text: /No projects yet/
       assert_select "[data-nk='data-section'] [data-nk='empty-state']", count: 0
       assert_select "form[enctype='multipart/form-data'] [data-nk='dropzone'][data-state='idle']", count: 1
       assert_select "input[type='file'][name='project_import[files][]']:not([data-direct-upload-url])", count: 1
     end
     assert_select "#gallery-sidebar-application-error[data-theme='dark']" do
+      assert_select "[data-slot='app-shell-sidebar-toggle'][aria-pressed='false']", count: 1
+      assert_select "[data-slot='app-shell-brand-icon']", count: 1
       assert_select "[data-nk='alert'][data-variant='destructive']", count: 1
       assert_select "[data-nk='details-table'] [data-slot='details-table-empty']", count: 2
       assert_select "[data-nk='dialog']", count: 1
     end
+    assert_select "#gallery-sidebar-application-populated[data-nk--app-shell-collapsible-value='false']", count: 1
+    assert_select "#gallery-sidebar-application-empty[data-nk--app-shell-collapsible-value='true'][data-nk--app-shell-pinned-value='true']", count: 1
+    assert_select "#gallery-sidebar-application-error[data-nk--app-shell-collapsible-value='true'][data-nk--app-shell-pinned-value='false']", count: 1
+    assert_select "#example-sidebar-application-populated-code [data-gallery='code-source']", text: /collapsible: false/
+    assert_select "#example-sidebar-application-empty-code [data-gallery='code-source']", text: /collapsible: true.*sidebar: :expanded/m
+    assert_select "#example-sidebar-application-error-code [data-gallery='code-source']", text: /collapsible: true.*sidebar: :collapsed/m
+    assert_select "#gallery-sidebar-application-inset[data-ui='inset-workspace']" do
+      assert_select "[data-slot='app-shell-sidebar-toggle']", count: 0
+      assert_select "> [data-slot='app-shell-main'] > [data-ui='workspace-content']", count: 1
+      assert_select "[data-nk='stat-grid'] [data-slot='stat-grid-stat']", count: 3
+      assert_select "[data-nk='table'] tbody tr", count: 3
+    end
+    assert_select "#example-sidebar-application-inset-code [data-gallery='code-source']", text: /ui: "inset-workspace"/
+    assert_select "#gallery-sidebar-application-inset-collapsible[data-ui='inset-workspace'][data-nk--app-shell-collapsible-value='true']" do
+      assert_select "[data-slot='app-shell-sidebar-toggle'][aria-pressed='true']", count: 1
+      assert_select "[data-slot='app-shell-brand-icon']", count: 1
+      assert_select "> [data-slot='app-shell-main'] > [data-ui='workspace-content']", count: 1
+      assert_select "[data-nk='table'] tbody tr", count: 3
+    end
+    assert_select "#example-sidebar-application-inset-collapsible-code [data-gallery='code-source']", text: /collapsible: true.*sidebar: :expanded/m
   end
 
   test "topbar applications combine progressive media menus loading long data and overlays" do

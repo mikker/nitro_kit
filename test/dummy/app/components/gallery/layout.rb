@@ -33,10 +33,11 @@ module Gallery
           render NitroKit::AppShell.new(
             id: "gallery-shell",
             layout: :sidebar,
+            collapsible: true,
             navigation_dialog_label: "Gallery navigation",
             data: { gallery: "shell" }
           ) do |shell|
-            shell.brand { gallery_brand }
+            shell.brand(icon: :zap) { gallery_brand }
             shell.navigation { gallery_navigation }
             shell.main { div(data: { gallery: "main" }) { yield } }
           end

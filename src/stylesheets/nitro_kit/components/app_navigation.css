@@ -137,7 +137,8 @@
     border-radius: var(--nk-radius-lg);
     transition:
       color var(--nk-duration-normal) var(--nk-ease),
-      background-color var(--nk-duration-normal) var(--nk-ease);
+      background-color var(--nk-duration-normal) var(--nk-ease),
+      inline-size var(--nk-duration-fast) var(--nk-ease);
   }
 
   :where([data-nk="app-navigation"] [data-slot="app-navigation-item-label"]) {
