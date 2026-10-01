@@ -188,7 +188,7 @@ class ButtonTest < ActiveSupport::TestCase
     assert_match(/do not accept type/, error.message)
   end
 
-  test "uses Flux icon geometry for labelled and square buttons" do
+  test "uses distinct icon geometry for labelled and square buttons" do
     labelled = render_node(NitroKit::Button.new("Export", icon: :download))
     square = render_node(NitroKit::Button.new(icon: :ellipsis, aria: { label: "More" }))
 

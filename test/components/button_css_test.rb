@@ -3,7 +3,7 @@ require "test_helper"
 load File.expand_path("../../lib/tasks/nitro_kit_tasks.rake", __dir__) unless defined?(NitroKit::CssBundle)
 
 class ButtonCssTest < ActiveSupport::TestCase
-  test "matches Flux base geometry and exposes its neutral treatment" do
+  test "uses shared control geometry and exposes its neutral treatment" do
     css = button_css
 
     assert_includes css, "--_nk-button-height: var(--nk-control-height-md)"
@@ -48,7 +48,7 @@ class ButtonCssTest < ActiveSupport::TestCase
     assert_includes css, "background: var(--nk-button-default-hover-background)"
   end
 
-  test "matches Flux primary destructive and ghost treatments" do
+  test "defines primary destructive and ghost treatments" do
     css = button_css
 
     assert_includes css, "--_nk-button-shadow: inset 0 1px\n      color-mix(in oklab, var(--nk-white) 20%, transparent)"
@@ -62,7 +62,7 @@ class ButtonCssTest < ActiveSupport::TestCase
     assert_includes tokens_css, "oklch(0.59 0.237 25.331)"
   end
 
-  test "matches Flux compact sizes icon padding and disabled state" do
+  test "defines compact sizes icon padding and disabled state" do
     css = button_css
 
     assert_includes css, "--_nk-button-height: var(--nk-control-height-sm)"
