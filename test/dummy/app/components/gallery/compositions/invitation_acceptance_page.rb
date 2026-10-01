@@ -60,7 +60,7 @@ module Gallery
           end
           if %w[accepted expired invalid-token].include?(state)
             card.divider
-            card.footer { render_recovery_action }
+            card.footer { card.actions { render_recovery_action } }
           end
         end
       end

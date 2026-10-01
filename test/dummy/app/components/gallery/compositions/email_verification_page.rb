@@ -41,7 +41,7 @@ module Gallery
             render_status
           end
           card.divider
-          card.footer { render_action }
+          card.footer { card.actions { render_action } }
         end
       end
 

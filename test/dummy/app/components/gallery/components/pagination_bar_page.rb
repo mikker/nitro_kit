@@ -117,7 +117,7 @@ module Gallery
           example("Invoice history", slug: "pagination-bar-invoices", mode: :full_width) do
             render NitroKit::Card.new(id: "gallery-pagination-bar-invoices-card") do |card|
               card.title("Invoice history", level: 4)
-              card.body do
+              card.full do
                 render NitroKit::Table.new(id: "gallery-pagination-bar-invoices-table") do |table|
                   table.caption("Recent workspace invoices")
                   table.thead do
@@ -137,6 +137,8 @@ module Gallery
                     end
                   end
                 end
+              end
+              card.body do
                 render NitroKit::PaginationBar.new(id: "gallery-pagination-bar-invoices") do |bar|
                   bar.summary("Showing the three most recent of 36 invoices")
                   bar.pagination(NitroKit::Pagination.new(label: "Invoice history pages")) do |pagination|

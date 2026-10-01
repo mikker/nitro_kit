@@ -32,12 +32,15 @@ module Gallery
                 Gallery::Data.plans.each do |plan|
                   render NitroKit::Card.new(id: "gallery-grid-card-#{plan.id}") do |card|
                     card.title(plan.name, level: 4)
-                    card.body(plan.features.to_sentence)
+                    card.description(plan.features.to_sentence)
                     card.footer do
-                      render NitroKit::Button.new(
-                        plan.current ? "Manage" : "Choose",
-                        variant: plan.current ? :default : :primary
-                      )
+                      card.actions do
+                        render NitroKit::Button.new(
+                          plan.current ? "Manage" : "Choose",
+                          variant: plan.current ? :default : :primary,
+                          size: :sm
+                        )
+                      end
                     end
                   end
                 end
@@ -99,9 +102,9 @@ module Gallery
                 id: "gallery-grid-catalog"
               ) do
                 8.times do |index|
-                  render NitroKit::Card.new(id: "gallery-grid-catalog-#{index + 1}") do |card|
+                  render NitroKit::Card.new(id: "gallery-grid-catalog-#{index + 1}", size: :sm) do |card|
                     card.title("Integration #{index + 1}", level: 4)
-                    card.body("A roomy card collection gains columns gradually.")
+                    card.description("A roomy card collection gains columns gradually.")
                   end
                 end
               end
@@ -114,9 +117,9 @@ module Gallery
                 id: "gallery-grid-metrics"
               ) do
                 12.times do |index|
-                  render NitroKit::Card.new(id: "gallery-grid-metric-#{index + 1}") do |card|
+                  render NitroKit::Card.new(id: "gallery-grid-metric-#{index + 1}", size: :sm) do |card|
                     card.title("Region #{index + 1}", level: 4)
-                    card.body("#{(index + 1) * 128_430} requests")
+                    card.description("#{(index + 1) * 128_430} requests")
                   end
                 end
               end
@@ -143,9 +146,9 @@ module Gallery
             sample("Many", slug: "many") do
               render NitroKit::Grid.new(cols: "1 sm:2 lg:3", gap: 2, id: "gallery-grid-many") do
                 9.times do |index|
-                  render NitroKit::Card.new do |card|
+                  render NitroKit::Card.new(size: :sm) do |card|
                     card.title("Record #{index + 1}", level: 4)
-                    card.body("Deterministic collection item")
+                    card.description("Deterministic collection item")
                   end
                 end
               end
@@ -160,19 +163,26 @@ module Gallery
             ) do
               Gallery::Data.members.each do |member|
                 render NitroKit::Card.new(id: "gallery-grid-team-#{member.id}") do |card|
-                  card.title(member.name, level: 4)
-                  card.body do
-                    render NitroKit::Flex.new(dir: :col, gap: 2, align: :start) do
+                  card.header do
+                    card.title(member.name, level: 4)
+                    card.description do
+                      plain member.email
+                      if member == Gallery::Data.members.first
+                        br
+                        plain "International Research, Production, and Reliability Engineering"
+                      end
+                    end
+                    card.actions do
                       render NitroKit::Badge.new(
                         member.status.to_s.humanize,
-                        color: member.status == :active ? :success : :info
+                        color: member.status == :active ? :success : :info,
+                        size: :sm
                       )
-                      p { member.email }
-                      p { "International Research, Production, and Reliability Engineering" } if member == Gallery::Data.members.first
                     end
                   end
+                  card.divider
                   card.footer do
-                    render NitroKit::Flex.new(dir: :row, gap: 1, align: :center, wrap: :wrap) do
+                    card.actions do
                       render NitroKit::Button.new("View", size: :sm)
                       render NitroKit::Button.new("Change role", size: :sm)
                     end

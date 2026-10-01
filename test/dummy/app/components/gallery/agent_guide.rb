@@ -24,7 +24,7 @@ module Gallery
             "Arguments are the contract; a wrong keyword or an unknown enumerated value raises " \
             "`ArgumentError` at render time.",
           "Compound components yield themselves: `render NitroKit::Card.new do |card| " \
-            "card.title(\"Plan\"); card.body { ... } end`. The compound methods are the " \
+            "card.title(\"Plan\"); card.description(\"Billed monthly\"); card.body { ... } end`. The compound methods are the " \
             "component's published anatomy, and the blocks take ordinary Phlex content.",
           "Rails forms use `form_with(model: record, builder: NitroKit::FormBuilder)`. Rails keeps " \
             "naming, ids, values, CSRF, multipart, and ActiveModel errors; Nitro renders the controls.",

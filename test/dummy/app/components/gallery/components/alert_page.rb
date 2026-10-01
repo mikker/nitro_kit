@@ -128,7 +128,17 @@ module Gallery
         ) do
           example("Release notification", slug: "alert-release-notification") do
             render NitroKit::Card.new(id: "gallery-alert-notification-card") do |card|
-              card.title("Release 2026.07.13", level: 3)
+              card.header do
+                card.title("Release 2026.07.13", level: 3)
+                card.actions do
+                  render NitroKit::Badge.new(
+                    "Production",
+                    id: "gallery-alert-notification-badge",
+                    color: :success,
+                    size: :sm
+                  )
+                end
+              end
               card.body do
                 render NitroKit::Alert.new(
                   id: "gallery-alert-notification-success",
@@ -142,12 +152,7 @@ module Gallery
                 end
               end
               card.footer do
-                render NitroKit::Badge.new(
-                  "Production",
-                  id: "gallery-alert-notification-badge",
-                  color: :success,
-                  size: :sm
-                )
+                plain "Reviewed by"
                 render NitroKit::AvatarStack.new(
                   id: "gallery-alert-notification-reviewers",
                   size: :sm,

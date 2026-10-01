@@ -285,33 +285,35 @@ module Gallery
       def render_long
         row = webhook_rows.last
         render NitroKit::Card.new(id: "gallery-api-webhooks-long-card") do |card|
-          card.title(row.fetch(:name))
-          card.body do
-            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              p { row.fetch(:url) }
-              p { "Subscribed to customer-visible incident coordination, international invoice settlement, production deployment approval, and regulatory audit export completion events." }
-            end
+          card.header do
+            card.title(row.fetch(:name))
+            card.description(row.fetch(:url))
           end
+          card.body do
+            p { "Subscribed to customer-visible incident coordination, international invoice settlement, production deployment approval, and regulatory audit export completion events." }
+          end
+          card.divider
           card.footer do
-            render NitroKit::Button.new("View endpoint history", href: entry_path(entry, state: "detail"), variant: :primary)
+            card.actions do
+              render NitroKit::Button.new("View endpoint history", href: entry_path(entry, state: "detail"), variant: :primary)
+            end
           end
         end
       end
 
       def render_mobile
         render NitroKit::Card.new(id: "gallery-api-webhooks-mobile-card") do |card|
-          card.title("Production events")
-          card.body do
-            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              render NitroKit::Flex.new(dir: :row, gap: 2, align: :center) do
-                render NitroKit::Badge.new("Failing", color: :destructive)
-              end
-              p { "https://api.example.test/hooks/nitro" }
-              p { "Last response: HTTP 500 · attempt 3 scheduled" }
-            end
+          card.header do
+            card.title("Production events")
+            card.description("https://api.example.test/hooks/nitro")
+            card.actions { render NitroKit::Badge.new("Failing", color: :destructive) }
           end
+          card.body("Last response: HTTP 500 · attempt 3 scheduled")
+          card.divider
           card.footer do
-            render NitroKit::Button.new("Review failed delivery", href: entry_path(entry, state: "delivery-failed"), variant: :primary, id: "gallery-api-webhooks-mobile-action")
+            card.actions do
+              render NitroKit::Button.new("Review failed delivery", href: entry_path(entry, state: "delivery-failed"), variant: :primary, id: "gallery-api-webhooks-mobile-action")
+            end
           end
         end
       end

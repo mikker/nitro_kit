@@ -115,33 +115,38 @@ module Gallery
             render NitroKit::Accordion.new(id: "gallery-accordion-deployment", mode: :single) do |accordion|
               accordion.item(:overview, title: "Deployment overview", expanded: true) do
                 render NitroKit::Card.new(id: "gallery-accordion-deployment-card") do |card|
-                  card.title("Billing portal · release 1842", level: 3)
-                  card.body do
-                    render NitroKit::Badge.new(
-                      "Operational",
-                      id: "gallery-accordion-deployment-status",
-                      color: :success,
-                      size: :sm
-                    )
-                    p { "Deployed by Grace Hopper on July 13, 2026 at 08:42 UTC." }
+                  card.header do
+                    card.title("Billing portal · release 1842", level: 3)
+                    card.description("Deployed by Grace Hopper on July 13, 2026 at 08:42 UTC.")
+                    card.actions do
+                      render NitroKit::Badge.new(
+                        "Operational",
+                        id: "gallery-accordion-deployment-status",
+                        color: :success,
+                        size: :sm
+                      )
+                    end
                   end
+                  card.divider
                   card.footer do
-                    render NitroKit::ButtonGroup.new(
-                      id: "gallery-accordion-deployment-actions",
-                      label: "Deployment actions"
-                    ) do |group|
-                      group.button(
-                        "View logs",
-                        id: "gallery-accordion-deployment-logs",
-                        href: "#deployment-logs",
-                        size: :sm
-                      )
-                      group.button(
-                        "Roll back",
-                        id: "gallery-accordion-deployment-rollback",
-                        variant: :destructive,
-                        size: :sm
-                      )
+                    card.actions do
+                      render NitroKit::ButtonGroup.new(
+                        id: "gallery-accordion-deployment-actions",
+                        label: "Deployment actions"
+                      ) do |group|
+                        group.button(
+                          "View logs",
+                          id: "gallery-accordion-deployment-logs",
+                          href: "#deployment-logs",
+                          size: :sm
+                        )
+                        group.button(
+                          "Roll back",
+                          id: "gallery-accordion-deployment-rollback",
+                          variant: :destructive,
+                          size: :sm
+                        )
+                      end
                     end
                   end
                 end
@@ -153,17 +158,17 @@ module Gallery
 
               accordion.item(:environment, title: "Environment and access") do
                 render NitroKit::Card.new(id: "gallery-accordion-environment-card") do |card|
-                  card.title("Production environment", level: 3)
-                  card.body do
-                    p { "EU region · protected branch · owner approval required" }
-                  end
-                  card.footer do
-                    render NitroKit::Badge.new(
-                      "Protected",
-                      id: "gallery-accordion-environment-status",
-                      variant: :outline,
-                      color: :info
-                    )
+                  card.header do
+                    card.title("Production environment", level: 3)
+                    card.description("EU region · protected branch · owner approval required")
+                    card.actions do
+                      render NitroKit::Badge.new(
+                        "Protected",
+                        id: "gallery-accordion-environment-status",
+                        variant: :outline,
+                        color: :info
+                      )
+                    end
                   end
                 end
               end

@@ -70,13 +70,9 @@ module Gallery
 
       def render_path_card(title, description, destination, icon)
         render NitroKit::Card.new(id: "gallery-onboarding-path-#{destination}") do |card|
+          card.body { render NitroKit::Icon.new(icon, size: :lg) }
           card.title(title, level: 5)
-          card.body do
-            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              render NitroKit::Icon.new(icon)
-              p { description }
-            end
-          end
+          card.description(description)
           card.footer do
             render NitroKit::Button.new(
               "Choose #{title.downcase}",
@@ -326,13 +322,12 @@ module Gallery
       def render_resume
         render NitroKit::Card.new(id: "gallery-onboarding-resume-card") do |card|
           card.title("Resume saved onboarding", level: 5)
-          card.body do
-            p { "Company branch · workspace details saved · team invitations not completed · saved July 13 at 10:48 UTC" }
-          end
+          card.description("Company branch · workspace details saved · team invitations not completed · saved July 13 at 10:48 UTC")
+          card.divider
           card.footer do
-            render NitroKit::ButtonGroup.new(label: "Resume actions") do |actions|
-              actions.button("Resume team invitations", href: entry_path(entry, state: "invite-team"), variant: :primary)
-              actions.button("Start over", href: entry_path(entry, state: "choose-path"))
+            card.actions do
+              render NitroKit::Button.new("Start over", href: entry_path(entry, state: "choose-path"))
+              render NitroKit::Button.new("Resume team invitations", href: entry_path(entry, state: "invite-team"), variant: :primary)
             end
           end
         end
@@ -341,11 +336,12 @@ module Gallery
       def render_long
         render NitroKit::Card.new(id: "gallery-onboarding-long-card") do |card|
           card.title("International Research, Production, Reliability, Regulatory Archive, and Customer Incident Coordination", level: 5)
-          card.body do
-            p { "118 expected members · European Union residency · 27 production environments · GitHub, Slack, and custom webhook setup deferred until administrator verification." }
-          end
+          card.description("118 expected members · European Union residency · 27 production environments · GitHub, Slack, and custom webhook setup deferred until administrator verification.")
+          card.divider
           card.footer do
-            render NitroKit::Button.new("Continue review", href: entry_path(entry, state: "review-company"), variant: :primary)
+            card.actions do
+              render NitroKit::Button.new("Continue review", href: entry_path(entry, state: "review-company"), variant: :primary)
+            end
           end
         end
       end
@@ -353,9 +349,9 @@ module Gallery
       def render_mobile
         render NitroKit::Card.new(id: "gallery-onboarding-mobile-card") do |card|
           card.title("Workspace type", level: 5)
+          card.description("Company, personal, and import setup stay separate on a narrow screen.")
           card.body do
             render NitroKit::Flex.new(dir: :col, gap: 3, align: :stretch) do
-              p { "Company, personal, and import setup stay separate on a narrow screen." }
               render NitroKit::Button.new("Company workspace", href: entry_path(entry, state: "company"), id: "gallery-onboarding-mobile-action")
               render NitroKit::Button.new("Personal workspace", href: entry_path(entry, state: "solo"))
               render NitroKit::Button.new("Import configuration", href: entry_path(entry, state: "import"))

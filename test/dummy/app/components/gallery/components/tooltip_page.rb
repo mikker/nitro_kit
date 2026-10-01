@@ -81,28 +81,34 @@ module Gallery
         ) do
           example("API credential", slug: "tooltip-api-credential") do
             render NitroKit::Card.new(id: "gallery-tooltip-api-card") do |card|
-              card.title("Production credential", level: 3)
-              card.body do
-                render NitroKit::Badge.new(
-                  "Read and write",
-                  id: "gallery-tooltip-api-access",
-                  color: :warning,
-                  size: :sm
-                )
-                p { "nk_live_7P3F… was last used today at 08:31 UTC." }
+              card.header do
+                card.title("Production credential", level: 3)
+                card.description("nk_live_7P3F… was last used today at 08:31 UTC.")
+                card.actions do
+                  render NitroKit::Badge.new(
+                    "Read and write",
+                    id: "gallery-tooltip-api-access",
+                    color: :warning,
+                    size: :sm
+                  )
+                end
               end
+              card.divider
               card.footer do
                 render NitroKit::Tooltip.new(
                   id: "gallery-tooltip-rotate-key",
                   content: "Rotation immediately reveals a new secret once."
                 ) do |tooltip|
-                  tooltip.trigger("How rotation works")
+                  tooltip.trigger("How rotation works", size: :sm, icon: :circle_help)
                 end
-                render NitroKit::Button.new(
-                  "Rotate credential",
-                  id: "gallery-tooltip-rotate-action",
-                  variant: :destructive
-                )
+                card.actions do
+                  render NitroKit::Button.new(
+                    "Rotate credential",
+                    id: "gallery-tooltip-rotate-action",
+                    variant: :destructive,
+                    size: :sm
+                  )
+                end
               end
             end
           end

@@ -62,7 +62,7 @@ module Gallery
             end
           end
           card.divider
-          card.footer { render_footer }
+          card.footer { card.actions { render_footer } }
         end
       end
 

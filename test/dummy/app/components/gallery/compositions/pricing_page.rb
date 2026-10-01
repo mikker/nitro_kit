@@ -58,12 +58,12 @@ module Gallery
           Gallery::PublicData.plans.each do |plan|
             render NitroKit::Card.new(id: "gallery-pricing-plan-#{plan.id}") do |card|
               card.title(plan_name(plan), level: 2)
+              card.description(plan.description)
               card.body do
-                render NitroKit::Flex.new(dir: :col, gap: 4, align: :start) do
+                render NitroKit::Flex.new(dir: :col, gap: 3, align: :start) do
                   render NitroKit::Badge.new("Recommended", color: :success) if plan.highlighted
-                  strong { plan_price(plan) }
                   render NitroKit::Typeset.new do
-                    p { plan.description }
+                    p { strong { plan_price(plan) } }
                     ul { plan.features.each { |feature| li { feature } } }
                   end
                 end

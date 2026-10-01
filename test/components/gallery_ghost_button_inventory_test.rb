@@ -56,10 +56,6 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
     ],
     "test/dummy/app/components/gallery/components/dropdown_page.rb" => [
       GhostUse.new(
-        pattern: /menu\.trigger\("Release actions", variant: :ghost\)/,
-        reason: "menu trigger embedded in record-card chrome"
-      ),
-      GhostUse.new(
         pattern: /menu\.trigger\(icon: :ellipsis, label: "Record actions", variant: :ghost\)/,
         reason: "icon-only overflow menu trigger, the canonical low-emphasis record control"
       )
@@ -80,10 +76,6 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
       GhostUse.new(
         pattern: /group\.button\("Search", href: "#search", variant: :ghost, size: :sm, icon: :search\)/,
         reason: "compact search control embedded in application-shell topbar chrome"
-      ),
-      GhostUse.new(
-        pattern: /menu\.trigger\("Media actions", variant: :ghost, size: :sm\)/,
-        reason: "compact record menu trigger embedded in an application card"
       )
     ]
   }.freeze
@@ -95,7 +87,7 @@ class GalleryGhostButtonInventoryTest < ActiveSupport::TestCase
     end.reject { |_path, count| count.zero? }
 
     assert_equal RETAINED_GHOSTS.keys.sort, actual_by_file.keys.sort
-    assert_equal 14, actual_by_file.values.sum
+    assert_equal 12, actual_by_file.values.sum
 
     RETAINED_GHOSTS.each do |relative_path, uses|
       source = ROOT.join(relative_path).read

@@ -36,14 +36,14 @@ module Gallery
         render NitroKit::Grid.new(cols: "1 md:2", gap: 5, id: "gallery-features-grid") do
           selected_features.each_with_index do |feature, index|
             render NitroKit::Card.new(id: "gallery-feature-#{feature.id}") do |card|
-              card.title(feature_title(feature, index), level: 2)
               card.body do
-                render NitroKit::Flex.new(dir: :col, gap: 3, align: :start) do
+                render NitroKit::Flex.new(dir: :row, gap: 3, align: :center, justify: :between) do
                   render NitroKit::Icon.new(feature_icon(feature.category), size: :lg)
-                  render NitroKit::Badge.new(feature.category.to_s.humanize, color: feature_color(feature.category))
-                  p { feature.description }
+                  render NitroKit::Badge.new(feature.category.to_s.humanize, color: feature_color(feature.category), size: :sm)
                 end
               end
+              card.title(feature_title(feature, index), level: 2)
+              card.description(feature.description)
             end
           end
         end

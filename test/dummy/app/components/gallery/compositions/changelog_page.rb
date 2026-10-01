@@ -33,30 +33,33 @@ module Gallery
         latest = featured_release
 
         render NitroKit::Card.new(id: "gallery-changelog-latest-card") do |card|
-          card.title("#{latest.version} · #{release_title(latest)}", level: 2)
+          card.header do
+            card.title("#{latest.version} · #{release_title(latest)}", level: 2)
+            card.actions do
+              render NitroKit::Badge.new(
+                "Released #{latest.released_on.to_fs(:long)}",
+                color: :success,
+                id: "gallery-changelog-latest-status"
+              )
+            end
+          end
           card.body do
-            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              render NitroKit::Flex.new(dir: :row, gap: 2, align: :center) do
-                render NitroKit::Badge.new(
-                  "Released #{latest.released_on.to_fs(:long)}",
-                  color: :success,
-                  id: "gallery-changelog-latest-status"
-                )
-              end
-              render NitroKit::Typeset.new(id: "gallery-changelog-latest-prose") do
-                p { latest.summary }
-                ul do
-                  latest.changes.each { |change| li { change } }
-                end
+            render NitroKit::Typeset.new(id: "gallery-changelog-latest-prose") do
+              p { latest.summary }
+              ul do
+                latest.changes.each { |change| li { change } }
               end
             end
           end
+          card.divider
           card.footer do
-            render NitroKit::Button.new(
-              "Read migration notes",
-              href: "#migration-#{latest.version}",
-              id: "gallery-changelog-migration-notes"
-            )
+            card.actions do
+              render NitroKit::Button.new(
+                "Read migration notes",
+                href: "#migration-#{latest.version}",
+                id: "gallery-changelog-migration-notes"
+              )
+            end
           end
         end
       end

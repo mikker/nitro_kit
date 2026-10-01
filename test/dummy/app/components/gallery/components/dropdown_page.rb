@@ -102,23 +102,23 @@ module Gallery
         ) do
           example("Production deployment", slug: "dropdown-deployment-card") do
             render NitroKit::Card.new(id: "gallery-dropdown-deployment-card") do |card|
-              card.title("Release 2026.07.13", level: 3)
-              card.body do
-                render NitroKit::Badge.new(
-                  "Healthy",
-                  id: "gallery-dropdown-deployment-status",
-                  color: :success,
-                  size: :sm
-                )
-                p { "Serving all workspaces from fra1 and iad1." }
-              end
-              card.footer do
-                render NitroKit::Dropdown.new(id: "gallery-dropdown-deployment") do |menu|
-                  menu.trigger("Release actions", variant: :ghost)
-                  menu.item("View deployment", href: "/gallery/deployments/2026-07-13")
-                  menu.item("Copy release identifier")
-                  menu.separator
-                  menu.item("Roll back release", variant: :destructive)
+              card.header do
+                card.title("Release 2026.07.13", level: 3)
+                card.description("Serving all workspaces from fra1 and iad1.")
+                card.actions do
+                  render NitroKit::Badge.new(
+                    "Healthy",
+                    id: "gallery-dropdown-deployment-status",
+                    color: :success,
+                    size: :sm
+                  )
+                  render NitroKit::Dropdown.new(id: "gallery-dropdown-deployment", placement: :bottom_end) do |menu|
+                    menu.trigger(icon: :ellipsis, label: "Release actions", size: :sm)
+                    menu.item("View deployment", href: "/gallery/deployments/2026-07-13")
+                    menu.item("Copy release identifier")
+                    menu.separator
+                    menu.item("Roll back release", variant: :destructive)
+                  end
                 end
               end
             end

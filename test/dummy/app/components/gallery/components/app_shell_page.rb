@@ -309,7 +309,7 @@ module Gallery
                             Gallery::Hostile.members(9).each do |member|
                               render NitroKit::Card.new(id: "gallery-app-shell-hostile-#{layout}-#{member.id}") do |card|
                                 card.title(member.name, level: 5)
-                                card.body { p { member.email } }
+                                card.description(member.email)
                               end
                             end
                           end
@@ -422,14 +422,14 @@ module Gallery
 
       def workspace_card(title, value, description)
         render NitroKit::Card.new do |card|
-          card.title(title, level: 5)
-          card.body do
-            strong { value }
-            p { description }
+          card.header do
+            card.title(title, level: 5)
+            card.description(description)
           end
           card.divider
           card.footer do
-            render NitroKit::Button.new("View details", href: "#details", size: :sm)
+            strong { value }
+            card.actions { render NitroKit::Button.new("View details", href: "#details", size: :sm) }
           end
         end
       end

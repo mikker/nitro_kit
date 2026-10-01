@@ -8,7 +8,7 @@ module Gallery
       TITLE_ROLES = [
         [ :page, "The one page heading", "PageHeader" ],
         [ :section, "Full-width section headers", "DataSection, SettingsSection, DangerZone" ],
-        [ :surface, "Panels and fieldsets", "Card, Dialog, Sheet, EmptyState, Fieldset" ],
+        [ :surface, "Panels and fieldsets", "Dialog, Sheet, EmptyState, Fieldset" ],
         [ :compact, "Legends and status titles", "Alert, Toast, CheckboxGroup, RadioButtonGroup, AppearancePicker" ]
       ].freeze
 
@@ -84,10 +84,11 @@ module Gallery
           end
 
           example("A surface title in context", slug: "title-role-context") do
-            render NitroKit::Card.new(id: "gallery-typography-card") do |card|
-              card.title("Quarterly invoices")
-              card.body { plain "The card title above samples the surface role." }
-            end
+            render NitroKit::EmptyState.new(
+              id: "gallery-typography-surface",
+              title: "Quarterly invoices",
+              description: "The empty state title above samples the surface role."
+            )
           end
         end
       end

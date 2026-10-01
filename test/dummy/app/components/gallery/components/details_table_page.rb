@@ -96,7 +96,6 @@ module Gallery
         ) do
           example("Workspace record card", slug: "details-table-record-card", mode: :full_width) do
             render NitroKit::Card.new(id: "gallery-details-table-card") do |card|
-              card.title("Workspace owner", level: 3)
               card.full do
                 render NitroKit::ProgressiveImage.new(
                   attachment: demo_attachment,
@@ -105,6 +104,7 @@ module Gallery
                   id: "gallery-details-table-image"
                 )
               end
+              card.title("Workspace owner", level: 3)
               card.body do
                 render NitroKit::DetailsTable.new(PROFILE, id: "gallery-details-table-card-values") do |details|
                   details.fields(:name, :email, :joined_on)

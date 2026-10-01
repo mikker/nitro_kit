@@ -96,17 +96,18 @@ module Gallery
         ) do
           example("Personalization card", slug: "appearance-picker-card") do
             render NitroKit::Card.new(id: "gallery-appearance-card") do |card|
-              card.title("Personalization", level: 3)
+              card.header do
+                card.title("Personalization", level: 3)
+                card.description("Choose a fixed appearance or keep this browser in step with the operating system.")
+              end
               card.body do
-                p { "Choose a fixed appearance or keep this browser in step with the operating system." }
                 render NitroKit::AppearancePicker.new(
                   id: "gallery-appearance-card-control",
                   label: "Interface appearance"
                 )
               end
-              card.footer do
-                render NitroKit::Badge.new("Saved in this browser", variant: :outline, color: :neutral)
-              end
+              card.divider
+              card.footer("Saved in this browser")
             end
           end
         end

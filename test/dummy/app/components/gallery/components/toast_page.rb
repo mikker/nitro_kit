@@ -201,22 +201,29 @@ module Gallery
         ) do
           example("Saved integration", slug: "toast-saved-integration") do
             render NitroKit::Card.new(id: "gallery-toast-integration-card") do |card|
-              card.title("Slack integration", level: 3)
-              card.body do
-                render NitroKit::Badge.new(
-                  "Connected",
-                  id: "gallery-toast-integration-status",
-                  color: :success
-                )
-                p { "Deployment notifications post to #operations." }
+              card.header do
+                card.title("Slack integration", level: 3)
+                card.description("Deployment notifications post to #operations.")
+                card.actions do
+                  render NitroKit::Badge.new(
+                    "Connected",
+                    id: "gallery-toast-integration-status",
+                    color: :success,
+                    size: :sm
+                  )
+                end
               end
+              card.divider
               card.footer do
-                render NitroKit::Button.new(
-                  "Configure",
-                  id: "gallery-toast-configure",
-                  href: "#configure",
-                  variant: :default
-                )
+                card.actions do
+                  render NitroKit::Button.new(
+                    "Configure",
+                    id: "gallery-toast-configure",
+                    href: "#configure",
+                    variant: :default,
+                    size: :sm
+                  )
+                end
               end
             end
             render NitroKit::Toast.new(

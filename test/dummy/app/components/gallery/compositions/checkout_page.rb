@@ -189,33 +189,37 @@ module Gallery
 
       def render_long
         render NitroKit::Card.new(id: "gallery-checkout-long-card") do |card|
-          card.title("International Research, Production, Reliability, and Regulatory Archive Team plan")
+          card.header do
+            card.title("International Research, Production, Reliability, and Regulatory Archive Team plan")
+            card.actions { render NitroKit::Badge.new("Due today: DKK 18,492.75", color: :warning) }
+          end
           card.body do
-            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              p do
-                "The first charge covers 118 active members, 27 connected production environments, replicated audit storage, " \
-                  "priority incident response, and tax documentation for accounts-payable+international-research-and-production@example.test."
-              end
-              render NitroKit::Badge.new("Due today: DKK 18,492.75", color: :warning)
+            p do
+              "The first charge covers 118 active members, 27 connected production environments, replicated audit storage, " \
+                "priority incident response, and tax documentation for accounts-payable+international-research-and-production@example.test."
             end
           end
+          card.divider
           card.footer do
-            render NitroKit::Button.new("Review complete order and tax details", href: entry_path(entry, state: "review"), variant: :primary)
+            card.actions do
+              render NitroKit::Button.new("Review complete order and tax details", href: entry_path(entry, state: "review"), variant: :primary)
+            end
           end
         end
       end
 
       def render_mobile
         render NitroKit::Card.new(id: "gallery-checkout-mobile-card") do |card|
-          card.title("Team plan checkout")
-          card.body do
-            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              p { "$49.00 due today" }
-              p { "Visa ending in 4242 · receipt to accounts-payable@example.test" }
-            end
+          card.header do
+            card.title("Team plan checkout")
+            card.description("$49.00 due today")
           end
+          card.body("Visa ending in 4242 · receipt to accounts-payable@example.test")
+          card.divider
           card.footer do
-            render NitroKit::Button.new("Pay securely", href: entry_path(entry, state: "payment"), variant: :primary, id: "gallery-checkout-mobile-action")
+            card.actions do
+              render NitroKit::Button.new("Pay securely", href: entry_path(entry, state: "payment"), variant: :primary, id: "gallery-checkout-mobile-action")
+            end
           end
         end
       end

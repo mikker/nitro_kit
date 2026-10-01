@@ -142,7 +142,10 @@ module Gallery
 
       def render_profile_settings
         render NitroKit::Card.new(id: "gallery-tabs-profile-card") do |card|
-          card.title("Workspace profile", level: 3)
+          card.header do
+            card.title("Workspace profile", level: 3)
+            card.description("Shown to members and in notification emails.")
+          end
           card.body do
             form(id: "gallery-tabs-profile-form", action: "#workspace-profile", method: "post") do
               render NitroKit::FieldGroup.new do
@@ -167,26 +170,29 @@ module Gallery
               end
             end
           end
+          card.divider
           card.footer do
-            render NitroKit::ButtonGroup.new(
-              id: "gallery-tabs-profile-actions",
-              label: "Workspace profile actions"
-            ) do |group|
-              group.button(
-                "Save changes",
-                id: "gallery-tabs-profile-save",
-                type: :submit,
-                form: "gallery-tabs-profile-form",
-                variant: :primary,
-                size: :sm
-              )
-              group.button(
-                "Reset",
-                id: "gallery-tabs-profile-reset",
-                type: :reset,
-                form: "gallery-tabs-profile-form",
-                size: :sm
-              )
+            card.actions do
+              render NitroKit::ButtonGroup.new(
+                id: "gallery-tabs-profile-actions",
+                label: "Workspace profile actions"
+              ) do |group|
+                group.button(
+                  "Reset",
+                  id: "gallery-tabs-profile-reset",
+                  type: :reset,
+                  form: "gallery-tabs-profile-form",
+                  size: :sm
+                )
+                group.button(
+                  "Save changes",
+                  id: "gallery-tabs-profile-save",
+                  type: :submit,
+                  form: "gallery-tabs-profile-form",
+                  variant: :primary,
+                  size: :sm
+                )
+              end
             end
           end
         end
@@ -194,8 +200,20 @@ module Gallery
 
       def render_member_settings
         render NitroKit::Card.new(id: "gallery-tabs-members-card") do |card|
-          card.title("Members", level: 3)
-          card.body do
+          card.header do
+            card.title("Members", level: 3)
+            card.actions do
+              render NitroKit::Button.new(
+                "Invite member",
+                id: "gallery-tabs-members-invite",
+                href: "#invite-member",
+                variant: :primary,
+                size: :sm,
+                icon: :user_plus
+              )
+            end
+          end
+          card.full do
             render NitroKit::Table.new(
               id: "gallery-tabs-members-table",
               table_html: { id: "gallery-tabs-members-table-element" }
@@ -226,31 +244,25 @@ module Gallery
               end
             end
           end
-          card.footer do
-            render NitroKit::Button.new(
-              "Invite member",
-              id: "gallery-tabs-members-invite",
-              href: "#invite-member",
-              variant: :primary,
-              size: :sm,
-              icon: :user_plus
-            )
-          end
         end
       end
 
       def render_billing_settings
         render NitroKit::Card.new(id: "gallery-tabs-billing-card") do |card|
-          card.title("Team plan", level: 3)
-          card.body do
-            render NitroKit::Badge.new(
-              "Current plan",
-              id: "gallery-tabs-billing-status",
-              variant: :outline,
-              color: :info
-            )
-            p { "USD 49.00 monthly · renews August 1, 2026" }
+          card.header do
+            card.title("Team plan", level: 3)
+            card.description("USD 49.00 monthly · renews August 1, 2026")
+            card.actions do
+              render NitroKit::Badge.new(
+                "Current plan",
+                id: "gallery-tabs-billing-status",
+                variant: :outline,
+                color: :info,
+                size: :sm
+              )
+            end
           end
+          card.divider
           card.footer do
             render NitroKit::ButtonGroup.new(
               id: "gallery-tabs-billing-actions",

@@ -55,12 +55,14 @@ module Gallery
           card.divider
           card.footer do
             if state == "success"
-              render NitroKit::Button.new(
-                "Verify email address",
-                id: "gallery-account-creation-verify",
-                href: verification_path,
-                variant: :primary
-              )
+              card.actions do
+                render NitroKit::Button.new(
+                  "Verify email address",
+                  id: "gallery-account-creation-verify",
+                  href: verification_path,
+                  variant: :primary
+                )
+              end
             else
               p do
                 plain "Already have an account? "

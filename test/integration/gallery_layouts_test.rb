@@ -70,7 +70,7 @@ class GalleryLayoutsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-flex-composition-actions[data-wrap='wrap'] > [data-nk='button']", count: 2
   end
 
-  test "grid page covers scalar and responsive columns gaps cardinality and nested Flex" do
+  test "grid page covers scalar and responsive columns gaps cardinality and composed cards" do
     get_layout("grid")
 
     assert_select "#gallery-grid-cards[data-cols='1 sm:2 lg:3'][data-gap='3 md:4 lg:6'] > [data-nk='card']", count: 3
@@ -91,8 +91,8 @@ class GalleryLayoutsTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-grid-one > [data-nk='card']", count: 1
     assert_select "#gallery-grid-many > [data-nk='card']", count: 9
     assert_select "#gallery-grid-team[data-cols='1 sm:2 lg:3'] > [data-nk='card']", count: 3
-    assert_select "#gallery-grid-team [data-nk='flex'][data-dir='col']", count: 3
-    assert_select "#gallery-grid-team [data-nk='flex'][data-dir='row']", count: 3
+    assert_select "#gallery-grid-team [data-slot='card-header'] [data-slot='card-actions'] [data-nk='badge']", count: 3
+    assert_select "#gallery-grid-team [data-slot='card-footer'] > [data-slot='card-actions'] > [data-nk='button']", count: 6
     assert_select "#gallery-grid-team", text: /International Research, Production, and Reliability Engineering/
   end
 

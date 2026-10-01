@@ -73,23 +73,24 @@ module Gallery
       def render_plans
         render NitroKit::Flex.new(dir: :col, gap: 6, align: :stretch, id: "gallery-billing-plans-stack") do
           render NitroKit::Card.new(id: "gallery-billing-plan-summary") do |card|
-            card.title("Team plan", level: 4)
-            card.body do
-              render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-                render NitroKit::Flex.new(dir: :row, gap: 2, align: :center) do
-                  render NitroKit::Badge.new("Current plan", id: "gallery-billing-current-plan", color: :success, size: :sm)
-                end
-                p { "$49.00 per month · 18 active members · renews August 1, 2026" }
-                p { "Plans are billed monthly in US dollars and can be changed at any time." }
+            card.header do
+              card.title("Team plan", level: 4)
+              card.description("$49.00 per month · 18 active members · renews August 1, 2026")
+              card.actions do
+                render NitroKit::Badge.new("Current plan", id: "gallery-billing-current-plan", color: :success, size: :sm)
               end
             end
             card.divider
             card.footer do
-              render NitroKit::Button.new(
-                "Review invoices",
-                id: "gallery-billing-plan-invoices",
-                href: entry_path(entry, state: "invoices")
-              )
+              plain "Plans are billed monthly in US dollars and can be changed at any time."
+              card.actions do
+                render NitroKit::Button.new(
+                  "Review invoices",
+                  id: "gallery-billing-plan-invoices",
+                  href: entry_path(entry, state: "invoices"),
+                  size: :sm
+                )
+              end
             end
           end
 
@@ -101,31 +102,34 @@ module Gallery
           ) do
             Gallery::Data.plans.each do |plan|
               render NitroKit::Card.new(id: "gallery-billing-#{plan.id}") do |card|
-                card.title(plan.name, level: 5)
-                card.body do
-                  render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-                    render NitroKit::Typeset.new do
-                      p { plan_price(plan) }
-                      ul do
-                        plan.features.each { |feature| li { feature } }
-                      end
+                card.header do
+                  card.title(plan.name, level: 5)
+                  card.description(plan_price(plan))
+                  if plan.current
+                    card.actions do
+                      render NitroKit::Badge.new("Current plan", id: "gallery-billing-#{plan.id}-badge", color: :success, size: :sm)
                     end
-                    if plan.current
-                      render NitroKit::Flex.new(dir: :row, gap: 2, align: :center) do
-                        render NitroKit::Badge.new("Current plan", id: "gallery-billing-#{plan.id}-badge", color: :success)
-                      end
+                  end
+                end
+                card.body do
+                  render NitroKit::Typeset.new do
+                    ul do
+                      plan.features.each { |feature| li { feature } }
                     end
                   end
                 end
                 card.divider
                 card.footer do
-                  render NitroKit::Button.new(
-                    plan.current ? "Manage Team plan" : "Choose #{plan.name}",
-                    id: "gallery-billing-#{plan.id}-choose",
-                    href: plan.current ? entry_path(entry, state: "cancellation") : "#choose-#{plan.id}",
-                    variant: plan.current ? :default : :primary,
-                    disabled: plan.current
-                  )
+                  card.actions do
+                    render NitroKit::Button.new(
+                      plan.current ? "Manage Team plan" : "Choose #{plan.name}",
+                      id: "gallery-billing-#{plan.id}-choose",
+                      href: plan.current ? entry_path(entry, state: "cancellation") : "#choose-#{plan.id}",
+                      variant: plan.current ? :default : :primary,
+                      disabled: plan.current,
+                      size: :sm
+                    )
+                  end
                 end
               end
             end
@@ -251,12 +255,14 @@ module Gallery
           end
           card.divider
           card.footer do
-            render NitroKit::Button.new(
-              "View invoice history",
-              id: "gallery-billing-payment-updated-continue",
-              href: entry_path(entry, state: "invoices"),
-              variant: :primary
-            )
+            card.actions do
+              render NitroKit::Button.new(
+                "View invoice history",
+                id: "gallery-billing-payment-updated-continue",
+                href: entry_path(entry, state: "invoices"),
+                variant: :primary
+              )
+            end
           end
         end
       end
@@ -367,66 +373,66 @@ module Gallery
         invoice = Gallery::Data.invoices.first
 
         render NitroKit::Card.new(id: "gallery-billing-invoice-detail-card") do |card|
-          card.title("Invoice #{invoice.number}", level: 4)
+          card.header do
+            card.title("Invoice #{invoice.number}", level: 4)
+            card.actions { render NitroKit::Badge.new("Paid", id: "gallery-billing-invoice-detail-status", color: :success) }
+          end
           card.body do
-            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              render NitroKit::Flex.new(dir: :row, gap: 2, align: :center) do
-                render NitroKit::Badge.new("Paid", id: "gallery-billing-invoice-detail-status", color: :success)
-              end
-              render NitroKit::DetailsTable.new(
-                invoice,
-                data: { gallery: "billing-invoice-metadata" }
-              ) do |details|
-                details.field(:issued_on, label: "Issued") { |date| plain date.to_fs(:long) }
-                details.field(:paid, value: "July 1, 2026 at 08:04 UTC")
-                details.field(:billed_to, value: "Analytical Engines Ltd., 12 Long Calculation Street, London SW1A 1AA, United Kingdom")
-                details.field(:payment_method, value: "Visa ending in 4242")
-              end
-
-              render NitroKit::Table.new(id: "gallery-billing-invoice-lines") do |table|
-                table.caption("Line items for #{invoice.number}")
-                table.thead do
-                  table.tr do
-                    table.th("Description")
-                    table.th("Period")
-                    table.th("Amount", align: :right)
-                  end
+            render NitroKit::DetailsTable.new(
+              invoice,
+              data: { gallery: "billing-invoice-metadata" }
+            ) do |details|
+              details.field(:issued_on, label: "Issued") { |date| plain date.to_fs(:long) }
+              details.field(:paid, value: "July 1, 2026 at 08:04 UTC")
+              details.field(:billed_to, value: "Analytical Engines Ltd., 12 Long Calculation Street, London SW1A 1AA, United Kingdom")
+              details.field(:payment_method, value: "Visa ending in 4242")
+            end
+          end
+          card.full do
+            render NitroKit::Table.new(id: "gallery-billing-invoice-lines") do |table|
+              table.caption("Line items for #{invoice.number}")
+              table.thead do
+                table.tr do
+                  table.th("Description")
+                  table.th("Period")
+                  table.th("Amount", align: :right)
                 end
-                table.tbody do
-                  table.tr do
-                    table.th("Team plan — 20 member workspace", scope: :row)
-                    table.td("July 1–31, 2026")
-                    table.td("$49.00", align: :right)
-                  end
-                  table.tr do
-                    table.th("Value-added tax", scope: :row)
-                    table.td("Reverse charge")
-                    table.td("$0.00", align: :right)
-                  end
-                  table.tr do
-                    table.th("Total paid", scope: :row)
-                    table.td("USD")
-                    table.td("$49.00", align: :right)
-                  end
+              end
+              table.tbody do
+                table.tr do
+                  table.th("Team plan — 20 member workspace", scope: :row)
+                  table.td("July 1–31, 2026")
+                  table.td("$49.00", align: :right)
+                end
+                table.tr do
+                  table.th("Value-added tax", scope: :row)
+                  table.td("Reverse charge")
+                  table.td("$0.00", align: :right)
+                end
+                table.tr do
+                  table.th("Total paid", scope: :row)
+                  table.td("USD")
+                  table.td("$49.00", align: :right)
                 end
               end
             end
           end
-          card.divider
           card.footer do
-            render NitroKit::ButtonGroup.new(id: "gallery-billing-invoice-actions", label: "Invoice actions") do |group|
-              group.button(
-                "Download PDF",
-                id: "gallery-billing-invoice-download",
-                href: "/gallery/invoices/#{invoice.id}.pdf",
-                download: "#{invoice.number}.pdf",
-                variant: :primary
-              )
-              group.button(
-                "Back to history",
-                id: "gallery-billing-invoice-back",
-                href: entry_path(entry, state: "invoices")
-              )
+            card.actions do
+              render NitroKit::ButtonGroup.new(id: "gallery-billing-invoice-actions", label: "Invoice actions") do |group|
+                group.button(
+                  "Download PDF",
+                  id: "gallery-billing-invoice-download",
+                  href: "/gallery/invoices/#{invoice.id}.pdf",
+                  download: "#{invoice.number}.pdf",
+                  variant: :primary
+                )
+                group.button(
+                  "Back to history",
+                  id: "gallery-billing-invoice-back",
+                  href: entry_path(entry, state: "invoices")
+                )
+              end
             end
           end
         end
@@ -554,24 +560,26 @@ module Gallery
           end
           card.divider
           card.footer do
-            render NitroKit::Button.new(
-              "Reactivate Team plan",
-              id: "gallery-billing-reactivate",
-              href: "#reactivate",
-              variant: :primary
-            )
+            card.actions do
+              render NitroKit::Button.new(
+                "Reactivate Team plan",
+                id: "gallery-billing-reactivate",
+                href: "#reactivate",
+                variant: :primary
+              )
+            end
           end
         end
       end
 
       def render_mobile_overview
         render NitroKit::Card.new(id: "gallery-billing-mobile-card") do |card|
-          card.title("Team plan for Analytical Engines — Research and Production", level: 4)
+          card.header do
+            card.title("Team plan for Analytical Engines — Research and Production", level: 4)
+            card.actions { render NitroKit::Badge.new("Active", id: "gallery-billing-mobile-status", color: :success) }
+          end
           card.body do
             render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              render NitroKit::Flex.new(dir: :row, gap: 2, align: :center) do
-                render NitroKit::Badge.new("Active", id: "gallery-billing-mobile-status", color: :success)
-              end
               render NitroKit::DetailsTable.new(
                 billing_overview,
                 data: { gallery: "billing-mobile-summary" }
@@ -586,18 +594,20 @@ module Gallery
           end
           card.divider
           card.footer do
-            render NitroKit::ButtonGroup.new(id: "gallery-billing-mobile-actions", label: "Billing actions") do |group|
-              group.button(
-                "Payment method",
-                id: "gallery-billing-mobile-payment",
-                href: entry_path(entry, state: "payment-method"),
-                variant: :primary
-              )
-              group.button(
-                "Invoices",
-                id: "gallery-billing-mobile-invoices",
-                href: entry_path(entry, state: "invoices")
-              )
+            card.actions do
+              render NitroKit::ButtonGroup.new(id: "gallery-billing-mobile-actions", label: "Billing actions") do |group|
+                group.button(
+                  "Payment method",
+                  id: "gallery-billing-mobile-payment",
+                  href: entry_path(entry, state: "payment-method"),
+                  variant: :primary
+                )
+                group.button(
+                  "Invoices",
+                  id: "gallery-billing-mobile-invoices",
+                  href: entry_path(entry, state: "invoices")
+                )
+              end
             end
           end
         end

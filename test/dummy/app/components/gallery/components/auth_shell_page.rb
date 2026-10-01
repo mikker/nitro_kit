@@ -238,10 +238,10 @@ module Gallery
       def render_access_card
         render NitroKit::Card.new(id: "gallery-auth-shell-branding-card") do |card|
           card.title("Welcome back", level: 4)
-          card.body("Use your team account to continue to the workspace.")
+          card.description("Use your team account to continue to the workspace.")
           card.divider
           card.footer do
-            render NitroKit::Button.new("Continue with email", href: "#email", variant: :primary)
+            card.actions { render NitroKit::Button.new("Continue with email", href: "#email", variant: :primary) }
           end
         end
       end
@@ -257,7 +257,8 @@ module Gallery
           end
           card.divider
           card.footer do
-            render NitroKit::Button.new("Resend verification", href: "#resend")
+            plain "Didn’t get the email?"
+            card.actions { render NitroKit::Button.new("Resend verification", href: "#resend") }
           end
         end
       end
@@ -315,7 +316,7 @@ module Gallery
           end
           card.divider
           card.footer do
-            render NitroKit::Button.new("Open workspace", href: "#workspace", variant: :primary)
+            card.actions { render NitroKit::Button.new("Open workspace", href: "#workspace", variant: :primary) }
           end
         end
       end
@@ -323,11 +324,9 @@ module Gallery
       def render_long_copy_card
         render NitroKit::Card.new(id: "gallery-auth-shell-long-copy-card") do |card|
           card.title("Verify your account", level: 4)
-          card.body do
-            p do
-              "We sent instructions to katherine.johnson+analytical-engines-research-and-production@example.test " \
-                "for the International Research, Production, and Reliability Engineering workspace."
-            end
+          card.description do
+            "We sent instructions to katherine.johnson+analytical-engines-research-and-production@example.test " \
+              "for the International Research, Production, and Reliability Engineering workspace."
           end
           card.divider
           card.footer do
@@ -347,8 +346,10 @@ module Gallery
           end
           card.divider
           card.footer do
-            render NitroKit::Button.new("Request another link", href: "#request", variant: :primary)
-            render NitroKit::Button.new("Back to sign in", href: "#sign-in")
+            card.actions do
+              render NitroKit::Button.new("Back to sign in", href: "#sign-in")
+              render NitroKit::Button.new("Request another link", href: "#request", variant: :primary)
+            end
           end
         end
       end

@@ -83,22 +83,20 @@ module Gallery
                         id: "gallery-topbar-application-image-#{index + 1}"
                       )
                     end
-                    card.title(title, level: 3)
-                    card.body do
-                      render NitroKit::Flex.new(dir: :col, gap: 2, align: :start) do
-                        status_badge(status, id: "gallery-topbar-application-media-status-#{index + 1}")
-                        p { detail }
+                    card.header do
+                      card.title(title, level: 3)
+                      card.description(detail)
+                      card.actions do
+                        render NitroKit::Dropdown.new(id: "gallery-topbar-application-menu-#{index + 1}", placement: :bottom_end) do |menu|
+                          menu.trigger(icon: :ellipsis, label: "Actions for #{title}", size: :sm)
+                          menu.item("Open details", href: "#media-#{index + 1}")
+                          menu.item("Duplicate")
+                          menu.separator
+                          menu.item("Archive", variant: :destructive)
+                        end
                       end
                     end
-                    card.footer do
-                      render NitroKit::Dropdown.new(id: "gallery-topbar-application-menu-#{index + 1}") do |menu|
-                        menu.trigger("Media actions", variant: :ghost, size: :sm)
-                        menu.item("Open details", href: "#media-#{index + 1}")
-                        menu.item("Duplicate")
-                        menu.separator
-                        menu.item("Archive", variant: :destructive)
-                      end
-                    end
+                    card.footer { status_badge(status, id: "gallery-topbar-application-media-status-#{index + 1}") }
                   end
                 end
               end
@@ -167,9 +165,9 @@ module Gallery
                       )
                     end
                     card.title("Loading record #{index + 1}", level: 3)
-                    card.body { p { "Metadata and publication status are still being verified." } }
+                    card.description("Metadata and publication status are still being verified.")
                     card.footer do
-                      render NitroKit::Button.new("Open record", disabled: true, size: :sm)
+                      card.actions { render NitroKit::Button.new("Open record", disabled: true, size: :sm) }
                     end
                   end
                 end

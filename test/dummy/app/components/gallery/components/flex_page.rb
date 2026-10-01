@@ -34,7 +34,7 @@ module Gallery
               ) do
                 render NitroKit::Card.new(id: "gallery-flex-responsive-summary") do |card|
                   card.title("Production workspace", level: 4)
-                  card.body("Stacks on small screens, then becomes a row without application CSS.")
+                  card.description("Stacks on small screens, then becomes a row without application CSS.")
                 end
                 render NitroKit::Badge.new(
                   "12 active members",

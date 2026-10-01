@@ -46,13 +46,9 @@ module Gallery
         render NitroKit::Grid.new(cols: "1 sm:2 lg:3", id: "gallery-landing-feature-grid") do
           landing_features.each do |feature|
             render NitroKit::Card.new(id: "gallery-landing-feature-#{feature.id}") do |card|
+              card.body { render NitroKit::Icon.new(landing_feature_icon(feature.id), size: :lg) }
               card.title(feature.title, level: 2)
-              card.body do
-                render NitroKit::Flex.new(dir: :col, gap: 3, align: :start) do
-                  render NitroKit::Icon.new(landing_feature_icon(feature.id), size: :lg)
-                  p { feature.description }
-                end
-              end
+              card.description(feature.description)
             end
           end
         end

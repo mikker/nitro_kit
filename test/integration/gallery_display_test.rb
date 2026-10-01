@@ -178,8 +178,8 @@ class GalleryDisplayTest < ActionDispatch::IntegrationTest
         assert_select "code", text: "--nk-title-#{role}-size"
       end
     end
-    assert_select "#gallery-typography-card[data-nk='card']" do
-      assert_select "[data-slot='card-title']", text: "Quarterly invoices"
+    assert_select "#gallery-typography-surface[data-nk='empty-state']" do
+      assert_select "[data-slot='empty-state-title']", text: "Quarterly invoices"
     end
   end
 

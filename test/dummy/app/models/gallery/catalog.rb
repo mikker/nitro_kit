@@ -62,7 +62,7 @@ module Gallery
         description: "The type scale, weights, leading, and the four title roles every owned title samples.",
         page: Gallery::Foundations::TypographyPage,
         states: [],
-        expected_roots: %w[card]
+        expected_roots: %w[empty-state]
       ),
       Entry.new(
         kind: :foundation,
@@ -301,7 +301,7 @@ module Gallery
         description: "Native light, dark, and system preferences synchronized through one document runtime.",
         page: Gallery::Components::AppearancePickerPage,
         states: [],
-        expected_roots: %w[appearance-picker card badge]
+        expected_roots: %w[appearance-picker card]
       ),
       Entry.new(
         kind: :component,
@@ -481,7 +481,7 @@ module Gallery
         description: "Responsive one-to-twelve-column collections with Tailwind-style breakpoint shorthand.",
         page: Gallery::Components::GridPage,
         states: [],
-        expected_roots: %w[grid flex container card badge button]
+        expected_roots: %w[grid container card badge button]
       ),
       Entry.new(
         kind: :component,

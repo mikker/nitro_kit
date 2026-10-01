@@ -37,6 +37,9 @@ module Gallery
       def render_screen
         render NitroKit::Card.new(id: "gallery-password-reset-card") do |card|
           card.title(screen_title, level: 4)
+          if %w[request validation loading].include?(state)
+            card.description("Enter the email attached to your account. We will send a link that expires after 30 minutes.")
+          end
           card.body do
             render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               case state
@@ -48,7 +51,6 @@ module Gallery
                 render_update_form
               else
                 render_request_error if state == "validation"
-                p { "Enter the email attached to your account. We will send a link that expires after 30 minutes." }
                 render_request_form
               end
             end

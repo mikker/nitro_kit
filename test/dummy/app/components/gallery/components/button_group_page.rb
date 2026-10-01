@@ -123,16 +123,19 @@ module Gallery
         ) do
           example("API credential", slug: "button-group-api-credential") do
             render NitroKit::Card.new(id: "gallery-button-group-record-card") do |card|
-              card.title("Production API key", level: 3)
-              card.body do
-                render NitroKit::Badge.new(
-                  "Read and write",
-                  id: "gallery-button-group-record-access",
-                  color: :info,
-                  size: :sm
-                )
-                p { "nk_live_7P3F · Last used July 13, 2026 at 08:31 UTC" }
+              card.header do
+                card.title("Production API key", level: 3)
+                card.description("nk_live_7P3F · Last used July 13, 2026 at 08:31 UTC")
+                card.actions do
+                  render NitroKit::Badge.new(
+                    "Read and write",
+                    id: "gallery-button-group-record-access",
+                    color: :info,
+                    size: :sm
+                  )
+                end
               end
+              card.divider
               card.footer do
                 render NitroKit::ButtonGroup.new(
                   id: "gallery-button-group-record-actions",

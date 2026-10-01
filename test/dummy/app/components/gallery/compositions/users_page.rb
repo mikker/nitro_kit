@@ -154,7 +154,10 @@ module Gallery
         user = USERS.fetch(1)
 
         render NitroKit::Card.new(id: "gallery-users-detail-card") do |card|
-          card.title(user.name, level: 4)
+          card.header do
+            card.title(user.name, level: 4)
+            card.actions { render NitroKit::Badge.new("Active", id: "gallery-users-detail-status", color: :success) }
+          end
           card.body do
             render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Avatar.new(
@@ -164,7 +167,6 @@ module Gallery
                 size: :lg,
                 id: "gallery-users-detail-avatar"
               )
-              render NitroKit::Badge.new("Active", id: "gallery-users-detail-status", color: :success)
               render NitroKit::DetailsTable.new(
                 user,
                 data: { gallery: "user-detail-metadata" }
@@ -180,10 +182,12 @@ module Gallery
           end
           card.divider
           card.footer do
-            render NitroKit::ButtonGroup.new(id: "gallery-users-detail-actions", label: "Actions for #{user.name}") do |group|
-              group.button("Edit role", id: "gallery-users-edit-role", href: "#edit-role", variant: :primary)
-              group.button("Reset sessions", id: "gallery-users-reset-sessions", href: "#reset-sessions")
-              group.button("Suspend user", id: "gallery-users-suspend", href: "#suspend", variant: :destructive)
+            card.actions do
+              render NitroKit::ButtonGroup.new(id: "gallery-users-detail-actions", label: "Actions for #{user.name}") do |group|
+                group.button("Edit role", id: "gallery-users-edit-role", href: "#edit-role", variant: :primary)
+                group.button("Reset sessions", id: "gallery-users-reset-sessions", href: "#reset-sessions")
+                group.button("Suspend user", id: "gallery-users-suspend", href: "#suspend", variant: :destructive)
+              end
             end
           end
         end
@@ -307,9 +311,11 @@ module Gallery
           end
           card.divider
           card.footer do
-            render NitroKit::ButtonGroup.new(id: "gallery-users-error-actions", label: "Directory recovery actions") do |group|
-              group.button("Retry", id: "gallery-users-retry", href: entry_path(entry, state: "index"), variant: :primary)
-              group.button("Workspace settings", id: "gallery-users-settings", href: "#workspace-settings")
+            card.actions do
+              render NitroKit::ButtonGroup.new(id: "gallery-users-error-actions", label: "Directory recovery actions") do |group|
+                group.button("Retry", id: "gallery-users-retry", href: entry_path(entry, state: "index"), variant: :primary)
+                group.button("Workspace settings", id: "gallery-users-settings", href: "#workspace-settings")
+              end
             end
           end
         end
@@ -462,12 +468,14 @@ module Gallery
           end
           card.divider
           card.footer do
-            render NitroKit::Button.new(
-              "Return to users",
-              id: "gallery-users-bulk-complete-return",
-              href: entry_path(entry, state: "index"),
-              variant: :primary
-            )
+            card.actions do
+              render NitroKit::Button.new(
+                "Return to users",
+                id: "gallery-users-bulk-complete-return",
+                href: entry_path(entry, state: "index"),
+                variant: :primary
+              )
+            end
           end
         end
       end
@@ -476,7 +484,10 @@ module Gallery
         user = USERS.fetch(4)
 
         render NitroKit::Card.new(id: "gallery-users-mobile-card") do |card|
-          card.title("Margaret Hamilton — Director of Software Engineering", level: 4)
+          card.header do
+            card.title("Margaret Hamilton — Director of Software Engineering", level: 4)
+            card.actions { render NitroKit::Badge.new("Active member", id: "gallery-users-mobile-status", color: :success) }
+          end
           card.body do
             render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
               render NitroKit::Avatar.new(
@@ -485,7 +496,6 @@ module Gallery
                 size: :lg,
                 id: "gallery-users-mobile-avatar"
               )
-              render NitroKit::Badge.new("Active member", id: "gallery-users-mobile-status", color: :success)
               render NitroKit::DetailsTable.new(
                 user,
                 data: { gallery: "user-mobile-metadata" }
@@ -503,9 +513,11 @@ module Gallery
           end
           card.divider
           card.footer do
-            render NitroKit::ButtonGroup.new(id: "gallery-users-mobile-actions", label: "Actions for Margaret Hamilton") do |group|
-              group.button("Edit role", id: "gallery-users-mobile-edit", href: "#edit-role", variant: :primary)
-              group.button("Suspend access", id: "gallery-users-mobile-suspend", href: "#suspend", variant: :destructive)
+            card.actions do
+              render NitroKit::ButtonGroup.new(id: "gallery-users-mobile-actions", label: "Actions for Margaret Hamilton") do |group|
+                group.button("Edit role", id: "gallery-users-mobile-edit", href: "#edit-role", variant: :primary)
+                group.button("Suspend access", id: "gallery-users-mobile-suspend", href: "#suspend", variant: :destructive)
+              end
             end
           end
         end

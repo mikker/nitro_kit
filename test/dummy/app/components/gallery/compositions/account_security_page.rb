@@ -124,10 +124,11 @@ module Gallery
               alert.description("Too many sign-in attempts were rejected. Wait 15 minutes or request a signed unlock link.")
             end
           end
+          card.divider
           card.footer do
-            render NitroKit::ButtonGroup.new(label: "Locked account actions") do |actions|
-              actions.button("Send unlock link", href: entry_path(entry, state: "unlock-sent"), variant: :primary, id: "gallery-account-security-unlock")
-              actions.button("Use a recovery code", href: entry_path(entry, state: "recovery-code"))
+            card.actions do
+              render NitroKit::Button.new("Use a recovery code", href: entry_path(entry, state: "recovery-code"))
+              render NitroKit::Button.new("Send unlock link", href: entry_path(entry, state: "unlock-sent"), variant: :primary, id: "gallery-account-security-unlock")
             end
           end
         end
@@ -240,14 +241,15 @@ module Gallery
       def render_long
         render NitroKit::Card.new(id: "gallery-account-security-long-card") do |card|
           card.title("Recover International Research, Production, Reliability, and Regulatory Archive administrator access", level: 5)
-          card.body do
-            p do
-              "The recovery request was initiated for ada.lovelace+international-research-production-reliability@example.test " \
-                "after several unsuccessful hardware-key challenges. No workspace membership, existing session, or enrolled factor is disclosed."
-            end
+          card.description do
+            "The recovery request was initiated for ada.lovelace+international-research-production-reliability@example.test " \
+              "after several unsuccessful hardware-key challenges. No workspace membership, existing session, or enrolled factor is disclosed."
           end
+          card.divider
           card.footer do
-            render NitroKit::Button.new("Continue recovery", href: entry_path(entry, state: "recovery-request"), variant: :primary)
+            card.actions do
+              render NitroKit::Button.new("Continue recovery", href: entry_path(entry, state: "recovery-request"), variant: :primary)
+            end
           end
         end
       end
@@ -255,11 +257,12 @@ module Gallery
       def render_mobile
         render NitroKit::Card.new(id: "gallery-account-security-mobile-card") do |card|
           card.title("Verify identity", level: 5)
-          card.body { "Use an authentication code or one saved recovery code on this narrow screen." }
+          card.description("Use an authentication code or one saved recovery code on this narrow screen.")
+          card.divider
           card.footer do
-            render NitroKit::ButtonGroup.new(label: "Verification options") do |actions|
-              actions.button("Authentication code", href: entry_path(entry, state: "two-factor-challenge"), variant: :primary)
-              actions.button("Recovery code", href: entry_path(entry, state: "recovery-code"))
+            card.actions do
+              render NitroKit::Button.new("Recovery code", href: entry_path(entry, state: "recovery-code"))
+              render NitroKit::Button.new("Authentication code", href: entry_path(entry, state: "two-factor-challenge"), variant: :primary)
             end
           end
         end

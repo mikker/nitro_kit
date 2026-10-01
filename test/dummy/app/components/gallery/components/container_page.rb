@@ -23,7 +23,7 @@ module Gallery
                 render NitroKit::Container.new(size:, id: "gallery-container-size-#{size}") do
                   render NitroKit::Card.new(id: "gallery-container-size-#{size}-card") do |card|
                     card.title("#{size.to_s.upcase} content boundary", level: 4)
-                    card.body("Uses --nk-content-#{size}; the surrounding application still owns available width.")
+                    card.description("Uses --nk-content-#{size}; the surrounding application still owns available width.")
                   end
                 end
               end
@@ -44,7 +44,7 @@ module Gallery
           ) do
             render NitroKit::Card.new(id: "gallery-container-full-width-card") do |card|
               card.title("Full available width", level: 4)
-              card.body("No data-nk=container ancestor is emitted for this surface.")
+              card.description("No data-nk=container ancestor is emitted for this surface.")
             end
           end
         end
@@ -88,11 +88,9 @@ module Gallery
                   "Analytical Engines — International Research, Production, and Reliability Engineering",
                   level: 4
                 )
-                card.body do
-                  p do
-                    "This account description stays inside the same readable maximum width even when customer-owned " \
-                      "identity and operational context are substantially longer than the common case."
-                  end
+                card.description do
+                  "This account description stays inside the same readable maximum width even when customer-owned " \
+                    "identity and operational context are substantially longer than the common case."
                 end
               end
             end
@@ -123,7 +121,7 @@ module Gallery
                   Gallery::Data.members.each do |member|
                     render NitroKit::Card.new(id: "gallery-container-composition-#{member.id}") do |card|
                       card.title(member.name, level: 4)
-                      card.body("#{member.role.to_s.humanize} · #{member.email}")
+                      card.description("#{member.role.to_s.humanize} · #{member.email}")
                     end
                   end
                 end

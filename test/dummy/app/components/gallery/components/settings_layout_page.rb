@@ -38,7 +38,10 @@ module Gallery
               end
               layout.content do
                 render NitroKit::Card.new(id: "gallery-settings-layout-profile-card") do |card|
-                  card.title("Public profile", level: 4)
+                  card.header do
+                    card.title("Public profile", level: 4)
+                    card.description("Shown on your comments and shared documents.")
+                  end
                   card.body do
                     render NitroKit::Field.new(
                       nil,
@@ -49,12 +52,16 @@ module Gallery
                       label: "Name"
                     )
                   end
+                  card.divider
                   card.footer do
-                    render NitroKit::Button.new(
-                      "Save profile",
-                      id: "gallery-settings-layout-profile-save",
-                      variant: :primary
-                    )
+                    card.actions do
+                      render NitroKit::Button.new(
+                        "Save profile",
+                        id: "gallery-settings-layout-profile-save",
+                        variant: :primary,
+                        size: :sm
+                      )
+                    end
                   end
                 end
               end
@@ -100,8 +107,8 @@ module Gallery
                 layout.content do
                   render NitroKit::Flex.new(dir: :col, gap: 2, align: :stretch) do
                     6.times do |index|
-                      render NitroKit::Card.new(id: "gallery-settings-layout-many-#{index + 1}") do |card|
-                        card.body("Policy section #{index + 1}")
+                      render NitroKit::Card.new(id: "gallery-settings-layout-many-#{index + 1}", size: :sm) do |card|
+                        card.description("Policy section #{index + 1}")
                       end
                     end
                   end
@@ -136,7 +143,7 @@ module Gallery
               layout.content do
                 render NitroKit::Card.new(id: "gallery-settings-layout-long-card") do |card|
                   card.title("Public organization identity and verified domains", level: 4)
-                  card.body(
+                  card.description(
                     "These settings apply to every administrator, production environment, customer-visible status " \
                       "notification, security event, and invoice issued by this unusually long-named workspace."
                   )

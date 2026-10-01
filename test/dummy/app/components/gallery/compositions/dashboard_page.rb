@@ -138,26 +138,28 @@ module Gallery
         render_metrics
         render_request_chart(:error)
         render NitroKit::Card.new(id: "gallery-dashboard-incident-card") do |card|
-          card.title("Active incident", level: 4)
-          card.body do
-            render NitroKit::Flex.new(dir: :col, gap: 4, align: :stretch) do
-              render NitroKit::Flex.new(dir: :row, gap: 2, align: :center) do
-                render NitroKit::Badge.new(
-                  "Investigating",
-                  id: "gallery-dashboard-incident-status",
-                  color: :destructive,
-                  size: :sm
-                )
-              end
-              p { "Slack notification delivery · started July 13, 2026 at 09:12 UTC" }
+          card.header do
+            card.title("Active incident", level: 4)
+            card.description("Slack notification delivery · started July 13, 2026 at 09:12 UTC")
+            card.actions do
+              render NitroKit::Badge.new(
+                "Investigating",
+                id: "gallery-dashboard-incident-status",
+                color: :destructive,
+                size: :sm
+              )
             end
           end
+          card.divider
           card.footer do
-            render NitroKit::Button.new(
-              "Retry failed deliveries",
-              id: "gallery-dashboard-retry-deliveries",
-              variant: :primary
-            )
+            card.actions do
+              render NitroKit::Button.new(
+                "Retry failed deliveries",
+                id: "gallery-dashboard-retry-deliveries",
+                variant: :primary,
+                size: :sm
+              )
+            end
           end
         end
         render_integration_section
@@ -220,12 +222,15 @@ module Gallery
 
           if mode == :error
             card.footer do
-              render NitroKit::Button.new(
-                "Retry request chart",
-                id: "gallery-dashboard-request-chart-retry",
-                href: "#request-volume",
-                variant: :primary
-              )
+              card.actions do
+                render NitroKit::Button.new(
+                  "Retry request chart",
+                  id: "gallery-dashboard-request-chart-retry",
+                  href: "#request-volume",
+                  variant: :primary,
+                  size: :sm
+                )
+              end
             end
           end
         end
