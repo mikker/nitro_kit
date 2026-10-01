@@ -144,6 +144,60 @@ class GalleryStructuredTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "card examples cover every size surface and divided form" do
+    get_component("card")
+
+    assert_select "#example-card-size-matrix" do
+      NitroKit::Card::SIZES.each do |size|
+        assert_select "article[data-nk='card'][data-size='#{size}'] > [data-slot='card-header'] [data-slot='card-actions']", count: 1
+      end
+    end
+    assert_select "#example-card-surface-matrix" do
+      NitroKit::Card::VARIANTS.each do |variant|
+        assert_select "article[data-nk='card'][data-variant='#{variant}']", count: 1
+      end
+    end
+    assert_select "#example-card-size-surface-matrix" do
+      NitroKit::Card::SIZES.product(NitroKit::Card::VARIANTS).each do |size, variant|
+        assert_select "article[data-nk='card'][data-size='#{size}'][data-variant='#{variant}']", count: 1
+      end
+    end
+
+    assert_select "#example-card-form-configurations" do
+      NitroKit::Card::SIZES.each do |size|
+        form_id = "gallery-card-preferences-#{size}"
+        assert_select "form##{form_id} input[role='switch']", count: 3
+        assert_select "button[type='submit'][form='#{form_id}']", count: 1
+        assert_select "button[type='reset'][form='#{form_id}']", count: 1
+      end
+    end
+
+    assert_select "#gallery-card-security > [data-slot='card-header']", count: 3
+    assert_select "#gallery-card-transactions > [data-slot='card-full'] [data-nk='table'] caption", text: "Transactions this week"
+  end
+
+  test "card examples cover touched media edges action states and responsive parents" do
+    get_component("card")
+
+    assert_select "#example-card-media-configurations" do
+      assert_select "img[src='/gallery/card-landscape.svg'][alt]", count: 3
+      NitroKit::Card::SIZES.each do |size|
+        assert_select "[data-size='#{size}'] > [data-slot='card-full']:first-child", count: 1
+      end
+    end
+    assert_select "#gallery-card-media-only > [data-slot='card-full']:only-child img[alt]", count: 1
+
+    assert_select "#example-card-footer-states" do
+      assert_select "button[aria-busy='true'][disabled]", count: 1
+      assert_select "button[disabled]", count: 3
+    end
+    assert_select "[data-nk='card'] [data-nk='button'][data-variant='ghost']", count: 0
+
+    assert_select "#example-card-responsive-collection [data-nk='grid'][data-cols='1 sm:2 lg:3']" do
+      assert_select "article[data-nk='card']", count: 3
+    end
+  end
+
   test "table page covers every alignment dense nested content and empty structure" do
     get_component("table")
 

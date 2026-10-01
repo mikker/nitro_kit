@@ -12,8 +12,12 @@
 
   /* A group keeps the same rhythm at either boundary as the fields inside it,
      so introductory copy and trailing actions never read as attached to the
-     nearest control. */
-  :where(* + [data-nk="field-group"], [data-nk="field-group"] + *) {
+     nearest control. Hidden inputs, such as the ones Rails emits at the top of
+     every form, are not visible neighbours and do not count. */
+  :where(
+    :not(input[type="hidden"]) + [data-nk="field-group"],
+    [data-nk="field-group"] + :not(input[type="hidden"])
+  ) {
     margin-block-start: calc(var(--nk-space) * 6);
   }
 }

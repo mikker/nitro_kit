@@ -9,7 +9,7 @@
     text-align: center;
     background: var(--nk-color-surface);
     border: var(--nk-border-width) dashed var(--nk-color-border);
-    border-radius: var(--nk-radius-lg);
+    border-radius: var(--nk-radius-xl);
   }
 
   :where([data-nk="empty-state"] > [data-slot="empty-state-icon"]) {

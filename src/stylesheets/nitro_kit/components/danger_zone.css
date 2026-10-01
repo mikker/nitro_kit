@@ -13,7 +13,7 @@
     );
     border: var(--nk-border-width) solid
       color-mix(in oklab, var(--nk-color-destructive) 50%, transparent);
-    border-radius: var(--nk-radius-lg);
+    border-radius: var(--nk-radius-xl);
   }
 
   :where([data-nk="danger-zone"] > [data-slot="danger-zone-header"]) {

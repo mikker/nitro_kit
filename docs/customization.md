@@ -517,7 +517,7 @@ The following variables are the complete public token set. Theme-independent tok
 | `--nk-title-page-weight`    | Page title weight.                                                   |
 | `--nk-title-section-size`   | Section title size: data, settings, and danger sections.             |
 | `--nk-title-section-weight` | Section title weight.                                                |
-| `--nk-title-surface-size`   | Surface title size: cards, dialogs, sheets, empty states, fieldsets. |
+| `--nk-title-surface-size`   | Surface title size: dialogs, sheets, empty states, fieldsets.        |
 | `--nk-title-surface-weight` | Surface title weight.                                                |
 | `--nk-title-compact-size`   | Compact title size: legends, alert and toast titles.                 |
 | `--nk-title-compact-weight` | Compact title weight.                                                |

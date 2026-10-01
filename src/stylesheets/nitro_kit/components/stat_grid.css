@@ -22,11 +22,11 @@
     align-content: start;
     gap: calc(var(--nk-space) * 2);
     min-block-size: 100%;
-    padding: calc(var(--nk-space) * 5);
+    padding: calc(var(--nk-space) * 6);
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-lg);
-    box-shadow: var(--nk-shadow-sm);
+    border-radius: var(--nk-radius-xl);
+    box-shadow: var(--nk-shadow-xs);
   }
 
   :where([data-nk="stat-grid"] [data-slot="stat-grid-label"]) {
@@ -38,7 +38,7 @@
   :where([data-nk="stat-grid"] [data-slot="stat-grid-value"]) {
     font-size: var(--nk-text-2xl);
     font-variant-numeric: tabular-nums;
-    font-weight: var(--nk-font-weight-bold);
+    font-weight: var(--nk-font-weight-semibold);
     line-height: var(--nk-leading-tight);
     overflow-wrap: anywhere;
   }

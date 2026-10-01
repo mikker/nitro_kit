@@ -3,14 +3,21 @@
 module NitroKit
   class Card < Component
     TITLE_LEVELS = (1..6).freeze
+    SIZES = %i[sm md lg].freeze
+    VARIANTS = %i[default outline muted].freeze
 
-    def initialize(id: nil, html: {}, aria: {}, data: {}, desperately_need_a_class: nil)
+    def initialize(size: :md, variant: :default, id: nil, html: {}, aria: {}, data: {}, desperately_need_a_class: nil)
+      size = validate_choice!(:size, size, SIZES)
+      variant = validate_choice!(:variant, variant, VARIANTS)
+
       super(
         component: :card,
         attributes: { id: }.compact,
         html:,
         aria:,
         data:,
+        size:,
+        variant:,
         desperately_need_a_class:
       )
     end
@@ -23,7 +30,14 @@ module NitroKit
 
     alias :html_title :title
     alias :html_body :body
+    alias :html_header :header
     alias :html_footer :footer
+
+    def header(html: {}, aria: {}, data: {}, desperately_need_a_class: nil)
+      raise ArgumentError, "Card header requires a block" unless block_given?
+
+      html_header(**slot_attributes(:header, html:, aria:, data:, desperately_need_a_class:)) { yield }
+    end
 
     def title(text = nil, level: 2, html: {}, aria: {}, data: {}, desperately_need_a_class: nil, &block)
       validate_choice!(:level, level, TITLE_LEVELS)
@@ -32,6 +46,19 @@ module NitroKit
         :"h#{level}",
         **slot_attributes(:title, html:, aria:, data:, desperately_need_a_class:)
       ) { text_or_block(text, &block) }
+    end
+
+    def description(text = nil, html: {}, aria: {}, data: {}, desperately_need_a_class: nil, &block)
+      require_region!(:description, text, block)
+      p(**slot_attributes(:description, html:, aria:, data:, desperately_need_a_class:)) do
+        text_or_block(text, &block)
+      end
+    end
+
+    def actions(html: {}, aria: {}, data: {}, desperately_need_a_class: nil)
+      raise ArgumentError, "Card actions requires a block" unless block_given?
+
+      div(**slot_attributes(:actions, html:, aria:, data:, desperately_need_a_class:)) { yield }
     end
 
     def body(text = nil, html: {}, aria: {}, data: {}, desperately_need_a_class: nil, &block)

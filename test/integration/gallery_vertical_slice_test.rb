@@ -43,24 +43,26 @@ class GalleryVerticalSliceTest < ActionDispatch::IntegrationTest
     assert_select "#gallery-icon-stroke-bold[stroke-width='2']"
   end
 
-  test "card page covers its anatomy long content and a composed profile form" do
+  test "card page covers its header body footer anatomy and a composed profile form" do
     get_component("card")
 
-    assert_select "#gallery-card-workspace[data-nk='card']" do
-      assert_select "[data-slot='card-title']"
-      assert_select "[data-slot='card-body']"
-      assert_select "[data-slot='card-divider']"
-      assert_select "[data-slot='card-footer']"
+    assert_select "#gallery-card-profile[data-nk='card']" do
+      assert_select "> header[data-slot='card-header']" do
+        assert_select "h3[data-slot='card-title']", text: "Profile"
+        assert_select "p[data-slot='card-description']"
+        assert_select "[data-slot='card-actions'] #gallery-card-profile-menu[data-nk='dropdown']"
+      end
+      assert_select "> [data-slot='card-divider']", count: 2
+      assert_select "form#gallery-card-profile-form" do
+        assert_select "#gallery-card-profile-name-field[data-nk='field']"
+        assert_select "#gallery-card-profile-bio-field[data-nk='field'] textarea"
+      end
+      assert_select "> [data-slot='card-footer'] > [data-slot='card-actions']" do
+        assert_select "#gallery-card-profile-save[data-nk='button'][form='gallery-card-profile-form'][type='submit']"
+        assert_select "[data-nk='button'][form='gallery-card-profile-form'][type='reset']"
+      end
     end
-    assert_select "#gallery-card-activity [data-slot='card-full']"
-    assert_select "#gallery-card-long-content [data-slot='card-title']", text: /workspace name/
-    assert_select "#gallery-card-profile-form-card form#gallery-card-profile-form" do
-      assert_select "#gallery-card-profile-name-field[data-nk='field']"
-      assert_select "#gallery-card-profile-email-field[data-nk='field']"
-      assert_select "#gallery-card-profile-name[data-nk='input']"
-    end
-    assert_select "#gallery-card-profile-save[data-nk='button'][form='gallery-card-profile-form'][type='submit']"
-    assert_select "#gallery-card-profile-reset[data-nk='button'][form='gallery-card-profile-form'][type='reset']"
+    assert_select "#gallery-card-simple > [data-slot='card-title'] + [data-slot='card-description']"
   end
 
   test "input page covers representative native types and browser states" do

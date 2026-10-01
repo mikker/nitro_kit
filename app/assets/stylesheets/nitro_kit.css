@@ -40,8 +40,9 @@
 
     /* The title scale. Four roles cover every owned title and legend: page
        for the one page heading, section for full-width section headers,
-       surface for cards, dialogs, sheets, empty states, and fieldsets, and
-       compact for control-group legends and status titles. */
+       surface for dialogs, sheets, empty states, and fieldsets, and compact
+       for control-group legends and status titles. Card titles scale with
+       the card's own size instead. */
     --nk-title-page-size: var(--nk-text-2xl);
     --nk-title-page-weight: var(--nk-font-weight-bold);
     --nk-title-section-size: var(--nk-text-xl);
@@ -2902,24 +2903,86 @@
 @layer nitro-kit.base {
   :where([data-nk="card"]) {
     --_nk-card-padding: calc(var(--nk-space) * 6);
+    --_nk-card-gap: calc(var(--nk-space) * 4);
+    --_nk-card-radius: var(--nk-radius-xl);
+    --_nk-card-title-size: var(--nk-text-base);
+    --_nk-card-title-leading: calc(
+      var(--_nk-card-title-size) * var(--nk-leading-tight)
+    );
 
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: calc(var(--nk-space) * 4);
+    gap: var(--_nk-card-gap);
     padding: var(--_nk-card-padding);
     color: var(--nk-color-foreground);
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-lg);
-    box-shadow: var(--nk-shadow-sm);
+    border-radius: var(--_nk-card-radius);
+    box-shadow: var(--nk-shadow-xs);
   }
 
-  :where([data-nk="card"] > [data-slot="card-title"]) {
-    font-size: var(--nk-title-surface-size);
-    font-weight: var(--nk-title-surface-weight);
-    line-height: var(--nk-leading-tight);
+  :where(
+    [data-nk="card"] > [data-slot="card-title"],
+    [data-nk="card"] > [data-slot="card-header"] > [data-slot="card-title"]
+  ) {
+    font-size: var(--_nk-card-title-size);
+    font-weight: var(--nk-font-weight-semibold);
+    line-height: var(--_nk-card-title-leading);
     text-wrap: balance;
+  }
+
+  :where(
+    [data-nk="card"] > [data-slot="card-description"],
+    [data-nk="card"]
+      > [data-slot="card-header"]
+      > [data-slot="card-description"]
+  ) {
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-sm);
+    line-height: var(--nk-leading-normal);
+    text-wrap: pretty;
+  }
+
+  /* The header pairs a title and description with trailing actions centred
+     beside them. Actions take negative block margins so a small button never
+     makes a title-only header taller than its title line. */
+  :where([data-nk="card"] > [data-slot="card-header"]) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: calc(var(--nk-space) * 4);
+    align-items: start;
+  }
+
+  :where(
+    [data-nk="card"]
+      > [data-slot="card-header"]
+      > [data-slot="card-title"]
+      + [data-slot="card-description"]
+  ) {
+    margin-block-start: calc(var(--nk-space) * 1);
+  }
+
+  :where([data-nk="card"] > [data-slot="card-header"] > *) {
+    grid-column: 1;
+  }
+
+  :where(
+    [data-nk="card"] > [data-slot="card-header"] > [data-slot="card-actions"]
+  ) {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+    margin-block: calc(
+      (var(--_nk-card-title-leading) - var(--nk-control-height-sm)) / 2
+    );
+  }
+
+  :where([data-nk="card"] [data-slot="card-actions"]) {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: calc(var(--nk-space) * 2);
   }
 
   :where([data-nk="card"] > [data-slot="card-body"]) {
@@ -2934,10 +2997,96 @@
     align-items: center;
     flex-wrap: wrap;
     gap: calc(var(--nk-space) * 2);
+    color: var(--nk-color-muted-foreground);
+    font-size: var(--nk-text-sm);
+    line-height: var(--nk-leading-normal);
+    /* Raw text becomes an anonymous flex item. Include emergency breaks in
+       its intrinsic width so long URLs can shrink with the footer. */
+    overflow-wrap: anywhere;
+  }
+
+  :where(
+    [data-nk="card"] > [data-slot="card-footer"] > [data-slot="card-actions"]
+  ) {
+    margin-inline-start: auto;
+  }
+}
+
+@layer nitro-kit.variant {
+  :where([data-nk="card"][data-variant="outline"]) {
+    background: transparent;
+    box-shadow: none;
+  }
+
+  :where([data-nk="card"][data-variant="muted"]) {
+    background: color-mix(in oklab, var(--nk-color-foreground) 4%, transparent);
+    box-shadow: none;
+  }
+}
+
+@layer nitro-kit.size {
+  :where([data-nk="card"][data-size="sm"]) {
+    --_nk-card-padding: calc(var(--nk-space) * 4);
+    --_nk-card-gap: calc(var(--nk-space) * 3);
+    --_nk-card-radius: var(--nk-radius-lg);
+    --_nk-card-title-size: var(--nk-text-sm);
+  }
+
+  :where([data-nk="card"][data-size="lg"]) {
+    --_nk-card-padding: calc(var(--nk-space) * 8);
+    --_nk-card-gap: calc(var(--nk-space) * 6);
+    --_nk-card-radius: calc(var(--nk-radius-xl) + var(--nk-space));
+    --_nk-card-title-size: var(--nk-text-lg);
   }
 }
 
 @layer nitro-kit.compound {
+  /* A description directly under a root-level title belongs to it. */
+  :where(
+    [data-nk="card"] > [data-slot="card-title"] + [data-slot="card-description"]
+  ) {
+    margin-block-start: calc(var(--nk-space) * 1 - var(--_nk-card-gap));
+  }
+
+  /* A section set apart by a divider at the card's edge is a band: the space
+     between the band and the edge matches the space between the band and its
+     divider, so a footer's actions or a header's title sit evenly. Full
+     regions keep the padding because they bleed through it. */
+  :where(
+    [data-nk="card"]:has(
+      > :first-child:not([data-slot="card-full"]):not(
+          [data-slot="card-divider"]
+        )
+        + [data-slot="card-divider"]
+    )
+  ) {
+    padding-block-start: var(--_nk-card-gap);
+  }
+
+  :where(
+    [data-nk="card"]:has(
+      > [data-slot="card-divider"]
+        + :last-child:not([data-slot="card-full"]):not(
+          [data-slot="card-divider"]
+        )
+    )
+  ) {
+    padding-block-end: var(--_nk-card-gap);
+  }
+
+  /* When a parent stretches the card, such as a grid row, the spare height
+     goes above a trailing footer and its divider, keeping actions on the
+     card's bottom edge across a row. */
+  :where(
+    [data-nk="card"]
+      > :not([data-slot="card-divider"])
+      + [data-slot="card-footer"]:last-child,
+    [data-nk="card"]
+      > [data-slot="card-divider"]:has(+ [data-slot="card-footer"]:last-child)
+  ) {
+    margin-block-start: auto;
+  }
+
   /* Only the region that bleeds to the edge clips, never the card itself, so
      an edge-to-edge image cannot break the card's corners while tooltips,
      dropdowns, and other overlays inside a card stay free to escape its box. */
@@ -2949,25 +3098,68 @@
   :where([data-nk="card"] > [data-slot="card-full"]:first-child) {
     margin-block-start: calc(var(--_nk-card-padding) * -1);
     border-start-start-radius: calc(
-      var(--nk-radius-lg) - var(--nk-border-width)
+      var(--_nk-card-radius) - var(--nk-border-width)
     );
-    border-start-end-radius: calc(var(--nk-radius-lg) - var(--nk-border-width));
+    border-start-end-radius: calc(
+      var(--_nk-card-radius) - var(--nk-border-width)
+    );
   }
 
   :where([data-nk="card"] > [data-slot="card-full"]:last-child) {
     margin-block-end: calc(var(--_nk-card-padding) * -1);
-    border-end-start-radius: calc(var(--nk-radius-lg) - var(--nk-border-width));
-    border-end-end-radius: calc(var(--nk-radius-lg) - var(--nk-border-width));
+    border-end-start-radius: calc(
+      var(--_nk-card-radius) - var(--nk-border-width)
+    );
+    border-end-end-radius: calc(
+      var(--_nk-card-radius) - var(--nk-border-width)
+    );
   }
 
   /* Full-width media fills the card edge to edge, so the card owns the corner
      radius and the media drops its own. */
   :where(
-      [data-nk="card"]
-        > [data-slot="card-full"]
-        :is(img, [data-nk="progressive-image"])
-    ) {
+    [data-nk="card"]
+      > [data-slot="card-full"]
+      :is(img, [data-nk="progressive-image"])
+  ) {
     border-radius: 0;
+  }
+
+  /* A table bleeding to the card's edges keeps its first and last columns
+     and its caption on the card's content gutter. */
+  :where(
+    [data-nk="card"]
+      > [data-slot="card-full"]
+      > [data-nk="table"]
+      [data-slot="table-header"]:first-child,
+    [data-nk="card"]
+      > [data-slot="card-full"]
+      > [data-nk="table"]
+      [data-slot="table-cell"]:first-child
+  ) {
+    padding-inline-start: var(--_nk-card-padding);
+  }
+
+  :where(
+    [data-nk="card"]
+      > [data-slot="card-full"]
+      > [data-nk="table"]
+      [data-slot="table-header"]:last-child,
+    [data-nk="card"]
+      > [data-slot="card-full"]
+      > [data-nk="table"]
+      [data-slot="table-cell"]:last-child
+  ) {
+    padding-inline-end: var(--_nk-card-padding);
+  }
+
+  :where(
+    [data-nk="card"]
+      > [data-slot="card-full"]
+      > [data-nk="table"]
+      [data-slot="table-caption"]
+  ) {
+    padding-inline: var(--_nk-card-padding);
   }
 
   :where([data-nk="card"] > [data-slot="card-divider"]) {
@@ -3852,7 +4044,7 @@
     );
     border: var(--nk-border-width) solid
       color-mix(in oklab, var(--nk-color-destructive) 50%, transparent);
-    border-radius: var(--nk-radius-lg);
+    border-radius: var(--nk-radius-xl);
   }
 
   :where([data-nk="danger-zone"] > [data-slot="danger-zone-header"]) {
@@ -4727,7 +4919,7 @@
     text-align: center;
     background: var(--nk-color-surface);
     border: var(--nk-border-width) dashed var(--nk-color-border);
-    border-radius: var(--nk-radius-lg);
+    border-radius: var(--nk-radius-xl);
   }
 
   :where([data-nk="empty-state"] > [data-slot="empty-state-icon"]) {
@@ -4870,8 +5062,12 @@
 
   /* A group keeps the same rhythm at either boundary as the fields inside it,
      so introductory copy and trailing actions never read as attached to the
-     nearest control. */
-  :where(* + [data-nk="field-group"], [data-nk="field-group"] + *) {
+     nearest control. Hidden inputs, such as the ones Rails emits at the top of
+     every form, are not visible neighbours and do not count. */
+  :where(
+    :not(input[type="hidden"]) + [data-nk="field-group"],
+    [data-nk="field-group"] + :not(input[type="hidden"])
+  ) {
     margin-block-start: calc(var(--nk-space) * 6);
   }
 }
@@ -7555,11 +7751,11 @@
     align-content: start;
     gap: calc(var(--nk-space) * 2);
     min-block-size: 100%;
-    padding: calc(var(--nk-space) * 5);
+    padding: calc(var(--nk-space) * 6);
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
-    border-radius: var(--nk-radius-lg);
-    box-shadow: var(--nk-shadow-sm);
+    border-radius: var(--nk-radius-xl);
+    box-shadow: var(--nk-shadow-xs);
   }
 
   :where([data-nk="stat-grid"] [data-slot="stat-grid-label"]) {
@@ -7571,7 +7767,7 @@
   :where([data-nk="stat-grid"] [data-slot="stat-grid-value"]) {
     font-size: var(--nk-text-2xl);
     font-variant-numeric: tabular-nums;
-    font-weight: var(--nk-font-weight-bold);
+    font-weight: var(--nk-font-weight-semibold);
     line-height: var(--nk-leading-tight);
     overflow-wrap: anywhere;
   }

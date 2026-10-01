@@ -25,8 +25,9 @@
 
     /* The title scale. Four roles cover every owned title and legend: page
        for the one page heading, section for full-width section headers,
-       surface for cards, dialogs, sheets, empty states, and fieldsets, and
-       compact for control-group legends and status titles. */
+       surface for dialogs, sheets, empty states, and fieldsets, and compact
+       for control-group legends and status titles. Card titles scale with
+       the card's own size instead. */
     --nk-title-page-size: var(--nk-text-2xl);
     --nk-title-page-weight: var(--nk-font-weight-bold);
     --nk-title-section-size: var(--nk-text-xl);
