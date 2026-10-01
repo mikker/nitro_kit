@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-ruby "4.0.6"
+ruby "4.0.7"
 
 gemspec
 
@@ -23,5 +23,5 @@ end
 
 group :test do
   gem "capybara", "~> 3.40.0"
-  gem "selenium-webdriver", "~> 4.47.0"
+  gem "selenium-webdriver", "~> 4.50.0"
 end
