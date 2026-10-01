@@ -1,9 +1,15 @@
 # Changelog
 
-## Unreleased
+## 2.0.0.beta.2
 
 ### Added
 
+- Redesign Card with `header`, `description`, and `actions` slots so call sites
+  stop hand-rolling headers and footers. `actions` inside a `header` trail the
+  title and description; inside a `footer` they push to the end.
+- Add Card `size: :sm | :md | :lg` density and `variant: :default | :muted |
+  :outline` surfaces, emitted as owned `data-size` and `data-variant`
+  attributes. Sizes coordinate padding, part gaps, corners, and title size.
 - Add explicit `nitro_kit:eject COMPONENT` source-level customization, with
   isolated Ruby/CSS/Stimulus dependencies, version provenance, and safe whole-snapshot
   skip behavior unless `--force` is requested.
@@ -23,6 +29,32 @@
   the panel and content transitions together.
 - Preserve client sidebar pin state and its accessible toggle state across
   Turbo morph refreshes without persisting it across page loads.
+
+### Changed
+
+- Card titles scale with the card's own size instead of the shared
+  `--nk-title-surface-size` role, which now covers dialogs, sheets, empty
+  states, and fieldsets.
+- Give card sections set apart by a divider at the top or bottom edge even
+  spacing, fixing the uneven medium footer padding. Tables inside `full`
+  regions align with the card gutter, and a trailing footer stays on the
+  bottom edge of a card stretched by a Grid row.
+- Align StatGrid, DangerZone, and EmptyState panels with the card's padding
+  and corners.
+- Stop FieldGroup spacing from counting hidden inputs as neighbours.
+- Replace ghost menu triggers inside gallery cards with the default button
+  treatment and rebuild the card gallery around header, body, and footer
+  recipes.
+
+### Upgrade notes
+
+- Pin `2.0.0.beta.2` explicitly. Beta releases may still change APIs; review
+  release notes before updating.
+- Cards no longer read `--nk-title-surface-size`; a theme that tuned card
+  headings through that token should pick a card `size:` instead.
+- Review application-owned card headers and footers built from raw `Flex`
+  rows and move them onto `header`, `description`, and `actions`. Existing
+  copied or ejected source is not updated automatically by this gem release.
 
 ## 2.0.0.beta.1
 
