@@ -30,11 +30,14 @@ jobs:
         run: bin/rails test
 
   system:
-    name: Browser smoke (${{ matrix.browser }})
+    name: Browser smoke (${{ matrix.browser }} ${{ matrix.lane }})
     strategy:
       fail-fast: false
       matrix:
-        browser: [chrome, firefox]
+        include:
+          - { browser: chrome, lane: headed-parallel, headless: "false", workers: "4" }
+          - { browser: chrome, lane: headless-parallel, headless: "true", workers: "4" }
+          - { browser: chrome, lane: headed-serial, headless: "false", workers: "1" }
     runs-on: ubuntu-latest
 
     steps:
@@ -61,9 +64,10 @@ jobs:
         if: matrix.browser == 'chrome'
         env:
           BROWSER: ${{ matrix.browser }}
-          HEADLESS: "false"
+          HEADLESS: ${{ matrix.headless }}
+          PARALLEL_WORKERS: ${{ matrix.workers }}
           RAILS_ENV: test
-        run: xvfb-run --auto-servernum bin/rails test test/system/ci_diagnostics_test.rb test/system/app_shell_test.rb test/system/app_shell_animation_test.rb
+        run: xvfb-run --auto-servernum bin/rails test:system
 
       - name: Run Firefox priority smoke tests
         if: matrix.browser == 'firefox'

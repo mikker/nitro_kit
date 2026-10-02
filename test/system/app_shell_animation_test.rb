@@ -24,12 +24,20 @@ class AppShellAnimationTest < ApplicationSystemTestCase
         frames = evaluate_script("window.sidebarFrames")
         moving = frames.select { |frame| frame.fetch("width").between?(65, 207) }
         assert_predicate moving, :present?, "Expected intermediate animation frames for #{example}, pinned: #{pinned}"
+        # The highlight spans the navigation body's content box, which a
+        # classic scrollbar gutter narrows on Linux and Windows. Its travel
+        # therefore differs from the panel's, so synchronization is a shared
+        # progress fraction rather than a fixed offset from the panel edge.
+        panel_travel = frames.last.fetch("width") - frames.first.fetch("width")
+        item_travel = frames.last.fetch("item") - frames.first.fetch("item")
         moving.each do |frame|
           assert_in_delta frame.fetch("width"), frame.fetch("main"), 1
-          assert_in_delta frame.fetch("width") - 24, frame.fetch("item"), 1.1
+          progress = (frame.fetch("width") - frames.first.fetch("width")) / panel_travel
+          assert_in_delta frames.first.fetch("item") + item_travel * progress, frame.fetch("item"), 1.1
           assert_in_delta frames.first.fetch("icon"), frame.fetch("icon"), 0.5
         end
         assert_in_delta target_width, frames.last.fetch("main"), 1
+        assert_in_delta target_width - 24 - frames.last.fetch("gutter"), frames.last.fetch("item"), 1
       end
     end
   ensure
@@ -72,13 +80,15 @@ class AppShellAnimationTest < ApplicationSystemTestCase
       const main = shell.querySelector('[data-slot="app-shell-main"]')
       const item = shell.querySelector('[data-slot="app-navigation-item-link"]')
       const icon = item.querySelector('[data-slot="app-navigation-item-icon"]')
+      const body = shell.querySelector('[data-slot="app-navigation-body"]')
+      const gutter = targetPinned ? body.offsetWidth - body.clientWidth : 0
       window.sidebarFrames = []
       window.sidebarFramesDone = false
       function sample() {
         const origin = shell.getBoundingClientRect().left
         const width = sidebar.getBoundingClientRect().width
         const pinned = shell.getAttribute('data-nk--app-shell-pinned-value') === 'true'
-        window.sidebarFrames.push({ pinned, width,
+        window.sidebarFrames.push({ pinned, width, gutter,
           main: main.getBoundingClientRect().left-origin,
           item: item.getBoundingClientRect().width,
           icon: icon.getBoundingClientRect().left-origin })
