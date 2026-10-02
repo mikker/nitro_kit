@@ -73,7 +73,13 @@ every possible descendant selector.
 ## Release verification
 
 Automated CI runs the full system suite in Chrome and priority browser smoke
-coverage in Firefox and macOS Safari. Before a release, maintainers also verify
+coverage in Firefox and macOS Safari. The Chrome lane runs headed under Xvfb
+with a single worker. Headless Linux Chrome reports no `hover` or `pointer`
+capability, so hover-gated behaviour such as the sidebar rail peek and tooltips
+never engages there, and parallel headed windows share one X pointer whose
+enter and leave events reset `:hover` while a test is mid-interaction. Linux
+and Windows also reserve a classic scrollbar gutter that macOS does not, so
+geometry assertions must not assume overlay scrollbars. Before a release, maintainers also verify
 the priority flows on current Android Chrome and iOS Safari. Capability-focused
 tests supplement these runs; they do not prove an untested historical browser
 version.

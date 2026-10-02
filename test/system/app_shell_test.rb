@@ -388,7 +388,7 @@ class AppShellTest < ApplicationSystemTestCase
 
     install_morph_counter
     refresh_with_turbo_stream
-    wait_until { evaluate_script("window.__nitroMorphCount") == 1 }
+    wait_until(timeout: 15, message: "Turbo did not morph the page") { evaluate_script("window.__nitroMorphCount") == 1 }
 
     [ [ unpinned, false ], [ pinned, true ] ].each_with_index do |(root, state), index|
       assert_selector "#{root}[data-enhanced][data-nk--app-shell-pinned-value='#{state}']"
@@ -418,7 +418,7 @@ class AppShellTest < ApplicationSystemTestCase
 
     install_morph_counter
     refresh_with_turbo_stream
-    wait_until(message: "Turbo did not morph the page") do
+    wait_until(timeout: 15, message: "Turbo did not morph the page") do
       evaluate_script("window.__nitroMorphCount") == 1
     end
 

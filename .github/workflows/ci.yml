@@ -57,11 +57,14 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
+      # One worker: parallel headed windows share the Xvfb pointer, and its
+      # enter/leave events reset :hover mid-test. See docs/browser_support.md.
       - name: Run Chrome system tests
         if: matrix.browser == 'chrome'
         env:
           BROWSER: ${{ matrix.browser }}
           HEADLESS: "false"
+          PARALLEL_WORKERS: "1"
           RAILS_ENV: test
         run: xvfb-run --auto-servernum bin/rails test:system
 
