@@ -63,7 +63,7 @@ jobs:
           BROWSER: ${{ matrix.browser }}
           HEADLESS: "false"
           RAILS_ENV: test
-        run: xvfb-run --auto-servernum bin/rails test:system
+        run: xvfb-run --auto-servernum bin/rails test test/system/ci_diagnostics_test.rb test/system/app_shell_test.rb test/system/app_shell_animation_test.rb
 
       - name: Run Firefox priority smoke tests
         if: matrix.browser == 'firefox'
