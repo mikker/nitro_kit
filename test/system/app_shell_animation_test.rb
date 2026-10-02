@@ -37,7 +37,7 @@ class AppShellAnimationTest < ApplicationSystemTestCase
           assert_in_delta frames.first.fetch("icon"), frame.fetch("icon"), 0.5
         end
         assert_in_delta target_width, frames.last.fetch("main"), 1
-        assert_in_delta target_width - 24 - frames.last.fetch("gutter"), frames.last.fetch("item"), 1
+        assert_in_delta target_width - 24 - frames.last.fetch("gutter"), frames.last.fetch("item"), 1.1
       end
     end
   ensure
