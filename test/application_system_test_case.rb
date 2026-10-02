@@ -33,19 +33,5 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     resize_viewport(width: 1440, height: 1200)
   end
 
-  teardown do
-    next unless BROWSER == :chrome && !passed?
-
-    media = evaluate_script(<<~JS)
-      ({ hover: matchMedia('(hover: hover)').matches, pointerFine: matchMedia('(pointer: fine)').matches,
-         anyHover: matchMedia('(any-hover: hover)').matches, anyPointerFine: matchMedia('(any-pointer: fine)').matches,
-         reducedMotion: matchMedia('(prefers-reduced-motion: reduce)').matches, maxTouchPoints: navigator.maxTouchPoints,
-         inner: [innerWidth, innerHeight], url: location.pathname })
-    JS
-    puts "DIAG #{name} pid=#{Process.pid} media=#{media.to_json}"
-  rescue StandardError => error
-    puts "DIAG #{name} unavailable: #{error.class}"
-  end
-
   Capybara.default_max_wait_time = 5
 end

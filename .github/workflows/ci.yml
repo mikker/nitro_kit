@@ -30,14 +30,11 @@ jobs:
         run: bin/rails test
 
   system:
-    name: Browser smoke (${{ matrix.browser }} ${{ matrix.lane }})
+    name: Browser smoke (${{ matrix.browser }})
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - { browser: chrome, lane: headed-parallel, headless: "false", workers: "4" }
-          - { browser: chrome, lane: headless-parallel, headless: "true", workers: "4" }
-          - { browser: chrome, lane: headed-serial, headless: "false", workers: "1" }
+        browser: [chrome, firefox]
     runs-on: ubuntu-latest
 
     steps:
@@ -60,12 +57,14 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
+      # One worker: parallel headed windows share the Xvfb pointer, and its
+      # enter/leave events reset :hover mid-test. See docs/browser_support.md.
       - name: Run Chrome system tests
         if: matrix.browser == 'chrome'
         env:
           BROWSER: ${{ matrix.browser }}
-          HEADLESS: ${{ matrix.headless }}
-          PARALLEL_WORKERS: ${{ matrix.workers }}
+          HEADLESS: "false"
+          PARALLEL_WORKERS: "1"
           RAILS_ENV: test
         run: xvfb-run --auto-servernum bin/rails test:system
 
