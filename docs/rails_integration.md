@@ -36,7 +36,9 @@ Load Nitro Kit before application styles:
 ```
 
 For third-party base CSS, Tailwind, appearance setup, and token overrides, use
-the canonical [stylesheet order](customization.md#stylesheet-order).
+the canonical [stylesheet order](customization.md#stylesheet-order). A
+`tailwindcss-rails` application can bundle Nitro Kit into its compiled Tailwind
+stylesheet through the engine entry described there.
 
 ## Stimulus
 

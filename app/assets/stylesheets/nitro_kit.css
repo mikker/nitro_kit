@@ -4,6 +4,14 @@
  */
 
 /* Source: src/stylesheets/nitro_kit/layers.css */
+/*
+ * Global cascade-layer order. Declared first so that, when an application also
+ * loads a compiled Tailwind CSS v4 stylesheet, Nitro Kit sits between
+ * Tailwind's base and components layers and Tailwind utilities still win.
+ * Without Tailwind the extra layers are simply unused.
+ */
+@layer properties, theme, base, nitro-kit, components, utilities;
+
 @layer nitro-kit.tokens,
   nitro-kit.reset,
   nitro-kit.base,
@@ -635,6 +643,45 @@
   }
 }
 
+/* Source: src/stylesheets/nitro_kit/tailwind.css */
+/*
+ * Tailwind CSS v4 theme aliases. Maps Nitro tokens onto the theme variables
+ * Tailwind utilities read, so bg-background, rounded-md, shadow-sm and friends
+ * share one palette with the components. Tailwind itself stays an application
+ * concern: Nitro Kit never compiles, configures, or depends on it.
+ */
+@layer nitro-kit.tokens {
+  :where(:root, [data-theme]) {
+    --font-sans: var(--nk-font-sans);
+    --font-mono: var(--nk-font-mono);
+    --spacing: var(--nk-space);
+
+    --color-background: var(--nk-color-canvas);
+    --color-foreground: var(--nk-color-foreground);
+    --color-muted: var(--nk-color-muted);
+    --color-muted-content: var(--nk-color-muted-foreground);
+    --color-border: var(--nk-color-border);
+    --color-ring: var(--nk-color-focus);
+    --color-primary: var(--nk-color-primary);
+    --color-primary-foreground: var(--nk-color-primary-foreground);
+    --color-destructive: var(--nk-color-destructive);
+    --color-destructive-content: var(--nk-color-destructive-content);
+    --color-destructive-foreground: var(--nk-color-destructive-foreground);
+
+    --radius-sm: var(--nk-radius-sm);
+    --radius-md: var(--nk-radius-md);
+    --radius-lg: var(--nk-radius-lg);
+    --radius-xl: var(--nk-radius-xl);
+
+    --shadow-sm: var(--nk-shadow-sm);
+    --shadow-md: var(--nk-shadow-md);
+    --shadow-lg: var(--nk-shadow-lg);
+
+    --default-transition-duration: var(--nk-duration-normal);
+    --default-transition-timing-function: var(--nk-ease);
+  }
+}
+
 /* Source: src/stylesheets/nitro_kit/reset.css */
 /* Nitro Kit ships its own full-page preflight. It lives in the
    `nitro-kit.reset` cascade layer, so unlayered application CSS always wins,
@@ -754,7 +801,7 @@
   }
 
   :where(:disabled),
-  ::file-selector-button:disabled {
+  :disabled::file-selector-button {
     cursor: default;
   }
 

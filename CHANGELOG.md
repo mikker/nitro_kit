@@ -1,5 +1,34 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Ship `app/assets/tailwind/nitro_kit/engine.css` for `tailwindcss-rails`
+  engine support, so a Tailwind CSS v4 application can `@import
+"../builds/tailwind/nitro_kit"` and load Nitro Kit through its single
+  compiled `tailwind` stylesheet. The engine keeps that entry out of the asset
+  pipeline, and `nitro_kit:doctor` and the installer expect only `tailwind`
+  when the import is present.
+
+### Changed
+
+- Fold the Tailwind CSS v4 adapter into `nitro_kit.css`. The distribution
+  stylesheet now opens with the global cascade-layer order and carries the
+  Tailwind theme aliases from `src/stylesheets/nitro_kit/tailwind.css`, so a
+  Tailwind application links `nitro_kit` then `tailwind` and nothing else.
+
+### Fixed
+
+- Replace the invalid `::file-selector-button:disabled` reset selector with
+  `:disabled::file-selector-button`, which Lightning CSS otherwise warns about
+  when the stylesheet goes through a Tailwind build.
+
+### Removed
+
+- The separate `nitro_kit-tailwind-v4.css` asset. Remove it from the layout's
+  `stylesheet_link_tag`; `nitro_kit:doctor` flags a leftover link.
+
 ## 2.0.0.beta.2
 
 ### Added
@@ -8,7 +37,7 @@
   stop hand-rolling headers and footers. `actions` inside a `header` trail the
   title and description; inside a `footer` they push to the end.
 - Add Card `size: :sm | :md | :lg` density and `variant: :default | :muted |
-  :outline` surfaces, emitted as owned `data-size` and `data-variant`
+:outline` surfaces, emitted as owned `data-size` and `data-variant`
   attributes. Sizes coordinate padding, part gaps, corners, and title size.
 - Add explicit `nitro_kit:eject COMPONENT` source-level customization, with
   isolated Ruby/CSS/Stimulus dependencies, version provenance, and safe whole-snapshot

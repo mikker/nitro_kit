@@ -11,10 +11,9 @@ Nitro Kit owns component Ruby, markup, behavior, and default CSS. Applications n
 Load browser styles in this order:
 
 1. Optional third-party base styles, such as Lexxy.
-2. The optional `nitro_kit-tailwind-v4` adapter.
-3. The generated `nitro_kit` distribution stylesheet.
-4. The application's compiled Tailwind CSS, when present.
-5. Application styles, including Nitro token overrides.
+2. The generated `nitro_kit` distribution stylesheet.
+3. The application's compiled Tailwind CSS, when present.
+4. Application styles, including Nitro token overrides.
 
 `NitroKit::AppearanceBootstrap` precedes every entry in this list. The install
 generator applies this order when it can identify conventional layout entries
@@ -34,13 +33,34 @@ A Rails application without Tailwind can use:
 A Tailwind CSS v4 application can use:
 
 ```erb
-<%= stylesheet_link_tag \
-  "nitro_kit-tailwind-v4", \
-  "nitro_kit", \
-  "tailwind", \
-  "application", \
-  "data-turbo-track": "reload" %>
+<%= stylesheet_link_tag "nitro_kit", "tailwind", "application", "data-turbo-track": "reload" %>
 ```
+
+`nitro_kit.css` opens with the global cascade-layer order
+`properties, theme, base, nitro-kit, components, utilities` and aliases Nitro
+tokens onto Tailwind's theme variables, so it must load before the compiled
+Tailwind stylesheet. The separate `nitro_kit-tailwind-v4` adapter from earlier
+2.0 betas no longer exists; `nitro_kit:doctor` reports a leftover link.
+
+A Tailwind CSS v4 application using `tailwindcss-rails` can instead ship one
+stylesheet. Nitro Kit provides the engine entry `tailwindcss-rails` looks for,
+`app/assets/tailwind/nitro_kit/engine.css`, and `tailwindcss:build` or
+`tailwindcss:watch` generates `app/assets/builds/tailwind/nitro_kit.css` in the
+application. Import it before Tailwind in `app/assets/tailwind/application.css`:
+
+```css
+@import "../builds/tailwind/nitro_kit";
+@import "tailwindcss";
+```
+
+Then the layout loads only the compiled Tailwind stylesheet:
+
+```erb
+<%= stylesheet_link_tag "tailwind", "application", "data-turbo-track": "reload" %>
+```
+
+`nitro_kit:doctor` recognizes the import and reports a separate `nitro_kit`
+link as a duplicate.
 
 Keep overrides unlayered in application CSS and load them after Nitro Kit. Nitro's selectors use `:where()` inside named cascade layers, so an ordinary application rule can override a token without selector escalation or `!important`.
 
@@ -472,9 +492,9 @@ This registers Nitro's `controllers/nk/*` modules together with application cont
 For the resulting behavior when those modules are not registered, use the
 canonical no-JavaScript matrix in [`browser_support.md`](browser_support.md).
 
-## Optional Tailwind CSS v4 adapter
+## Tailwind CSS v4 theme aliases
 
-Nitro Kit does not require Tailwind, Tailwind configuration, or Tailwind Preflight — it ships its own global preflight in the `nitro-kit.reset` cascade layer, which unlayered application CSS always overrides. The optional `nitro_kit-tailwind-v4.css` asset only establishes compatible cascade-layer order and maps Nitro tokens to common Tailwind v4 theme variables, including background, foreground, primary, destructive, radii, shadows, fonts, spacing, and transition defaults.
+Nitro Kit does not require Tailwind, Tailwind configuration, or Tailwind Preflight — it ships its own global preflight in the `nitro-kit.reset` cascade layer, which unlayered application CSS always overrides. For applications that do compile Tailwind, `nitro_kit.css` establishes a compatible cascade-layer order and maps Nitro tokens to common Tailwind v4 theme variables, including background, foreground, primary, destructive, radii, shadows, fonts, spacing, and transition defaults. The aliases live in `src/stylesheets/nitro_kit/tailwind.css` inside the `nitro-kit.tokens` layer; without Tailwind they are inert custom properties.
 
 Tailwind remains compiled and configured by the application. An application can add further aliases in its Tailwind CSS source with the v4 CSS-first API:
 
@@ -488,7 +508,7 @@ Tailwind remains compiled and configured by the application. An application can 
 }
 ```
 
-Use `@theme inline` when a Tailwind theme variable references another custom property so generated utilities resolve the live Nitro value. The adapter does not make Tailwind a Nitro runtime dependency, configure source detection, generate utility classes, or permit Tailwind classes inside Nitro component APIs.
+Use `@theme inline` when a Tailwind theme variable references another custom property so generated utilities resolve the live Nitro value. The aliases do not make Tailwind a Nitro runtime dependency, configure source detection, generate utility classes, or permit Tailwind classes inside Nitro component APIs.
 
 ## Public token reference
 

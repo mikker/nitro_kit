@@ -330,7 +330,7 @@ Before JavaScript connects, `:root` follows `prefers-color-scheme`. Explicit `[d
 
 Customization tools may read, preview, and export documented public tokens. Model customizer state as an immutable, explicitly versioned value object with closed named choices and readable URL parameters; never serialize an opaque arbitrary-token blob. Exports use stable selector and declaration ordering, cover light, dark, and system fallback, and contain only documented public variables. Structural preview choices may emit copyable component-composition examples, but never component implementations. Customization tools must not expose private `--_nk-*` values, edit the generated distribution asset, generate component copies, or turn arbitrary CSS into a Nitro contract.
 
-The optional `nitro_kit-tailwind-v4.css` adapter is a separate asset. It may map Nitro values into Tailwind v4 theme variables, but Tailwind compilation, source detection, and utilities remain application concerns. Do not add Tailwind as a Nitro runtime dependency.
+`src/stylesheets/nitro_kit/tailwind.css` declares the global cascade-layer order and maps Nitro values into Tailwind v4 theme variables so a compiled Tailwind stylesheet composes with the distribution asset. Tailwind compilation, source detection, and utilities remain application concerns. Do not add Tailwind as a Nitro runtime dependency.
 
 ## Baseline
 

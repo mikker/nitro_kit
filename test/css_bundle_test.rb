@@ -8,8 +8,8 @@ class CssBundleTest < ActiveSupport::TestCase
   end
 
   test "foundation sources have deterministic order" do
-    assert_equal %w[ layers.css tokens.css reset.css ],
-      NitroKit::CssBundle.source_files.first(3).map { |path| path.basename.to_s }
+    assert_equal %w[ layers.css tokens.css tailwind.css reset.css ],
+      NitroKit::CssBundle.source_files.first(4).map { |path| path.basename.to_s }
   end
 
   test "stylesheet is independent from Tailwind processing" do
@@ -17,6 +17,10 @@ class CssBundleTest < ActiveSupport::TestCase
 
     refute_includes css, "@import \"tailwindcss\""
     refute_includes css, "@apply"
+    assert_equal "@layer properties, theme, base, nitro-kit, components, utilities;",
+      css.gsub(%r{/\*.*?\*/}m, "").scan(/^@layer[^;]*;/m).first,
+      "global cascade-layer order must be the first layer statement"
+    assert_includes css, "--color-background: var(--nk-color-canvas);"
     assert_includes css, "nitro-kit.tokens"
     assert_includes css, "[data-theme=\"dark\"]"
     assert_includes css, ":where([data-nk], [data-nk] [data-slot])"
@@ -121,6 +125,15 @@ class CssBundleTest < ActiveSupport::TestCase
     refute_includes css, "transition: all"
   end
 
+  test "tailwind engine entry imports the distribution stylesheet" do
+    assert_equal "nitro_kit", NitroKit::Engine.engine_name
+    entry = NitroKit::Engine.root.join("app/assets/tailwind/#{NitroKit::Engine.engine_name}/engine.css")
+    imports = entry.read.gsub(%r{/\*.*?\*/}m, "").scan(/@import\s+"([^"]+)"/).flatten
+
+    assert_equal %w[../../stylesheets/nitro_kit.css], imports
+    imports.each { |path| assert_predicate entry.dirname.join(path), :file? }
+  end
+
   test "gem package includes responsive layout sources and distribution assets" do
     specification = Gem::Specification.load(NitroKit::CssBundle::ROOT.join("nitro_kit.gemspec").to_s)
 
@@ -129,7 +142,9 @@ class CssBundleTest < ActiveSupport::TestCase
     assert_includes specification.files, "src/stylesheets/nitro_kit/components/flex.css"
     assert_includes specification.files, "src/stylesheets/nitro_kit/components/grid.css"
     assert_includes specification.files, "app/assets/stylesheets/nitro_kit.css"
-    assert_includes specification.files, "app/assets/stylesheets/nitro_kit-tailwind-v4.css"
+    refute_includes specification.files, "app/assets/stylesheets/nitro_kit-tailwind-v4.css"
+    assert_includes specification.files, "src/stylesheets/nitro_kit/tailwind.css"
+    assert_includes specification.files, "app/assets/tailwind/nitro_kit/engine.css"
     assert_includes specification.files, "app/components/nitro_kit/responsive_value.rb"
     assert_includes specification.files, "app/components/nitro_kit/flex.rb"
     assert_includes specification.files, "app/components/nitro_kit/grid.rb"

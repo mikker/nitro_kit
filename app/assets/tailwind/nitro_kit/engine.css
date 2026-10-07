@@ -1,0 +1,15 @@
+/*
+ * Nitro Kit entry point for tailwindcss-rails engine support.
+ *
+ * tailwindcss-rails writes app/assets/builds/tailwind/nitro_kit.css in the host
+ * application on every build or watch. Importing that file from the host's
+ * app/assets/tailwind/application.css bundles Nitro Kit into the single
+ * compiled Tailwind stylesheet:
+ *
+ *   @import "../builds/tailwind/nitro_kit";
+ *   @import "tailwindcss";
+ *
+ * Nitro Kit leads so its cascade-layer order and Tailwind theme aliases apply
+ * to the whole file, matching the stylesheet order in docs/customization.md.
+ */
+@import "../../stylesheets/nitro_kit.css";

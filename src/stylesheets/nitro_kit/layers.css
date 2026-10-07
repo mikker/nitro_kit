@@ -1,3 +1,11 @@
+/*
+ * Global cascade-layer order. Declared first so that, when an application also
+ * loads a compiled Tailwind CSS v4 stylesheet, Nitro Kit sits between
+ * Tailwind's base and components layers and Tailwind utilities still win.
+ * Without Tailwind the extra layers are simply unused.
+ */
+@layer properties, theme, base, nitro-kit, components, utilities;
+
 @layer nitro-kit.tokens,
   nitro-kit.reset,
   nitro-kit.base,

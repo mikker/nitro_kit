@@ -113,11 +113,74 @@ class InstallationTest < ActiveSupport::TestCase
 
       assert_includes installed, "<%= render NitroKit::AppearanceBootstrap.new %>"
       refute_includes installed, "content_security_policy_nonce"
-      assert_includes installed, '<%= stylesheet_link_tag "nitro_kit-tailwind-v4", "data-turbo-track": "reload" %>'
+      refute_includes installed, '"nitro_kit-tailwind-v4"'
       assert_includes installed, '<%= stylesheet_link_tag "nitro_kit", "data-turbo-track": "reload" %>'
       assert_includes installed, '<%= stylesheet_link_tag "tailwind", "application", "data-turbo-track": "reload", media: "all" %>'
-      assert_operator installed.index("NitroKit::AppearanceBootstrap"), :<, installed.index('"nitro_kit-tailwind-v4"')
+      assert_operator installed.index("NitroKit::AppearanceBootstrap"), :<, installed.index('"nitro_kit"')
       assert_equal :unchanged, installation.install.fetch("app/views/layouts/application.html.erb")
+    end
+  end
+
+  test "doctor flags the retired Tailwind adapter and the installer leaves the call intact" do
+    Dir.mktmpdir do |directory|
+      root = Pathname.new(directory)
+      root.join("Gemfile").write("gem \"tailwindcss-rails\"\n")
+      write_erb_layout(root, <<~ERB)
+        <%= render NitroKit::AppearanceBootstrap.new %>
+        <%= stylesheet_link_tag "nitro_kit-tailwind-v4", "nitro_kit", "tailwind", "application", "data-turbo-track": "reload" %>
+      ERB
+
+      installation = NitroKit::Installation.new(root)
+      assert_equal :unchanged, installation.install.fetch("app/views/layouts/application.html.erb")
+
+      stale = installation.checks.index_by(&:label).fetch("Stylesheet and appearance setup")
+      assert_equal :fail, stale.status
+      assert_includes stale.detail, 'remove stylesheet "nitro_kit-tailwind-v4"; nitro_kit now includes the Tailwind v4 layer order and theme aliases'
+      assert_includes stale.detail, %(installer left the layout unchanged: drop "nitro_kit-tailwind-v4" from its stylesheet call)
+
+      write_erb_layout(root, <<~ERB)
+        <%= render NitroKit::AppearanceBootstrap.new %>
+        <%= stylesheet_link_tag "nitro_kit", "tailwind", "application", "data-turbo-track": "reload" %>
+      ERB
+      assert_equal :pass, NitroKit::Installation.new(root).checks.index_by(&:label).fetch("Stylesheet and appearance setup").status
+    end
+  end
+
+  test "doctor and installer expect only tailwind when the Tailwind build bundles Nitro Kit" do
+    Dir.mktmpdir do |directory|
+      root = Pathname.new(directory)
+      root.join("Gemfile").write("gem \"tailwindcss-rails\"\n")
+      write_file(root, "app/assets/tailwind/application.css", <<~CSS)
+        @import "../builds/tailwind/nitro_kit";
+        @import "tailwindcss";
+      CSS
+      write_erb_layout(root, <<~ERB)
+        <%= render NitroKit::AppearanceBootstrap.new %>
+        <%= stylesheet_link_tag "tailwind", "application", "data-turbo-track": "reload" %>
+      ERB
+
+      bundled = NitroKit::Installation.new(root).checks.index_by(&:label).fetch("Stylesheet and appearance setup")
+      assert_equal :pass, bundled.status
+      assert_includes bundled.detail, "AppearanceBootstrap → tailwind → application"
+
+      write_erb_layout(root, <<~ERB)
+        <%= render NitroKit::AppearanceBootstrap.new %>
+        <%= stylesheet_link_tag "nitro_kit-tailwind-v4", "nitro_kit", "tailwind", "application", "data-turbo-track": "reload" %>
+      ERB
+      duplicated = NitroKit::Installation.new(root).checks.index_by(&:label).fetch("Stylesheet and appearance setup")
+      assert_equal :fail, duplicated.status
+      assert_includes duplicated.detail, 'remove stylesheet "nitro_kit"; app/assets/tailwind/application.css already bundles it'
+      assert_includes duplicated.detail, 'remove stylesheet "nitro_kit-tailwind-v4"; nitro_kit now includes'
+
+      write_erb_layout(root, '<%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>')
+      installation = NitroKit::Installation.new(root)
+      installation.install
+      installed = root.join("app/views/layouts/application.html.erb").read
+
+      assert_includes installed, '<%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>'
+      refute_includes installed, '"nitro_kit"'
+      refute_includes installed, '"nitro_kit-tailwind-v4"'
+      assert_equal :pass, installation.checks.index_by(&:label).fetch("Stylesheet and appearance setup").status
     end
   end
 

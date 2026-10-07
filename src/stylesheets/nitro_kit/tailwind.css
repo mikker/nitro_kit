@@ -1,10 +1,9 @@
 /*
- * Nitro Kit Tailwind CSS v4 adapter.
- * Load this before both Nitro Kit and compiled Tailwind stylesheets.
+ * Tailwind CSS v4 theme aliases. Maps Nitro tokens onto the theme variables
+ * Tailwind utilities read, so bg-background, rounded-md, shadow-sm and friends
+ * share one palette with the components. Tailwind itself stays an application
+ * concern: Nitro Kit never compiles, configures, or depends on it.
  */
-
-@layer properties, theme, base, nitro-kit, components, utilities;
-
 @layer nitro-kit.tokens {
   :where(:root, [data-theme]) {
     --font-sans: var(--nk-font-sans);

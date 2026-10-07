@@ -116,7 +116,7 @@
   }
 
   :where(:disabled),
-  ::file-selector-button:disabled {
+  :disabled::file-selector-button {
     cursor: default;
   }
 

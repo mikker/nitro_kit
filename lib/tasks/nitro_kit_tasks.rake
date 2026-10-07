@@ -9,7 +9,7 @@ module NitroKit
     ROOT = Pathname.new(File.expand_path("../..", __dir__))
     SOURCE_ROOT = ROOT.join("src/stylesheets/nitro_kit")
     OUTPUT = ROOT.join("app/assets/stylesheets/nitro_kit.css")
-    FOUNDATION_SOURCES = %w[ layers.css tokens.css reset.css ].freeze
+    FOUNDATION_SOURCES = %w[ layers.css tokens.css tailwind.css reset.css ].freeze
     BANNER = <<~CSS.freeze
       /*
        * Nitro Kit 2.0

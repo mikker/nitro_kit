@@ -9,9 +9,13 @@ module NitroKit
     ROOT = Pathname.new(File.expand_path("../..", __dir__))
     SKILLS = %w[nitro-kit-hotwire nitro-kit-rails nitro-kit-ui].freeze
     SKILL_ROOTS = [ ".agents/skills", ".claude/skills" ].freeze
+    # nitro_kit-tailwind-v4 is the beta-era adapter that nitro_kit.css absorbed;
+    # it stays managed so doctor flags a leftover link instead of ignoring it.
     MANAGED_STYLESHEETS = %w[
       lexxy nitro_kit-tailwind-v4 nitro_kit tailwind application
     ].freeze
+    TAILWIND_ENTRY = "app/assets/tailwind/application.css"
+    TAILWIND_BUNDLE_IMPORT = %r{@import\s+["'](?:\.\./)+builds/tailwind/nitro_kit(?:\.css)?["']}
     AGENTS_START = "<!-- nitro-kit:start -->"
     AGENTS_END = "<!-- nitro-kit:end -->"
     AGENTS_BLOCK = <<~MARKDOWN.freeze
@@ -217,8 +221,12 @@ module NitroKit
           errors << "installer left the layout unchanged: #{edit_error}"
         end
 
-        if assets.include?("nitro_kit-tailwind-v4") && !expected.include?("tailwind")
-          errors << "remove nitro_kit-tailwind-v4 or load compiled Tailwind after nitro_kit"
+        if assets.include?("nitro_kit-tailwind-v4")
+          errors << "remove stylesheet \"nitro_kit-tailwind-v4\"; nitro_kit now includes the Tailwind v4 layer order and theme aliases"
+        end
+
+        if tailwind_bundles_nitro_kit? && assets.include?("nitro_kit")
+          errors << "remove stylesheet \"nitro_kit\"; #{TAILWIND_ENTRY} already bundles it"
         end
 
         bootstrap_position = analysis.bootstraps.first&.range&.begin
@@ -569,17 +577,20 @@ module NitroKit
         assets = managed_stylesheet_assets(analysis) - [ "nitro_kit-tailwind-v4" ]
         assets << "lexxy" if dependency?("lexxy")
         assets << "tailwind" if tailwind?(assets)
-        assets << "nitro_kit"
+        if tailwind_bundles_nitro_kit?
+          assets -= [ "nitro_kit" ]
+          assets << "tailwind"
+        else
+          assets << "nitro_kit"
+        end
         assets << "application" if assets.include?("application") || application_stylesheet_asset?
-        assets << "nitro_kit-tailwind-v4" if assets.include?("tailwind")
         ordered_stylesheets(assets.uniq)
       end
 
       def ordered_stylesheets(assets)
-        vendor = assets - %w[nitro_kit-tailwind-v4 nitro_kit tailwind application]
+        vendor = assets - %w[nitro_kit tailwind application]
         [
           *vendor,
-          *(%w[nitro_kit-tailwind-v4] & assets),
           *(%w[nitro_kit] & assets),
           *(%w[tailwind] & assets),
           *(%w[application] & assets)
@@ -597,6 +608,9 @@ module NitroKit
 
         existing = managed_stylesheet_assets(analysis)
         return "duplicate canonical stylesheet assets require manual review" if existing.uniq != existing
+        if existing.include?("nitro_kit-tailwind-v4")
+          return "drop \"nitro_kit-tailwind-v4\" from its stylesheet call without changing the call's options"
+        end
         unless existing == expected.select { existing.include?(_1) }
           return "existing canonical stylesheets are misordered; reorder their intact calls manually"
         end
@@ -657,7 +671,15 @@ module NitroKit
       end
 
       def tailwind?(assets)
-        assets.include?("tailwind") || dependency?("tailwindcss-rails") || application_root.join("app/assets/tailwind/application.css").file?
+        assets.include?("tailwind") || dependency?("tailwindcss-rails") || application_root.join(TAILWIND_ENTRY).file?
+      end
+
+      # True when the application's Tailwind source imports the engine entry
+      # that tailwindcss-rails generates from app/assets/tailwind/nitro_kit/engine.css,
+      # so the compiled "tailwind" stylesheet already contains Nitro Kit.
+      def tailwind_bundles_nitro_kit?
+        entry = application_root.join(TAILWIND_ENTRY)
+        entry.file? && entry.read.match?(TAILWIND_BUNDLE_IMPORT)
       end
 
       def application_stylesheet_asset?
