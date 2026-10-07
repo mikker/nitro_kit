@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 2.0.0.beta.3
 
 ### Added
 
@@ -28,6 +28,18 @@
 
 - The separate `nitro_kit-tailwind-v4.css` asset. Remove it from the layout's
   `stylesheet_link_tag`; `nitro_kit:doctor` flags a leftover link.
+
+### Upgrade notes
+
+- Pin `2.0.0.beta.3` explicitly. Beta releases may still change APIs; review
+  release notes before updating.
+- Delete `"nitro_kit-tailwind-v4"` from every `stylesheet_link_tag`. The
+  `nitro_kit` stylesheet now provides the cascade-layer order and Tailwind
+  theme aliases itself, and must load before the compiled `tailwind`
+  stylesheet. Run `nitro_kit:doctor` to confirm the layout.
+- A `tailwindcss-rails` application can optionally collapse to one stylesheet:
+  add `@import "../builds/tailwind/nitro_kit";` above `@import "tailwindcss";`
+  in `app/assets/tailwind/application.css` and link only `tailwind`.
 
 ## 2.0.0.beta.2
 

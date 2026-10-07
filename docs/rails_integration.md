@@ -12,7 +12,7 @@ There are no `nk_form_with` helpers or general ERB component bridge.
 Pin the current prerelease:
 
 ```ruby
-gem "nitro_kit", "2.0.0.beta.2"
+gem "nitro_kit", "2.0.0.beta.3"
 ```
 
 Use the released gem and commit `Gemfile` with `Gemfile.lock`. Before upgrading,
