@@ -408,7 +408,12 @@
     --nk-palette-rose: var(--nk-rose-400);
   }
 
-  :where(:root, [data-theme="light"]) {
+  /* Appearance. `data-theme="light"` and `data-theme="dark"` select a palette
+     directly, which is what AppearanceBootstrap writes. A host whose themes use
+     other names, such as daisyUI's `data-theme="night"`, declares the scheme
+     with `data-nk-scheme="light"` or `data-nk-scheme="dark"` on the same
+     element. When both attributes are present, `data-nk-scheme` decides. */
+  :where(:root, [data-theme="light"], [data-nk-scheme="light"]) {
     color-scheme: light;
 
     --nk-color-canvas: color-mix(
@@ -464,7 +469,7 @@
   }
 
   @media (prefers-color-scheme: dark) {
-    :where(:root:not([data-theme])) {
+    :where(:root:not([data-theme], [data-nk-scheme])) {
       color-scheme: dark;
 
       --nk-color-canvas: var(--nk-zinc-950);
@@ -520,7 +525,7 @@
     }
   }
 
-  :where([data-theme="dark"]) {
+  :where([data-theme="dark"]:not([data-nk-scheme]), [data-nk-scheme="dark"]) {
     color-scheme: dark;
 
     --nk-color-canvas: var(--nk-zinc-950);
@@ -575,7 +580,7 @@
     --nk-palette-rose-content: var(--nk-rose-200);
   }
 
-  :where(:root, [data-theme]) {
+  :where(:root, [data-theme], [data-nk-scheme]) {
     --nk-button-default-background: light-dark(
       var(--nk-color-surface),
       var(--nk-color-border)

@@ -40,12 +40,15 @@
   /* Only the tint strength changes with appearance. The colours themselves come
      from the `--nk-palette-*` roles, whose `-content` half already resolves per
      appearance. */
-  :where([data-theme="dark"] [data-nk="badge"]) {
+  :where(
+    :is([data-theme="dark"]:not([data-nk-scheme]), [data-nk-scheme="dark"])
+      [data-nk="badge"]
+  ) {
     --_nk-badge-tint-strength: 40%;
   }
 
   @media (prefers-color-scheme: dark) {
-    :where(:root:not([data-theme]) [data-nk="badge"]) {
+    :where(:root:not([data-theme], [data-nk-scheme]) [data-nk="badge"]) {
       --_nk-badge-tint-strength: 40%;
     }
   }

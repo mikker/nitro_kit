@@ -3,9 +3,13 @@
  * Tailwind utilities read, so bg-background, rounded-md, shadow-sm and friends
  * share one palette with the components. Tailwind itself stays an application
  * concern: Nitro Kit never compiles, configures, or depends on it.
+ *
+ * The aliases have their own `nitro-kit.aliases` layer, ordered before the
+ * Nitro tokens, so an application can drop one alias with `revert-layer`
+ * declared inside that layer and fall back to its own theme's value.
  */
-@layer nitro-kit.tokens {
-  :where(:root, [data-theme]) {
+@layer nitro-kit.aliases {
+  :where(:root, [data-theme], [data-nk-scheme]) {
     --font-sans: var(--nk-font-sans);
     --font-mono: var(--nk-font-mono);
     --spacing: var(--nk-space);

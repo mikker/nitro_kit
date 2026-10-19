@@ -161,7 +161,7 @@
 
   @media (prefers-color-scheme: dark) {
     :where(
-        :root:not([data-theme])
+        :root:not([data-theme], [data-nk-scheme])
           [data-nk="button"]:is(
             [data-variant="primary"],
             [data-variant="destructive"]
@@ -171,17 +171,24 @@
     }
 
     :where(
-        :root:not([data-theme]) [data-nk="button"][data-variant="destructive"]
+        :root:not([data-theme], [data-nk-scheme])
+          [data-nk="button"][data-variant="destructive"]
       ) {
       --_nk-button-shadow: none;
     }
   }
 
-  :where([data-theme="dark"] [data-nk="button"][data-variant="primary"]) {
+  :where(
+      :is([data-theme="dark"]:not([data-nk-scheme]), [data-nk-scheme="dark"])
+        [data-nk="button"][data-variant="primary"]
+    ) {
     --_nk-button-border-width: 0;
   }
 
-  :where([data-theme="dark"] [data-nk="button"][data-variant="destructive"]) {
+  :where(
+      :is([data-theme="dark"]:not([data-nk-scheme]), [data-nk-scheme="dark"])
+        [data-nk="button"][data-variant="destructive"]
+    ) {
     --_nk-button-shadow: none;
   }
 }
@@ -256,7 +263,7 @@
      destructive control as disabled. */
   @media (prefers-color-scheme: dark) {
     :where(
-        :root:not([data-theme])
+        :root:not([data-theme], [data-nk-scheme])
           [data-nk="button"][data-variant="destructive"]:is(
             :disabled,
             [aria-disabled="true"]
@@ -271,7 +278,7 @@
   }
 
   :where(
-      [data-theme="dark"]
+      :is([data-theme="dark"]:not([data-nk-scheme]), [data-nk-scheme="dark"])
         [data-nk="button"][data-variant="destructive"]:is(
           :disabled,
           [aria-disabled="true"]

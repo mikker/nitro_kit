@@ -213,6 +213,35 @@ script-src 'self' 'sha256-Vcime4euWSeYtHSfjYjqz/XhRyzMcLpn6Ip2LlaHleY='
 
 The value is also available as `NitroKit::AppearanceBootstrap::CSP_HASH`. The default preference is stored in a data attribute, so changing `default:` does not change the hash. Recheck the constant when upgrading because an intentional runtime change produces a new hash.
 
+## Named themes
+
+Nitro's palettes follow `data-theme="light"` and `data-theme="dark"`, the two
+values `AppearanceBootstrap` writes. An application that already owns
+`data-theme`, such as a daisyUI app with `night` and `lofi`, declares which
+palette each named theme uses with `data-nk-scheme` on the same element:
+
+```html
+<html data-theme="night" data-nk-scheme="dark">
+  <body>
+    <section data-theme="lofi" data-nk-scheme="light">…</section>
+  </body>
+</html>
+```
+
+`data-nk-scheme` accepts `light` or `dark`. When an element carries both
+attributes, `data-nk-scheme` decides, so `data-theme="dark"
+data-nk-scheme="light"` renders the light palette. A root with neither
+attribute follows `prefers-color-scheme`; a root with only an unrecognized
+`data-theme`, such as `night`, keeps the light palette, which is why the hint
+is required. The attribute also works on a subtree, exactly like `data-theme`.
+
+Set the hint wherever the application sets its theme name, server-rendered or
+in its own theme switcher. Do not combine a theme switcher that writes named
+themes with `AppearanceBootstrap`: the bootstrap owns `data-theme` on the root
+and overwrites it with `light` or `dark`. Application token overrides for a
+named theme select the scheme rather than the name, for example
+`[data-nk-scheme="dark"]` alongside `[data-theme="dark"]`.
+
 ## Choosing a theme
 
 Treat related tokens as a system:
@@ -225,6 +254,102 @@ Treat related tokens as a system:
 - Font changes normally set `--nk-font-sans`; set `--nk-font-mono`, text sizes, line heights, or weights only when the whole type system calls for it.
 
 Check foreground pairs and focus indicators for contrast in both appearances. The semantic names describe use, not a fixed hue: `destructive` can be a project-appropriate red, but it should remain recognizably destructive everywhere it appears.
+
+## Bridging an existing theme
+
+An application that already has a theme owner, such as daisyUI, can make Nitro
+read that theme instead of maintaining two palettes. This walkthrough bridges a
+daisyUI `night` theme. The same steps apply to any named theme.
+
+1. Mark the scheme. Without it, `night` renders Nitro's light palette, and
+   light-palette status text on a dark surface lands near 2:1 contrast.
+
+   ```html
+   <html data-theme="night" data-nk-scheme="dark">
+     …
+   </html>
+   ```
+
+2. Map the host's surface, text, and accent tokens onto Nitro's. Declare the
+   bridge unlayered, after Nitro Kit, on the element that carries the theme
+   name:
+
+   ```css
+   [data-theme="night"] {
+     --nk-color-canvas: var(--color-base-100);
+     --nk-color-surface: var(--color-base-200);
+     --nk-color-elevated: var(--color-base-300);
+     --nk-color-foreground: var(--color-base-content);
+     --nk-color-muted: var(--color-base-300);
+     --nk-color-muted-foreground: color-mix(
+       in oklab,
+       var(--color-base-content) 65%,
+       var(--color-base-100)
+     );
+     --nk-color-border: var(--color-base-300);
+     --nk-color-primary: var(--color-primary);
+     --nk-color-primary-foreground: var(--color-primary-content);
+     --nk-color-focus: var(--color-primary);
+   }
+   ```
+
+   Bridging `--color-primary` this way meets Nitro's reverse alias, which sets
+   `--color-primary` from `--nk-color-primary`. Opt out of that alias, as shown
+   in [Tailwind CSS v4 theme aliases](#tailwind-css-v4-theme-aliases), or the
+   two declarations form a cycle and both become invalid.
+
+3. Map status colors. Fills (`--nk-color-{family}`) can take the host's status
+   colors directly. Status text is different: daisyUI's `--color-success` is a
+   fill meant for `--color-success-content` text on top of it, while Nitro's
+   `-content` tokens are text drawn on the page surface. Do not map
+   `--color-success-content` to `--nk-color-success-content`; that is the
+   fill's foreground, usually near-black, and it disappears on a dark surface.
+   Mix the host's status color toward the host's text color instead:
+
+   ```css
+   [data-theme="night"] {
+     --nk-color-success: var(--color-success);
+     --nk-color-warning: var(--color-warning);
+     --nk-color-destructive: var(--color-error);
+     --nk-color-destructive-foreground: var(--color-error-content);
+
+     --nk-color-success-content: color-mix(
+       in oklab,
+       var(--color-success) 60%,
+       var(--color-base-content)
+     );
+     --nk-color-warning-content: color-mix(
+       in oklab,
+       var(--color-warning) 60%,
+       var(--color-base-content)
+     );
+     --nk-color-destructive-content: color-mix(
+       in oklab,
+       var(--color-error) 60%,
+       var(--color-base-content)
+     );
+
+     --nk-palette-success: var(--color-success);
+     --nk-palette-success-content: var(--nk-color-success-content);
+     --nk-palette-warning: var(--color-warning);
+     --nk-palette-warning-content: var(--nk-color-warning-content);
+     --nk-palette-destructive: var(--color-error);
+     --nk-palette-destructive-content: var(--nk-color-destructive-content);
+   }
+   ```
+
+   `--nk-color-destructive-content` colors field errors; the
+   `--nk-palette-*-content` tokens color Badge, Alert, and Toast text over
+   their tinted surfaces. Repeat for `info` and `neutral` when the host has
+   matching colors.
+
+4. Check contrast in the rendered page, not in the token file. Render a field
+   error, then a success, warning, and destructive Badge and Alert, on the
+   canvas and inside a Card. In the browser inspector, pick each text element
+   and read the contrast ratio the color picker reports against its actual
+   background. Aim for at least 4.5:1 for text and 3:1 for focus rings and
+   icons. Adjust the mix percentage per theme until every pair passes, then
+   repeat for each named theme the application ships.
 
 ## Theme customizer
 
@@ -494,7 +619,19 @@ canonical no-JavaScript matrix in [`browser_support.md`](browser_support.md).
 
 ## Tailwind CSS v4 theme aliases
 
-Nitro Kit does not require Tailwind, Tailwind configuration, or Tailwind Preflight — it ships its own global preflight in the `nitro-kit.reset` cascade layer, which unlayered application CSS always overrides. For applications that do compile Tailwind, `nitro_kit.css` establishes a compatible cascade-layer order and maps Nitro tokens to common Tailwind v4 theme variables, including background, foreground, primary, destructive, radii, shadows, fonts, spacing, and transition defaults. The aliases live in `src/stylesheets/nitro_kit/tailwind.css` inside the `nitro-kit.tokens` layer; without Tailwind they are inert custom properties.
+Nitro Kit does not require Tailwind, Tailwind configuration, or Tailwind Preflight — it ships its own global preflight in the `nitro-kit.reset` cascade layer, which unlayered application CSS always overrides. For applications that do compile Tailwind, `nitro_kit.css` establishes a compatible cascade-layer order and maps Nitro tokens to common Tailwind v4 theme variables, including background, foreground, primary, destructive, radii, shadows, fonts, spacing, and transition defaults. The aliases live in `src/stylesheets/nitro_kit/tailwind.css` inside their own `nitro-kit.aliases` layer, on `:root` and on every element carrying `data-theme` or `data-nk-scheme`; without Tailwind they are inert custom properties.
+
+The aliases point from Tailwind to Nitro: `--color-primary` reads `--nk-color-primary`. An application whose theme already defines one of those Tailwind variables, and which bridges Nitro onto it, must drop that alias. Declare `revert-layer` for the alias inside the `nitro-kit.aliases` layer:
+
+```css
+@layer nitro-kit.aliases {
+  [data-theme="night"] {
+    --color-primary: revert-layer;
+  }
+}
+```
+
+`revert-layer` discards Nitro's alias for that property only, so the value falls back to whatever earlier layer defined it, such as Tailwind's `theme` layer or a daisyUI theme in `base`, and every other alias keeps working. List one declaration per alias the application's theme owns; in the [bridging walkthrough](#bridging-an-existing-theme) that is only `--color-primary`. It has to sit inside `nitro-kit.aliases`: an unlayered `revert-layer` reverts to the layered cascade, which includes the alias, and the cycle remains. The selector needs at least the specificity of one attribute, which `[data-theme="night"]` or `:root` already has.
 
 Tailwind remains compiled and configured by the application. An application can add further aliases in its Tailwind CSS source with the v4 CSS-first API:
 

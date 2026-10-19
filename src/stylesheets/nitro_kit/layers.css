@@ -6,7 +6,8 @@
  */
 @layer properties, theme, base, nitro-kit, components, utilities;
 
-@layer nitro-kit.tokens,
+@layer nitro-kit.aliases,
+  nitro-kit.tokens,
   nitro-kit.reset,
   nitro-kit.base,
   nitro-kit.variant,

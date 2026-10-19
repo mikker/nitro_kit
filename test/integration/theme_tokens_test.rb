@@ -43,7 +43,7 @@ class ThemeTokensTest < ActionDispatch::IntegrationTest
   test "public tokens are themeable because they are declared without escalation" do
     refute_includes TOKENS_CSS, "!important"
     assert_includes TOKENS_CSS, ":where(:root)"
-    assert_includes TOKENS_CSS, ':where(:root, [data-theme="light"])'
+    assert_includes TOKENS_CSS, ':where(:root, [data-theme="light"], [data-nk-scheme="light"])'
   end
 
   test "the gallery loads Nitro Kit before its own styles so overrides win" do

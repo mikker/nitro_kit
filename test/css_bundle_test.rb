@@ -92,12 +92,12 @@ class CssBundleTest < ActiveSupport::TestCase
 
   test "theme tokens follow the system only when no explicit theme is present" do
     source = NitroKit::CssBundle::ROOT.join("src/stylesheets/nitro_kit/tokens.css").read
-    system_dark = theme_declarations(source, ":where(:root:not([data-theme]))")
-    explicit_dark = theme_declarations(source, ':where([data-theme="dark"])')
-    explicit_light = theme_declarations(source, ':where(:root, [data-theme="light"])')
+    system_dark = theme_declarations(source, ":where(:root:not([data-theme], [data-nk-scheme]))")
+    explicit_dark = theme_declarations(source, ':where([data-theme="dark"]:not([data-nk-scheme]), [data-nk-scheme="dark"])')
+    explicit_light = theme_declarations(source, ':where(:root, [data-theme="light"], [data-nk-scheme="light"])')
 
     assert_includes source, "@media (prefers-color-scheme: dark)"
-    assert_includes source, ':where(:root, [data-theme="light"])'
+    assert_includes source, ':where(:root, [data-theme="light"], [data-nk-scheme="light"])'
     assert_predicate system_dark, :any?
     assert_equal explicit_light.keys, explicit_dark.keys
     assert_equal explicit_dark, system_dark
