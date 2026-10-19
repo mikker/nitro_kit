@@ -18,6 +18,7 @@ Read this guide from that directory. The installed
 | Task                                               | Read                                                         |
 | -------------------------------------------------- | ------------------------------------------------------------ |
 | Rails models, routes, CRUD, and tests              | [Rails conventions](rails_conventions.md)                    |
+| Any page composition (run on every page)           | [Composition checklist](patterns/composition.md)             |
 | Authentication, teams, shell, and settings         | [Application foundation](patterns/application_foundation.md) |
 | Inset canvas and shell spacing                     | [Inset workspace](patterns/inset_workspace.md)               |
 | Complete product CRUD                              | [CRUD resource](patterns/crud_resource.md)                   |
@@ -85,6 +86,9 @@ explicitly authorized.
   removal or invitation revocation. See the destructive-action pattern.
 - Let the shell own gutters and each page choose content width: full width for
   tables, a centered Container for bounded forms or reading content.
+- Before finishing any page, run the [composition checklist](patterns/composition.md):
+  one gutter owner, one primary action and no row-level destructive buttons,
+  populated/empty/invalid/narrow states, one title scale.
 - Keep product policy, records, routes, authorization, queries, DOM IDs, and
   server responses in application code.
 - Do not copy Nitro source, add `nk_*` helpers, mutate Nitro controllers, or
@@ -93,6 +97,30 @@ explicitly authorized.
 
 Follow the canonical [browser support policy](browser_support.md) for
 JavaScript and fallback guarantees.
+
+## Adopt Nitro Kit next to an existing design system
+
+When the application already has a design system, split ownership by layer
+instead of letting two systems both style the page:
+
+| Layer                | Owner                     | Decisions                                                                                    |
+| -------------------- | ------------------------- | -------------------------------------------------------------------------------------------- |
+| Theme tokens         | Host design system        | Brand color, neutrals, radius, font family, focus ring, density, mapped onto `--nk-*` tokens |
+| Components           | Nitro Kit                 | Control geometry, states, accessibility, and behavior of every Nitro component               |
+| Layout and page type | Host layout (or AppShell) | Navigation frame, the content gutter, content widths, and the title scale                    |
+
+- Map the host's semantic tokens onto documented `--nk-*` properties once, in
+  application CSS, rather than restyling individual components. See
+  [Customization](customization.md).
+- Exactly one system owns the gutter and exactly one owns the title scale. If
+  the host layout already pads its main region and styles its page `h1`, keep
+  that and do not add `AppShell` or a `Toolbar` title on top; if Nitro's
+  `AppShell` frames the page, remove the host's outer padding and heading styles
+  from those routes.
+- Do not mix host buttons and Nitro Buttons in the same action row. Convert the
+  row, or leave it host-owned.
+- Compare a converted route with an unconverted neighbor at wide and narrow
+  widths; title size, gutter, and primary-action color should match.
 
 ## Install project-local guidance
 

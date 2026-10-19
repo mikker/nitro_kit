@@ -66,6 +66,11 @@ Entity`. Public controllers query only publicly visible records.
 
 ## Acceptance checklist
 
+Run the [page composition checklist](composition.md) on index, form, and
+detail routes. In particular, index rows carry plain View or Edit actions;
+permanent deletion lives in the edit route's `DangerZone`, and
+destructive button treatment never appears in index rows.
+
 Test tenant isolation, authorization, public visibility, lifecycle resources,
 pagination, `303` redirects, and `422` validation. Protect the high-level
 composition: one title, one primary action, the correct form association,

@@ -69,6 +69,18 @@ If the gem is not installed, say that the skill requires Nitro Kit and follow th
    `docs/patterns/application_foundation.md`. Put Settings after an
    `AppNavigation` spacer and use `SettingsLayout` with plain `SettingsSection`
    regions instead of a stack of Cards.
+10. In an application with an existing design system, read "Adopt Nitro Kit
+    next to an existing design system" in `docs/agent_guide.md`: host tokens
+    map onto `--nk-*`, Nitro owns components, and exactly one system owns the
+    gutter and the title scale.
+
+## Check the composition
+
+Before finishing any page, including one adapted from a catalog pattern, run
+`NITRO_KIT_ROOT/docs/patterns/composition.md`: exactly one element owns the
+page gutter; one primary action, with destructive buttons kept off table rows
+and reserved for an edit route's DangerZone and confirming submits; populated, empty, invalid, and 390px
+states inspected; one `h1` at the same scale as neighboring routes.
 
 ## Preserve the boundary
 

@@ -85,6 +85,11 @@ ordinary Rails flash and `303 See Other` redirects. Use the dedicated
 
 ## Acceptance checklist
 
+Run the [page composition checklist](composition.md) on every route: one
+gutter owner, one primary action with destructive actions kept out of
+row-level prominence, populated/empty/invalid/narrow states, and one title
+scale. Then verify the foundation itself:
+
 - Signup or sign-in selects a membership and team.
 - Cross-team records cannot be loaded.
 - Owner, administrator, and member policy differs where intended.
