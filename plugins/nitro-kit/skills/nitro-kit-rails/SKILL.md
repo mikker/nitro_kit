@@ -23,6 +23,9 @@ established application outside the requested scope.
 8. Read the matching Hotwire recipe before implementing an interaction.
 9. Read `NITRO_KIT_ROOT/docs/browser_support.md` before claiming an
    interaction works without JavaScript.
+10. In a jsbundling-rails application, read the Bundlers section of
+    `NITRO_KIT_ROOT/docs/rails_integration.md`. Before wrapping Nitro
+    components in ERB `cache` blocks, read its Fragment caching section.
 
 ## Discover optional catalog guidance
 
