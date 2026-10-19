@@ -188,6 +188,157 @@ class ComboboxTest < ActiveSupport::TestCase
     assert_nil plain_option["aria-label"]
   end
 
+  test "a stale value names the recovery instead of rendering a missing option" do
+    error = assert_raises(ArgumentError) { render_combobox(value: "deleted") }
+
+    assert_match(/does not match a declared option/, error.message)
+    assert_match(/pass value: nil or add the stale record to options:/, error.message)
+  end
+
+  test "remote multiple mode renders chips backed by Rails array fields" do
+    node = render_remote(
+      multiple: true,
+      selected: [
+        NitroKit::Choice.new(label: "Bug", value: 1),
+        { label: "Performance", value: 7 }
+      ]
+    )
+    selections = node.at_css("[data-slot='combobox-selections']")
+    chips = selections.css("> [data-slot='combobox-selection']")
+    listbox = node.at_css("[data-slot='combobox-listbox']")
+    input = node.at_css("[data-slot='combobox-input']")
+    template = node.at_css("template[data-slot='combobox-selection-template']")
+
+    assert_equal "combobox", node["data-nk"]
+    assert_equal "/labels", node["data-nk--combobox-src-value"]
+    assert node.key?("data-nk--combobox-multiple-value")
+    assert_equal I18n.t("nitro_kit.combobox.loading"), node["data-nk--combobox-loading-value"]
+    assert_equal I18n.t("nitro_kit.combobox.error"), node["data-nk--combobox-error-value"]
+    assert_equal "Remove %{label}", node["data-nk--combobox-remove-value"]
+
+    assert_nil node.at_css("[data-slot='combobox-native']")
+    assert_nil node.at_css("[data-slot='combobox-control']")["hidden"]
+    assert_nil input["name"]
+    assert_nil input["value"]
+    assert_equal "true", listbox["aria-multiselectable"]
+    assert listbox.key?("hidden")
+    assert_empty listbox.css("[data-slot='combobox-option']")
+    message = listbox.at_css("> [data-slot='combobox-message']")
+    assert_equal "presentation", message["role"]
+    assert_equal "idle", message["data-state"]
+    assert message.key?("hidden")
+
+    blank = node.at_css("> input[data-slot='combobox-blank']")
+    assert_equal [ "hidden", "issue[label_ids][]", "" ], [ blank["type"], blank["name"], blank["value"] ]
+    assert_equal "labels-label", selections["aria-labelledby"]
+    assert_equal %w[1 7], chips.map { |chip| chip["data-value"] }
+    assert_equal %w[Bug Performance], chips.map { |chip| chip.at_css("[data-slot='combobox-selection-label']").text }
+    assert_equal(
+      [ [ "issue[label_ids][]", "1" ], [ "issue[label_ids][]", "7" ] ],
+      chips.map { |chip| chip.at_css("input[type='hidden']").then { [ _1["name"], _1["value"] ] } }
+    )
+    remove = chips.first.at_css("[data-slot='combobox-remove']")
+    assert_equal "button", remove["type"]
+    assert_equal "Remove Bug", remove["aria-label"]
+    assert_equal "nk--combobox#remove", remove["data-action"]
+    assert_equal "Remove %{label}", template.at_css("[data-slot='combobox-remove']")["aria-label"]
+    assert_empty node.css("[class], [style]")
+  end
+
+  test "remote names already ending in brackets are not doubled" do
+    node = render_remote(name: "issue[label_ids][]", multiple: true)
+
+    assert_equal "issue[label_ids][]", node.at_css("[data-slot='combobox-blank']")["name"]
+  end
+
+  test "remote single mode submits one hidden value and shows its label" do
+    node = render_remote(selected: [ { label: "Regression", value: 8 } ], required: true)
+    value = node.at_css("[data-slot='combobox-value']")
+
+    assert_nil node["data-nk--combobox-multiple-value"]
+    assert_nil node.at_css("[data-slot='combobox-selections']")
+    assert_nil node.at_css("[data-slot='combobox-blank']")
+    assert_equal "Regression", node.at_css("[data-slot='combobox-input']")["value"]
+    assert_equal [ "hidden", "labels-value", "issue[label_ids]", "8", "value" ],
+      [ value["type"], value["id"], value["name"], value["value"], value["data-nk--combobox-target"] ]
+    assert_nil node.at_css("[data-slot='combobox-listbox']")["aria-multiselectable"]
+
+    empty = render_remote
+    assert_equal "", empty.at_css("[data-slot='combobox-value']")["value"]
+  end
+
+  test "remote disabled mode disables the input, removals, and submitted fields" do
+    node = render_remote(multiple: true, selected: [ { label: "Bug", value: 1 } ], disabled: true)
+
+    assert node.at_css("[data-slot='combobox-input']").key?("disabled")
+    assert node.at_css("[data-slot='combobox-selections'] [data-slot='combobox-remove']").key?("disabled")
+    assert node.at_css("[data-slot='combobox-selections'] input[type='hidden']").key?("disabled")
+    assert node.at_css("[data-slot='combobox-blank']").key?("disabled")
+  end
+
+  test "remote and local options are explicit modes" do
+    assert_raises(ArgumentError) { render_remote(options: [ [ "Bug", 1 ] ]) }
+    assert_raises(ArgumentError) { render_remote(value: 1) }
+    assert_raises(ArgumentError) { render_remote(include_blank: false) }
+    assert_raises(ArgumentError) { render_remote(src: "") }
+    assert_raises(ArgumentError) { render_remote(multiple: :yes) }
+    assert_raises(ArgumentError) { render_remote(selected: { label: "Bug", value: 1 }) }
+    assert_raises(ArgumentError) { render_remote(selected: [ [ "Bug", 1 ] ]) }
+    assert_raises(ArgumentError) { render_remote(selected: [ { label: "Bug", value: 1 }, { label: "Design", value: 4 } ]) }
+    assert_raises(ArgumentError) do
+      render_remote(multiple: true, selected: [ { label: "Bug", value: 1 }, { label: "Bug again", value: "1" } ])
+    end
+    assert_raises(ArgumentError) { render_combobox(multiple: true) }
+    assert_raises(ArgumentError) { render_combobox(selected: [ { label: "Denmark", value: "dk" } ]) }
+    assert_raises(ArgumentError) { NitroKit::Combobox.new(id: "country", name: "country", label: "Country") }
+  end
+
+  test "results render options and actions in the listbox contract" do
+    html = NitroKit::Combobox::Results.new(id: "labels", data: { tracking: "labels" }).call do |results|
+      results.option("Bug", value: 1, description: "Something is not working")
+      results.option("Archived", value: 2, disabled: true)
+      results.action("Create “Bugfix”", url: "/labels", params: { "label[name]": "Bugfix" })
+    end
+    root = Nokogiri::HTML.fragment(html).first_element_child
+    option, disabled, action = root.css("> li")
+
+    assert_equal "ul", root.name
+    assert_equal "combobox-results", root["data-nk"]
+    assert_equal "labels-results", root["id"]
+    assert_equal "labels", root["data-tracking"]
+
+    assert_equal "combobox-option", option["data-slot"]
+    assert_equal [ "labels-result-1", "option", "false", "1", "option" ],
+      [ option["id"], option["role"], option["aria-selected"], option["data-value"], option["data-nk--combobox-target"] ]
+    assert_equal "labels-result-1-description", option["aria-describedby"]
+    assert_equal "Bug", option.at_css("[data-slot='combobox-option-label']").text
+    assert_equal "true", disabled["aria-disabled"]
+    assert_nil disabled["data-action"]
+
+    assert_equal "combobox-action", action["data-slot"]
+    assert_equal "option", action["role"]
+    assert_nil action["data-value"]
+    assert_equal "/labels", action["data-request-url"]
+    assert_equal "post", action["data-request-method"]
+    assert_equal({ "label[name]" => "Bugfix" }, JSON.parse(action["data-request-params"]))
+    assert_equal "combobox-action-icon", action.at_css("svg")["data-slot"]
+    assert_equal "Create “Bugfix”", action.at_css("[data-slot='combobox-option-label']").text
+    assert_empty root.css("[class], [style]")
+  end
+
+  test "results validate their items" do
+    assert_raises(ArgumentError) { NitroKit::Combobox::Results.new(id: "two words") }
+    assert_raises(ArgumentError) { NitroKit::Combobox::Results.new(id: "labels").option("Bug", value: 1) }
+    assert_raises(ArgumentError) { render_results { _1.option("", value: 1) } }
+    assert_raises(ArgumentError) { render_results { _1.option("Bug", value: nil) } }
+    assert_raises(ArgumentError) { render_results { _1.option("Bug", value: 1); _1.option("Bug", value: "1") } }
+    assert_raises(ArgumentError) { render_results { _1.action("Create", url: "/labels", method: :delete) } }
+    assert_raises(ArgumentError) { render_results { _1.action("Create", url: "") } }
+    assert_raises(ArgumentError) { render_results { _1.action("Create", url: "/labels", params: [ "name" ]) } }
+    assert_raises(ArgumentError) { NitroKit::Combobox::Results.new(id: "labels", data: { slot: "x" }) }
+    assert_equal "", render_results { nil }.inner_html
+  end
+
   private
 
   def render_combobox(
@@ -199,5 +350,14 @@ class ComboboxTest < ActiveSupport::TestCase
   )
     component = NitroKit::Combobox.new(id:, name:, label:, options:, **attributes)
     Nokogiri::HTML.fragment(component.call).first_element_child
+  end
+
+  def render_remote(id: "labels", name: "issue[label_ids]", label: "Labels", src: "/labels", **attributes)
+    component = NitroKit::Combobox.new(id:, name:, label:, src:, **attributes)
+    Nokogiri::HTML.fragment(component.call).first_element_child
+  end
+
+  def render_results(&block)
+    Nokogiri::HTML.fragment(NitroKit::Combobox::Results.new(id: "labels").call(&block)).first_element_child
   end
 end

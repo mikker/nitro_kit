@@ -15,7 +15,30 @@ class ComboboxCssTest < ActiveSupport::TestCase
     assert_includes source_css, selector
   end
 
+  test "remote chips truncate inside the field and empty lists collapse" do
+    css = compact(source_css)
+
+    assert_includes css, ':where([data-nk="combobox"] > [data-slot="combobox-selections"]:empty) { display: none; }'
+    assert_match(
+      /\[data-slot="combobox-selection"\] > \[data-slot="combobox-selection-label"\] \) \{ min-inline-size: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; \}/,
+      css
+    )
+    assert_match(/\[data-slot="combobox-selection"\] \) \{[^}]*max-inline-size: 100%;/, css)
+  end
+
+  test "remote feedback and actions are styled through owned state" do
+    css = compact(source_css)
+
+    assert_includes css, '> [data-slot="combobox-message"][data-state="error"] ) { color: var(--nk-color-destructive); }'
+    assert_includes css, '> [data-slot="combobox-action"][aria-busy="true"] ) { cursor: progress;'
+    refute_match(/transition:\s*all/, css)
+  end
+
   private
+
+  def compact(css)
+    css.gsub(/\s+/, " ").gsub("( ", "(")
+  end
 
   def source_css
     @source_css ||= Rails.root.join(

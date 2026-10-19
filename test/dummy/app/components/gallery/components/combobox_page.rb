@@ -29,7 +29,8 @@ module Gallery
       end
 
       def api_note
-        "NitroKit::Combobox.new(id:, name:, label:, options:, value:, include_blank:)"
+        "NitroKit::Combobox.new(id:, name:, label:, options:, value:, include_blank:) · " \
+          "NitroKit::Combobox.new(id:, name:, label:, src:, selected:, multiple:)"
       end
 
       def component_template
@@ -158,6 +159,71 @@ module Gallery
         end
 
         example_section(
+          "Remote relations",
+          slug: "combobox-remote",
+          description: "`src:` searches server-rendered `Combobox::Results`; the application keeps search, authorization, " \
+            "creation, and persistence. Multiple mode submits one hidden `name[]` field per chip."
+        ) do
+          example(
+            "Relation picker",
+            slug: "combobox-relation-picker",
+            description: "Search labels, select several, create a missing one from the results, then save without a title: " \
+              "the 422 re-render rebuilds every chip from the submitted ids.",
+            source: "test/dummy/app/controllers/gallery/combobox_labels_controller.rb",
+            api: "GET query → NitroKit::Combobox::Results.new(id:) { |results| results.option(...); results.action(...) }",
+            code: Gallery::SourceCode.from_method(Gallery::ComboboxReleaseForm.instance_method(:release_form))
+          ) do
+            render Gallery::ComboboxReleaseForm.new
+          end
+
+          example("Remote states", slug: "combobox-remote-states", layout: :matrix) do
+            sample("Single selection", slug: "single") do
+              render NitroKit::Combobox.new(
+                id: "gallery-combobox-remote-single",
+                name: "issue[label_id]",
+                label: "Primary label",
+                src: gallery_combobox_labels_path(combobox: "gallery-combobox-remote-single"),
+                selected: [ { label: "Regression", value: 8 } ],
+                placeholder: "Search labels"
+              )
+            end
+            sample("Required multiple", slug: "required-multiple") do
+              render NitroKit::Combobox.new(
+                id: "gallery-combobox-remote-required",
+                name: "issue[label_ids]",
+                label: "Labels",
+                src: gallery_combobox_labels_path(combobox: "gallery-combobox-remote-required"),
+                multiple: true,
+                required: true,
+                placeholder: "Choose at least one label"
+              )
+            end
+            sample("Disabled with selections", slug: "disabled") do
+              render NitroKit::Combobox.new(
+                id: "gallery-combobox-remote-disabled",
+                name: "issue[locked_label_ids]",
+                label: "Locked labels",
+                src: gallery_combobox_labels_path(combobox: "gallery-combobox-remote-disabled"),
+                multiple: true,
+                selected: [ { label: "Security", value: 9 }, { label: "Bug", value: 1 } ],
+                disabled: true
+              )
+            end
+            sample("Unavailable search", slug: "error") do
+              render NitroKit::Combobox.new(
+                id: "gallery-combobox-remote-error",
+                name: "issue[fallback_label_ids]",
+                label: "Labels",
+                src: gallery_combobox_labels_path(combobox: "gallery-combobox-remote-error", unavailable: 1),
+                multiple: true,
+                selected: [ { label: "Documentation", value: 5 } ],
+                placeholder: "Search fails with 503"
+              )
+            end
+          end
+        end
+
+        example_section(
           "Under pressure",
           slug: "combobox-stress",
           description: "Thirty Gallery::Hostile badge labels as searchable options with sentence-long descriptions, an " \
@@ -188,6 +254,23 @@ module Gallery
                 disabled: true
               )
             end
+          end
+
+          example("Hostile remote selections", slug: "combobox-hostile-remote", stress: true) do
+            selected = (Gallery::Hostile::BADGE_LABELS + Gallery::Hostile::NAMES).each_with_index.map do |label, index|
+              { label:, value: "hostile_#{index}" }
+            end
+
+            render NitroKit::Combobox.new(
+              id: "gallery-combobox-hostile-remote",
+              name: "hostile[label_ids]",
+              label: Gallery::Hostile::LONG_LABEL,
+              src: gallery_combobox_labels_path(combobox: "gallery-combobox-hostile-remote"),
+              multiple: true,
+              selected:,
+              placeholder: Gallery::Hostile::LONG_SENTENCE,
+              required: true
+            )
           end
 
           example("Hostile combobox field", slug: "combobox-hostile-field", stress: true) do

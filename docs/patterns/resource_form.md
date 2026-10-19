@@ -12,6 +12,8 @@ and update forms.
 - Use one primary submit: the shell toolbar owns it, or a standalone form keeps
   it inside `form.group`.
 - Wrap the form in a Turbo Frame only when it needs an independent lifecycle.
+- Relation pickers use a remote `Combobox` whose `selected:` choices are rebuilt
+  from the submitted ids, so an invalid re-render keeps every selection.
 
 ## Form
 
@@ -59,6 +61,69 @@ Button("Save project", type: :submit, form: form_id, variant: :primary)
 
 Do not also call `form.submit` in the body. A standalone form without a toolbar
 keeps its submit in the same `form.group` as its visible fields.
+
+## Relation pickers
+
+Pick associated records with a remote `Combobox`. Rails keeps search,
+authorization, creation, and persistence; the combobox owns selection state,
+stale-search cancellation, loading and error feedback, keyboard navigation, and
+chips backed by hidden `name[]` fields.
+
+```ruby
+render NitroKit::Combobox.new(
+  id: "post-tags",
+  name: form.field_name(:tag_ids, multiple: true),
+  label: "Tags",
+  src: tags_path(combobox: "post-tags"),
+  multiple: true,
+  selected: @post.tags.map { |tag| { label: tag.name, value: tag.id } }
+)
+```
+
+Build `selected:` from the model, never from the raw params, so an invalid
+`422` re-render shows exactly the records that still exist. On an unsaved
+record, `@post.tag_ids = params[:post][:tag_ids]` loads them in memory.
+
+The search endpoint scopes records to the current user and renders
+`Combobox::Results` without a layout. An action posts back to the application,
+which answers with the record to select:
+
+```ruby
+class TagsController < ApplicationController
+  def index
+    tags = Current.account.tags.search(params[:query]).limit(8)
+    render UI::TagResults.new(tags:, query: params[:query]), layout: false
+  end
+
+  def create
+    tag = Current.account.tags.create_or_find_by!(name: params.require(:tag)[:name])
+    render UI::TagResults.new(tags: [ tag ], query: nil), status: :created, layout: false
+  end
+end
+
+class UI::TagResults < Phlex::HTML
+  include Phlex::Rails::Helpers::Routes
+
+  def initialize(tags:, query:)
+    @tags = tags
+    @query = query.to_s.strip
+  end
+
+  def view_template
+    render NitroKit::Combobox::Results.new(id: "post-tags") do |results|
+      @tags.each { |tag| results.option(tag.name, value: tag.id) }
+      if @query.present? && @tags.none? { |tag| tag.name.casecmp?(@query) }
+        results.action("Create tag “#{@query}”", url: tags_path, params: { "tag[name]" => @query })
+      end
+    end
+  end
+end
+```
+
+Respond with a non-success status when creation fails; the combobox shows its
+error message and keeps the existing chips. Use a single remote combobox
+(without `multiple:`) for a `belongs_to` picker; it submits one hidden
+`name` field.
 
 ## Responses
 

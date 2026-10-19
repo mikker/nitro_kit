@@ -20,6 +20,8 @@ Rails.application.routes.draw do
     resource(:button_submission, only: :create)
     resource(:destructive_action, only: :destroy)
     resources(:command_palette_results, only: :index)
+    resources(:combobox_labels, only: %i[ index create ])
+    resource(:combobox_release, only: :create)
     get("previews/:kind/:slug/:example" => "previews#show", as: :preview)
     resources(:foundations, only: :show, param: :slug)
     resources(:components, only: :show, param: :slug)

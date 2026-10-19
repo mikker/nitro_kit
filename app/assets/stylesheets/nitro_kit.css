@@ -12,7 +12,8 @@
  */
 @layer properties, theme, base, nitro-kit, components, utilities;
 
-@layer nitro-kit.tokens,
+@layer nitro-kit.aliases,
+  nitro-kit.tokens,
   nitro-kit.reset,
   nitro-kit.base,
   nitro-kit.variant,
@@ -431,7 +432,12 @@
     --nk-palette-rose: var(--nk-rose-400);
   }
 
-  :where(:root, [data-theme="light"]) {
+  /* Appearance. `data-theme="light"` and `data-theme="dark"` select a palette
+     directly, which is what AppearanceBootstrap writes. A host whose themes use
+     other names, such as daisyUI's `data-theme="night"`, declares the scheme
+     with `data-nk-scheme="light"` or `data-nk-scheme="dark"` on the same
+     element. When both attributes are present, `data-nk-scheme` decides. */
+  :where(:root, [data-theme="light"], [data-nk-scheme="light"]) {
     color-scheme: light;
 
     --nk-color-canvas: color-mix(
@@ -487,7 +493,7 @@
   }
 
   @media (prefers-color-scheme: dark) {
-    :where(:root:not([data-theme])) {
+    :where(:root:not([data-theme], [data-nk-scheme])) {
       color-scheme: dark;
 
       --nk-color-canvas: var(--nk-zinc-950);
@@ -543,7 +549,7 @@
     }
   }
 
-  :where([data-theme="dark"]) {
+  :where([data-theme="dark"]:not([data-nk-scheme]), [data-nk-scheme="dark"]) {
     color-scheme: dark;
 
     --nk-color-canvas: var(--nk-zinc-950);
@@ -598,7 +604,7 @@
     --nk-palette-rose-content: var(--nk-rose-200);
   }
 
-  :where(:root, [data-theme]) {
+  :where(:root, [data-theme], [data-nk-scheme]) {
     --nk-button-default-background: light-dark(
       var(--nk-color-surface),
       var(--nk-color-border)
@@ -649,9 +655,13 @@
  * Tailwind utilities read, so bg-background, rounded-md, shadow-sm and friends
  * share one palette with the components. Tailwind itself stays an application
  * concern: Nitro Kit never compiles, configures, or depends on it.
+ *
+ * The aliases have their own `nitro-kit.aliases` layer, ordered before the
+ * Nitro tokens, so an application can drop one alias with `revert-layer`
+ * declared inside that layer and fall back to its own theme's value.
  */
-@layer nitro-kit.tokens {
-  :where(:root, [data-theme]) {
+@layer nitro-kit.aliases {
+  :where(:root, [data-theme], [data-nk-scheme]) {
     --font-sans: var(--nk-font-sans);
     --font-mono: var(--nk-font-mono);
     --spacing: var(--nk-space);
@@ -2512,12 +2522,15 @@
   /* Only the tint strength changes with appearance. The colours themselves come
      from the `--nk-palette-*` roles, whose `-content` half already resolves per
      appearance. */
-  :where([data-theme="dark"] [data-nk="badge"]) {
+  :where(
+    :is([data-theme="dark"]:not([data-nk-scheme]), [data-nk-scheme="dark"])
+      [data-nk="badge"]
+  ) {
     --_nk-badge-tint-strength: 40%;
   }
 
   @media (prefers-color-scheme: dark) {
-    :where(:root:not([data-theme]) [data-nk="badge"]) {
+    :where(:root:not([data-theme], [data-nk-scheme]) [data-nk="badge"]) {
       --_nk-badge-tint-strength: 40%;
     }
   }
@@ -2715,7 +2728,7 @@
 
   @media (prefers-color-scheme: dark) {
     :where(
-        :root:not([data-theme])
+        :root:not([data-theme], [data-nk-scheme])
           [data-nk="button"]:is(
             [data-variant="primary"],
             [data-variant="destructive"]
@@ -2725,17 +2738,24 @@
     }
 
     :where(
-        :root:not([data-theme]) [data-nk="button"][data-variant="destructive"]
+        :root:not([data-theme], [data-nk-scheme])
+          [data-nk="button"][data-variant="destructive"]
       ) {
       --_nk-button-shadow: none;
     }
   }
 
-  :where([data-theme="dark"] [data-nk="button"][data-variant="primary"]) {
+  :where(
+      :is([data-theme="dark"]:not([data-nk-scheme]), [data-nk-scheme="dark"])
+        [data-nk="button"][data-variant="primary"]
+    ) {
     --_nk-button-border-width: 0;
   }
 
-  :where([data-theme="dark"] [data-nk="button"][data-variant="destructive"]) {
+  :where(
+      :is([data-theme="dark"]:not([data-nk-scheme]), [data-nk-scheme="dark"])
+        [data-nk="button"][data-variant="destructive"]
+    ) {
     --_nk-button-shadow: none;
   }
 }
@@ -2810,7 +2830,7 @@
      destructive control as disabled. */
   @media (prefers-color-scheme: dark) {
     :where(
-        :root:not([data-theme])
+        :root:not([data-theme], [data-nk-scheme])
           [data-nk="button"][data-variant="destructive"]:is(
             :disabled,
             [aria-disabled="true"]
@@ -2825,7 +2845,7 @@
   }
 
   :where(
-      [data-theme="dark"]
+      :is([data-theme="dark"]:not([data-nk-scheme]), [data-nk-scheme="dark"])
         [data-nk="button"][data-variant="destructive"]:is(
           :disabled,
           [aria-disabled="true"]
@@ -3488,7 +3508,14 @@
     inset: var(--_nk-overlay-top, auto) auto auto var(--_nk-overlay-left, auto);
   }
 
-  :where([data-nk="combobox"] [data-slot="combobox-option"]) {
+  :where(
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-option"],
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-action"]
+    ) {
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -3509,7 +3536,48 @@
     display: block;
   }
 
-  :where([data-nk="combobox"] [data-slot="combobox-empty"]) {
+  /* A result action ("Create …") leads with its icon; its label and optional
+     description stack in the second column. */
+  :where(
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-action"]
+    ) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: calc(var(--nk-space) * 2);
+    align-items: center;
+  }
+
+  :where(
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-action"]
+        > [data-slot="combobox-action-icon"]
+    ) {
+    grid-row: 1 / span 2;
+    color: var(--nk-color-muted-foreground);
+  }
+
+  :where(
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-action"]
+        > [data-slot="combobox-option-label"],
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-action"]
+        > [data-slot="combobox-option-description"]
+    ) {
+    grid-column: 2;
+  }
+
+  :where(
+      [data-nk="combobox"] [data-slot="combobox-empty"],
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-message"]
+    ) {
     display: flex;
     align-items: center;
     min-block-size: var(--nk-control-height-md);
@@ -3531,17 +3599,96 @@
     font-size: var(--nk-text-xs);
     text-wrap: pretty;
   }
+
+  /* Multiple selections render as removable chips under the input. Each chip
+     owns its hidden name[] field, so the list is the submitted value. */
+  :where([data-nk="combobox"] > [data-slot="combobox-selections"]) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--nk-space) * 1.5);
+    margin-block-start: calc(var(--nk-space) * 2);
+    padding: 0;
+    list-style: none;
+  }
+
+  :where([data-nk="combobox"] > [data-slot="combobox-selections"]:empty) {
+    display: none;
+  }
+
+  :where(
+      [data-nk="combobox"]
+        > [data-slot="combobox-selections"]
+        > [data-slot="combobox-selection"]
+    ) {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--nk-space) * 0.5);
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    padding-inline-start: calc(var(--nk-space) * 2.5);
+    padding-inline-end: calc(var(--nk-space) * 0.5);
+    padding-block: calc(var(--nk-space) * 0.5);
+    font-size: var(--nk-text-sm);
+    line-height: var(--nk-leading-tight);
+    color: var(--nk-color-foreground);
+    background: var(--nk-color-muted);
+    border: var(--nk-border-width) solid
+      color-mix(in oklab, var(--nk-color-foreground) 10%, transparent);
+    border-radius: var(--nk-radius-md);
+  }
+
+  :where(
+      [data-nk="combobox"]
+        > [data-slot="combobox-selections"]
+        > [data-slot="combobox-selection"]
+        > [data-slot="combobox-selection-label"]
+    ) {
+    min-inline-size: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  :where(
+      [data-nk="combobox"]
+        > [data-slot="combobox-selections"]
+        > [data-slot="combobox-selection"]
+        > [data-slot="combobox-remove"]
+    ) {
+    flex-shrink: 0;
+  }
 }
 
 @layer nitro-kit.state {
   :where(
       [data-nk="combobox"]
-        [data-slot="combobox-option"]:is(
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-option"]:is(
           [data-active="true"],
           [aria-selected="true"]
-        )
+        ),
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-action"][data-active="true"]
     ) {
     background: var(--nk-color-muted);
+  }
+
+  :where(
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-action"][aria-busy="true"]
+    ) {
+    cursor: progress;
+    opacity: var(--nk-disabled-opacity);
+  }
+
+  :where(
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-message"][data-state="error"]
+    ) {
+    color: var(--nk-color-destructive);
   }
 
   :where(
@@ -6828,13 +6975,15 @@
 
   /* Dark appearances need a stronger tint to separate the surface from the
      page behind it. */
-  :where([data-theme="dark"])
+  :where(
+      :is([data-theme="dark"]:not([data-nk-scheme]), [data-nk-scheme="dark"])
+    )
     :where([data-nk="alert"], [data-nk="toast-item"]) {
     --_nk-semantic-tint: 20%;
   }
 
   @media (prefers-color-scheme: dark) {
-    :where(:root:not([data-theme]))
+    :where(:root:not([data-theme], [data-nk-scheme]))
       :where([data-nk="alert"], [data-nk="toast-item"]) {
       --_nk-semantic-tint: 20%;
     }

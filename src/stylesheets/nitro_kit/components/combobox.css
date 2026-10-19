@@ -58,7 +58,14 @@
     inset: var(--_nk-overlay-top, auto) auto auto var(--_nk-overlay-left, auto);
   }
 
-  :where([data-nk="combobox"] [data-slot="combobox-option"]) {
+  :where(
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-option"],
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-action"]
+    ) {
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -79,7 +86,48 @@
     display: block;
   }
 
-  :where([data-nk="combobox"] [data-slot="combobox-empty"]) {
+  /* A result action ("Create …") leads with its icon; its label and optional
+     description stack in the second column. */
+  :where(
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-action"]
+    ) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: calc(var(--nk-space) * 2);
+    align-items: center;
+  }
+
+  :where(
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-action"]
+        > [data-slot="combobox-action-icon"]
+    ) {
+    grid-row: 1 / span 2;
+    color: var(--nk-color-muted-foreground);
+  }
+
+  :where(
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-action"]
+        > [data-slot="combobox-option-label"],
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-action"]
+        > [data-slot="combobox-option-description"]
+    ) {
+    grid-column: 2;
+  }
+
+  :where(
+      [data-nk="combobox"] [data-slot="combobox-empty"],
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-message"]
+    ) {
     display: flex;
     align-items: center;
     min-block-size: var(--nk-control-height-md);
@@ -101,17 +149,96 @@
     font-size: var(--nk-text-xs);
     text-wrap: pretty;
   }
+
+  /* Multiple selections render as removable chips under the input. Each chip
+     owns its hidden name[] field, so the list is the submitted value. */
+  :where([data-nk="combobox"] > [data-slot="combobox-selections"]) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: calc(var(--nk-space) * 1.5);
+    margin-block-start: calc(var(--nk-space) * 2);
+    padding: 0;
+    list-style: none;
+  }
+
+  :where([data-nk="combobox"] > [data-slot="combobox-selections"]:empty) {
+    display: none;
+  }
+
+  :where(
+      [data-nk="combobox"]
+        > [data-slot="combobox-selections"]
+        > [data-slot="combobox-selection"]
+    ) {
+    display: inline-flex;
+    align-items: center;
+    gap: calc(var(--nk-space) * 0.5);
+    min-inline-size: 0;
+    max-inline-size: 100%;
+    padding-inline-start: calc(var(--nk-space) * 2.5);
+    padding-inline-end: calc(var(--nk-space) * 0.5);
+    padding-block: calc(var(--nk-space) * 0.5);
+    font-size: var(--nk-text-sm);
+    line-height: var(--nk-leading-tight);
+    color: var(--nk-color-foreground);
+    background: var(--nk-color-muted);
+    border: var(--nk-border-width) solid
+      color-mix(in oklab, var(--nk-color-foreground) 10%, transparent);
+    border-radius: var(--nk-radius-md);
+  }
+
+  :where(
+      [data-nk="combobox"]
+        > [data-slot="combobox-selections"]
+        > [data-slot="combobox-selection"]
+        > [data-slot="combobox-selection-label"]
+    ) {
+    min-inline-size: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  :where(
+      [data-nk="combobox"]
+        > [data-slot="combobox-selections"]
+        > [data-slot="combobox-selection"]
+        > [data-slot="combobox-remove"]
+    ) {
+    flex-shrink: 0;
+  }
 }
 
 @layer nitro-kit.state {
   :where(
       [data-nk="combobox"]
-        [data-slot="combobox-option"]:is(
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-option"]:is(
           [data-active="true"],
           [aria-selected="true"]
-        )
+        ),
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-action"][data-active="true"]
     ) {
     background: var(--nk-color-muted);
+  }
+
+  :where(
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-action"][aria-busy="true"]
+    ) {
+    cursor: progress;
+    opacity: var(--nk-disabled-opacity);
+  }
+
+  :where(
+      [data-nk="combobox"]
+        > [data-slot="combobox-listbox"]
+        > [data-slot="combobox-message"][data-state="error"]
+    ) {
+    color: var(--nk-color-destructive);
   }
 
   :where(

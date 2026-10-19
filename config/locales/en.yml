@@ -19,6 +19,9 @@ en:
     combobox:
       invalid_selection: "Choose an option."
       no_results: "No options found."
+      loading: "Searching…"
+      error: "Results could not be loaded. Try again."
+      remove: "Remove %{label}"
       results:
         one: "%{count} option available."
         other: "%{count} options available."
