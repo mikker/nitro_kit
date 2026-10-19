@@ -18,10 +18,11 @@ module NitroKit
 
     def show_diagnostics
       say ""
-      installation.checks.each do |check|
-        color = { pass: :green, warn: :yellow, fail: :red }.fetch(check.status)
-        say_status(check.status.to_s.upcase, "#{check.label}: #{check.detail}", color)
+      checks = installation.checks
+      checks.each do |check|
+        say_status(check.status.to_s.upcase, "#{check.label}: #{check.detail}", Installation::STATUS_COLORS.fetch(check.status))
       end
+      say Installation.summary(checks)
     end
 
     def offer_initialization_prompt

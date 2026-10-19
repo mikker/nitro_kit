@@ -2,6 +2,7 @@ require "fileutils"
 require "open3"
 require "pathname"
 require "ripper"
+require "yaml"
 require "nitro_kit/migration_inventory"
 
 module NitroKit
@@ -9,6 +10,20 @@ module NitroKit
     ROOT = Pathname.new(File.expand_path("../..", __dir__))
     SKILLS = %w[nitro-kit-hotwire nitro-kit-rails nitro-kit-ui].freeze
     SKILL_ROOTS = [ ".agents/skills", ".claude/skills" ].freeze
+    # Doctor outcomes, most to least severe after :fail. Only :fail makes the
+    # installation unhealthy. :unverified means Doctor could not inspect the
+    # setup and names what to check by hand; :optional is a convention the
+    # application chose not to adopt; :warn is an application next step.
+    STATUS_COLORS = {
+      pass: :green,
+      optional: :blue,
+      unverified: :cyan,
+      warn: :yellow,
+      fail: :red
+    }.freeze
+    CONFIG_PATH = "config/nitro_kit/doctor.yml"
+    THEME_OWNERS = %w[nitro_kit application].freeze
+    CONFIG_KEYS = %w[theme_owner skill_roots retained_dependencies].freeze
     # nitro_kit-tailwind-v4 is the beta-era adapter that nitro_kit.css absorbed;
     # it stays managed so doctor flags a leftover link instead of ignoring it.
     MANAGED_STYLESHEETS = %w[
@@ -57,7 +72,25 @@ module NitroKit
 
     Check = Struct.new(:status, :label, :detail, keyword_init: true)
     LayoutExpression = Struct.new(:range, :type, :assets, :dynamic, keyword_init: true)
-    LayoutAnalysis = Struct.new(:head_range, :stylesheets, :bootstraps, :errors, keyword_init: true)
+    # errors: every reason the installer must leave the layout alone.
+    # uninspectable: the subset that stops Doctor from verifying the head.
+    # defects: the subset Doctor can prove is wrong.
+    LayoutAnalysis = Struct.new(:head_range, :stylesheets, :bootstraps, :errors, :uninspectable, :defects, keyword_init: true)
+    Configuration = Struct.new(:theme_owner, :skill_roots, :retained_dependencies, :errors, :present, keyword_init: true) do
+      def theme_owned_by_application? = theme_owner == "application"
+    end
+
+    # One line after the per-check output: the verdict, then what the
+    # non-failing outcomes ask of the reader.
+    def self.summary(checks)
+      counts = checks.map(&:status).tally
+      verdict = counts[:fail] ? "Doctor found #{counts[:fail]} failure#{'s' unless counts[:fail] == 1}" : "Doctor found no failures"
+      notes = []
+      notes << "#{counts[:unverified]} UNVERIFIED to check by hand" if counts[:unverified]
+      notes << "#{counts[:optional]} OPTIONAL convention#{'s' unless counts[:optional] == 1} not adopted" if counts[:optional]
+      notes << "#{counts[:warn]} WARN next step#{'s' unless counts[:warn] == 1}" if counts[:warn]
+      [ verdict, *notes ].join("; ") + "."
+    end
 
     attr_reader :application_root
 
@@ -89,7 +122,7 @@ module NitroKit
     end
 
     def write_skills
-      SKILL_ROOTS.product(SKILLS).to_h do |root, skill|
+      configuration.skill_roots.product(SKILLS).to_h do |root, skill|
         destination = application_root.join(root, skill, "SKILL.md")
         source = skill_source(skill)
         [ destination.relative_path_from(application_root).to_s, write(destination, source.read) ]
@@ -113,18 +146,28 @@ module NitroKit
     def checks
       [
         version_check,
+        configuration_check,
         agents_check,
         skills_check,
         hotwire_check,
         stimulus_loader_check,
         stylesheet_setup_check,
+        appearance_check,
         phlex_kit_check,
         *migration_checks
-      ]
+      ].compact
     end
 
     def healthy?
       checks.none? { _1.status == :fail }
+    end
+
+    # Host-declared Doctor exceptions from config/nitro_kit/doctor.yml. A file
+    # rather than a Ruby initializer so the installer and Doctor read the same
+    # answer without booting the application. Invalid settings fall back to the
+    # defaults and fail the "Doctor configuration" check.
+    def configuration
+      @configuration ||= load_configuration
     end
 
     private
@@ -156,16 +199,96 @@ module NitroKit
         )
       end
 
-      def skills_check
-        missing = SKILL_ROOTS.product(SKILLS).filter_map do |root, skill|
-          path = application_root.join(root, skill, "SKILL.md")
-          path.relative_path_from(application_root).to_s unless path.exist? && path.read == skill_source(skill).read
+      def load_configuration
+        defaults = { theme_owner: "nitro_kit", skill_roots: SKILL_ROOTS, retained_dependencies: {} }
+        path = application_root.join(CONFIG_PATH)
+        return Configuration.new(**defaults, errors: [], present: false) unless path.file?
+
+        data = begin
+          YAML.safe_load(path.read) || {}
+        rescue Psych::Exception => error
+          return Configuration.new(**defaults, errors: [ "could not parse: #{error.message}" ], present: true)
         end
+        return Configuration.new(**defaults, errors: [ "expected a mapping of settings" ], present: true) unless data.is_a?(Hash)
+
+        errors = []
+        unknown = data.keys - CONFIG_KEYS
+        errors << "unknown settings #{unknown.join(', ')}; expected #{CONFIG_KEYS.join(', ')}" if unknown.any?
+
+        theme_owner = data.fetch("theme_owner", defaults[:theme_owner])
+        unless THEME_OWNERS.include?(theme_owner)
+          errors << "theme_owner must be one of #{THEME_OWNERS.join(', ')}"
+          theme_owner = defaults[:theme_owner]
+        end
+
+        skill_roots = data.fetch("skill_roots", SKILL_ROOTS)
+        unless skill_roots.is_a?(Array) && skill_roots.any? && skill_roots.uniq.size == skill_roots.size && (skill_roots - SKILL_ROOTS).empty?
+          errors << "skill_roots must list one or both of #{SKILL_ROOTS.join(', ')}"
+          skill_roots = SKILL_ROOTS
+        end
+
+        retained = data.fetch("retained_dependencies", {})
+        known = MigrationInventory::VENDORED_MODULES.keys
+        if !retained.is_a?(Hash)
+          errors << "retained_dependencies must map a package name to the reason it is retained"
+          retained = {}
+        else
+          invalid = retained.reject { |name, reason| known.include?(name) && reason.is_a?(String) && !reason.strip.empty? }
+          if invalid.any?
+            errors << "retained_dependencies entries need a known package (#{known.join(', ')}) and a non-empty reason: #{invalid.keys.join(', ')}"
+            retained = retained.except(*invalid.keys)
+          end
+        end
+
+        Configuration.new(theme_owner:, skill_roots: SKILL_ROOTS & skill_roots, retained_dependencies: retained, errors:, present: true)
+      end
+
+      def configuration_check
+        return unless configuration.present
+
+        settings = [
+          "theme owner #{configuration.theme_owner}",
+          "skill roots #{configuration.skill_roots.join(', ')}",
+          "#{configuration.retained_dependencies.size} retained dependenc#{configuration.retained_dependencies.one? ? 'y' : 'ies'}"
+        ]
         Check.new(
-          status: missing.empty? ? :pass : :fail,
-          label: "Project-local skills",
-          detail: missing.empty? ? "Codex and Claude skill routers are current" : "missing or stale: #{missing.join(', ')}"
+          status: configuration.errors.empty? ? :pass : :fail,
+          label: "Doctor configuration",
+          detail: "#{CONFIG_PATH}: #{configuration.errors.empty? ? settings.join('; ') : "#{configuration.errors.join('; ')}; using defaults for invalid settings"}"
         )
+      end
+
+      def skills_check
+        skipped = SKILL_ROOTS - configuration.skill_roots
+        missing = skill_paths(configuration.skill_roots).reject { current_skill?(*_1) }.map(&:first)
+        # A stale copy in a root the application chose not to adopt still
+        # misleads the agent that reads it.
+        stale = skill_paths(skipped).select { |path, skill| application_root.join(path).exist? && !current_skill?(path, skill) }.map(&:first)
+
+        if missing.any? || stale.any?
+          detail = [
+            ("missing or stale: #{missing.join(', ')}" if missing.any?),
+            ("stale outside the configured skill_roots; refresh or remove: #{stale.join(', ')}" if stale.any?)
+          ].compact.join("; ")
+          Check.new(status: :fail, label: "Project-local skills", detail:)
+        elsif skipped.any?
+          Check.new(
+            status: :optional,
+            label: "Project-local skills",
+            detail: "#{configuration.skill_roots.join(', ')} current; #{skipped.join(', ')} not adopted (skill_roots in #{CONFIG_PATH})"
+          )
+        else
+          Check.new(status: :pass, label: "Project-local skills", detail: "Codex and Claude skill routers are current")
+        end
+      end
+
+      def skill_paths(roots)
+        roots.product(SKILLS).map { |root, skill| [ File.join(root, skill, "SKILL.md"), skill ] }
+      end
+
+      def current_skill?(path, skill)
+        path = application_root.join(path)
+        path.exist? && path.read == skill_source(skill).read
       end
 
       def hotwire_check
@@ -186,45 +309,59 @@ module NitroKit
         end
 
         Check.new(
-          status: loader ? :pass : :warn,
+          status: loader ? :pass : :unverified,
           label: "Stimulus loader",
-          detail: loader ? "#{loader} is configured" : "verify the application's controller registration"
+          detail: loader ? "#{loader} is configured" : "no eagerLoadControllersFrom or application.register call found; check by hand that the application registers its Stimulus controllers"
         )
       end
 
       def stylesheet_setup_check
-        return Check.new(
-          status: :fail,
-          label: "Stylesheet and appearance setup",
-          detail: "missing application layout; add AppearanceBootstrap before the ordered stylesheet entries"
-        ) unless layout_path
+        label = "Stylesheet and appearance setup"
+        unless layout_path
+          other_layouts = application_root.glob("app/views/layouts/*.{erb,haml,slim}").select(&:file?)
+          if other_layouts.any?
+            return Check.new(
+              status: :unverified,
+              label:,
+              detail: "no conventional application layout; check by hand that #{other_layouts.map { relative(_1) }.join(', ')} load#{'s' if other_layouts.one?} #{setup_sequence(%w[nitro_kit])} before application styles"
+            )
+          end
 
-        contents = layout_path.read
-        analysis = analyze_layout(contents)
+          detail = bootstrap_required? ? "add AppearanceBootstrap before the ordered stylesheet entries" : "add the ordered stylesheet entries"
+          return Check.new(status: :fail, label:, detail: "missing application layout; #{detail}")
+        end
+
+        analysis = analyze_layout(layout_path.read)
         expected = expected_stylesheets(analysis)
-        errors = []
-        bootstrap_count = analysis.bootstraps.size
+        assets = managed_stylesheet_assets(analysis)
+        location = relative(layout_path)
 
-        if analysis.errors.any?
+        if analysis.uninspectable.any?
+          defects = analysis.defects + visible_stylesheet_defects(analysis, expected, assets)
+          if defects.any?
+            return Check.new(
+              status: :fail,
+              label:,
+              detail: "#{location}: #{defects.join('; ')}; installer left the layout unchanged — #{analysis.errors.join('; ')}"
+            )
+          end
+
           return Check.new(
-            status: :fail,
-            label: "Stylesheet and appearance setup",
-            detail: "#{relative(layout_path)}: installer left the layout unchanged — #{analysis.errors.join('; ')}; manually ensure AppearanceBootstrap → #{expected.join(' → ')} without discarding existing options"
+            status: :unverified,
+            label:,
+            detail: "#{location}: could not inspect the head — #{analysis.uninspectable.join('; ')}; check by hand that the rendered head loads #{setup_sequence(expected)}, each once, in that order"
           )
         end
 
-        errors << "add one NitroKit::AppearanceBootstrap before every stylesheet" if bootstrap_count.zero?
+        errors = analysis.defects.dup
+        bootstrap_count = analysis.bootstraps.size
+        errors << "add one NitroKit::AppearanceBootstrap before every stylesheet" if bootstrap_count.zero? && bootstrap_required?
         errors << "remove duplicate NitroKit::AppearanceBootstrap entries" if bootstrap_count > 1
 
-        assets = managed_stylesheet_assets(analysis)
         expected.each do |stylesheet|
           count = assets.count(stylesheet)
           errors << "add stylesheet #{stylesheet.inspect}" if count.zero?
           errors << "remove duplicate stylesheet #{stylesheet.inspect}" if count > 1
-        end
-
-        if (edit_error = layout_edit_error(analysis, expected))
-          errors << "installer left the layout unchanged: #{edit_error}"
         end
 
         if assets.include?("nitro_kit-tailwind-v4")
@@ -235,17 +372,56 @@ module NitroKit
           errors << "remove stylesheet \"nitro_kit\"; #{TAILWIND_ENTRY} already bundles it"
         end
 
-        bootstrap_position = analysis.bootstraps.first&.range&.begin
-        first_stylesheet_position = analysis.stylesheets.first&.range&.begin
-        if errors.empty? && (bootstrap_position >= first_stylesheet_position || assets != expected)
-          errors << "reorder to AppearanceBootstrap → #{expected.join(' → ')}"
+        bootstrap = analysis.bootstraps.first
+        first_stylesheet = analysis.stylesheets.first
+        bootstrap_late = bootstrap && first_stylesheet && bootstrap.range.begin >= first_stylesheet.range.begin
+        if errors.empty? && (bootstrap_late || assets != expected)
+          errors << "reorder to #{setup_sequence(expected)}"
+        end
+
+        if errors.any? && (edit_error = layout_edit_error(analysis, expected))
+          errors << "installer left the layout unchanged: #{edit_error}"
         end
 
         Check.new(
           status: errors.empty? ? :pass : :fail,
-          label: "Stylesheet and appearance setup",
-          detail: errors.empty? ? "#{relative(layout_path)}: AppearanceBootstrap → #{expected.join(' → ')}" : "#{relative(layout_path)}: #{errors.join('; ')}"
+          label:,
+          detail: "#{location}: #{errors.empty? ? setup_sequence(expected, present: bootstrap) : errors.join('; ')}"
         )
+      end
+
+      # Order problems Doctor can still prove from the static calls it found in
+      # a head it could not fully inspect.
+      def visible_stylesheet_defects(analysis, expected, assets)
+        defects = []
+        if assets.include?("nitro_kit-tailwind-v4")
+          defects << "remove stylesheet \"nitro_kit-tailwind-v4\"; nitro_kit now includes the Tailwind v4 layer order and theme aliases"
+        end
+        if tailwind_bundles_nitro_kit? && assets.include?("nitro_kit")
+          defects << "remove stylesheet \"nitro_kit\"; #{TAILWIND_ENTRY} already bundles it"
+        end
+        visible = assets.uniq - [ "nitro_kit-tailwind-v4" ]
+        defects << "reorder the visible stylesheets to #{setup_sequence(expected)}" unless visible == expected.select { visible.include?(_1) }
+        defects
+      end
+
+      def appearance_check
+        return unless configuration.theme_owned_by_application?
+
+        Check.new(
+          status: :optional,
+          label: "Appearance bootstrap",
+          detail: "theme_owner is application in #{CONFIG_PATH}, so AppearanceBootstrap is not required; set data-theme=\"light|dark\" on <html> or leave it unset to follow prefers-color-scheme. AppearancePicker still needs AppearanceBootstrap"
+        )
+      end
+
+      def bootstrap_required?
+        !configuration.theme_owned_by_application?
+      end
+
+      def setup_sequence(stylesheets, present: nil)
+        bootstrap = bootstrap_required? || present ? [ "AppearanceBootstrap" ] : []
+        [ *bootstrap, *stylesheets ].join(" → ")
       end
 
       def phlex_kit_check
@@ -258,9 +434,17 @@ module NitroKit
       end
 
       def migration_checks
-        MigrationInventory.new(application_root).categories.map do |label, findings|
+        inventory = MigrationInventory.new(application_root, retained_dependencies: configuration.retained_dependencies)
+        inventory.categories.map do |label, findings|
+          status = if findings.empty?
+            :pass
+          elsif findings.all? { _1.status == :retained }
+            :optional
+          else
+            :warn
+          end
           Check.new(
-            status: findings.empty? ? :pass : :warn,
+            status:,
             label: "Migration: #{label}",
             detail: findings.empty? ? "migrated: none found" : findings.map do |finding|
               "#{finding.status.to_s.tr('_', '-')}: #{finding.path} — #{finding.guidance}"
@@ -293,13 +477,14 @@ module NitroKit
         return contents if edit_error
 
         missing = expected - managed_stylesheet_assets(analysis)
-        return contents if missing.empty? && analysis.bootstraps.one?
+        insert_bootstrap = analysis.bootstraps.empty? && bootstrap_required?
+        return contents if missing.empty? && !insert_bootstrap
 
         lines = contents.lines
         insertions = Hash.new { |hash, index| hash[index] = [] }
         indent = layout_indent(lines, analysis)
 
-        if analysis.bootstraps.empty?
+        if insert_bootstrap
           bootstrap_index = analysis.stylesheets.first&.range&.begin || analysis.head_range.begin + 1
           insertions[bootstrap_index] << bootstrap_markup(indent)
         end
@@ -319,31 +504,38 @@ module NitroKit
 
       def analyze_layout(contents)
         errors = []
-        errors << "multiple application layouts found: #{layout_paths.map { relative(_1) }.join(', ')}" if layout_paths.many?
+        uninspectable = []
+        defects = []
+        unverifiable = ->(message) { errors << message; uninspectable << message }
+        defect = ->(message) { errors << message; defects << message }
+
+        unverifiable.("multiple application layouts found: #{layout_paths.map { relative(_1) }.join(', ')}") if layout_paths.many?
         lines = contents.lines
         head_range, boundary_errors = if layout_path.extname == ".rb"
           phlex_head_range(contents)
         else
           erb_head_range(contents)
         end
-        errors.concat(boundary_errors)
+        boundary_errors.each(&unverifiable)
 
         all_expressions = layout_path.extname == ".rb" ? phlex_layout_expressions(contents) : erb_layout_expressions(contents)
         expressions = if head_range
           all_expressions.select do |expression|
             inside = head_range.cover?(expression.range.begin) && head_range.cover?(expression.range.end)
             overlaps = head_range.cover?(expression.range.begin) || head_range.cover?(expression.range.end)
-            errors << "#{expression.type} call on line #{expression.range.begin + 1} crosses the document head boundary" if overlaps && !inside
+            unverifiable.("#{expression.type} call on line #{expression.range.begin + 1} crosses the document head boundary") if overlaps && !inside
             inside
           end
         else
           []
         end
-        outside_expressions = all_expressions - expressions
-        outside_expressions.each do |expression|
-          next if head_range && (head_range.cover?(expression.range.begin) || head_range.cover?(expression.range.end))
+        # Without a known head, Doctor cannot tell where a call renders.
+        if head_range && boundary_errors.empty?
+          (all_expressions - expressions).each do |expression|
+            next if head_range.cover?(expression.range.begin) || head_range.cover?(expression.range.end)
 
-          errors << "#{expression.type} call on line #{expression.range.begin + 1} is outside the document head"
+            defect.("#{expression.type} call on line #{expression.range.begin + 1} is outside the document head")
+          end
         end
 
         stylesheets = expressions.select { _1.type == :stylesheet }
@@ -352,24 +544,32 @@ module NitroKit
 
         expressions.each do |expression|
           actual_indent = lines[expression.range.begin][/^\s*/].to_s.length
-          errors << "#{expression.type} call on line #{expression.range.begin + 1} is conditional or nested" unless actual_indent == target_indent
+          unverifiable.("#{expression.type} call on line #{expression.range.begin + 1} is conditional or nested") unless actual_indent == target_indent
         end
         stylesheets.each do |expression|
-          errors << "stylesheet call on line #{expression.range.begin + 1} has dynamic assets" if expression.dynamic
+          unverifiable.("stylesheet call on line #{expression.range.begin + 1} has dynamic assets") if expression.dynamic
           if (expression.assets & MANAGED_STYLESHEETS).any? && (expression.assets - MANAGED_STYLESHEETS).any?
+            # Doctor can still read the order; only the installer must stay out.
             errors << "stylesheet call on line #{expression.range.begin + 1} combines custom and canonical assets"
           end
         end
 
         head_contents = head_range ? lines[head_range].join : ""
         if layout_path.extname == ".erb" && head_contents.match?(/<%(?![=%#])/)
-          errors << "head contains conditional or executable ERB"
+          unverifiable.("head contains conditional or executable ERB")
         end
         if head_contents.match?(/<link\b[^>]*\brel=["']stylesheet["']/i)
-          errors << "head contains a custom stylesheet link"
+          unverifiable.("head contains a custom stylesheet link")
         end
 
-        LayoutAnalysis.new(head_range: head_range || (0..0), stylesheets:, bootstraps:, errors: errors.uniq)
+        LayoutAnalysis.new(
+          head_range: head_range || (0..0),
+          stylesheets:,
+          bootstraps:,
+          errors: errors.uniq,
+          uninspectable: uninspectable.uniq,
+          defects: defects.uniq
+        )
       end
 
       def erb_head_range(contents)

@@ -13,9 +13,9 @@ module Rails
           say JSON.pretty_generate(checks.map { { status: _1.status, label: _1.label, detail: _1.detail } })
         else
           checks.each do |check|
-            color = { pass: :green, warn: :yellow, fail: :red }.fetch(check.status)
-            say_status(check.status.to_s.upcase, "#{check.label}: #{check.detail}", color)
+            say_status(check.status.to_s.upcase, "#{check.label}: #{check.detail}", NitroKit::Installation::STATUS_COLORS.fetch(check.status))
           end
+          say NitroKit::Installation.summary(checks)
         end
 
         exit 1 if checks.any? { _1.status == :fail }

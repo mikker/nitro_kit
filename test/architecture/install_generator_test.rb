@@ -33,6 +33,30 @@ class InstallGeneratorTest < Rails::Generators::TestCase
     assert_match(/Nitro Kit version/, output)
   end
 
+  test "reports unverified and optional outcomes for a configured manual integration" do
+    File.write(File.join(destination_root, "Gemfile"), "")
+    FileUtils.mkdir_p(File.join(destination_root, "config/nitro_kit"))
+    File.write(File.join(destination_root, "config/nitro_kit/doctor.yml"), "theme_owner: application\nskill_roots: [.agents/skills]\n")
+    path = File.join(destination_root, "app/views/layouts/application.html.erb")
+    FileUtils.mkdir_p(File.dirname(path))
+    File.write(path, <<~ERB)
+      <html>
+        <head>
+          <%= stylesheet_link_tag theme_stylesheet %>
+        </head>
+        <body><%= yield %></body>
+      </html>
+    ERB
+
+    output = run_generator %w[--no-prompt]
+
+    assert_no_file ".claude/skills/nitro-kit-ui/SKILL.md"
+    assert_match(/UNVERIFIED\s+Stylesheet and appearance setup: .*check by hand/, output)
+    assert_match(/OPTIONAL\s+Appearance bootstrap/, output)
+    assert_match(/OPTIONAL\s+Project-local skills/, output)
+    assert_match(/Doctor found no failures; 2 UNVERIFIED to check by hand; 2 OPTIONAL conventions not adopted/, output)
+  end
+
   private
     def write_layout
       path = File.join(destination_root, "app/components/ui/application_layout.rb")

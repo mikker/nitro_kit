@@ -233,9 +233,10 @@ class InstallationTest < ActiveSupport::TestCase
       assert_equal :unchanged, installation.install.fetch("app/views/layouts/application.html.erb")
       assert_equal dynamic, root.join("app/views/layouts/application.html.erb").read
       diagnostic = installation.checks.index_by(&:label).fetch("Stylesheet and appearance setup")
-      assert_equal :fail, diagnostic.status
-      assert_includes diagnostic.detail, "left the layout unchanged"
+      assert_equal :unverified, diagnostic.status
+      assert_includes diagnostic.detail, "could not inspect the head"
       assert_includes diagnostic.detail, "dynamic assets"
+      assert_includes diagnostic.detail, "check by hand that the rendered head loads AppearanceBootstrap → nitro_kit"
 
       grouped = write_erb_layout(root, <<~ERB.strip)
         <%= render NitroKit::AppearanceBootstrap.new(default: :dark) %>
@@ -330,7 +331,7 @@ class InstallationTest < ActiveSupport::TestCase
       assert_equal :unchanged, installation.install.fetch("app/views/layouts/application.html.erb")
       assert_equal erb, root.join("app/views/layouts/application.html.erb").read
       erb_check = installation.checks.index_by(&:label).fetch("Stylesheet and appearance setup")
-      assert_equal :fail, erb_check.status
+      assert_equal :unverified, erb_check.status
       assert_includes erb_check.detail, "expected one conventional </head> closing tag"
     end
 
@@ -355,7 +356,7 @@ class InstallationTest < ActiveSupport::TestCase
       assert_equal :unchanged, installation.install.fetch("app/components/application_layout.rb")
       assert_equal phlex, root.join("app/components/application_layout.rb").read
       phlex_check = installation.checks.index_by(&:label).fetch("Stylesheet and appearance setup")
-      assert_equal :fail, phlex_check.status
+      assert_equal :unverified, phlex_check.status
       assert_includes phlex_check.detail, "head block must be owned directly"
     end
   end
@@ -561,6 +562,189 @@ class InstallationTest < ActiveSupport::TestCase
       assert migration_checks.all? { _1.status == :pass }
       assert migration_checks.all? { _1.detail == "migrated: none found" }
     end
+  end
+
+  test "a manual integration with its own theme, one skill root, and retained dependencies is healthy" do
+    Dir.mktmpdir do |directory|
+      root = Pathname.new(directory)
+      write_file(root, "config/nitro_kit/doctor.yml", <<~YAML)
+        theme_owner: application
+        skill_roots:
+          - .agents/skills
+        retained_dependencies:
+          "@github/combobox-nav": Retained by the application-owned search combobox controller
+      YAML
+      write_file(root, "app/assets/stylesheets/application.css", "body {}\n")
+      write_file(root, "config/importmap.rb", %(pin "@github/combobox-nav", to: "@github--combobox-nav.js"\n))
+      write_file(root, "vendor/javascript/@github--combobox-nav.js", "export {}\n")
+      write_erb_layout(root, <<~ERB)
+        <% if content_for?(:head) %>
+          <%= yield :head %>
+        <% end %>
+        <%= stylesheet_link_tag "nitro_kit", "data-turbo-track": "reload" %>
+        <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+      ERB
+      installation = NitroKit::Installation.new(root)
+
+      changes = installation.install
+      refute changes.key?(".claude/skills/nitro-kit-ui/SKILL.md")
+      refute root.join(".claude/skills").exist?
+      assert_equal :unchanged, changes.fetch("app/views/layouts/application.html.erb")
+      refute_includes root.join("app/views/layouts/application.html.erb").read, "AppearanceBootstrap"
+
+      checks = installation.checks.index_by(&:label)
+      assert_equal :pass, checks.fetch("Doctor configuration").status
+      assert_equal :optional, checks.fetch("Project-local skills").status
+      assert_includes checks.fetch("Project-local skills").detail, ".claude/skills not adopted"
+      assert_equal :unverified, checks.fetch("Stylesheet and appearance setup").status
+      assert_includes checks.fetch("Stylesheet and appearance setup").detail, "head contains conditional or executable ERB"
+      assert_includes checks.fetch("Stylesheet and appearance setup").detail, "loads nitro_kit → application"
+      refute_includes checks.fetch("Stylesheet and appearance setup").detail, "AppearanceBootstrap →"
+      assert_equal :optional, checks.fetch("Appearance bootstrap").status
+      dependencies = checks.fetch("Migration: Vendored dependencies")
+      assert_equal :optional, dependencies.status
+      assert_includes dependencies.detail, "retained: config/importmap.rb:1 — @github/combobox-nav: Retained by the application-owned"
+      assert_includes dependencies.detail, "retained: vendor/javascript/@github--combobox-nav.js"
+      assert_equal :optional, checks.fetch("Migration: Unresolved or application-owned items").status
+      assert_equal :pass, checks.fetch("Migration: Known replacements").status
+      assert installation.healthy?
+    end
+  end
+
+  test "an application-owned theme still fails missing and misordered stylesheets" do
+    Dir.mktmpdir do |directory|
+      root = Pathname.new(directory)
+      write_file(root, "config/nitro_kit/doctor.yml", "theme_owner: application\n")
+      write_file(root, "app/assets/stylesheets/application.css", "body {}\n")
+      write_erb_layout(root, '<%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>')
+
+      check = NitroKit::Installation.new(root).checks.index_by(&:label).fetch("Stylesheet and appearance setup")
+      assert_equal :fail, check.status
+      assert_includes check.detail, 'add stylesheet "nitro_kit"'
+      refute_includes check.detail, "AppearanceBootstrap"
+
+      installation = NitroKit::Installation.new(root)
+      installation.install
+      installed = root.join("app/views/layouts/application.html.erb").read
+      refute_includes installed, "AppearanceBootstrap"
+      assert_operator installed.index('"nitro_kit"'), :<, installed.index('"application"')
+      passing = installation.checks.index_by(&:label).fetch("Stylesheet and appearance setup")
+      assert_equal :pass, passing.status
+      assert_includes passing.detail, "nitro_kit → application"
+
+      write_erb_layout(root, <<~ERB)
+        <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+        <%= stylesheet_link_tag "nitro_kit", "data-turbo-track": "reload" %>
+      ERB
+      misordered = NitroKit::Installation.new(root)
+      assert_equal :fail, misordered.checks.index_by(&:label).fetch("Stylesheet and appearance setup").status
+      refute misordered.healthy?
+    end
+  end
+
+  test "doctor still fails visible misorder and retired assets in a head it cannot fully inspect" do
+    Dir.mktmpdir do |directory|
+      root = Pathname.new(directory)
+      write_file(root, "app/assets/stylesheets/application.css", "body {}\n")
+      write_erb_layout(root, <<~ERB)
+        <%= render NitroKit::AppearanceBootstrap.new %>
+        <% if admin? %>
+          <%= stylesheet_link_tag "admin" %>
+        <% end %>
+        <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+        <%= stylesheet_link_tag "nitro_kit", "data-turbo-track": "reload" %>
+      ERB
+
+      misordered = NitroKit::Installation.new(root).checks.index_by(&:label).fetch("Stylesheet and appearance setup")
+      assert_equal :fail, misordered.status
+      assert_includes misordered.detail, "reorder the visible stylesheets to AppearanceBootstrap → nitro_kit → application"
+
+      write_erb_layout(root, <<~ERB)
+        <%= render NitroKit::AppearanceBootstrap.new %>
+        <%= stylesheet_link_tag current_theme_stylesheet %>
+        <%= stylesheet_link_tag "nitro_kit-tailwind-v4", "data-turbo-track": "reload" %>
+        <%= stylesheet_link_tag "nitro_kit", "application", "data-turbo-track": "reload" %>
+      ERB
+      retired = NitroKit::Installation.new(root).checks.index_by(&:label).fetch("Stylesheet and appearance setup")
+      assert_equal :fail, retired.status
+      assert_includes retired.detail, 'remove stylesheet "nitro_kit-tailwind-v4"'
+    end
+  end
+
+  test "doctor marks a missing conventional layout unverified only when other layouts exist" do
+    Dir.mktmpdir do |directory|
+      root = Pathname.new(directory)
+      write_file(root, "app/views/layouts/site.html.erb", "<html></html>\n")
+
+      check = NitroKit::Installation.new(root).checks.index_by(&:label).fetch("Stylesheet and appearance setup")
+      assert_equal :unverified, check.status
+      assert_includes check.detail, "app/views/layouts/site.html.erb"
+    end
+  end
+
+  test "doctor fails invalid configuration and stale skills outside the configured roots" do
+    Dir.mktmpdir do |directory|
+      root = Pathname.new(directory)
+      write_file(root, "config/nitro_kit/doctor.yml", <<~YAML)
+        theme_owner: tailwind
+        skill_roots: [.cursor/skills]
+        retained_dependencies:
+          "@github/combobox-nav": ""
+        retained: true
+      YAML
+      installation = NitroKit::Installation.new(root)
+
+      check = installation.checks.index_by(&:label).fetch("Doctor configuration")
+      assert_equal :fail, check.status
+      assert_includes check.detail, "unknown settings retained"
+      assert_includes check.detail, "theme_owner must be one of nitro_kit, application"
+      assert_includes check.detail, "skill_roots must list one or both of .agents/skills, .claude/skills"
+      assert_includes check.detail, "non-empty reason: @github/combobox-nav"
+      assert_equal NitroKit::Installation::SKILL_ROOTS, installation.configuration.skill_roots
+      refute installation.configuration.theme_owned_by_application?
+
+      write_file(root, "config/nitro_kit/doctor.yml", "skill_roots: [.agents/skills]\n")
+      installation = NitroKit::Installation.new(root)
+      installation.install
+      write_file(root, ".claude/skills/nitro-kit-ui/SKILL.md", "stale\n")
+
+      skills = installation.checks.index_by(&:label).fetch("Project-local skills")
+      assert_equal :fail, skills.status
+      assert_includes skills.detail, "stale outside the configured skill_roots; refresh or remove: .claude/skills/nitro-kit-ui/SKILL.md"
+    end
+  end
+
+  test "doctor keeps unconfigured retained dependencies as migration warnings" do
+    Dir.mktmpdir do |directory|
+      root = Pathname.new(directory)
+      write_file(root, "config/nitro_kit/doctor.yml", <<~YAML)
+        retained_dependencies:
+          "@github/combobox-nav": Retained by the application-owned search combobox controller
+      YAML
+      write_file(root, "config/importmap.rb", %(pin "@github/combobox-nav"\npin "@floating-ui/dom"\n))
+
+      checks = NitroKit::Installation.new(root).checks.index_by(&:label)
+      dependencies = checks.fetch("Migration: Vendored dependencies")
+
+      assert_equal :warn, dependencies.status
+      assert_includes dependencies.detail, "retained: config/importmap.rb:1"
+      assert_includes dependencies.detail, "unresolved: config/importmap.rb:2"
+      refute_includes checks.fetch("Migration: Known replacements").detail, "combobox"
+    end
+  end
+
+  test "doctor summary separates failures from unverified and optional outcomes" do
+    checks = [
+      NitroKit::Installation::Check.new(status: :pass, label: "A", detail: ""),
+      NitroKit::Installation::Check.new(status: :unverified, label: "B", detail: ""),
+      NitroKit::Installation::Check.new(status: :optional, label: "C", detail: "")
+    ]
+    assert_equal "Doctor found no failures; 1 UNVERIFIED to check by hand; 1 OPTIONAL convention not adopted.",
+      NitroKit::Installation.summary(checks)
+
+    checks << NitroKit::Installation::Check.new(status: :fail, label: "D", detail: "")
+    assert_match(/\ADoctor found 1 failure;/, NitroKit::Installation.summary(checks))
+    assert_equal NitroKit::Installation::STATUS_COLORS.keys.sort, %i[fail optional pass unverified warn]
   end
 
   test "ships a version-specific initialization prompt" do

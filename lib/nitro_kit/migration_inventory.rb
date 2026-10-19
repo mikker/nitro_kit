@@ -238,8 +238,12 @@ module NitroKit
 
     attr_reader :application_root
 
-    def initialize(application_root)
+    # retained_dependencies maps a VENDORED_MODULES package to the documented
+    # reason the application still uses it. Those findings become :retained
+    # instead of :unresolved.
+    def initialize(application_root, retained_dependencies: {})
       @application_root = Pathname.new(application_root)
+      @retained_dependencies = retained_dependencies
     end
 
     def categories
@@ -299,7 +303,8 @@ module NitroKit
 
       def vendored_dependencies
         findings = application_root.glob("vendor/javascript/{@floating-ui--*,@github--combobox-nav*}.js").map do |path|
-          Finding.new(
+          name = VENDORED_MODULES.keys.find { path.basename.to_s.start_with?(_1.sub("/", "--")) }
+          retained_finding(name, relative(path)) || Finding.new(
             status: :unresolved,
             path: relative(path),
             guidance: "delete the vendored 1.x runtime after removing copied Nitro controllers"
@@ -311,12 +316,20 @@ module NitroKit
             next if line.lstrip.start_with?("#", "//")
 
             VENDORED_MODULES.each do |name, guidance|
-              findings << Finding.new(status: :unresolved, path: location(path, line_number), guidance:) if line.include?(name)
+              next unless line.include?(name)
+
+              findings << (retained_finding(name, location(path, line_number)) ||
+                Finding.new(status: :unresolved, path: location(path, line_number), guidance:))
             end
           end
         end
 
         findings.uniq { [ _1.path, _1.guidance ] }
+      end
+
+      def retained_finding(name, path)
+        reason = @retained_dependencies[name]
+        Finding.new(status: :retained, path:, guidance: "#{name}: #{reason}") if reason
       end
 
       def application_button_treatments
@@ -420,6 +433,8 @@ module NitroKit
           guidance = case status
           when :application_owned
             "preserve the behavior under an application namespace; do not keep a Nitro shadow"
+          when :retained
+            "documented exceptions in config/nitro_kit/doctor.yml; remove each entry with the code that still needs it"
           else
             "apply the per-file replacement or removal listed in the category above"
           end
