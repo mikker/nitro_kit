@@ -34,7 +34,7 @@ module NitroKit
 
     private
       def installation
-        @installation ||= Installation.new(destination_root)
+        @installation ||= Installation.new(destination_root, pretend: options[:pretend])
       end
 
       def copy_initialization_prompt

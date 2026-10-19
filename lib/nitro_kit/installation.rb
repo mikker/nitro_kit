@@ -61,8 +61,13 @@ module NitroKit
 
     attr_reader :application_root
 
-    def initialize(application_root)
+    def initialize(application_root, pretend: false)
       @application_root = Pathname.new(application_root)
+      @pretend = pretend
+    end
+
+    def pretend?
+      @pretend
     end
 
     def install
@@ -125,6 +130,7 @@ module NitroKit
     private
       def write(path, contents)
         return :unchanged if path.exist? && path.read == contents
+        return :written if pretend?
 
         FileUtils.mkdir_p(path.dirname)
         path.write(contents)
