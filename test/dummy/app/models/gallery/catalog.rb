@@ -1004,7 +1004,7 @@ module Gallery
     PATTERNS = {
       [ :component, "alert" ] => %w[flash_and_toast],
       [ :component, "app-navigation" ] => %w[application_foundation],
-      [ :component, "app-shell" ] => %w[application_foundation inset_workspace crud_resource],
+      [ :component, "app-shell" ] => %w[application_foundation composition inset_workspace crud_resource],
       [ :component, "auth-shell" ] => %w[application_foundation],
       [ :component, "card" ] => %w[inline_edit],
       [ :component, "checkbox" ] => %w[resource_form],
@@ -1023,7 +1023,7 @@ module Gallery
       [ :component, "settings-section" ] => %w[resource_form crud_resource],
       [ :component, "input" ] => %w[resource_form],
       [ :component, "label" ] => %w[resource_form],
-      [ :component, "page-header" ] => %w[crud_resource],
+      [ :component, "page-header" ] => %w[composition crud_resource],
       [ :component, "pagination" ] => %w[queryable_collection],
       [ :component, "pagination-bar" ] => %w[queryable_collection],
       [ :component, "radio-button" ] => %w[resource_form],
