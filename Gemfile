@@ -12,7 +12,7 @@ gem "minitest"
 gem "stimulus-rails"
 gem "turbo-rails"
 gem "importmap-rails"
-gem "pagy", "~> 43.6"
+gem "pagy", "~> 43.8"
 gem "lexxy"
 gem "ransack"
 gem "rubocop-rails-omakase", require: false
@@ -23,5 +23,5 @@ end
 
 group :test do
   gem "capybara", "~> 3.40.0"
-  gem "selenium-webdriver", "~> 4.50.0"
+  gem "selenium-webdriver", "~> 4.51.0"
 end
