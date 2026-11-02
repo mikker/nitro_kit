@@ -40,7 +40,6 @@
     padding: var(--_nk-app-navigation-inset);
     overflow: auto;
     overscroll-behavior: contain;
-    scrollbar-gutter: stable;
   }
 
   :where(
