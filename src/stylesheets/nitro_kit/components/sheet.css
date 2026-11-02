@@ -74,30 +74,30 @@
   }
 
   :where(
-      [data-nk="sheet"][data-side="left"] > [data-slot="sheet-panel"][open]
-    ) {
+    [data-nk="sheet"][data-side="left"] > [data-slot="sheet-panel"][open]
+  ) {
     --_nk-sheet-from: calc(var(--nk-space) * -4);
   }
 
   :where(
-      [data-nk="sheet"][data-side="right"] > [data-slot="sheet-panel"][open]
-    ) {
+    [data-nk="sheet"][data-side="right"] > [data-slot="sheet-panel"][open]
+  ) {
     --_nk-sheet-from: calc(var(--nk-space) * 4);
   }
 
   /* Sides are logical, but translateX is physical; RTL flips the slide so the
      panel still enters from its own edge. */
   :where(
-      [data-nk="sheet"][data-side="left"]:dir(rtl)
-        > [data-slot="sheet-panel"][open]
-    ) {
+    [data-nk="sheet"][data-side="left"]:dir(rtl)
+      > [data-slot="sheet-panel"][open]
+  ) {
     --_nk-sheet-from: calc(var(--nk-space) * 4);
   }
 
   :where(
-      [data-nk="sheet"][data-side="right"]:dir(rtl)
-        > [data-slot="sheet-panel"][open]
-    ) {
+    [data-nk="sheet"][data-side="right"]:dir(rtl)
+      > [data-slot="sheet-panel"][open]
+  ) {
     --_nk-sheet-from: calc(var(--nk-space) * -4);
   }
 

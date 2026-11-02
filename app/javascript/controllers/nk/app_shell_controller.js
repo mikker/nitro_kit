@@ -230,8 +230,8 @@ export default class extends Controller {
     const focusTarget = this.previouslyFocused?.isConnected
       ? this.previouslyFocused
       : this.hasTriggerTarget
-      ? this.triggerTarget
-      : null;
+        ? this.triggerTarget
+        : null;
 
     this.restoreNavigation();
     this.setState(false);

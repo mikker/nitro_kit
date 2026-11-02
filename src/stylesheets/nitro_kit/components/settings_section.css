@@ -22,8 +22,8 @@
   }
 
   :where(
-      [data-nk="settings-section"] [data-slot="settings-section-description"]
-    ) {
+    [data-nk="settings-section"] [data-slot="settings-section-description"]
+  ) {
     max-inline-size: var(--nk-content-lg);
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
@@ -46,18 +46,18 @@
   }
 
   :where(
-      [data-nk="settings-section"] > [data-slot="settings-section-form"] > form
-    ) {
+    [data-nk="settings-section"] > [data-slot="settings-section-form"] > form
+  ) {
     display: grid;
     gap: calc(var(--nk-space) * 5);
   }
 
   :where(
-      [data-nk="settings-section"]
-        > [data-slot="settings-section-form"]
-        > form
-        > [data-nk="button"]
-    ) {
+    [data-nk="settings-section"]
+      > [data-slot="settings-section-form"]
+      > form
+      > [data-nk="button"]
+  ) {
     justify-self: start;
   }
 
@@ -75,9 +75,9 @@
     }
 
     :where(
-        [data-nk="settings-section"] > [data-slot="settings-section-status"],
-        [data-nk="settings-section"] > [data-slot="settings-section-form"]
-      ) {
+      [data-nk="settings-section"] > [data-slot="settings-section-status"],
+      [data-nk="settings-section"] > [data-slot="settings-section-form"]
+    ) {
       grid-column: 1;
     }
   }

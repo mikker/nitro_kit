@@ -27,10 +27,10 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="rich-text-area"]
-        > [data-slot="rich-text-area-editor"]
-        > [aria-invalid="true"]
-    ) {
+    [data-nk="rich-text-area"]
+      > [data-slot="rich-text-area-editor"]
+      > [aria-invalid="true"]
+  ) {
     border-color: var(--nk-color-destructive);
   }
 }

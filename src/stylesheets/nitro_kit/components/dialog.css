@@ -29,19 +29,17 @@
   }
 
   :where(
-      [data-nk="dialog"]
-        > [data-slot="dialog-panel"]
-        > [data-slot="dialog-header"]
-    ) {
+    [data-nk="dialog"]
+      > [data-slot="dialog-panel"]
+      > [data-slot="dialog-header"]
+  ) {
     display: flow-root;
     margin-block-end: calc(var(--nk-space) * 4);
   }
 
   :where(
-      [data-nk="dialog"]
-        > [data-slot="dialog-panel"]
-        > [data-slot="dialog-body"]
-    ) {
+    [data-nk="dialog"] > [data-slot="dialog-panel"] > [data-slot="dialog-body"]
+  ) {
     clear: both;
   }
 
@@ -63,10 +61,8 @@
   /* The close control precedes the panel content and sticks to the top of the
      scrolling panel so long content never scrolls it out of reach. */
   :where(
-      [data-nk="dialog"]
-        > [data-slot="dialog-panel"]
-        > [data-slot="dialog-close"]
-    ) {
+    [data-nk="dialog"] > [data-slot="dialog-panel"] > [data-slot="dialog-close"]
+  ) {
     position: sticky;
     z-index: 1;
     float: inline-end;

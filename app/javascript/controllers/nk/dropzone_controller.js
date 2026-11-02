@@ -237,8 +237,8 @@ export default class extends Controller {
     this.element.dataset.state = this.initialInputDisabled
       ? "disabled"
       : selectedCount > 0
-      ? "success"
-      : "idle";
+        ? "success"
+        : "idle";
   }
 
   replaceFiles(files) {

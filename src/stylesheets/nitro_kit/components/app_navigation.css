@@ -12,9 +12,9 @@
   }
 
   :where(
-      [data-nk="app-navigation"] > [data-slot="app-navigation-header"],
-      [data-nk="app-navigation"] > [data-slot="app-navigation-footer"]
-    ) {
+    [data-nk="app-navigation"] > [data-slot="app-navigation-header"],
+    [data-nk="app-navigation"] > [data-slot="app-navigation-footer"]
+  ) {
     flex: 0 0 auto;
   }
 
@@ -43,9 +43,9 @@
   }
 
   :where(
-      [data-nk="app-navigation"] [data-slot="app-navigation-section"],
-      [data-nk="app-navigation"] [data-slot="app-navigation-section-list"]
-    ) {
+    [data-nk="app-navigation"] [data-slot="app-navigation-section"],
+    [data-nk="app-navigation"] [data-slot="app-navigation-section-list"]
+  ) {
     display: flex;
     flex: 0 0 auto;
     flex-direction: column;
@@ -54,8 +54,8 @@
   }
 
   :where(
-      [data-nk="app-navigation"] [data-slot="app-navigation-section-label"]
-    ) {
+    [data-nk="app-navigation"] [data-slot="app-navigation-section-label"]
+  ) {
     display: block;
     margin: calc(var(--nk-space) * 4) calc(var(--nk-space) * 2) var(--nk-space);
     color: var(--nk-color-muted-foreground);
@@ -68,9 +68,8 @@
      same inline padding, symmetric block margins, and the same hover
      treatment, so the disclosure target is as easy to hit as a destination. */
   :where(
-      [data-nk="app-navigation"]
-        summary[data-slot="app-navigation-section-label"]
-    ) {
+    [data-nk="app-navigation"] summary[data-slot="app-navigation-section-label"]
+  ) {
     display: flex;
     gap: var(--nk-space);
     align-items: center;
@@ -89,9 +88,9 @@
   }
 
   :where(
-      [data-nk="app-navigation"]
-        summary[data-slot="app-navigation-section-label"]::-webkit-details-marker
-    ) {
+    [data-nk="app-navigation"]
+      summary[data-slot="app-navigation-section-label"]::-webkit-details-marker
+  ) {
     display: none;
   }
 
@@ -103,17 +102,17 @@
   }
 
   :where(
-      [data-nk="app-navigation"]
-        [data-slot="app-navigation-section-disclosure"]:not([open])
-        [data-slot="app-navigation-section-icon"]
-    ) {
+    [data-nk="app-navigation"]
+      [data-slot="app-navigation-section-disclosure"]:not([open])
+      [data-slot="app-navigation-section-icon"]
+  ) {
     transform: rotate(-90deg);
   }
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-        [data-nk="app-navigation"] [data-slot="app-navigation-section-icon"]
-      ) {
+      [data-nk="app-navigation"] [data-slot="app-navigation-section-icon"]
+    ) {
       transition-duration: 0.01ms;
     }
   }
@@ -149,10 +148,10 @@
   }
 
   :where(
-      [data-nk="app-navigation"] [data-slot="app-navigation-item-icon"],
-      [data-nk="app-navigation"] [data-slot="app-navigation-item-icon-end"],
-      [data-nk="app-navigation"] [data-slot="app-navigation-item-badge"]
-    ) {
+    [data-nk="app-navigation"] [data-slot="app-navigation-item-icon"],
+    [data-nk="app-navigation"] [data-slot="app-navigation-item-icon-end"],
+    [data-nk="app-navigation"] [data-slot="app-navigation-item-badge"]
+  ) {
     flex: 0 0 auto;
   }
 
@@ -179,45 +178,45 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="app-navigation"]
-        [data-slot="app-navigation-item-link"][aria-current]
-    ) {
+    [data-nk="app-navigation"]
+      [data-slot="app-navigation-item-link"][aria-current]
+  ) {
     color: var(--nk-app-shell-sidebar-accent-foreground);
     background: var(--nk-app-shell-sidebar-accent);
   }
 
   @media (hover: hover) {
     :where(
-        [data-nk="app-navigation"] [data-slot="app-navigation-item-link"]:hover,
-        [data-nk="app-navigation"]
-          summary[data-slot="app-navigation-section-label"]:hover
-      ) {
+      [data-nk="app-navigation"] [data-slot="app-navigation-item-link"]:hover,
+      [data-nk="app-navigation"]
+        summary[data-slot="app-navigation-section-label"]:hover
+    ) {
       color: var(--nk-app-shell-sidebar-accent-foreground);
       background: var(--nk-app-shell-sidebar-accent);
     }
   }
 
   :where(
-      [data-nk="app-navigation"]
-        summary[data-slot="app-navigation-section-label"]:focus-visible
-    ) {
+    [data-nk="app-navigation"]
+      summary[data-slot="app-navigation-section-label"]:focus-visible
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: calc(var(--nk-focus-offset) * -1);
   }
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-        [data-nk="app-navigation"]
-          summary[data-slot="app-navigation-section-label"]
-      ) {
+      [data-nk="app-navigation"]
+        summary[data-slot="app-navigation-section-label"]
+    ) {
       transition-duration: 0.01ms;
     }
   }
 
   :where(
-      [data-nk="app-navigation"]
-        [data-slot="app-navigation-item-link"]:focus-visible
-    ) {
+    [data-nk="app-navigation"]
+      [data-slot="app-navigation-item-link"]:focus-visible
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: calc(var(--nk-focus-offset) * -1);
   }

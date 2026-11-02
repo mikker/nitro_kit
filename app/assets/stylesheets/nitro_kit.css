@@ -24,10 +24,12 @@
 /* Source: src/stylesheets/nitro_kit/tokens.css */
 @layer nitro-kit.tokens {
   :where(:root) {
-    --nk-font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    --nk-font-sans:
+      ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
       "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    --nk-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-      "Liberation Mono", "Courier New", monospace;
+    --nk-font-mono:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+      "Courier New", monospace;
 
     --nk-text-xs: 0.75rem;
     --nk-text-sm: 0.875rem;
@@ -85,9 +87,11 @@
       color-mix(in oklab, var(--nk-black) 5%, transparent);
     --nk-shadow-sm: 0 1px 2px
       color-mix(in oklab, var(--nk-black) 8%, transparent);
-    --nk-shadow-md: 0 4px 6px -1px color-mix(in oklab, var(--nk-black) 10%, transparent),
+    --nk-shadow-md:
+      0 4px 6px -1px color-mix(in oklab, var(--nk-black) 10%, transparent),
       0 2px 4px -2px color-mix(in oklab, var(--nk-black) 10%, transparent);
-    --nk-shadow-lg: 0 10px 15px -3px color-mix(in oklab, var(--nk-black) 12%, transparent),
+    --nk-shadow-lg:
+      0 10px 15px -3px color-mix(in oklab, var(--nk-black) 12%, transparent),
       0 4px 6px -4px color-mix(in oklab, var(--nk-black) 12%, transparent);
 
     --nk-duration-fast: 100ms;
@@ -802,10 +806,10 @@
   }
 
   :where(
-      button,
-      input:is([type="button"], [type="reset"], [type="submit"]),
-      label[for]
-    ),
+    button,
+    input:is([type="button"], [type="reset"], [type="submit"]),
+    label[for]
+  ),
   ::file-selector-button {
     cursor: pointer;
   }
@@ -849,11 +853,11 @@
   /* Only Nitro-owned lists lose their markers. Prose lists keep real markers,
      and `typeset` restores its own in the `nitro-kit.base` layer. */
   :where(
-      ol[data-nk],
-      ul[data-nk],
-      menu[data-nk],
-      [data-nk] :is(ol, ul, menu)[data-slot]
-    ) {
+    ol[data-nk],
+    ul[data-nk],
+    menu[data-nk],
+    [data-nk] :is(ol, ul, menu)[data-slot]
+  ) {
     list-style: none;
   }
 
@@ -912,10 +916,10 @@
   }
 
   :where(
-      [data-nk="accordion"]
-        > [data-slot="accordion-item"]
-        > [data-slot="accordion-trigger"]
-    ) {
+    [data-nk="accordion"]
+      > [data-slot="accordion-item"]
+      > [data-slot="accordion-trigger"]
+  ) {
     display: flex;
     inline-size: 100%;
     min-block-size: var(--nk-control-height-lg);
@@ -934,28 +938,28 @@
   }
 
   :where(
-      [data-nk="accordion"]
-        > [data-slot="accordion-item"]
-        > [data-slot="accordion-trigger"]
-    )::-webkit-details-marker {
+    [data-nk="accordion"]
+      > [data-slot="accordion-item"]
+      > [data-slot="accordion-trigger"]
+  )::-webkit-details-marker {
     display: none;
   }
 
   :where(
-      [data-nk="accordion"]
-        > [data-slot="accordion-item"]
-        > [data-slot="accordion-trigger"]
-        > [data-slot="accordion-label"]
-    ) {
+    [data-nk="accordion"]
+      > [data-slot="accordion-item"]
+      > [data-slot="accordion-trigger"]
+      > [data-slot="accordion-label"]
+  ) {
     flex: 1;
   }
 
   :where(
-      [data-nk="accordion"]
-        > [data-slot="accordion-item"]
-        > [data-slot="accordion-trigger"]
-        > [data-slot="accordion-icon"]
-    ) {
+    [data-nk="accordion"]
+      > [data-slot="accordion-item"]
+      > [data-slot="accordion-trigger"]
+      > [data-slot="accordion-icon"]
+  ) {
     flex: none;
     inline-size: var(--nk-icon-size-sm);
     block-size: var(--nk-icon-size-sm);
@@ -966,19 +970,19 @@
   }
 
   :where(
-      [data-nk="accordion"]
-        > [data-slot="accordion-item"][open]
-        > [data-slot="accordion-trigger"]
-        > [data-slot="accordion-icon"]
-    ) {
+    [data-nk="accordion"]
+      > [data-slot="accordion-item"][open]
+      > [data-slot="accordion-trigger"]
+      > [data-slot="accordion-icon"]
+  ) {
     transform: rotate(180deg);
   }
 
   :where(
-      [data-nk="accordion"]
-        > [data-slot="accordion-item"]
-        > [data-slot="accordion-content"]
-    ) {
+    [data-nk="accordion"]
+      > [data-slot="accordion-item"]
+      > [data-slot="accordion-content"]
+  ) {
     padding-block-end: calc(var(--nk-space) * 4);
     line-height: var(--nk-leading-normal);
     color: var(--nk-color-muted-foreground);
@@ -988,30 +992,30 @@
 @layer nitro-kit.state {
   @media (hover: hover) {
     :where(
-        [data-nk="accordion"]
-          > [data-slot="accordion-item"]
-          > [data-slot="accordion-trigger"]:hover
-      ) {
+      [data-nk="accordion"]
+        > [data-slot="accordion-item"]
+        > [data-slot="accordion-trigger"]:hover
+    ) {
       color: var(--nk-color-primary);
     }
   }
 
   :where(
-      [data-nk="accordion"]
-        > [data-slot="accordion-item"]
-        > [data-slot="accordion-trigger"]:focus-visible
-    ) {
+    [data-nk="accordion"]
+      > [data-slot="accordion-item"]
+      > [data-slot="accordion-trigger"]:focus-visible
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-        [data-nk="accordion"]
-          > [data-slot="accordion-item"]
-          > [data-slot="accordion-trigger"]
-          > [data-slot="accordion-icon"]
-      ) {
+      [data-nk="accordion"]
+        > [data-slot="accordion-item"]
+        > [data-slot="accordion-trigger"]
+        > [data-slot="accordion-icon"]
+    ) {
       transition-duration: 0.01ms;
     }
   }
@@ -1061,16 +1065,17 @@
       (
           var(--nk-title-compact-size) * var(--nk-leading-tight) -
             var(--_nk-alert-icon-size)
-        ) / 2
+        ) /
+        2
     );
   }
 
   :where(
-      [data-nk="alert"]:has(> [data-slot="alert-icon"])
-        > [data-slot="alert-title"],
-      [data-nk="alert"]:has(> [data-slot="alert-icon"])
-        > [data-slot="alert-description"]
-    ) {
+    [data-nk="alert"]:has(> [data-slot="alert-icon"])
+      > [data-slot="alert-title"],
+    [data-nk="alert"]:has(> [data-slot="alert-icon"])
+      > [data-slot="alert-description"]
+  ) {
     grid-column: 2;
   }
 
@@ -1107,9 +1112,9 @@
   }
 
   :where(
-      [data-nk="app-navigation"] > [data-slot="app-navigation-header"],
-      [data-nk="app-navigation"] > [data-slot="app-navigation-footer"]
-    ) {
+    [data-nk="app-navigation"] > [data-slot="app-navigation-header"],
+    [data-nk="app-navigation"] > [data-slot="app-navigation-footer"]
+  ) {
     flex: 0 0 auto;
   }
 
@@ -1138,9 +1143,9 @@
   }
 
   :where(
-      [data-nk="app-navigation"] [data-slot="app-navigation-section"],
-      [data-nk="app-navigation"] [data-slot="app-navigation-section-list"]
-    ) {
+    [data-nk="app-navigation"] [data-slot="app-navigation-section"],
+    [data-nk="app-navigation"] [data-slot="app-navigation-section-list"]
+  ) {
     display: flex;
     flex: 0 0 auto;
     flex-direction: column;
@@ -1149,8 +1154,8 @@
   }
 
   :where(
-      [data-nk="app-navigation"] [data-slot="app-navigation-section-label"]
-    ) {
+    [data-nk="app-navigation"] [data-slot="app-navigation-section-label"]
+  ) {
     display: block;
     margin: calc(var(--nk-space) * 4) calc(var(--nk-space) * 2) var(--nk-space);
     color: var(--nk-color-muted-foreground);
@@ -1163,9 +1168,8 @@
      same inline padding, symmetric block margins, and the same hover
      treatment, so the disclosure target is as easy to hit as a destination. */
   :where(
-      [data-nk="app-navigation"]
-        summary[data-slot="app-navigation-section-label"]
-    ) {
+    [data-nk="app-navigation"] summary[data-slot="app-navigation-section-label"]
+  ) {
     display: flex;
     gap: var(--nk-space);
     align-items: center;
@@ -1184,9 +1188,9 @@
   }
 
   :where(
-      [data-nk="app-navigation"]
-        summary[data-slot="app-navigation-section-label"]::-webkit-details-marker
-    ) {
+    [data-nk="app-navigation"]
+      summary[data-slot="app-navigation-section-label"]::-webkit-details-marker
+  ) {
     display: none;
   }
 
@@ -1198,17 +1202,17 @@
   }
 
   :where(
-      [data-nk="app-navigation"]
-        [data-slot="app-navigation-section-disclosure"]:not([open])
-        [data-slot="app-navigation-section-icon"]
-    ) {
+    [data-nk="app-navigation"]
+      [data-slot="app-navigation-section-disclosure"]:not([open])
+      [data-slot="app-navigation-section-icon"]
+  ) {
     transform: rotate(-90deg);
   }
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-        [data-nk="app-navigation"] [data-slot="app-navigation-section-icon"]
-      ) {
+      [data-nk="app-navigation"] [data-slot="app-navigation-section-icon"]
+    ) {
       transition-duration: 0.01ms;
     }
   }
@@ -1244,10 +1248,10 @@
   }
 
   :where(
-      [data-nk="app-navigation"] [data-slot="app-navigation-item-icon"],
-      [data-nk="app-navigation"] [data-slot="app-navigation-item-icon-end"],
-      [data-nk="app-navigation"] [data-slot="app-navigation-item-badge"]
-    ) {
+    [data-nk="app-navigation"] [data-slot="app-navigation-item-icon"],
+    [data-nk="app-navigation"] [data-slot="app-navigation-item-icon-end"],
+    [data-nk="app-navigation"] [data-slot="app-navigation-item-badge"]
+  ) {
     flex: 0 0 auto;
   }
 
@@ -1274,45 +1278,45 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="app-navigation"]
-        [data-slot="app-navigation-item-link"][aria-current]
-    ) {
+    [data-nk="app-navigation"]
+      [data-slot="app-navigation-item-link"][aria-current]
+  ) {
     color: var(--nk-app-shell-sidebar-accent-foreground);
     background: var(--nk-app-shell-sidebar-accent);
   }
 
   @media (hover: hover) {
     :where(
-        [data-nk="app-navigation"] [data-slot="app-navigation-item-link"]:hover,
-        [data-nk="app-navigation"]
-          summary[data-slot="app-navigation-section-label"]:hover
-      ) {
+      [data-nk="app-navigation"] [data-slot="app-navigation-item-link"]:hover,
+      [data-nk="app-navigation"]
+        summary[data-slot="app-navigation-section-label"]:hover
+    ) {
       color: var(--nk-app-shell-sidebar-accent-foreground);
       background: var(--nk-app-shell-sidebar-accent);
     }
   }
 
   :where(
-      [data-nk="app-navigation"]
-        summary[data-slot="app-navigation-section-label"]:focus-visible
-    ) {
+    [data-nk="app-navigation"]
+      summary[data-slot="app-navigation-section-label"]:focus-visible
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: calc(var(--nk-focus-offset) * -1);
   }
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-        [data-nk="app-navigation"]
-          summary[data-slot="app-navigation-section-label"]
-      ) {
+      [data-nk="app-navigation"]
+        summary[data-slot="app-navigation-section-label"]
+    ) {
       transition-duration: 0.01ms;
     }
   }
 
   :where(
-      [data-nk="app-navigation"]
-        [data-slot="app-navigation-item-link"]:focus-visible
-    ) {
+    [data-nk="app-navigation"]
+      [data-slot="app-navigation-item-link"]:focus-visible
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: calc(var(--nk-focus-offset) * -1);
   }
@@ -1358,8 +1362,8 @@
   }
 
   :where(
-      [data-nk="app-shell"] > [data-slot="app-shell-skip-link"]:focus-visible
-    ) {
+    [data-nk="app-shell"] > [data-slot="app-shell-skip-link"]:focus-visible
+  ) {
     transform: translateY(0);
   }
 
@@ -1368,10 +1372,10 @@
   }
 
   :where(
-      [data-nk="app-shell"]
-        > [data-slot="app-shell-header"]
-        > [data-slot="app-shell-brand"]
-    ) {
+    [data-nk="app-shell"]
+      > [data-slot="app-shell-header"]
+      > [data-slot="app-shell-brand"]
+  ) {
     position: sticky;
     inset-block-start: 0;
     z-index: 20;
@@ -1389,13 +1393,13 @@
   }
 
   :where(
-      [data-nk="app-shell"]
-        > [data-slot="app-shell-header"]
-        > [data-slot="app-shell-mobile-trigger"],
-      [data-nk="app-shell"]
-        > [data-slot="app-shell-dialog"]
-        > [data-slot="app-shell-mobile-close"]
-    ) {
+    [data-nk="app-shell"]
+      > [data-slot="app-shell-header"]
+      > [data-slot="app-shell-mobile-trigger"],
+    [data-nk="app-shell"]
+      > [data-slot="app-shell-dialog"]
+      > [data-slot="app-shell-mobile-close"]
+  ) {
     display: none;
     align-items: center;
     justify-content: center;
@@ -1431,13 +1435,13 @@
   }
 
   :where(
-      [data-nk="app-shell"]
-        > [data-slot="app-shell-sidebar"]
-        > [data-slot="app-shell-navigation"],
-      [data-nk="app-shell"]
-        > [data-slot="app-shell-dialog"]
-        > [data-slot="app-shell-navigation"]
-    ) {
+    [data-nk="app-shell"]
+      > [data-slot="app-shell-sidebar"]
+      > [data-slot="app-shell-navigation"],
+    [data-nk="app-shell"]
+      > [data-slot="app-shell-dialog"]
+      > [data-slot="app-shell-navigation"]
+  ) {
     display: flex;
     flex: 1 1 auto;
     min-inline-size: 0;
@@ -1445,10 +1449,10 @@
   }
 
   :where(
-      [data-nk="app-shell"]
-        > [data-slot="app-shell-header"]
-        > [data-slot="app-shell-topbar"]
-    ) {
+    [data-nk="app-shell"]
+      > [data-slot="app-shell-header"]
+      > [data-slot="app-shell-topbar"]
+  ) {
     position: sticky;
     inset-block-start: 0;
     z-index: 20;
@@ -1466,19 +1470,19 @@
   }
 
   :where(
-      [data-nk="app-shell"]
-        > [data-slot="app-shell-header"]
-        > [data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])
-    ) {
+    [data-nk="app-shell"]
+      > [data-slot="app-shell-header"]
+      > [data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])
+  ) {
     justify-content: stretch;
   }
 
   :where(
-      [data-nk="app-shell"]
-        > [data-slot="app-shell-header"]
-        > [data-slot="app-shell-topbar"]
-        > [data-nk="toolbar"]
-    ) {
+    [data-nk="app-shell"]
+      > [data-slot="app-shell-header"]
+      > [data-slot="app-shell-topbar"]
+      > [data-nk="toolbar"]
+  ) {
     flex: 1 1 auto;
   }
 
@@ -1506,11 +1510,11 @@
 
 @layer nitro-kit.variant {
   :where(
-      [data-nk="app-shell"][data-layout="sidebar"]:not(
-          :has(> [data-slot="app-shell-header"] > [data-slot="app-shell-brand"])
-        )
-        > [data-slot="app-shell-sidebar"]
-    ) {
+    [data-nk="app-shell"][data-layout="sidebar"]:not(
+        :has(> [data-slot="app-shell-header"] > [data-slot="app-shell-brand"])
+      )
+      > [data-slot="app-shell-sidebar"]
+  ) {
     inset-block-start: 0;
     grid-row: 1 / 3;
     block-size: 100vh;
@@ -1522,17 +1526,17 @@
   }
 
   :where(
-      [data-nk="app-shell"][data-layout="topbar"]
-        > [data-slot="app-shell-sidebar"]
-    ) {
+    [data-nk="app-shell"][data-layout="topbar"]
+      > [data-slot="app-shell-sidebar"]
+  ) {
     display: contents;
   }
 
   :where(
-      [data-nk="app-shell"][data-layout="topbar"]
-        > [data-slot="app-shell-sidebar"]
-        > [data-slot="app-shell-navigation"]
-    ) {
+    [data-nk="app-shell"][data-layout="topbar"]
+      > [data-slot="app-shell-sidebar"]
+      > [data-slot="app-shell-navigation"]
+  ) {
     position: sticky;
     inset-block-start: 0;
     z-index: 20;
@@ -1544,47 +1548,47 @@
   }
 
   :where(
-      [data-nk="app-shell"][data-layout="topbar"]
-        > [data-slot="app-shell-header"]
-        > [data-slot="app-shell-brand"]
-    ) {
+    [data-nk="app-shell"][data-layout="topbar"]
+      > [data-slot="app-shell-header"]
+      > [data-slot="app-shell-brand"]
+  ) {
     grid-column: 1;
     background: var(--nk-app-shell-background);
     border-inline-end: 0;
   }
 
   :where(
-      [data-nk="app-shell"][data-layout="topbar"]
-        > [data-slot="app-shell-header"]
-        > [data-slot="app-shell-topbar"]
-    ) {
+    [data-nk="app-shell"][data-layout="topbar"]
+      > [data-slot="app-shell-header"]
+      > [data-slot="app-shell-topbar"]
+  ) {
     grid-column: 3;
   }
 
   :where(
-      [data-nk="app-shell"][data-layout="topbar"] > [data-slot="app-shell-main"]
-    ) {
+    [data-nk="app-shell"][data-layout="topbar"] > [data-slot="app-shell-main"]
+  ) {
     grid-row: 2;
     grid-column: 1 / -1;
   }
 
   :where(
-      [data-nk="app-shell"][data-layout="topbar"]
-        > [data-slot="app-shell-sidebar"]
-        > [data-slot="app-shell-navigation"]
-        > [data-nk="app-navigation"]
-    ) {
+    [data-nk="app-shell"][data-layout="topbar"]
+      > [data-slot="app-shell-sidebar"]
+      > [data-slot="app-shell-navigation"]
+      > [data-nk="app-navigation"]
+  ) {
     flex-direction: row;
     align-items: stretch;
   }
 
   :where(
-      [data-nk="app-shell"][data-layout="topbar"]
-        > [data-slot="app-shell-sidebar"]
-        > [data-slot="app-shell-navigation"]
-        > [data-nk="app-navigation"]
-        > [data-slot="app-navigation-body"]
-    ) {
+    [data-nk="app-shell"][data-layout="topbar"]
+      > [data-slot="app-shell-sidebar"]
+      > [data-slot="app-shell-navigation"]
+      > [data-nk="app-navigation"]
+      > [data-slot="app-navigation-body"]
+  ) {
     flex-direction: row;
     align-items: center;
     padding-block: calc(var(--nk-space) * 2);
@@ -1592,23 +1596,23 @@
   }
 
   :where(
-      [data-nk="app-shell"][data-layout="topbar"]
-        > [data-slot="app-shell-sidebar"]
-        > [data-slot="app-shell-navigation"]
-        > [data-nk="app-navigation"]
-        [data-slot="app-navigation-section"]
-    ) {
+    [data-nk="app-shell"][data-layout="topbar"]
+      > [data-slot="app-shell-sidebar"]
+      > [data-slot="app-shell-navigation"]
+      > [data-nk="app-navigation"]
+      [data-slot="app-navigation-section"]
+  ) {
     flex-direction: row;
     align-items: center;
   }
 
   :where(
-      [data-nk="app-shell"][data-layout="topbar"]
-        > [data-slot="app-shell-sidebar"]
-        > [data-slot="app-shell-navigation"]
-        > [data-nk="app-navigation"]
-        [data-slot="app-navigation-section-label"]
-    ) {
+    [data-nk="app-shell"][data-layout="topbar"]
+      > [data-slot="app-shell-sidebar"]
+      > [data-slot="app-shell-navigation"]
+      > [data-nk="app-navigation"]
+      [data-slot="app-navigation-section-label"]
+  ) {
     position: absolute;
     inline-size: 1px;
     block-size: 1px;
@@ -1621,24 +1625,24 @@
   }
 
   :where(
-      [data-nk="app-shell"][data-layout="topbar"]
-        > [data-slot="app-shell-sidebar"]
-        > [data-slot="app-shell-navigation"]
-        > [data-nk="app-navigation"]
-        [data-slot="app-navigation-divider"]
-    ) {
+    [data-nk="app-shell"][data-layout="topbar"]
+      > [data-slot="app-shell-sidebar"]
+      > [data-slot="app-shell-navigation"]
+      > [data-nk="app-navigation"]
+      [data-slot="app-navigation-divider"]
+  ) {
     inline-size: var(--nk-border-width);
     block-size: calc(var(--nk-control-height-md) - (var(--nk-space) * 2));
     margin: calc(var(--nk-space) * 2);
   }
 
   :where(
-      [data-nk="app-shell"][data-layout="topbar"]
-        > [data-slot="app-shell-sidebar"]
-        > [data-slot="app-shell-navigation"]
-        > [data-nk="app-navigation"]
-        [data-slot="app-navigation-spacer"]
-    ) {
+    [data-nk="app-shell"][data-layout="topbar"]
+      > [data-slot="app-shell-sidebar"]
+      > [data-slot="app-shell-navigation"]
+      > [data-nk="app-navigation"]
+      [data-slot="app-navigation-spacer"]
+  ) {
     flex-basis: calc(var(--nk-space) * 4);
     min-inline-size: calc(var(--nk-space) * 4);
     min-block-size: 0;
@@ -1648,36 +1652,36 @@
 @layer nitro-kit.state {
   @media (hover: hover) {
     :where(
-        [data-nk="app-shell"]
-          > [data-slot="app-shell-header"]
-          > [data-slot="app-shell-mobile-trigger"]:hover,
-        [data-nk="app-shell"]
-          > [data-slot="app-shell-dialog"]
-          > [data-slot="app-shell-mobile-close"]:hover
-      ) {
+      [data-nk="app-shell"]
+        > [data-slot="app-shell-header"]
+        > [data-slot="app-shell-mobile-trigger"]:hover,
+      [data-nk="app-shell"]
+        > [data-slot="app-shell-dialog"]
+        > [data-slot="app-shell-mobile-close"]:hover
+    ) {
       background: var(--nk-app-shell-sidebar-accent);
     }
   }
 
   :where(
-      [data-nk="app-shell"]
-        > [data-slot="app-shell-header"]
-        > [data-slot="app-shell-mobile-trigger"]:active,
-      [data-nk="app-shell"]
-        > [data-slot="app-shell-dialog"]
-        > [data-slot="app-shell-mobile-close"]:active
-    ) {
+    [data-nk="app-shell"]
+      > [data-slot="app-shell-header"]
+      > [data-slot="app-shell-mobile-trigger"]:active,
+    [data-nk="app-shell"]
+      > [data-slot="app-shell-dialog"]
+      > [data-slot="app-shell-mobile-close"]:active
+  ) {
     scale: 0.96;
   }
 
   :where(
-      [data-nk="app-shell"]
-        > [data-slot="app-shell-header"]
-        > [data-slot="app-shell-mobile-trigger"]:focus-visible,
-      [data-nk="app-shell"]
-        > [data-slot="app-shell-dialog"]
-        > [data-slot="app-shell-mobile-close"]:focus-visible
-    ) {
+    [data-nk="app-shell"]
+      > [data-slot="app-shell-header"]
+      > [data-slot="app-shell-mobile-trigger"]:focus-visible,
+    [data-nk="app-shell"]
+      > [data-slot="app-shell-dialog"]
+      > [data-slot="app-shell-mobile-close"]:focus-visible
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -1685,17 +1689,17 @@
 
 @layer nitro-kit.compound {
   :where(
-      [data-nk="app-shell"]
-        > [data-slot="app-shell-sidebar"]
-        > [data-slot="app-shell-sidebar-toggle"]
-    ) {
+    [data-nk="app-shell"]
+      > [data-slot="app-shell-sidebar"]
+      > [data-slot="app-shell-sidebar-toggle"]
+  ) {
     display: none;
   }
 
   @media (width >= 48rem) {
     :where(
-        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
-      ) {
+      [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+    ) {
       --_nk-shell-rail-width: calc(var(--nk-space) * 16);
       --_nk-shell-panel-width: var(--nk-app-shell-sidebar-width);
       --_nk-shell-label-clip: none;
@@ -1703,9 +1707,9 @@
     }
 
     :where(
-        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
-          > [data-slot="app-shell-sidebar"]
-      ) {
+      [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+        > [data-slot="app-shell-sidebar"]
+    ) {
       z-index: 30;
       inline-size: var(--_nk-shell-panel-width);
       background-color: var(--nk-app-shell-background);
@@ -1717,41 +1721,41 @@
     }
 
     :where(
-        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
-          > [data-slot="app-shell-header"]
-          > [data-slot="app-shell-brand"]:has(
-            > [data-slot="app-shell-brand-icon"]
-          )
-      ) {
+      [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+        > [data-slot="app-shell-header"]
+        > [data-slot="app-shell-brand"]:has(
+          > [data-slot="app-shell-brand-icon"]
+        )
+    ) {
       gap: calc(var(--nk-space) * 2);
       padding-inline: calc(var(--nk-space) * 6);
     }
 
     :where(
-        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
-          > [data-slot="app-shell-header"]
-          > [data-slot="app-shell-brand"]
-          > [data-slot="app-shell-brand-icon"]
-      ) {
+      [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+        > [data-slot="app-shell-header"]
+        > [data-slot="app-shell-brand"]
+        > [data-slot="app-shell-brand-icon"]
+    ) {
       flex: none;
     }
 
     :where(
-        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
-          > [data-slot="app-shell-header"]
-          > [data-slot="app-shell-brand"]
-          > [data-slot="app-shell-brand-content"]
-      ) {
+      [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+        > [data-slot="app-shell-header"]
+        > [data-slot="app-shell-brand"]
+        > [data-slot="app-shell-brand-content"]
+    ) {
       min-inline-size: 0;
       overflow: hidden;
       clip-path: var(--_nk-shell-label-clip, none);
     }
 
     :where(
-        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
-          > [data-slot="app-shell-header"]
-          > [data-slot="app-shell-brand"]
-      ) {
+      [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+        > [data-slot="app-shell-header"]
+        > [data-slot="app-shell-brand"]
+    ) {
       z-index: 30;
       inline-size: var(--_nk-shell-panel-width);
       overflow: hidden;
@@ -1765,10 +1769,10 @@
     }
 
     :where(
-        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
-          > [data-slot="app-shell-sidebar"]
-          > [data-slot="app-shell-navigation"]
-      ) {
+      [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+        > [data-slot="app-shell-sidebar"]
+        > [data-slot="app-shell-navigation"]
+    ) {
       flex: 1 1 0;
       inline-size: calc(
         var(--nk-app-shell-sidebar-width) - var(--nk-border-width)
@@ -1779,10 +1783,10 @@
     }
 
     :where(
-        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
-          > [data-slot="app-shell-sidebar"]
-          > [data-slot="app-shell-sidebar-toggle"]
-      ) {
+      [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+        > [data-slot="app-shell-sidebar"]
+        > [data-slot="app-shell-sidebar-toggle"]
+    ) {
       display: inline-flex;
       flex: none;
       align-self: flex-start;
@@ -1793,10 +1797,10 @@
     }
 
     :where(
-        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
-          > [data-slot="app-shell-sidebar"]
-          [data-slot="app-navigation-item-link"]
-      ) {
+      [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+        > [data-slot="app-shell-sidebar"]
+        [data-slot="app-navigation-item-link"]
+    ) {
       inline-size: min(
         100%,
         calc(
@@ -1807,8 +1811,8 @@
     }
 
     :where(
-        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"][data-nk--app-shell-pinned-value="false"]
-      ) {
+      [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"][data-nk--app-shell-pinned-value="false"]
+    ) {
       --_nk-shell-panel-width: var(--_nk-shell-rail-width);
       grid-template-columns: var(--_nk-shell-rail-width) minmax(0, 1fr);
     }
@@ -1816,73 +1820,73 @@
     /* Keep the full navigation geometry: only its labels disappear. Focus
        reveals arbitrary header/footer content before it can be activated. */
     :where(
-        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"][data-nk--app-shell-pinned-value="false"]:not(
-            :has(
-                > [data-slot="app-shell-sidebar"]
-                  > [data-slot="app-shell-navigation"]:focus-within,
-                > [data-slot="app-shell-header"]
-                  > [data-slot="app-shell-brand"]:focus-within
-              )
-          )
-      ) {
-      --_nk-shell-label-clip: inset(50%);
-    }
-
-    :where(
-        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
-          > [data-slot="app-shell-sidebar"]
-          [data-slot="app-navigation-item-label"],
-        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
-          > [data-slot="app-shell-sidebar"]
-          [data-slot="app-navigation-section-label"],
-        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
-          > [data-slot="app-shell-sidebar"]
-          [data-slot="app-navigation-item-badge"],
-        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
-          > [data-slot="app-shell-sidebar"]
-          [data-slot="app-navigation-item-icon-end"],
-        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
-          > [data-slot="app-shell-sidebar"]
-          [data-slot="app-navigation-header"],
-        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
-          > [data-slot="app-shell-sidebar"]
-          [data-slot="app-navigation-footer"]
-      ) {
-      clip-path: var(--_nk-shell-label-clip, none);
-    }
-
-    :where(
-        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]:has(
+      [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"][data-nk--app-shell-pinned-value="false"]:not(
+          :has(
             > [data-slot="app-shell-sidebar"]
               > [data-slot="app-shell-navigation"]:focus-within,
             > [data-slot="app-shell-header"]
               > [data-slot="app-shell-brand"]:focus-within
           )
-      ) {
+        )
+    ) {
+      --_nk-shell-label-clip: inset(50%);
+    }
+
+    :where(
+      [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+        > [data-slot="app-shell-sidebar"]
+        [data-slot="app-navigation-item-label"],
+      [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+        > [data-slot="app-shell-sidebar"]
+        [data-slot="app-navigation-section-label"],
+      [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+        > [data-slot="app-shell-sidebar"]
+        [data-slot="app-navigation-item-badge"],
+      [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+        > [data-slot="app-shell-sidebar"]
+        [data-slot="app-navigation-item-icon-end"],
+      [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+        > [data-slot="app-shell-sidebar"]
+        [data-slot="app-navigation-header"],
+      [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]
+        > [data-slot="app-shell-sidebar"]
+        [data-slot="app-navigation-footer"]
+    ) {
+      clip-path: var(--_nk-shell-label-clip, none);
+    }
+
+    :where(
+      [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]:has(
+          > [data-slot="app-shell-sidebar"]
+            > [data-slot="app-shell-navigation"]:focus-within,
+          > [data-slot="app-shell-header"]
+            > [data-slot="app-shell-brand"]:focus-within
+        )
+    ) {
       --_nk-shell-panel-width: var(--nk-app-shell-sidebar-width);
       --_nk-shell-label-clip: none;
     }
 
     @media (hover: hover) and (pointer: fine) {
       :where(
-          [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]:not(
-              [data-nk--app-shell-hover-suppressed-value="true"]
-            ):has(
-              > [data-slot="app-shell-sidebar"]
-                > [data-slot="app-shell-navigation"]:hover,
-              > [data-slot="app-shell-header"]
-                > [data-slot="app-shell-brand"]:hover
-            )
-        ) {
+        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"]:not(
+            [data-nk--app-shell-hover-suppressed-value="true"]
+          ):has(
+            > [data-slot="app-shell-sidebar"]
+              > [data-slot="app-shell-navigation"]:hover,
+            > [data-slot="app-shell-header"]
+              > [data-slot="app-shell-brand"]:hover
+          )
+      ) {
         --_nk-shell-panel-width: var(--nk-app-shell-sidebar-width);
         --_nk-shell-label-clip: none;
       }
     }
 
     :where(
-        [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"][data-nk--app-shell-pinned-value="false"]
-          > [data-slot="app-shell-sidebar"]
-      ) {
+      [data-nk="app-shell"][data-layout="sidebar"][data-enhanced][data-nk--app-shell-collapsible-value="true"][data-nk--app-shell-pinned-value="false"]
+        > [data-slot="app-shell-sidebar"]
+    ) {
       box-shadow: var(--nk-shadow-md);
     }
   }
@@ -1910,13 +1914,13 @@
     }
 
     :where(
-        [data-nk="app-shell"]
-          > [data-slot="app-shell-header"]
-          > [data-slot="app-shell-brand"],
-        [data-nk="app-shell"]
-          > [data-slot="app-shell-header"]
-          > [data-slot="app-shell-topbar"]
-      ) {
+      [data-nk="app-shell"]
+        > [data-slot="app-shell-header"]
+        > [data-slot="app-shell-brand"],
+      [data-nk="app-shell"]
+        > [data-slot="app-shell-header"]
+        > [data-slot="app-shell-topbar"]
+    ) {
       position: static;
       display: flex;
       min-block-size: auto;
@@ -1926,36 +1930,36 @@
     }
 
     :where(
-        [data-nk="app-shell"]
-          > [data-slot="app-shell-header"]
-          > [data-slot="app-shell-brand"]
-      ) {
+      [data-nk="app-shell"]
+        > [data-slot="app-shell-header"]
+        > [data-slot="app-shell-brand"]
+    ) {
       flex: 1 1 auto;
       order: 0;
     }
 
     :where(
-        [data-nk="app-shell"]
-          > [data-slot="app-shell-header"]
-          > [data-slot="app-shell-topbar"]
-      ) {
+      [data-nk="app-shell"]
+        > [data-slot="app-shell-header"]
+        > [data-slot="app-shell-topbar"]
+    ) {
       flex: 0 0 auto;
       order: 1;
     }
 
     :where(
-        [data-nk="app-shell"]
-          > [data-slot="app-shell-header"]
-          > [data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])
-      ) {
+      [data-nk="app-shell"]
+        > [data-slot="app-shell-header"]
+        > [data-slot="app-shell-topbar"]:has(> [data-nk="toolbar"])
+    ) {
       flex: 1 1 auto;
     }
 
     :where(
-        [data-nk="app-shell"][data-enhanced]
-          > [data-slot="app-shell-header"]
-          > [data-slot="app-shell-mobile-trigger"]
-      ) {
+      [data-nk="app-shell"][data-enhanced]
+        > [data-slot="app-shell-header"]
+        > [data-slot="app-shell-mobile-trigger"]
+    ) {
       display: inline-flex;
       flex: 0 0 auto;
       order: -1;
@@ -1975,30 +1979,30 @@
     }
 
     :where(
-        [data-nk="app-shell"]
-          > [data-slot="app-shell-sidebar"]
-          > [data-slot="app-shell-navigation"]
-      ) {
+      [data-nk="app-shell"]
+        > [data-slot="app-shell-sidebar"]
+        > [data-slot="app-shell-navigation"]
+    ) {
       min-block-size: auto;
     }
 
     :where(
-        [data-nk="app-shell"][data-layout="topbar"]
-          > [data-slot="app-shell-sidebar"]
-          > [data-slot="app-shell-navigation"]
-          > [data-nk="app-navigation"]
-      ) {
+      [data-nk="app-shell"][data-layout="topbar"]
+        > [data-slot="app-shell-sidebar"]
+        > [data-slot="app-shell-navigation"]
+        > [data-nk="app-navigation"]
+    ) {
       flex-direction: column;
       align-items: stretch;
     }
 
     :where(
-        [data-nk="app-shell"][data-layout="topbar"]
-          > [data-slot="app-shell-sidebar"]
-          > [data-slot="app-shell-navigation"]
-          > [data-nk="app-navigation"]
-          > [data-slot="app-navigation-body"]
-      ) {
+      [data-nk="app-shell"][data-layout="topbar"]
+        > [data-slot="app-shell-sidebar"]
+        > [data-slot="app-shell-navigation"]
+        > [data-nk="app-navigation"]
+        > [data-slot="app-navigation-body"]
+    ) {
       flex-direction: column;
       align-items: stretch;
       padding: calc(var(--nk-space) * 3);
@@ -2006,23 +2010,23 @@
     }
 
     :where(
-        [data-nk="app-shell"][data-layout="topbar"]
-          > [data-slot="app-shell-sidebar"]
-          > [data-slot="app-shell-navigation"]
-          > [data-nk="app-navigation"]
-          [data-slot="app-navigation-section"]
-      ) {
+      [data-nk="app-shell"][data-layout="topbar"]
+        > [data-slot="app-shell-sidebar"]
+        > [data-slot="app-shell-navigation"]
+        > [data-nk="app-navigation"]
+        [data-slot="app-navigation-section"]
+    ) {
       flex-direction: column;
       align-items: stretch;
     }
 
     :where(
-        [data-nk="app-shell"][data-layout="topbar"]
-          > [data-slot="app-shell-sidebar"]
-          > [data-slot="app-shell-navigation"]
-          > [data-nk="app-navigation"]
-          [data-slot="app-navigation-section-label"]
-      ) {
+      [data-nk="app-shell"][data-layout="topbar"]
+        > [data-slot="app-shell-sidebar"]
+        > [data-slot="app-shell-navigation"]
+        > [data-nk="app-navigation"]
+        [data-slot="app-navigation-section-label"]
+    ) {
       position: static;
       inline-size: auto;
       block-size: auto;
@@ -2035,15 +2039,15 @@
     }
 
     :where(
-        [data-nk="app-shell"][data-enhanced] > [data-slot="app-shell-sidebar"]
-      ) {
+      [data-nk="app-shell"][data-enhanced] > [data-slot="app-shell-sidebar"]
+    ) {
       display: none;
     }
 
     :where(
-        [data-nk="app-shell"][data-enhanced]
-          > [data-slot="app-shell-dialog"][open]
-      ) {
+      [data-nk="app-shell"][data-enhanced]
+        > [data-slot="app-shell-dialog"][open]
+    ) {
       --_nk-app-shell-dialog-enter-x: -100%;
 
       position: fixed;
@@ -2068,18 +2072,18 @@
     }
 
     :where(
-        [dir="rtl"]
-          [data-nk="app-shell"][data-enhanced]
-          > [data-slot="app-shell-dialog"][open]
-      ) {
+      [dir="rtl"]
+        [data-nk="app-shell"][data-enhanced]
+        > [data-slot="app-shell-dialog"][open]
+    ) {
       --_nk-app-shell-dialog-enter-x: 100%;
     }
 
     :where(
-        [data-nk="app-shell"][data-enhanced]
-          > [data-slot="app-shell-dialog"][open]
-          > [data-slot="app-shell-mobile-close"]
-      ) {
+      [data-nk="app-shell"][data-enhanced]
+        > [data-slot="app-shell-dialog"][open]
+        > [data-slot="app-shell-mobile-close"]
+    ) {
       display: inline-flex;
       flex: 0 0 auto;
       align-self: flex-end;
@@ -2104,21 +2108,21 @@
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-        [data-nk="app-shell"][data-nk--app-shell-collapsible-value="true"],
-        [data-nk="app-shell"][data-nk--app-shell-collapsible-value="true"]
-          > [data-slot="app-shell-sidebar"],
-        [data-nk="app-shell"][data-nk--app-shell-collapsible-value="true"]
-          > [data-slot="app-shell-header"]
-          > [data-slot="app-shell-brand"],
-        [data-nk="app-shell"] > [data-slot="app-shell-skip-link"],
-        [data-nk="app-shell"] > [data-slot="app-shell-dialog"],
-        [data-nk="app-shell"]
-          > [data-slot="app-shell-header"]
-          > [data-slot="app-shell-mobile-trigger"],
-        [data-nk="app-shell"]
-          > [data-slot="app-shell-dialog"]
-          > [data-slot="app-shell-mobile-close"]
-      ) {
+      [data-nk="app-shell"][data-nk--app-shell-collapsible-value="true"],
+      [data-nk="app-shell"][data-nk--app-shell-collapsible-value="true"]
+        > [data-slot="app-shell-sidebar"],
+      [data-nk="app-shell"][data-nk--app-shell-collapsible-value="true"]
+        > [data-slot="app-shell-header"]
+        > [data-slot="app-shell-brand"],
+      [data-nk="app-shell"] > [data-slot="app-shell-skip-link"],
+      [data-nk="app-shell"] > [data-slot="app-shell-dialog"],
+      [data-nk="app-shell"]
+        > [data-slot="app-shell-header"]
+        > [data-slot="app-shell-mobile-trigger"],
+      [data-nk="app-shell"]
+        > [data-slot="app-shell-dialog"]
+        > [data-slot="app-shell-mobile-close"]
+    ) {
       animation-duration: 0.01ms;
       transition-duration: 0.01ms;
     }
@@ -2135,8 +2139,8 @@
   }
 
   :where(
-      [data-nk="appearance-picker"] > [data-slot="appearance-picker-legend"]
-    ) {
+    [data-nk="appearance-picker"] > [data-slot="appearance-picker-legend"]
+  ) {
     padding: 0;
     font-size: var(--nk-title-compact-size);
     font-weight: var(--nk-title-compact-weight);
@@ -2144,34 +2148,34 @@
 
   /* The gap below the label exists only when there is a label. */
   :where(
-      [data-nk="appearance-picker"] > [data-slot="appearance-picker-options"]
-    ) {
+    [data-nk="appearance-picker"] > [data-slot="appearance-picker-options"]
+  ) {
     display: flex;
     flex-wrap: wrap;
     gap: calc(var(--nk-space) * 3);
   }
 
   :where(
-      [data-nk="appearance-picker"]
-        > [data-slot="appearance-picker-legend"]
-        + [data-slot="appearance-picker-options"]
-    ) {
+    [data-nk="appearance-picker"]
+      > [data-slot="appearance-picker-legend"]
+      + [data-slot="appearance-picker-options"]
+  ) {
     margin-block-start: calc(var(--nk-space) * 2);
   }
 
   :where(
-      [data-nk="appearance-picker"][data-presentation="radios"]
-        > [data-slot="appearance-picker-options"]
-    ) {
+    [data-nk="appearance-picker"][data-presentation="radios"]
+      > [data-slot="appearance-picker-options"]
+  ) {
     display: grid;
   }
 
   /* Like every other control, the segmented row fills its container and the
      parent owns the available width; the segments share it equally. */
   :where(
-      [data-nk="appearance-picker"][data-presentation="segmented"]
-        > [data-slot="appearance-picker-options"]
-    ) {
+    [data-nk="appearance-picker"][data-presentation="segmented"]
+      > [data-slot="appearance-picker-options"]
+  ) {
     display: flex;
     gap: 0;
     padding: var(--nk-space);
@@ -2189,8 +2193,8 @@
   }
 
   :where(
-      [data-nk="appearance-picker"] [data-slot="appearance-picker-control"]
-    ) {
+    [data-nk="appearance-picker"] [data-slot="appearance-picker-control"]
+  ) {
     inline-size: var(--nk-choice-size-md);
     block-size: var(--nk-choice-size-md);
     margin: 0;
@@ -2199,9 +2203,9 @@
   }
 
   :where(
-      [data-nk="appearance-picker"][data-presentation="segmented"]
-        [data-slot="appearance-picker-option"]
-    ) {
+    [data-nk="appearance-picker"][data-presentation="segmented"]
+      [data-slot="appearance-picker-option"]
+  ) {
     position: relative;
     flex: 1 1 0;
     justify-content: center;
@@ -2210,17 +2214,17 @@
   }
 
   :where(
-      [data-nk="appearance-picker"][data-presentation="segmented"]
-        [data-slot="appearance-picker-control"]
-    ) {
+    [data-nk="appearance-picker"][data-presentation="segmented"]
+      [data-slot="appearance-picker-control"]
+  ) {
     position: absolute;
     opacity: 0;
   }
 
   :where(
-      [data-nk="appearance-picker"][data-presentation="select"]
-        > [data-slot="appearance-picker-select"]
-    ) {
+    [data-nk="appearance-picker"][data-presentation="select"]
+      > [data-slot="appearance-picker-select"]
+  ) {
     display: block;
     inline-size: 100%;
     min-block-size: var(--nk-control-height-md);
@@ -2236,19 +2240,19 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="appearance-picker"][data-presentation="segmented"]
-        [data-slot="appearance-picker-option"]:has(
-          [data-slot="appearance-picker-control"]:checked
-        )
-    ) {
+    [data-nk="appearance-picker"][data-presentation="segmented"]
+      [data-slot="appearance-picker-option"]:has(
+        [data-slot="appearance-picker-control"]:checked
+      )
+  ) {
     background: var(--nk-color-surface);
     box-shadow: var(--nk-shadow-sm);
   }
 
   :where(
-      [data-nk="appearance-picker"]
-        [data-slot="appearance-picker-control"]:focus-visible
-    ) {
+    [data-nk="appearance-picker"]
+      [data-slot="appearance-picker-control"]:focus-visible
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -2256,11 +2260,11 @@
   /* The segmented control is visually hidden, so its focus ring must show on
      the segment that contains it. */
   :where(
-      [data-nk="appearance-picker"][data-presentation="segmented"]
-        [data-slot="appearance-picker-option"]:has(
-          [data-slot="appearance-picker-control"]:focus-visible
-        )
-    ) {
+    [data-nk="appearance-picker"][data-presentation="segmented"]
+      [data-slot="appearance-picker-option"]:has(
+        [data-slot="appearance-picker-control"]:focus-visible
+      )
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -2311,9 +2315,9 @@
   }
 
   :where(
-      [data-nk="avatar"] > [data-slot="avatar-fallback"],
-      [data-nk="avatar"] > [data-slot="avatar-image"]
-    ) {
+    [data-nk="avatar"] > [data-slot="avatar-fallback"],
+    [data-nk="avatar"] > [data-slot="avatar-image"]
+  ) {
     grid-area: 1 / 1;
     inline-size: 100%;
     block-size: 100%;
@@ -2399,9 +2403,9 @@
      fill would let that ring show through. Each item paints its own fill as a
      background image over an opaque surface underlay. */
   :where(
-      [data-nk="avatar-stack"] > [data-slot="avatar-stack-avatar"],
-      [data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]
-    ) {
+    [data-nk="avatar-stack"] > [data-slot="avatar-stack-avatar"],
+    [data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]
+  ) {
     --_nk-avatar-stack-fill: var(--nk-color-muted);
 
     flex: none;
@@ -2415,9 +2419,9 @@
   }
 
   :where(
-      [data-nk="avatar-stack"] > [data-slot="avatar-stack-avatar"]:first-child,
-      [data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]:first-child
-    ) {
+    [data-nk="avatar-stack"] > [data-slot="avatar-stack-avatar"]:first-child,
+    [data-nk="avatar-stack"] > [data-slot="avatar-stack-overflow"]:first-child
+  ) {
     margin-inline-start: 0;
   }
 
@@ -2442,36 +2446,36 @@
   }
 
   :where(
-      [data-nk="avatar-stack"][data-size="xs"]
-        > [data-slot="avatar-stack-overflow"]
-    ) {
+    [data-nk="avatar-stack"][data-size="xs"]
+      > [data-slot="avatar-stack-overflow"]
+  ) {
     min-inline-size: var(--nk-avatar-size-xs);
     block-size: var(--nk-avatar-size-xs);
     font-size: calc(var(--nk-text-xs) * 0.875);
   }
 
   :where(
-      [data-nk="avatar-stack"][data-size="sm"]
-        > [data-slot="avatar-stack-overflow"]
-    ) {
+    [data-nk="avatar-stack"][data-size="sm"]
+      > [data-slot="avatar-stack-overflow"]
+  ) {
     min-inline-size: var(--nk-avatar-size-sm);
     block-size: var(--nk-avatar-size-sm);
     font-size: var(--nk-text-xs);
   }
 
   :where(
-      [data-nk="avatar-stack"][data-size="md"]
-        > [data-slot="avatar-stack-overflow"]
-    ) {
+    [data-nk="avatar-stack"][data-size="md"]
+      > [data-slot="avatar-stack-overflow"]
+  ) {
     min-inline-size: var(--nk-avatar-size-md);
     block-size: var(--nk-avatar-size-md);
     font-size: var(--nk-text-sm);
   }
 
   :where(
-      [data-nk="avatar-stack"][data-size="lg"]
-        > [data-slot="avatar-stack-overflow"]
-    ) {
+    [data-nk="avatar-stack"][data-size="lg"]
+      > [data-slot="avatar-stack-overflow"]
+  ) {
     min-inline-size: var(--nk-avatar-size-lg);
     block-size: var(--nk-avatar-size-lg);
     font-size: var(--nk-text-base);
@@ -2618,10 +2622,10 @@
   }
 
   :where(
-      [data-nk="button"] > [data-slot="button-icon-start"],
-      [data-nk="button"] > [data-slot="button-icon-end"],
-      [data-nk="button"] > [data-slot="button-spinner"]
-    ) {
+    [data-nk="button"] > [data-slot="button-icon-start"],
+    [data-nk="button"] > [data-slot="button-icon-end"],
+    [data-nk="button"] > [data-slot="button-spinner"]
+  ) {
     display: inline-flex;
     flex: none;
   }
@@ -2647,12 +2651,12 @@
   }
 
   :where(
-      [data-nk="button"]:has(> [data-slot="button-icon-start"]),
-      [data-nk="button"]:has(> [data-slot="button-spinner"]),
-      [data-nk="button"]:has(
-          > [data-slot="button-submission-spinner"][data-state="visible"]
-        )
-    ) {
+    [data-nk="button"]:has(> [data-slot="button-icon-start"]),
+    [data-nk="button"]:has(> [data-slot="button-spinner"]),
+    [data-nk="button"]:has(
+      > [data-slot="button-submission-spinner"][data-state="visible"]
+    )
+  ) {
     padding-inline-start: var(--_nk-button-icon-padding);
   }
 
@@ -2661,12 +2665,12 @@
   }
 
   :where(
-      [data-nk="button"]:not(:has(> [data-slot="button-label"])):has(
-          > [data-slot="button-icon-start"],
-          > [data-slot="button-icon-end"],
-          > [data-slot="button-spinner"]
-        )
-    ) {
+    [data-nk="button"]:not(:has(> [data-slot="button-label"])):has(
+        > [data-slot="button-icon-start"],
+        > [data-slot="button-icon-end"],
+        > [data-slot="button-spinner"]
+      )
+  ) {
     inline-size: var(--_nk-button-height);
     padding-inline: 0;
   }
@@ -2708,7 +2712,8 @@
     --_nk-button-border-width: 0;
     --_nk-button-border: transparent;
     --_nk-button-border-bottom: transparent;
-    --_nk-button-shadow: inset 0 1px var(--nk-color-destructive),
+    --_nk-button-shadow:
+      inset 0 1px var(--nk-color-destructive),
       inset 0 2px color-mix(in oklab, var(--nk-white) 15%, transparent);
   }
 
@@ -2727,34 +2732,34 @@
 
   @media (prefers-color-scheme: dark) {
     :where(
-        :root:not([data-theme], [data-nk-scheme])
-          [data-nk="button"]:is(
-            [data-variant="primary"],
-            [data-variant="destructive"]
-          )
-      ) {
+      :root:not([data-theme], [data-nk-scheme])
+        [data-nk="button"]:is(
+          [data-variant="primary"],
+          [data-variant="destructive"]
+        )
+    ) {
       --_nk-button-border-width: 0;
     }
 
     :where(
-        :root:not([data-theme], [data-nk-scheme])
-          [data-nk="button"][data-variant="destructive"]
-      ) {
+      :root:not([data-theme], [data-nk-scheme])
+        [data-nk="button"][data-variant="destructive"]
+    ) {
       --_nk-button-shadow: none;
     }
   }
 
   :where(
-      :is([data-theme="dark"]:not([data-nk-scheme]), [data-nk-scheme="dark"])
-        [data-nk="button"][data-variant="primary"]
-    ) {
+    :is([data-theme="dark"]:not([data-nk-scheme]), [data-nk-scheme="dark"])
+      [data-nk="button"][data-variant="primary"]
+  ) {
     --_nk-button-border-width: 0;
   }
 
   :where(
-      :is([data-theme="dark"]:not([data-nk-scheme]), [data-nk-scheme="dark"])
-        [data-nk="button"][data-variant="destructive"]
-    ) {
+    :is([data-theme="dark"]:not([data-nk-scheme]), [data-nk-scheme="dark"])
+      [data-nk="button"][data-variant="destructive"]
+  ) {
     --_nk-button-shadow: none;
   }
 }
@@ -2817,9 +2822,9 @@
   }
 
   :where(
-      [data-nk="button"]:disabled,
-      [data-nk="button"][aria-disabled="true"]
-    ) {
+    [data-nk="button"]:disabled,
+    [data-nk="button"][aria-disabled="true"]
+  ) {
     pointer-events: none;
     cursor: default;
     opacity: var(--nk-disabled-opacity);
@@ -2829,12 +2834,12 @@
      destructive control as disabled. */
   @media (prefers-color-scheme: dark) {
     :where(
-        :root:not([data-theme], [data-nk-scheme])
-          [data-nk="button"][data-variant="destructive"]:is(
-            :disabled,
-            [aria-disabled="true"]
-          )
-      ) {
+      :root:not([data-theme], [data-nk-scheme])
+        [data-nk="button"][data-variant="destructive"]:is(
+          :disabled,
+          [aria-disabled="true"]
+        )
+    ) {
       --_nk-button-background: color-mix(
         in oklab,
         var(--nk-color-destructive) 40%,
@@ -2844,12 +2849,12 @@
   }
 
   :where(
-      :is([data-theme="dark"]:not([data-nk-scheme]), [data-nk-scheme="dark"])
-        [data-nk="button"][data-variant="destructive"]:is(
-          :disabled,
-          [aria-disabled="true"]
-        )
-    ) {
+    :is([data-theme="dark"]:not([data-nk-scheme]), [data-nk-scheme="dark"])
+      [data-nk="button"][data-variant="destructive"]:is(
+        :disabled,
+        [aria-disabled="true"]
+      )
+  ) {
     --_nk-button-background: color-mix(
       in oklab,
       var(--nk-color-destructive) 40%,
@@ -2862,9 +2867,9 @@
   }
 
   :where(
-      [data-nk="button"]
-        > [data-slot="button-submission-spinner"][data-state="visible"]
-    ) {
+    [data-nk="button"]
+      > [data-slot="button-submission-spinner"][data-state="visible"]
+  ) {
     display: inline-flex;
     animation: nk-button-spin 1s linear infinite;
   }
@@ -2877,10 +2882,10 @@
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-        [data-nk="button"][aria-busy="true"] > [data-slot="button-spinner"],
-        [data-nk="button"]
-          > [data-slot="button-submission-spinner"][data-state="visible"]
-      ) {
+      [data-nk="button"][aria-busy="true"] > [data-slot="button-spinner"],
+      [data-nk="button"]
+        > [data-slot="button-submission-spinner"][data-state="visible"]
+    ) {
       animation: none;
     }
   }
@@ -2918,38 +2923,38 @@
   }
 
   :where(
-      [data-nk="button-group"]
-        > [data-slot="button-group-button"]:not(:first-child)
-    ) {
+    [data-nk="button-group"]
+      > [data-slot="button-group-button"]:not(:first-child)
+  ) {
     margin-inline-start: calc(var(--nk-border-width) * -1);
   }
 
   :where(
-      [data-nk="button-group"]
-        > [data-slot="button-group-button"]:not(:only-child)
-    ) {
+    [data-nk="button-group"]
+      > [data-slot="button-group-button"]:not(:only-child)
+  ) {
     border-radius: 0;
   }
 
   :where(
-      [data-nk="button-group"]
-        > [data-slot="button-group-button"]:first-child:not(:only-child)
-    ) {
+    [data-nk="button-group"]
+      > [data-slot="button-group-button"]:first-child:not(:only-child)
+  ) {
     border-start-start-radius: var(--_nk-button-radius);
     border-end-start-radius: var(--_nk-button-radius);
   }
 
   :where(
-      [data-nk="button-group"]
-        > [data-slot="button-group-button"]:last-child:not(:only-child)
-    ) {
+    [data-nk="button-group"]
+      > [data-slot="button-group-button"]:last-child:not(:only-child)
+  ) {
     border-start-end-radius: var(--_nk-button-radius);
     border-end-end-radius: var(--_nk-button-radius);
   }
 
   :where(
-      [data-nk="button-group"] > [data-slot="button-group-button"]:focus-visible
-    ) {
+    [data-nk="button-group"] > [data-slot="button-group-button"]:focus-visible
+  ) {
     z-index: 1;
     /* The scroll container would clip an offset ring at its edges, so member
        focus rings draw inside the member. */
@@ -3262,9 +3267,9 @@
   }
 
   :where(
-      [data-nk="checkbox"] [data-slot="checkbox-control"],
-      [data-nk="checkbox"] [data-slot="checkbox-indicator"]
-    ) {
+    [data-nk="checkbox"] [data-slot="checkbox-control"],
+    [data-nk="checkbox"] [data-slot="checkbox-indicator"]
+  ) {
     grid-area: 1 / 1;
     inline-size: var(--_nk-choice-size);
     block-size: var(--_nk-choice-size);
@@ -3318,28 +3323,28 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="checkbox"]
-        [data-slot="checkbox-control"]:checked
-        + [data-slot="checkbox-indicator"],
-      [data-nk="checkbox"][data-state="indeterminate"]
-        [data-slot="checkbox-indicator"]
-    ) {
+    [data-nk="checkbox"]
+      [data-slot="checkbox-control"]:checked
+      + [data-slot="checkbox-indicator"],
+    [data-nk="checkbox"][data-state="indeterminate"]
+      [data-slot="checkbox-indicator"]
+  ) {
     background: var(--nk-color-primary);
     border-color: var(--nk-color-primary);
   }
 
   :where(
-      [data-nk="checkbox"]
-        [data-slot="checkbox-control"]:checked
-        + [data-slot="checkbox-indicator"]
-    )::after {
+    [data-nk="checkbox"]
+      [data-slot="checkbox-control"]:checked
+      + [data-slot="checkbox-indicator"]
+  )::after {
     opacity: 1;
   }
 
   :where(
-      [data-nk="checkbox"][data-state="indeterminate"]
-        [data-slot="checkbox-indicator"]
-    )::after {
+    [data-nk="checkbox"][data-state="indeterminate"]
+      [data-slot="checkbox-indicator"]
+  )::after {
     inline-size: calc(var(--_nk-choice-size) * 0.49);
     block-size: 0;
     border-block-end: calc(var(--nk-border-width) * 2) solid currentcolor;
@@ -3349,10 +3354,10 @@
   }
 
   :where(
-      [data-nk="checkbox"]
-        [data-slot="checkbox-control"]:focus-visible
-        + [data-slot="checkbox-indicator"]
-    ) {
+    [data-nk="checkbox"]
+      [data-slot="checkbox-control"]:focus-visible
+      + [data-slot="checkbox-indicator"]
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -3369,10 +3374,10 @@
      user touches the control, so an untouched invalid checkbox keeps its
      border. */
   :where(
-      [data-nk="checkbox"]
-        [data-slot="checkbox-control"][aria-invalid="true"]:not(:user-valid)
-        + [data-slot="checkbox-indicator"]
-    ) {
+    [data-nk="checkbox"]
+      [data-slot="checkbox-control"][aria-invalid="true"]:not(:user-valid)
+      + [data-slot="checkbox-indicator"]
+  ) {
     border-color: var(--nk-color-destructive);
   }
 
@@ -3399,8 +3404,8 @@
   }
 
   :where(
-      [data-nk="checkbox-group"] > [data-slot="checkbox-group-description"]
-    ) {
+    [data-nk="checkbox-group"] > [data-slot="checkbox-group-description"]
+  ) {
     margin-block-start: var(--nk-space);
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
@@ -3414,19 +3419,19 @@
   }
 
   :where(
-      [data-nk="checkbox-group"][data-orientation="horizontal"]
-        > [data-slot="checkbox-group-choices"]
-    ) {
+    [data-nk="checkbox-group"][data-orientation="horizontal"]
+      > [data-slot="checkbox-group-choices"]
+  ) {
     display: flex;
     flex-wrap: wrap;
     gap: calc(var(--nk-space) * 4);
   }
 
   :where(
-      [data-nk="checkbox-group"][data-presentation="cards"]
-        > [data-slot="checkbox-group-choices"]
-        > [data-slot="checkbox-group-choice"]
-    ) {
+    [data-nk="checkbox-group"][data-presentation="cards"]
+      > [data-slot="checkbox-group-choices"]
+      > [data-slot="checkbox-group-choice"]
+  ) {
     inline-size: 100%;
     padding: calc(var(--nk-space) * 3);
     background: var(--nk-color-surface);
@@ -3437,10 +3442,10 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="checkbox-group"][data-presentation="cards"]
-        > [data-slot="checkbox-group-choices"]
-        > [data-slot="checkbox-group-choice"]:has(input:checked)
-    ) {
+    [data-nk="checkbox-group"][data-presentation="cards"]
+      > [data-slot="checkbox-group-choices"]
+      > [data-slot="checkbox-group-choice"]:has(input:checked)
+  ) {
     border-color: var(--nk-color-primary);
     box-shadow: 0 0 0 var(--nk-border-width) var(--nk-color-primary);
   }
@@ -3508,13 +3513,13 @@
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-option"],
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-action"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-option"],
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-action"]
+  ) {
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -3538,10 +3543,10 @@
   /* A result action ("Create …") leads with its icon; its label and optional
      description stack in the second column. */
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-action"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-action"]
+  ) {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
     column-gap: calc(var(--nk-space) * 2);
@@ -3549,34 +3554,34 @@
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-action"]
-        > [data-slot="combobox-action-icon"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-action"]
+      > [data-slot="combobox-action-icon"]
+  ) {
     grid-row: 1 / span 2;
     color: var(--nk-color-muted-foreground);
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-action"]
-        > [data-slot="combobox-option-label"],
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-action"]
-        > [data-slot="combobox-option-description"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-action"]
+      > [data-slot="combobox-option-label"],
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-action"]
+      > [data-slot="combobox-option-description"]
+  ) {
     grid-column: 2;
   }
 
   :where(
-      [data-nk="combobox"] [data-slot="combobox-empty"],
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-message"]
-    ) {
+    [data-nk="combobox"] [data-slot="combobox-empty"],
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-message"]
+  ) {
     display: flex;
     align-items: center;
     min-block-size: var(--nk-control-height-md);
@@ -3587,11 +3592,11 @@
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-option"]
-        > [data-slot="combobox-option-description"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-option"]
+      > [data-slot="combobox-option-description"]
+  ) {
     display: block;
     margin-block-start: calc(var(--nk-space) * 0.5);
     color: var(--nk-color-muted-foreground);
@@ -3615,10 +3620,10 @@
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-selections"]
-        > [data-slot="combobox-selection"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-selections"]
+      > [data-slot="combobox-selection"]
+  ) {
     display: inline-flex;
     align-items: center;
     gap: calc(var(--nk-space) * 0.5);
@@ -3637,11 +3642,11 @@
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-selections"]
-        > [data-slot="combobox-selection"]
-        > [data-slot="combobox-selection-label"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-selections"]
+      > [data-slot="combobox-selection"]
+      > [data-slot="combobox-selection-label"]
+  ) {
     min-inline-size: 0;
     overflow: hidden;
     white-space: nowrap;
@@ -3649,69 +3654,69 @@
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-selections"]
-        > [data-slot="combobox-selection"]
-        > [data-slot="combobox-remove"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-selections"]
+      > [data-slot="combobox-selection"]
+      > [data-slot="combobox-remove"]
+  ) {
     flex-shrink: 0;
   }
 }
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-option"]:is(
-          [data-active="true"],
-          [aria-selected="true"]
-        ),
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-action"][data-active="true"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-option"]:is(
+        [data-active="true"],
+        [aria-selected="true"]
+      ),
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-action"][data-active="true"]
+  ) {
     background: var(--nk-color-muted);
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-action"][aria-busy="true"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-action"][aria-busy="true"]
+  ) {
     cursor: progress;
     opacity: var(--nk-disabled-opacity);
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-message"][data-state="error"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-message"][data-state="error"]
+  ) {
     color: var(--nk-color-destructive);
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-option"]:is(
-          [data-active="true"],
-          [aria-selected="true"]
-        )
-        > [data-slot="combobox-option-description"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-option"]:is(
+        [data-active="true"],
+        [aria-selected="true"]
+      )
+      > [data-slot="combobox-option-description"]
+  ) {
     color: var(--nk-color-foreground);
   }
 
   :where(
-      [data-nk="combobox"] [data-slot="combobox-option"][aria-disabled="true"]
-    ) {
+    [data-nk="combobox"] [data-slot="combobox-option"][aria-disabled="true"]
+  ) {
     cursor: not-allowed;
     opacity: var(--nk-disabled-opacity);
   }
 
   :where(
-      [data-nk="combobox"] > [data-slot="combobox-listbox"][data-state="open"]
-    ) {
+    [data-nk="combobox"] > [data-slot="combobox-listbox"][data-state="open"]
+  ) {
     animation: nk-combobox-enter var(--nk-duration-normal) var(--nk-ease);
   }
 
@@ -3754,10 +3759,10 @@
   }
 
   :where(
-      [data-nk="command-palette"]
-        > [data-slot="command-palette-trigger"]
-        > [data-slot="button-label"]
-    ) {
+    [data-nk="command-palette"]
+      > [data-slot="command-palette-trigger"]
+      > [data-slot="button-label"]
+  ) {
     display: flex;
     flex: 1 1 auto;
     gap: calc(var(--nk-space) * 2);
@@ -3766,8 +3771,8 @@
   }
 
   :where(
-      [data-nk="command-palette"] [data-slot="command-palette-trigger-label"]
-    ) {
+    [data-nk="command-palette"] [data-slot="command-palette-trigger-label"]
+  ) {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -3776,11 +3781,11 @@
   /* The chip floats at the trigger's end with the same inset on its top,
      end, and bottom sides, so the trigger's text padding stands down. */
   :where(
-      [data-nk="command-palette"]
-        > [data-slot="command-palette-trigger"]:has(
-          [data-slot="command-palette-shortcut"]
-        )
-    ) {
+    [data-nk="command-palette"]
+      > [data-slot="command-palette-trigger"]:has(
+        [data-slot="command-palette-shortcut"]
+      )
+  ) {
     padding-inline-end: calc(var(--nk-space) * 2 - var(--nk-border-width));
   }
 
@@ -3802,8 +3807,8 @@
      shrinkable list scrolls. The flex display applies only while open, so
      the closed dialog keeps the user-agent's display: none. */
   :where(
-      [data-nk="command-palette"] > [data-slot="command-palette-panel"][open]
-    ) {
+    [data-nk="command-palette"] > [data-slot="command-palette-panel"][open]
+  ) {
     display: flex;
     flex-direction: column;
   }
@@ -3825,22 +3830,22 @@
      shrinks downward and the top edge never jumps while filtering. The
      non-enhanced fallback keeps the centered default. */
   :where(
-      [data-nk="command-palette"] > [data-slot="command-palette-panel"]:modal
-    ) {
+    [data-nk="command-palette"] > [data-slot="command-palette-panel"]:modal
+  ) {
     margin-block: 12dvh auto;
     max-block-size: min(36rem, calc(88dvh - var(--nk-space) * 4));
   }
 
   :where(
-      [data-nk="command-palette"] > [data-slot="command-palette-panel"]
-    )::backdrop {
+    [data-nk="command-palette"] > [data-slot="command-palette-panel"]
+  )::backdrop {
     background: var(--nk-color-overlay);
   }
 
   :where(
-      [data-nk="command-palette"] [data-slot="command-palette-title"],
-      [data-nk="command-palette"] [data-slot="command-palette-status"]
-    ) {
+    [data-nk="command-palette"] [data-slot="command-palette-title"],
+    [data-nk="command-palette"] [data-slot="command-palette-status"]
+  ) {
     position: absolute;
     inline-size: 1px;
     block-size: 1px;
@@ -3863,19 +3868,19 @@
   }
 
   :where(
-      [data-nk="command-palette"]
-        > [data-slot="command-palette-panel"]
-        > [data-slot="command-palette-close"]
-    ) {
+    [data-nk="command-palette"]
+      > [data-slot="command-palette-panel"]
+      > [data-slot="command-palette-close"]
+  ) {
     margin-block: calc(var(--nk-space) * 2);
     margin-inline: auto calc(var(--nk-space) * 2);
   }
 
   :where(
-      [data-nk="command-palette"][data-enhanced]
-        > [data-slot="command-palette-panel"]
-        > [data-slot="command-palette-close"]
-    ) {
+    [data-nk="command-palette"][data-enhanced]
+      > [data-slot="command-palette-panel"]
+      > [data-slot="command-palette-close"]
+  ) {
     position: absolute;
     z-index: 1;
     inset-block-start: calc(var(--nk-space) * 2);
@@ -3884,23 +3889,23 @@
   }
 
   :where(
-      [data-nk="command-palette"][data-enhanced]
-        [data-slot="command-palette-search"]
-    ) {
+    [data-nk="command-palette"][data-enhanced]
+      [data-slot="command-palette-search"]
+  ) {
     padding-inline-end: calc(
       var(--nk-control-height-md) + (var(--nk-space) * 4)
     );
   }
 
   :where(
-      [data-nk="command-palette"] [data-slot="command-palette-search"][hidden]
-    ) {
+    [data-nk="command-palette"] [data-slot="command-palette-search"][hidden]
+  ) {
     display: none;
   }
 
   :where(
-      [data-nk="command-palette"] [data-slot="command-palette-search-icon"]
-    ) {
+    [data-nk="command-palette"] [data-slot="command-palette-search-icon"]
+  ) {
     flex: 0 0 auto;
     margin-inline-start: calc(var(--nk-space) * 2);
     color: var(--nk-color-muted-foreground);
@@ -3912,8 +3917,8 @@
   }
 
   :where(
-      [data-nk="command-palette"] [data-slot="command-palette-input"]
-    )::-webkit-search-cancel-button {
+    [data-nk="command-palette"] [data-slot="command-palette-input"]
+  )::-webkit-search-cancel-button {
     appearance: none;
   }
 
@@ -3934,8 +3939,8 @@
   }
 
   :where(
-      [data-nk="command-palette"] [data-slot="command-palette-destination"]
-    ) {
+    [data-nk="command-palette"] [data-slot="command-palette-destination"]
+  ) {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -3953,9 +3958,9 @@
   }
 
   :where(
-      [data-nk="command-palette"]
-        [data-slot="command-palette-destination-description"]
-    ) {
+    [data-nk="command-palette"]
+      [data-slot="command-palette-destination-description"]
+  ) {
     margin-block-start: calc(var(--nk-space) * 0.5);
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-xs);
@@ -3983,9 +3988,9 @@
   }
 
   :where(
-      [data-nk="command-palette"]
-        [data-slot="command-palette-input"]:focus-visible
-    ) {
+    [data-nk="command-palette"]
+      [data-slot="command-palette-input"]:focus-visible
+  ) {
     outline: none;
   }
 }
@@ -3993,18 +3998,18 @@
 @layer nitro-kit.state {
   @media (hover: hover) {
     :where(
-        [data-nk="command-palette"]
-          [data-slot="command-palette-destination"]:hover
-      ) {
+      [data-nk="command-palette"]
+        [data-slot="command-palette-destination"]:hover
+    ) {
       color: var(--nk-color-foreground);
       background: var(--nk-color-muted);
     }
   }
 
   :where(
-      [data-nk="command-palette"]
-        [data-slot="command-palette-destination"]:focus-visible
-    ) {
+    [data-nk="command-palette"]
+      [data-slot="command-palette-destination"]:focus-visible
+  ) {
     color: var(--nk-color-foreground);
     background: var(--nk-color-muted);
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
@@ -4012,16 +4017,16 @@
   }
 
   :where(
-      [data-nk="command-palette"]
-        [data-slot="command-palette-destination"]:is(:hover, :focus-visible)
-        [data-slot="command-palette-destination-description"]
-    ) {
+    [data-nk="command-palette"]
+      [data-slot="command-palette-destination"]:is(:hover, :focus-visible)
+      [data-slot="command-palette-destination-description"]
+  ) {
     color: var(--nk-color-foreground);
   }
 
   :where(
-      [data-nk="command-palette"] > [data-slot="command-palette-panel"][open]
-    ) {
+    [data-nk="command-palette"] > [data-slot="command-palette-panel"][open]
+  ) {
     animation: nk-command-palette-enter var(--nk-duration-slow) var(--nk-ease);
   }
 
@@ -4042,8 +4047,8 @@
     }
 
     :where(
-        [data-nk="command-palette"] [data-slot="command-palette-destination"]
-      ) {
+      [data-nk="command-palette"] [data-slot="command-palette-destination"]
+    ) {
       transition-duration: 0.01ms;
     }
   }
@@ -4095,38 +4100,38 @@
   }
 
   :where(
-      [data-nk="control-group"]
-        > :is(
-          [data-nk="input"],
-          [data-nk="select"],
-          [data-nk="button"],
-          span[data-slot="control-group-addon"]
-        )
-    ) {
+    [data-nk="control-group"]
+      > :is(
+        [data-nk="input"],
+        [data-nk="select"],
+        [data-nk="button"],
+        span[data-slot="control-group-addon"]
+      )
+  ) {
     position: relative;
     block-size: var(--_nk-control-group-height);
     min-block-size: var(--_nk-control-group-height);
   }
 
   :where(
-      [data-nk="control-group"]
-        > :is(
-          [data-nk="input"],
-          [data-nk="select"],
-          [data-nk="button"]
-        ):focus-within
-    ) {
+    [data-nk="control-group"]
+      > :is(
+        [data-nk="input"],
+        [data-nk="select"],
+        [data-nk="button"]
+      ):focus-within
+  ) {
     z-index: 1;
   }
 
   :where(
-      [data-nk="control-group"]
-        > :is(
-          [data-nk="input"],
-          [data-nk="button"],
-          span[data-slot="control-group-addon"]
-        )
-    ) {
+    [data-nk="control-group"]
+      > :is(
+        [data-nk="input"],
+        [data-nk="button"],
+        span[data-slot="control-group-addon"]
+      )
+  ) {
     border-radius: 0;
   }
 
@@ -4145,50 +4150,50 @@
   }
 
   :where(
-      [data-nk="control-group"]
-        > :is(
-          [data-nk="input"],
-          [data-nk="button"],
-          span[data-slot="control-group-addon"]
-        ):first-child
-    ) {
+    [data-nk="control-group"]
+      > :is(
+        [data-nk="input"],
+        [data-nk="button"],
+        span[data-slot="control-group-addon"]
+      ):first-child
+  ) {
     border-start-start-radius: var(--nk-radius-lg);
     border-end-start-radius: var(--nk-radius-lg);
   }
 
   :where(
-      [data-nk="control-group"]
-        > :is(
-          [data-nk="input"],
-          [data-nk="button"],
-          span[data-slot="control-group-addon"]
-        ):last-child
-    ) {
+    [data-nk="control-group"]
+      > :is(
+        [data-nk="input"],
+        [data-nk="button"],
+        span[data-slot="control-group-addon"]
+      ):last-child
+  ) {
     border-start-end-radius: var(--nk-radius-lg);
     border-end-end-radius: var(--nk-radius-lg);
   }
 
   :where(
-      [data-nk="control-group"]
-        > :is(
-          [data-nk="input"],
-          [data-nk="select"],
-          [data-nk="button"],
-          span[data-slot="control-group-addon"]
-        )
-        + :is(
-          [data-nk="input"],
-          [data-nk="select"],
-          [data-nk="button"],
-          span[data-slot="control-group-addon"]
-        )
-    ) {
+    [data-nk="control-group"]
+      > :is(
+        [data-nk="input"],
+        [data-nk="select"],
+        [data-nk="button"],
+        span[data-slot="control-group-addon"]
+      )
+      + :is(
+        [data-nk="input"],
+        [data-nk="select"],
+        [data-nk="button"],
+        span[data-slot="control-group-addon"]
+      )
+  ) {
     margin-inline-start: calc(var(--nk-border-width) * -1);
   }
 
   :where(
-      [data-nk="control-group"] > :is([data-nk="input"], [data-nk="select"])
-    ) {
+    [data-nk="control-group"] > :is([data-nk="input"], [data-nk="select"])
+  ) {
     min-inline-size: 0;
     flex: 1 1 auto;
   }
@@ -4336,16 +4341,16 @@
   }
 
   :where(
-      [data-nk="details-table"] [data-slot="details-table-number"],
-      [data-nk="details-table"] [data-slot="details-table-time"]
-    ) {
+    [data-nk="details-table"] [data-slot="details-table-number"],
+    [data-nk="details-table"] [data-slot="details-table-time"]
+  ) {
     font-variant-numeric: tabular-nums;
   }
 
   :where(
-      [data-nk="details-table"] [data-slot="details-table-link"],
-      [data-nk="details-table"] [data-slot="details-table-record"]
-    ) {
+    [data-nk="details-table"] [data-slot="details-table-link"],
+    [data-nk="details-table"] [data-slot="details-table-record"]
+  ) {
     color: var(--nk-color-info-content);
     text-decoration-line: underline;
     text-decoration-color: color-mix(in oklab, currentcolor 40%, transparent);
@@ -4354,9 +4359,9 @@
 
   @media (hover: hover) {
     :where(
-        [data-nk="details-table"] [data-slot="details-table-link"]:hover,
-        [data-nk="details-table"] [data-slot="details-table-record"]:hover
-      ) {
+      [data-nk="details-table"] [data-slot="details-table-link"]:hover,
+      [data-nk="details-table"] [data-slot="details-table-record"]:hover
+    ) {
       text-decoration-color: currentcolor;
     }
   }
@@ -4408,19 +4413,17 @@
   }
 
   :where(
-      [data-nk="dialog"]
-        > [data-slot="dialog-panel"]
-        > [data-slot="dialog-header"]
-    ) {
+    [data-nk="dialog"]
+      > [data-slot="dialog-panel"]
+      > [data-slot="dialog-header"]
+  ) {
     display: flow-root;
     margin-block-end: calc(var(--nk-space) * 4);
   }
 
   :where(
-      [data-nk="dialog"]
-        > [data-slot="dialog-panel"]
-        > [data-slot="dialog-body"]
-    ) {
+    [data-nk="dialog"] > [data-slot="dialog-panel"] > [data-slot="dialog-body"]
+  ) {
     clear: both;
   }
 
@@ -4442,10 +4445,8 @@
   /* The close control precedes the panel content and sticks to the top of the
      scrolling panel so long content never scrolls it out of reach. */
   :where(
-      [data-nk="dialog"]
-        > [data-slot="dialog-panel"]
-        > [data-slot="dialog-close"]
-    ) {
+    [data-nk="dialog"] > [data-slot="dialog-panel"] > [data-slot="dialog-close"]
+  ) {
     position: sticky;
     z-index: 1;
     float: inline-end;
@@ -4544,10 +4545,10 @@
   }
 
   :where(
-      [data-nk="dropdown"]
-        [data-slot="dropdown-item"]
-        > [data-slot="dropdown-item-icon"]
-    ) {
+    [data-nk="dropdown"]
+      [data-slot="dropdown-item"]
+      > [data-slot="dropdown-item-icon"]
+  ) {
     display: inline-flex;
     flex: none;
     margin-inline-end: calc(var(--nk-space) * 2);
@@ -4564,17 +4565,16 @@
 
 @layer nitro-kit.variant {
   :where(
-      [data-nk="dropdown"]
-        [data-slot="dropdown-item"][data-variant="destructive"]
-    ) {
+    [data-nk="dropdown"] [data-slot="dropdown-item"][data-variant="destructive"]
+  ) {
     color: var(--nk-color-destructive-content);
   }
 
   :where(
-      [data-nk="dropdown"]
-        [data-slot="dropdown-item"][data-variant="destructive"]
-        > [data-slot="dropdown-item-icon"]
-    ) {
+    [data-nk="dropdown"]
+      [data-slot="dropdown-item"][data-variant="destructive"]
+      > [data-slot="dropdown-item-icon"]
+  ) {
     color: inherit;
   }
 }
@@ -4582,22 +4582,19 @@
 @layer nitro-kit.state {
   @media (hover: hover) {
     :where(
-        [data-nk="dropdown"]
-          [data-slot="dropdown-item"]:hover:not(
-            :disabled,
-            [aria-disabled="true"]
-          )
-      ) {
+      [data-nk="dropdown"]
+        [data-slot="dropdown-item"]:hover:not(:disabled, [aria-disabled="true"])
+    ) {
       background: var(--nk-color-muted);
     }
 
     :where(
-        [data-nk="dropdown"]
-          [data-slot="dropdown-item"][data-variant="destructive"]:hover:not(
-            :disabled,
-            [aria-disabled="true"]
-          )
-      ) {
+      [data-nk="dropdown"]
+        [data-slot="dropdown-item"][data-variant="destructive"]:hover:not(
+          :disabled,
+          [aria-disabled="true"]
+        )
+    ) {
       color: var(--nk-color-destructive-foreground);
       background: var(--nk-color-destructive);
     }
@@ -4609,9 +4606,9 @@
   }
 
   :where(
-      [data-nk="dropdown"]
-        [data-slot="dropdown-item"]:is(:disabled, [aria-disabled="true"])
-    ) {
+    [data-nk="dropdown"]
+      [data-slot="dropdown-item"]:is(:disabled, [aria-disabled="true"])
+  ) {
     cursor: not-allowed;
     opacity: var(--nk-disabled-opacity);
   }
@@ -4675,30 +4672,30 @@
   }
 
   :where(
-      [data-nk="dropzone"] [data-slot="dropzone-title"],
-      [data-nk="dropzone"] [data-slot="dropzone-file-name"]
-    ) {
+    [data-nk="dropzone"] [data-slot="dropzone-title"],
+    [data-nk="dropzone"] [data-slot="dropzone-file-name"]
+  ) {
     font-size: var(--nk-text-sm);
     font-weight: var(--nk-font-weight-medium);
   }
 
   :where(
-      [data-nk="dropzone"] [data-slot="dropzone-instruction"],
-      [data-nk="dropzone"] [data-slot="dropzone-compact-instruction"],
-      [data-nk="dropzone"] [data-slot="dropzone-description"],
-      [data-nk="dropzone"] [data-slot="dropzone-file-size"],
-      [data-nk="dropzone"] [data-slot="dropzone-file-status"],
-      [data-nk="dropzone"] > [data-slot="dropzone-status"]
-    ) {
+    [data-nk="dropzone"] [data-slot="dropzone-instruction"],
+    [data-nk="dropzone"] [data-slot="dropzone-compact-instruction"],
+    [data-nk="dropzone"] [data-slot="dropzone-description"],
+    [data-nk="dropzone"] [data-slot="dropzone-file-size"],
+    [data-nk="dropzone"] [data-slot="dropzone-file-status"],
+    [data-nk="dropzone"] > [data-slot="dropzone-status"]
+  ) {
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
   }
 
   :where(
-      [data-nk="dropzone"]
-        [data-slot="dropzone-message"]
-        > span:not([data-slot="dropzone-icon"])
-    ) {
+    [data-nk="dropzone"]
+      [data-slot="dropzone-message"]
+      > span:not([data-slot="dropzone-icon"])
+  ) {
     color: var(--nk-color-muted-foreground);
     color: color-mix(
       in srgb,
@@ -4712,9 +4709,8 @@
   }
 
   :where(
-      [data-nk="dropzone"][data-layout="inline"]
-        > [data-slot="dropzone-message"]
-    ) {
+    [data-nk="dropzone"][data-layout="inline"] > [data-slot="dropzone-message"]
+  ) {
     grid-template-columns: auto minmax(0, 1fr);
     justify-items: start;
     column-gap: calc(var(--nk-space) * 4);
@@ -4723,8 +4719,8 @@
   }
 
   :where(
-      [data-nk="dropzone"][data-layout="inline"] [data-slot="dropzone-icon"]
-    ) {
+    [data-nk="dropzone"][data-layout="inline"] [data-slot="dropzone-icon"]
+  ) {
     grid-column: 1;
     grid-row: 1 / span 3;
     align-self: center;
@@ -4732,10 +4728,10 @@
   }
 
   :where(
-      [data-nk="dropzone"][data-layout="inline"]
-        [data-slot="dropzone-message"]
-        > :not([data-slot="dropzone-icon"])
-    ) {
+    [data-nk="dropzone"][data-layout="inline"]
+      [data-slot="dropzone-message"]
+      > :not([data-slot="dropzone-icon"])
+  ) {
     grid-column: 2;
   }
 
@@ -4749,8 +4745,8 @@
   }
 
   :where(
-      [data-nk="dropzone"] > [data-slot="dropzone-input"]
-    )::file-selector-button {
+    [data-nk="dropzone"] > [data-slot="dropzone-input"]
+  )::file-selector-button {
     min-block-size: calc(
       var(--nk-control-height-md) - (var(--nk-border-width) * 2)
     );
@@ -4766,9 +4762,9 @@
 
   /* Keep the native input focusable; its label carries the visible focus ring. */
   :where(
-      [data-nk="dropzone"]:not([data-presentation="input"])
-        > [data-slot="dropzone-input"]
-    ) {
+    [data-nk="dropzone"]:not([data-presentation="input"])
+      > [data-slot="dropzone-input"]
+  ) {
     position: absolute;
     inline-size: 1px;
     block-size: 1px;
@@ -4807,9 +4803,9 @@
   }
 
   :where(
-      [data-nk="dropzone"] [data-slot="dropzone-preview-image"],
-      [data-nk="dropzone"] [data-slot="dropzone-file-icon"]
-    ) {
+    [data-nk="dropzone"] [data-slot="dropzone-preview-image"],
+    [data-nk="dropzone"] [data-slot="dropzone-file-icon"]
+  ) {
     grid-column: 1;
     grid-row: 1 / span 3;
     inline-size: calc(var(--nk-space) * 10);
@@ -4829,12 +4825,12 @@
   }
 
   :where(
-      [data-nk="dropzone"]
-        [data-slot="dropzone-preview"]:has(
-          [data-slot="dropzone-preview-image"]:not([hidden])
-        )
-        > [data-slot="dropzone-file-icon"]
-    ) {
+    [data-nk="dropzone"]
+      [data-slot="dropzone-preview"]:has(
+        [data-slot="dropzone-preview-image"]:not([hidden])
+      )
+      > [data-slot="dropzone-file-icon"]
+  ) {
     display: none;
   }
 
@@ -4883,24 +4879,24 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="dropzone"][data-state="drag"] > [data-slot="dropzone-message"]
-    ) {
+    [data-nk="dropzone"][data-state="drag"] > [data-slot="dropzone-message"]
+  ) {
     background: var(--nk-color-surface-hover);
     border-color: var(--nk-color-primary);
     border-style: solid;
   }
 
   :where(
-      [data-nk="dropzone"][data-state="uploading"]
-        > [data-slot="dropzone-message"]
-    ) {
+    [data-nk="dropzone"][data-state="uploading"]
+      > [data-slot="dropzone-message"]
+  ) {
     border-color: var(--nk-color-info);
   }
 
   :where(
-      [data-nk="dropzone"][data-state="error"] > [data-slot="dropzone-message"],
-      [data-nk="dropzone"] [data-slot="dropzone-preview"][data-state="error"]
-    ) {
+    [data-nk="dropzone"][data-state="error"] > [data-slot="dropzone-message"],
+    [data-nk="dropzone"] [data-slot="dropzone-preview"][data-state="error"]
+  ) {
     border-color: var(--nk-color-destructive);
   }
 
@@ -4909,35 +4905,34 @@
   }
 
   :where(
-      [data-nk="dropzone"][data-state="disabled"]
-        > [data-slot="dropzone-message"]
-    ) {
+    [data-nk="dropzone"][data-state="disabled"] > [data-slot="dropzone-message"]
+  ) {
     cursor: not-allowed;
   }
 
   :where(
-      [data-nk="dropzone"] > [data-slot="dropzone-input"]:focus-visible,
-      [data-nk="dropzone"] [data-slot="dropzone-remove-control"]:focus-visible
-    ) {
+    [data-nk="dropzone"] > [data-slot="dropzone-input"]:focus-visible,
+    [data-nk="dropzone"] [data-slot="dropzone-remove-control"]:focus-visible
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
 
   :where(
-      [data-nk="dropzone"]:not([data-presentation="input"]):has(
-          > [data-slot="dropzone-input"]:focus-visible
-        )
-        > [data-slot="dropzone-message"]
-    ) {
+    [data-nk="dropzone"]:not([data-presentation="input"]):has(
+        > [data-slot="dropzone-input"]:focus-visible
+      )
+      > [data-slot="dropzone-message"]
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
 
   @media (hover: hover) {
     :where(
-        [data-nk="dropzone"]:not([data-state="disabled"])
-          > [data-slot="dropzone-message"]:hover
-      ) {
+      [data-nk="dropzone"]:not([data-state="disabled"])
+        > [data-slot="dropzone-message"]:hover
+    ) {
       background: var(--nk-color-surface-hover);
     }
 
@@ -4947,11 +4942,11 @@
   }
 
   :where(
-      [data-nk="dropzone"] > [data-slot="dropzone-error"],
-      [data-nk="dropzone"]
-        [data-slot="dropzone-preview"][data-state="error"]
-        > [data-slot="dropzone-file-status"]
-    ) {
+    [data-nk="dropzone"] > [data-slot="dropzone-error"],
+    [data-nk="dropzone"]
+      [data-slot="dropzone-preview"][data-state="error"]
+      > [data-slot="dropzone-file-status"]
+  ) {
     color: var(--nk-color-destructive-content);
     font-size: var(--nk-text-sm);
   }
@@ -4983,9 +4978,9 @@
 
 @layer nitro-kit.variant {
   :where(
-      [data-nk="dropzone"][data-presentation="avatar"]
-        > [data-slot="dropzone-message"]
-    ) {
+    [data-nk="dropzone"][data-presentation="avatar"]
+      > [data-slot="dropzone-message"]
+  ) {
     position: relative;
     inline-size: calc(var(--nk-space) * 16 + var(--nk-space) * 4);
     block-size: calc(var(--nk-space) * 16 + var(--nk-space) * 4);
@@ -4995,9 +4990,8 @@
   }
 
   :where(
-      [data-nk="dropzone"][data-presentation="avatar"]
-        [data-slot="dropzone-icon"]
-    ) {
+    [data-nk="dropzone"][data-presentation="avatar"] [data-slot="dropzone-icon"]
+  ) {
     margin: 0;
   }
 
@@ -5011,12 +5005,12 @@
   }
 
   :where(
-      [data-nk="dropzone"]
-        [data-slot="dropzone-message"]:has(
-          [data-slot="dropzone-avatar-image"]:not([hidden])
-        )
-        > [data-slot="dropzone-icon"]
-    ) {
+    [data-nk="dropzone"]
+      [data-slot="dropzone-message"]:has(
+        [data-slot="dropzone-avatar-image"]:not([hidden])
+      )
+      > [data-slot="dropzone-icon"]
+  ) {
     visibility: hidden;
   }
 
@@ -5035,9 +5029,9 @@
   }
 
   :where(
-      [data-nk="dropzone"][data-presentation="compact"]
-        > [data-slot="dropzone-message"]
-    ) {
+    [data-nk="dropzone"][data-presentation="compact"]
+      > [data-slot="dropzone-message"]
+  ) {
     display: inline-flex;
     justify-self: start;
     align-items: center;
@@ -5054,17 +5048,17 @@
 
   /* Concise controls retain their full accessible label and constraints. */
   :where(
-      [data-nk="dropzone"]:is(
-          [data-presentation="avatar"],
-          [data-presentation="compact"]
-        )
-        [data-slot="dropzone-message"]
-        > span:not([data-slot="dropzone-icon"]):not(
-          [data-slot="dropzone-upload-badge"]
-        ),
-      [data-nk="dropzone"][data-presentation="avatar"]
-        [data-slot="dropzone-title"]
-    ) {
+    [data-nk="dropzone"]:is(
+        [data-presentation="avatar"],
+        [data-presentation="compact"]
+      )
+      [data-slot="dropzone-message"]
+      > span:not([data-slot="dropzone-icon"]):not(
+        [data-slot="dropzone-upload-badge"]
+      ),
+    [data-nk="dropzone"][data-presentation="avatar"]
+      [data-slot="dropzone-title"]
+  ) {
     position: absolute;
     inline-size: 1px;
     block-size: 1px;
@@ -5077,9 +5071,9 @@
 @media (pointer: coarse) {
   @layer nitro-kit.size {
     :where(
-        [data-nk="dropzone"][data-presentation="compact"]
-          > [data-slot="dropzone-message"]
-      ) {
+      [data-nk="dropzone"][data-presentation="compact"]
+        > [data-slot="dropzone-message"]
+    ) {
       min-block-size: var(--nk-control-height-lg);
     }
   }
@@ -5089,13 +5083,13 @@
   /* Message children are grid items placed at start, so they size to their
      content; cap them at the cell so one long word wraps inside the target. */
   :where(
-      [data-nk="dropzone"]
-        [data-slot="dropzone-message"]
-        > [data-slot="dropzone-title"],
-      [data-nk="dropzone"]
-        [data-slot="dropzone-message"]
-        > [data-slot="dropzone-description"]
-    ) {
+    [data-nk="dropzone"]
+      [data-slot="dropzone-message"]
+      > [data-slot="dropzone-title"],
+    [data-nk="dropzone"]
+      [data-slot="dropzone-message"]
+      > [data-slot="dropzone-description"]
+  ) {
     max-inline-size: 100%;
   }
 }
@@ -5188,54 +5182,50 @@
 
 @layer nitro-kit.compound {
   :where(
-      [data-nk="field"]
-        > [data-slot="field-label"]
-        + [data-slot="field-control"]
-    ) {
+    [data-nk="field"] > [data-slot="field-label"] + [data-slot="field-control"]
+  ) {
     margin-block-start: calc(var(--nk-space) * 2);
   }
 
   :where(
-      [data-nk="field"]
-        > [data-slot="field-label"]
-        + [data-slot="field-description"]
-    ) {
+    [data-nk="field"]
+      > [data-slot="field-label"]
+      + [data-slot="field-description"]
+  ) {
     margin-block-start: var(--nk-space);
   }
 
   :where(
-      [data-nk="field"]
-        > [data-slot="field-description"]
-        + [data-slot="field-control"]
-    ) {
+    [data-nk="field"]
+      > [data-slot="field-description"]
+      + [data-slot="field-control"]
+  ) {
     margin-block-start: calc(var(--nk-space) * 3);
   }
 
   :where(
-      [data-nk="field"]
-        > [data-slot="field-control"]
-        + [data-slot="field-description"],
-      [data-nk="field"]
-        > [data-slot="field-control"]
-        + [data-slot="field-error"],
-      [data-nk="field"]
-        > [data-slot="field-description"]
-        + [data-slot="field-error"]
-    ) {
+    [data-nk="field"]
+      > [data-slot="field-control"]
+      + [data-slot="field-description"],
+    [data-nk="field"] > [data-slot="field-control"] + [data-slot="field-error"],
+    [data-nk="field"]
+      > [data-slot="field-description"]
+      + [data-slot="field-error"]
+  ) {
     margin-block-start: calc(var(--nk-space) * 2);
   }
 }
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="field"][data-state="invalid"]
-        > [data-slot="field-control"][data-nk="select"]
-        > [data-slot="select-control"],
-      [data-nk="field"][data-state="invalid"]
-        > [data-slot="field-control"][data-nk="textarea"],
-      [data-nk="field"][data-state="invalid"]
-        > [data-slot="field-control"][data-nk="input"]
-    ) {
+    [data-nk="field"][data-state="invalid"]
+      > [data-slot="field-control"][data-nk="select"]
+      > [data-slot="select-control"],
+    [data-nk="field"][data-state="invalid"]
+      > [data-slot="field-control"][data-nk="textarea"],
+    [data-nk="field"][data-state="invalid"]
+      > [data-slot="field-control"][data-nk="input"]
+  ) {
     border-color: var(--nk-color-destructive);
   }
 }
@@ -5295,8 +5285,8 @@
   }
 
   :where(
-      [data-nk="fieldset"] > [data-slot="fieldset-fields"] > [data-nk="button"]
-    ) {
+    [data-nk="fieldset"] > [data-slot="fieldset-fields"] > [data-nk="button"]
+  ) {
     justify-self: start;
   }
 }
@@ -6099,8 +6089,8 @@
 /* Source: src/stylesheets/nitro_kit/components/input.css */
 @layer nitro-kit.base {
   :where(
-      [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
-    ) {
+    [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
+  ) {
     display: block;
     inline-size: 100%;
     min-block-size: var(--nk-control-height-md);
@@ -6160,24 +6150,16 @@
      from md up, beside 14px labels and body text. */
   @media (min-width: 48rem) {
     :where(
-        [data-nk="input"]:not(
-            [type="checkbox"],
-            [type="radio"],
-            [type="hidden"]
-          )
-      ) {
+      [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
+    ) {
       font-size: var(--nk-text-sm);
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-        [data-nk="input"]:not(
-            [type="checkbox"],
-            [type="radio"],
-            [type="hidden"]
-          )
-      ) {
+      [data-nk="input"]:not([type="checkbox"], [type="radio"], [type="hidden"])
+    ) {
       transition-duration: 0.01ms;
     }
   }
@@ -6271,395 +6253,395 @@
 
   @media (min-width: 40rem) {
     :where(
-        [data-nk="flex"][data-gap~="sm:0"],
-        [data-nk="grid"][data-gap~="sm:0"]
-      ) {
+      [data-nk="flex"][data-gap~="sm:0"],
+      [data-nk="grid"][data-gap~="sm:0"]
+    ) {
       --_nk-layout-gap: 0;
     }
 
     :where(
-        [data-nk="flex"][data-gap~="sm:1"],
-        [data-nk="grid"][data-gap~="sm:1"]
-      ) {
+      [data-nk="flex"][data-gap~="sm:1"],
+      [data-nk="grid"][data-gap~="sm:1"]
+    ) {
       --_nk-layout-gap: var(--nk-space);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="sm:2"],
-        [data-nk="grid"][data-gap~="sm:2"]
-      ) {
+      [data-nk="flex"][data-gap~="sm:2"],
+      [data-nk="grid"][data-gap~="sm:2"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 2);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="sm:3"],
-        [data-nk="grid"][data-gap~="sm:3"]
-      ) {
+      [data-nk="flex"][data-gap~="sm:3"],
+      [data-nk="grid"][data-gap~="sm:3"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 3);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="sm:4"],
-        [data-nk="grid"][data-gap~="sm:4"]
-      ) {
+      [data-nk="flex"][data-gap~="sm:4"],
+      [data-nk="grid"][data-gap~="sm:4"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 4);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="sm:5"],
-        [data-nk="grid"][data-gap~="sm:5"]
-      ) {
+      [data-nk="flex"][data-gap~="sm:5"],
+      [data-nk="grid"][data-gap~="sm:5"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 5);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="sm:6"],
-        [data-nk="grid"][data-gap~="sm:6"]
-      ) {
+      [data-nk="flex"][data-gap~="sm:6"],
+      [data-nk="grid"][data-gap~="sm:6"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 6);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="sm:8"],
-        [data-nk="grid"][data-gap~="sm:8"]
-      ) {
+      [data-nk="flex"][data-gap~="sm:8"],
+      [data-nk="grid"][data-gap~="sm:8"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 8);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="sm:10"],
-        [data-nk="grid"][data-gap~="sm:10"]
-      ) {
+      [data-nk="flex"][data-gap~="sm:10"],
+      [data-nk="grid"][data-gap~="sm:10"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 10);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="sm:12"],
-        [data-nk="grid"][data-gap~="sm:12"]
-      ) {
+      [data-nk="flex"][data-gap~="sm:12"],
+      [data-nk="grid"][data-gap~="sm:12"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 12);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="sm:16"],
-        [data-nk="grid"][data-gap~="sm:16"]
-      ) {
+      [data-nk="flex"][data-gap~="sm:16"],
+      [data-nk="grid"][data-gap~="sm:16"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 16);
     }
   }
 
   @media (min-width: 48rem) {
     :where(
-        [data-nk="flex"][data-gap~="md:0"],
-        [data-nk="grid"][data-gap~="md:0"]
-      ) {
+      [data-nk="flex"][data-gap~="md:0"],
+      [data-nk="grid"][data-gap~="md:0"]
+    ) {
       --_nk-layout-gap: 0;
     }
 
     :where(
-        [data-nk="flex"][data-gap~="md:1"],
-        [data-nk="grid"][data-gap~="md:1"]
-      ) {
+      [data-nk="flex"][data-gap~="md:1"],
+      [data-nk="grid"][data-gap~="md:1"]
+    ) {
       --_nk-layout-gap: var(--nk-space);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="md:2"],
-        [data-nk="grid"][data-gap~="md:2"]
-      ) {
+      [data-nk="flex"][data-gap~="md:2"],
+      [data-nk="grid"][data-gap~="md:2"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 2);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="md:3"],
-        [data-nk="grid"][data-gap~="md:3"]
-      ) {
+      [data-nk="flex"][data-gap~="md:3"],
+      [data-nk="grid"][data-gap~="md:3"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 3);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="md:4"],
-        [data-nk="grid"][data-gap~="md:4"]
-      ) {
+      [data-nk="flex"][data-gap~="md:4"],
+      [data-nk="grid"][data-gap~="md:4"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 4);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="md:5"],
-        [data-nk="grid"][data-gap~="md:5"]
-      ) {
+      [data-nk="flex"][data-gap~="md:5"],
+      [data-nk="grid"][data-gap~="md:5"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 5);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="md:6"],
-        [data-nk="grid"][data-gap~="md:6"]
-      ) {
+      [data-nk="flex"][data-gap~="md:6"],
+      [data-nk="grid"][data-gap~="md:6"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 6);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="md:8"],
-        [data-nk="grid"][data-gap~="md:8"]
-      ) {
+      [data-nk="flex"][data-gap~="md:8"],
+      [data-nk="grid"][data-gap~="md:8"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 8);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="md:10"],
-        [data-nk="grid"][data-gap~="md:10"]
-      ) {
+      [data-nk="flex"][data-gap~="md:10"],
+      [data-nk="grid"][data-gap~="md:10"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 10);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="md:12"],
-        [data-nk="grid"][data-gap~="md:12"]
-      ) {
+      [data-nk="flex"][data-gap~="md:12"],
+      [data-nk="grid"][data-gap~="md:12"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 12);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="md:16"],
-        [data-nk="grid"][data-gap~="md:16"]
-      ) {
+      [data-nk="flex"][data-gap~="md:16"],
+      [data-nk="grid"][data-gap~="md:16"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 16);
     }
   }
 
   @media (min-width: 64rem) {
     :where(
-        [data-nk="flex"][data-gap~="lg:0"],
-        [data-nk="grid"][data-gap~="lg:0"]
-      ) {
+      [data-nk="flex"][data-gap~="lg:0"],
+      [data-nk="grid"][data-gap~="lg:0"]
+    ) {
       --_nk-layout-gap: 0;
     }
 
     :where(
-        [data-nk="flex"][data-gap~="lg:1"],
-        [data-nk="grid"][data-gap~="lg:1"]
-      ) {
+      [data-nk="flex"][data-gap~="lg:1"],
+      [data-nk="grid"][data-gap~="lg:1"]
+    ) {
       --_nk-layout-gap: var(--nk-space);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="lg:2"],
-        [data-nk="grid"][data-gap~="lg:2"]
-      ) {
+      [data-nk="flex"][data-gap~="lg:2"],
+      [data-nk="grid"][data-gap~="lg:2"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 2);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="lg:3"],
-        [data-nk="grid"][data-gap~="lg:3"]
-      ) {
+      [data-nk="flex"][data-gap~="lg:3"],
+      [data-nk="grid"][data-gap~="lg:3"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 3);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="lg:4"],
-        [data-nk="grid"][data-gap~="lg:4"]
-      ) {
+      [data-nk="flex"][data-gap~="lg:4"],
+      [data-nk="grid"][data-gap~="lg:4"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 4);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="lg:5"],
-        [data-nk="grid"][data-gap~="lg:5"]
-      ) {
+      [data-nk="flex"][data-gap~="lg:5"],
+      [data-nk="grid"][data-gap~="lg:5"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 5);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="lg:6"],
-        [data-nk="grid"][data-gap~="lg:6"]
-      ) {
+      [data-nk="flex"][data-gap~="lg:6"],
+      [data-nk="grid"][data-gap~="lg:6"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 6);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="lg:8"],
-        [data-nk="grid"][data-gap~="lg:8"]
-      ) {
+      [data-nk="flex"][data-gap~="lg:8"],
+      [data-nk="grid"][data-gap~="lg:8"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 8);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="lg:10"],
-        [data-nk="grid"][data-gap~="lg:10"]
-      ) {
+      [data-nk="flex"][data-gap~="lg:10"],
+      [data-nk="grid"][data-gap~="lg:10"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 10);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="lg:12"],
-        [data-nk="grid"][data-gap~="lg:12"]
-      ) {
+      [data-nk="flex"][data-gap~="lg:12"],
+      [data-nk="grid"][data-gap~="lg:12"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 12);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="lg:16"],
-        [data-nk="grid"][data-gap~="lg:16"]
-      ) {
+      [data-nk="flex"][data-gap~="lg:16"],
+      [data-nk="grid"][data-gap~="lg:16"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 16);
     }
   }
 
   @media (min-width: 80rem) {
     :where(
-        [data-nk="flex"][data-gap~="xl:0"],
-        [data-nk="grid"][data-gap~="xl:0"]
-      ) {
+      [data-nk="flex"][data-gap~="xl:0"],
+      [data-nk="grid"][data-gap~="xl:0"]
+    ) {
       --_nk-layout-gap: 0;
     }
 
     :where(
-        [data-nk="flex"][data-gap~="xl:1"],
-        [data-nk="grid"][data-gap~="xl:1"]
-      ) {
+      [data-nk="flex"][data-gap~="xl:1"],
+      [data-nk="grid"][data-gap~="xl:1"]
+    ) {
       --_nk-layout-gap: var(--nk-space);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="xl:2"],
-        [data-nk="grid"][data-gap~="xl:2"]
-      ) {
+      [data-nk="flex"][data-gap~="xl:2"],
+      [data-nk="grid"][data-gap~="xl:2"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 2);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="xl:3"],
-        [data-nk="grid"][data-gap~="xl:3"]
-      ) {
+      [data-nk="flex"][data-gap~="xl:3"],
+      [data-nk="grid"][data-gap~="xl:3"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 3);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="xl:4"],
-        [data-nk="grid"][data-gap~="xl:4"]
-      ) {
+      [data-nk="flex"][data-gap~="xl:4"],
+      [data-nk="grid"][data-gap~="xl:4"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 4);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="xl:5"],
-        [data-nk="grid"][data-gap~="xl:5"]
-      ) {
+      [data-nk="flex"][data-gap~="xl:5"],
+      [data-nk="grid"][data-gap~="xl:5"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 5);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="xl:6"],
-        [data-nk="grid"][data-gap~="xl:6"]
-      ) {
+      [data-nk="flex"][data-gap~="xl:6"],
+      [data-nk="grid"][data-gap~="xl:6"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 6);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="xl:8"],
-        [data-nk="grid"][data-gap~="xl:8"]
-      ) {
+      [data-nk="flex"][data-gap~="xl:8"],
+      [data-nk="grid"][data-gap~="xl:8"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 8);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="xl:10"],
-        [data-nk="grid"][data-gap~="xl:10"]
-      ) {
+      [data-nk="flex"][data-gap~="xl:10"],
+      [data-nk="grid"][data-gap~="xl:10"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 10);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="xl:12"],
-        [data-nk="grid"][data-gap~="xl:12"]
-      ) {
+      [data-nk="flex"][data-gap~="xl:12"],
+      [data-nk="grid"][data-gap~="xl:12"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 12);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="xl:16"],
-        [data-nk="grid"][data-gap~="xl:16"]
-      ) {
+      [data-nk="flex"][data-gap~="xl:16"],
+      [data-nk="grid"][data-gap~="xl:16"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 16);
     }
   }
 
   @media (min-width: 96rem) {
     :where(
-        [data-nk="flex"][data-gap~="2xl:0"],
-        [data-nk="grid"][data-gap~="2xl:0"]
-      ) {
+      [data-nk="flex"][data-gap~="2xl:0"],
+      [data-nk="grid"][data-gap~="2xl:0"]
+    ) {
       --_nk-layout-gap: 0;
     }
 
     :where(
-        [data-nk="flex"][data-gap~="2xl:1"],
-        [data-nk="grid"][data-gap~="2xl:1"]
-      ) {
+      [data-nk="flex"][data-gap~="2xl:1"],
+      [data-nk="grid"][data-gap~="2xl:1"]
+    ) {
       --_nk-layout-gap: var(--nk-space);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="2xl:2"],
-        [data-nk="grid"][data-gap~="2xl:2"]
-      ) {
+      [data-nk="flex"][data-gap~="2xl:2"],
+      [data-nk="grid"][data-gap~="2xl:2"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 2);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="2xl:3"],
-        [data-nk="grid"][data-gap~="2xl:3"]
-      ) {
+      [data-nk="flex"][data-gap~="2xl:3"],
+      [data-nk="grid"][data-gap~="2xl:3"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 3);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="2xl:4"],
-        [data-nk="grid"][data-gap~="2xl:4"]
-      ) {
+      [data-nk="flex"][data-gap~="2xl:4"],
+      [data-nk="grid"][data-gap~="2xl:4"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 4);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="2xl:5"],
-        [data-nk="grid"][data-gap~="2xl:5"]
-      ) {
+      [data-nk="flex"][data-gap~="2xl:5"],
+      [data-nk="grid"][data-gap~="2xl:5"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 5);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="2xl:6"],
-        [data-nk="grid"][data-gap~="2xl:6"]
-      ) {
+      [data-nk="flex"][data-gap~="2xl:6"],
+      [data-nk="grid"][data-gap~="2xl:6"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 6);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="2xl:8"],
-        [data-nk="grid"][data-gap~="2xl:8"]
-      ) {
+      [data-nk="flex"][data-gap~="2xl:8"],
+      [data-nk="grid"][data-gap~="2xl:8"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 8);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="2xl:10"],
-        [data-nk="grid"][data-gap~="2xl:10"]
-      ) {
+      [data-nk="flex"][data-gap~="2xl:10"],
+      [data-nk="grid"][data-gap~="2xl:10"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 10);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="2xl:12"],
-        [data-nk="grid"][data-gap~="2xl:12"]
-      ) {
+      [data-nk="flex"][data-gap~="2xl:12"],
+      [data-nk="grid"][data-gap~="2xl:12"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 12);
     }
 
     :where(
-        [data-nk="flex"][data-gap~="2xl:16"],
-        [data-nk="grid"][data-gap~="2xl:16"]
-      ) {
+      [data-nk="flex"][data-gap~="2xl:16"],
+      [data-nk="grid"][data-gap~="2xl:16"]
+    ) {
       --_nk-layout-gap: calc(var(--nk-space) * 16);
     }
   }
@@ -6712,9 +6694,9 @@
        the first row so their top edge aligns with the header instead of
        dropping beside the final line of supporting text. */
     :where(
-        [data-nk="page-header"]:has(> [data-slot="page-header-actions"])
-          > :not([data-slot="page-header-actions"])
-      ) {
+      [data-nk="page-header"]:has(> [data-slot="page-header-actions"])
+        > :not([data-slot="page-header-actions"])
+    ) {
       grid-column: 1;
     }
 
@@ -6746,20 +6728,20 @@
   }
 
   :where(
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-    ) {
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+  ) {
     display: flex;
     flex: none;
   }
 
   :where(
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-        > [data-slot="pagination-ellipsis-label"]
-    ) {
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+      > [data-slot="pagination-ellipsis-label"]
+  ) {
     position: absolute;
     inline-size: 1px;
     block-size: 1px;
@@ -6775,19 +6757,19 @@
 
 @layer nitro-kit.compound {
   :where(
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-        > [data-slot="pagination-page"],
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-        > [data-slot="pagination-current"],
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-        > [data-slot="pagination-ellipsis"]
-    ) {
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+      > [data-slot="pagination-page"],
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+      > [data-slot="pagination-current"],
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+      > [data-slot="pagination-ellipsis"]
+  ) {
     min-inline-size: var(--nk-control-height-md);
     min-block-size: var(--nk-control-height-md);
     padding-inline: calc(var(--nk-space) * 2);
@@ -6795,24 +6777,24 @@
   }
 
   :where(
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-        > [data-slot="pagination-page"]
-    ) {
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+      > [data-slot="pagination-page"]
+  ) {
     justify-content: center;
   }
 
   :where(
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-        > [data-slot="pagination-page"][aria-current="page"],
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-        > [data-slot="pagination-current"]
-    ) {
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+      > [data-slot="pagination-page"][aria-current="page"],
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+      > [data-slot="pagination-current"]
+  ) {
     color: var(--nk-color-foreground);
     cursor: default;
     background: var(--nk-color-muted);
@@ -6821,11 +6803,11 @@
   }
 
   :where(
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-        > [data-slot="pagination-current"]
-    ) {
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+      > [data-slot="pagination-current"]
+  ) {
     display: inline-grid;
     place-items: center;
     font-size: var(--nk-text-sm);
@@ -6835,11 +6817,11 @@
   }
 
   :where(
-      [data-nk="pagination"]
-        > [data-slot="pagination-list"]
-        > [data-slot="pagination-item"]
-        > [data-slot="pagination-ellipsis"]
-    ) {
+    [data-nk="pagination"]
+      > [data-slot="pagination-list"]
+      > [data-slot="pagination-item"]
+      > [data-slot="pagination-ellipsis"]
+  ) {
     display: inline-grid;
     place-items: center;
     color: var(--nk-color-muted-foreground);
@@ -6867,9 +6849,9 @@
   }
 
   :where(
-      [data-nk="pagination-bar"]
-        > [data-nk="pagination"][data-slot="pagination-bar-pagination"]
-    ) {
+    [data-nk="pagination-bar"]
+      > [data-nk="pagination"][data-slot="pagination-bar-pagination"]
+  ) {
     margin-inline-start: auto;
   }
 }
@@ -6885,9 +6867,9 @@
     }
 
     :where(
-        [data-nk="pagination-bar"]
-          > [data-nk="pagination"][data-slot="pagination-bar-pagination"]
-      ) {
+      [data-nk="pagination-bar"]
+        > [data-nk="pagination"][data-slot="pagination-bar-pagination"]
+    ) {
       margin-inline-start: 0;
     }
   }
@@ -6909,37 +6891,37 @@
  */
 @layer nitro-kit.variant {
   :where(
-      [data-nk="badge"][data-color="neutral"],
-      [data-nk="alert"][data-variant="default"],
-      [data-nk="toast-item"][data-variant="default"]
-    ) {
+    [data-nk="badge"][data-color="neutral"],
+    [data-nk="alert"][data-variant="default"],
+    [data-nk="toast-item"][data-variant="default"]
+  ) {
     --_nk-semantic-accent: var(--nk-palette-neutral);
     --_nk-semantic-content: var(--nk-palette-neutral-content);
   }
 
   :where(
-      [data-nk="badge"][data-color="info"],
-      [data-nk="alert"][data-variant="info"],
-      [data-nk="toast-item"][data-variant="info"]
-    ) {
+    [data-nk="badge"][data-color="info"],
+    [data-nk="alert"][data-variant="info"],
+    [data-nk="toast-item"][data-variant="info"]
+  ) {
     --_nk-semantic-accent: var(--nk-palette-info);
     --_nk-semantic-content: var(--nk-palette-info-content);
   }
 
   :where(
-      [data-nk="badge"][data-color="success"],
-      [data-nk="alert"][data-variant="success"],
-      [data-nk="toast-item"][data-variant="success"]
-    ) {
+    [data-nk="badge"][data-color="success"],
+    [data-nk="alert"][data-variant="success"],
+    [data-nk="toast-item"][data-variant="success"]
+  ) {
     --_nk-semantic-accent: var(--nk-palette-success);
     --_nk-semantic-content: var(--nk-palette-success-content);
   }
 
   :where(
-      [data-nk="badge"][data-color="warning"],
-      [data-nk="alert"][data-variant="warning"],
-      [data-nk="toast-item"][data-variant="warning"]
-    ) {
+    [data-nk="badge"][data-color="warning"],
+    [data-nk="alert"][data-variant="warning"],
+    [data-nk="toast-item"][data-variant="warning"]
+  ) {
     --_nk-semantic-accent: var(--nk-palette-warning);
     --_nk-semantic-content: var(--nk-palette-warning-content);
   }
@@ -6948,10 +6930,10 @@
      Both spellings resolve to the destructive family, and this is the only
      place they meet. */
   :where(
-      [data-nk="badge"][data-color="destructive"],
-      [data-nk="alert"][data-variant="destructive"],
-      [data-nk="toast-item"][data-variant="error"]
-    ) {
+    [data-nk="badge"][data-color="destructive"],
+    [data-nk="alert"][data-variant="destructive"],
+    [data-nk="toast-item"][data-variant="error"]
+  ) {
     --_nk-semantic-accent: var(--nk-palette-destructive);
     --_nk-semantic-content: var(--nk-palette-destructive-content);
   }
@@ -7104,11 +7086,10 @@
   }
 
   :where(
-      [data-nk="progressive-image"]
-        > [data-slot="progressive-image-placeholder"],
-      [data-nk="progressive-image"] > [data-slot="progressive-image-image"],
-      [data-nk="progressive-image"] > [data-slot="progressive-image-fallback"]
-    ) {
+    [data-nk="progressive-image"] > [data-slot="progressive-image-placeholder"],
+    [data-nk="progressive-image"] > [data-slot="progressive-image-image"],
+    [data-nk="progressive-image"] > [data-slot="progressive-image-fallback"]
+  ) {
     grid-area: 1 / 1;
     inline-size: 100%;
     block-size: 100%;
@@ -7116,17 +7097,15 @@
   }
 
   :where(
-      [data-nk="progressive-image"]
-        > [data-slot="progressive-image-placeholder"],
-      [data-nk="progressive-image"] > [data-slot="progressive-image-image"]
-    ) {
+    [data-nk="progressive-image"] > [data-slot="progressive-image-placeholder"],
+    [data-nk="progressive-image"] > [data-slot="progressive-image-image"]
+  ) {
     object-fit: cover;
   }
 
   :where(
-      [data-nk="progressive-image"]
-        > [data-slot="progressive-image-placeholder"]
-    ) {
+    [data-nk="progressive-image"] > [data-slot="progressive-image-placeholder"]
+  ) {
     z-index: 1;
     filter: blur(calc(var(--nk-space) * 4));
     opacity: 0;
@@ -7134,15 +7113,15 @@
   }
 
   :where(
-      [data-nk="progressive-image"] > [data-slot="progressive-image-image"]
-    ) {
+    [data-nk="progressive-image"] > [data-slot="progressive-image-image"]
+  ) {
     z-index: 2;
     opacity: 1;
   }
 
   :where(
-      [data-nk="progressive-image"] > [data-slot="progressive-image-fallback"]
-    ) {
+    [data-nk="progressive-image"] > [data-slot="progressive-image-fallback"]
+  ) {
     display: grid;
     min-block-size: 10rem;
     padding: calc(var(--nk-space) * 6);
@@ -7158,43 +7137,43 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="progressive-image"][data-enhanced="true"]
-        > [data-slot="progressive-image-placeholder"],
-      [data-nk="progressive-image"][data-enhanced="true"]
-        > [data-slot="progressive-image-image"]
-    ) {
+    [data-nk="progressive-image"][data-enhanced="true"]
+      > [data-slot="progressive-image-placeholder"],
+    [data-nk="progressive-image"][data-enhanced="true"]
+      > [data-slot="progressive-image-image"]
+  ) {
     transition: opacity var(--nk-duration-slow) var(--nk-ease);
   }
 
   :where(
-      [data-nk="progressive-image"][data-enhanced="true"][data-state="loading"]
-        > [data-slot="progressive-image-placeholder"]
-    ) {
+    [data-nk="progressive-image"][data-enhanced="true"][data-state="loading"]
+      > [data-slot="progressive-image-placeholder"]
+  ) {
     opacity: 1;
   }
 
   :where(
-      [data-nk="progressive-image"][data-enhanced="true"][data-state="loading"]
-        > [data-slot="progressive-image-image"]
-    ) {
+    [data-nk="progressive-image"][data-enhanced="true"][data-state="loading"]
+      > [data-slot="progressive-image-image"]
+  ) {
     opacity: 0;
   }
 
   :where(
-      [data-nk="progressive-image"][data-enhanced="true"][data-state="loaded"]
-        > [data-slot="progressive-image-image"]
-    ) {
+    [data-nk="progressive-image"][data-enhanced="true"][data-state="loaded"]
+      > [data-slot="progressive-image-image"]
+  ) {
     opacity: 1;
   }
 
   :where(
-      [data-nk="progressive-image"][data-enhanced="true"][data-state="loaded"]
-        > [data-slot="progressive-image-placeholder"],
-      [data-nk="progressive-image"][data-enhanced="true"][data-state="error"]
-        > [data-slot="progressive-image-placeholder"],
-      [data-nk="progressive-image"][data-enhanced="true"][data-state="error"]
-        > [data-slot="progressive-image-image"]
-    ) {
+    [data-nk="progressive-image"][data-enhanced="true"][data-state="loaded"]
+      > [data-slot="progressive-image-placeholder"],
+    [data-nk="progressive-image"][data-enhanced="true"][data-state="error"]
+      > [data-slot="progressive-image-placeholder"],
+    [data-nk="progressive-image"][data-enhanced="true"][data-state="error"]
+      > [data-slot="progressive-image-image"]
+  ) {
     opacity: 0;
   }
 }
@@ -7202,10 +7181,10 @@
 @media (prefers-reduced-motion: reduce) {
   @layer nitro-kit.state {
     :where(
-        [data-nk="progressive-image"]
-          > [data-slot="progressive-image-placeholder"],
-        [data-nk="progressive-image"] > [data-slot="progressive-image-image"]
-      ) {
+      [data-nk="progressive-image"]
+        > [data-slot="progressive-image-placeholder"],
+      [data-nk="progressive-image"] > [data-slot="progressive-image-image"]
+    ) {
       transition-duration: 0s;
     }
   }
@@ -7240,9 +7219,9 @@
   }
 
   :where(
-      [data-nk="radio-button"] [data-slot="radio-button-control"],
-      [data-nk="radio-button"] [data-slot="radio-button-indicator"]
-    ) {
+    [data-nk="radio-button"] [data-slot="radio-button-control"],
+    [data-nk="radio-button"] [data-slot="radio-button-indicator"]
+  ) {
     grid-area: 1 / 1;
     inline-size: var(--_nk-choice-size);
     block-size: var(--_nk-choice-size);
@@ -7294,26 +7273,26 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="radio-button"]
-        [data-slot="radio-button-control"]:checked
-        + [data-slot="radio-button-indicator"]
-    ) {
+    [data-nk="radio-button"]
+      [data-slot="radio-button-control"]:checked
+      + [data-slot="radio-button-indicator"]
+  ) {
     border-color: var(--nk-color-primary);
   }
 
   :where(
-      [data-nk="radio-button"]
-        [data-slot="radio-button-control"]:checked
-        + [data-slot="radio-button-indicator"]
-    )::after {
+    [data-nk="radio-button"]
+      [data-slot="radio-button-control"]:checked
+      + [data-slot="radio-button-indicator"]
+  )::after {
     opacity: 1;
   }
 
   :where(
-      [data-nk="radio-button"]
-        [data-slot="radio-button-control"]:focus-visible
-        + [data-slot="radio-button-indicator"]
-    ) {
+    [data-nk="radio-button"]
+      [data-slot="radio-button-control"]:focus-visible
+      + [data-slot="radio-button-indicator"]
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -7328,10 +7307,10 @@
      the destructive border stands down. `:user-valid` never matches before the user
      touches the control, so an untouched invalid radio keeps its border. */
   :where(
-      [data-nk="radio-button"]
-        [data-slot="radio-button-control"][aria-invalid="true"]:not(:user-valid)
-        + [data-slot="radio-button-indicator"]
-    ) {
+    [data-nk="radio-button"]
+      [data-slot="radio-button-control"][aria-invalid="true"]:not(:user-valid)
+      + [data-slot="radio-button-indicator"]
+  ) {
     border-color: var(--nk-color-destructive);
   }
 
@@ -7352,17 +7331,17 @@
   }
 
   :where(
-      [data-nk="radio-button-group"] > [data-slot="radio-button-group-legend"]
-    ) {
+    [data-nk="radio-button-group"] > [data-slot="radio-button-group-legend"]
+  ) {
     padding: 0;
     font-size: var(--nk-title-compact-size);
     font-weight: var(--nk-title-compact-weight);
   }
 
   :where(
-      [data-nk="radio-button-group"]
-        > [data-slot="radio-button-group-description"]
-    ) {
+    [data-nk="radio-button-group"]
+      > [data-slot="radio-button-group-description"]
+  ) {
     margin-block-start: var(--nk-space);
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
@@ -7370,34 +7349,34 @@
   }
 
   :where(
-      [data-nk="radio-button-group"] > [data-slot="radio-button-group-choices"]
-    ) {
+    [data-nk="radio-button-group"] > [data-slot="radio-button-group-choices"]
+  ) {
     display: grid;
     gap: var(--nk-space);
     margin-block-start: calc(var(--nk-space) * 2);
   }
 
   :where(
-      [data-nk="radio-button-group"][data-presentation="list"][data-orientation="vertical"]
-        > [data-slot="radio-button-group-choices"]
-    ) {
+    [data-nk="radio-button-group"][data-presentation="list"][data-orientation="vertical"]
+      > [data-slot="radio-button-group-choices"]
+  ) {
     gap: 0;
   }
 
   :where(
-      [data-nk="radio-button-group"][data-orientation="horizontal"]
-        > [data-slot="radio-button-group-choices"]
-    ) {
+    [data-nk="radio-button-group"][data-orientation="horizontal"]
+      > [data-slot="radio-button-group-choices"]
+  ) {
     display: flex;
     flex-wrap: wrap;
     gap: calc(var(--nk-space) * 4);
   }
 
   :where(
-      [data-nk="radio-button-group"][data-presentation="cards"]
-        > [data-slot="radio-button-group-choices"]
-        > [data-slot="radio-button-group-choice"]
-    ) {
+    [data-nk="radio-button-group"][data-presentation="cards"]
+      > [data-slot="radio-button-group-choices"]
+      > [data-slot="radio-button-group-choice"]
+  ) {
     inline-size: 100%;
     padding: calc(var(--nk-space) * 3);
     background: var(--nk-color-surface);
@@ -7406,9 +7385,9 @@
   }
 
   :where(
-      [data-nk="radio-button-group"][data-presentation="segmented"]
-        > [data-slot="radio-button-group-choices"]
-    ) {
+    [data-nk="radio-button-group"][data-presentation="segmented"]
+      > [data-slot="radio-button-group-choices"]
+  ) {
     display: inline-flex;
     gap: 0;
     padding: var(--nk-space);
@@ -7417,19 +7396,19 @@
   }
 
   :where(
-      [data-nk="radio-button-group"][data-presentation="segmented"]
-        > [data-slot="radio-button-group-choices"]
-        > [data-slot="radio-button-group-choice"]
-    ) {
+    [data-nk="radio-button-group"][data-presentation="segmented"]
+      > [data-slot="radio-button-group-choices"]
+      > [data-slot="radio-button-group-choice"]
+  ) {
     min-inline-size: 0;
     padding-inline: calc(var(--nk-space) * 3);
     border-radius: calc(var(--nk-radius-lg) - var(--nk-space));
   }
 
   :where(
-      [data-nk="radio-button-group"][data-presentation="segmented"]
-        [data-slot="radio-button-indicator"]
-    ) {
+    [data-nk="radio-button-group"][data-presentation="segmented"]
+      [data-slot="radio-button-indicator"]
+  ) {
     display: none;
   }
 
@@ -7439,9 +7418,9 @@
      centred between the segment's own paddings and makes the entire segment
      clickable. */
   :where(
-      [data-nk="radio-button-group"][data-presentation="segmented"]
-        [data-slot="radio-button-label"]
-    ) {
+    [data-nk="radio-button-group"][data-presentation="segmented"]
+      [data-slot="radio-button-label"]
+  ) {
     position: relative;
     display: flex;
     gap: 0;
@@ -7451,9 +7430,9 @@
   }
 
   :where(
-      [data-nk="radio-button-group"][data-presentation="segmented"]
-        [data-slot="radio-button-control"]
-    ) {
+    [data-nk="radio-button-group"][data-presentation="segmented"]
+      [data-slot="radio-button-control"]
+  ) {
     position: absolute;
     inset: 0;
     inline-size: 100%;
@@ -7463,13 +7442,13 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="radio-button-group"][data-presentation="cards"]
-        > [data-slot="radio-button-group-choices"]
-        > [data-slot="radio-button-group-choice"]:has(input:checked),
-      [data-nk="radio-button-group"][data-presentation="segmented"]
-        > [data-slot="radio-button-group-choices"]
-        > [data-slot="radio-button-group-choice"]:has(input:checked)
-    ) {
+    [data-nk="radio-button-group"][data-presentation="cards"]
+      > [data-slot="radio-button-group-choices"]
+      > [data-slot="radio-button-group-choice"]:has(input:checked),
+    [data-nk="radio-button-group"][data-presentation="segmented"]
+      > [data-slot="radio-button-group-choices"]
+      > [data-slot="radio-button-group-choice"]:has(input:checked)
+  ) {
     background: var(--nk-color-surface);
     border-color: var(--nk-color-primary);
     box-shadow: var(--nk-shadow-sm);
@@ -7478,9 +7457,9 @@
   /* The segmented indicator is hidden, so the focus ring belongs to the native
      radio that now covers the segment. */
   :where(
-      [data-nk="radio-button-group"][data-presentation="segmented"]
-        [data-slot="radio-button-control"]:focus-visible
-    ) {
+    [data-nk="radio-button-group"][data-presentation="segmented"]
+      [data-slot="radio-button-control"]:focus-visible
+  ) {
     border-radius: calc(var(--nk-radius-lg) - var(--nk-space));
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: calc(var(--nk-focus-offset) * -1);
@@ -7517,10 +7496,10 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="rich-text-area"]
-        > [data-slot="rich-text-area-editor"]
-        > [aria-invalid="true"]
-    ) {
+    [data-nk="rich-text-area"]
+      > [data-slot="rich-text-area-editor"]
+      > [aria-invalid="true"]
+  ) {
     border-color: var(--nk-color-destructive);
   }
 }
@@ -7600,8 +7579,8 @@
   }
 
   :where(
-      [data-nk="select"] > [data-slot="select-control"][aria-invalid="true"]
-    ) {
+    [data-nk="select"] > [data-slot="select-control"][aria-invalid="true"]
+  ) {
     border-color: var(--nk-color-destructive);
   }
 }
@@ -7617,9 +7596,9 @@
   }
 
   :where(
-      [data-nk="settings-layout"] > [data-slot="settings-layout-navigation"],
-      [data-nk="settings-layout"] > [data-slot="settings-layout-content"]
-    ) {
+    [data-nk="settings-layout"] > [data-slot="settings-layout-navigation"],
+    [data-nk="settings-layout"] > [data-slot="settings-layout-content"]
+  ) {
     min-inline-size: 0;
   }
 
@@ -7663,43 +7642,42 @@
   /* Emphasis alone marks the current destination without adding a decorative
      edge or a filled block that would outweigh the content beside it. */
   :where(
-      [data-nk="settings-layout"]
-        [data-slot="settings-layout-item-link"][data-state="current"]
-    ) {
+    [data-nk="settings-layout"]
+      [data-slot="settings-layout-item-link"][data-state="current"]
+  ) {
     color: var(--nk-color-foreground);
     font-weight: var(--nk-font-weight-semibold);
   }
 
   :where(
-      [data-nk="settings-layout"]
-        [data-slot="settings-layout-item-link"][data-state="current"]
-        [data-slot="settings-layout-item-icon"]
-    ) {
+    [data-nk="settings-layout"]
+      [data-slot="settings-layout-item-link"][data-state="current"]
+      [data-slot="settings-layout-item-icon"]
+  ) {
     color: var(--nk-color-foreground);
   }
 
   @media (hover: hover) {
     :where(
-        [data-nk="settings-layout"]
-          [data-slot="settings-layout-item-link"]:hover
-      ) {
+      [data-nk="settings-layout"] [data-slot="settings-layout-item-link"]:hover
+    ) {
       color: var(--nk-color-foreground);
       background: color-mix(in oklab, var(--nk-color-muted) 60%, transparent);
     }
   }
 
   :where(
-      [data-nk="settings-layout"]
-        [data-slot="settings-layout-item-link"]:focus-visible
-    ) {
+    [data-nk="settings-layout"]
+      [data-slot="settings-layout-item-link"]:focus-visible
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: calc(var(--nk-focus-offset) * -1);
   }
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-        [data-nk="settings-layout"] [data-slot="settings-layout-item-link"]
-      ) {
+      [data-nk="settings-layout"] [data-slot="settings-layout-item-link"]
+    ) {
       transition-duration: 0.01ms;
     }
   }
@@ -7738,8 +7716,8 @@
   }
 
   :where(
-      [data-nk="settings-section"] [data-slot="settings-section-description"]
-    ) {
+    [data-nk="settings-section"] [data-slot="settings-section-description"]
+  ) {
     max-inline-size: var(--nk-content-lg);
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-sm);
@@ -7762,18 +7740,18 @@
   }
 
   :where(
-      [data-nk="settings-section"] > [data-slot="settings-section-form"] > form
-    ) {
+    [data-nk="settings-section"] > [data-slot="settings-section-form"] > form
+  ) {
     display: grid;
     gap: calc(var(--nk-space) * 5);
   }
 
   :where(
-      [data-nk="settings-section"]
-        > [data-slot="settings-section-form"]
-        > form
-        > [data-nk="button"]
-    ) {
+    [data-nk="settings-section"]
+      > [data-slot="settings-section-form"]
+      > form
+      > [data-nk="button"]
+  ) {
     justify-self: start;
   }
 
@@ -7791,9 +7769,9 @@
     }
 
     :where(
-        [data-nk="settings-section"] > [data-slot="settings-section-status"],
-        [data-nk="settings-section"] > [data-slot="settings-section-form"]
-      ) {
+      [data-nk="settings-section"] > [data-slot="settings-section-status"],
+      [data-nk="settings-section"] > [data-slot="settings-section-form"]
+    ) {
       grid-column: 1;
     }
   }
@@ -7876,30 +7854,30 @@
   }
 
   :where(
-      [data-nk="sheet"][data-side="left"] > [data-slot="sheet-panel"][open]
-    ) {
+    [data-nk="sheet"][data-side="left"] > [data-slot="sheet-panel"][open]
+  ) {
     --_nk-sheet-from: calc(var(--nk-space) * -4);
   }
 
   :where(
-      [data-nk="sheet"][data-side="right"] > [data-slot="sheet-panel"][open]
-    ) {
+    [data-nk="sheet"][data-side="right"] > [data-slot="sheet-panel"][open]
+  ) {
     --_nk-sheet-from: calc(var(--nk-space) * 4);
   }
 
   /* Sides are logical, but translateX is physical; RTL flips the slide so the
      panel still enters from its own edge. */
   :where(
-      [data-nk="sheet"][data-side="left"]:dir(rtl)
-        > [data-slot="sheet-panel"][open]
-    ) {
+    [data-nk="sheet"][data-side="left"]:dir(rtl)
+      > [data-slot="sheet-panel"][open]
+  ) {
     --_nk-sheet-from: calc(var(--nk-space) * 4);
   }
 
   :where(
-      [data-nk="sheet"][data-side="right"]:dir(rtl)
-        > [data-slot="sheet-panel"][open]
-    ) {
+    [data-nk="sheet"][data-side="right"]:dir(rtl)
+      > [data-slot="sheet-panel"][open]
+  ) {
     --_nk-sheet-from: calc(var(--nk-space) * -4);
   }
 
@@ -7929,19 +7907,19 @@
   }
 
   :where(
-      [data-nk="stat-grid"]
-        > [data-slot="stat-grid-grid"]
-        > [data-slot="stat-grid-list"]
-    ) {
+    [data-nk="stat-grid"]
+      > [data-slot="stat-grid-grid"]
+      > [data-slot="stat-grid-list"]
+  ) {
     display: contents;
   }
 
   :where(
-      [data-nk="stat-grid"]
-        > [data-slot="stat-grid-grid"]
-        > [data-slot="stat-grid-list"]
-        > [data-slot="stat-grid-stat"]
-    ) {
+    [data-nk="stat-grid"]
+      > [data-slot="stat-grid-grid"]
+      > [data-slot="stat-grid-list"]
+      > [data-slot="stat-grid-stat"]
+  ) {
     display: grid;
     align-content: start;
     gap: calc(var(--nk-space) * 2);
@@ -8012,9 +7990,9 @@
   }
 
   :where(
-      [data-nk="switch"] [data-slot="switch-control"],
-      [data-nk="switch"] [data-slot="switch-track"]
-    ) {
+    [data-nk="switch"] [data-slot="switch-control"],
+    [data-nk="switch"] [data-slot="switch-track"]
+  ) {
     grid-area: 1 / 1;
   }
 
@@ -8072,28 +8050,28 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="switch"]
-        [data-slot="switch-control"]:checked
-        + [data-slot="switch-track"]
-    ) {
+    [data-nk="switch"]
+      [data-slot="switch-control"]:checked
+      + [data-slot="switch-track"]
+  ) {
     background: var(--nk-color-primary);
     border-color: var(--nk-color-primary);
   }
 
   :where(
-      [data-nk="switch"]
-        [data-slot="switch-control"]:checked
-        + [data-slot="switch-track"]
-        > [data-slot="switch-handle"]
-    ) {
+    [data-nk="switch"]
+      [data-slot="switch-control"]:checked
+      + [data-slot="switch-track"]
+      > [data-slot="switch-handle"]
+  ) {
     transform: translateX(var(--_nk-switch-travel));
   }
 
   :where(
-      [data-nk="switch"]
-        [data-slot="switch-control"]:focus-visible
-        + [data-slot="switch-track"]
-    ) {
+    [data-nk="switch"]
+      [data-slot="switch-control"]:focus-visible
+      + [data-slot="switch-track"]
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -8108,10 +8086,10 @@
      destructive border stands down. `:user-valid` never matches before the user
      touches the control, so an untouched invalid switch keeps its border. */
   :where(
-      [data-nk="switch"]
-        [data-slot="switch-control"][aria-invalid="true"]:not(:user-valid)
-        + [data-slot="switch-track"]
-    ) {
+    [data-nk="switch"]
+      [data-slot="switch-control"][aria-invalid="true"]:not(:user-valid)
+      + [data-slot="switch-track"]
+  ) {
     border-color: var(--nk-color-destructive);
   }
 }
@@ -8119,9 +8097,9 @@
 @media (prefers-reduced-motion: reduce) {
   @layer nitro-kit.base {
     :where(
-        [data-nk="switch"] [data-slot="switch-track"],
-        [data-nk="switch"] [data-slot="switch-handle"]
-      ) {
+      [data-nk="switch"] [data-slot="switch-track"],
+      [data-nk="switch"] [data-slot="switch-handle"]
+    ) {
       transition-duration: 0.01ms;
     }
   }
@@ -8157,9 +8135,9 @@
   /* min-block-size is undefined on table cells, so the 40px minimum comes
      from padding around a single line box instead. */
   :where(
-      [data-nk="table"] [data-slot="table-header"],
-      [data-nk="table"] [data-slot="table-cell"]
-    ) {
+    [data-nk="table"] [data-slot="table-header"],
+    [data-nk="table"] [data-slot="table-cell"]
+  ) {
     padding-block: calc((var(--nk-control-height-md) - 1lh) / 2);
     padding-inline: calc(var(--nk-space) * 2);
     text-align: start;
@@ -8196,25 +8174,25 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="table"]
-        [data-slot="table-header"]:is(
-          [aria-sort="ascending"],
-          [aria-sort="descending"]
-        )
-        [data-slot="table-sort"]
-    ) {
+    [data-nk="table"]
+      [data-slot="table-header"]:is(
+        [aria-sort="ascending"],
+        [aria-sort="descending"]
+      )
+      [data-slot="table-sort"]
+  ) {
     color: var(--nk-color-foreground);
     font-weight: var(--nk-font-weight-semibold);
   }
 
   :where(
-      [data-nk="table"]
-        [data-slot="table-header"]:is(
-          [aria-sort="ascending"],
-          [aria-sort="descending"]
-        )
-        [data-slot="table-sort-indicator"]
-    ) {
+    [data-nk="table"]
+      [data-slot="table-header"]:is(
+        [aria-sort="ascending"],
+        [aria-sort="descending"]
+      )
+      [data-slot="table-sort-indicator"]
+  ) {
     color: var(--nk-color-primary);
   }
 
@@ -8224,10 +8202,10 @@
     }
 
     :where(
-        [data-nk="table"]
-          [data-slot="table-sort"]:hover
-          [data-slot="table-sort-indicator"]
-      ) {
+      [data-nk="table"]
+        [data-slot="table-sort"]:hover
+        [data-slot="table-sort-indicator"]
+    ) {
       color: var(--nk-color-muted-foreground);
     }
   }
@@ -8240,15 +8218,15 @@
 
 @layer nitro-kit.compound {
   :where(
-      [data-nk="table"] [data-slot="table-header"][data-align="center"],
-      [data-nk="table"] [data-slot="table-cell"][data-align="center"]
-    ) {
+    [data-nk="table"] [data-slot="table-header"][data-align="center"],
+    [data-nk="table"] [data-slot="table-cell"][data-align="center"]
+  ) {
     text-align: center;
   }
   :where(
-      [data-nk="table"] [data-slot="table-header"][data-align="right"],
-      [data-nk="table"] [data-slot="table-cell"][data-align="right"]
-    ) {
+    [data-nk="table"] [data-slot="table-header"][data-align="right"],
+    [data-nk="table"] [data-slot="table-cell"][data-align="right"]
+  ) {
     font-variant-numeric: tabular-nums;
     text-align: right;
   }
@@ -8308,8 +8286,8 @@
   }
 
   :where(
-      [data-nk="tabs"][data-orientation="vertical"] > [data-slot="tabs-list"]
-    ) {
+    [data-nk="tabs"][data-orientation="vertical"] > [data-slot="tabs-list"]
+  ) {
     flex-direction: column;
     grid-column: 1;
     grid-row: 1;
@@ -8320,26 +8298,26 @@
   }
 
   :where(
-      [data-nk="tabs"][data-orientation="vertical"]
-        > [data-slot="tabs-list"]
-        > [data-slot="tabs-tab"]
-    ) {
+    [data-nk="tabs"][data-orientation="vertical"]
+      > [data-slot="tabs-list"]
+      > [data-slot="tabs-tab"]
+  ) {
     text-align: start;
     border-block-end: 0;
     border-inline-end: var(--nk-focus-width) solid transparent;
   }
 
   :where(
-      [data-nk="tabs"][data-orientation="vertical"]
-        > [data-slot="tabs-list"]
-        > [data-slot="tabs-tab"][aria-selected="true"]
-    ) {
+    [data-nk="tabs"][data-orientation="vertical"]
+      > [data-slot="tabs-list"]
+      > [data-slot="tabs-tab"][aria-selected="true"]
+  ) {
     border-inline-end-color: var(--nk-color-primary);
   }
 
   :where(
-      [data-nk="tabs"][data-orientation="vertical"] > [data-slot="tabs-panel"]
-    ) {
+    [data-nk="tabs"][data-orientation="vertical"] > [data-slot="tabs-panel"]
+  ) {
     grid-column: 2;
     grid-row: 1;
     padding-block-start: calc(var(--nk-space) * 2);
@@ -8349,45 +8327,43 @@
 @layer nitro-kit.state {
   @media (hover: hover) {
     :where(
-        [data-nk="tabs"]
-          > [data-slot="tabs-list"]
-          > [data-slot="tabs-tab"]:hover:not(:disabled)
-      ) {
+      [data-nk="tabs"]
+        > [data-slot="tabs-list"]
+        > [data-slot="tabs-tab"]:hover:not(:disabled)
+    ) {
       color: var(--nk-color-foreground);
     }
   }
 
   :where(
-      [data-nk="tabs"]
-        > [data-slot="tabs-list"]
-        > [data-slot="tabs-tab"][aria-selected="true"]
-    ) {
+    [data-nk="tabs"]
+      > [data-slot="tabs-list"]
+      > [data-slot="tabs-tab"][aria-selected="true"]
+  ) {
     color: var(--nk-color-foreground);
     border-block-end-color: var(--nk-color-primary);
   }
 
   :where(
-      [data-nk="tabs"][data-orientation="vertical"]
-        > [data-slot="tabs-list"]
-        > [data-slot="tabs-tab"][aria-selected="true"]
-    ) {
+    [data-nk="tabs"][data-orientation="vertical"]
+      > [data-slot="tabs-list"]
+      > [data-slot="tabs-tab"][aria-selected="true"]
+  ) {
     border-block-end-color: transparent;
   }
 
   :where(
-      [data-nk="tabs"]
-        > [data-slot="tabs-list"]
-        > [data-slot="tabs-tab"]:focus-visible
-    ) {
+    [data-nk="tabs"]
+      > [data-slot="tabs-list"]
+      > [data-slot="tabs-tab"]:focus-visible
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: calc(var(--nk-focus-offset) * -1);
   }
 
   :where(
-      [data-nk="tabs"]
-        > [data-slot="tabs-list"]
-        > [data-slot="tabs-tab"]:disabled
-    ) {
+    [data-nk="tabs"] > [data-slot="tabs-list"] > [data-slot="tabs-tab"]:disabled
+  ) {
     color: var(--nk-color-muted-foreground);
     cursor: not-allowed;
     opacity: var(--nk-disabled-opacity);
@@ -8395,8 +8371,8 @@
 
   @media (prefers-reduced-motion: reduce) {
     :where(
-        [data-nk="tabs"] > [data-slot="tabs-list"] > [data-slot="tabs-tab"]
-      ) {
+      [data-nk="tabs"] > [data-slot="tabs-list"] > [data-slot="tabs-tab"]
+    ) {
       transition-duration: 0.01ms;
     }
   }
@@ -8567,9 +8543,9 @@
   }
 
   :where(
-      [data-nk="toolbar"] > [data-slot="toolbar-leading"],
-      [data-nk="toolbar"] > [data-slot="toolbar-trailing"]
-    ) {
+    [data-nk="toolbar"] > [data-slot="toolbar-leading"],
+    [data-nk="toolbar"] > [data-slot="toolbar-trailing"]
+  ) {
     display: flex;
     min-inline-size: 0;
     /* Regions never exceed the toolbar, so nested content such as a
@@ -8588,9 +8564,9 @@
   /* Application content in a region is a flex item; without this a heading
      holding one long word keeps its min-content width and widens the page. */
   :where(
-      [data-nk="toolbar"] > [data-slot="toolbar-leading"] > *,
-      [data-nk="toolbar"] > [data-slot="toolbar-trailing"] > *
-    ) {
+    [data-nk="toolbar"] > [data-slot="toolbar-leading"] > *,
+    [data-nk="toolbar"] > [data-slot="toolbar-trailing"] > *
+  ) {
     min-inline-size: 0;
   }
 }
@@ -8655,70 +8631,68 @@
   }
 
   :where(
-      [data-nk="tooltip"][data-placement="top"] > [data-slot="tooltip-content"]
-    ) {
+    [data-nk="tooltip"][data-placement="top"] > [data-slot="tooltip-content"]
+  ) {
     inset-block-end: calc(100% + (var(--nk-space) * 2));
     inset-inline-start: 50%;
     transform: translateX(-50%);
   }
 
   :where(
-      [data-nk="tooltip"][data-placement="top"]
-        > [data-slot="tooltip-content"]::before
-    ) {
+    [data-nk="tooltip"][data-placement="top"]
+      > [data-slot="tooltip-content"]::before
+  ) {
     inset-block-start: 100%;
     inset-inline: 0;
     block-size: calc(var(--nk-space) * 2);
   }
 
   :where(
-      [data-nk="tooltip"][data-placement="right"]
-        > [data-slot="tooltip-content"]
-    ) {
+    [data-nk="tooltip"][data-placement="right"] > [data-slot="tooltip-content"]
+  ) {
     inset-block-start: 50%;
     inset-inline-start: calc(100% + (var(--nk-space) * 2));
     transform: translateY(-50%);
   }
 
   :where(
-      [data-nk="tooltip"][data-placement="right"]
-        > [data-slot="tooltip-content"]::before
-    ) {
+    [data-nk="tooltip"][data-placement="right"]
+      > [data-slot="tooltip-content"]::before
+  ) {
     inset-block: 0;
     inset-inline-end: 100%;
     inline-size: calc(var(--nk-space) * 2);
   }
 
   :where(
-      [data-nk="tooltip"][data-placement="bottom"]
-        > [data-slot="tooltip-content"]
-    ) {
+    [data-nk="tooltip"][data-placement="bottom"] > [data-slot="tooltip-content"]
+  ) {
     inset-block-start: calc(100% + (var(--nk-space) * 2));
     inset-inline-start: 50%;
     transform: translateX(-50%);
   }
 
   :where(
-      [data-nk="tooltip"][data-placement="bottom"]
-        > [data-slot="tooltip-content"]::before
-    ) {
+    [data-nk="tooltip"][data-placement="bottom"]
+      > [data-slot="tooltip-content"]::before
+  ) {
     inset-block-end: 100%;
     inset-inline: 0;
     block-size: calc(var(--nk-space) * 2);
   }
 
   :where(
-      [data-nk="tooltip"][data-placement="left"] > [data-slot="tooltip-content"]
-    ) {
+    [data-nk="tooltip"][data-placement="left"] > [data-slot="tooltip-content"]
+  ) {
     inset-block-start: 50%;
     inset-inline-end: calc(100% + (var(--nk-space) * 2));
     transform: translateY(-50%);
   }
 
   :where(
-      [data-nk="tooltip"][data-placement="left"]
-        > [data-slot="tooltip-content"]::before
-    ) {
+    [data-nk="tooltip"][data-placement="left"]
+      > [data-slot="tooltip-content"]::before
+  ) {
     inset-block: 0;
     inset-inline-start: 100%;
     inline-size: calc(var(--nk-space) * 2);
@@ -8727,9 +8701,9 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="tooltip"]:not([data-dismissed]):focus-within
-        > [data-slot="tooltip-content"]
-    ) {
+    [data-nk="tooltip"]:not([data-dismissed]):focus-within
+      > [data-slot="tooltip-content"]
+  ) {
     display: block;
     visibility: visible;
     opacity: 1;
@@ -8741,9 +8715,9 @@
 
   @media (hover: hover) {
     :where(
-        [data-nk="tooltip"]:not([data-dismissed]):hover
-          > [data-slot="tooltip-content"]
-      ) {
+      [data-nk="tooltip"]:not([data-dismissed]):hover
+        > [data-slot="tooltip-content"]
+    ) {
       display: block;
       visibility: visible;
       opacity: 1;

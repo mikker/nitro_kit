@@ -13,37 +13,37 @@
  */
 @layer nitro-kit.variant {
   :where(
-      [data-nk="badge"][data-color="neutral"],
-      [data-nk="alert"][data-variant="default"],
-      [data-nk="toast-item"][data-variant="default"]
-    ) {
+    [data-nk="badge"][data-color="neutral"],
+    [data-nk="alert"][data-variant="default"],
+    [data-nk="toast-item"][data-variant="default"]
+  ) {
     --_nk-semantic-accent: var(--nk-palette-neutral);
     --_nk-semantic-content: var(--nk-palette-neutral-content);
   }
 
   :where(
-      [data-nk="badge"][data-color="info"],
-      [data-nk="alert"][data-variant="info"],
-      [data-nk="toast-item"][data-variant="info"]
-    ) {
+    [data-nk="badge"][data-color="info"],
+    [data-nk="alert"][data-variant="info"],
+    [data-nk="toast-item"][data-variant="info"]
+  ) {
     --_nk-semantic-accent: var(--nk-palette-info);
     --_nk-semantic-content: var(--nk-palette-info-content);
   }
 
   :where(
-      [data-nk="badge"][data-color="success"],
-      [data-nk="alert"][data-variant="success"],
-      [data-nk="toast-item"][data-variant="success"]
-    ) {
+    [data-nk="badge"][data-color="success"],
+    [data-nk="alert"][data-variant="success"],
+    [data-nk="toast-item"][data-variant="success"]
+  ) {
     --_nk-semantic-accent: var(--nk-palette-success);
     --_nk-semantic-content: var(--nk-palette-success-content);
   }
 
   :where(
-      [data-nk="badge"][data-color="warning"],
-      [data-nk="alert"][data-variant="warning"],
-      [data-nk="toast-item"][data-variant="warning"]
-    ) {
+    [data-nk="badge"][data-color="warning"],
+    [data-nk="alert"][data-variant="warning"],
+    [data-nk="toast-item"][data-variant="warning"]
+  ) {
     --_nk-semantic-accent: var(--nk-palette-warning);
     --_nk-semantic-content: var(--nk-palette-warning-content);
   }
@@ -52,10 +52,10 @@
      Both spellings resolve to the destructive family, and this is the only
      place they meet. */
   :where(
-      [data-nk="badge"][data-color="destructive"],
-      [data-nk="alert"][data-variant="destructive"],
-      [data-nk="toast-item"][data-variant="error"]
-    ) {
+    [data-nk="badge"][data-color="destructive"],
+    [data-nk="alert"][data-variant="destructive"],
+    [data-nk="toast-item"][data-variant="error"]
+  ) {
     --_nk-semantic-accent: var(--nk-palette-destructive);
     --_nk-semantic-content: var(--nk-palette-destructive-content);
   }

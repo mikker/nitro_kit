@@ -9,9 +9,9 @@
   }
 
   :where(
-      [data-nk="toolbar"] > [data-slot="toolbar-leading"],
-      [data-nk="toolbar"] > [data-slot="toolbar-trailing"]
-    ) {
+    [data-nk="toolbar"] > [data-slot="toolbar-leading"],
+    [data-nk="toolbar"] > [data-slot="toolbar-trailing"]
+  ) {
     display: flex;
     min-inline-size: 0;
     /* Regions never exceed the toolbar, so nested content such as a
@@ -30,9 +30,9 @@
   /* Application content in a region is a flex item; without this a heading
      holding one long word keeps its min-content width and widens the page. */
   :where(
-      [data-nk="toolbar"] > [data-slot="toolbar-leading"] > *,
-      [data-nk="toolbar"] > [data-slot="toolbar-trailing"] > *
-    ) {
+    [data-nk="toolbar"] > [data-slot="toolbar-leading"] > *,
+    [data-nk="toolbar"] > [data-slot="toolbar-trailing"] > *
+  ) {
     min-inline-size: 0;
   }
 }

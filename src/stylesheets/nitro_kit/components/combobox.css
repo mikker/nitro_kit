@@ -59,13 +59,13 @@
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-option"],
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-action"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-option"],
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-action"]
+  ) {
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -89,10 +89,10 @@
   /* A result action ("Create …") leads with its icon; its label and optional
      description stack in the second column. */
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-action"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-action"]
+  ) {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
     column-gap: calc(var(--nk-space) * 2);
@@ -100,34 +100,34 @@
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-action"]
-        > [data-slot="combobox-action-icon"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-action"]
+      > [data-slot="combobox-action-icon"]
+  ) {
     grid-row: 1 / span 2;
     color: var(--nk-color-muted-foreground);
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-action"]
-        > [data-slot="combobox-option-label"],
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-action"]
-        > [data-slot="combobox-option-description"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-action"]
+      > [data-slot="combobox-option-label"],
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-action"]
+      > [data-slot="combobox-option-description"]
+  ) {
     grid-column: 2;
   }
 
   :where(
-      [data-nk="combobox"] [data-slot="combobox-empty"],
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-message"]
-    ) {
+    [data-nk="combobox"] [data-slot="combobox-empty"],
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-message"]
+  ) {
     display: flex;
     align-items: center;
     min-block-size: var(--nk-control-height-md);
@@ -138,11 +138,11 @@
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-option"]
-        > [data-slot="combobox-option-description"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-option"]
+      > [data-slot="combobox-option-description"]
+  ) {
     display: block;
     margin-block-start: calc(var(--nk-space) * 0.5);
     color: var(--nk-color-muted-foreground);
@@ -166,10 +166,10 @@
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-selections"]
-        > [data-slot="combobox-selection"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-selections"]
+      > [data-slot="combobox-selection"]
+  ) {
     display: inline-flex;
     align-items: center;
     gap: calc(var(--nk-space) * 0.5);
@@ -188,11 +188,11 @@
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-selections"]
-        > [data-slot="combobox-selection"]
-        > [data-slot="combobox-selection-label"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-selections"]
+      > [data-slot="combobox-selection"]
+      > [data-slot="combobox-selection-label"]
+  ) {
     min-inline-size: 0;
     overflow: hidden;
     white-space: nowrap;
@@ -200,69 +200,69 @@
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-selections"]
-        > [data-slot="combobox-selection"]
-        > [data-slot="combobox-remove"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-selections"]
+      > [data-slot="combobox-selection"]
+      > [data-slot="combobox-remove"]
+  ) {
     flex-shrink: 0;
   }
 }
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-option"]:is(
-          [data-active="true"],
-          [aria-selected="true"]
-        ),
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-action"][data-active="true"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-option"]:is(
+        [data-active="true"],
+        [aria-selected="true"]
+      ),
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-action"][data-active="true"]
+  ) {
     background: var(--nk-color-muted);
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-action"][aria-busy="true"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-action"][aria-busy="true"]
+  ) {
     cursor: progress;
     opacity: var(--nk-disabled-opacity);
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-message"][data-state="error"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-message"][data-state="error"]
+  ) {
     color: var(--nk-color-destructive);
   }
 
   :where(
-      [data-nk="combobox"]
-        > [data-slot="combobox-listbox"]
-        > [data-slot="combobox-option"]:is(
-          [data-active="true"],
-          [aria-selected="true"]
-        )
-        > [data-slot="combobox-option-description"]
-    ) {
+    [data-nk="combobox"]
+      > [data-slot="combobox-listbox"]
+      > [data-slot="combobox-option"]:is(
+        [data-active="true"],
+        [aria-selected="true"]
+      )
+      > [data-slot="combobox-option-description"]
+  ) {
     color: var(--nk-color-foreground);
   }
 
   :where(
-      [data-nk="combobox"] [data-slot="combobox-option"][aria-disabled="true"]
-    ) {
+    [data-nk="combobox"] [data-slot="combobox-option"][aria-disabled="true"]
+  ) {
     cursor: not-allowed;
     opacity: var(--nk-disabled-opacity);
   }
 
   :where(
-      [data-nk="combobox"] > [data-slot="combobox-listbox"][data-state="open"]
-    ) {
+    [data-nk="combobox"] > [data-slot="combobox-listbox"][data-state="open"]
+  ) {
     animation: nk-combobox-enter var(--nk-duration-normal) var(--nk-ease);
   }
 

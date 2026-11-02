@@ -41,16 +41,17 @@
       (
           var(--nk-title-compact-size) * var(--nk-leading-tight) -
             var(--_nk-alert-icon-size)
-        ) / 2
+        ) /
+        2
     );
   }
 
   :where(
-      [data-nk="alert"]:has(> [data-slot="alert-icon"])
-        > [data-slot="alert-title"],
-      [data-nk="alert"]:has(> [data-slot="alert-icon"])
-        > [data-slot="alert-description"]
-    ) {
+    [data-nk="alert"]:has(> [data-slot="alert-icon"])
+      > [data-slot="alert-title"],
+    [data-nk="alert"]:has(> [data-slot="alert-icon"])
+      > [data-slot="alert-description"]
+  ) {
     grid-column: 2;
   }
 

@@ -18,10 +18,10 @@
   }
 
   :where(
-      [data-nk="command-palette"]
-        > [data-slot="command-palette-trigger"]
-        > [data-slot="button-label"]
-    ) {
+    [data-nk="command-palette"]
+      > [data-slot="command-palette-trigger"]
+      > [data-slot="button-label"]
+  ) {
     display: flex;
     flex: 1 1 auto;
     gap: calc(var(--nk-space) * 2);
@@ -30,8 +30,8 @@
   }
 
   :where(
-      [data-nk="command-palette"] [data-slot="command-palette-trigger-label"]
-    ) {
+    [data-nk="command-palette"] [data-slot="command-palette-trigger-label"]
+  ) {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -40,11 +40,11 @@
   /* The chip floats at the trigger's end with the same inset on its top,
      end, and bottom sides, so the trigger's text padding stands down. */
   :where(
-      [data-nk="command-palette"]
-        > [data-slot="command-palette-trigger"]:has(
-          [data-slot="command-palette-shortcut"]
-        )
-    ) {
+    [data-nk="command-palette"]
+      > [data-slot="command-palette-trigger"]:has(
+        [data-slot="command-palette-shortcut"]
+      )
+  ) {
     padding-inline-end: calc(var(--nk-space) * 2 - var(--nk-border-width));
   }
 
@@ -66,8 +66,8 @@
      shrinkable list scrolls. The flex display applies only while open, so
      the closed dialog keeps the user-agent's display: none. */
   :where(
-      [data-nk="command-palette"] > [data-slot="command-palette-panel"][open]
-    ) {
+    [data-nk="command-palette"] > [data-slot="command-palette-panel"][open]
+  ) {
     display: flex;
     flex-direction: column;
   }
@@ -89,22 +89,22 @@
      shrinks downward and the top edge never jumps while filtering. The
      non-enhanced fallback keeps the centered default. */
   :where(
-      [data-nk="command-palette"] > [data-slot="command-palette-panel"]:modal
-    ) {
+    [data-nk="command-palette"] > [data-slot="command-palette-panel"]:modal
+  ) {
     margin-block: 12dvh auto;
     max-block-size: min(36rem, calc(88dvh - var(--nk-space) * 4));
   }
 
   :where(
-      [data-nk="command-palette"] > [data-slot="command-palette-panel"]
-    )::backdrop {
+    [data-nk="command-palette"] > [data-slot="command-palette-panel"]
+  )::backdrop {
     background: var(--nk-color-overlay);
   }
 
   :where(
-      [data-nk="command-palette"] [data-slot="command-palette-title"],
-      [data-nk="command-palette"] [data-slot="command-palette-status"]
-    ) {
+    [data-nk="command-palette"] [data-slot="command-palette-title"],
+    [data-nk="command-palette"] [data-slot="command-palette-status"]
+  ) {
     position: absolute;
     inline-size: 1px;
     block-size: 1px;
@@ -127,19 +127,19 @@
   }
 
   :where(
-      [data-nk="command-palette"]
-        > [data-slot="command-palette-panel"]
-        > [data-slot="command-palette-close"]
-    ) {
+    [data-nk="command-palette"]
+      > [data-slot="command-palette-panel"]
+      > [data-slot="command-palette-close"]
+  ) {
     margin-block: calc(var(--nk-space) * 2);
     margin-inline: auto calc(var(--nk-space) * 2);
   }
 
   :where(
-      [data-nk="command-palette"][data-enhanced]
-        > [data-slot="command-palette-panel"]
-        > [data-slot="command-palette-close"]
-    ) {
+    [data-nk="command-palette"][data-enhanced]
+      > [data-slot="command-palette-panel"]
+      > [data-slot="command-palette-close"]
+  ) {
     position: absolute;
     z-index: 1;
     inset-block-start: calc(var(--nk-space) * 2);
@@ -148,23 +148,23 @@
   }
 
   :where(
-      [data-nk="command-palette"][data-enhanced]
-        [data-slot="command-palette-search"]
-    ) {
+    [data-nk="command-palette"][data-enhanced]
+      [data-slot="command-palette-search"]
+  ) {
     padding-inline-end: calc(
       var(--nk-control-height-md) + (var(--nk-space) * 4)
     );
   }
 
   :where(
-      [data-nk="command-palette"] [data-slot="command-palette-search"][hidden]
-    ) {
+    [data-nk="command-palette"] [data-slot="command-palette-search"][hidden]
+  ) {
     display: none;
   }
 
   :where(
-      [data-nk="command-palette"] [data-slot="command-palette-search-icon"]
-    ) {
+    [data-nk="command-palette"] [data-slot="command-palette-search-icon"]
+  ) {
     flex: 0 0 auto;
     margin-inline-start: calc(var(--nk-space) * 2);
     color: var(--nk-color-muted-foreground);
@@ -176,8 +176,8 @@
   }
 
   :where(
-      [data-nk="command-palette"] [data-slot="command-palette-input"]
-    )::-webkit-search-cancel-button {
+    [data-nk="command-palette"] [data-slot="command-palette-input"]
+  )::-webkit-search-cancel-button {
     appearance: none;
   }
 
@@ -198,8 +198,8 @@
   }
 
   :where(
-      [data-nk="command-palette"] [data-slot="command-palette-destination"]
-    ) {
+    [data-nk="command-palette"] [data-slot="command-palette-destination"]
+  ) {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -217,9 +217,9 @@
   }
 
   :where(
-      [data-nk="command-palette"]
-        [data-slot="command-palette-destination-description"]
-    ) {
+    [data-nk="command-palette"]
+      [data-slot="command-palette-destination-description"]
+  ) {
     margin-block-start: calc(var(--nk-space) * 0.5);
     color: var(--nk-color-muted-foreground);
     font-size: var(--nk-text-xs);
@@ -247,9 +247,9 @@
   }
 
   :where(
-      [data-nk="command-palette"]
-        [data-slot="command-palette-input"]:focus-visible
-    ) {
+    [data-nk="command-palette"]
+      [data-slot="command-palette-input"]:focus-visible
+  ) {
     outline: none;
   }
 }
@@ -257,18 +257,18 @@
 @layer nitro-kit.state {
   @media (hover: hover) {
     :where(
-        [data-nk="command-palette"]
-          [data-slot="command-palette-destination"]:hover
-      ) {
+      [data-nk="command-palette"]
+        [data-slot="command-palette-destination"]:hover
+    ) {
       color: var(--nk-color-foreground);
       background: var(--nk-color-muted);
     }
   }
 
   :where(
-      [data-nk="command-palette"]
-        [data-slot="command-palette-destination"]:focus-visible
-    ) {
+    [data-nk="command-palette"]
+      [data-slot="command-palette-destination"]:focus-visible
+  ) {
     color: var(--nk-color-foreground);
     background: var(--nk-color-muted);
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
@@ -276,16 +276,16 @@
   }
 
   :where(
-      [data-nk="command-palette"]
-        [data-slot="command-palette-destination"]:is(:hover, :focus-visible)
-        [data-slot="command-palette-destination-description"]
-    ) {
+    [data-nk="command-palette"]
+      [data-slot="command-palette-destination"]:is(:hover, :focus-visible)
+      [data-slot="command-palette-destination-description"]
+  ) {
     color: var(--nk-color-foreground);
   }
 
   :where(
-      [data-nk="command-palette"] > [data-slot="command-palette-panel"][open]
-    ) {
+    [data-nk="command-palette"] > [data-slot="command-palette-panel"][open]
+  ) {
     animation: nk-command-palette-enter var(--nk-duration-slow) var(--nk-ease);
   }
 
@@ -306,8 +306,8 @@
     }
 
     :where(
-        [data-nk="command-palette"] [data-slot="command-palette-destination"]
-      ) {
+      [data-nk="command-palette"] [data-slot="command-palette-destination"]
+    ) {
       transition-duration: 0.01ms;
     }
   }

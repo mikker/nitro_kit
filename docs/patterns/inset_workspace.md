@@ -93,9 +93,8 @@ Load this stylesheet after Nitro Kit:
     --nk-app-shell-sidebar-background: transparent;
     block-size: 100vh;
     block-size: 100dvh;
-    padding: var(--workspace-inset) var(--workspace-inset) var(
-        --workspace-inset
-      ) 0;
+    padding: var(--workspace-inset) var(--workspace-inset)
+      var(--workspace-inset) 0;
     grid-template-rows: auto minmax(0, 1fr);
     column-gap: 0;
     overflow: hidden;
@@ -106,10 +105,10 @@ Load this stylesheet after Nitro Kit:
     border: 0;
   }
   :where(
-      [data-ui="inset-workspace"]
-        > [data-slot="app-shell-header"]
-        > [data-slot="app-shell-brand"]
-    ) {
+    [data-ui="inset-workspace"]
+      > [data-slot="app-shell-header"]
+      > [data-slot="app-shell-brand"]
+  ) {
     padding-inline: calc(var(--nk-space) * 6);
     border: 0;
   }
@@ -122,10 +121,10 @@ Load this stylesheet after Nitro Kit:
     box-shadow: var(--nk-shadow-sm);
   }
   :where(
-      [data-ui="inset-workspace"][data-layout="sidebar"]
-        > [data-slot="app-shell-header"]
-        > [data-slot="app-shell-topbar"]
-    ) {
+    [data-ui="inset-workspace"][data-layout="sidebar"]
+      > [data-slot="app-shell-header"]
+      > [data-slot="app-shell-topbar"]
+  ) {
     padding: calc(var(--nk-space) * 6);
     background: var(--nk-color-surface);
     border: var(--nk-border-width) solid var(--nk-color-border);
@@ -133,9 +132,9 @@ Load this stylesheet after Nitro Kit:
     border-radius: var(--nk-radius-xl) var(--nk-radius-xl) 0 0;
   }
   :where(
-      [data-ui="inset-workspace"][data-layout="sidebar"]
-        > [data-slot="app-shell-main"]
-    ) {
+    [data-ui="inset-workspace"][data-layout="sidebar"]
+      > [data-slot="app-shell-main"]
+  ) {
     border-block-start: 0;
     border-start-start-radius: 0;
     border-start-end-radius: 0;
@@ -147,17 +146,17 @@ Load this stylesheet after Nitro Kit:
 
 @media (width < 48rem) {
   :where(
-      [data-ui="inset-workspace"]
-        > [data-slot="app-shell-header"]
-        > [data-slot="app-shell-brand"]
-    ) {
+    [data-ui="inset-workspace"]
+      > [data-slot="app-shell-header"]
+      > [data-slot="app-shell-brand"]
+  ) {
     display: none;
   }
   :where(
-      [data-ui="inset-workspace"]
-        [data-slot="app-shell-topbar"]
-        > [data-nk="toolbar"]
-    ) {
+    [data-ui="inset-workspace"]
+      [data-slot="app-shell-topbar"]
+      > [data-nk="toolbar"]
+  ) {
     flex-direction: row;
     flex-wrap: nowrap;
     align-items: center;

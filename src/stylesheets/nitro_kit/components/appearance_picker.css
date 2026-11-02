@@ -7,8 +7,8 @@
   }
 
   :where(
-      [data-nk="appearance-picker"] > [data-slot="appearance-picker-legend"]
-    ) {
+    [data-nk="appearance-picker"] > [data-slot="appearance-picker-legend"]
+  ) {
     padding: 0;
     font-size: var(--nk-title-compact-size);
     font-weight: var(--nk-title-compact-weight);
@@ -16,34 +16,34 @@
 
   /* The gap below the label exists only when there is a label. */
   :where(
-      [data-nk="appearance-picker"] > [data-slot="appearance-picker-options"]
-    ) {
+    [data-nk="appearance-picker"] > [data-slot="appearance-picker-options"]
+  ) {
     display: flex;
     flex-wrap: wrap;
     gap: calc(var(--nk-space) * 3);
   }
 
   :where(
-      [data-nk="appearance-picker"]
-        > [data-slot="appearance-picker-legend"]
-        + [data-slot="appearance-picker-options"]
-    ) {
+    [data-nk="appearance-picker"]
+      > [data-slot="appearance-picker-legend"]
+      + [data-slot="appearance-picker-options"]
+  ) {
     margin-block-start: calc(var(--nk-space) * 2);
   }
 
   :where(
-      [data-nk="appearance-picker"][data-presentation="radios"]
-        > [data-slot="appearance-picker-options"]
-    ) {
+    [data-nk="appearance-picker"][data-presentation="radios"]
+      > [data-slot="appearance-picker-options"]
+  ) {
     display: grid;
   }
 
   /* Like every other control, the segmented row fills its container and the
      parent owns the available width; the segments share it equally. */
   :where(
-      [data-nk="appearance-picker"][data-presentation="segmented"]
-        > [data-slot="appearance-picker-options"]
-    ) {
+    [data-nk="appearance-picker"][data-presentation="segmented"]
+      > [data-slot="appearance-picker-options"]
+  ) {
     display: flex;
     gap: 0;
     padding: var(--nk-space);
@@ -61,8 +61,8 @@
   }
 
   :where(
-      [data-nk="appearance-picker"] [data-slot="appearance-picker-control"]
-    ) {
+    [data-nk="appearance-picker"] [data-slot="appearance-picker-control"]
+  ) {
     inline-size: var(--nk-choice-size-md);
     block-size: var(--nk-choice-size-md);
     margin: 0;
@@ -71,9 +71,9 @@
   }
 
   :where(
-      [data-nk="appearance-picker"][data-presentation="segmented"]
-        [data-slot="appearance-picker-option"]
-    ) {
+    [data-nk="appearance-picker"][data-presentation="segmented"]
+      [data-slot="appearance-picker-option"]
+  ) {
     position: relative;
     flex: 1 1 0;
     justify-content: center;
@@ -82,17 +82,17 @@
   }
 
   :where(
-      [data-nk="appearance-picker"][data-presentation="segmented"]
-        [data-slot="appearance-picker-control"]
-    ) {
+    [data-nk="appearance-picker"][data-presentation="segmented"]
+      [data-slot="appearance-picker-control"]
+  ) {
     position: absolute;
     opacity: 0;
   }
 
   :where(
-      [data-nk="appearance-picker"][data-presentation="select"]
-        > [data-slot="appearance-picker-select"]
-    ) {
+    [data-nk="appearance-picker"][data-presentation="select"]
+      > [data-slot="appearance-picker-select"]
+  ) {
     display: block;
     inline-size: 100%;
     min-block-size: var(--nk-control-height-md);
@@ -108,19 +108,19 @@
 
 @layer nitro-kit.state {
   :where(
-      [data-nk="appearance-picker"][data-presentation="segmented"]
-        [data-slot="appearance-picker-option"]:has(
-          [data-slot="appearance-picker-control"]:checked
-        )
-    ) {
+    [data-nk="appearance-picker"][data-presentation="segmented"]
+      [data-slot="appearance-picker-option"]:has(
+        [data-slot="appearance-picker-control"]:checked
+      )
+  ) {
     background: var(--nk-color-surface);
     box-shadow: var(--nk-shadow-sm);
   }
 
   :where(
-      [data-nk="appearance-picker"]
-        [data-slot="appearance-picker-control"]:focus-visible
-    ) {
+    [data-nk="appearance-picker"]
+      [data-slot="appearance-picker-control"]:focus-visible
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }
@@ -128,11 +128,11 @@
   /* The segmented control is visually hidden, so its focus ring must show on
      the segment that contains it. */
   :where(
-      [data-nk="appearance-picker"][data-presentation="segmented"]
-        [data-slot="appearance-picker-option"]:has(
-          [data-slot="appearance-picker-control"]:focus-visible
-        )
-    ) {
+    [data-nk="appearance-picker"][data-presentation="segmented"]
+      [data-slot="appearance-picker-option"]:has(
+        [data-slot="appearance-picker-control"]:focus-visible
+      )
+  ) {
     outline: var(--nk-focus-width) solid var(--nk-color-focus);
     outline-offset: var(--nk-focus-offset);
   }

@@ -12,7 +12,7 @@ class ComboboxCssTest < ActiveSupport::TestCase
               > [data-slot="combobox-option-description"]
     CSS
 
-    assert_includes source_css, selector
+    assert_includes compact(source_css), compact(selector)
   end
 
   test "remote chips truncate inside the field and empty lists collapse" do

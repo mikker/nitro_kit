@@ -16,38 +16,38 @@
   }
 
   :where(
-      [data-nk="control-group"]
-        > :is(
-          [data-nk="input"],
-          [data-nk="select"],
-          [data-nk="button"],
-          span[data-slot="control-group-addon"]
-        )
-    ) {
+    [data-nk="control-group"]
+      > :is(
+        [data-nk="input"],
+        [data-nk="select"],
+        [data-nk="button"],
+        span[data-slot="control-group-addon"]
+      )
+  ) {
     position: relative;
     block-size: var(--_nk-control-group-height);
     min-block-size: var(--_nk-control-group-height);
   }
 
   :where(
-      [data-nk="control-group"]
-        > :is(
-          [data-nk="input"],
-          [data-nk="select"],
-          [data-nk="button"]
-        ):focus-within
-    ) {
+    [data-nk="control-group"]
+      > :is(
+        [data-nk="input"],
+        [data-nk="select"],
+        [data-nk="button"]
+      ):focus-within
+  ) {
     z-index: 1;
   }
 
   :where(
-      [data-nk="control-group"]
-        > :is(
-          [data-nk="input"],
-          [data-nk="button"],
-          span[data-slot="control-group-addon"]
-        )
-    ) {
+    [data-nk="control-group"]
+      > :is(
+        [data-nk="input"],
+        [data-nk="button"],
+        span[data-slot="control-group-addon"]
+      )
+  ) {
     border-radius: 0;
   }
 
@@ -66,50 +66,50 @@
   }
 
   :where(
-      [data-nk="control-group"]
-        > :is(
-          [data-nk="input"],
-          [data-nk="button"],
-          span[data-slot="control-group-addon"]
-        ):first-child
-    ) {
+    [data-nk="control-group"]
+      > :is(
+        [data-nk="input"],
+        [data-nk="button"],
+        span[data-slot="control-group-addon"]
+      ):first-child
+  ) {
     border-start-start-radius: var(--nk-radius-lg);
     border-end-start-radius: var(--nk-radius-lg);
   }
 
   :where(
-      [data-nk="control-group"]
-        > :is(
-          [data-nk="input"],
-          [data-nk="button"],
-          span[data-slot="control-group-addon"]
-        ):last-child
-    ) {
+    [data-nk="control-group"]
+      > :is(
+        [data-nk="input"],
+        [data-nk="button"],
+        span[data-slot="control-group-addon"]
+      ):last-child
+  ) {
     border-start-end-radius: var(--nk-radius-lg);
     border-end-end-radius: var(--nk-radius-lg);
   }
 
   :where(
-      [data-nk="control-group"]
-        > :is(
-          [data-nk="input"],
-          [data-nk="select"],
-          [data-nk="button"],
-          span[data-slot="control-group-addon"]
-        )
-        + :is(
-          [data-nk="input"],
-          [data-nk="select"],
-          [data-nk="button"],
-          span[data-slot="control-group-addon"]
-        )
-    ) {
+    [data-nk="control-group"]
+      > :is(
+        [data-nk="input"],
+        [data-nk="select"],
+        [data-nk="button"],
+        span[data-slot="control-group-addon"]
+      )
+      + :is(
+        [data-nk="input"],
+        [data-nk="select"],
+        [data-nk="button"],
+        span[data-slot="control-group-addon"]
+      )
+  ) {
     margin-inline-start: calc(var(--nk-border-width) * -1);
   }
 
   :where(
-      [data-nk="control-group"] > :is([data-nk="input"], [data-nk="select"])
-    ) {
+    [data-nk="control-group"] > :is([data-nk="input"], [data-nk="select"])
+  ) {
     min-inline-size: 0;
     flex: 1 1 auto;
   }

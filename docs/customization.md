@@ -653,37 +653,37 @@ The following variables are the complete public token set. Theme-independent tok
 
 ### Typography
 
-| Token                       | Role                                                                 |
-| --------------------------- | -------------------------------------------------------------------- |
-| `--nk-font-sans`            | Default UI font family.                                              |
-| `--nk-font-mono`            | Monospace font family.                                               |
-| `--nk-text-xs`              | Extra-small text size.                                               |
-| `--nk-text-sm`              | Small text size.                                                     |
-| `--nk-text-base`            | Base text size.                                                      |
-| `--nk-text-lg`              | Large text size.                                                     |
-| `--nk-text-xl`              | Extra-large text size.                                               |
-| `--nk-text-2xl`             | Largest shipped display text size.                                   |
-| `--nk-leading-tight`        | Tight line-height ratio.                                             |
-| `--nk-leading-normal`       | Default line-height ratio.                                           |
-| `--nk-leading-relaxed`      | Relaxed line-height ratio.                                           |
-| `--nk-font-weight-normal`   | Normal text weight.                                                  |
-| `--nk-font-weight-medium`   | Medium text weight.                                                  |
-| `--nk-font-weight-semibold` | Semibold text weight.                                                |
-| `--nk-font-weight-bold`     | Bold text weight.                                                    |
-| `--nk-title-page-size`      | Page title size; the one top-level heading.                          |
-| `--nk-title-page-weight`    | Page title weight.                                                   |
-| `--nk-title-section-size`   | Section title size: data, settings, and danger sections.             |
-| `--nk-title-section-weight` | Section title weight.                                                |
-| `--nk-title-surface-size`   | Surface title size: dialogs, sheets, empty states, fieldsets.        |
-| `--nk-title-surface-weight` | Surface title weight.                                                |
-| `--nk-title-compact-size`   | Compact title size: legends, alert and toast titles.                 |
-| `--nk-title-compact-weight` | Compact title weight.                                                |
-| `--nk-typeset-font-body`    | Typeset body font family.                                            |
-| `--nk-typeset-font-heading` | Typeset heading font family.                                         |
-| `--nk-typeset-font-mono`    | Typeset code font family.                                            |
-| `--nk-typeset-size`         | Typeset base text size.                                              |
-| `--nk-typeset-leading`      | Typeset body line-height ratio.                                      |
-| `--nk-typeset-flow`         | Typeset vertical rhythm unit.                                        |
+| Token                       | Role                                                          |
+| --------------------------- | ------------------------------------------------------------- |
+| `--nk-font-sans`            | Default UI font family.                                       |
+| `--nk-font-mono`            | Monospace font family.                                        |
+| `--nk-text-xs`              | Extra-small text size.                                        |
+| `--nk-text-sm`              | Small text size.                                              |
+| `--nk-text-base`            | Base text size.                                               |
+| `--nk-text-lg`              | Large text size.                                              |
+| `--nk-text-xl`              | Extra-large text size.                                        |
+| `--nk-text-2xl`             | Largest shipped display text size.                            |
+| `--nk-leading-tight`        | Tight line-height ratio.                                      |
+| `--nk-leading-normal`       | Default line-height ratio.                                    |
+| `--nk-leading-relaxed`      | Relaxed line-height ratio.                                    |
+| `--nk-font-weight-normal`   | Normal text weight.                                           |
+| `--nk-font-weight-medium`   | Medium text weight.                                           |
+| `--nk-font-weight-semibold` | Semibold text weight.                                         |
+| `--nk-font-weight-bold`     | Bold text weight.                                             |
+| `--nk-title-page-size`      | Page title size; the one top-level heading.                   |
+| `--nk-title-page-weight`    | Page title weight.                                            |
+| `--nk-title-section-size`   | Section title size: data, settings, and danger sections.      |
+| `--nk-title-section-weight` | Section title weight.                                         |
+| `--nk-title-surface-size`   | Surface title size: dialogs, sheets, empty states, fieldsets. |
+| `--nk-title-surface-weight` | Surface title weight.                                         |
+| `--nk-title-compact-size`   | Compact title size: legends, alert and toast titles.          |
+| `--nk-title-compact-weight` | Compact title weight.                                         |
+| `--nk-typeset-font-body`    | Typeset body font family.                                     |
+| `--nk-typeset-font-heading` | Typeset heading font family.                                  |
+| `--nk-typeset-font-mono`    | Typeset code font family.                                     |
+| `--nk-typeset-size`         | Typeset base text size.                                       |
+| `--nk-typeset-leading`      | Typeset body line-height ratio.                               |
+| `--nk-typeset-flow`         | Typeset vertical rhythm unit.                                 |
 
 ### Spacing and dimensions
 

@@ -56,8 +56,8 @@ export default class extends Controller {
       this.orientationValue === "vertical"
         ? ["ArrowUp", "ArrowDown"]
         : rightToLeft
-        ? ["ArrowRight", "ArrowLeft"]
-        : ["ArrowLeft", "ArrowRight"];
+          ? ["ArrowRight", "ArrowLeft"]
+          : ["ArrowLeft", "ArrowRight"];
 
     if (![...directionKeys, "Home", "End"].includes(event.key)) return;
 

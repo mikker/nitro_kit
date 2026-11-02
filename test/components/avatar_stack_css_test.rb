@@ -18,7 +18,7 @@ class AvatarStackCssTest < ActiveSupport::TestCase
           );
     CSS
 
-    assert_includes source_css, rule
+    assert_includes source_css.gsub(/\s+/, ""), rule.gsub(/\s+/, "")
   end
 
   test "the overflow indicator dresses like the avatar fallbacks" do
