@@ -15,19 +15,32 @@ module Gallery
         return render UploadPreview.new(mode:, error: message), status: :unprocessable_entity, layout: false
       end
 
-      # This throwaway demo reads the real uploaded data and releases its blobs.
-      # An application would attach or import the files at this boundary.
-      blobs = []
-      receipt = files.map do |file|
-        if file.is_a?(ActionDispatch::Http::UploadedFile)
-          { name: file.original_filename, bytes: file.size }
-        else
-          blob = ActiveStorage::Blob.find_signed!(file)
-          blobs << blob
-          blob.open { |io| { name: blob.filename.to_s, bytes: io.size } }
+      receipt = ActiveStorage::Blob.transaction do
+        signed_files = files.reject { _1.is_a?(ActionDispatch::Http::UploadedFile) }
+          .to_h { [ _1, ActiveStorage::Blob.find_signed!(_1) ] }
+        blobs = signed_files.values.uniq(&:id).sort_by(&:id)
+        blobs.each do |blob|
+          blob.lock!
+          unless session[:gallery_upload_owner].present? &&
+              blob.metadata["gallery_upload_owner"] == session[:gallery_upload_owner] &&
+              blob.created_at > 30.minutes.ago && !blob.attachments.exists? &&
+              blob.byte_size.between?(1, DirectUploadsController::MAX_BYTES)
+            raise ActiveRecord::RecordNotFound
+          end
         end
+        # Validate the entire set before opening or purging any blob.
+        result = files.map do |file|
+          if file.is_a?(ActionDispatch::Http::UploadedFile)
+            raise ActionController::BadRequest if file.size > DirectUploadsController::MAX_BYTES
+            { name: file.original_filename, bytes: file.size }
+          else
+            blob = signed_files.fetch(file)
+            blob.open { |io| { name: blob.filename.to_s, bytes: io.size } }
+          end
+        end
+        blobs.each(&:purge)
+        result
       end
-      blobs.each(&:purge)
 
       render UploadPreview.new(mode:, receipt:), layout: false
     rescue ActiveSupport::MessageVerifier::InvalidSignature, ActiveRecord::RecordNotFound,
