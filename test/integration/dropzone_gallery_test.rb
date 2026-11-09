@@ -66,9 +66,7 @@ class DropzoneGalleryTest < ActionDispatch::IntegrationTest
   end
 
   test "processes signed blobs and renders a fresh direct upload form" do
-    blob = ActiveStorage::Blob.create_and_upload!(
-      io: StringIO.new("real upload contents"), filename: "evidence.txt", content_type: "text/plain"
-    )
+    blob = issue_upload("real upload contents", "evidence.txt")
     key = blob.key
 
     assert_difference("ActiveStorage::Blob.count", -1) do
@@ -87,7 +85,7 @@ class DropzoneGalleryTest < ActionDispatch::IntegrationTest
 
   test "processes both shared inputs and reports expired uploads" do
     blobs = %w[primary secondary].map do |name|
-      ActiveStorage::Blob.create_and_upload!(io: StringIO.new(name), filename: "#{name}.txt")
+      issue_upload(name, "#{name}.txt")
     end
     post gallery_upload_submissions_path(mode: "shared"), params: {
       upload: { primary_file: blobs.first.signed_id, secondary_file: blobs.last.signed_id }
@@ -135,5 +133,84 @@ class DropzoneGalleryTest < ActionDispatch::IntegrationTest
     imports = JSON.parse(css_select("script[type='importmap']").first.text).fetch("imports")
     assert_match %r{\A/assets/activestorage\.esm-}, imports.fetch("@rails/activestorage")
     assert_match %r{\A/assets/controllers/nk/dropzone_controller-}, imports.fetch("controllers/nk/dropzone_controller")
+  end
+
+  test "a signed blob from another session cannot be read or purged" do
+    blob = issue_upload("private demo", "private.txt")
+    other = open_session
+    assert_no_difference "ActiveStorage::Blob.count" do
+      other.post gallery_upload_submissions_path(mode: "direct"), params: { upload: { files: [ blob.signed_id ] } }
+    end
+    assert_equal 422, other.response.status
+    assert ActiveStorage::Blob.service.exist?(blob.key)
+  end
+
+  test "foreign expired and attached blobs reject the entire submission" do
+    own = issue_upload("own", "own.txt")
+    foreign = ActiveStorage::Blob.create_and_upload!(io: StringIO.new("foreign"), filename: "foreign.txt")
+    assert_no_difference "ActiveStorage::Blob.count" do
+      post gallery_upload_submissions_path(mode: "direct"), params: { upload: { files: [ own.signed_id, foreign.signed_id ] } }
+    end
+    assert_response :unprocessable_entity
+    assert ActiveStorage::Blob.service.exist?(own.key)
+
+    own.update!(created_at: 31.minutes.ago)
+    post gallery_upload_submissions_path(mode: "direct"), params: { upload: { files: [ own.signed_id ] } }
+    assert_response :unprocessable_entity
+    own.update!(created_at: Time.current)
+    record = Gallery::CatalogItem.create!(sku: "UPLOAD-TEST", name: "Upload", owner: "Test", status: "active", seats: 1)
+    ActiveStorage::Attachment.create!(name: "evidence", record:, blob: own)
+    post gallery_upload_submissions_path(mode: "direct"), params: { upload: { files: [ own.signed_id ] } }
+    assert_response :unprocessable_entity
+    assert ActiveStorage::Blob.service.exist?(own.key)
+  end
+
+  test "issuance enforces size pending count and server-owned metadata" do
+    issue_upload("data", "data.txt", metadata: { gallery_upload_owner: "client-selected" })
+    owner = response.parsed_body.fetch("metadata").fetch("gallery_upload_owner")
+    refute_equal "client-selected", owner
+    [ nil, false, "invalid", 0, -1, 11.megabytes ].each do |size|
+      assert_no_difference "ActiveStorage::Blob.count" do
+        post rails_direct_uploads_path, params: { blob: upload_attributes("data", "data.txt").merge(byte_size: size) }, as: :json
+      end
+      assert_response :unprocessable_entity
+    end
+    11.times { issue_upload("data", "data.txt") }
+    assert_no_difference "ActiveStorage::Blob.count" do
+      post rails_direct_uploads_path, params: { blob: upload_attributes("data", "extra.txt") }, as: :json
+    end
+    assert_response :too_many_requests
+  end
+
+  test "issuance works with the issuing session CSRF token and rejects missing tokens" do
+    previous = ActionController::Base.allow_forgery_protection
+    ActionController::Base.allow_forgery_protection = true
+    get gallery_component_path("dropzone")
+    token = css_select("meta[name=csrf-token]").first["content"]
+    post rails_direct_uploads_path, params: { blob: upload_attributes("data", "data.txt") },
+      headers: { "X-CSRF-Token" => token }, as: :json
+    assert_response :success
+    assert_no_difference "ActiveStorage::Blob.count" do
+      post rails_direct_uploads_path, params: { blob: upload_attributes("data", "data.txt") },
+        headers: { "X-CSRF-Token" => nil }, as: :json
+    end
+    assert_response :unprocessable_entity
+  ensure
+    ActionController::Base.allow_forgery_protection = previous
+  end
+
+  private
+
+  def upload_attributes(contents, filename)
+    { filename:, content_type: "text/plain", byte_size: contents.bytesize,
+      checksum: Base64.strict_encode64(Digest::MD5.digest(contents)) }
+  end
+
+  def issue_upload(contents, filename, metadata: {})
+    post rails_direct_uploads_path, params: { blob: upload_attributes(contents, filename).merge(metadata:) }, as: :json
+    assert_response :success
+    blob = ActiveStorage::Blob.find_signed!(response.parsed_body.fetch("signed_id"))
+    blob.upload(StringIO.new(contents))
+    blob
   end
 end
