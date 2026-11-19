@@ -182,7 +182,7 @@ GEM
       activesupport (>= 7.0.0)
       rack
     public_suffix (7.0.5)
-    puma (8.0.2)
+    puma (8.0.4)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.2.8)
@@ -329,7 +329,7 @@ DEPENDENCIES
   turbo-rails
 
 RUBY VERSION
-  ruby 4.0.9
+  ruby 4.0.10
 
 BUNDLED WITH
   4.0.20
